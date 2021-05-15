@@ -52,6 +52,16 @@
 		"hu"			"Fájl elérési Menü"
 	}
 
+	"MTPrefsInfo"
+	{
+		"hu"			"Írd be{olive} !mt_prefs{default} hogy megváltoztasd{mint} a vizuális jutalom beállításokat{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"hu"			"Mutáns Tankok Preferenciák Menü"
+	}
+
 	"MTReloadMenu"
 	{
 		"hu"			"Konfig menü újratöltése"
@@ -297,6 +307,16 @@
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}"
 	}
 
+	"BodyVisualOn"
+	{
+		"hu"			"Vizuális Test Szín: BE"
+	}
+
+	"BodyVisualOff"
+	{
+		"hu"			"Vizuális Test Szín: KI"
+	}
+
 	"ChangeType"
 	{
 		"hu"			"A személyes Mutáns Tank típusod megváltozott."
@@ -395,6 +415,16 @@
 	"GeneralDetails"
 	{
 		"hu"			"A Mutáns Tankok újra izgalmassá teszik a küzdelmet!"
+	}
+
+	"GlowVisualOn"
+	{
+		"hu"			"Vizuális Fénylő Körvonal: BE"
+	}
+
+	"GlowVisualOff"
+	{
+		"hu"			"Vizuális Fénylő Körvonal: KI"
 	}
 
 	"HumanCooldown"
@@ -560,6 +590,16 @@
 	"OptionYes"
 	{
 		"hu"			"Igen"
+	}
+
+	"ParticleVisualOn"
+	{
+		"hu"			"Vizuális Részecske Effekt: BE"
+	}
+
+	"ParticleVisualOff"
+	{
+		"hu"			"Vizuális Részecske Effekt: KI"
 	}
 
 	"PluginDisabled"
@@ -797,6 +837,21 @@
 		"hu"			"A{yellow} sebesség növelésed{default} véget ért!"
 	}
 
+	"ScreenVisualOn"
+	{
+		"hu"			"Képernyő Vizualitások: BE"
+	}
+
+	"ScreenVisualOff"
+	{
+		"hu"			"Képernyő Vizualitások: KI"
+	}
+
+	"SpawnManually"
+	{
+		"hu"			"Manuálisan kell megszületned."
+	}
+
 	"SpawnMessage"
 	{
 		"hu"			"Mutáns Tank lettél! Használhatod a következőket:"
@@ -810,6 +865,11 @@
 	"StillParsing"
 	{
 		"hu"			"A plugin még elemzi a konfig fájlt."
+	}
+
+	"TankDisabled"
+	{
+		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
 	}
 
 	"TeammatesList"
@@ -827,14 +887,14 @@
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"hu"			"Manuálisan kell megszületned."
+		"hu"			"Vizuális Ismétlődő Hangsor: BE"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+		"hu"			"Vizuális Ismétlődő Hangsor: KI"
 	}
 
 	"Absorb"

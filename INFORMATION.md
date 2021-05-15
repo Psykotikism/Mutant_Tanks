@@ -5,7 +5,7 @@
 
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `92-93` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `91` and recompile all the plugins, but expect server lag with higher values.)
-- Most of the settings below can be overridden for each player.
+- Most of the settings below can be overridden for each player via their SteamID32 or Steam3ID.
 
 ## Sections
 - Plugin Settings
@@ -1614,6 +1614,15 @@
 			// Minimum: 0.1
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
+
+			// Skip every Mutant Tank's taunting animation after incapacitating survivors.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Taunt"				"0"
 
 			// Every Mutant Tank's punches hit all survivors within range.
 			// Note: Both games already do this by default in Versus and Survival modes.
@@ -4159,6 +4168,15 @@
 			// Minimum: 0.1
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
+
+			// Skip the Mutant Tank's taunting animation after incapacitating survivors.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Taunt"				"0"
 
 			// The Mutant Tank's punches hit all survivors within range.
 			// Note: Both games already do this by default in Versus and Survival modes.

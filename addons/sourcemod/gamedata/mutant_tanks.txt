@@ -1089,6 +1089,21 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::SelectWeightedSequence(Activity) */
+			"CTerrorPlayer::SelectWeightedSequence"
+			{
+				"signature"	"CTerrorPlayer::SelectWeightedSequence"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"activity"
+					{
+						"type"		"int"
+					}
+				}
+			}
 		}
 		"Addresses"
 		{
@@ -1594,6 +1609,14 @@
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 						/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75 */
+			}
+			/* CTerrorPlayer::SelectWeightedSequence(Activity) */
+			"CTerrorPlayer::SelectWeightedSequence"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer22SelectWeightedSequenceE8Activity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x83\xF8\x03"
+						/* ? ? ? ? ? ? ? ? 8B ? 81 ? ? ? ? ? 75 ? E8 ? ? ? ? 83 F8 03 */
 			}
 			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
 			"CTerrorPlayer::StartReviving"

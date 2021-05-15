@@ -52,6 +52,16 @@
 		"chi"			"文件路径菜单"
 	}
 
+	"MTPrefsInfo"
+	{
+		"chi"			"输入{olive} !mt_prefs{default} 来变更你的{mint} 可视化奖励设定{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"chi"			"突变坦克 首选项菜单"
+	}
+
 	"MTReloadMenu"
 	{
 		"chi"			"重新加载配置菜单"
@@ -297,6 +307,16 @@
 		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}"
 	}
 
+	"BodyVisualOn"
+	{
+		"chi"			"身体颜色: 开"
+	}
+
+	"BodyVisualOff"
+	{
+		"chi"			"身体颜色: 关"
+	}
+
 	"ChangeType"
 	{
 		"chi"			"你的突变坦克类型已变更."
@@ -395,6 +415,16 @@
 	"GeneralDetails"
 	{
 		"chi"			"突变坦克让坦克对抗更加多姿多彩!"
+	}
+
+	"GlowVisualOn"
+	{
+		"chi"			"发光轮廓: 开"
+	}
+
+	"GlowVisualOff"
+	{
+		"chi"			"发光轮廓: 关"
 	}
 
 	"HumanCooldown"
@@ -560,6 +590,16 @@
 	"OptionYes"
 	{
 		"chi"			"是"
+	}
+
+	"ParticleVisualOn"
+	{
+		"chi"			"粒子特效: 开"
+	}
+
+	"ParticleVisualOff"
+	{
+		"chi"			"粒子特效: 关"
 	}
 
 	"PluginDisabled"
@@ -797,6 +837,21 @@
 		"chi"			"你的{yellow} 速度加成{default} 已结束!"
 	}
 
+	"ScreenVisualOn"
+	{
+		"chi"			"屏幕特效: 开"
+	}
+
+	"ScreenVisualOff"
+	{
+		"chi"			"屏幕特效: 关"
+	}
+
+	"SpawnManually"
+	{
+		"chi"			"你必须手动生成."
+	}
+
 	"SpawnMessage"
 	{
 		"chi"			"你变成突变坦克了!你可以使用以下功能:"
@@ -810,6 +865,11 @@
 	"StillParsing"
 	{
 		"chi"			"插件还在解析配置文件."
+	}
+
+	"TankDisabled"
+	{
+		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
 	}
 
 	"TeammatesList"
@@ -827,14 +887,14 @@
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"chi"			"你必须手动生成."
+		"chi"			"循环声音线: 开"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
+		"chi"			"循环声音线: 关"
 	}
 
 	"Absorb"

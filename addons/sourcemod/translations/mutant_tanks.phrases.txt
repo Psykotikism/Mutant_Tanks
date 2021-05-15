@@ -52,6 +52,16 @@
 		"en"			"File Path Menu"
 	}
 
+	"MTPrefsInfo"
+	{
+		"en"			"Type{olive} !mt_prefs{default} to change your{mint} visual reward settings{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"en"			"Mutant Tanks Preferences Menu"
+	}
+
 	"MTReloadMenu"
 	{
 		"en"			"Reload Config Menu"
@@ -325,6 +335,16 @@
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}"
 	}
 
+	"BodyVisualOn"
+	{
+		"en"			"Body Color Visual: ON"
+	}
+
+	"BodyVisualOff"
+	{
+		"en"			"Body Color Visual: OFF"
+	}
+
 	"ChangeType"
 	{
 		"en"			"Your personal Mutant Tank type changed."
@@ -438,6 +458,16 @@
 	"GeneralDetails"
 	{
 		"en"			"Mutant Tanks makes fighting Tanks great again!"
+	}
+
+	"GlowVisualOn"
+	{
+		"en"			"Glow Outline Visual: ON"
+	}
+
+	"GlowVisualOff"
+	{
+		"en"			"Glow Outline Visual: OFF"
 	}
 
 	"HumanCooldown"
@@ -627,6 +657,16 @@
 	"OptionYes"
 	{
 		"en"			"Yes"
+	}
+
+	"ParticleVisualOn"
+	{
+		"en"			"Particle Effect Visual: ON"
+	}
+
+	"ParticleVisualOff"
+	{
+		"en"			"Particle Effect Visual: OFF"
 	}
 
 	"PluginDisabled"
@@ -901,6 +941,21 @@
 		"en"			"Your{yellow} speed boost{default} ended!"
 	}
 
+	"ScreenVisualOn"
+	{
+		"en"			"Screen Visual: ON"
+	}
+
+	"ScreenVisualOff"
+	{
+		"en"			"Screen Visual: OFF"
+	}
+
+	"SpawnManually"
+	{
+		"en"			"You will have to spawn manually."
+	}
+
 	"SpawnMessage"
 	{
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
@@ -914,6 +969,12 @@
 	"StillParsing"
 	{
 		"en"			"The plugin is still parsing the config file."
+	}
+
+	"TankDisabled"
+	{
+		"#format"		"{1:t},{2:i}"
+		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
 	}
 
 	"TeammatesList"
@@ -934,15 +995,14 @@
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"en"			"You will have to spawn manually."
+		"en"			"Looping Voiceline Visual: ON"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"en"			"Looping Voiceline Visual: OFF"
 	}
 
 	"Absorb"

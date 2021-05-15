@@ -5,6 +5,7 @@
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32">
 </a>
+
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Русский" width = "32">
 </a>
@@ -166,7 +167,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -187,7 +188,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -208,7 +209,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -229,7 +230,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -252,7 +253,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -1560,6 +1561,7 @@ sm_mt_version2 - Узнать текущую версию плагина.
 // Доступны всем игрокам.
 sm_mutanttank - Выберать танка-мутанта. (Эта команда работает только в том случае, если параметр "Spawn Mode" в разделе "Plugin Settings/Human Support" установлен на 0.)
 sm_mt_info - Просмотр информации о танках-мутантах.
+sm_mt_prefs - Установите свои предпочтения танках-мутантах.
 
 // Комбинированный
 sm_mt_ability - Просмотр информации каждой способности (A-L).

@@ -47,6 +47,7 @@
 - Added strict checking for hooking/unhooking events. (Thanks to Shadowart for reporting!)
 - Updated the logic for checking which game modes to enable/disable the plugin on. (Thanks to Shadowart for reporting!)
 - Added a `Tank #-1` option to the `sm_tank`/`sm_mt_tank` menu. (Thanks to jeremyvillanueva for the idea!)
+- Added the `sm_mt_prefs` command for players to change their reward visual settings.
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
@@ -66,9 +67,10 @@
 	- `Particle Effect Visual` (Requested by 3aljiyavslgazana.)
 	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
-- Added the `Sweep Fist` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to HarryPotter for the idea!)
+- Added the following settings under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections:
+	- `Skip Taunt` (Thanks to Lux for the code!)
+	- `Sweep Fist` (Thanks to HarryPotter for the idea!)
 - Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
-- Increased the size of buffers for convar changes under the `Plugin Settings/ConVars` section.
 - Added the `Listen Support` setting under the `Plugin Settings/General` section.
 
 #### Translations

@@ -15,6 +15,7 @@
 
 #undef REQUIRE_PLUGIN
 #tryinclude <adminmenu>
+#tryinclude <clientprefs>
 #tryinclude <left4dhooks>
 #tryinclude <mt_clone>
 #tryinclude <WeaponHandling>
@@ -293,6 +294,7 @@ enum struct esGeneral
 	ArrayList g_alSections;
 
 	bool g_bAbilityPlugin[MT_MAXABILITIES + 1];
+	bool g_bClientPrefsInstalled;
 	bool g_bCloneInstalled;
 	bool g_bFinaleEnded;
 	bool g_bForceSpawned;
@@ -304,7 +306,6 @@ enum struct esGeneral
 	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
-	bool g_bWeaponHandlingInstalled;
 	bool g_bWitchKilled[2048];
 
 	char g_sBodyColorVisual[48];
@@ -368,6 +369,8 @@ enum struct esGeneral
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
 
+	Cookie g_ckMTPrefs;
+
 	DynamicDetour g_ddActionCompleteDetour;
 	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoAnimationEventDetour;
@@ -389,6 +392,7 @@ enum struct esGeneral
 	DynamicDetour g_ddRevivedDetour;
 	DynamicDetour g_ddSecondaryAttackDetour;
 	DynamicDetour g_ddSecondaryAttackDetour2;
+	DynamicDetour g_ddSelectWeightedSequenceDetour;
 	DynamicDetour g_ddSetMainActivityDetour;
 	DynamicDetour g_ddShovedByPounceLandingDetour;
 	DynamicDetour g_ddShovedBySurvivorDetour;
@@ -584,6 +588,7 @@ enum struct esGeneral
 	int g_iScaleDamage;
 	int g_iSection;
 	int g_iShovePenaltyReward[3];
+	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[3];
 	int g_iSpawnLimit;
 	int g_iSpawnEnabled;
@@ -656,6 +661,7 @@ esDeveloper g_esDeveloper[MAXPLAYERS + 1];
 enum struct esPlayer
 {
 	bool g_bAdminMenu;
+	bool g_bApplyVisuals[5];
 	bool g_bArtificial;
 	bool g_bAttacked;
 	bool g_bAttackedAgain;
@@ -869,6 +875,7 @@ enum struct esPlayer
 	int g_iRewardNotify[3];
 	int g_iRewardPriority[3];
 	int g_iRewardVisual[3];
+	int g_iRewardVisuals;
 	int g_iRewardTypes;
 	int g_iRock[20];
 	int g_iRockColor[4];
@@ -878,6 +885,8 @@ enum struct esPlayer
 	int g_iShovePenalty;
 	int g_iShovePenaltyReward[3];
 	int g_iSkinColor[4];
+	int g_iSkinColorVisual[4];
+	int g_iSkipTaunt;
 	int g_iSledgehammerRounds;
 	int g_iSledgehammerRoundsReward[3];
 	int g_iSpawnType;
@@ -1043,6 +1052,7 @@ enum struct esTank
 	int g_iRockModel;
 	int g_iShovePenaltyReward[3];
 	int g_iSkinColor[4];
+	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[3];
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
@@ -1191,6 +1201,7 @@ enum struct esCache
 	int g_iRockModel;
 	int g_iShovePenaltyReward[3];
 	int g_iSkinColor[4];
+	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[3];
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
@@ -1674,7 +1685,11 @@ public any aNative_VomitPlayer(Handle plugin, int numParams)
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "left4dhooks"))
+	if (StrEqual(name, "clientprefs"))
+	{
+		g_esGeneral.g_bClientPrefsInstalled = true;
+	}
+	else if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = true;
 	}
@@ -1682,15 +1697,15 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
-	else if (StrEqual(name, "WeaponHandling"))
-	{
-		g_esGeneral.g_bWeaponHandlingInstalled = true;
-	}
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "left4dhooks"))
+	if (StrEqual(name, "clientprefs"))
+	{
+		g_esGeneral.g_bClientPrefsInstalled = false;
+	}
+	else if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = false;
 	}
@@ -1698,17 +1713,13 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
-	else if (StrEqual(name, "WeaponHandling"))
-	{
-		g_esGeneral.g_bWeaponHandlingInstalled = false;
-	}
 }
 
 public void OnAllPluginsLoaded()
 {
+	g_esGeneral.g_bClientPrefsInstalled = LibraryExists("clientprefs");
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-	g_esGeneral.g_bWeaponHandlingInstalled = LibraryExists("WeaponHandling");
 }
 
 public void OnPluginStart()
@@ -1764,6 +1775,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_mt_info", cmdMTInfo, "View information about Mutant Tanks.");
 	RegAdminCmd("sm_mt_list", cmdMTList, ADMFLAG_ROOT, "View a list of installed abilities.");
 	RegConsoleCmd("sm_mt_list2", cmdMTList2, "View a list of installed abilities.");
+	RegConsoleCmd("sm_mt_prefs", cmdMTPrefs, "Set your Mutant Tanks preferences.");
 	RegAdminCmd("sm_mt_reload", cmdMTReload, ADMFLAG_ROOT, "Reload the config file.");
 	RegAdminCmd("sm_mt_version", cmdMTVersion, ADMFLAG_ROOT, "Find out the current version of Mutant Tanks.");
 	RegConsoleCmd("sm_mt_version2", cmdMTVersion2, "Find out the current version of Mutant Tanks.");
@@ -1814,6 +1826,8 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
+
+	g_esGeneral.g_ckMTPrefs = new Cookie("MTPrefs", "Mutant Tanks Preferences", CookieAccess_Private);
 
 	char sDate[32];
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
@@ -1883,6 +1897,7 @@ public void OnPluginStart()
 				vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "CTerrorPlayer::Fling");
 				vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
 				vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
+				vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, gdMutantTanks, "CTerrorPlayer::SelectWeightedSequence");
 				vSetupDetour(g_esGeneral.g_ddStartActionDetour, gdMutantTanks, "CBaseBackpackItem::StartAction");
 				vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "CTerrorMeleeWeapon::TestMeleeSwingCollision");
 			}
@@ -2124,6 +2139,16 @@ public void OnPluginStart()
 			{
 				OnClientPutInServer(iPlayer);
 				OnClientPostAdminCheck(iPlayer);
+
+				if (bIsValidClient(iPlayer, MT_CHECK_FAKECLIENT) && AreClientCookiesCached(iPlayer))
+				{
+					OnClientCookiesCached(iPlayer);
+				}
+
+				if (bIsTank(iPlayer, MT_CHECK_ALIVE))
+				{
+					SDKHook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
+				}
 			}
 		}
 
@@ -2233,6 +2258,19 @@ public void OnClientPostAdminCheck(int client)
 	GetClientAuthId(client, AuthId_Steam3, g_esPlayer[client].g_sSteam3ID, sizeof(esPlayer::g_sSteam3ID));
 
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
+}
+
+public void OnClientCookiesCached(int client)
+{
+	char sValue[3];
+	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof(sValue));
+	g_esPlayer[client].g_iRewardVisuals = StringToInt(sValue);
+
+	g_esPlayer[client].g_bApplyVisuals[0] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN);
+	g_esPlayer[client].g_bApplyVisuals[1] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW);
+	g_esPlayer[client].g_bApplyVisuals[2] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY);
+	g_esPlayer[client].g_bApplyVisuals[3] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE);
+	g_esPlayer[client].g_bApplyVisuals[4] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE);
 }
 
 public void OnClientDisconnect(int client)
@@ -3612,8 +3650,8 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 						g_esPlayer[developer].g_iParticleEffect = 0;
 					}
 
-					vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, ",");
-					vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, ",", false);
+					vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, _, ",", false);
+					vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, _, ",", false);
 					CreateTimer(0.75, tTimerDevParticle, GetClientUserId(developer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 			}
@@ -3637,8 +3675,8 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 
 			switch (bIsDeveloper(developer, 6) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 			{
-				case true: SDKHook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
-				case false: SDKUnhook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+				case true: SDKHook(developer, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
+				case false: SDKUnhook(developer, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 			}
 
 			switch (bIsDeveloper(developer, 11) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_GODMODE))
@@ -3667,7 +3705,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 	else if (bIsValidClient(developer))
 	{
 		SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-		SDKUnhook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+		SDKUnhook(developer, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 
 		if (bIsValidClient(developer, MT_CHECK_ALIVE))
 		{
@@ -4262,6 +4300,159 @@ static void vListAbilities(int admin)
 			case false: MT_PrintToServer("%s %T", MT_TAG, "NoAbilities", LANG_SERVER);
 		}
 	}
+}
+
+public Action cmdMTPrefs(int client, int args)
+{
+	client = iGetListenServerHost(client, g_bDedicated);
+
+	if (!g_esGeneral.g_bPluginEnabled)
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!g_esGeneral.g_bClientPrefsInstalled)
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vPrefsMenu(client);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vPrefsMenu(int client, int item = 0)
+{
+	Menu mPrefsMenu = new Menu(iPrefsMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mPrefsMenu.SetTitle("Mutant Tanks Preferences Menu");
+
+	static char sDisplay[PLATFORM_MAX_PATH], sInfo[3];
+	FormatEx(sDisplay, sizeof(sDisplay), "Screen Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_SCREEN, sInfo, sizeof(sInfo));
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_GLOW, sInfo, sizeof(sInfo));
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Body Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_BODY, sInfo, sizeof(sInfo));
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_PARTICLE, sInfo, sizeof(sInfo));
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Looping Voiceline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_VOICELINE, sInfo, sizeof(sInfo));
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
+	mPrefsMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			char sInfo[3];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			int iBit = StringToInt(sInfo);
+			if (g_esPlayer[param1].g_bApplyVisuals[param2])
+			{
+				g_esPlayer[param1].g_bApplyVisuals[param2] = false;
+				g_esPlayer[param1].g_iRewardVisuals &= ~iBit;
+
+				char sValue[3];
+				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
+				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
+
+				switch (param2)
+				{
+					case 1: vRemoveGlow(param1);
+					case 2: SetEntityRenderColor(param1, 255, 255, 255, 255);
+				}
+			}
+			else
+			{
+				g_esPlayer[param1].g_bApplyVisuals[param2] = true;
+				g_esPlayer[param1].g_iRewardVisuals |= iBit;
+
+				char sValue[3];
+				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
+				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
+
+				float flCurrentTime = GetGameTime();
+
+				switch (param2)
+				{
+					case 1:
+					{
+						if (g_esPlayer[param1].g_flVisualTime[0] != -1.0 && g_esPlayer[param1].g_flVisualTime[0] > flCurrentTime)
+						{
+							vSetSurvivorGlow(param1);
+						}
+					}
+					case 2:
+					{
+						if (g_esPlayer[param1].g_flVisualTime[1] != -1.0 && g_esPlayer[param1].g_flVisualTime[1] > flCurrentTime)
+						{
+							SetEntityRenderColor(param1, g_esPlayer[param1].g_iSkinColorVisual[0], g_esPlayer[param1].g_iSkinColorVisual[1], g_esPlayer[param1].g_iSkinColorVisual[2], g_esPlayer[param1].g_iSkinColorVisual[3]);
+						}
+					}
+				}
+			}
+
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
+			{
+				vPrefsMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[PLATFORM_MAX_PATH];
+			Panel pPrefs = view_as<Panel>(param2);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTPrefsMenu", param1);
+			pPrefs.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			if (param2 >= 0)
+			{
+				char sMenuOption[PLATFORM_MAX_PATH];
+
+				switch (param2)
+				{
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ScreenVisualOn" : "ScreenVisualOff"), param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_GLOW) ? "GlowVisualOn" : "GlowVisualOff"), param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_BODY) ? "BodyVisualOn" : "BodyVisualOff"), param1);
+					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ParticleVisualOn" : "ParticleVisualOff"), param1);
+					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "VoicelineVisualOn" : "VoicelineVisualOff"), param1);
+				}
+
+				return RedrawMenuItem(sMenuOption);
+			}
+		}
+	}
+
+	return 0;
 }
 
 public Action cmdMTReload(int client, int args)
@@ -5301,7 +5492,35 @@ public void OnPropSpawnPost(int entity)
 	}
 }
 
-public void OnPlayerPostThinkPost(int survivor)
+public void OnSpeedPreThinkPost(int survivor)
+{
+	switch (bIsSurvivor(survivor))
+	{
+		case true:
+		{
+			static bool bDeveloper;
+			bDeveloper = bIsDeveloper(survivor, 5);
+			if (bDeveloper || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
+			{
+				static float flSpeed;
+				flSpeed = (bDeveloper && g_esDeveloper[survivor].g_flDevSpeedBoost > g_esPlayer[survivor].g_flSpeedBoost) ? g_esDeveloper[survivor].g_flDevSpeedBoost : g_esPlayer[survivor].g_flSpeedBoost;
+				switch (flSpeed > 0.0)
+				{
+					case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flSpeed);
+					case false: SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+				}
+			}
+			else
+			{
+				SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			}
+		}
+		case false: SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+	}
+}
+
+public void OnSurvivorPostThinkPost(int survivor)
 {
 	switch (bIsSurvivor(survivor))
 	{
@@ -5358,38 +5577,33 @@ public void OnPlayerPostThinkPost(int survivor)
 			}
 			else
 			{
-				SDKUnhook(survivor, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+				SDKUnhook(survivor, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 			}
 		}
-		case false: SDKUnhook(survivor, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+		case false: SDKUnhook(survivor, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 	}
 }
 
-public void OnSpeedPreThinkPost(int survivor)
+public void OnTankPostThinkPost(int tank)
 {
-	switch (bIsSurvivor(survivor))
+	switch (bIsTank(tank))
 	{
 		case true:
 		{
-			static bool bDeveloper;
-			bDeveloper = bIsDeveloper(survivor, 5);
-			if (bDeveloper || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
+			if (g_esCache[tank].g_iSkipTaunt == 1)
 			{
-				static float flSpeed;
-				flSpeed = (bDeveloper && g_esDeveloper[survivor].g_flDevSpeedBoost > g_esPlayer[survivor].g_flSpeedBoost) ? g_esDeveloper[survivor].g_flDevSpeedBoost : g_esPlayer[survivor].g_flSpeedBoost;
-				switch (flSpeed > 0.0)
+				switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
 				{
-					case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flSpeed);
-					case false: SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+					case 17: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 2.0);
+					case 18, 19, 20, 21, 22, 23: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 10.0);
 				}
 			}
 			else
 			{
-				SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+				SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 			}
 		}
-		case false: SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+		case false: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 	}
 }
 
@@ -6021,6 +6235,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iRandomTank = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRandomTank, g_esTank[iType].g_iRandomTank);
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
 	g_esCache[tank].g_iRockModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockModel, g_esTank[iType].g_iRockModel);
+	g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSkipTaunt, g_esGeneral.g_iSkipTaunt);
+	g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkipTaunt, g_esCache[tank].g_iSkipTaunt);
 	g_esCache[tank].g_iSpawnType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnType, g_esTank[iType].g_iSpawnType);
 	g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSweepFist, g_esGeneral.g_iSweepFist);
 	g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSweepFist, g_esCache[tank].g_iSweepFist);
@@ -6506,6 +6722,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_flPunchForce = -1.0;
 		g_esGeneral.g_flRockDamage = -1.0;
 		g_esGeneral.g_flRunSpeed = 0.0;
+		g_esGeneral.g_iSkipTaunt = 0;
 		g_esGeneral.g_iSweepFist = 0;
 		g_esGeneral.g_flThrowInterval = 0.0;
 		g_esGeneral.g_iBulletImmunity = 0;
@@ -6671,6 +6888,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flPunchForce = -1.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = 0.0;
+			g_esTank[iIndex].g_iSkipTaunt = 0;
 			g_esTank[iIndex].g_iSweepFist = 0;
 			g_esTank[iIndex].g_flThrowInterval = 0.0;
 			g_esTank[iIndex].g_iBulletImmunity = 0;
@@ -6848,6 +7066,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_flPunchForce = -1.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = 0.0;
+				g_esPlayer[iPlayer].g_iSkipTaunt = 0;
 				g_esPlayer[iPlayer].g_iSweepFist = 0;
 				g_esPlayer[iPlayer].g_flThrowInterval = 0.0;
 				g_esPlayer[iPlayer].g_iBulletImmunity = 0;
@@ -7076,6 +7295,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esGeneral.g_flPunchForce, value, -1.0, 999999.0);
 				g_esGeneral.g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esGeneral.g_flRockDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, 0.0, 3.0);
+				g_esGeneral.g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esGeneral.g_iSkipTaunt, value, 0, 1);
 				g_esGeneral.g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esGeneral.g_iSweepFist, value, 0, 1);
 				g_esGeneral.g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esGeneral.g_flThrowInterval, value, 0.0, 999999.0);
 				g_esGeneral.g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esGeneral.g_iBulletImmunity, value, 0, 1);
@@ -7364,6 +7584,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, 0.0, 3.0);
+						g_esPlayer[iPlayer].g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esPlayer[iPlayer].g_iSkipTaunt, value, 0, 1);
 						g_esPlayer[iPlayer].g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esPlayer[iPlayer].g_iSweepFist, value, 0, 1);
 						g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
@@ -7854,13 +8075,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_connect") || StrEqual(name, "player_disconnect"))
 		{
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsValidClient(iSurvivor, MT_CHECK_INDEX))
-			{
-				g_esPlayer[iSurvivor].g_iLadyKiller = 0;
-				g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
+			g_esPlayer[iSurvivor].g_iLadyKiller = 0;
+			g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
 
-				vDeveloperSettings(iSurvivor);
-			}
+			vDeveloperSettings(iSurvivor);
 		}
 		else if (StrEqual(name, "player_death"))
 		{
@@ -7871,6 +8089,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				g_esPlayer[iVictim].g_bDied = true;
 				g_esPlayer[iVictim].g_bTriggered = false;
 
+				SDKUnhook(iVictim, SDKHook_PostThinkPost, OnTankPostThinkPost);
 				vCalculateDeath(iVictim, iAttacker);
 
 				if (g_esPlayer[iVictim].g_iTankType > 0)
@@ -7997,6 +8216,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 			if (bIsValidClient(iPlayer))
 			{
+				SDKUnhook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
+
 				DataPack dpPlayerSpawn = new DataPack();
 				RequestFrame(vPlayerSpawnFrame, dpPlayerSpawn);
 				dpPlayerSpawn.WriteCell(iPlayerId);
@@ -8145,6 +8366,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esTank[type].g_flPunchForce, value, -1.0, 999999.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[type].g_flRockDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, 0.0, 3.0);
+		g_esTank[type].g_iSkipTaunt = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esTank[type].g_iSkipTaunt, value, 0, 1);
 		g_esTank[type].g_iSweepFist = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esTank[type].g_iSweepFist, value, 0, 1);
 		g_esTank[type].g_flThrowInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[type].g_flThrowInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_iBulletImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[type].g_iBulletImmunity, value, 0, 1);
@@ -8473,6 +8695,7 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, true, 2);
@@ -8533,6 +8756,7 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, false, 2);
@@ -8998,6 +9222,8 @@ static void vRemoveEffects(int survivor, bool body = false)
 		vRemoveGlow(survivor);
 		SetEntityRenderColor(survivor, 255, 255, 255, 255);
 	}
+
+	SDKUnhook(survivor, SDKHook_PostThinkPost, OnTankPostThinkPost);
 }
 
 static void vRemoveGlow(int player)
@@ -9292,6 +9518,11 @@ static void vResetSurvivorStats(int survivor)
 		if (iPos < sizeof(esPlayer::g_iScreenColorVisual))
 		{
 			g_esPlayer[survivor].g_iScreenColorVisual[iPos] = -1;
+		}
+
+		if (iPos < sizeof(esPlayer::g_iSkinColorVisual))
+		{
+			g_esPlayer[survivor].g_iSkinColorVisual[iPos] = -1;
 		}
 	}
 }
@@ -9656,7 +9887,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 					{
-						SDKHook(survivor, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+						SDKHook(survivor, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 						vRewardMessage(survivor, priority, "RewardAttackBoost", "RewardAttackBoost2", "RewardAttackBoost3", sTankName);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_ATTACKBOOST;
@@ -9819,35 +10050,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					}
 				}
 
-				if (!g_esPlayer[survivor].g_bEffectApplied)
-				{
-					g_esPlayer[survivor].g_bEffectApplied = true;
-
-					int iEffect = g_esCache[tank].g_iRewardEffect[priority];
-					if (iEffect > 0)
-					{
-						if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
-						{
-							g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
-						}
-
-						if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
-						{
-							g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
-						}
-
-						if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
-						{
-							EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
-						}
-
-						if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
-						{
-							vExternalView(survivor, 1.5);
-						}
-					}
-				}
-
 				int iVisual = g_esCache[tank].g_iRewardVisual[priority];
 				if (iVisual > 0)
 				{
@@ -9906,7 +10108,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sGlowColorVisual3);
 							}
 
-							vSetSurvivorOutline(survivor, sColor);
+							vSetSurvivorOutline(survivor, sColor, g_esPlayer[survivor].g_bApplyVisuals[1]);
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
 							{
@@ -9928,7 +10130,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sBodyColorVisual3);
 							}
 
-							vSetSurvivorColor(survivor, sColor);
+							vSetSurvivorColor(survivor, sColor, g_esPlayer[survivor].g_bApplyVisuals[2]);
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime))
 							{
@@ -9979,6 +10181,40 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 							{
 								g_esPlayer[survivor].g_flVisualTime[4] = flDuration;
 							}
+						}
+					}
+
+					if (!g_esPlayer[survivor].g_bEffectApplied)
+					{
+						MT_PrintToChat(survivor, "%s %t", MT_TAG2, "MTPrefsInfo");
+					}
+				}
+
+				if (!g_esPlayer[survivor].g_bEffectApplied)
+				{
+					g_esPlayer[survivor].g_bEffectApplied = true;
+
+					int iEffect = g_esCache[tank].g_iRewardEffect[priority];
+					if (iEffect > 0)
+					{
+						if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
+						{
+							g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
+						}
+
+						if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
+						{
+							g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
+						}
+
+						if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
+						{
+							EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+						}
+
+						if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+						{
+							vExternalView(survivor, 1.5);
 						}
 					}
 				}
@@ -10187,6 +10423,13 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
 	g_esDeveloper[developer].g_iDevWeaponSkin = 1;
+
+	g_esPlayer[developer].g_iRewardVisuals = 31;
+
+	for (int iPos = 0; iPos < sizeof(esPlayer::g_bApplyVisuals); iPos++)
+	{
+		g_esPlayer[developer].g_bApplyVisuals[iPos] = true;
+	}
 }
 
 static void vFixAmmo(int survivor)
@@ -11389,7 +11632,7 @@ static void vSetRockModel(int tank, int rock)
 	}
 }
 
-static void vSetSurvivorColor(int survivor, const char[] colors, const char[] delimiter = ";")
+static void vSetSurvivorColor(int survivor, const char[] colors, bool apply = true, const char[] delimiter = ";", bool save = true)
 {
 	char sColor[48], sValue[4][4];
 	strcopy(sColor, sizeof(sColor), colors);
@@ -11400,11 +11643,22 @@ static void vSetSurvivorColor(int survivor, const char[] colors, const char[] de
 	{
 		if (sValue[iPos][0] != '\0')
 		{
-			iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+			switch (save)
+			{
+				case true:
+				{
+					iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+					g_esPlayer[survivor].g_iSkinColorVisual[iPos] = iColor[iPos];
+				}
+				case false: iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+			}
 		}
 	}
 
-	SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
+	if (apply)
+	{
+		SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
+	}
 }
 
 static void vSetSurvivorEffects(int survivor, int effects)
@@ -11462,7 +11716,7 @@ static void vSetSurvivorGlow(int survivor, int red = -1, int green = -1, int blu
 	SetEntProp(survivor, Prop_Send, "m_iGlowType", 3);
 }
 
-static void vSetSurvivorOutline(int survivor, const char[] colors, const char[] delimiter = ";", bool save = true)
+static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = true, const char[] delimiter = ";", bool save = true)
 {
 	char sColor[36], sValue[3][4];
 	strcopy(sColor, sizeof(sColor), colors);
@@ -11485,7 +11739,10 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, const char[] 
 		}
 	}
 
-	vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
+	if (apply)
+	{
+		vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
+	}
 }
 
 static void vSetSurvivorWeaponSkin(int developer)
@@ -12213,6 +12470,8 @@ public void vPlayerSpawnFrame(DataPack pack)
 		if (g_bSecondGame)
 		{
 			g_esPlayer[iPlayer].g_bStasis = bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer));
+
+			SDKHook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
 		}
 
 		if (g_esPlayer[iPlayer].g_bStasis && g_esGeneral.g_iStasisMode == 1 && g_esGeneral.g_hSDKLeaveStasis != null)
@@ -14126,6 +14385,19 @@ public MRESReturn mreSecondaryAttackPost(int pThis)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreSelectWeightedSequencePost(int pThis, DHookReturn hReturn, DHookParam hParams)
+{
+	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && 54 <= hReturn.Value <= 60)
+	{
+		hReturn.Value = iGetAnimation(pThis, "ACT_HULK_ATTACK_LOW");
+		SetEntPropFloat(pThis, Prop_Send, "m_flCycle", 15.0);
+
+		return MRES_Override;
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreShovedByPounceLandingPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)))
@@ -14995,7 +15267,7 @@ public Action tTimerLoopVoiceline(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[4] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[4] < GetGameTime() || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[4] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[4] < GetGameTime() || g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] == '\0' || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[4] = -1.0;
 		g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] = '\0';
@@ -15003,11 +15275,9 @@ public Action tTimerLoopVoiceline(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] == '\0')
+	if (!(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_VOICELINE))
 	{
-		g_esPlayer[iSurvivor].g_flVisualTime[4] = -1.0;
-
-		return Plugin_Stop;
+		return Plugin_Continue;
 	}
 
 	vVocalize(iSurvivor, g_esPlayer[iSurvivor].g_sLoopingVoiceline);
@@ -15041,6 +15311,11 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 		g_esPlayer[iSurvivor].g_iParticleEffect = 0;
 
 		return Plugin_Stop;
+	}
+
+	if (!(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_PARTICLE))
+	{
+		return Plugin_Continue;
 	}
 
 	vSetSurvivorEffects(iSurvivor, g_esPlayer[iSurvivor].g_iParticleEffect);
@@ -15125,6 +15400,9 @@ public Action tTimerRefreshRewards(Handle timer)
 					if ((g_esPlayer[iSurvivor].g_flVisualTime[2] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[2] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[2] = -1.0;
+						g_esPlayer[iSurvivor].g_iSkinColorVisual[0] = -1;
+						g_esPlayer[iSurvivor].g_iSkinColorVisual[1] = -1;
+						g_esPlayer[iSurvivor].g_iSkinColorVisual[2] = -1;
 
 						SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
 					}
@@ -15435,7 +15713,7 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsSurvivorHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson || bIsPlayerInThirdPerson(iSurvivor))
+	if (!(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_SCREEN) || bIsSurvivorHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson || bIsPlayerInThirdPerson(iSurvivor))
 	{
 		return Plugin_Continue;
 	}

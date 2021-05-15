@@ -5,6 +5,7 @@
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
+
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
@@ -166,7 +167,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -187,7 +188,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -208,7 +209,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -229,7 +230,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -252,7 +253,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -1560,6 +1561,7 @@ sm_mt_version2 - Find out the current version of Mutant Tanks.
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
 sm_mt_info - View information about Mutant Tanks.
+sm_mt_prefs - Set your Mutant Tanks preferences.
 
 // Packaged
 sm_mt_ability - View information about each ability (A-L).
