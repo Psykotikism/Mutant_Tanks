@@ -404,9 +404,9 @@ public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &
 	return Plugin_Continue;
 }
 
-public Action PreThink(int tank)
+public Action OnFlyPreThink(int tank)
 {
-	switch (MT_IsTankSupported(tank) && g_esFlyPlayer[tank].g_bActivated)
+	switch (MT_IsTankSupported(tank) && !MT_IsTankIdle(tank) && g_esFlyPlayer[tank].g_bActivated)
 	{
 		case true:
 		{
@@ -417,11 +417,11 @@ public Action PreThink(int tank)
 
 			vFlyThink(tank, iButtons, flDuration);
 		}
-		case false: SDKUnhook(tank, SDKHook_PreThink, PreThink);
+		case false: SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	}
 }
 
-public Action StartTouch(int tank, int other)
+public Action OnFlyStartTouch(int tank, int other)
 {
 	vStopFly(tank);
 }
@@ -858,10 +858,10 @@ void vFly(int tank, bool announce, int pos = -1)
 	TeleportEntity(tank, flOrigin, NULL_VECTOR, flEyeAngles);
 	vCopyVector(flEyeAngles, g_esFlyPlayer[tank].g_flCurrentVelocity);
 
-	SDKUnhook(tank, SDKHook_PreThink, PreThink);
-	SDKHook(tank, SDKHook_PreThink, PreThink);
-	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
-	SDKHook(tank, SDKHook_StartTouch, StartTouch);
+	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
+	SDKHook(tank, SDKHook_PreThink, OnFlyPreThink);
+	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
+	SDKHook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility > 0)
 	{
@@ -1413,8 +1413,8 @@ void vStopFly(int tank)
 		vFlyReset3(tank);
 	}
 
-	SDKUnhook(tank, SDKHook_PreThink, PreThink);
-	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
+	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
+	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
 	if (bIsValidClient(tank))
 	{

@@ -327,10 +327,10 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action CarStartTouch(int car, int other)
+public Action OnCarStartTouch(int car, int other)
 {
 	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SDKUnhook(car, SDKHook_StartTouch, CarStartTouch);
+	SDKUnhook(car, SDKHook_StartTouch, OnCarStartTouch);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -965,7 +965,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			DispatchSpawn(iCar);
 			TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
-			SDKHook(iCar, SDKHook_StartTouch, CarStartTouch);
+			SDKHook(iCar, SDKHook_StartTouch, OnCarStartTouch);
 
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, g_esCarCache[iTank].g_flCarLifetime);

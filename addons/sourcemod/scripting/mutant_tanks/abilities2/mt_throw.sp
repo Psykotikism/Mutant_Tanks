@@ -408,10 +408,10 @@ public Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
-public Action StartTouch(int thrown, int other)
+public Action OnThrowStartTouch(int thrown, int other)
 {
 	TeleportEntity(thrown, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SDKUnhook(thrown, SDKHook_StartTouch, StartTouch);
+	SDKUnhook(thrown, SDKHook_StartTouch, OnThrowStartTouch);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -1034,7 +1034,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						DispatchSpawn(iCar);
 						TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
-						SDKHook(iCar, SDKHook_StartTouch, StartTouch);
+						SDKHook(iCar, SDKHook_StartTouch, OnThrowStartTouch);
 
 						iCar = EntIndexToEntRef(iCar);
 						vDeleteEntity(iCar, g_esThrowCache[iTank].g_flThrowCarLifetime);
@@ -1179,7 +1179,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
 							ActivateEntity(iWitch);
 
-							SDKHook(iWitch, SDKHook_StartTouch, StartTouch);
+							SDKHook(iWitch, SDKHook_StartTouch, OnThrowStartTouch);
 
 							if (g_esThrowCache[iTank].g_flThrowWitchLifetime > 0.0)
 							{
