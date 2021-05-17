@@ -97,6 +97,11 @@
 		"hu"			"A távolsági képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 	}
 
+	"AndConjunction"
+	{
+		"hu"			"és"
+	}
+
 	"ButtonMode"
 	{
 		"hu"			"Gomb Mód"
@@ -634,137 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAmmo3"
-	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"hu"			"A{yellow} lőszert növelésed{default} véget ért!"
+		"hu"			"lőszert növelést"
 	}
 
 	"RewardAttackBoost"
 	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"hu"			"A{yellow} támadás növelésed{default} véget ért!"
+		"hu"			"támadás növelést"
 	}
 
 	"RewardDamageBoost"
 	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"
+		"hu"			"sebzés növelést"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"hu"			"A{yellow} sebzés növelésed{default} véget ért!"
+		"hu"			"A{yellow} {1}{default} véget ért!"
 	}
 
 	"RewardGod"
 	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardGod3"
-	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardGodEnd"
-	{
-		"hu"			"A{yellow} halhatatlanságod{default} véget ért!"
+		"hu"			"halhatatlanságot"
 	}
 
 	"RewardHealth"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardHealth3"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"hu"			"A{yellow} életet növelésed{default} véget ért!"
+		"hu"			"életet növelést"
 	}
 
 	"RewardInfAmmo"
 	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"hu"			"A{yellow} végtelen lőszered{default} véget ért!"
+		"hu"			"végtelen lőszert"
 	}
 
 	"RewardItem"
 	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted{olive} {2}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
-	}
-
-	"RewardItem3"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} {1}{default}."
 	}
 
 	"RewardLadyKiller"
@@ -777,6 +687,21 @@
 		"hu"			"Van még neked{yellow} {1}{mint} nőcsábász{default} használatod."
 	}
 
+	"RewardList"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted{olive} {2}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
+	}
+
+	"RewardList3"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+	}
+
 	"RewardNone"
 	{
 		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
@@ -784,57 +709,22 @@
 
 	"RewardRefill"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardRefill3"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"életet és lőszert"
 	}
 
 	"RewardRespawn"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardRespawn2"
-	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardRespawn3"
-	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"újjászületést"
 	}
 
 	"RewardSolo"
 	{
-		"hu"			"Leszólóztad{default} az{olive} {1}{default}-ot!"
+		"hu"			"{1}{default} legyőzte{olive} {2}{default}-ot!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardSpeedBoost2"
-	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardSpeedBoost3"
-	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardSpeedBoostEnd"
-	{
-		"hu"			"A{yellow} sebesség növelésed{default} véget ért!"
+		"hu"			"sebesség növelést"
 	}
 
 	"ScreenVisualOn"

@@ -97,6 +97,11 @@
 		"ru"			"Ваша дальняя способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
 	}
 
+	"AndConjunction"
+	{
+		"ru"			"и"
+	}
+
 	"ButtonMode"
 	{
 		"ru"			"Кнопочный режим"
@@ -634,137 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} боеприпасы{default} закончился!"
+		"ru"			"боеприпасы"
 	}
 
 	"RewardAttackBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление атаки{default} закончился!"
+		"ru"			"усиление атаки"
 	}
 
 	"RewardDamageBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за убийство{olive} '{1}'{default}!"
+		"ru"			"усиление урона"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление урона{default} закончился!"
+		"ru"			"Ваш бонус:{yellow} {1}{default} закончился!"
 	}
 
 	"RewardGod"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} режим бога{default} закончился!"
+		"ru"			"режим бога"
 	}
 
 	"RewardHealth"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление здоровье{default} закончилось!"
+		"ru"			"усиление здоровья"
 	}
 
 	"RewardInfAmmo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} бесконечный боезапас{default} закончился!"
+		"ru"			"бесконечный боезапас"
 	}
 
 	"RewardItem"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство{olive} '{2}'{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за наибольшую помощь в убийстве{olive} '{2}'{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default}."
 	}
 
 	"RewardLadyKiller"
@@ -777,6 +687,21 @@
 		"ru"			"В вашем бонусе:{mint} Женоубийца{default} осталось{yellow} {1}{default} использований."
 	}
 
+	"RewardList"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство{olive} '{2}'{default}!"
+	}
+
+	"RewardList2"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за наибольшую помощь в убийстве{olive} '{2}'{default}!"
+	}
+
+	"RewardList3"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
+	}
+
 	"RewardNone"
 	{
 		"ru"			"Вы{default} не нанесли достаточного урона {olive} '{1}'{default} для какой-либо награды."
@@ -784,57 +709,22 @@
 
 	"RewardRefill"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"здоровье и боеприпасы"
 	}
 
 	"RewardRespawn"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardRespawn2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"возрождение"
 	}
 
 	"RewardSolo"
 	{
-		"ru"			"Вы{default} убили в одиночку:{olive} '{1}'{default}!"
+		"ru"			"{1}{default} убили в одиночку:{olive} '{2}'{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardSpeedBoost2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardSpeedBoost3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardSpeedBoostEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} ускорение{default} закончился!"
+		"ru"			"ускорение"
 	}
 
 	"ScreenVisualOn"

@@ -100,6 +100,11 @@
 		"en"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 	}
 
+	"AndConjunction"
+	{
+		"en"			"and"
+	}
+
 	"ButtonMode"
 	{
 		"en"			"Button Mode"
@@ -704,158 +709,44 @@
 
 	"RewardAmmo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"en"			"Your{yellow} ammunition boost{default} ended!"
+		"en"			"ammunition boost"
 	}
 
 	"RewardAttackBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"en"			"Your{yellow} attack boost{default} ended!"
+		"en"			"attack boost"
 	}
 
 	"RewardDamageBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
+		"en"			"damage boost"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"en"			"Your{yellow} damage boost{default} ended!"
+		"#format"		"{1:s}"
+		"en"			"Your{yellow} {1}{default} ended!"
 	}
 
 	"RewardGod"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"en"			"Your{yellow} god mode{default} ended!"
+		"en"			"god mode"
 	}
 
 	"RewardHealth"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"en"			"Your{yellow} health boost{default} ended!"
+		"en"			"health boost"
 	}
 
 	"RewardInfAmmo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"en"			"Your{yellow} infinite ammo{default} ended!"
+		"en"			"infinite ammo"
 	}
 
 	"RewardItem"
 	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"#format"		"{1:s}"
+		"en"			"You{default} received{yellow} {1}{default}."
 	}
 
 	"RewardLadyKiller"
@@ -870,6 +761,24 @@
 		"en"			"Your{mint} Lady Killer{default} has{yellow} {1}{default} use(s) left."
 	}
 
+	"RewardList"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+	}
+
+	"RewardList3"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
@@ -878,67 +787,23 @@
 
 	"RewardRefill"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
+		"en"			"health and ammunition"
 	}
 
 	"RewardRespawn"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardRespawn2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
+		"en"			"respawn"
 	}
 
 	"RewardSolo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} soloed{olive} {1}{default}!"
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} soloed{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardSpeedBoost2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardSpeedBoost3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardSpeedBoostEnd"
-	{
-		"en"			"Your{yellow} speed boost{default} ended!"
+		"en"			"speed boost"
 	}
 
 	"ScreenVisualOn"

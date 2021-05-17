@@ -97,6 +97,11 @@
 		"chi"			"你的范围能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
 	}
 
+	"AndConjunction"
+	{
+		"chi"			"和"
+	}
+
 	"ButtonMode"
 	{
 		"chi"			"按键模式"
@@ -634,137 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"chi"			"你的{yellow} 弹药加成{default} 结束了!"
+		"chi"			"弹药加成"
 	}
 
 	"RewardAttackBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"chi"			"你的{yellow} 攻击加成{default} 结束了!"
+		"chi"			"攻击加成"
 	}
 
 	"RewardDamageBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
+		"chi"			"伤害加成"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 伤害加成{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"chi"			"你的{yellow} 伤害加成{default} 结束了!"
+		"chi"			"你的{yellow} {1}{default} 结束了!"
 	}
 
 	"RewardGod"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"chi"			"你的{yellow} 无敌{default} 已结束!"
+		"chi"			"无敌"
 	}
 
 	"RewardHealth"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"chi"			"你的{yellow} 生命值加成{default} 结束了!"
+		"chi"			"生命值加成"
 	}
 
 	"RewardInfAmmo"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"chi"			"你的{yellow} 无限弹药{default} 已结束!"
+		"chi"			"无限弹药"
 	}
 
 	"RewardItem"
 	{
-		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"chi"			"你协助队友击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+		"chi"			"你{default} 获得了{yellow} {1}{default}."
 	}
 
 	"RewardLadyKiller"
@@ -777,6 +687,21 @@
 		"chi"			"你的{mint} 女巫杀手{default} 还剩下{yellow} {1}{default} 次可用."
 	}
 
+	"RewardList"
+	{
+		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"chi"			"你协助队友击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
+	}
+
+	"RewardList3"
+	{
+		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"chi"			"你对{default}{olive} {1}{default} 的伤害不足, 无法获得任何奖励."
@@ -784,57 +709,22 @@
 
 	"RewardRefill"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值和弹药{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
+		"chi"			"生命值和弹药"
 	}
 
 	"RewardRespawn"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
-	}
-
-	"RewardRespawn2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 复活{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
+		"chi"			"复活"
 	}
 
 	"RewardSolo"
 	{
-		"chi"			"你{default} 独自击杀了{olive} {1}{default}!"
+		"chi"			"{1}{default} 独自击杀了{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
-	}
-
-	"RewardSpeedBoost2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 速度加成{default}!"
-	}
-
-	"RewardSpeedBoost3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
-	}
-
-	"RewardSpeedBoostEnd"
-	{
-		"chi"			"你的{yellow} 速度加成{default} 已结束!"
+		"chi"			"速度加成"
 	}
 
 	"ScreenVisualOn"
