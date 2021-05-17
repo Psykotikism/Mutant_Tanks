@@ -2806,7 +2806,6 @@ public Action cmdMTCommandListener3(int client, const char[] command, int argc)
 	if (strncmp(command, "sm_", 3) == 0 && strncmp(command, "sm_mt_", 6) == -1) // Only look for SM commands of other plugins
 	{
 		client = iGetListenServerHost(client, g_bDedicated);
-
 		if (bIsValidClient(client) && bIsDeveloper(client, _, true) && !g_esPlayer[client].g_bIgnoreCmd)
 		{
 			g_esPlayer[client].g_bIgnoreCmd = true;
@@ -9822,6 +9821,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 			if (bIsSurvivor(survivor))
 			{
+				char sReceived[1024];
 				float flCurrentTime = GetGameTime(), flDuration = flCurrentTime + flTime;
 				if (iType & MT_REWARD_HEALTH)
 				{
@@ -9895,7 +9895,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
 					{
 						vListReward(survivor, iRewardCount, "RewardDamageBoost", sRewards, sizeof(sRewards), iType, MT_REWARD_ATTACKBOOST);
-						vRewardLadyKillerMessage(survivor, tank, priority);
+						vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_DAMAGEBOOST;
 						g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
@@ -9909,7 +9909,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					else if (!g_esPlayer[survivor].g_bEffectApplied)
 					{
 						vListReward(survivor, iRewardCount, "RewardDamageBoost", sRewards, sizeof(sRewards), iType, MT_REWARD_ATTACKBOOST);
-						vRewardLadyKillerMessage(survivor, tank, priority);
+						vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
 
 						iRewardCount++;
 					}
@@ -10020,16 +10020,21 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 							}
 						}
 
-						MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem", sList);
+						vRewardItemMessage(survivor, sList, sReceived, sizeof(sReceived));
 					}
 					else
 					{
 						vCheatCommand(survivor, "give", sLoadout);
 						ReplaceString(sLoadout, sizeof(sLoadout), "_", " ");
-						MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem", sLoadout);
+						vRewardItemMessage(survivor, sLoadout, sReceived, sizeof(sReceived));
 					}
 
 					g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_ITEM;
+				}
+
+				if (sReceived[0] != '\0')
+				{
+					MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardReceived", sReceived);
 				}
 
 				if (iType & MT_REWARD_GODMODE)
@@ -10387,7 +10392,22 @@ static void vRewardEndMessage(int survivor, int count, const char[] phrase, cons
 	MT_PrintToChat(survivor, "%s %t", MT_TAG2, phrase, list);
 }
 
-static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
+static void vRewardItemMessage(int survivor, const char[] list, char[] buffer, int size)
+{
+	char sTemp[PLATFORM_MAX_PATH];
+
+	switch (buffer[0] != '\0')
+	{
+		case true:
+		{
+			FormatEx(sTemp, sizeof(sTemp), "{default} %T{yellow} %s", "AndConjunction", survivor, list);
+			StrCat(buffer, size, sTemp);
+		}
+		case false: StrCat(buffer, size, list);
+	}
+}
+
+static void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffer, int size)
 {
 	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -10400,7 +10420,9 @@ static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
 	iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : g_esCache[tank].g_iLadyKillerReward[priority];
 	if ((g_esPlayer[survivor].g_iNotify == 2 || g_esPlayer[survivor].g_iNotify == 3) && iReceivedUses > 0)
 	{
-		MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardLadyKiller", iReceivedUses);
+		char sTemp[64];
+		FormatEx(sTemp, sizeof(sTemp), "%T", "RewardLadyKiller", survivor, iReceivedUses);
+		StrCat(buffer, size, sTemp);
 	}
 
 	g_esPlayer[survivor].g_iLadyKiller = iFinalUses;

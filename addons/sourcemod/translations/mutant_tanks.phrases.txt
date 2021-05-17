@@ -743,16 +743,10 @@
 		"en"			"infinite ammo"
 	}
 
-	"RewardItem"
-	{
-		"#format"		"{1:s}"
-		"en"			"You{default} received{yellow} {1}{default}."
-	}
-
 	"RewardLadyKiller"
 	{
 		"#format"		"{1:i}"
-		"en"			"You{default} received{yellow} {1}{default} use(s) of{mint} Lady killer{default}."
+		"en"			"{1}{default} use(s) of{mint} Lady Killer"
 	}
 
 	"RewardLadyKiller2"
@@ -783,6 +777,12 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
+	}
+
+	"RewardReceived"
+	{
+		"#format"		"{1:s}"
+		"en"			"You{default} received{yellow} {1}{default}."
 	}
 
 	"RewardRefill"

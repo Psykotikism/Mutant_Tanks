@@ -672,14 +672,9 @@
 		"hu"			"végtelen lőszert"
 	}
 
-	"RewardItem"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default}."
-	}
-
 	"RewardLadyKiller"
 	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} nőcsábász{mint} használatot{default}."
+		"hu"			"{1}{mint} nőcsábász{default} használatot"
 	}
 
 	"RewardLadyKiller2"
@@ -705,6 +700,11 @@
 	"RewardNone"
 	{
 		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
+	}
+
+	"RewardReceived"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default}."
 	}
 
 	"RewardRefill"
