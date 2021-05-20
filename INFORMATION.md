@@ -556,6 +556,11 @@
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite ammo reward (temporary)
+			// - Infinite ammo for primary weapons
+			// - Infinite ammo for secondary weapons
+			// - Infinite ammo for throwables
+			// - Infinite ammo for medkits/defibs/ammo packs
+			// - Infinite ammo for pills/adrenaline
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -641,6 +646,11 @@
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite ammo reward (temporary)
+			// - Infinite ammo for primary weapons
+			// - Infinite ammo for secondary weapons
+			// - Infinite ammo for throwables
+			// - Infinite ammo for medkits/defibs/ammo packs
+			// - Infinite ammo for pills/adrenaline
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -974,6 +984,29 @@
 			// 3rd number = Give hollowpoint ammo to teammates.
 			"Hollowpoint Ammo Reward"		"1,1,1"
 
+			// Give infinite ammo as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 31
+			// --
+			// 0: OFF
+			// 1: Infinite ammo for primary weapons
+			// 2: Infinite ammo for secondary weapons
+			// 4: Infinite ammo for throwables
+			// 8: Infinite ammo for medkits/defibs/ammo packs
+			// 16: Infinite ammo for pills/adrenaline
+			// --
+			// 1st number = Give infinite ammo to killers.
+			// 2nd number = Give infinite ammo to assistants.
+			// 3rd number = Give infinite ammo to teammates.
+			"Infinite Ammo Reward"			"31,31,31"
+
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -1237,7 +1270,7 @@
 			// 1st number = Give thorns to killers.
 			// 2nd number = Give thorns to assistants.
 			// 3rd number = Give thorns to teammates.
-			"Thorns Reward"			"1,1,1"
+			"Thorns Reward"				"1,1,1"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting can be used for standard Tanks.
@@ -2417,6 +2450,11 @@
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite ammo reward (temporary)
+			// - Infinite ammo for primary weapons
+			// - Infinite ammo for secondary weapons
+			// - Infinite ammo for throwables
+			// - Infinite ammo for medkits/defibs/ammo packs
+			// - Infinite ammo for pills/adrenaline
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -2502,6 +2540,11 @@
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite ammo reward (temporary)
+			// - Infinite ammo for primary weapons
+			// - Infinite ammo for secondary weapons
+			// - Infinite ammo for throwables
+			// - Infinite ammo for medkits/defibs/ammo packs
+			// - Infinite ammo for pills/adrenaline
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -2700,7 +2743,7 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Ammo Regen Reward"			"1,1,1"
+			"Ammo Regen Reward"			"0,0,0"
 
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2834,6 +2877,29 @@
 			// 2nd number = Give hollowpoint ammo to assistants.
 			// 3rd number = Give hollowpoint ammo to teammates.
 			"Hollowpoint Ammo Reward"		"0,0,0"
+
+			// Give infinite ammo as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 31
+			// --
+			// 0: OFF
+			// 1: Infinite ammo for primary weapons
+			// 2: Infinite ammo for secondary weapons
+			// 4: Infinite ammo for throwables
+			// 8: Infinite ammo for medkits/defibs/ammo packs
+			// 16: Infinite ammo for pills/adrenaline
+			// --
+			// 1st number = Give infinite ammo to killers.
+			// 2nd number = Give infinite ammo to assistants.
+			// 3rd number = Give infinite ammo to teammates.
+			"Infinite Ammo Reward"			"0,0,0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3098,7 +3164,7 @@
 			// 1st number = Give thorns to killers.
 			// 2nd number = Give thorns to assistants.
 			// 3rd number = Give thorns to teammates.
-			"Thorns Reward"			"0,0,0"
+			"Thorns Reward"				"0,0,0"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

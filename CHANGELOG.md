@@ -66,11 +66,13 @@
 	- `Looping Voiceline Visual` (Requested by 3aljiyavslgazana.)
 	- `Particle Effect Visual` (Requested by 3aljiyavslgazana.)
 	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
+	- `Infinite Ammo Reward`
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
 - Added the following settings under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections:
 	- `Skip Taunt` (Thanks to Lux for the code!)
 	- `Sweep Fist` (Thanks to HarryPotter for the idea!)
 - Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
+- Increased the size of buffers for convar changes under the `Plugin Settings/ConVars` section.
 - Added the `Listen Support` setting under the `Plugin Settings/General` section.
 
 #### Translations
