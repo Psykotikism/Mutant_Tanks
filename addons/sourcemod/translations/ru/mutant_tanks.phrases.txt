@@ -697,6 +697,11 @@
 		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
 	}
 
+	"RewardList4"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство и наибольшую помощь в убийстве{olive} '{2}'{default}!"
+	}
+
 	"RewardNone"
 	{
 		"ru"			"Вы{default} не нанесли достаточного урона {olive} '{1}'{default} для какой-либо награды."

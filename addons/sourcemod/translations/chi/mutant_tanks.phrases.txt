@@ -697,6 +697,11 @@
 		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
 	}
 
+	"RewardList4"
+	{
+		"chi"			"你击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"chi"			"你对{default}{olive} {1}{default} 的伤害不足, 无法获得任何奖励."

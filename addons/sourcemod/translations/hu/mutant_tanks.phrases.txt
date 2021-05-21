@@ -697,6 +697,11 @@
 		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
 	}
 
+	"RewardList4"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted és nagyrészt segítettél{olive} {2}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."

@@ -48,6 +48,8 @@
 - Updated the logic for checking which game modes to enable/disable the plugin on. (Thanks to Shadowart for reporting!)
 - Added a `Tank #-1` option to the `sm_tank`/`sm_mt_tank` menu. (Thanks to jeremyvillanueva for the idea!)
 - Added the `sm_mt_prefs` command for players to change their reward visual settings.
+- Improved the `Reward` system's messages.
+- Rewards can now be stacked for recipients who both kill and do the most damage against Tanks.
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.

@@ -773,6 +773,12 @@
 		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
 	}
 
+	"RewardList4"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for killing and assisting the most against{olive} {2}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"#format"		"{1:t}"

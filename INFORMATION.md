@@ -538,6 +538,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
+			// - Give up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -628,6 +629,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
+			// - Give up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -2432,6 +2434,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
+			// - Give up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -2522,6 +2525,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
+			// - Give up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
