@@ -2818,7 +2818,6 @@ public Action cmdMTCommandListener3(int client, const char[] command, int argc)
 	if (strncmp(command, "sm_", 3) == 0 && strncmp(command, "sm_mt_", 6) == -1) // Only look for SM commands of other plugins
 	{
 		client = iGetListenServerHost(client, g_bDedicated);
-
 		if (bIsValidClient(client) && bIsDeveloper(client, _, true) && !g_esPlayer[client].g_bIgnoreCmd)
 		{
 			g_esPlayer[client].g_bIgnoreCmd = true;
@@ -10529,12 +10528,16 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
-				g_esPlayer[assistant].g_flHealPercent += g_esCache[tank].g_flHealPercentReward[assistPriority];
+				g_esPlayer[assistant].g_flHealPercent -= g_esCache[tank].g_flHealPercentReward[assistPriority] / 2.0;
+				g_esPlayer[assistant].g_flHealPercent = flClamp(g_esPlayer[assistant].g_flHealPercent, 1.0, 100.0);
 				g_esPlayer[assistant].g_iHealthRegen += g_esCache[tank].g_iHealthRegenReward[assistPriority];
+				g_esPlayer[assistant].g_iHealthRegen = iClamp(g_esPlayer[assistant].g_iHealthRegen, 0, MT_MAXHEALTH);
 				g_esPlayer[assistant].g_iLifeLeech += g_esCache[tank].g_iLifeLeechReward[assistPriority];
+				g_esPlayer[assistant].g_iLifeLeech = iClamp(g_esPlayer[assistant].g_iLifeLeech, 0, MT_MAXHEALTH);
 				g_esPlayer[assistant].g_iReviveHealth += g_esCache[tank].g_iReviveHealthReward[assistPriority];
+				g_esPlayer[assistant].g_iReviveHealth = iClamp(g_esPlayer[assistant].g_iReviveHealth, 0, MT_MAXHEALTH);
 			}
 		}
 		case MT_REWARD_SPEEDBOOST:
@@ -10546,10 +10549,12 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iFallPasses = 0;
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
 				g_esPlayer[assistant].g_flJumpHeight += g_esCache[tank].g_flJumpHeightReward[assistPriority];
+				g_esPlayer[assistant].g_flJumpHeight = flClamp(g_esPlayer[assistant].g_flJumpHeight, 0.1, 999999.0);
 				g_esPlayer[assistant].g_flSpeedBoost += g_esCache[tank].g_flSpeedBoostReward[assistPriority];
+				g_esPlayer[assistant].g_flSpeedBoost = flClamp(g_esPlayer[assistant].g_flSpeedBoost, 0.1, 999999.0);
 				g_esPlayer[assistant].g_iFallPasses = 0;
 			}
 		}
@@ -10565,14 +10570,17 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iThorns = g_esCache[tank].g_iThornsReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
 				g_esPlayer[assistant].g_flDamageBoost += g_esCache[tank].g_flDamageBoostReward[assistPriority];
-				g_esPlayer[assistant].g_flDamageResistance += g_esCache[tank].g_flDamageResistanceReward[assistPriority];
-				g_esPlayer[assistant].g_iHollowpointAmmo += g_esCache[tank].g_iHollowpointAmmoReward[assistPriority];
+				g_esPlayer[assistant].g_flDamageBoost = flClamp(g_esPlayer[assistant].g_flDamageBoost, 0.1, 999999.0);
+				g_esPlayer[assistant].g_flDamageResistance -= g_esCache[tank].g_flDamageResistanceReward[assistPriority] / 2.0;
+				g_esPlayer[assistant].g_flDamageResistance = flClamp(g_esPlayer[assistant].g_flDamageResistance, 0.1, 1.0);
+				g_esPlayer[assistant].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[assistPriority];
 				g_esPlayer[assistant].g_iMeleeRange += g_esCache[tank].g_iMeleeRangeReward[assistPriority];
-				g_esPlayer[assistant].g_iSledgehammerRounds += g_esCache[tank].g_iSledgehammerRoundsReward[assistPriority];
-				g_esPlayer[assistant].g_iThorns += g_esCache[tank].g_iThornsReward[assistPriority];
+				g_esPlayer[assistant].g_iMeleeRange = iClamp(g_esPlayer[assistant].g_iMeleeRange, 0, 999999);
+				g_esPlayer[assistant].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[assistPriority];
+				g_esPlayer[assistant].g_iThorns = g_esCache[tank].g_iThornsReward[assistPriority];
 			}
 		}
 		case MT_REWARD_ATTACKBOOST:
@@ -10586,13 +10594,17 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
-				g_esPlayer[assistant].g_flActionDuration += g_esCache[tank].g_flActionDurationReward[assistPriority];
+				g_esPlayer[assistant].g_flActionDuration -= g_esCache[tank].g_flActionDurationReward[assistPriority] / 2.0;
+				g_esPlayer[assistant].g_flActionDuration = flClamp(g_esPlayer[assistant].g_flActionDuration, 0.1, 999999.0);
 				g_esPlayer[assistant].g_flAttackBoost += g_esCache[tank].g_flAttackBoostReward[assistPriority];
+				g_esPlayer[assistant].g_flAttackBoost = flClamp(g_esPlayer[assistant].g_flAttackBoost, 0.1, 999999.0);
 				g_esPlayer[assistant].g_flShoveDamage += g_esCache[tank].g_flShoveDamageReward[assistPriority];
-				g_esPlayer[assistant].g_flShoveRate += g_esCache[tank].g_flShoveRateReward[assistPriority];
-				g_esPlayer[assistant].g_iShovePenalty += g_esCache[tank].g_iShovePenaltyReward[assistPriority];
+				g_esPlayer[assistant].g_flShoveDamage = flClamp(g_esPlayer[assistant].g_flShoveDamage, 0.1, 999999.0);
+				g_esPlayer[assistant].g_flShoveRate -= g_esCache[tank].g_flShoveRateReward[assistPriority] / 2.0;
+				g_esPlayer[assistant].g_flShoveRate = flClamp(g_esPlayer[assistant].g_flShoveRate, 0.1, 999999.0);
+				g_esPlayer[assistant].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[assistPriority];
 			}
 		}
 		case MT_REWARD_AMMO:
@@ -10604,11 +10616,13 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iSpecialAmmo = g_esCache[tank].g_iSpecialAmmoReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
-				g_esPlayer[assistant].g_iAmmoBoost += g_esCache[tank].g_iAmmoBoostReward[assistPriority];
+				g_esPlayer[assistant].g_iAmmoBoost = g_esCache[tank].g_iAmmoBoostReward[assistPriority];
 				g_esPlayer[assistant].g_iAmmoRegen += g_esCache[tank].g_iAmmoRegenReward[assistPriority];
-				g_esPlayer[assistant].g_iSpecialAmmo += g_esCache[tank].g_iSpecialAmmoReward[assistPriority];
+				g_esPlayer[assistant].g_iAmmoRegen = iClamp(g_esPlayer[assistant].g_iAmmoRegen, 0, 999999);
+				g_esPlayer[assistant].g_iSpecialAmmo |= g_esCache[tank].g_iSpecialAmmoReward[assistPriority];
+				g_esPlayer[assistant].g_iSpecialAmmo = iClamp(g_esPlayer[assistant].g_iSpecialAmmo, 0, 3);
 			}
 		}
 		case MT_REWARD_GODMODE:
@@ -10619,10 +10633,11 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iCleanKills = g_esCache[tank].g_iCleanKillsReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
-				g_esPlayer[assistant].g_flPunchResistance += g_esCache[tank].g_flPunchResistanceReward[assistPriority];
-				g_esPlayer[assistant].g_iCleanKills += g_esCache[tank].g_iCleanKillsReward[assistPriority];
+				g_esPlayer[assistant].g_flPunchResistance -= g_esCache[tank].g_flPunchResistanceReward[assistPriority] / 2.0;
+				g_esPlayer[assistant].g_flPunchResistance = flClamp(g_esPlayer[assistant].g_flPunchResistance, 0.1, 1.0);
+				g_esPlayer[assistant].g_iCleanKills = g_esCache[tank].g_iCleanKillsReward[assistPriority];
 			}
 		}
 		case MT_REWARD_INFAMMO:
@@ -10632,9 +10647,10 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 				g_esPlayer[survivor].g_iInfiniteAmmo = g_esCache[tank].g_iInfiniteAmmoReward[priority];
 			}
 
-			if (survivor == assistant && assistPriority != -1 && ((assistTypes & type) || (g_esDeveloper[survivor].g_iDevRewardTypes & type)))
+			if (survivor == assistant && assistPriority != -1 && (assistTypes & type))
 			{
 				g_esPlayer[assistant].g_iInfiniteAmmo |= g_esCache[tank].g_iInfiniteAmmoReward[assistPriority];
+				g_esPlayer[assistant].g_iInfiniteAmmo = iClamp(g_esPlayer[assistant].g_iInfiniteAmmo, 0, 31);
 			}
 		}
 	}
@@ -15718,10 +15734,10 @@ public Action tTimerRefreshRewards(Handle timer)
 				switch (iPos)
 				{
 					case 0: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH);
-					case 1: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO);
-					case 2: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST);
-					case 3: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
-					case 4: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
+					case 1: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST);
+					case 2: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
+					case 3: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
+					case 4: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO);
 					case 5: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE);
 					case 6: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_INFAMMO);
 				}
