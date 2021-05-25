@@ -174,6 +174,9 @@ public void MT_OnPluginEnd()
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
+#if defined MT_MENU_ITEM
+	vItemEntityCreated(entity, classname);
+#endif
 #if defined MT_MENU_KAMIKAZE
 	vKamikazeEntityCreated(entity, classname);
 #endif
@@ -1864,6 +1867,13 @@ public Action MT_OnFatalFalling(int survivor)
 	vChokeFatalFalling(survivor);
 #endif
 	return Plugin_Continue;
+}
+
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+{
+#if defined MT_MENU_ITEM
+	vItemPlayerEventKilled(victim, attacker);
+#endif
 }
 
 public Action MT_OnPlayerHitByVomitJar(int player, int thrower)

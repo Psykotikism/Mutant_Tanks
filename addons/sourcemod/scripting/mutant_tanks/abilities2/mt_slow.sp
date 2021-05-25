@@ -61,6 +61,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_SLOW "Slow Ability"
 
+#define MT_STEP_DEFAULTSIZE 18.0 // default step size
+
 enum struct esSlowPlayer
 {
 	bool g_bAffected;
@@ -88,6 +90,7 @@ enum struct esSlowPlayer
 	int g_iSlowEffect;
 	int g_iSlowHit;
 	int g_iSlowHitMode;
+	int g_iSlowIncline;
 	int g_iSlowMessage;
 	int g_iTankType;
 }
@@ -114,6 +117,7 @@ enum struct esSlowAbility
 	int g_iSlowEffect;
 	int g_iSlowHit;
 	int g_iSlowHitMode;
+	int g_iSlowIncline;
 	int g_iSlowMessage;
 }
 
@@ -137,6 +141,7 @@ enum struct esSlowCache
 	int g_iSlowEffect;
 	int g_iSlowHit;
 	int g_iSlowHitMode;
+	int g_iSlowIncline;
 	int g_iSlowMessage;
 }
 
@@ -510,6 +515,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSlowAbility[iIndex].g_flSlowDuration = 5.0;
 				g_esSlowAbility[iIndex].g_iSlowHit = 0;
 				g_esSlowAbility[iIndex].g_iSlowHitMode = 0;
+				g_esSlowAbility[iIndex].g_iSlowIncline = 1;
 				g_esSlowAbility[iIndex].g_flSlowRange = 150.0;
 				g_esSlowAbility[iIndex].g_flSlowRangeChance = 15.0;
 				g_esSlowAbility[iIndex].g_flSlowSpeed = 0.25;
@@ -536,6 +542,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSlowPlayer[iPlayer].g_flSlowDuration = 0.0;
 					g_esSlowPlayer[iPlayer].g_iSlowHit = 0;
 					g_esSlowPlayer[iPlayer].g_iSlowHitMode = 0;
+					g_esSlowPlayer[iPlayer].g_iSlowIncline = 0;
 					g_esSlowPlayer[iPlayer].g_flSlowRange = 0.0;
 					g_esSlowPlayer[iPlayer].g_flSlowRangeChance = 0.0;
 					g_esSlowPlayer[iPlayer].g_flSlowSpeed = 0.0;
@@ -566,6 +573,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSlowPlayer[admin].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowPlayer[admin].g_flSlowDuration, value, 0.1, 999999.0);
 		g_esSlowPlayer[admin].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowPlayer[admin].g_iSlowHit, value, 0, 1);
 		g_esSlowPlayer[admin].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowPlayer[admin].g_iSlowHitMode, value, 0, 2);
+		g_esSlowPlayer[admin].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowPlayer[admin].g_iSlowIncline, value, 0, 1);
 		g_esSlowPlayer[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowPlayer[admin].g_flSlowRange, value, 1.0, 999999.0);
 		g_esSlowPlayer[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowPlayer[admin].g_flSlowRangeChance, value, 0.0, 100.0);
 		g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, 0.1, 0.9);
@@ -588,6 +596,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSlowAbility[type].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowAbility[type].g_flSlowDuration, value, 0.1, 999999.0);
 		g_esSlowAbility[type].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowAbility[type].g_iSlowHit, value, 0, 1);
 		g_esSlowAbility[type].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowAbility[type].g_iSlowHitMode, value, 0, 2);
+		g_esSlowAbility[type].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowAbility[type].g_iSlowIncline, value, 0, 1);
 		g_esSlowAbility[type].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowAbility[type].g_flSlowRange, value, 1.0, 999999.0);
 		g_esSlowAbility[type].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowAbility[type].g_flSlowRangeChance, value, 0.0, 100.0);
 		g_esSlowAbility[type].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowAbility[type].g_flSlowSpeed, value, 0.1, 0.9);
@@ -618,6 +627,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esSlowCache[tank].g_iSlowEffect = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowEffect, g_esSlowAbility[type].g_iSlowEffect);
 	g_esSlowCache[tank].g_iSlowHit = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHit, g_esSlowAbility[type].g_iSlowHit);
 	g_esSlowCache[tank].g_iSlowHitMode = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowHitMode, g_esSlowAbility[type].g_iSlowHitMode);
+	g_esSlowCache[tank].g_iSlowIncline = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowIncline, g_esSlowAbility[type].g_iSlowIncline);
 	g_esSlowCache[tank].g_iSlowMessage = iGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_iSlowMessage, g_esSlowAbility[type].g_iSlowMessage);
 	g_esSlowPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -879,6 +889,11 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esSlowCache[tank].g_flSlowSpeed;
 				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flSpeed);
 
+				if (g_esSlowCache[tank].g_iSlowIncline == 1)
+				{
+					SetEntPropFloat(survivor, Prop_Send, "m_flStepSize", 1.0);
+				}
+
 				static float flDuration;
 				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esSlowCache[tank].g_flSlowDuration;
 				DataPack dpStopSlow;
@@ -923,6 +938,7 @@ void vStopSlow(int survivor)
 	g_esSlowPlayer[survivor].g_iOwner = 0;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	SetEntPropFloat(survivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
 	EmitSoundToAll(SOUND_DRIP, survivor);
 }
 

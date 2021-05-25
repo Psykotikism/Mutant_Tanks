@@ -57,13 +57,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_ITEM "Item Ability"
 
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
+#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+
 enum struct esItemPlayer
 {
 	bool g_bActivated;
 
 	char g_sItemLoadout[325];
+	char g_sItemPinata[325];
 
 	float g_flItemChance;
+	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -73,6 +79,7 @@ enum struct esItemPlayer
 	int g_iItemAbility;
 	int g_iItemMessage;
 	int g_iItemMode;
+	int g_iItemPinataBody;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -82,8 +89,10 @@ esItemPlayer g_esItemPlayer[MAXPLAYERS + 1];
 enum struct esItemAbility
 {
 	char g_sItemLoadout[325];
+	char g_sItemPinata[325];
 
 	float g_flItemChance;
+	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -93,6 +102,7 @@ enum struct esItemAbility
 	int g_iItemAbility;
 	int g_iItemMessage;
 	int g_iItemMode;
+	int g_iItemPinataBody;
 	int g_iRequiresHumans;
 }
 
@@ -101,8 +111,10 @@ esItemAbility g_esItemAbility[MT_MAXTYPES + 1];
 enum struct esItemCache
 {
 	char g_sItemLoadout[325];
+	char g_sItemPinata[325];
 
 	float g_flItemChance;
+	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
 
 	int g_iComboAbility;
@@ -110,10 +122,13 @@ enum struct esItemCache
 	int g_iItemAbility;
 	int g_iItemMessage;
 	int g_iItemMode;
+	int g_iItemPinataBody;
 	int g_iRequiresHumans;
 }
 
 esItemCache g_esItemCache[MAXPLAYERS + 1];
+
+int g_iItemDeathModelOwner = 0;
 
 #if !defined MT_ABILITIES_MAIN
 public void OnPluginStart()
@@ -290,6 +305,54 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN
+void vItemEntityCreated(int entity, const char[] classname)
+#else
+public void OnEntityCreated(int entity, const char[] classname)
+#endif
+{
+	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
+	{
+		int iOwner = GetClientOfUserId(g_iItemDeathModelOwner);
+		if (bIsValidClient(iOwner))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnItemModelSpawnPost);
+		}
+
+		g_iItemDeathModelOwner = 0;
+	}
+}
+
+public void OnItemModelSpawnPost(int model)
+{
+	g_iItemDeathModelOwner = 0;
+
+	SDKUnhook(model, SDKHook_SpawnPost, OnItemModelSpawnPost);
+
+	if (!bIsValidEntity(model))
+	{
+		return;
+	}
+
+	RemoveEntity(model);
+}
+
+public Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	return Plugin_Handled;
+}
+
+public void OnItemUse(int entity, int activator, int caller, UseType type, float value)
+{
+	if (!bIsValidEntity(entity))
+	{
+		return;
+	}
+	
+	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
+	SDKUnhook(entity, SDKHook_Use, OnItemUse);
+}
+
+#if defined MT_ABILITIES_MAIN
 void vItemPluginCheck(ArrayList list)
 #else
 public void MT_OnPluginCheck(ArrayList list)
@@ -379,6 +442,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esItemAbility[iIndex].g_flItemChance = 33.3;
 				g_esItemAbility[iIndex].g_sItemLoadout = "rifle,pistol,first_aid_kit,pain_pills";
 				g_esItemAbility[iIndex].g_iItemMode = 0;
+				g_esItemAbility[iIndex].g_sItemPinata[0] = '\0';
+				g_esItemAbility[iIndex].g_iItemPinataBody = 1;
+				g_esItemAbility[iIndex].g_flItemPinataChance = 33.3;
 			}
 		}
 		case 3:
@@ -398,6 +464,9 @@ public void MT_OnConfigsLoad(int mode)
 					g_esItemPlayer[iPlayer].g_flItemChance = 0.0;
 					g_esItemPlayer[iPlayer].g_sItemLoadout[0] = '\0';
 					g_esItemPlayer[iPlayer].g_iItemMode = 0;
+					g_esItemPlayer[iPlayer].g_sItemPinata[0] = '\0';
+					g_esItemPlayer[iPlayer].g_iItemPinataBody = 0;
+					g_esItemPlayer[iPlayer].g_flItemPinataChance = 0.0;
 				}
 			}
 		}
@@ -420,10 +489,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemPlayer[admin].g_iItemMessage, value, 0, 1);
 		g_esItemPlayer[admin].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemPlayer[admin].g_flItemChance, value, 0.0, 100.0);
 		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 1);
+		g_esItemPlayer[admin].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemPlayer[admin].g_iItemPinataBody, value, 0, 1);
+		g_esItemPlayer[admin].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemPlayer[admin].g_flItemPinataChance, value, 0.0, 100.0);
 		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof(esItemPlayer::g_sItemLoadout), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof(esItemPlayer::g_sItemPinata), value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -436,10 +508,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemAbility[type].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemAbility[type].g_iItemMessage, value, 0, 1);
 		g_esItemAbility[type].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemAbility[type].g_flItemChance, value, 0.0, 100.0);
 		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 1);
+		g_esItemAbility[type].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemAbility[type].g_iItemPinataBody, value, 0, 1);
+		g_esItemAbility[type].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemAbility[type].g_flItemPinataChance, value, 0.0, 100.0);
 		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof(esItemAbility::g_sItemLoadout), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof(esItemAbility::g_sItemPinata), value);
 	}
 }
 
@@ -451,16 +526,19 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esItemCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemChance, g_esItemAbility[type].g_flItemChance);
+	g_esItemCache[tank].g_flItemPinataChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemAbility[type].g_flItemPinataChance);
 	g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[type].g_iComboAbility);
 	g_esItemCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iHumanAbility, g_esItemAbility[type].g_iHumanAbility);
 	g_esItemCache[tank].g_iItemAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemAbility, g_esItemAbility[type].g_iItemAbility);
 	g_esItemCache[tank].g_iItemMessage = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMessage, g_esItemAbility[type].g_iItemMessage);
 	g_esItemCache[tank].g_iItemMode = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMode, g_esItemAbility[type].g_iItemMode);
+	g_esItemCache[tank].g_iItemPinataBody = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemPinataBody, g_esItemAbility[type].g_iItemPinataBody);
 	g_esItemCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemAbility[type].g_flOpenAreasOnly);
 	g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans);
 	g_esItemPlayer[tank].g_iTankType = apply ? type : 0;
 
 	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -507,6 +585,36 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vItemReset();
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
+void vItemPlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
+	{
+		float flPos[3];
+		GetClientAbsOrigin(victim, flPos);
+		flPos[2] += 50.0;
+
+		char sItems[5][64];
+		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), " ", "");
+		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+		{
+			if (sItems[iItem][0] != '\0')
+			{
+				vSpawnItem(sItems[iItem], flPos);
+			}
+		}
+
+		if (g_esItemCache[attacker].g_iItemPinataBody == 1)
+		{
+			g_iItemDeathModelOwner = GetClientUserId(victim);
+		}
 	}
 }
 
@@ -634,6 +742,113 @@ void vItemReset()
 	}
 }
 
+void vSpawnItem(const char[] name, float pos[3])
+{
+	char sClassname[32];
+	int iItem = -1, iType = 0;
+	if (StrEqual(name, "gascan") || StrEqual(name, "propanetank") || StrEqual(name, "oxygentank") || StrEqual(name, "fireworkcrate"))
+	{
+		iType = 1;
+	}
+	else if (StrEqual(name, "grenade_launcher") || StrContains(name, "pistol") == 0 || StrContains(name, "rifle") != -1
+		|| StrContains(name, "smg") == 0 || StrContains(name, "shotgun") != -1 || StrContains(name, "sniper") == 0)
+	{
+		iType = 2;
+	}
+	else if (StrEqual(name, "molotov") || StrEqual(name, "pipe_bomb") || StrEqual(name, "vomitjar") || StrEqual(name, "first_aid_kit")
+		|| StrEqual(name, "defibrillator") || StrContains(name, "upgrade") != -1 || StrEqual(name, "pain_pills") || StrEqual(name, "adrenaline"))
+	{
+		iType = 3;
+	}
+	else
+	{
+		iType = 4;
+	}
+
+	switch (iType)
+	{
+		case 1:
+		{
+			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+
+			switch (StrEqual(sClassname, "weapon_gascan"))
+			{
+				case true: iItem = CreateEntityByName(sClassname);
+				case false:
+				{
+					iItem = CreateEntityByName("prop_physics");
+					if (bIsValidEntity(iItem))
+					{
+						if (StrEqual(name, "fireworkcrate"))
+						{
+							SetEntityModel(iItem, MODEL_FIREWORKCRATE);
+						}
+						else if (StrEqual(name, "oxygentank"))
+						{
+							SetEntityModel(iItem, MODEL_OXYGENTANK);
+						}
+						else if (StrEqual(name, "propanetank"))
+						{
+							SetEntityModel(iItem, MODEL_PROPANETANK);
+						}
+					}
+				}
+			}
+
+			if (bIsValidEntity(iItem))
+			{
+				SDKHook(iItem, SDKHook_OnTakeDamage, OnItemTakeDamage);
+				SDKHook(iItem, SDKHook_Use, OnItemUse);
+				CreateTimer(3.0, tTimerRemoveItemHooks, EntIndexToEntRef(iItem), TIMER_FLAG_NO_MAPCHANGE);
+			}
+		}
+		case 2, 3:
+		{
+			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+			iItem = CreateEntityByName(sClassname);
+		}
+		case 4:
+		{
+			iItem = CreateEntityByName("weapon_melee");
+			if (bIsValidEntity(iItem))
+			{
+				DispatchKeyValue(iItem, "melee_script_name", name);
+			}
+		}
+	}
+
+	if (bIsValidEntity(iItem))
+	{
+		TeleportEntity(iItem, pos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iItem);
+		ActivateEntity(iItem);
+
+		if (iType == 2)
+		{
+			if (StrContains(name, "rifle") == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 300);
+			}
+			else if (StrContains(name, "smg") == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 600);
+			}
+			else if (StrEqual(name, "autoshotgun") || StrEqual(name, "shotgun_spas"))
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 100);
+			}
+			else if (StrEqual(name, "pumpshotgun") || StrEqual(name, "shotgun_chrome"))
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 50);
+			}
+			else if (StrEqual(name, "hunting_rifle") || StrContains(name, "sniper") == 0)
+			{
+				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 150);
+			}
+		}
+	}
+}
+
 public Action tTimerItemCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -643,6 +858,20 @@ public Action tTimerItemCombo(Handle timer, int userid)
 	}
 
 	g_esItemPlayer[iTank].g_bActivated = true;
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRemoveItemHooks(Handle timer, int ref)
+{
+	int iItem = EntRefToEntIndex(ref);
+	if (!bIsValidEntity(iItem))
+	{
+		return Plugin_Stop;
+	}
+	
+	SDKUnhook(iItem, SDKHook_OnTakeDamage, OnItemTakeDamage);
+	SDKUnhook(iItem, SDKHook_Use, OnItemUse);
 
 	return Plugin_Continue;
 }

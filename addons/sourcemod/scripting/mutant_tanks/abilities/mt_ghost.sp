@@ -52,7 +52,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
 #define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_TANK_MAIN "models/infected/hulk.mdl"
 #define MODEL_TANK_DLC "models/infected/hulk_dlc3.mdl"
@@ -1191,13 +1191,13 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	{
 		static char sModel[128];
 		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
+		if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
 		{
 			static int iTank;
 			iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iTank == tank)
 			{
-				if (StrEqual(sModel, MODEL_JETPACK, false))
+				if (StrEqual(sModel, MODEL_OXYGENTANK, false))
 				{
 					static int iOzTankColor[4];
 					MT_GetPropColors(tank, 2, iOzTankColor[0], iOzTankColor[1], iOzTankColor[2], iOzTankColor[3]);

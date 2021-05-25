@@ -1257,6 +1257,23 @@
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"1.25,1.25,1.25"
 
+			// Allow rewards from Mutant Tanks to be stacked.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Stack rewards for killers.
+			// 2nd number = Stack rewards for assistants.
+			// 3rd number = Stack rewards for teammates.
+			"Stack Rewards"				"1,1,1"
+
 			// Give thorns as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -3152,6 +3169,23 @@
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"0.0,0.0,0.0"
+
+			// Allow rewards from the Mutant Tank to be stacked.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Stack rewards for killers.
+			// 2nd number = Stack rewards for assistants.
+			// 3rd number = Stack rewards for teammates.
+			"Stack Rewards"				"0,0,0"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -11253,6 +11287,13 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gives survivors items upon death.
+		// "Ability Enabled" - When the Mutant Tank dies, it gives survivors items.
+		// - "Item Chance"
+		// - "Item Loadout"
+		// - "Item Mode"
+		// "Item Pinata" - When the Mutant Tank kills a survivor, the survivor drops items.
+		// - "Item Pinata Body"
+		// - "Item Pinata Chance"
 		// Requires "mt_abilities.smx" to be compiled with "mt_item.sp" to work.
 		"Item Ability"
 		{
@@ -11356,6 +11397,42 @@
 			// 0: Survivors get a random item.
 			// 1: Survivors get all items.
 			"Item Mode"				"0"
+
+			// The Mutant Tank turns its dead survivor victims into pinatas that spawn certain items.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Item limit: 5
+			// Character limit for each item: 64
+			// --
+			// Example: "pain_pills,pain_pills,pain_pills"
+			// Example: "katana,katana,rifle_m60"
+			// Example: "first_aid_kit,defibrillator,first_aid_kit,defibrillator"
+			"Item Pinata"				""
+
+			// Removes the death model of the survivor when killed.
+			// Note: This setting only applies if the "Item Pinata" setting is not empty.
+			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Item Pinata Body"			"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to turn its dead survivor victims into pinatas.
+			// Note: This setting only applies if the "Item Pinata" setting is not empty.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Item Pinata Chance"			"33.3"
 		}
 	}
 }
@@ -16976,6 +17053,13 @@
 			// "survivor"/"hurt" - 2
 			"Slow Hit Mode"				"0"
 
+			// The Mutant Tank prevents survivors from walking up inclines (ramps, stairs, etc.) while slowed down.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Slow Incline"				"1"
+
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -18999,7 +19083,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank warps to survivors and warps survivors to random teammates.
-		// "Ability Enabled" - The Tank warps to a random survivor.
+		// "Ability Enabled" - The Mutant Tank warps to a random survivor.
 		// - "Warp Interval"
 		// - "Warp Mode"
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is warped to a random teammate.

@@ -987,7 +987,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 				for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 				{
-					if (StrContains(g_esRestartCache[tank].g_sRestartLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+					if (sItems[iItem][0] != '\0')
 					{
 						vCheatCommand(survivor, "give", sItems[iItem]);
 					}

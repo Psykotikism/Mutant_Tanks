@@ -1953,7 +1953,7 @@ mutant_tanks // 3-й формат
 	{
 		"Fast Ability"
 		{
-			"Human Ammo"				"1"
+			"Human Ammo"				"25"
 		}
 	}
 }
