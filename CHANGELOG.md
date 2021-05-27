@@ -49,8 +49,7 @@
 - Added a `Tank #-1` option to the `sm_tank`/`sm_mt_tank` menu. (Thanks to jeremyvillanueva for the idea!)
 - Added the `sm_mt_prefs` command for players to change their reward visual settings.
 - Improved the `Reward` system's messages.
-- Rewards can now be stacked for recipients who both kill and do the most damage against Tanks.
-- Rewards can now be stacked when recipients receive the same rewards more than once.
+- Rewards can now be stacked.
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
@@ -73,6 +72,7 @@
 	- `Stack Rewards`
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
 - Added the following settings under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections:
+	- `Punch Throw` (Thanks to ConnerRia for the code!)
 	- `Skip Taunt` (Thanks to Lux for the code!)
 	- `Sweep Fist` (Thanks to HarryPotter for the idea!)
 - Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.

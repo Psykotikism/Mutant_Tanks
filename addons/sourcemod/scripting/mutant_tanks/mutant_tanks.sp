@@ -448,6 +448,7 @@ enum struct esGeneral
 	float g_flJumpHeightReward[3];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[3];
+	float g_flPunchThrow;
 	float g_flRegularDelay;
 	float g_flRegularInterval;
 	float g_flRewardChance[3];
@@ -785,6 +786,7 @@ enum struct esPlayer
 	float g_flPunchForce;
 	float g_flPunchResistance;
 	float g_flPunchResistanceReward[3];
+	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
@@ -987,6 +989,7 @@ enum struct esTank
 	float g_flPropsChance[9];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[3];
+	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
@@ -1147,6 +1150,7 @@ enum struct esCache
 	float g_flPropsChance[9];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[3];
+	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
@@ -5456,11 +5460,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 	else if (bIsTank(client))
 	{
-		if ((buttons & IN_ATTACK) && !g_esPlayer[client].g_bAttackedAgain)
-		{
-			g_esPlayer[client].g_bAttackedAgain = true;
-		}
-
 		if (bIsTankSupported(client, MT_CHECK_FAKECLIENT))
 		{
 			static int iButton;
@@ -5488,6 +5487,21 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			}
 
 			g_esPlayer[client].g_iLastButtons = buttons;
+		}
+
+		if (buttons & IN_ATTACK)
+		{
+			if (!g_esPlayer[client].g_bAttackedAgain)
+			{
+				g_esPlayer[client].g_bAttackedAgain = true;
+			}
+
+			if (GetRandomFloat(0.1, 100.0) <= g_esCache[client].g_flPunchThrow)
+			{
+				buttons |= IN_ATTACK2;
+
+				return Plugin_Changed;
+			}
 		}
 	}
 
@@ -6202,6 +6216,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1);
 	g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchForce, g_esGeneral.g_flPunchForce, 1);
 	g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchForce, g_esCache[tank].g_flPunchForce, 1);
+	g_esCache[tank].g_flPunchThrow = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchThrow, g_esGeneral.g_flPunchThrow);
+	g_esCache[tank].g_flPunchThrow = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchThrow, g_esCache[tank].g_flPunchThrow);
 	g_esCache[tank].g_flRandomDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRandomDuration, g_esTank[iType].g_flRandomDuration);
 	g_esCache[tank].g_flRandomInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRandomInterval, g_esTank[iType].g_flRandomInterval);
 	g_esCache[tank].g_flRockDamage = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRockDamage, g_esGeneral.g_flRockDamage, 1);
@@ -6756,6 +6772,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_flClawDamage = -1.0;
 		g_esGeneral.g_flHittableDamage = -1.0;
 		g_esGeneral.g_flPunchForce = -1.0;
+		g_esGeneral.g_flPunchThrow = 0.0;
 		g_esGeneral.g_flRockDamage = -1.0;
 		g_esGeneral.g_flRunSpeed = 0.0;
 		g_esGeneral.g_iSkipTaunt = 0;
@@ -6924,6 +6941,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flClawDamage = -1.0;
 			g_esTank[iIndex].g_flHittableDamage = -1.0;
 			g_esTank[iIndex].g_flPunchForce = -1.0;
+			g_esTank[iIndex].g_flPunchThrow = 0.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = 0.0;
 			g_esTank[iIndex].g_iSkipTaunt = 0;
@@ -7104,6 +7122,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
 				g_esPlayer[iPlayer].g_flHittableDamage = -1.0;
 				g_esPlayer[iPlayer].g_flPunchForce = -1.0;
+				g_esPlayer[iPlayer].g_flPunchThrow = 0.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = 0.0;
 				g_esPlayer[iPlayer].g_iSkipTaunt = 0;
@@ -7334,7 +7353,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esGeneral.g_flAttackInterval, value, 0.0, 999999.0);
 				g_esGeneral.g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esGeneral.g_flClawDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esGeneral.g_flHittableDamage, value, -1.0, 999999.0);
-				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esGeneral.g_flPunchForce, value, -1.0, 999999.0);
+				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esGeneral.g_flPunchForce, value, -1.0, 999999.0);
+				g_esGeneral.g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esGeneral.g_flPunchThrow, value, 0.0, 100.0);
 				g_esGeneral.g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esGeneral.g_flRockDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, 0.0, 3.0);
 				g_esGeneral.g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esGeneral.g_iSkipTaunt, value, 0, 1);
@@ -7625,7 +7645,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -1.0, 999999.0);
-						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 999999.0);
+						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 999999.0);
+						g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esPlayer[iPlayer].g_flPunchThrow, value, 0.0, 100.0);
 						g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, 0.0, 3.0);
 						g_esPlayer[iPlayer].g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esPlayer[iPlayer].g_iSkipTaunt, value, 0, 1);
@@ -8409,7 +8430,8 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_flAttackInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[type].g_flAttackInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_flClawDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[type].g_flClawDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flHittableDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[type].g_flHittableDamage, value, -1.0, 999999.0);
-		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esTank[type].g_flPunchForce, value, -1.0, 999999.0);
+		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esTank[type].g_flPunchForce, value, -1.0, 999999.0);
+		g_esTank[type].g_flPunchThrow = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esTank[type].g_flPunchThrow, value, 0.0, 100.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[type].g_flRockDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, 0.0, 3.0);
 		g_esTank[type].g_iSkipTaunt = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esTank[type].g_iSkipTaunt, value, 0, 1);
@@ -10554,6 +10576,8 @@ static void vRewardNotify(int survivor, int tank, int priority, const char[] phr
 
 static void vSetupRewardCounts(int survivor, int tank, int priority, int type, int types, int assistant, int assistPriority, int assistTypes)
 {
+	int iAssistant = (survivor == assistant) ? assistant : survivor, iPriority = (assistPriority != -1) ? assistPriority : priority;
+
 	switch (type)
 	{
 		case MT_REWARD_HEALTH:
@@ -10568,15 +10592,15 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[0] < MT_STACK_HEALTH)
 			{
-				g_esPlayer[assistant].g_flHealPercent -= g_esCache[tank].g_flHealPercentReward[assistPriority] / 2.0;
-				g_esPlayer[assistant].g_flHealPercent = flClamp(g_esPlayer[assistant].g_flHealPercent, 1.0, 100.0);
-				g_esPlayer[assistant].g_iHealthRegen += g_esCache[tank].g_iHealthRegenReward[assistPriority];
-				g_esPlayer[assistant].g_iHealthRegen = iClamp(g_esPlayer[assistant].g_iHealthRegen, 0, MT_MAXHEALTH);
-				g_esPlayer[assistant].g_iLifeLeech += g_esCache[tank].g_iLifeLeechReward[assistPriority];
-				g_esPlayer[assistant].g_iLifeLeech = iClamp(g_esPlayer[assistant].g_iLifeLeech, 0, MT_MAXHEALTH);
-				g_esPlayer[assistant].g_iReviveHealth += g_esCache[tank].g_iReviveHealthReward[assistPriority];
-				g_esPlayer[assistant].g_iReviveHealth = iClamp(g_esPlayer[assistant].g_iReviveHealth, 0, MT_MAXHEALTH);
-				g_esPlayer[assistant].g_iRewardStack[0]++;
+				g_esPlayer[iAssistant].g_flHealPercent -= g_esCache[tank].g_flHealPercentReward[iPriority] / 2.0;
+				g_esPlayer[iAssistant].g_flHealPercent = flClamp(g_esPlayer[iAssistant].g_flHealPercent, 1.0, 100.0);
+				g_esPlayer[iAssistant].g_iHealthRegen += g_esCache[tank].g_iHealthRegenReward[iPriority];
+				g_esPlayer[iAssistant].g_iHealthRegen = iClamp(g_esPlayer[iAssistant].g_iHealthRegen, 0, MT_MAXHEALTH);
+				g_esPlayer[iAssistant].g_iLifeLeech += g_esCache[tank].g_iLifeLeechReward[iPriority];
+				g_esPlayer[iAssistant].g_iLifeLeech = iClamp(g_esPlayer[iAssistant].g_iLifeLeech, 0, MT_MAXHEALTH);
+				g_esPlayer[iAssistant].g_iReviveHealth += g_esCache[tank].g_iReviveHealthReward[iPriority];
+				g_esPlayer[iAssistant].g_iReviveHealth = iClamp(g_esPlayer[iAssistant].g_iReviveHealth, 0, MT_MAXHEALTH);
+				g_esPlayer[iAssistant].g_iRewardStack[0]++;
 			}
 		}
 		case MT_REWARD_SPEEDBOOST:
@@ -10590,12 +10614,12 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[1] < MT_STACK_SPEEDBOOST)
 			{
-				g_esPlayer[assistant].g_flJumpHeight += g_esCache[tank].g_flJumpHeightReward[assistPriority];
-				g_esPlayer[assistant].g_flJumpHeight = flClamp(g_esPlayer[assistant].g_flJumpHeight, 0.1, 999999.0);
-				g_esPlayer[assistant].g_flSpeedBoost += g_esCache[tank].g_flSpeedBoostReward[assistPriority];
-				g_esPlayer[assistant].g_flSpeedBoost = flClamp(g_esPlayer[assistant].g_flSpeedBoost, 0.1, 999999.0);
-				g_esPlayer[assistant].g_iFallPasses = 0;
-				g_esPlayer[assistant].g_iRewardStack[1]++;
+				g_esPlayer[iAssistant].g_flJumpHeight += g_esCache[tank].g_flJumpHeightReward[iPriority];
+				g_esPlayer[iAssistant].g_flJumpHeight = flClamp(g_esPlayer[iAssistant].g_flJumpHeight, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_flSpeedBoost += g_esCache[tank].g_flSpeedBoostReward[iPriority];
+				g_esPlayer[iAssistant].g_flSpeedBoost = flClamp(g_esPlayer[iAssistant].g_flSpeedBoost, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_iFallPasses = 0;
+				g_esPlayer[iAssistant].g_iRewardStack[1]++;
 			}
 		}
 		case MT_REWARD_DAMAGEBOOST:
@@ -10612,16 +10636,16 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[2] < MT_STACK_DAMAGEBOOST)
 			{
-				g_esPlayer[assistant].g_flDamageBoost += g_esCache[tank].g_flDamageBoostReward[assistPriority];
-				g_esPlayer[assistant].g_flDamageBoost = flClamp(g_esPlayer[assistant].g_flDamageBoost, 0.1, 999999.0);
-				g_esPlayer[assistant].g_flDamageResistance -= g_esCache[tank].g_flDamageResistanceReward[assistPriority] / 2.0;
-				g_esPlayer[assistant].g_flDamageResistance = flClamp(g_esPlayer[assistant].g_flDamageResistance, 0.1, 1.0);
-				g_esPlayer[assistant].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[assistPriority];
-				g_esPlayer[assistant].g_iMeleeRange += g_esCache[tank].g_iMeleeRangeReward[assistPriority];
-				g_esPlayer[assistant].g_iMeleeRange = iClamp(g_esPlayer[assistant].g_iMeleeRange, 0, 999999);
-				g_esPlayer[assistant].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[assistPriority];
-				g_esPlayer[assistant].g_iThorns = g_esCache[tank].g_iThornsReward[assistPriority];
-				g_esPlayer[assistant].g_iRewardStack[2]++;
+				g_esPlayer[iAssistant].g_flDamageBoost += g_esCache[tank].g_flDamageBoostReward[iPriority];
+				g_esPlayer[iAssistant].g_flDamageBoost = flClamp(g_esPlayer[iAssistant].g_flDamageBoost, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_flDamageResistance -= g_esCache[tank].g_flDamageResistanceReward[iPriority] / 2.0;
+				g_esPlayer[iAssistant].g_flDamageResistance = flClamp(g_esPlayer[iAssistant].g_flDamageResistance, 0.1, 1.0);
+				g_esPlayer[iAssistant].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[iPriority];
+				g_esPlayer[iAssistant].g_iMeleeRange += g_esCache[tank].g_iMeleeRangeReward[iPriority];
+				g_esPlayer[iAssistant].g_iMeleeRange = iClamp(g_esPlayer[iAssistant].g_iMeleeRange, 0, 999999);
+				g_esPlayer[iAssistant].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[iPriority];
+				g_esPlayer[iAssistant].g_iThorns = g_esCache[tank].g_iThornsReward[iPriority];
+				g_esPlayer[iAssistant].g_iRewardStack[2]++;
 			}
 		}
 		case MT_REWARD_ATTACKBOOST:
@@ -10637,16 +10661,16 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[3] < MT_STACK_ATTACKBOOST)
 			{
-				g_esPlayer[assistant].g_flActionDuration -= g_esCache[tank].g_flActionDurationReward[assistPriority] / 2.0;
-				g_esPlayer[assistant].g_flActionDuration = flClamp(g_esPlayer[assistant].g_flActionDuration, 0.1, 999999.0);
-				g_esPlayer[assistant].g_flAttackBoost += g_esCache[tank].g_flAttackBoostReward[assistPriority];
-				g_esPlayer[assistant].g_flAttackBoost = flClamp(g_esPlayer[assistant].g_flAttackBoost, 0.1, 999999.0);
-				g_esPlayer[assistant].g_flShoveDamage += g_esCache[tank].g_flShoveDamageReward[assistPriority];
-				g_esPlayer[assistant].g_flShoveDamage = flClamp(g_esPlayer[assistant].g_flShoveDamage, 0.1, 999999.0);
-				g_esPlayer[assistant].g_flShoveRate -= g_esCache[tank].g_flShoveRateReward[assistPriority] / 2.0;
-				g_esPlayer[assistant].g_flShoveRate = flClamp(g_esPlayer[assistant].g_flShoveRate, 0.1, 999999.0);
-				g_esPlayer[assistant].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[assistPriority];
-				g_esPlayer[assistant].g_iRewardStack[3]++;
+				g_esPlayer[iAssistant].g_flActionDuration -= g_esCache[tank].g_flActionDurationReward[iPriority] / 2.0;
+				g_esPlayer[iAssistant].g_flActionDuration = flClamp(g_esPlayer[iAssistant].g_flActionDuration, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_flAttackBoost += g_esCache[tank].g_flAttackBoostReward[iPriority];
+				g_esPlayer[iAssistant].g_flAttackBoost = flClamp(g_esPlayer[iAssistant].g_flAttackBoost, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_flShoveDamage += g_esCache[tank].g_flShoveDamageReward[iPriority];
+				g_esPlayer[iAssistant].g_flShoveDamage = flClamp(g_esPlayer[iAssistant].g_flShoveDamage, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_flShoveRate -= g_esCache[tank].g_flShoveRateReward[iPriority] / 2.0;
+				g_esPlayer[iAssistant].g_flShoveRate = flClamp(g_esPlayer[iAssistant].g_flShoveRate, 0.1, 999999.0);
+				g_esPlayer[iAssistant].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[iPriority];
+				g_esPlayer[iAssistant].g_iRewardStack[3]++;
 			}
 		}
 		case MT_REWARD_AMMO:
@@ -10660,12 +10684,12 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[4] < MT_STACK_AMMO)
 			{
-				g_esPlayer[assistant].g_iAmmoBoost = g_esCache[tank].g_iAmmoBoostReward[assistPriority];
-				g_esPlayer[assistant].g_iAmmoRegen += g_esCache[tank].g_iAmmoRegenReward[assistPriority];
-				g_esPlayer[assistant].g_iAmmoRegen = iClamp(g_esPlayer[assistant].g_iAmmoRegen, 0, 999999);
-				g_esPlayer[assistant].g_iSpecialAmmo |= g_esCache[tank].g_iSpecialAmmoReward[assistPriority];
-				g_esPlayer[assistant].g_iSpecialAmmo = iClamp(g_esPlayer[assistant].g_iSpecialAmmo, 0, 3);
-				g_esPlayer[assistant].g_iRewardStack[4]++;
+				g_esPlayer[iAssistant].g_iAmmoBoost = g_esCache[tank].g_iAmmoBoostReward[iPriority];
+				g_esPlayer[iAssistant].g_iAmmoRegen += g_esCache[tank].g_iAmmoRegenReward[iPriority];
+				g_esPlayer[iAssistant].g_iAmmoRegen = iClamp(g_esPlayer[iAssistant].g_iAmmoRegen, 0, 999999);
+				g_esPlayer[iAssistant].g_iSpecialAmmo |= g_esCache[tank].g_iSpecialAmmoReward[iPriority];
+				g_esPlayer[iAssistant].g_iSpecialAmmo = iClamp(g_esPlayer[iAssistant].g_iSpecialAmmo, 0, 3);
+				g_esPlayer[iAssistant].g_iRewardStack[4]++;
 			}
 		}
 		case MT_REWARD_GODMODE:
@@ -10678,10 +10702,10 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[5] < MT_STACK_GODMODE)
 			{
-				g_esPlayer[assistant].g_flPunchResistance -= g_esCache[tank].g_flPunchResistanceReward[assistPriority] / 2.0;
-				g_esPlayer[assistant].g_flPunchResistance = flClamp(g_esPlayer[assistant].g_flPunchResistance, 0.1, 1.0);
-				g_esPlayer[assistant].g_iCleanKills = g_esCache[tank].g_iCleanKillsReward[assistPriority];
-				g_esPlayer[assistant].g_iRewardStack[5]++;
+				g_esPlayer[iAssistant].g_flPunchResistance -= g_esCache[tank].g_flPunchResistanceReward[iPriority] / 2.0;
+				g_esPlayer[iAssistant].g_flPunchResistance = flClamp(g_esPlayer[iAssistant].g_flPunchResistance, 0.1, 1.0);
+				g_esPlayer[iAssistant].g_iCleanKills = g_esCache[tank].g_iCleanKillsReward[iPriority];
+				g_esPlayer[iAssistant].g_iRewardStack[5]++;
 			}
 		}
 		case MT_REWARD_INFAMMO:
@@ -10693,9 +10717,9 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 			if (((g_esCache[tank].g_iStackRewards[priority] == 1 && (g_esPlayer[survivor].g_iRewardTypes & type)) || (survivor == assistant && assistPriority != -1 && g_esCache[tank].g_iStackRewards[assistPriority] == 1 && (assistTypes & type))) && g_esPlayer[assistant].g_iRewardStack[6] < MT_STACK_INFAMMO)
 			{
-				g_esPlayer[assistant].g_iInfiniteAmmo |= g_esCache[tank].g_iInfiniteAmmoReward[assistPriority];
-				g_esPlayer[assistant].g_iInfiniteAmmo = iClamp(g_esPlayer[assistant].g_iInfiniteAmmo, 0, 31);
-				g_esPlayer[assistant].g_iRewardStack[6]++;
+				g_esPlayer[iAssistant].g_iInfiniteAmmo |= g_esCache[tank].g_iInfiniteAmmoReward[iPriority];
+				g_esPlayer[iAssistant].g_iInfiniteAmmo = iClamp(g_esPlayer[iAssistant].g_iInfiniteAmmo, 0, 31);
+				g_esPlayer[iAssistant].g_iRewardStack[6]++;
 			}
 		}
 	}

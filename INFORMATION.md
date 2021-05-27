@@ -1643,6 +1643,21 @@
 			// "strongest" - 999999.0 force
 			"Punch Force"				"-1.0"
 
+			// Every Mutant Tank has this many chances out of 100.0% to punch and throw a rock simultaneously.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Punch Throw"				"0.0"
+
 			// Every Mutant Tank's rock throws do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -4248,6 +4263,21 @@
 			// "weakest" - 1.0 force
 			// "strongest" - 999999.0 force
 			"Punch Force"				"-1.0"
+
+			// The Mutant Tank has this many chances out of 100.0% to punch and throw a rock simultaneously.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Punch Throw"				"0.0"
 
 			// The Mutant Tank's rock throws do this much damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
