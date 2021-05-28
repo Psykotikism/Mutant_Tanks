@@ -11047,13 +11047,7 @@ static void vRefillMagazine(int survivor, int weapon, bool reset)
 				iNewAmmo = iMaxAmmo;
 			}
 		}
-		case false:
-		{
-			if (bIsDeveloper(survivor, 4) || bIsDeveloper(survivor, 6) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[survivor].g_iAmmoBoost == 1))
-			{
-				iNewAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
-			}
-		}
+		case false: iNewAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
 	}
 
 	if (iNewAmmo > 0)
