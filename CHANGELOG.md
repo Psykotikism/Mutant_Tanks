@@ -26,6 +26,10 @@
 
 - Kamikaze: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
 
+- Medic: Fixed the ability requiring an incapacitation check for special infected. (Thanks to ddd123 for reporting!)
+
+- Necro: Fixed the ability attempting to respawn special infected too late. (Thanks to ddd123 for reporting!)
+
 - Respawn: Fixed the ability requiring `DHooks`.
 
 - Rocket: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]

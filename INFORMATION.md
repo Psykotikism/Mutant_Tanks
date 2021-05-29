@@ -3,8 +3,8 @@
 ## Notes
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `92-93` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
-- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `91` and recompile all the plugins, but expect server lag with higher values.)
+- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `93-94` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
+- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `92` and recompile all the plugins, but expect server lag with higher values.)
 - Most of the settings below can be overridden for each player.
 
 ## Sections

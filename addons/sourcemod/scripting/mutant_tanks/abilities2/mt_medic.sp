@@ -1017,7 +1017,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	static int iHealth, iValue, iLimit, iMaxHealth, iNewHealth, iLeftover, iExtraHealth, iExtraHealth2, iRealHealth, iTotalHealth;
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && bIsPlayerIncapacitated(iInfected) && iTank != iInfected)
+		if (((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iInfected)) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && iTank != iInfected)
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange)
@@ -1037,10 +1037,11 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 
 				if (g_esMedicCache[iTank].g_iMedicMessage == 1)
 				{
-					static char sTankName[33];
+					static char sTankName[33], sInfectedName[33];
 					MT_GetTankName(iTank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName, iInfected);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic2", LANG_SERVER, sTankName, iInfected);
+					MT_GetTankName(iInfected, sInfectedName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName, sInfectedName);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic2", LANG_SERVER, sTankName, sInfectedName);
 				}
 			}
 		}

@@ -1934,7 +1934,7 @@ mutant_tanks // 3-й формат
 
 4. Как мне изменить кнопки или добавить дополнительные кнопки?
 
-Отредактируйте `96-99` строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
+Отредактируйте `97-100` строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
 
 5. Что произойдёт, если у танка-мутанта есть несколько способностей, которые активируются одной и той же кнопкой?
 
@@ -2121,7 +2121,7 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - За предложения идей.
 

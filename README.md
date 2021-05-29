@@ -1934,7 +1934,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `96-99` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `97-100` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -2121,7 +2121,7 @@ Examples:
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - For suggesting ideas.
 

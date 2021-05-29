@@ -3171,7 +3171,7 @@
 
 	"Medic2"
 	{
-		"#format"		"{1:t},{2:N}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
 	}
 

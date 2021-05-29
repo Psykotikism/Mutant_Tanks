@@ -575,64 +575,71 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death"))
 	{
-		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
-		if (bIsSpecialInfected(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			bool bRandom = false;
-			float flInfectedPos[3];
-			GetClientAbsOrigin(iInfected, flInfectedPos);
-			for (int iTank = 1; iTank <= MaxClients; iTank++)
+			vRemoveNecro(iTank);
+		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vNecroReset();
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vNecroPlayerEventKilled(int victim)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSpecialInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		bool bRandom = false;
+		float flInfectedPos[3];
+		GetClientAbsOrigin(victim, flInfectedPos);
+		for (int iTank = 1; iTank <= MaxClients; iTank++)
+		{
+			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esNecroPlayer[iTank].g_bActivated)
 			{
-				if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esNecroPlayer[iTank].g_bActivated)
+				if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags))
 				{
-					if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags))
-					{
-						continue;
-					}
+					continue;
+				}
 
-					bRandom = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
-					if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
+				bRandom = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
+				if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
+				{
+					float flTankPos[3], flRange = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition) : g_esNecroCache[iTank].g_flNecroRange;
+					GetClientAbsOrigin(iTank, flTankPos);
+					if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
 					{
-						float flTankPos[3], flRange = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition) : g_esNecroCache[iTank].g_flNecroRange;
-						GetClientAbsOrigin(iTank, flTankPos);
-						if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
+						int iClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
+
+						switch (iClass)
 						{
-							int iClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
-
-							switch (iClass)
+							case 1: vNecro(iTank, flInfectedPos, "smoker");
+							case 2: vNecro(iTank, flInfectedPos, "boomer");
+							case 3: vNecro(iTank, flInfectedPos, "hunter");
+							case 4, 5, 6:
 							{
-								case 1: vNecro(iTank, flInfectedPos, "smoker");
-								case 2: vNecro(iTank, flInfectedPos, "boomer");
-								case 3: vNecro(iTank, flInfectedPos, "hunter");
-								case 4, 5, 6:
+								if (g_bSecondGame)
 								{
-									if (g_bSecondGame)
+									switch (iClass)
 									{
-										switch (iClass)
-										{
-											case 4: vNecro(iTank, flInfectedPos, "spitter");
-											case 5: vNecro(iTank, flInfectedPos, "jockey");
-											case 6: vNecro(iTank, flInfectedPos, "charger");
-										}
+										case 4: vNecro(iTank, flInfectedPos, "spitter");
+										case 5: vNecro(iTank, flInfectedPos, "jockey");
+										case 6: vNecro(iTank, flInfectedPos, "charger");
 									}
 								}
 							}
 						}
 					}
 				}
-
-				break;
 			}
-		}
 
-		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
-		{
-			vRemoveNecro(iInfected);
+			break;
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vNecroReset();
 	}
 }
 

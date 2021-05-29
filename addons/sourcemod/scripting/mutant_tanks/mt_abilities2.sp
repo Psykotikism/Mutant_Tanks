@@ -1830,6 +1830,9 @@ public void MT_OnPostTankSpawn(int tank)
 
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 {
+#if defined MT_MENU_NECRO
+	vNecroPlayerEventKilled(victim);
+#endif
 #if defined MT_MENU_RESPAWN
 	vRespawnPlayerEventKilled(victim);
 #endif
