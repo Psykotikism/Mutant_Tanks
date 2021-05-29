@@ -13921,21 +13921,21 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 		{
 			switch (iType)
 			{
-				case 2: return (bRewarded || !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
-				case 3: return (bRewarded || !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle
-				case 5: return (bRewarded || !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg
-				case 6: return (bRewarded || !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 1.56), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/autoshotgun
+				case 2: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
+				case 3: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle
+				case 5: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg
+				case 6: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 1.56), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/autoshotgun
 			}
 		}
 		else
 		{
 			switch (iType)
 			{
-				case 1: return (bRewarded || !reset) ? 30 : 15; // pistol
-				case 2: return (bRewarded || !reset) ? 30 : 15; // hunting_rifle
-				case 3: return (bRewarded || !reset) ? 100 : 50; // rifle
-				case 5: return (bRewarded || !reset) ? 100 : 50; // smg
-				case 6: return (bRewarded || !reset) ? 20 : 10; // pumpshotgun/autoshotgun
+				case 1: return (bRewarded && !reset) ? 30 : 15; // pistol
+				case 2: return (bRewarded && !reset) ? 30 : 15; // hunting_rifle
+				case 3: return (bRewarded && !reset) ? 100 : 50; // rifle
+				case 5: return (bRewarded && !reset) ? 100 : 50; // smg
+				case 6: return (bRewarded && !reset) ? 20 : 10; // pumpshotgun/autoshotgun
 			}
 		}
 	}
