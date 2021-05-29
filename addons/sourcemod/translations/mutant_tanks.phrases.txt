@@ -3171,11 +3171,17 @@
 
 	"Medic2"
 	{
-		"#format"		"{1:t},{2:t}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
 	}
 
 	"Medic3"
+	{
+		"#format"		"{1:t},{2:t}"
+		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+	}
+
+	"Medic4"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"

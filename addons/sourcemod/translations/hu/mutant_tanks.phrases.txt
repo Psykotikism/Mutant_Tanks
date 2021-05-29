@@ -2904,6 +2904,11 @@
 
 	"Medic3"
 	{
+		"hu"			"{olive}{1}{mint} épp meggyógyította{yellow} {2}{mint}"
+	}
+
+	"Medic4"
+	{
 		"hu"			"{olive}{1}{mint} abbahagyta a közelben lévő spec. fertőzöttek gyógyítását!"
 	}
 

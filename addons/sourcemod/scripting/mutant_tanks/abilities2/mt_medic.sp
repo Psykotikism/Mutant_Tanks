@@ -896,8 +896,8 @@ void vMedicReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Medic3", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic3", LANG_SERVER, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Medic4", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic4", LANG_SERVER, sTankName);
 	}
 }
 
@@ -1039,9 +1039,17 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 				{
 					static char sTankName[33], sInfectedName[33];
 					MT_GetTankName(iTank, sTankName);
-					MT_GetTankName(iInfected, sInfectedName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName, sInfectedName);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic2", LANG_SERVER, sTankName, sInfectedName);
+					if (bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName, iInfected);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic2", LANG_SERVER, sTankName, iInfected);
+					}
+					else
+					{
+						MT_GetTankName(iInfected, sInfectedName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Medic3", sTankName, sInfectedName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic3", LANG_SERVER, sTankName, sInfectedName);
+					}
 				}
 			}
 		}

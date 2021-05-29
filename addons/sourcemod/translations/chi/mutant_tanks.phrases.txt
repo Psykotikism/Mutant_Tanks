@@ -2904,6 +2904,11 @@
 
 	"Medic3"
 	{
+		"chi"			"{olive}{1}{mint} 治愈了{yellow} {2}{mint}!"
+	}
+
+	"Medic4"
+	{
 		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}
 
