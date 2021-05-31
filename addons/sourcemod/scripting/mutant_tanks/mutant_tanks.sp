@@ -2294,13 +2294,15 @@ public void OnClientCookiesCached(int client)
 {
 	char sValue[3];
 	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof(sValue));
-	g_esPlayer[client].g_iRewardVisuals = StringToInt(sValue);
-
-	g_esPlayer[client].g_bApplyVisuals[0] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN);
-	g_esPlayer[client].g_bApplyVisuals[1] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW);
-	g_esPlayer[client].g_bApplyVisuals[2] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY);
-	g_esPlayer[client].g_bApplyVisuals[3] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE);
-	g_esPlayer[client].g_bApplyVisuals[4] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE);
+	if (sValue[0] != '\0')
+	{
+		g_esPlayer[client].g_iRewardVisuals = StringToInt(sValue);
+		g_esPlayer[client].g_bApplyVisuals[0] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN);
+		g_esPlayer[client].g_bApplyVisuals[1] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW);
+		g_esPlayer[client].g_bApplyVisuals[2] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY);
+		g_esPlayer[client].g_bApplyVisuals[3] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE);
+		g_esPlayer[client].g_bApplyVisuals[4] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE);
+	}
 }
 
 public void OnClientDisconnect(int client)
@@ -13708,10 +13710,10 @@ static float flGetScaledDamage(float damage)
 
 		switch (sDifficulty[0])
 		{
-			case 'E': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
-			case 'N': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
-			case 'H': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
-			case 'I': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
+			case 'e', 'E': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
+			case 'n', 'N': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
+			case 'h', 'H': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
+			case 'i', 'I': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
 		}
 	}
 
