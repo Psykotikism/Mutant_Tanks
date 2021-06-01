@@ -52,6 +52,16 @@
 		"en"			"File Path Menu"
 	}
 
+	"MTPrefsInfo"
+	{
+		"en"			"Type{olive} !mt_prefs{default} to change your{mint} visual reward settings{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"en"			"Mutant Tanks Preferences Menu"
+	}
+
 	"MTReloadMenu"
 	{
 		"en"			"Reload Config Menu"
@@ -88,6 +98,11 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
+	}
+
+	"AndConjunction"
+	{
+		"en"			"and"
 	}
 
 	"ButtonMode"
@@ -267,62 +282,72 @@
 
 	"Assist1"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}"
+	}
+
+	"BodyVisualOn"
+	{
+		"en"			"Body Color Visual: ON"
+	}
+
+	"BodyVisualOff"
+	{
+		"en"			"Body Color Visual: OFF"
 	}
 
 	"ChangeType"
@@ -339,6 +364,12 @@
 	{
 		"#format"		"{1:s},{2:i},{3:i}"
 		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
+	}
+
+	"CommandUsage2"
+	{
+		"#format"		"{1:s}"
+		"en"			"Usage: {1} \"ability name\""
 	}
 
 	"CompletedParsing"
@@ -434,6 +465,16 @@
 		"en"			"Mutant Tanks makes fighting Tanks great again!"
 	}
 
+	"GlowVisualOn"
+	{
+		"en"			"Glow Outline Visual: ON"
+	}
+
+	"GlowVisualOff"
+	{
+		"en"			"Glow Outline Visual: OFF"
+	}
+
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"
@@ -507,62 +548,62 @@
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:s},{2:t},{3:s}"
+		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -623,6 +664,16 @@
 		"en"			"Yes"
 	}
 
+	"ParticleVisualOn"
+	{
+		"en"			"Particle Effect Visual: ON"
+	}
+
+	"ParticleVisualOff"
+	{
+		"en"			"Particle Effect Visual: OFF"
+	}
+
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
@@ -658,164 +709,44 @@
 
 	"RewardAmmo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"en"			"Your{yellow} ammunition boost{default} ended!"
+		"en"			"ammunition boost"
 	}
 
 	"RewardAttackBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} attack boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"en"			"Your{yellow} attack boost{default} ended!"
+		"en"			"attack boost"
 	}
 
 	"RewardDamageBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
+		"en"			"damage boost"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"en"			"Your{yellow} damage boost{default} ended!"
+		"#format"		"{1:s}"
+		"en"			"Your{yellow} {1}{default} ended!"
 	}
 
 	"RewardGod"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"en"			"Your{yellow} god mode{default} ended!"
+		"en"			"god mode"
 	}
 
 	"RewardHealth"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health boost{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"en"			"Your{yellow} health boost{default} ended!"
+		"en"			"health boost"
 	}
 
 	"RewardInfAmmo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} infinite ammo{default} for assisting against{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"en"			"Your{yellow} infinite ammo{default} ended!"
-	}
-
-	"RewardItem"
-	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"en"			"infinite ammo"
 	}
 
 	"RewardLadyKiller"
 	{
 		"#format"		"{1:i}"
-		"en"			"You{default} received{yellow} {1}{default} use(s) of{mint} Lady killer{default}."
+		"en"			"{1}{default} use(s) of{mint} Lady Killer"
 	}
 
 	"RewardLadyKiller2"
@@ -824,69 +755,76 @@
 		"en"			"Your{mint} Lady Killer{default} has{yellow} {1}{default} use(s) left."
 	}
 
+	"RewardList"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+	}
+
+	"RewardList3"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
+	}
+
+	"RewardList4"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received{yellow} {1}{default} for killing and assisting the most against{olive} {2}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
 	}
 
+	"RewardReceived"
+	{
+		"#format"		"{1:s}"
+		"en"			"You{default} received{yellow} {1}{default}."
+	}
+
 	"RewardRefill"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
+		"en"			"health and ammunition"
 	}
 
 	"RewardRespawn"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
+		"en"			"respawn"
 	}
 
-	"RewardRespawn2"
+	"RewardSolo"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} soloed{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
+		"en"			"speed boost"
 	}
 
-	"RewardSpeedBoost2"
+	"ScreenVisualOn"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
+		"en"			"Screen Visual: ON"
 	}
 
-	"RewardSpeedBoost3"
+	"ScreenVisualOff"
 	{
-		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
+		"en"			"Screen Visual: OFF"
 	}
 
-	"RewardSpeedBoostEnd"
+	"SpawnManually"
 	{
-		"en"			"Your{yellow} speed boost{default} ended!"
+		"en"			"You will have to spawn manually."
 	}
 
 	"SpawnMessage"
@@ -904,6 +842,18 @@
 		"en"			"The plugin is still parsing the config file."
 	}
 
+	"TankDisabled"
+	{
+		"#format"		"{1:t},{2:i}"
+		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+	}
+
+	"TeammatesList"
+	{
+		"#format"		"{1:t},{2:s}"
+		"en"			"Total damage done to{olive} {1}{default}:{mint} {2}"
+	}
+
 	"Transformed"
 	{
 		"#format"		"{1:t},{2:t}"
@@ -916,15 +866,14 @@
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"en"			"You will have to spawn manually."
+		"en"			"Looping Voiceline Visual: ON"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"en"			"Looping Voiceline Visual: OFF"
 	}
 
 	"Absorb"
@@ -3227,6 +3176,12 @@
 	}
 
 	"Medic3"
+	{
+		"#format"		"{1:t},{2:t}"
+		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+	}
+
+	"Medic4"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"

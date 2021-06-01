@@ -52,6 +52,16 @@
 		"hu"			"Fájl elérési Menü"
 	}
 
+	"MTPrefsInfo"
+	{
+		"hu"			"Írd be{olive} !mt_prefs{default} hogy megváltoztasd{mint} a vizuális jutalom beállításokat{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"hu"			"Mutáns Tankok Preferenciák Menü"
+	}
+
 	"MTReloadMenu"
 	{
 		"hu"			"Konfig menü újratöltése"
@@ -85,6 +95,11 @@
 	"AbilityAmmo2"
 	{
 		"hu"			"A távolsági képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
+	}
+
+	"AndConjunction"
+	{
+		"hu"			"és"
 	}
 
 	"ButtonMode"
@@ -249,52 +264,62 @@
 
 	"Assist1"
 	{
-		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}"
+	}
+
+	"BodyVisualOn"
+	{
+		"hu"			"Vizuális Test Szín: BE"
+	}
+
+	"BodyVisualOff"
+	{
+		"hu"			"Vizuális Test Szín: KI"
 	}
 
 	"ChangeType"
@@ -310,6 +335,11 @@
 	"CommandUsage"
 	{
 		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
+	}
+
+	"CommandUsage2"
+	{
+		"hu"			"Használat: {1} \"képesség név\""
 	}
 
 	"CompletedParsing"
@@ -392,6 +422,16 @@
 		"hu"			"A Mutáns Tankok újra izgalmassá teszik a küzdelmet!"
 	}
 
+	"GlowVisualOn"
+	{
+		"hu"			"Vizuális Fénylő Körvonal: BE"
+	}
+
+	"GlowVisualOff"
+	{
+		"hu"			"Vizuális Fénylő Körvonal: KI"
+	}
+
 	"HumanCooldown"
 	{
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."
@@ -454,52 +494,52 @@
 
 	"Killer1"
 	{
-		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -557,6 +597,16 @@
 		"hu"			"Igen"
 	}
 
+	"ParticleVisualOn"
+	{
+		"hu"			"Vizuális Részecske Effekt: BE"
+	}
+
+	"ParticleVisualOff"
+	{
+		"hu"			"Vizuális Részecske Effekt: KI"
+	}
+
 	"PluginDisabled"
 	{
 		"hu"			"Mutáns Tankok{default} letiltva."
@@ -589,142 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAmmo3"
-	{
-		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"hu"			"A{yellow} lőszert növelésed{default} véget ért!"
+		"hu"			"lőszert növelést"
 	}
 
 	"RewardAttackBoost"
 	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"hu"			"A{yellow} támadás növelésed{default} véget ért!"
+		"hu"			"támadás növelést"
 	}
 
 	"RewardDamageBoost"
 	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"
+		"hu"			"sebzés növelést"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"hu"			"A{yellow} sebzés növelésed{default} véget ért!"
+		"hu"			"A{yellow} {1}{default} véget ért!"
 	}
 
 	"RewardGod"
 	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardGod3"
-	{
-		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardGodEnd"
-	{
-		"hu"			"A{yellow} halhatatlanságod{default} véget ért!"
+		"hu"			"halhatatlanságot"
 	}
 
 	"RewardHealth"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardHealth3"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"hu"			"A{yellow} életet növelésed{default} véget ért!"
+		"hu"			"életet növelést"
 	}
 
 	"RewardInfAmmo"
 	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"hu"			"Most{default} kaptál{yellow} végtelen lőszert{default} mert segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"hu"			"A{yellow} végtelen lőszered{default} véget ért!"
-	}
-
-	"RewardItem"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted{olive} {2}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
-	}
-
-	"RewardItem3"
-	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+		"hu"			"végtelen lőszert"
 	}
 
 	"RewardLadyKiller"
 	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} nőcsábász{mint} használatot{default}."
+		"hu"			"{1}{mint} nőcsábász{default} használatot"
 	}
 
 	"RewardLadyKiller2"
@@ -732,59 +682,69 @@
 		"hu"			"Van még neked{yellow} {1}{mint} nőcsábász{default} használatod."
 	}
 
+	"RewardList"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted{olive} {2}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
+	}
+
+	"RewardList3"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+	}
+
+	"RewardList4"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted és nagyrészt segítettél{olive} {2}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
 	}
 
+	"RewardReceived"
+	{
+		"hu"			"Most{default} kaptál{yellow} {1}{default}."
+	}
+
 	"RewardRefill"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert megölted{olive} {1}{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardRefill3"
-	{
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"életet és lőszert"
 	}
 
 	"RewardRespawn"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert megölted{olive} {1}{default}!"
+		"hu"			"újjászületést"
 	}
 
-	"RewardRespawn2"
+	"RewardSolo"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
-	}
-
-	"RewardRespawn3"
-	{
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"{1}{default} legyőzte{olive} {2}{default}-ot!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert megölted{olive} {1}{default}!"
+		"hu"			"sebesség növelést"
 	}
 
-	"RewardSpeedBoost2"
+	"ScreenVisualOn"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			"Képernyő Vizualitások: BE"
 	}
 
-	"RewardSpeedBoost3"
+	"ScreenVisualOff"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"Képernyő Vizualitások: KI"
 	}
 
-	"RewardSpeedBoostEnd"
+	"SpawnManually"
 	{
-		"hu"			"A{yellow} sebesség növelésed{default} véget ért!"
+		"hu"			"Manuálisan kell megszületned."
 	}
 
 	"SpawnMessage"
@@ -802,6 +762,16 @@
 		"hu"			"A plugin még elemzi a konfig fájlt."
 	}
 
+	"TankDisabled"
+	{
+		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+	}
+
+	"TeammatesList"
+	{
+		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{mint} {2}"
+	}
+
 	"Transformed"
 	{
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
@@ -812,14 +782,14 @@
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"hu"			"Manuálisan kell megszületned."
+		"hu"			"Vizuális Ismétlődő Hangsor: BE"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+		"hu"			"Vizuális Ismétlődő Hangsor: KI"
 	}
 
 	"Absorb"
@@ -2933,6 +2903,11 @@
 	}
 
 	"Medic3"
+	{
+		"hu"			"{olive}{1}{mint} épp meggyógyította{yellow} {2}{mint}"
+	}
+
+	"Medic4"
 	{
 		"hu"			"{olive}{1}{mint} abbahagyta a közelben lévő spec. fertőzöttek gyógyítását!"
 	}

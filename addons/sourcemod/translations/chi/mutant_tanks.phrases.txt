@@ -52,6 +52,16 @@
 		"chi"			"文件路径菜单"
 	}
 
+	"MTPrefsInfo"
+	{
+		"chi"			"输入{olive} !mt_prefs{default} 来变更你的{mint} 可视化奖励设定{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"chi"			"突变坦克 首选项菜单"
+	}
+
 	"MTReloadMenu"
 	{
 		"chi"			"重新加载配置菜单"
@@ -85,6 +95,11 @@
 	"AbilityAmmo2"
 	{
 		"chi"			"你的范围能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
+	}
+
+	"AndConjunction"
+	{
+		"chi"			"和"
 	}
 
 	"ButtonMode"
@@ -249,52 +264,62 @@
 
 	"Assist1"
 	{
-		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"chi"			"幸存者消灭了{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"幸存者消灭了{olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"chi"			"{olive}{1}{default} 被打入地狱了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打入地狱了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}"
+	}
+
+	"BodyVisualOn"
+	{
+		"chi"			"身体颜色: 开"
+	}
+
+	"BodyVisualOff"
+	{
+		"chi"			"身体颜色: 关"
 	}
 
 	"ChangeType"
@@ -310,6 +335,11 @@
 	"CommandUsage"
 	{
 		"chi"			"用法: {1} <类型 {2}-{3}> <数量: 1-32> <0: 在十字准星处生成|1: 自动生成>"
+	}
+
+	"CommandUsage2"
+	{
+		"chi"			"用法: {1} \"能力名称\""
 	}
 
 	"CompletedParsing"
@@ -392,6 +422,16 @@
 		"chi"			"突变坦克让坦克对抗更加多姿多彩!"
 	}
 
+	"GlowVisualOn"
+	{
+		"chi"			"发光轮廓: 开"
+	}
+
+	"GlowVisualOff"
+	{
+		"chi"			"发光轮廓: 关"
+	}
+
 	"HumanCooldown"
 	{
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型."
@@ -454,52 +494,52 @@
 
 	"Killer1"
 	{
-		"chi"			"{mint}{1}{default} 终结了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 终结了{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"chi"			"{mint}{1}{default} 击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 打入地狱了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 打入地狱了!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"chi"			"{mint}{1}{default} 真的杀死{olive} {2}{default}...了吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 真的杀死{olive} {2}{default}...了吗?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"chi"			"{olive}{2}{default} 挑战{mint} {1}{default} 失败了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 挑战{mint} {1}{default} 失败了!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"chi"			"{olive}{2}{default} 在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 气得愤怒退场!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 气得愤怒退场!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -557,6 +597,16 @@
 		"chi"			"是"
 	}
 
+	"ParticleVisualOn"
+	{
+		"chi"			"粒子特效: 开"
+	}
+
+	"ParticleVisualOff"
+	{
+		"chi"			"粒子特效: 关"
+	}
+
 	"PluginDisabled"
 	{
 		"chi"			"突变坦克{default} 已禁用."
@@ -589,142 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"chi"			"你的{yellow} 弹药加成{default} 结束了!"
+		"chi"			"弹药加成"
 	}
 
 	"RewardAttackBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"chi"			"你的{yellow} 攻击加成{default} 结束了!"
+		"chi"			"攻击加成"
 	}
 
 	"RewardDamageBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
+		"chi"			"伤害加成"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 伤害加成{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"chi"			"你的{yellow} 伤害加成{default} 结束了!"
+		"chi"			"你的{yellow} {1}{default} 结束了!"
 	}
 
 	"RewardGod"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"chi"			"你的{yellow} 无敌{default} 已结束!"
+		"chi"			"无敌"
 	}
 
 	"RewardHealth"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值加成{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"chi"			"你的{yellow} 生命值加成{default} 结束了!"
+		"chi"			"生命值加成"
 	}
 
 	"RewardInfAmmo"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"chi"			"你的{yellow} 无限弹药{default} 已结束!"
-	}
-
-	"RewardItem"
-	{
-		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"chi"			"你协助队友击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+		"chi"			"无限弹药"
 	}
 
 	"RewardLadyKiller"
 	{
-		"chi"			"你{default} 获得了{yellow} {1}{default} 次{mint} 女巫杀手{default} 的使用权."
+		"chi"			"{1}{default} 次{mint} 女巫杀手{default} 的使用权"
 	}
 
 	"RewardLadyKiller2"
@@ -732,59 +682,69 @@
 		"chi"			"你的{mint} 女巫杀手{default} 还剩下{yellow} {1}{default} 次可用."
 	}
 
+	"RewardList"
+	{
+		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+	}
+
+	"RewardList2"
+	{
+		"chi"			"你协助队友击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
+	}
+
+	"RewardList3"
+	{
+		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
+	}
+
+	"RewardList4"
+	{
+		"chi"			"你击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
+	}
+
 	"RewardNone"
 	{
 		"chi"			"你对{default}{olive} {1}{default} 的伤害不足, 无法获得任何奖励."
 	}
 
+	"RewardReceived"
+	{
+		"chi"			"你{default} 获得了{yellow} {1}{default}."
+	}
+
 	"RewardRefill"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值和弹药{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
+		"chi"			"生命值和弹药"
 	}
 
 	"RewardRespawn"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
+		"chi"			"复活"
 	}
 
-	"RewardRespawn2"
+	"RewardSolo"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 复活{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
+		"chi"			"{1}{default} 独自击杀了{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
+		"chi"			"速度加成"
 	}
 
-	"RewardSpeedBoost2"
+	"ScreenVisualOn"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 速度加成{default}!"
+		"chi"			"屏幕特效: 开"
 	}
 
-	"RewardSpeedBoost3"
+	"ScreenVisualOff"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
+		"chi"			"屏幕特效: 关"
 	}
 
-	"RewardSpeedBoostEnd"
+	"SpawnManually"
 	{
-		"chi"			"你的{yellow} 速度加成{default} 已结束!"
+		"chi"			"你必须手动生成."
 	}
 
 	"SpawnMessage"
@@ -802,6 +762,16 @@
 		"chi"			"插件还在解析配置文件."
 	}
 
+	"TankDisabled"
+	{
+		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
+	}
+
+	"TeammatesList"
+	{
+		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{mint} {2}"
+	}
+
 	"Transformed"
 	{
 		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
@@ -812,14 +782,14 @@
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"chi"			"你必须手动生成."
+		"chi"			"循环声音线: 开"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
+		"chi"			"循环声音线: 关"
 	}
 
 	"Absorb"
@@ -2933,6 +2903,11 @@
 	}
 
 	"Medic3"
+	{
+		"chi"			"{olive}{1}{mint} 治愈了{yellow} {2}{mint}!"
+	}
+
+	"Medic4"
 	{
 		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}

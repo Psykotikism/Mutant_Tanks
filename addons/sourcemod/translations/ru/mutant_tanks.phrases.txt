@@ -52,6 +52,16 @@
 		"ru"			"Меню пути к файлу"
 	}
 
+	"MTPrefsInfo"
+	{
+		"ru"			"Введите{olive} !mt_prefs{default}, чтобы изменить настройки{mint} вознаграждения{default}!"
+	}
+
+	"MTPrefsMenu"
+	{
+		"ru"			"Меню настроек танков-мутантов"
+	}
+
 	"MTReloadMenu"
 	{
 		"ru"			"Обновить меню конфигурации"
@@ -85,6 +95,11 @@
 	"AbilityAmmo2"
 	{
 		"ru"			"Ваша дальняя способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
+	}
+
+	"AndConjunction"
+	{
+		"ru"			"и"
 	}
 
 	"ButtonMode"
@@ -249,52 +264,62 @@
 
 	"Assist1"
 	{
-		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"ru"			"{olive}{1}{default} покидает игру{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} покидает игру{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Наибольший урон:{mint} {2}"
+	}
+
+	"BodyVisualOn"
+	{
+		"ru"			"Отображать цвет тела: ВКЛ"
+	}
+
+	"BodyVisualOff"
+	{
+		"ru"			"Отображать цвет тела: ВЫКЛ"
 	}
 
 	"ChangeType"
@@ -310,6 +335,11 @@
 	"CommandUsage"
 	{
 		"ru"			"Использование: {1} <введите {2}-{3}> <количество: 1-32> <0: создать на прицеле|1: создать автоматически>"
+	}
+
+	"CommandUsage2"
+	{
+		"ru"			"Использование: {1} \"названию способности\""
 	}
 
 	"CompletedParsing"
@@ -392,6 +422,16 @@
 		"ru"			"Танки-мутанты снова делают бои против танков великолепными!"
 	}
 
+	"GlowVisualOn"
+	{
+		"ru"			"Отображать светящийся контур: ВКЛ"
+	}
+
+	"GlowVisualOff"
+	{
+		"ru"			"Отображать светящийся контур: ВЫКЛ"
+	}
+
 	"HumanCooldown"
 	{
 		"ru"			"Вы должны подождать ещё{olive} {1} сек.{mint} Прежде чем сменить на другой тип танка-мутанта."
@@ -454,52 +494,52 @@
 
 	"Killer1"
 	{
-		"ru"			"{mint}{1}{default} прикончил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} прикончил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"ru"			"{mint}{1}{default} победил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} победил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"ru"			"{mint}{1}{default} отправил{olive} {2}{default} обратно в ад!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} отправил{olive} {2}{default} обратно в ад!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"ru"			"Действительно ли{mint} {1}{default} убил{olive} {2}{default}...?{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"Действительно ли{mint} {1}{default} убил{olive} {2}{default}...?{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"ru"			"{olive}{2}{default} проиграл вызов против{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} проиграл вызов против{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"ru"			"{olive} {2}{default} не удалось убить{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive} {2}{default} не удалось убить{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"ru"			"{olive}{2}{default} встретил свою кончину от рук{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} встретил свою кончину от рук{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"ru"			"Ура!{olive} {2}{default} мёртв благодаря{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"Ура!{olive} {2}{default} мёртв благодаря{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"ru"			"{default}Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{default}Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -557,6 +597,16 @@
 		"ru"			"Да"
 	}
 
+	"ParticleVisualOn"
+	{
+		"ru"			"Отображать эффект частиц: ВКЛ"
+	}
+
+	"ParticleVisualOff"
+	{
+		"ru"			"Отображать эффект частиц: ВЫКЛ"
+	}
+
 	"PluginDisabled"
 	{
 		"ru"			"Танки-мутанты{default} отключены."
@@ -589,142 +639,42 @@
 
 	"RewardAmmo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmo2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmo3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAmmoEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} боеприпасы{default} закончился!"
+		"ru"			"боеприпасы"
 	}
 
 	"RewardAttackBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoost2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoost3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardAttackBoostEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление атаки{default} закончился!"
+		"ru"			"усиление атаки"
 	}
 
 	"RewardDamageBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за убийство{olive} '{1}'{default}!"
+		"ru"			"усиление урона"
 	}
 
-	"RewardDamageBoost2"
+	"RewardEnd"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardDamageBoost3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardDamageBoostEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление урона{default} закончился!"
+		"ru"			"Ваш бонус:{yellow} {1}{default} закончился!"
 	}
 
 	"RewardGod"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardGod2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardGod3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardGodEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} режим бога{default} закончился!"
+		"ru"			"режим бога"
 	}
 
 	"RewardHealth"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardHealth2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardHealth3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardHealthEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} усиление здоровье{default} закончилось!"
+		"ru"			"усиление здоровья"
 	}
 
 	"RewardInfAmmo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmo2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmo3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardInfAmmoEnd"
-	{
-		"ru"			"Ваш бонус:{yellow} бесконечный боезапас{default} закончился!"
-	}
-
-	"RewardItem"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство{olive} '{2}'{default}!"
-	}
-
-	"RewardItem2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за наибольшую помощь в убийстве{olive} '{2}'{default}!"
-	}
-
-	"RewardItem3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
+		"ru"			"бесконечный боезапас"
 	}
 
 	"RewardLadyKiller"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} использований{mint} Женоубийцы{default}."
+		"ru"			"{1}{default} использований{mint} Женоубийцы"
 	}
 
 	"RewardLadyKiller2"
@@ -732,59 +682,69 @@
 		"ru"			"В вашем бонусе:{mint} Женоубийца{default} осталось{yellow} {1}{default} использований."
 	}
 
+	"RewardList"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство{olive} '{2}'{default}!"
+	}
+
+	"RewardList2"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за наибольшую помощь в убийстве{olive} '{2}'{default}!"
+	}
+
+	"RewardList3"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
+	}
+
+	"RewardList4"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} за убийство и наибольшую помощь в убийстве{olive} '{2}'{default}!"
+	}
+
 	"RewardNone"
 	{
 		"ru"			"Вы{default} не нанесли достаточного урона {olive} '{1}'{default} для какой-либо награды."
 	}
 
+	"RewardReceived"
+	{
+		"ru"			"Вы{default} получили бонус:{yellow} {1}{default}."
+	}
+
 	"RewardRefill"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за убийство{olive} '{1}'{default}!"
-	}
-
-	"RewardRefill2"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardRefill3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"здоровье и боеприпасы"
 	}
 
 	"RewardRespawn"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за убийство{olive} '{1}'{default}!"
+		"ru"			"возрождение"
 	}
 
-	"RewardRespawn2"
+	"RewardSolo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
-	}
-
-	"RewardRespawn3"
-	{
-		"ru"			"Вы{default} получили бонус:{yellow} возрождение{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"{1}{default} убили в одиночку:{olive} '{2}'{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за убийство{olive} '{1}'{default}!"
+		"ru"			"ускорение"
 	}
 
-	"RewardSpeedBoost2"
+	"ScreenVisualOn"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"Отображать на экране: ВКЛ"
 	}
 
-	"RewardSpeedBoost3"
+	"ScreenVisualOff"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"Отображать на экране: ВЫКЛ"
 	}
 
-	"RewardSpeedBoostEnd"
+	"SpawnManually"
 	{
-		"ru"			"Ваш бонус:{yellow} ускорение{default} закончился!"
+		"ru"			"Вам придётся возрождаться вручную."
 	}
 
 	"SpawnMessage"
@@ -802,6 +762,16 @@
 		"ru"			"Плагин всё ещё анализирует файл конфигурации."
 	}
 
+	"TankDisabled"
+	{
+		"ru"			"{1}{yellow} (Танк #{2}){default} отключен."
+	}
+
+	"TeammatesList"
+	{
+		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{mint} {2}"
+	}
+
 	"Transformed"
 	{
 		"ru"			"{olive}{1}{mint} превратился в{olive} {2}{mint}!"
@@ -812,14 +782,14 @@
 		"ru"			"{olive}{1}{mint} вернулся обратно в{olive} {2}{mint}!"
 	}
 
-	"SpawnManually"
+	"VoicelineVisualOn"
 	{
-		"ru"			"Вам придётся возрождаться вручную."
+		"ru"			"Циклические голосовые реплики: ВКЛ"
 	}
 
-	"TankDisabled"
+	"VoicelineVisualOff"
 	{
-		"ru"			"{1}{yellow} (Танк #{2}){default} отключен."
+		"ru"			"Циклические голосовые реплики: ВЫКЛ"
 	}
 
 	"Absorb"
@@ -2933,6 +2903,11 @@
 	}
 
 	"Medic3"
+	{
+		"ru"			"{olive}{1}{mint} вылечил{yellow} {2}{mint}!"
+	}
+
+	"Medic4"
 	{
 		"ru"			"{olive}{1}{mint} перестал лечить особых заражённых вокруг себя!"
 	}

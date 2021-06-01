@@ -1,8 +1,14 @@
 # Mutant Tanks
 
 ## Languages
- - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
- - [Russian](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
+- Click on one of the flags to view in another language.
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
+</a>
+
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
+</a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -39,7 +45,9 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 18. Fully customizable reward system.
 
 ## Requirements
-1. `SourceMod 1.11.0.6511` or higher
+1. `SourceMod 1.10` or `SourceMod 1.11`:
+- `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
+- `SourceMod 1.11.0.6511` or higher (Only if compiling the `.sp` files yourself.)
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
@@ -105,6 +113,15 @@ mt_enabledgamemodes ""
 // Minimum: "0.000000"
 // Maximum: "15.000000"
 mt_gamemodetypes "0"
+
+// Enable Mutant Tanks on listen servers.
+// 0: OFF
+// 1: ON
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+mt_listensupport "0"
 
 // Enable Mutant Tanks.
 // 0: OFF
@@ -688,7 +705,7 @@ forward void MT_OnAbilityActivated(int tank);
  * @param list3			List to store the third format.
  * @param list4			List to store the fourth format.
  **/
-forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
+forward void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4);
 
 /**
  * Called when a human-controlled Mutant Tank presses a button.
@@ -870,7 +887,7 @@ forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float
  *
  * @param list			List to store plugin's name in.
  **/
-forward void MT_OnPluginCheck(ArrayList &list);
+forward void MT_OnPluginCheck(ArrayList list);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
@@ -1410,7 +1427,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[255], sMessage[255];
+	static char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
 	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
@@ -1420,7 +1437,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -1434,7 +1451,7 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
 	VFormat(sBuffer, sizeof(sBuffer), message, 2);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
@@ -1460,7 +1477,7 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(client);
 	VFormat(sBuffer, sizeof(sBuffer), message, 3);
 
@@ -1470,7 +1487,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 		switch (client == 0)
 		{
-			case true: MT_PrintToServer(sBuffer);
+			case true: PrintToServer(sBuffer);
 			case false: PrintToConsole(client, sBuffer);
 		}
 	}
@@ -1544,6 +1561,13 @@ sm_mt_version2 - Find out the current version of Mutant Tanks.
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
 sm_mt_info - View information about Mutant Tanks.
+sm_mt_prefs - Set your Mutant Tanks preferences.
+
+// Packaged
+sm_mt_ability - View information about each ability (A-L).
+sm_mt_ability2 - View information about each ability (M-Z).
+
+// Standalone
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.
 sm_mt_aimless - View information about the Aimless ability.
@@ -1910,7 +1934,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `96-99` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `97-100` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1929,7 +1953,7 @@ Example:
 	{
 		"Fast Ability"
 		{
-			"Human Ammo"				"1"
+			"Human Ammo"				"5"
 		}
 	}
 }
@@ -1966,7 +1990,7 @@ That setting is a special mode setting for players, which can determine how some
 
 10. Is there any way players can view information about this feature in-game?
 
-Yes, each ability has a `sm_mt_<ability name here>` command that players can use anytime to view information about abilities.
+Yes, use the `sm_mt_ability`/`sm_mt_ability2` commands.
 
 The commands will each provide a menu that players can use to display certain information in chat.
 
@@ -2095,11 +2119,11 @@ Examples:
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
