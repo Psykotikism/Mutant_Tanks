@@ -9740,7 +9740,7 @@ static void vChooseReward(int survivor, int tank, int priority, int assistant = 
 	vRewardSurvivor(survivor, iType, tank, true, priority, iSetting, assistant, assistPriority, iSetting2);
 }
 
-static void vListRewards(int survivor, const char[][] buffers, int maxStrings, char[] buffer, int size)
+static void vListRewards(int survivor, int count, const char[][] buffers, int maxStrings, char[] buffer, int size)
 {
 	bool bListed = false;
 	for (int iPos = 0; iPos < maxStrings; iPos++)
@@ -9754,7 +9754,14 @@ static void vListRewards(int survivor, const char[][] buffers, int maxStrings, c
 					switch (iPos < maxStrings - 1 && buffers[iPos + 1][0] != '\0')
 					{
 						case true: Format(buffer, size, "%s{default}, {yellow}%s", buffer, buffers[iPos]);
-						case false: Format(buffer, size, "%s{default}, %T{yellow} %s", buffer, "AndConjunction", survivor, buffers[iPos]);
+						case false:
+						{
+							switch (count)
+							{
+								case 2: Format(buffer, size, "%s{default} %T{yellow} %s", buffer, "AndConjunction", survivor, buffers[iPos]);
+								default: Format(buffer, size, "%s{default}, %T{yellow} %s", buffer, "AndConjunction", survivor, buffers[iPos]);
+							}
+						}
 					}
 				}
 				case false:
@@ -10194,7 +10201,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 				char sRewards[1024];
 				int iPriority = (survivor == assistant && assistPriority != -1 && assistSetting > 0) ? 3 : priority;
-				vListRewards(survivor, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
+				vListRewards(survivor, iRewardCount, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
 				vRewardMessage(survivor, iRewardCount, iPriority, sRewards, sTankName);
 
 				int iVisual = g_esCache[tank].g_iRewardVisual[priority];
@@ -10480,7 +10487,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 			}
 
 			char sRewards[1024];
-			vListRewards(survivor, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
+			vListRewards(survivor, iRewardCount, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
 			vRewardEndMessage(survivor, iRewardCount, "RewardEnd", sRewards);
 
 			if (g_esPlayer[survivor].g_iRewardTypes <= 0)
@@ -12271,7 +12278,7 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
 					char sKiller[128];
-					vRecordKiller(tank, killer, percentage, sKiller, sizeof(sKiller));
+					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof(sKiller));
 					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
@@ -12412,8 +12419,15 @@ static void vRecordDamage(int tank, int killer, int assistant, float percentage,
 	}
 }
 
-static void vRecordKiller(int tank, int killer, float percentage, char[] buffer, int size)
+static void vRecordKiller(int tank, int killer, float percentage, int assistant, char[] buffer, int size)
 {
+	if (killer == assistant)
+	{
+		FormatEx(buffer, size, "%N", killer);
+
+		return;
+	}
+
 	switch (g_esCache[tank].g_iDeathDetails)
 	{
 		case 0, 3: FormatEx(buffer, size, "%N{default} ({olive}%i HP{default})", killer, g_esPlayer[killer].g_iTankDamage[tank]);
