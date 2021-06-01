@@ -548,61 +548,61 @@
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t},{3:s}"
+		"#format"		"{1:s},{2:t},{3:s}"
 		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 

@@ -1880,6 +1880,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -9691,12 +9692,13 @@ static void vCalculateDeath(int tank, int survivor)
 			}
 		}
 
-		float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
+		float flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100,
+			flAssistPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 
-		switch (flPercentage < 90.0)
+		switch (flAssistPercentage < 90.0)
 		{
-			case true: vAnnounceDeath(tank, survivor, iAssistant, flPercentage);
-			case false: vAnnounceDeath(tank, 0, 0, 0.0, false);
+			case true: vAnnounceDeath(tank, survivor, flPercentage, iAssistant, flAssistPercentage);
+			case false: vAnnounceDeath(tank, 0, 0.0, 0, 0.0, false);
 		}
 
 		vRewardPriority(survivor, iAssistant, tank, g_esCache[tank].g_iRewardPriority[0]);
@@ -9708,7 +9710,7 @@ static void vCalculateDeath(int tank, int survivor)
 	}
 	else if (g_esCache[tank].g_iAnnounceDeath > 0)
 	{
-		vAnnounceDeath(tank, 0, 0, 0.0);
+		vAnnounceDeath(tank, 0, 0.0, 0, 0.0);
 	}
 }
 
@@ -12252,7 +12254,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 	}
 }
 
-static void vAnnounceDeath(int tank, int killer, int assistant, float percentage, bool override = true)
+static void vAnnounceDeath(int tank, int killer, float percentage, int assistant, float assistPercentage, bool override = true)
 {
 	bool bAnnounce = false;
 
@@ -12268,17 +12270,19 @@ static void vAnnounceDeath(int tank, int killer, int assistant, float percentage
 				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
+					char sKiller[128];
+					vRecordKiller(tank, killer, percentage, sKiller, sizeof(sKiller));
 					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-					vRecordDamage(tank, assistant, percentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
-					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, killer, sTankName, sDetails);
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, killer, sTankName, sDetails);
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
 					vShowDamageList(tank, sTankName, sTeammates);
 					vVocalizeDeath(killer, assistant, tank);
 				}
-				else if (percentage >= 1.0)
+				else if (assistPercentage >= 1.0)
 				{
 					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-					vRecordDamage(tank, assistant, percentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
 					vShowDamageList(tank, sTankName, sTeammates);
@@ -12330,7 +12334,7 @@ static void vAnnounceDeath(int tank, int killer, int assistant, float percentage
 	}
 }
 
-static void vListTeammates(int tank, int assistant, int setting, char[] list, int listSize)
+static void vListTeammates(int tank, int killer, int assistant, int setting, char[] list, int listSize)
 {
 	if (setting < 3)
 	{
@@ -12342,7 +12346,7 @@ static void vListTeammates(int tank, int assistant, int setting, char[] list, in
 	float flPercentage = 0.0;
 	for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 	{
-		if (bIsValidClient(iTeammate) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0 && iTeammate != assistant)
+		if (bIsValidClient(iTeammate) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0 && iTeammate != killer && iTeammate != assistant)
 		{
 			flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 
@@ -12378,7 +12382,7 @@ static void vListTeammates(int tank, int assistant, int setting, char[] list, in
 	}
 }
 
-static void vRecordDamage(int tank, int assistant, float percentage, char[] solo, int soloSize, char[] list, int listSize)
+static void vRecordDamage(int tank, int killer, int assistant, float percentage, char[] solo, int soloSize, char[] list, int listSize)
 {
 	char sList[1024];
 	int iSetting = g_esCache[tank].g_iDeathDetails;
@@ -12388,23 +12392,33 @@ static void vRecordDamage(int tank, int assistant, float percentage, char[] solo
 		case 0, 3:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%i HP{default})", assistant, g_esPlayer[assistant].g_iTankDamage[tank]);
-			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList));
 		}
 		case 1, 4:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%.0f{percent}{default})", assistant, percentage);
-			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList));
 		}
 		case 2, 5:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", assistant, g_esPlayer[assistant].g_iTankDamage[tank], percentage);
-			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList));
 		}
 	}
 
 	if (sList[0] != '\0')
 	{
 		strcopy(list, listSize, sList);
+	}
+}
+
+static void vRecordKiller(int tank, int killer, float percentage, char[] buffer, int size)
+{
+	switch (g_esCache[tank].g_iDeathDetails)
+	{
+		case 0, 3: FormatEx(buffer, size, "%N{default} ({olive}%i HP{default})", killer, g_esPlayer[killer].g_iTankDamage[tank]);
+		case 1, 4: FormatEx(buffer, size, "%N{default} ({olive}%.0f{percent}{default})", killer, percentage);
+		case 2, 5: FormatEx(buffer, size, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", killer, g_esPlayer[killer].g_iTankDamage[tank], percentage);
 	}
 }
 
