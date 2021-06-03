@@ -536,13 +536,13 @@
 			"CTankClaw::SweepFist::Check1"
 			{
 				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"1565" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"1051" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
 			"CTankClaw::SweepFist::Check2"
 			{
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"3078" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start"
