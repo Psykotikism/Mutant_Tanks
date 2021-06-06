@@ -989,6 +989,22 @@ void vShoveHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
+void vShovePlayer(int player, int shover, float pos[3])
+{
+#if defined _l4dh_included
+	switch (g_bLeft4DHooksInstalled || g_hSDKStagger == null)
+	{
+		case true: L4D_StaggerPlayer(player, shover, pos);
+		case false: SDKCall(g_hSDKStagger, player, shover, pos);
+	}
+#else
+	if (g_hSDKStagger != null)
+	{
+		SDKCall(g_hSDKStagger, player, shover, pos);
+	}
+#endif
+}
+
 void vShoveRange(int tank, int value, float random, int pos = -1)
 {
 	static float flChance;
@@ -1010,11 +1026,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					switch (g_bLeft4DHooksInstalled || g_hSDKStagger == null)
-					{
-						case true: L4D_StaggerPlayer(iSurvivor, tank, flTankPos);
-						case false: SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
-					}
+					vShovePlayer(iSurvivor, tank, flTankPos);
 				}
 			}
 		}
@@ -1109,12 +1121,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	static float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-
-	switch (g_bLeft4DHooksInstalled || g_hSDKStagger == null)
-	{
-		case true: L4D_StaggerPlayer(iSurvivor, iTank, flOrigin);
-		case false: SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
-	}
+	vShovePlayer(iSurvivor, iTank, flOrigin);
 
 	return Plugin_Continue;
 }

@@ -1068,11 +1068,12 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
+#if defined _l4dh_included
 	if (g_bLeft4DHooksInstalled || g_esRestartGeneral.g_hSDKGetLastKnownArea == null)
 	{
 		return start ? (L4D_IsInFirstCheckpoint(survivor) || GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1) : L4D_IsInLastCheckpoint(survivor);
 	}
-
+#endif
 	bool bReturn = false;
 	if (g_esRestartPlayer[survivor].g_bCheckpoint && g_esRestartGeneral.g_iFlowOffset != -1)
 	{

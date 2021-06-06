@@ -872,12 +872,7 @@ void vAcid(int survivor, int tank)
 	static float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-
-	switch (g_bLeft4DHooksInstalled || g_hSDKSpitterProjectileCreate == null)
-	{
-		case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
-		case false: SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
-	}
+	vCreateAcid(survivor, flOrigin, flAngles);
 }
 
 void vAcidAbility(int tank, float random, int pos = -1)
@@ -1007,13 +1002,9 @@ void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 	{
 		static float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
+		GetClientAbsAngles(tank, flAngles);
 		flOrigin[2] += 40.0;
-
-		switch (g_bLeft4DHooksInstalled || g_hSDKSpitterProjectileCreate == null)
-		{
-			case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
-			case false: SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
-		}
+		vCreateAcid(tank, flOrigin, flAngles);
 
 		if (g_esAcidCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{
@@ -1029,6 +1020,22 @@ void vAcidCopyStats2(int oldTank, int newTank)
 {
 	g_esAcidPlayer[newTank].g_iAmmoCount = g_esAcidPlayer[oldTank].g_iAmmoCount;
 	g_esAcidPlayer[newTank].g_iCooldown = g_esAcidPlayer[oldTank].g_iCooldown;
+}
+
+void vCreateAcid(int spitter, float pos[3], float angles[3])
+{
+#if defined _l4dh_included
+	switch (g_bLeft4DHooksInstalled || g_hSDKSpitterProjectileCreate == null)
+	{
+		case true: L4D2_SpitterPrj(spitter, pos, angles);
+		case false: SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
+	}
+#else
+	if (g_hSDKSpitterProjectileCreate != null)
+	{
+		SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
+	}
+#endif
 }
 
 void vRemoveAcid(int tank)

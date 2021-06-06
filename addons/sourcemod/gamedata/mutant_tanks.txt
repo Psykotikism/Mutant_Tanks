@@ -110,15 +110,7 @@
 					}
 					"angles"
 					{
-						"type"		"objectptr"
-					}
-					"velocity"
-					{
 						"type"		"vectorptr"
-					}
-					"owner"
-					{
-						"type"		"cbaseentity"
 					}
 				}
 			}
@@ -440,10 +432,28 @@
 					}
 				}
 			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
+			"CTankRock::Create"
+			{
+				"arguments"
+				{
+					"windows" // L4D1 does not have this argument on Linux
+					{
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+					}
+					"owner"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
 			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
-				"arguments" // L4D1 has an extra argument on "CTerrorPlayer::OnVomitedUpon"
+				"arguments" // L4D1 has an extra argument
 				{
 					"a3"
 					{
@@ -992,6 +1002,21 @@
 						"type"		"cbaseentity"
 					}
 					"subject"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
+			"CTankRock::Create"
+			{
+				"arguments"
+				{
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"owner"
 					{
 						"type"		"cbaseentity"
 					}

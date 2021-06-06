@@ -1023,12 +1023,18 @@ void vStopBury(int survivor, int tank)
 
 	if (bIsPlayerIncapacitated(survivor))
 	{
+#if defined _l4dh_included
 		switch (g_bLeft4DHooksInstalled || g_hSDKRevive == null)
 		{
 			case true: L4D_ReviveSurvivor(survivor);
 			case false: SDKCall(g_hSDKRevive, survivor);
 		}
-
+#else
+		if (g_hSDKRevive != null)
+		{
+			SDKCall(g_hSDKRevive, survivor);
+		}
+#endif
 		if (g_esBuryCache[tank].g_flBuryBuffer > 0.0)
 		{
 			SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
