@@ -10816,9 +10816,9 @@ static void vDeveloperSettings(int developer)
 {
 	g_esDeveloper[developer].g_bDevVisual = false;
 	g_esDeveloper[developer].g_sDevFallVoiceline = "PlayerLaugh";
-	g_esDeveloper[developer].g_sDevGlowOutline = "100,165,255";
+	g_esDeveloper[developer].g_sDevGlowOutline = "255,135,0";
 	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "shotgun_spas;machete;molotov;first_aid_kit;pain_pills" : "autoshotgun;pistol;molotov;first_aid_kit;pain_pills;pistol";
-	g_esDeveloper[developer].g_sDevSkinColor = "100,165,255,150";
+	g_esDeveloper[developer].g_sDevSkinColor = "150,0,0,150";
 	g_esDeveloper[developer].g_flDevActionDuration = 2.0;
 	g_esDeveloper[developer].g_flDevAttackBoost = 1.25;
 	g_esDeveloper[developer].g_flDevDamageBoost = 1.75;
@@ -10837,7 +10837,7 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevLifeLeech = 5;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
 	g_esDeveloper[developer].g_iDevPanelLevel = 0;
-	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_ELECTRICITY;
+	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_FIRE;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
@@ -12923,7 +12923,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 
 			if (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
 			{
-				g_esDeveloper[iPlayer].g_iDevAccess = 1660;
+				g_esDeveloper[iPlayer].g_iDevAccess = 1661;
 			}
 
 			vSetupDeveloper(iPlayer, _, true);
