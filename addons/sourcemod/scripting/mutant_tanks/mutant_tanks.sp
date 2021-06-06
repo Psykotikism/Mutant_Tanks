@@ -271,9 +271,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_STACK_SPEEDBOOST 2 // how many times to stack speed boost reward
 #define MT_STACK_DAMAGEBOOST 2 // how many times to stack damage boost reward
 #define MT_STACK_ATTACKBOOST 2 // how many times to stack attack boost reward
-#define MT_STACK_AMMO 3 // how many times to stack ammo reward
+#define MT_STACK_AMMO 2 // how many times to stack ammo reward
 #define MT_STACK_GODMODE 2 // how many times to stack god mode reward
-#define MT_STACK_INFAMMO 1 // how many times to stack infinite ammo reward
+#define MT_STACK_INFAMMO 2 // how many times to stack infinite ammo reward
 
 #define MT_USEFUL_REFILL (1 << 0) // useful refill reward
 #define MT_USEFUL_HEALTH (1 << 1) // useful health reward
@@ -717,6 +717,7 @@ enum struct esPlayer
 	bool g_bTriggered;
 	bool g_bVomited;
 
+	char g_sBodyColor[48];
 	char g_sBodyColorVisual[48];
 	char g_sBodyColorVisual2[48];
 	char g_sBodyColorVisual3[48];
@@ -726,6 +727,7 @@ enum struct esPlayer
 	char g_sFallVoicelineReward[64];
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
+	char g_sGlowColor[36];
 	char g_sGlowColorVisual[36];
 	char g_sGlowColorVisual2[36];
 	char g_sGlowColorVisual3[36];
@@ -848,7 +850,6 @@ enum struct esPlayer
 	int g_iFlashlight;
 	int g_iFlashlightColor[4];
 	int g_iGlowColor[3];
-	int g_iGlowColorVisual[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
 	int g_iGlowMaxRange;
@@ -911,7 +912,6 @@ enum struct esPlayer
 	int g_iShovePenalty;
 	int g_iShovePenaltyReward[3];
 	int g_iSkinColor[4];
-	int g_iSkinColorVisual[4];
 	int g_iSkipTaunt;
 	int g_iSledgehammerRounds;
 	int g_iSledgehammerRoundsReward[3];
@@ -1890,6 +1890,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -3676,31 +3677,13 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			vSetupLoadout(developer, usual);
 			vGiveSpecialAmmo(developer);
+			vCheckClipSizes(developer);
 
 			if (bIsDeveloper(developer, 0))
 			{
-				if (g_esPlayer[developer].g_flVisualTime[1] != -1.0)
-				{
-					g_esPlayer[developer].g_flVisualTime[1] = -1.0;
-
-					vRemoveGlow(developer);
-				}
-
-				if (g_esPlayer[developer].g_flVisualTime[2] != -1.0)
-				{
-					g_esPlayer[developer].g_flVisualTime[2] = -1.0;
-
-					SetEntityRenderColor(developer, 255, 255, 255, 255);
-				}
-
-				if (g_esPlayer[developer].g_flVisualTime[3] != -1.0)
-				{
-					g_esPlayer[developer].g_flVisualTime[3] = -1.0;
-					g_esPlayer[developer].g_iParticleEffect = 0;
-				}
-
-				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, _, ",");
 				vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, _, ",");
+				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, _, ",");
+
 				if (!g_esDeveloper[developer].g_bDevVisual)
 				{
 					g_esDeveloper[developer].g_bDevVisual = true;
@@ -3712,11 +3695,8 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			{
 				g_esDeveloper[developer].g_bDevVisual = false;
 
-				vRemoveGlow(developer);
-				SetEntityRenderColor(developer, 255, 255, 255, 255);
+				vToggleEffects(developer);
 			}
-
-			vCheckClipSizes(developer);
 
 			switch (bIsDeveloper(developer, 5) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
@@ -3766,8 +3746,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			if (g_esDeveloper[developer].g_bDevVisual)
 			{
-				vRemoveGlow(developer);
-				SetEntityRenderColor(developer, 255, 255, 255, 255);
+				vToggleEffects(developer);
 			}
 
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
@@ -4452,11 +4431,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
-				switch (param2)
-				{
-					case 1: vRemoveGlow(param1);
-					case 2: SetEntityRenderColor(param1, 255, 255, 255, 255);
-				}
+				vToggleEffects(param1, param2);
 			}
 			else
 			{
@@ -4467,25 +4442,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
-				float flCurrentTime = GetGameTime();
-
-				switch (param2)
-				{
-					case 1:
-					{
-						if (g_esPlayer[param1].g_flVisualTime[0] != -1.0 && g_esPlayer[param1].g_flVisualTime[0] > flCurrentTime)
-						{
-							vSetSurvivorGlow(param1);
-						}
-					}
-					case 2:
-					{
-						if (g_esPlayer[param1].g_flVisualTime[1] != -1.0 && g_esPlayer[param1].g_flVisualTime[1] > flCurrentTime)
-						{
-							SetEntityRenderColor(param1, g_esPlayer[param1].g_iSkinColorVisual[0], g_esPlayer[param1].g_iSkinColorVisual[1], g_esPlayer[param1].g_iSkinColorVisual[2], g_esPlayer[param1].g_iSkinColorVisual[3]);
-						}
-					}
-				}
+				vToggleEffects(param1, param2);
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -8270,9 +8227,13 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
  			{
  				vSetTankGlow(iPlayer);
  			}
-			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_flVisualTime[1] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[1] > GetGameTime())
+			else if (bIsSurvivor(iPlayer))
 			{
-				vSetSurvivorGlow(iPlayer);
+				switch (bIsDeveloper(iPlayer, 0))
+				{
+					case true: vSetSurvivorOutline(iPlayer, g_esDeveloper[iPlayer].g_sDevGlowOutline, _, ",");
+					case false: vToggleEffects(iPlayer, 1);
+				}
 			}
 
 			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iPlayer].g_bVomited)
@@ -9081,6 +9042,27 @@ static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMo
 	}
 }
 
+static void vToggleEffects(int survivor, int type = 0)
+{
+	if (type == 0 || type == 1)
+	{
+		switch (g_esPlayer[survivor].g_flVisualTime[1] != -1.0 && g_esPlayer[survivor].g_flVisualTime[1] > GetGameTime())
+		{
+			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], _, true);
+			case false: vRemoveGlow(survivor);
+		}
+	}
+
+	if (type == 0 || type == 2)
+	{
+		switch (g_esPlayer[survivor].g_flVisualTime[2] != -1.0 && g_esPlayer[survivor].g_flVisualTime[2] > GetGameTime())
+		{
+			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
+			case false: SetEntityRenderColor(survivor, 255, 255, 255, 255);
+		}
+	}
+}
+
 static void vToggleLogging(int type = -1)
 {
 	static char sMessage[1024], sMap[128], sTime[32], sDate[32];
@@ -9602,19 +9584,9 @@ static void vResetSurvivorStats(int survivor)
 			g_esPlayer[survivor].g_flVisualTime[iPos] = -1.0;
 		}
 
-		if (iPos < sizeof(esPlayer::g_iGlowColorVisual))
-		{
-			g_esPlayer[survivor].g_iGlowColorVisual[iPos] = -1;
-		}
-
 		if (iPos < sizeof(esPlayer::g_iScreenColorVisual))
 		{
 			g_esPlayer[survivor].g_iScreenColorVisual[iPos] = -1;
-		}
-
-		if (iPos < sizeof(esPlayer::g_iSkinColorVisual))
-		{
-			g_esPlayer[survivor].g_iSkinColorVisual[iPos] = -1;
 		}
 	}
 }
@@ -10306,20 +10278,21 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (g_bSecondGame && !bIgnore && (bDeveloper || (iVisual & MT_VISUAL_GLOW)))
+					if (g_bSecondGame && (bDeveloper || (iVisual & MT_VISUAL_GLOW)))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
 						{
-							char sColor[36];
-
 							switch (priority)
 							{
-								case 0: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sGlowColorVisual);
-								case 1: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sGlowColorVisual2);
-								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sGlowColorVisual3);
+								case 0: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual);
+								case 1: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual2);
+								case 2: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual3);
 							}
 
-							vSetSurvivorOutline(survivor, sColor, g_esPlayer[survivor].g_bApplyVisuals[1], _, true);
+							if (!bIgnore)
+							{
+								vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], _, true);
+							}
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
 							{
@@ -10328,20 +10301,21 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (!bIgnore && (bDeveloper || (iVisual & MT_VISUAL_BODY)))
+					if (bDeveloper || (iVisual & MT_VISUAL_BODY))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime)))
 						{
-							char sColor[48];
-
 							switch (priority)
 							{
-								case 0: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sBodyColorVisual);
-								case 1: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sBodyColorVisual2);
-								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sBodyColorVisual3);
+								case 0: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual);
+								case 1: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual2);
+								case 2: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual3);
 							}
 
-							vSetSurvivorColor(survivor, sColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
+							if (!bIgnore)
+							{
+								vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
+							}
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime))
 							{
@@ -10350,7 +10324,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (!bIgnore && (bDeveloper || (iVisual & MT_VISUAL_PARTICLE)))
+					if (bDeveloper || (iVisual & MT_VISUAL_PARTICLE))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime)))
 						{
@@ -10804,7 +10778,7 @@ static void vSetupRewardCounts(int survivor, int tank, int priority, int type, i
 
 static void vDefaultCookieSettings(int client)
 {
-	g_esPlayer[client].g_iRewardVisuals = 31;
+	g_esPlayer[client].g_iRewardVisuals = MT_VISUAL_SCREEN|MT_VISUAL_GLOW|MT_VISUAL_BODY|MT_VISUAL_PARTICLE|MT_VISUAL_VOICELINE;
 
 	for (int iPos = 0; iPos < sizeof(esPlayer::g_bApplyVisuals); iPos++)
 	{
@@ -12050,15 +12024,7 @@ static void vSetSurvivorColor(int survivor, const char[] colors, bool apply = tr
 	{
 		if (sValue[iPos][0] != '\0')
 		{
-			switch (save)
-			{
-				case true:
-				{
-					iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
-					g_esPlayer[survivor].g_iSkinColorVisual[iPos] = iColor[iPos];
-				}
-				case false: iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
-			}
+			iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
 		}
 	}
 
@@ -12105,18 +12071,14 @@ static void vSetSurvivorEffects(int survivor, int effects)
 	}
 }
 
-static void vSetSurvivorGlow(int survivor, int red = -1, int green = -1, int blue = -1)
+static void vSetSurvivorGlow(int survivor, int red, int green, int blue)
 {
 	if (!g_bSecondGame)
 	{
 		return;
 	}
 
-	static int iColor[3];
-	iColor[0] = (0 <= red <= 255) ? red : g_esPlayer[survivor].g_iGlowColorVisual[0];
-	iColor[1] = (0 <= green <= 255) ? green : g_esPlayer[survivor].g_iGlowColorVisual[1];
-	iColor[2] = (0 <= blue <= 255) ? blue : g_esPlayer[survivor].g_iGlowColorVisual[2];
-	SetEntProp(survivor, Prop_Send, "m_glowColorOverride", iGetRGBColor(iColor[0], iColor[1], iColor[2]));
+	SetEntProp(survivor, Prop_Send, "m_glowColorOverride", iGetRGBColor(red, green, blue));
 	SetEntProp(survivor, Prop_Send, "m_bFlashing", 0);
 	SetEntProp(survivor, Prop_Send, "m_nGlowRangeMin", 0);
 	SetEntProp(survivor, Prop_Send, "m_nGlowRange", 999999);
@@ -12139,15 +12101,7 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = 
 	{
 		if (sValue[iPos][0] != '\0')
 		{
-			switch (save)
-			{
-				case true:
-				{
-					iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
-					g_esPlayer[survivor].g_iGlowColorVisual[iPos] = iColor[iPos];
-				}
-				case false: iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
-			}
+			iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
 		}
 	}
 
@@ -15829,7 +15783,7 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (!(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_PARTICLE))
+	if (bIsDeveloper(iSurvivor, 0) || !(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_PARTICLE))
 	{
 		return Plugin_Continue;
 	}
@@ -15907,21 +15861,23 @@ public Action tTimerRefreshRewards(Handle timer)
 					if ((g_esPlayer[iSurvivor].g_flVisualTime[1] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[1] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[1] = -1.0;
-						g_esPlayer[iSurvivor].g_iGlowColorVisual[0] = -1;
-						g_esPlayer[iSurvivor].g_iGlowColorVisual[1] = -1;
-						g_esPlayer[iSurvivor].g_iGlowColorVisual[2] = -1;
+						g_esPlayer[iSurvivor].g_sGlowColor[0] = '\0';
 
-						vRemoveGlow(iSurvivor);
+						if (!bIsDeveloper(iSurvivor, 0))
+						{
+							vRemoveGlow(iSurvivor);
+						}
 					}
 
 					if ((g_esPlayer[iSurvivor].g_flVisualTime[2] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[2] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[2] = -1.0;
-						g_esPlayer[iSurvivor].g_iSkinColorVisual[0] = -1;
-						g_esPlayer[iSurvivor].g_iSkinColorVisual[1] = -1;
-						g_esPlayer[iSurvivor].g_iSkinColorVisual[2] = -1;
+						g_esPlayer[iSurvivor].g_sBodyColor[0] = '\0';
 
-						SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
+						if (!bIsDeveloper(iSurvivor, 0))
+						{
+							SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
+						}
 					}
 
 					if ((g_esPlayer[iSurvivor].g_flVisualTime[3] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[3] < flTime) || g_esGeneral.g_bFinaleEnded)
