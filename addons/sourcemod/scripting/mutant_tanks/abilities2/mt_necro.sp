@@ -636,9 +636,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 						}
 					}
 				}
-			}
 
-			break;
+				break;
+			}
 		}
 	}
 }

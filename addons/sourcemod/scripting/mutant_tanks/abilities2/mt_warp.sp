@@ -1193,11 +1193,12 @@ void vWarpRange(int tank)
 
 bool bIsInsideSaferoom(int survivor)
 {
+#if defined _l4dh_included
 	if (g_bLeft4DHooksInstalled || g_esWarpGeneral.g_hSDKGetLastKnownArea == null)
 	{
 		return L4D_IsInLastCheckpoint(survivor);
 	}
-
+#endif
 	if (g_esWarpGeneral.g_iAttributeFlagsOffset != -1)
 	{
 		int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);

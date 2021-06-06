@@ -922,12 +922,18 @@ void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL9);
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
-
+#if defined _l4dh_included
 	switch (g_bLeft4DHooksInstalled || g_hSDKDeafen == null)
 	{
 		case true: L4D_Deafen(survivor);
 		case false: SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
 	}
+#else
+	if (g_hSDKDeafen != null)
+	{
+		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
+	}
+#endif
 }
 
 void vYellAbility(int tank)

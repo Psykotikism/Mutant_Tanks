@@ -839,12 +839,18 @@ void vFling(int survivor, int tank)
 	flVelocity[0] = (flRatio[0] * -1) * g_esFlingCache[tank].g_flFlingForce;
 	flVelocity[1] = (flRatio[1] * -1) * g_esFlingCache[tank].g_flFlingForce;
 	flVelocity[2] = g_esFlingCache[tank].g_flFlingForce;
-
+#if defined _l4dh_included
 	switch (g_bLeft4DHooksInstalled || g_hSDKFling == null)
 	{
 		case true: L4D2_CTerrorPlayer_Fling(survivor, tank, flVelocity);
 		case false: SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
 	}
+#else
+	if (g_hSDKFling != null)
+	{
+		SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
+	}
+#endif
 }
 
 void vFlingAbility(int tank, float random, int pos = -1)
