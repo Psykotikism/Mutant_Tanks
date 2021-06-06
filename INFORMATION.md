@@ -802,6 +802,23 @@
 			// 3rd number = Visual effect for teammates.
 			"Reward Visual"				"31,31,31"
 
+			// Enable the "sm_mt_prefs" command and notify players about it.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Notify and enable command for killers.
+			// 2nd number = Notify and enable command for assistants.
+			// 3rd number = Notify and enable command for teammates.
+			"Prefs Notify"				"1,1,1"
+
 			// The action duration to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -2729,6 +2746,23 @@
 			// 2nd number = Visual effect for assistants.
 			// 3rd number = Visual effect for teammates.
 			"Reward Visual"				"0,0,0"
+
+			// Enable the "sm_mt_prefs" command and notify players about it.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Notify and enable command for killers.
+			// 2nd number = Notify and enable command for assistants.
+			// 3rd number = Notify and enable command for teammates.
+			"Prefs Notify"				"0,0,0"
 
 			// The action duration to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
