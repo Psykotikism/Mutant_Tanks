@@ -1890,7 +1890,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -4389,13 +4388,16 @@ static void vPrefsMenu(int client, int item = 0)
 	mPrefsMenu.SetTitle("Mutant Tanks Preferences Menu");
 
 	static char sDisplay[PLATFORM_MAX_PATH], sInfo[3];
-	FormatEx(sDisplay, sizeof(sDisplay), "Screen Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_SCREEN, sInfo, sizeof(sInfo));
-	mPrefsMenu.AddItem(sInfo, sDisplay);
+	if (g_bSecondGame)
+	{
+		FormatEx(sDisplay, sizeof(sDisplay), "Screen Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ON" : "OFF"));
+		IntToString(MT_VISUAL_SCREEN, sInfo, sizeof(sInfo));
+		mPrefsMenu.AddItem(sInfo, sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_GLOW, sInfo, sizeof(sInfo));
-	mPrefsMenu.AddItem(sInfo, sDisplay);
+		FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW) ? "ON" : "OFF"));
+		IntToString(MT_VISUAL_GLOW, sInfo, sizeof(sInfo));
+		mPrefsMenu.AddItem(sInfo, sDisplay);
+	}
 
 	FormatEx(sDisplay, sizeof(sDisplay), "Body Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY) ? "ON" : "OFF"));
 	IntToString(MT_VISUAL_BODY, sInfo, sizeof(sInfo));

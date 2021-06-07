@@ -102,17 +102,6 @@
 				"signature"	"CTankRock::Create"
 				"callconv"	"cdecl"
 				"return"	"cbaseentity"
-				"arguments"
-				{
-					"origin"
-					{
-						"type"		"vectorptr"
-					}
-					"angles"
-					{
-						"type"		"vectorptr"
-					}
-				}
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump"
@@ -437,7 +426,23 @@
 			{
 				"arguments"
 				{
-					"windows" // L4D1 does not have this argument on Linux
+					"origin"
+					{
+						"type"		"vectorptr"
+						"linux"
+						{
+							"register"		"eax"
+						}
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+						"linux"
+						{
+							"register"		"edx"
+						}
+					}
+					"windows"
 					{
 						"velocity"
 						{
@@ -974,7 +979,7 @@
 			{
 				"signature"	"CBaseBackpackItem::StartAction"
 				"callconv"	"thiscall"
-				"return"	"int"
+				"return"	"float"
 				"this"		"entity"
 				"arguments"
 				{
@@ -1012,6 +1017,14 @@
 			{
 				"arguments"
 				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+					}
 					"velocity"
 					{
 						"type"		"vectorptr"
