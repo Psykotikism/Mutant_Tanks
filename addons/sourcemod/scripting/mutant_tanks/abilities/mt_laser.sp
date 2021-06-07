@@ -841,8 +841,9 @@ void vLaserReset3(int tank)
 int iGetNearestSurvivor(int tank, float pos[3])
 {
 	static float flSurvivorPos[3];
-	static int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
+	static int iSurvivorCount;
 	iSurvivorCount = 0;
+	int[] iSurvivors = new int[MaxClients + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esLaserPlayer[tank].g_iTankType, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLaserPlayer[iSurvivor].g_iImmunityFlags))
@@ -850,7 +851,8 @@ int iGetNearestSurvivor(int tank, float pos[3])
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(pos, flSurvivorPos) <= g_esLaserCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
 			{
-				iSurvivors[iSurvivorCount++] = iSurvivor;
+				iSurvivors[iSurvivorCount] = iSurvivor;
+				iSurvivorCount++;
 			}
 		}
 	}

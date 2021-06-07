@@ -819,6 +819,18 @@
 			// 3rd number = Notify and enable command for teammates.
 			"Prefs Notify"				"1,1,1"
 
+			// The total number of teammates to reward for assisting against Mutant Tanks.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: This setting excludes killers and most assists.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF, no limit (reward as many applicable recipients as possible).
+			// 1-32: ON, the total number of assistants to reward.
+			"Teammate Limit"			"0"
+
 			// The action duration to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -2763,6 +2775,18 @@
 			// 2nd number = Notify and enable command for assistants.
 			// 3rd number = Notify and enable command for teammates.
 			"Prefs Notify"				"0,0,0"
+
+			// The total number of teammates to reward for assisting against the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: This setting excludes killers and most assists.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF, no limit (reward as many applicable recipients as possible).
+			// 1-32: ON, the total number of assistants to reward.
+			"Teammate Limit"			"0"
 
 			// The action duration to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

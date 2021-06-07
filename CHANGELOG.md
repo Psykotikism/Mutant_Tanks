@@ -24,7 +24,9 @@
 - The `Reward` system's visual effects will no longer stack when the recipient receives rewards for both killing and assisting the most against a Tank. (Thanks to `Mi.Cura` for the idea!)
 
 #### Settings
-- Added the `Prefs Notify` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by `Mi.Cura`.)
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Prefs Notify` (Requested by `Mi.Cura`.)
+	- `Teammate Limit` (Requested by `Mi.Cura`.)
 - Added support for `8+` players for the `Death Details` setting's messages.
 
 ### Files

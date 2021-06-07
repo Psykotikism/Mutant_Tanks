@@ -1953,7 +1953,7 @@ Example:
 	{
 		"Fast Ability"
 		{
-			"Human Ammo"				"10"
+			"Human Ammo"				"5"
 		}
 	}
 }
