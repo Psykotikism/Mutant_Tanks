@@ -60,7 +60,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esRespawnPlayer
 {
 	bool g_bActivated;
-	bool g_bRespawning[3];
+	bool g_bRespawning[4];
 
 	float g_flOpenAreasOnly;
 	float g_flRespawnChance;
@@ -669,6 +669,7 @@ void vRespawn(int tank)
 		g_esRespawnPlayer[tank].g_bRespawning[0] = true;
 		g_esRespawnPlayer[tank].g_bRespawning[1] = true;
 		g_esRespawnPlayer[tank].g_bRespawning[2] = true;
+		g_esRespawnPlayer[tank].g_bRespawning[3] = true;
 		g_esRespawnPlayer[tank].g_iCount++;
 
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRespawnCache[tank].g_iHumanAbility == 1)

@@ -979,7 +979,7 @@
 			{
 				"signature"	"CBaseBackpackItem::StartAction"
 				"callconv"	"thiscall"
-				"return"	"float"
+				"return"	"int"
 				"this"		"entity"
 				"arguments"
 				{

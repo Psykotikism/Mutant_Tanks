@@ -28,6 +28,10 @@
 	- `Prefs Notify` (Requested by `Mi.Cura`.)
 	- `Teammate Limit` (Requested by `Mi.Cura`.)
 - Added support for `8+` players for the `Death Details` setting's messages.
+- Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
+
+#### Natives & Forwards
+- Updated the documentation for the `MT_OnRewardSurvivor` native.
 
 ### Files
 

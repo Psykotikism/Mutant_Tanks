@@ -391,7 +391,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param tank			Client index of the Tank.
  * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
  *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
- * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
+ * @param priority		0 = Killer, 1 = Assistant who did most damage, 2 = Teammate who helped, 3 = Assistant killer
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
  *
@@ -1452,7 +1452,7 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 	}
 }
 
-stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, const char[] value)
+stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value)
 {
 	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
@@ -1461,6 +1461,7 @@ stock void vGetStringValue(const char[] key, const char[] setting1, const char[]
 			case 0: strcopy(buffer1, size1, value);
 			case 1: strcopy(buffer2, size2, value);
 			case 2: strcopy(buffer3, size3, value);
+                        case 3: strcopy(buffer4, size4, value);
 		}
 	}
 }

@@ -480,7 +480,6 @@
 		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
-			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
@@ -568,10 +567,10 @@
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
-			"Reward Enabled"			"-1,-1,-1"
+			// 4th number = Enable rewards for assistant killers.
+			"Reward Enabled"			"-1,-1,-1,-1"
 
 			// Reward survivor bots for fighting Mutant Tanks.
-			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
@@ -659,7 +658,8 @@
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
-			"Reward Bots"				"-1,-1,-1"
+			// 4th number = Enable rewards for assistant killers.
+			"Reward Bots"				"-1,-1,-1,-1"
 
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -667,7 +667,7 @@
 			// --
 			// Separate chances with commas (",").
 			// --
-			// Chances limit: 3
+			// Chances limit: 4
 			// Character limit for each chance: 6
 			// --
 			// Minimum value for each chance: 0.0 (No chance)
@@ -676,7 +676,8 @@
 			// 1st number = Chance to reward killers.
 			// 2nd number = Chance to reward assistants.
 			// 3rd number = Chance to reward teammates.
-			"Reward Chance"				"33.3,33.3,33.3"
+			// 4th number = Chance to reward assistant killers.
+			"Reward Chance"				"33.3,33.3,33.3,33.3"
 
 			// The duration of temporary rewards.
 			// Note: This setting can be used for standard Tanks.
@@ -684,7 +685,7 @@
 			// --
 			// Separate durations with commas (",").
 			// --
-			// Durations limit: 3
+			// Durations limit: 4
 			// Character limit for each duration: 9
 			// --
 			// Minimum value for each duration: 0.1 (Shortest)
@@ -693,7 +694,8 @@
 			// 1st number = Duration for killer rewards.
 			// 2nd number = Duration for assistant rewards.
 			// 3rd number = Duration for teammate rewards.
-			"Reward Duration"			"10.0,10.0,10.0"
+			// 4th number = Duration for assistant killers.
+			"Reward Duration"			"10.0,10.0,10.0,10.0"
 
 			// The effects displayed when rewarding survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -715,7 +717,8 @@
 			// 1st number = Effect for killers.
 			// 2nd number = Effect for assistants.
 			// 3rd number = Effect for teammates.
-			"Reward Effect"				"15,15,15"
+			// 4th number = Effect for assistant killers.
+			"Reward Effect"				"15,15,15,15"
 
 			// Notify survivors when they receive a reward from Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -723,7 +726,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Add up numbers together for different results.
@@ -738,7 +741,8 @@
 			// 1st number = Notify killers.
 			// 2nd number = Notify assistants.
 			// 3rd number = Notify teammates.
-			"Reward Notify"				"3,3,3"
+			// 4th number = Notify assistant killers.
+			"Reward Notify"				"3,3,3,3"
 
 			// The minimum amount of damage in percentage required to receive a reward.
 			// Note: This setting can be used for standard Tanks.
@@ -746,7 +750,7 @@
 			// --
 			// Separate percentages with commas (",").
 			// --
-			// Percentages limit: 3
+			// Percentages limit: 4
 			// Character limit for each percentage: 6
 			// --
 			// Minimum value for each percentage: 0.1 (Least)
@@ -755,7 +759,8 @@
 			// 1st number = Percentage of damage required for killer rewards.
 			// 2nd number = Percentage of damage required for assistant rewards.
 			// 3rd number = Percentage of damage required for teammate rewards.
-			"Reward Percentage"			"10.0,10.0,10.0"
+			// 4th number = Percentage of damage required for assistant killers.
+			"Reward Percentage"			"10.0,10.0,10.0,10.0"
 
 			// Prioritize rewards in this order.
 			// Note: This setting can be used for standard Tanks.
@@ -763,7 +768,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0
@@ -773,11 +778,13 @@
 			// 1: Reward killers.
 			// 2: Reward assistants.
 			// 3: Reward teammates.
+			// 4: Reward assistant killers.
 			// --
 			// 1st number = 1st priority
 			// 2nd number = 2nd priority
 			// 3rd number = 3rd priority
-			"Reward Priority"			"1,2,3"
+			// 4th number = 4th priority
+			"Reward Priority"			"1,2,3,4"
 
 			// The visual effects displayed for rewards.
 			// Note: This setting can be used for standard Tanks.
@@ -800,7 +807,8 @@
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
 			// 3rd number = Visual effect for teammates.
-			"Reward Visual"				"31,31,31"
+			// 4th number = Visual effect for assistant killers.
+			"Reward Visual"				"31,31,31,31"
 
 			// Enable the "sm_mt_prefs" command and notify players about it.
 			// Note: This setting can be used for standard Tanks.
@@ -808,7 +816,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -817,7 +825,8 @@
 			// 1st number = Notify and enable command for killers.
 			// 2nd number = Notify and enable command for assistants.
 			// 3rd number = Notify and enable command for teammates.
-			"Prefs Notify"				"1,1,1"
+			// 4th number = Notify and enable command for assistant killers.
+			"Prefs Notify"				"1,1,1,1"
 
 			// The total number of teammates to reward for assisting against Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -837,7 +846,7 @@
 			// --
 			// Separate durations with commas (",").
 			// --
-			// Durations limit: 3
+			// Durations limit: 4
 			// Character limit for each duration: 9
 			// --
 			// Minimum value for each duration: 0.0 (OFF)
@@ -846,7 +855,8 @@
 			// 1st number = Duration for killers.
 			// 2nd number = Duration for assistants.
 			// 3rd number = Duration for teammates.
-			"Action Duration Reward"		"2.0,2.0,2.0"
+			// 4th number = Duration for assistant killers.
+			"Action Duration Reward"		"2.0,2.0,2.0,2.0"
 
 			// Give ammo boost as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -854,7 +864,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -863,7 +873,8 @@
 			// 1st number = Give ammo boost to killers.
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
-			"Ammo Boost Reward"			"1,1,1"
+			// 4th number = Give ammo boost to assistant killers.
+			"Ammo Boost Reward"			"1,1,1,1"
 
 			// The amount of ammo to regenerate per second as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -871,7 +882,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -880,7 +891,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Ammo Regen Reward"			"1,1,1"
+			// 4th number = Amount for assistant killers.
+			"Ammo Regen Reward"			"1,1,1,1"
 
 			// The attack boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -888,7 +900,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -897,7 +909,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Attack Boost Reward"			"1.25,1.25,1.25"
+			// 4th number = Boost for assistant killers.
+			"Attack Boost Reward"			"1.25,1.25,1.25,1.25"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -905,7 +918,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -914,7 +927,8 @@
 			// 1st number = Give clean kills to killers.
 			// 2nd number = Give clean kills to assistants.
 			// 3rd number = Give clean kills to teammates.
-			"Clean Kills Reward"			"1,1,1"
+			// 4th number = Give clean kills to assistant killers.
+			"Clean Kills Reward"			"1,1,1,1"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -922,7 +936,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -931,7 +945,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Damage Boost Reward"			"1.25,1.25,1.25"
+			// 4th number = Boost for assistant killers.
+			"Damage Boost Reward"			"1.25,1.25,1.25,1.25"
 
 			// The damage resistance to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -939,7 +954,7 @@
 			// --
 			// Separate resistances with commas (",").
 			// --
-			// Resistances limit: 3
+			// Resistances limit: 4
 			// Character limit for each resistance: 9
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
@@ -948,7 +963,8 @@
 			// 1st number = Resistance for killers.
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
-			"Damage Resistance Reward"		"0.5,0.5,0.5"
+			// 4th number = Resistance for assistant killers.
+			"Damage Resistance Reward"		"0.5,0.5,0.5,0.5"
 
 			// The voiceline that plays when survivors are falling.
 			// Note: This setting can be used for standard Tanks.
@@ -956,12 +972,13 @@
 			// --
 			// Separate voicelines sets with commas (",").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 64
 			// --
 			// 1st set = Fall voiceline for killers.
 			// 2nd set = Fall voiceline for assistants.
 			// 3rd set = Fall voiceline for teammates.
+			// 4th set = Fall voiceline for assistant killers.
 			"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh"
 
 			// The healing percentage from first aid kits to reward to survivors.
@@ -970,7 +987,7 @@
 			// --
 			// Separate percentages with commas (",").
 			// --
-			// Percentages limit: 3
+			// Percentages limit: 4
 			// Character limit for each percentage: 6
 			// --
 			// Minimum percentage for each: 0.0 (OFF)
@@ -979,7 +996,8 @@
 			// 1st number = Heal percentage for killers.
 			// 2nd number = Heal percentage for assistants.
 			// 3rd number = Heal percentage for teammates.
-			"Heal Percent Reward"			"100.0,100.0,100.0"
+			// 4th number = Heal percentage for assistant killers.
+			"Heal Percent Reward"			"100.0,100.0,100.0,100.0"
 
 			// The amount of health to regenerate per second as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -987,7 +1005,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -996,7 +1014,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Health Regen Reward"			"1,1,1"
+			// 4th number = Amount for assistant killers.
+			"Health Regen Reward"			"1,1,1,1"
 
 			// Give hollowpoint ammo as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1004,7 +1023,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1013,7 +1032,8 @@
 			// 1st number = Give hollowpoint ammo to killers.
 			// 2nd number = Give hollowpoint ammo to assistants.
 			// 3rd number = Give hollowpoint ammo to teammates.
-			"Hollowpoint Ammo Reward"		"1,1,1"
+			// 4th number = Give hollowpoint ammo to assistant killers.
+			"Hollowpoint Ammo Reward"		"1,1,1,1"
 
 			// Give infinite ammo as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1036,7 +1056,8 @@
 			// 1st number = Give infinite ammo to killers.
 			// 2nd number = Give infinite ammo to assistants.
 			// 3rd number = Give infinite ammo to teammates.
-			"Infinite Ammo Reward"			"31,31,31"
+			// 4th number = Give infinite ammo to assistant killers.
+			"Infinite Ammo Reward"			"31,31,31,31"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1045,13 +1066,14 @@
 			// Separate item sets with commas (",").
 			// Separate items with semi-colons (";").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 320
 			// --
 			// 1st set = Item set to reward killers.
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
-			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
+			// 4th set = Item set to reward assistant killers.
+			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// The jump height to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1060,7 +1082,7 @@
 			// --
 			// Separate heights with commas (",").
 			// --
-			// Heights limit: 3
+			// Heights limit: 4
 			// Character limit for each height: 9
 			// --
 			// Minimum value for each height: 0.0 (OFF)
@@ -1069,7 +1091,8 @@
 			// 1st number = Height for killers.
 			// 2nd number = Height for assistants.
 			// 3rd number = Height for teammates.
-			"Jump Height Reward"			"75.0,75.0,75.0"
+			// 4th number = Height for assistant killers.
+			"Jump Height Reward"			"75.0,75.0,75.0,75.0"
 
 			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1077,16 +1100,17 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
 			// Maximum value for each: 999999 (Highest)
 			// --
-			// 1st number = Number of lady killer bullets to give to killers.
-			// 2nd number = Number of lady killer bullets to give to assistants.
-			// 3rd number = Number of lady killer bullets to give to teammates.
-			"Lady Killer Reward"			"1,1,1"
+			// 1st number = Number of bullets to give to killers.
+			// 2nd number = Number of bullets to give to assistants.
+			// 3rd number = Number of bullets to give to teammates.
+			// 4th number = Number of bullets to give to assistant killers.
+			"Lady Killer Reward"			"1,1,1,1"
 
 			// The amount of health to leech per hit as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1094,7 +1118,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -1103,7 +1127,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Life Leech Reward"			"1,1,1"
+			// 4th number = Amount for assistant killers.
+			"Life Leech Reward"			"1,1,1,1"
 
 			// The melee range to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1111,7 +1136,7 @@
 			// --
 			// Separate ranges with commas (",").
 			// --
-			// Ranges limit: 3
+			// Ranges limit: 4
 			// Character limit for each range: 6
 			// --
 			// Minimum value for each range: 0 (OFF)
@@ -1120,7 +1145,8 @@
 			// 1st number = Range for killers.
 			// 2nd number = Range for assistants.
 			// 3rd number = Range for teammates.
-			"Melee Range Reward"			"100,100,100"
+			// 4th number = Range for assistant killers.
+			"Melee Range Reward"			"100,100,100,100"
 
 			// The punch resistance to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1128,7 +1154,7 @@
 			// --
 			// Separate resistances with commas (",").
 			// --
-			// Resistances limit: 3
+			// Resistances limit: 4
 			// Character limit for each resistance: 6
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
@@ -1137,7 +1163,8 @@
 			// 1st number = Resistance for killers.
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
-			"Punch Resistance Reward"		"0.25,0.25,0.25"
+			// 4th number = Resistance for assistant killers.
+			"Punch Resistance Reward"		"0.25,0.25,0.25,0.25"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -1145,7 +1172,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1154,7 +1181,8 @@
 			// 1st number = Restore loadouts for killers.
 			// 2nd number = Restore loadouts for assistants.
 			// 3rd number = Restore loadouts for teammates.
-			"Respawn Loadout Reward"		"1,1,1"
+			// 4th number = Restore loadouts for assistant killers.
+			"Respawn Loadout Reward"		"1,1,1,1"
 
 			// The revive health to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1162,7 +1190,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 12
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1171,7 +1199,8 @@
 			// 1st number = Health for killers.
 			// 2nd number = Health for assistants.
 			// 3rd number = Health for teammates.
-			"Revive Health Reward"			"100,100,100"
+			// 4th number = Health for assistant killers.
+			"Revive Health Reward"			"100,100,100,100"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1180,7 +1209,7 @@
 			// --
 			// Separate multipliers with commas (",").
 			// --
-			// Multipliers limit: 3
+			// Multipliers limit: 4
 			// Character limit for each multiplier: 9
 			// --
 			// Minimum value for each multiplier: 0.0 (OFF)
@@ -1189,9 +1218,10 @@
 			// 1st number = Multiplier for killers.
 			// 2nd number = Multiplier for assistants.
 			// 3rd number = Multiplier for teammates.
+			// 4th number = Multiplier for assistant killers.
 			// --
 			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
-			"Shove Damage Reward"			"0.025,0.025,0.025"
+			"Shove Damage Reward"			"0.025,0.025,0.025,0.025"
 
 			// Remove shove penalty as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1199,7 +1229,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1208,7 +1238,8 @@
 			// 1st number = Remove shove penalty for killers.
 			// 2nd number = Remove shove penalty for assistants.
 			// 3rd number = Remove shove penalty for teammates.
-			"Shove Penalty Reward"			"1,1,1"
+			// 4th number = Remove shove penalty for assistant killers.
+			"Shove Penalty Reward"			"1,1,1,1"
 
 			// The shove rate to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1217,7 +1248,7 @@
 			// --
 			// Separate rates with commas (",").
 			// --
-			// Rates limit: 3
+			// Rates limit: 4
 			// Character limit for each rate: 9
 			// --
 			// Minimum value for each rate: 0.0 (OFF)
@@ -1226,9 +1257,10 @@
 			// 1st number = Rate for killers.
 			// 2nd number = Rate for assistants.
 			// 3rd number = Rate for teammates.
+			// 4th number = Rate for assistant killers.
 			// --
 			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
-			"Shove Rate Reward"			"0.7,0.7,0.7"
+			"Shove Rate Reward"			"0.7,0.7,0.7,0.7"
 
 			// Give sledgehammer rounds as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1236,7 +1268,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1245,15 +1277,17 @@
 			// 1st number = Give sledgehammer rounds to killers.
 			// 2nd number = Give sledgehammer rounds to assistants.
 			// 3rd number = Give sledgehammer rounds to teammates.
-			"Sledgehammer Rounds Reward"		"1,1,1"
+			// 4th number = Give sledgehammer rounds to assistant killers.
+			"Sledgehammer Rounds Reward"		"1,1,1,1"
 
-			// Give special ammo as a reward to survivors. (Only available in Left 4 Dead 2.)
+			// Give special ammo as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0
@@ -1267,7 +1301,8 @@
 			// 1st number = Give special ammo to killers.
 			// 2nd number = Give special ammo to assistants.
 			// 3rd number = Give special ammo to teammates.
-			"Special Ammo Reward"			"1,1,1"
+			// 4th number = Give special ammo to assistant killers.
+			"Special Ammo Reward"			"1,1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1275,7 +1310,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -1284,7 +1319,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Speed Boost Reward"			"1.25,1.25,1.25"
+			// 4th number = Boost for assistant killers.
+			"Speed Boost Reward"			"1.25,1.25,1.25,1.25"
 
 			// Allow rewards from Mutant Tanks to be stacked.
 			// Note: This setting can be used for standard Tanks.
@@ -1292,7 +1328,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1301,7 +1337,8 @@
 			// 1st number = Stack rewards for killers.
 			// 2nd number = Stack rewards for assistants.
 			// 3rd number = Stack rewards for teammates.
-			"Stack Rewards"				"1,1,1"
+			// 4th number = Stack rewards for assistant killers.
+			"Stack Rewards"				"1,1,1,1"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1309,7 +1346,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -1318,7 +1355,8 @@
 			// 1st number = Give thorns to killers.
 			// 2nd number = Give thorns to assistants.
 			// 3rd number = Give thorns to teammates.
-			"Thorns Reward"				"1,1,1"
+			// 4th number = Give thorns to assistant killers.
+			"Thorns Reward"				"1,1,1,1"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting can be used for standard Tanks.
@@ -1340,7 +1378,8 @@
 			// 1st number = Enable useful rewards for killers.
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
-			"Useful Rewards"			"15,15,15"
+			// 4th number = Enable useful rewards for assistant killers.
+			"Useful Rewards"			"15,15,15,15"
 
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: This setting can be used for standard Tanks.
@@ -1350,7 +1389,7 @@
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGBA sets limit: 4
 			// Character limit for each set: 16
 			// Character limit for each value: 4
 			// --
@@ -1365,7 +1404,8 @@
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
-			"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
+			// 4th set = RGBA set for assistant killers.
+			"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 
 			// These are the RGB values of the recipients' glow outline color visual.
 			// Note: This setting can be used for standard Tanks.
@@ -1376,7 +1416,7 @@
 			// Separate RGB sets with commas (",").
 			// Separate RGB values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGB sets limit: 4
 			// Character limit for each set: 12
 			// Character limit for each value: 4
 			// --
@@ -1390,7 +1430,8 @@
 			// 1st set = RGB set for killers.
 			// 2nd set = RGB set for assistants.
 			// 3rd set = RGB set for teammates.
-			"Glow Color Visual"			"-1;-1;-1,-1;-1;-1,-1;-1;-1"
+			// 4th set = RGB set for assistant killers.
+			"Glow Color Visual"			"-1;-1;-1,-1;-1;-1,-1;-1;-1,-1;-1;-1"
 
 			// The voiceline that plays on loop throughout a survivor's reward duration.
 			// Note: This setting can be used for standard Tanks.
@@ -1398,13 +1439,14 @@
 			// --
 			// Separate voicelines sets with commas (",").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 64
 			// --
 			// 1st set = Looping voiceline for killers.
 			// 2nd set = Looping voiceline for assistants.
 			// 3rd set = Looping voiceline for teammates.
-			"Looping Voiceline Visual"		"PlayerDeath,PlayerDeath,PlayerDeath"
+			// 4th set = Looping voiceline for assistant killers.
+			"Looping Voiceline Visual"		"PlayerDeath,PlayerDeath,PlayerDeath,PlayerDeath"
 
 			// The particles for the recipients' particle effect visual.
 			// Note: This setting can be used for standard Tanks.
@@ -1420,7 +1462,12 @@
 			// 2: Electric Jolt
 			// 4: Fire Trail
 			// 8: Acid Trail (Only available in Left 4 Dead 2.)
-			"Particle Effect Visual"		"15,15,15"
+			// --
+			// 1st number = Particle effect for killers.
+			// 2nd number = Particle effect for assistants.
+			// 3rd number = Particle effect for teammates.
+			// 4th number = Particle effect for assistant killers.
+			"Particle Effect Visual"		"15,15,15,15"
 
 			// These are the RGBA values of the recipients' screen color visual.
 			// Note: This setting can be used for standard Tanks.
@@ -1430,7 +1477,7 @@
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGBA sets limit: 4
 			// Character limit for each set: 16
 			// Character limit for each value: 4
 			// --
@@ -1445,7 +1492,8 @@
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
-			"Screen Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
+			// 4th set = RGBA set for assistant killers.
+			"Screen Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 		}
 		"Competitive"
 		{
@@ -2437,7 +2485,6 @@
 		"Rewards"
 		{
 			// Reward survivors for fighting the Mutant Tank.
-			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
@@ -2525,10 +2572,10 @@
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
-			"Reward Enabled"			"-1,-1,-1"
+			// 4th number = Enable rewards for assistant killers.
+			"Reward Enabled"			"-1,-1,-1,-1"
 
 			// Reward survivor bots for fighting the Mutant Tank.
-			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
@@ -2616,7 +2663,8 @@
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
-			"Reward Bots"				"-1,-1,-1"
+			// 4th number = Enable rewards for assistant killers.
+			"Reward Bots"				"-1,-1,-1,-1"
 
 			// The chance to reward survivors for killing the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2624,7 +2672,7 @@
 			// --
 			// Separate chances with commas (",").
 			// --
-			// Chances limit: 3
+			// Chances limit: 4
 			// Character limit for each chance: 6
 			// --
 			// Minimum value for each chance: 0.0 (No chance)
@@ -2633,7 +2681,8 @@
 			// 1st number = Chance to reward killers.
 			// 2nd number = Chance to reward assistants.
 			// 3rd number = Chance to reward teammates.
-			"Reward Chance"				"0.0,0.0,0.0"
+			// 4th number = Chance to reward assistant killers.
+			"Reward Chance"				"0.0,0.0,0.0,0.0"
 
 			// The duration of temporary rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2641,7 +2690,7 @@
 			// --
 			// Separate durations with commas (",").
 			// --
-			// Durations limit: 3
+			// Durations limit: 4
 			// Character limit for each duration: 9
 			// --
 			// Minimum value for each duration: 0.1 (Shortest)
@@ -2650,7 +2699,8 @@
 			// 1st number = Duration for killer rewards.
 			// 2nd number = Duration for assistant rewards.
 			// 3rd number = Duration for teammate rewards.
-			"Reward Duration"			"0.0,0.0,0.0"
+			// 4th number = Duration for assistant killers.
+			"Reward Duration"			"0.0,0.0,0.0,0.0"
 
 			// The effects displayed when rewarding survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2661,7 +2711,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: 0
-			// Maximum value for each: 3
+			// Maximum value for each: 15
 			// --
 			// 0: OFF
 			// 1: Trophy
@@ -2672,7 +2722,8 @@
 			// 1st number = Effect for killers.
 			// 2nd number = Effect for assistants.
 			// 3rd number = Effect for teammates.
-			"Reward Effect"				"0,0,0"
+			// 4th number = Effect for assistant killers.
+			"Reward Effect"				"0,0,0,0"
 
 			// Notify survivors when they receive a reward from the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2680,7 +2731,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Add up numbers together for different results.
@@ -2695,7 +2746,8 @@
 			// 1st number = Notify killers.
 			// 2nd number = Notify assistants.
 			// 3rd number = Notify teammates.
-			"Reward Notify"				"0,0,0"
+			// 4th number = Notify assistant killers.
+			"Reward Notify"				"0,0,0,0"
 
 			// The minimum amount of damage in percentage required to receive a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2703,7 +2755,7 @@
 			// --
 			// Separate percentages with commas (",").
 			// --
-			// Percentages limit: 3
+			// Percentages limit: 4
 			// Character limit for each percentage: 6
 			// --
 			// Minimum value for each percentage: 0.1 (Least)
@@ -2712,7 +2764,8 @@
 			// 1st number = Percentage of damage required for killer rewards.
 			// 2nd number = Percentage of damage required for assistant rewards.
 			// 3rd number = Percentage of damage required for teammate rewards.
-			"Reward Percentage"			"0.0,0.0,0.0"
+			// 4th number = Percentage of damage required for assistant killers.
+			"Reward Percentage"			"0.0,0.0,0.0,0.0"
 
 			// Prioritize rewards in this order.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2720,7 +2773,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0
@@ -2730,11 +2783,13 @@
 			// 1: Reward killers.
 			// 2: Reward assistants.
 			// 3: Reward teammates.
+			// 4: Reward assistant killers.
 			// --
 			// 1st number = 1st priority
 			// 2nd number = 2nd priority
 			// 3rd number = 3rd priority
-			"Reward Priority"			"0,0,0"
+			// 4th number = 4th priority
+			"Reward Priority"			"0,0,0,0"
 
 			// The visual effects displayed for rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2757,7 +2812,8 @@
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
 			// 3rd number = Visual effect for teammates.
-			"Reward Visual"				"0,0,0"
+			// 4th number = Visual effect for assistant killers.
+			"Reward Visual"				"0,0,0,0"
 
 			// Enable the "sm_mt_prefs" command and notify players about it.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2765,7 +2821,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -2774,7 +2830,8 @@
 			// 1st number = Notify and enable command for killers.
 			// 2nd number = Notify and enable command for assistants.
 			// 3rd number = Notify and enable command for teammates.
-			"Prefs Notify"				"0,0,0"
+			// 4th number = Notify and enable command for assistant killers.
+			"Prefs Notify"				"0,0,0,0"
 
 			// The total number of teammates to reward for assisting against the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2794,7 +2851,7 @@
 			// --
 			// Separate durations with commas (",").
 			// --
-			// Durations limit: 3
+			// Durations limit: 4
 			// Character limit for each duration: 9
 			// --
 			// Minimum value for each duration: 0.0 (OFF)
@@ -2803,7 +2860,8 @@
 			// 1st number = Duration for killers.
 			// 2nd number = Duration for assistants.
 			// 3rd number = Duration for teammates.
-			"Action Duration Reward"		"0.0,0.0,0.0"
+			// 4th number = Duration for assistant killers.
+			"Action Duration Reward"		"0.0,0.0,0.0,0.0"
 
 			// Give ammo boost as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2811,7 +2869,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -2820,7 +2878,8 @@
 			// 1st number = Give ammo boost to killers.
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
-			"Ammo Boost Reward"			"0,0,0"
+			// 4th number = Give ammo boost to assistant killers.
+			"Ammo Boost Reward"			"0,0,0,0"
 
 			// The amount of ammo to regenerate per second as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2828,7 +2887,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -2837,7 +2896,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Ammo Regen Reward"			"0,0,0"
+			// 4th number = Amount for assistant killers.
+			"Ammo Regen Reward"			"0,0,0,0"
 
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2845,7 +2905,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -2854,7 +2914,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Attack Boost Reward"			"0.0,0.0,0.0"
+			// 4th number = Boost for assistant killers.
+			"Attack Boost Reward"			"0.0,0.0,0.0,0.0"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2862,7 +2923,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -2871,7 +2932,8 @@
 			// 1st number = Give clean kills to killers.
 			// 2nd number = Give clean kills to assistants.
 			// 3rd number = Give clean kills to teammates.
-			"Clean Kills Reward"			"0,0,0"
+			// 4th number = Give clean kills to assistant killers.
+			"Clean Kills Reward"			"0,0,0,0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2879,7 +2941,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -2888,7 +2950,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Damage Boost Reward"			"0.0,0.0,0.0"
+			// 4th number = Boost for assistant killers.
+			"Damage Boost Reward"			"0.0,0.0,0.0,0.0"
 
 			// The damage resistance to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2896,7 +2959,7 @@
 			// --
 			// Separate resistances with commas (",").
 			// --
-			// Resistances limit: 3
+			// Resistances limit: 4
 			// Character limit for each resistance: 9
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
@@ -2905,7 +2968,8 @@
 			// 1st number = Resistance for killers.
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
-			"Damage Resistance Reward"		"0.0,0.0,0.0"
+			// 4th number = Resistance for assistant killers.
+			"Damage Resistance Reward"		"0.0,0.0,0.0,0.0"
 
 			// The voiceline that plays when survivors are falling.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2913,12 +2977,13 @@
 			// --
 			// Separate voicelines sets with commas (",").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 64
 			// --
 			// 1st set = Fall voiceline for killers.
 			// 2nd set = Fall voiceline for assistants.
 			// 3rd set = Fall voiceline for teammates.
+			// 4th set = Fall voiceline for assistant killers.
 			"Fall Voiceline Reward"			""
 
 			// The healing percentage from first aid kits to reward to survivors.
@@ -2927,7 +2992,7 @@
 			// --
 			// Separate percentages with commas (",").
 			// --
-			// Percentages limit: 3
+			// Percentages limit: 4
 			// Character limit for each percentage: 6
 			// --
 			// Minimum percentage for each: 0.0 (OFF)
@@ -2936,7 +3001,8 @@
 			// 1st number = Heal percentage for killers.
 			// 2nd number = Heal percentage for assistants.
 			// 3rd number = Heal percentage for teammates.
-			"Heal Percent Reward"			"0.0,0.0,0.0"
+			// 4th number = Heal percentage for assistant killers.
+			"Heal Percent Reward"			"0.0,0.0,0.0,0.0"
 
 			// The amount of health to regenerate per second as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2944,7 +3010,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -2953,7 +3019,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Health Regen Reward"			"0,0,0"
+			// 4th number = Amount for assistant killers.
+			"Health Regen Reward"			"0,0,0,0"
 
 			// Give hollowpoint ammo as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2961,7 +3028,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -2970,7 +3037,8 @@
 			// 1st number = Give hollowpoint ammo to killers.
 			// 2nd number = Give hollowpoint ammo to assistants.
 			// 3rd number = Give hollowpoint ammo to teammates.
-			"Hollowpoint Ammo Reward"		"0,0,0"
+			// 4th number = Give hollowpoint ammo to assistant killers.
+			"Hollowpoint Ammo Reward"		"0,0,0,0"
 
 			// Give infinite ammo as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2993,7 +3061,8 @@
 			// 1st number = Give infinite ammo to killers.
 			// 2nd number = Give infinite ammo to assistants.
 			// 3rd number = Give infinite ammo to teammates.
-			"Infinite Ammo Reward"			"0,0,0"
+			// 4th number = Give infinite ammo to assistant killers.
+			"Infinite Ammo Reward"			"0,0,0,0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3002,12 +3071,13 @@
 			// Separate item sets with commas (",").
 			// Separate items with semi-colons (";").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 320
 			// --
 			// 1st set = Item set to reward killers.
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
+			// 4th set = Item set to reward assistant killers.
 			"Item Reward"				""
 
 			// The jump height to reward to survivors.
@@ -3017,7 +3087,7 @@
 			// --
 			// Separate heights with commas (",").
 			// --
-			// Heights limit: 3
+			// Heights limit: 4
 			// Character limit for each height: 9
 			// --
 			// Minimum value for each height: 0.0 (OFF)
@@ -3026,7 +3096,8 @@
 			// 1st number = Height for killers.
 			// 2nd number = Height for assistants.
 			// 3rd number = Height for teammates.
-			"Jump Height Reward"			"0.0,0.0,0.0"
+			// 4th number = Height for assistant killers.
+			"Jump Height Reward"			"0.0,0.0,0.0,0.0"
 
 			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3034,16 +3105,17 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
 			// Maximum value for each: 999999 (Highest)
 			// --
-			// 1st number = Number of lady killer bullets to give to killers.
-			// 2nd number = Number of lady killer bullets to give to assistants.
-			// 3rd number = Number of lady killer bullets to give to teammates.
-			"Lady Killer Reward"			"0,0,0"
+			// 1st number = Number of bullets to give to killers.
+			// 2nd number = Number of bullets to give to assistants.
+			// 3rd number = Number of bullets to give to teammates.
+			// 4th number = Number of bullets to give to assistant killers.
+			"Lady Killer Reward"			"0,0,0,0"
 
 			// The amount of health to leech per hit as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3051,7 +3123,7 @@
 			// --
 			// Separate amounts with commas (",").
 			// --
-			// Amounts limit: 3
+			// Amounts limit: 4
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
@@ -3060,7 +3132,8 @@
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
-			"Life Leech Reward"			"0,0,0"
+			// 4th number = Amount for assistant killers.
+			"Life Leech Reward"			"0,0,0,0"
 
 			// The melee range to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3068,7 +3141,7 @@
 			// --
 			// Separate ranges with commas (",").
 			// --
-			// Ranges limit: 3
+			// Ranges limit: 4
 			// Character limit for each range: 6
 			// --
 			// Minimum value for each range: 0 (OFF)
@@ -3077,7 +3150,8 @@
 			// 1st number = Range for killers.
 			// 2nd number = Range for assistants.
 			// 3rd number = Range for teammates.
-			"Melee Range Reward"			"0,0,0"
+			// 4th number = Range for assistant killers.
+			"Melee Range Reward"			"0,0,0,0"
 
 			// The punch resistance to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3085,7 +3159,7 @@
 			// --
 			// Separate resistances with commas (",").
 			// --
-			// Resistances limit: 3
+			// Resistances limit: 4
 			// Character limit for each resistance: 6
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
@@ -3094,7 +3168,8 @@
 			// 1st number = Resistance for killers.
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
-			"Punch Resistance Reward"		"0.0,0.0,0.0"
+			// 4th number = Resistance for assistant killers.
+			"Punch Resistance Reward"		"0.0,0.0,0.0,0.0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3102,7 +3177,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3111,7 +3186,8 @@
 			// 1st number = Restore loadouts for killers.
 			// 2nd number = Restore loadouts for assistants.
 			// 3rd number = Restore loadouts for teammates.
-			"Respawn Loadout Reward"		"0,0,0"
+			// 4th number = Restore loadouts for assistant killers.
+			"Respawn Loadout Reward"		"0,0,0,0"
 
 			// The revive health to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3119,7 +3195,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 12
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3128,7 +3204,8 @@
 			// 1st number = Health for killers.
 			// 2nd number = Health for assistants.
 			// 3rd number = Health for teammates.
-			"Revive Health Reward"			"0,0,0"
+			// 4th number = Health for assistant killers.
+			"Revive Health Reward"			"0,0,0,0"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3137,7 +3214,7 @@
 			// --
 			// Separate multipliers with commas (",").
 			// --
-			// Multipliers limit: 3
+			// Multipliers limit: 4
 			// Character limit for each multiplier: 9
 			// --
 			// Minimum value for each multiplier: 0.0 (OFF)
@@ -3146,9 +3223,10 @@
 			// 1st number = Multiplier for killers.
 			// 2nd number = Multiplier for assistants.
 			// 3rd number = Multiplier for teammates.
+			// 4th number = Multiplier for assistant killers.
 			// --
 			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
-			"Shove Damage Reward"			"0.0,0.0,0.0"
+			"Shove Damage Reward"			"0.0,0.0,0.0,0.0"
 
 			// Remove shove penalty as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3156,7 +3234,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3165,7 +3243,8 @@
 			// 1st number = Remove shove penalty for killers.
 			// 2nd number = Remove shove penalty for assistants.
 			// 3rd number = Remove shove penalty for teammates.
-			"Shove Penalty Reward"			"0,0,0"
+			// 4th number = Remove shove penalty for assistant killers.
+			"Shove Penalty Reward"			"0,0,0,0"
 
 			// The shove rate to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3174,7 +3253,7 @@
 			// --
 			// Separate rates with commas (",").
 			// --
-			// Rates limit: 3
+			// Rates limit: 4
 			// Character limit for each rate: 9
 			// --
 			// Minimum value for each rate: 0.0 (OFF)
@@ -3183,9 +3262,10 @@
 			// 1st number = Rate for killers.
 			// 2nd number = Rate for assistants.
 			// 3rd number = Rate for teammates.
+			// 4th number = Rate for assistant killers.
 			// --
 			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
-			"Shove Rate Reward"			"0.0,0.0,0.0"
+			"Shove Rate Reward"			"0.0,0.0,0.0,0.0"
 
 			// Give sledgehammer rounds as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3193,7 +3273,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3202,15 +3282,17 @@
 			// 1st number = Give sledgehammer rounds to killers.
 			// 2nd number = Give sledgehammer rounds to assistants.
 			// 3rd number = Give sledgehammer rounds to teammates.
-			"Sledgehammer Rounds Reward"		"0,0,0"
+			// 4th number = Give sledgehammer rounds to assistant killers.
+			"Sledgehammer Rounds Reward"		"0,0,0,0"
 
-			// Give special ammo as a reward to survivors. (Only available in Left 4 Dead 2.)
+			// Give special ammo as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0
@@ -3224,7 +3306,8 @@
 			// 1st number = Give special ammo to killers.
 			// 2nd number = Give special ammo to assistants.
 			// 3rd number = Give special ammo to teammates.
-			"Special Ammo Reward"			"0,0,0"
+			// 4th number = Give special ammo to assistant killers.
+			"Special Ammo Reward"			"0,0,0,0"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3232,7 +3315,7 @@
 			// --
 			// Separate boosts with commas (",").
 			// --
-			// Boosts limit: 3
+			// Boosts limit: 4
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 0.0 (OFF)
@@ -3241,7 +3324,8 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Speed Boost Reward"			"0.0,0.0,0.0"
+			// 4th number = Boost for assistant killers.
+			"Speed Boost Reward"			"0.0,0.0,0.0,0.0"
 
 			// Allow rewards from the Mutant Tank to be stacked.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3249,7 +3333,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3258,7 +3342,8 @@
 			// 1st number = Stack rewards for killers.
 			// 2nd number = Stack rewards for assistants.
 			// 3rd number = Stack rewards for teammates.
-			"Stack Rewards"				"0,0,0"
+			// 4th number = Stack rewards for assistant killers.
+			"Stack Rewards"				"0,0,0,0"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3266,7 +3351,7 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
+			// Values limit: 4
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
@@ -3275,7 +3360,8 @@
 			// 1st number = Give thorns to killers.
 			// 2nd number = Give thorns to assistants.
 			// 3rd number = Give thorns to teammates.
-			"Thorns Reward"				"0,0,0"
+			// 4th number = Give thorns to assistant killers.
+			"Thorns Reward"				"0,0,0,0"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3297,7 +3383,8 @@
 			// 1st number = Enable useful rewards for killers.
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
-			"Useful Rewards"			"0,0,0"
+			// 4th number = Enable useful rewards for assistant killers.
+			"Useful Rewards"			"0,0,0,0"
 
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3307,7 +3394,7 @@
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGBA sets limit: 4
 			// Character limit for each set: 16
 			// Character limit for each value: 4
 			// --
@@ -3322,6 +3409,7 @@
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
+			// 4th set = RGBA set for assistant killers.
 			"Body Color Visual"			""
 
 			// These are the RGB values of the recipients' glow outline color visual.
@@ -3333,7 +3421,7 @@
 			// Separate RGB sets with commas (",").
 			// Separate RGB values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGB sets limit: 4
 			// Character limit for each set: 12
 			// Character limit for each value: 4
 			// --
@@ -3347,6 +3435,7 @@
 			// 1st set = RGB set for killers.
 			// 2nd set = RGB set for assistants.
 			// 3rd set = RGB set for teammates.
+			// 4th set = RGB set for assistant killers.
 			"Glow Color Visual"			""
 
 			// The voiceline that plays on loop throughout a survivor's reward duration.
@@ -3355,12 +3444,13 @@
 			// --
 			// Separate voicelines sets with commas (",").
 			// --
-			// Item sets limit: 3
+			// Item sets limit: 4
 			// Character limit for each set: 64
 			// --
 			// 1st set = Looping voiceline for killers.
 			// 2nd set = Looping voiceline for assistants.
 			// 3rd set = Looping voiceline for teammates.
+			// 4th set = Looping voiceline for assistant killers.
 			"Looping Voiceline Visual"		""
 
 			// The particles for the recipients' particle effect visual.
@@ -3377,7 +3467,12 @@
 			// 2: Electric Jolt
 			// 4: Fire Trail
 			// 8: Acid Trail (Only available in Left 4 Dead 2.)
-			"Particle Effect Visual"		"0,0,0"
+			// --
+			// 1st number = Particle effect for killers.
+			// 2nd number = Particle effect for assistants.
+			// 3rd number = Particle effect for teammates.
+			// 4th number = Particle effect for assistant killers.
+			"Particle Effect Visual"		"0,0,0,0"
 
 			// These are the RGBA values of the recipients' screen color visual.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3387,7 +3482,7 @@
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
 			// --
-			// RGBA sets limit: 3
+			// RGBA sets limit: 4
 			// Character limit for each set: 16
 			// Character limit for each value: 4
 			// --
@@ -3402,6 +3497,7 @@
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
+			// 4th set = RGBA set for assistant killers.
 			"Screen Color Visual"			""
 		}
 		"Glow"
