@@ -31,7 +31,7 @@
 - Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
 
 #### Natives & Forwards
-- Updated the documentation for the `MT_OnRewardSurvivor` native.
+- Updated the documentation for the `MT_OnRewardSurvivor` forward.
 
 ### Files
 
