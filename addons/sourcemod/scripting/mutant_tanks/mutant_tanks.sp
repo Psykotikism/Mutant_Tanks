@@ -699,7 +699,6 @@ enum struct esPlayer
 	bool g_bCombo;
 	bool g_bDied;
 	bool g_bDualWielding;
-	bool g_bEffectApplied;
 	bool g_bElectric;
 	bool g_bFallDamage;
 	bool g_bFalling;
@@ -882,7 +881,6 @@ enum struct esPlayer
 	int g_iLadyKillerCount;
 	int g_iLadyKillerReward[4];
 	int g_iLastButtons;
-	int g_iLastTankKilled;
 	int g_iLifeLeech;
 	int g_iLifeLeechReward[4];
 	int g_iLight[9];
@@ -9345,8 +9343,6 @@ static void vRemoveDamage(int victim, int damagetype)
 
 static void vRemoveEffects(int survivor, bool body = false)
 {
-	g_esPlayer[survivor].g_bEffectApplied = false;
-
 	int iEffect = -1;
 	for (int iPos = 0; iPos < sizeof(esPlayer::g_iEffect); iPos++)
 	{
@@ -9631,7 +9627,6 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_iHealthRegen = 0;
 	g_esPlayer[survivor].g_iHollowpointAmmo = 0;
 	g_esPlayer[survivor].g_iInfiniteAmmo = 0;
-	g_esPlayer[survivor].g_iLastTankKilled = 0;
 	g_esPlayer[survivor].g_iLifeLeech = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
 	g_esPlayer[survivor].g_iNotify = 0;
@@ -9663,10 +9658,20 @@ static void vResetSurvivorStats(int survivor)
 
 static void vResetSurvivorStats2(int survivor)
 {
-	g_esPlayer[survivor].g_bEffectApplied = false;
-	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_REFILL;
-	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_ITEM;
-	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_RESPAWN;
+	if (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL)
+	{
+		g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_REFILL;
+	}
+
+	if (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ITEM)
+	{
+		g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_ITEM;
+	}
+
+	if (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_RESPAWN)
+	{
+		g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_RESPAWN;
+	}
 }
 
 static void vResetTank(int tank)
@@ -9808,19 +9813,15 @@ static void vCalculateDeath(int tank, int survivor)
 	}
 }
 
-static void vChooseReward(int survivor, int tank, int priority)
+static void vChooseReward(int survivor, int tank, int priority, int setting)
 {
-	int iSetting = bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[priority] : g_esCache[tank].g_iRewardBots[priority],
-		iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
-
+	int iType = (setting > 0) ? setting : (1 << GetRandomInt(0, 7));
 	if (bIsDeveloper(survivor, 3))
 	{
-		iSetting |= g_esDeveloper[survivor].g_iDevRewardTypes;
-		iType |= g_esDeveloper[survivor].g_iDevRewardTypes;
+		iType = g_esDeveloper[survivor].g_iDevRewardTypes;
 	}
 
 	iType |= iGetUsefulRewards(survivor, tank, iType, priority);
-
 	vRewardSurvivor(survivor, iType, tank, true, priority);
 }
 
@@ -9882,14 +9883,14 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 				flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 				if (flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
 				{
-					if (flPercentage >= 90.0 && !g_esPlayer[survivor].g_bEffectApplied)
+					if (flPercentage >= 90.0)
 					{
 						vRewardNotify(survivor, tank, 0, "RewardSolo", sTankName);
 					}
 
-					vChooseReward(survivor, tank, 0);
+					vChooseReward(survivor, tank, 0, iSetting);
 				}
-				else if (!g_esPlayer[survivor].g_bEffectApplied)
+				else
 				{
 					vRewardNotify(survivor, tank, 0, "RewardNone", sTankName);
 				}
@@ -9908,14 +9909,14 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 				flPercentage = (float(g_esPlayer[assistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 				if (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
 				{
-					if (flPercentage >= 90.0 && !g_esPlayer[assistant].g_bEffectApplied)
+					if (flPercentage >= 90.0)
 					{
 						vRewardNotify(assistant, tank, 1, "RewardSolo", sTankName);
 					}
 
-					vChooseReward(assistant, tank, 1);
+					vChooseReward(assistant, tank, 1, iSetting);
 				}
-				else if (!g_esPlayer[assistant].g_bEffectApplied)
+				else
 				{
 					vRewardNotify(assistant, tank, 1, "RewardNone", sTankName);
 				}
@@ -9965,7 +9966,8 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 								vRewardNotify(iTeammate, tank, 2, "RewardSolo", sTankName);
 							}
 
-							vChooseReward(iTeammate, tank, 2);
+							iSetting = bIsValidClient(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[2] : g_esCache[tank].g_iRewardBots[2];
+							vChooseReward(iTeammate, tank, 2, iSetting);
 							vResetSurvivorStats2(iTeammate);
 						}
 						else
@@ -9991,14 +9993,14 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 				flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 				if (flPercentage >= g_esCache[tank].g_flRewardPercentage[3])
 				{
-					if (flPercentage >= 90.0 && !g_esPlayer[survivor].g_bEffectApplied)
+					if (flPercentage >= 90.0)
 					{
 						vRewardNotify(survivor, tank, 3, "RewardSolo", sTankName);
 					}
 
-					vChooseReward(survivor, tank, 3);
+					vChooseReward(survivor, tank, 3, iSetting);
 				}
-				else if (!g_esPlayer[survivor].g_bEffectApplied)
+				else
 				{
 					vRewardNotify(survivor, tank, 3, "RewardNone", sTankName);
 				}
@@ -10061,7 +10063,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						vSaveCaughtSurvivor(survivor);
 						vRefillHealth(survivor);
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardHealth", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_HEALTH);
@@ -10102,7 +10104,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 							case 3: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward4);
 						}
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardSpeedBoost", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_SPEEDBOOST);
@@ -10127,7 +10129,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_DAMAGEBOOST;
 						iRewardCount++;
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardDamageBoost", survivor);
 						vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
@@ -10153,7 +10155,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_ATTACKBOOST;
 						iRewardCount++;
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAttackBoost", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_ATTACKBOOST);
@@ -10181,7 +10183,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						vRefillAmmo(survivor);
 						vGiveSpecialAmmo(survivor);
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAmmo", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_AMMO);
@@ -10274,7 +10276,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 							vUnvomitPlayer(survivor);
 						}
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardGod", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_GODMODE);
@@ -10311,7 +10313,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_INFAMMO;
 						iRewardCount++;
 					}
-					else if (!g_esPlayer[survivor].g_bEffectApplied)
+					else
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardInfAmmo", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_INFAMMO);
@@ -10330,9 +10332,8 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				vRewardMessage(survivor, iRewardCount, priority, sRewards, sTankName);
 
 				int iVisual = g_esCache[tank].g_iRewardVisual[priority];
-				if (iVisual > 0 && g_esPlayer[survivor].g_iLastTankKilled != tank)
+				if (iVisual > 0)
 				{
-					g_esPlayer[survivor].g_iLastTankKilled = tank;
 #if defined _clientprefs_included
 					switch (g_esPlayer[survivor].g_iPrefsAccess)
 					{
@@ -10478,38 +10479,33 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (!g_esPlayer[survivor].g_bEffectApplied && g_esPlayer[survivor].g_iPrefsAccess == 1)
+					if (g_esPlayer[survivor].g_iPrefsAccess == 1)
 					{
 						MT_PrintToChat(survivor, "%s %t", MT_TAG2, "MTPrefsInfo");
 					}
 				}
 
-				if (!g_esPlayer[survivor].g_bEffectApplied)
+				int iEffect = g_esCache[tank].g_iRewardEffect[priority];
+				if (iEffect > 0)
 				{
-					g_esPlayer[survivor].g_bEffectApplied = true;
-
-					int iEffect = g_esCache[tank].g_iRewardEffect[priority];
-					if (iEffect > 0)
+					if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
 					{
-						if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
-						{
-							g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
-						}
+						g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
+					}
 
-						if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
-						{
-							g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
-						}
+					if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
+					{
+						g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
+					}
 
-						if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
-						{
-							EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
-						}
+					if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
+					{
+						EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+					}
 
-						if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
-						{
-							vExternalView(survivor, 1.5);
-						}
+					if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+					{
+						vExternalView(survivor, 1.5);
 					}
 				}
 			}
@@ -10639,7 +10635,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 			if (g_esPlayer[survivor].g_iRewardTypes <= 0)
 			{
-				g_esPlayer[survivor].g_iLastTankKilled = 0;
 				g_esPlayer[survivor].g_iNotify = 0;
 				g_esPlayer[survivor].g_iPrefsAccess = 0;
 			}
