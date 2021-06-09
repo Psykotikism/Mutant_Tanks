@@ -9,7 +9,7 @@
 - Fixed the plugins not compiling when `Left 4 DHooks`, `Client Prefs`, `Admin Menu`, or the `Clone` ability is missing. (Thanks to `ReCreator` for pointing this out!)
 
 #### Game Data
-- Fixed `CTankRock::Create` detour not being setup properly.
+- Fixed `CTankRock::Create` detour not being setup properly. (Thanks to `Dragokas` for the help!)
 
 #### Core Plugin
 - Fixed some developer tools not toggling properly.
@@ -20,15 +20,13 @@
 
 ### Changes
 
-#### Core Plugin
-- The `Reward` system's visual effects will no longer stack when the recipient receives rewards for both killing and assisting the most against a Tank. (Thanks to `Mi.Cura` for the idea!)
-
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Prefs Notify` (Requested by `Mi.Cura`.)
 	- `Teammate Limit` (Requested by `Mi.Cura`.)
 - Added support for `8+` players for the `Death Details` setting's messages.
 - Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
+- Removed the `Reward Priority` setting. (No longer used.)
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnRewardSurvivor` forward.

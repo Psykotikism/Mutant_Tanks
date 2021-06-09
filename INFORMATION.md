@@ -762,30 +762,6 @@
 			// 4th number = Percentage of damage required for assistant killers.
 			"Reward Percentage"			"10.0,10.0,10.0,10.0"
 
-			// Prioritize rewards in this order.
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// --
-			// Separate values with commas (",").
-			// --
-			// Values limit: 4
-			// Character limit for each value: 1
-			// --
-			// Minimum value for each: 0
-			// Maximum value for each: 3
-			// --
-			// 0: OFF (Do not reward anyone.)
-			// 1: Reward killers.
-			// 2: Reward assistants.
-			// 3: Reward teammates.
-			// 4: Reward assistant killers.
-			// --
-			// 1st number = 1st priority
-			// 2nd number = 2nd priority
-			// 3rd number = 3rd priority
-			// 4th number = 4th priority
-			"Reward Priority"			"1,2,3,4"
-
 			// The visual effects displayed for rewards.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -2766,30 +2742,6 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			// 4th number = Percentage of damage required for assistant killers.
 			"Reward Percentage"			"0.0,0.0,0.0,0.0"
-
-			// Prioritize rewards in this order.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Separate values with commas (",").
-			// --
-			// Values limit: 4
-			// Character limit for each value: 1
-			// --
-			// Minimum value for each: 0
-			// Maximum value for each: 3
-			// --
-			// 0: OFF (Do not reward anyone.)
-			// 1: Reward killers.
-			// 2: Reward assistants.
-			// 3: Reward teammates.
-			// 4: Reward assistant killers.
-			// --
-			// 1st number = 1st priority
-			// 2nd number = 2nd priority
-			// 3rd number = 3rd priority
-			// 4th number = 4th priority
-			"Reward Priority"			"0,0,0,0"
 
 			// The visual effects displayed for rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
