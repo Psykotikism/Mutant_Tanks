@@ -53,6 +53,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 
+#define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
+
 #define MT_METEOR_SECTION "meteorability"
 #define MT_METEOR_SECTION2 "meteor ability"
 #define MT_METEOR_SECTION3 "meteor_ability"
@@ -848,6 +850,7 @@ void vMeteor3(int tank, int rock, int pos = -1)
 		return;
 	}
 
+	StopSound(rock, SNDCHAN_BODY, SOUND_MISSILE);
 	RemoveEntity(rock);
 
 	switch (g_esMeteorCache[tank].g_iMeteorMode)
