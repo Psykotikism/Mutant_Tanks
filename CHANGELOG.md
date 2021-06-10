@@ -5,11 +5,9 @@
 ### Bug Fixes
 
 #### General
-- Fixed crashing on Linux whenever Tank is throwing a rock. (Thanks to `ReCreator` for testing and reporting and to `epzminion` for the help!)
+- Fixed crashing on Linux whenever Tank is throwing a rock. (Thanks to `ReCreator` for testing and reporting and to `epzminion` and `Dragokas` for the help!)
 - Fixed the plugins not compiling when `Left 4 DHooks`, `Client Prefs`, `Admin Menu`, or the `Clone` ability is missing. (Thanks to `ReCreator` for pointing this out!)
-
-#### Game Data
-- Fixed `CTankRock::Create` detour not being setup properly. (Thanks to `Dragokas` for the help!)
+- Fixed the strong wind sound caused by Tank rock debris. (Thanks to `Lux` for the help!)
 
 #### Core Plugin
 - Fixed some developer tools not toggling properly.

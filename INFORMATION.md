@@ -5,7 +5,7 @@
 
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `93-94` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `92` and recompile all the plugins, but expect server lag with higher values.)
-- Most of the settings below can be overridden for each player.
+- Most of the settings below can be overridden for each player via their Steam ID.
 
 ## Sections
 - Plugin Settings
