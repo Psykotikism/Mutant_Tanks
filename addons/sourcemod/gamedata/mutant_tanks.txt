@@ -61,6 +61,21 @@
 					}
 				}
 			}
+			/* CDirectorVersusMode::EndVersusModeRound(bool) */
+			"CDirectorVersusMode::EndVersusModeRound"
+			{
+				"signature"		"CDirectorVersusMode::EndVersusModeRound"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"ignore"
+				"arguments"
+				{
+					"countSurvivors"
+					{
+						"type"		"bool"
+					}
+				}
+			}
 			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
@@ -95,13 +110,6 @@
 						"type"		"bool"
 					}
 				}
-			}
-			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
-			"CTankRock::Create"
-			{
-				"signature"	"CTankRock::Create"
-				"callconv"	"cdecl"
-				"return"	"cbaseentity"
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump"
@@ -421,33 +429,25 @@
 					}
 				}
 			}
-			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
-			"CTankRock::Create"
+			/* CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*) */
+			"CBaseEntity::Create"
 			{
+				"signature"	"CBaseEntity::Create"
+				"callconv"	"cdecl"
+				"return"	"cbaseentity"
 				"arguments"
 				{
+					"classname"
+					{
+						"type"		"charptr"
+					}
 					"origin"
 					{
 						"type"		"vectorptr"
-						"linux"
-						{
-							"register"		"eax"
-						}
 					}
 					"angles"
 					{
 						"type"		"vectorptr"
-						"linux"
-						{
-							"register"		"edx"
-						}
-					}
-					"windows"
-					{
-						"velocity"
-						{
-							"type"		"vectorptr"
-						}
 					}
 					"owner"
 					{
@@ -680,6 +680,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01\x00\x00\x83\x2A\x2A\xC3"
 						/* ? ? ? ? ? ? ? 50 E8 ? ? ? ? 8B 80 60 01 00 00 83 ? ? C3 */
 			}
+			/* CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*) */
+			"CBaseEntity::Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity6CreateEPKcRK6VectorRK6QAnglePS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x6A\xFF\x50\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x83\xC4\x0C\x85\xF6\x75\x2A\x56"
+						/* ? ? ? ? ? ? ? 6A FF 50 E8 ? ? ? ? 8B F0 83 C4 0C 85 F6 75 ? 56 */
+			}
 			/* CDeathFallCamera::Enable(CBasePlayer*) */
 			"CDeathFallCamera::Enable"
 			{
@@ -703,6 +711,14 @@
 				"linux"		"@_ZN8Director27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\xA7\x00\x00\x00"
 						/* ? ? ? ? ? ? ? ? 56 8B ? 80 ? ? ? ? ? ? 75 ? 80 ? ? ? ? ? ? 0F 84 A7 00 00 00 */
+			}
+			/* DirectorVersusMode::EndVersusModeRound(bool) */
+			"CDirectorVersusMode::EndVersusModeRound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Director18EndVersusModeRoundEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x53\x33\x2A\x38\x2A\x2A\x2A\x55"
+						/* ? ? ? ? ? ? E8 ? ? ? ? 84 ? 0F 84 ? ? ? ? 53 33 ? 38 ? ? ? 55 */
 			}
 			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
@@ -759,14 +775,6 @@
 				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_.constprop.248"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x0D"
 						/* ? ? ? ? ? ? 55 56 8B ? E8 ? ? ? ? 8B ? 85 F6 0F 84 ? ? ? ? 8B 0D */
-			}
-			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
-			"CTankRock::Create"
-			{
-				"library"	"server"
-				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
-				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
-						/* 8B 44 24 08 53 8B 5C 24 08 */
 			}
 			/* CTankRock::Detonate() */
 			"CTankRock::Detonate"
@@ -993,6 +1001,14 @@
 					}
 				}
 			}
+			/* CDirectorScavengeMode::EndScavengeRound() */
+			"CDirectorScavengeMode::EndScavengeRound"
+			{
+				"signature"		"CDirectorScavengeMode::EndScavengeRound"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"ignore"
+			}
 			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
 			"CFirstAidKit::OnActionComplete"
 			{
@@ -1015,6 +1031,9 @@
 			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
+				"signature"	"CTankRock::Create"
+				"callconv"	"cdecl"
+				"return"	"cbaseentity"
 				"arguments"
 				{
 					"origin"
@@ -1409,6 +1428,22 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F"
 						/* 55 8B EC 83 EC ? 56 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 84 C0 0F */
+			}
+			/* CDirectorScavengeMode::EndScavengeRound() */
+			"CDirectorScavengeMode::EndScavengeRound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN21CDirectorScavengeMode16EndScavengeRoundEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\x7E\x08\x00\x0F\x84\x2A\x2A\x2A\x2A\x53\xC6"
+						/* ? ? ? ? ? ? 56 8B ? 80 7E 08 00 0F 84 ? ? ? ? 53 C6 */
+			}
+			/* CDirectorVersusMode::EndVersusModeRound(bool) */
+			"CDirectorVersusMode::EndVersusModeRound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x84"
+						/* ? ? ? ? ? ? 57 8B F9 E8 ? ? ? ? 84 C0 0F 84 */
 			}
 			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
