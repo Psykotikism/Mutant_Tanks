@@ -162,17 +162,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_CONFIG_FILE "mutant_tanks.cfg"
 #define MT_CONFIG_PATH "data/mutant_tanks/"
-#define MT_CONFIG_DAY_PATH "daily_configs/"
-#define MT_CONFIG_DIFFICULTY_PATH "difficulty_configs/"
-#define MT_CONFIG_FINALE_PATH "l4d_finale_configs/"
-#define MT_CONFIG_FINALE_PATH2 "l4d2_finale_configs/"
-#define MT_CONFIG_GAMEMODE_PATH "l4d_gamemode_configs/"
-#define MT_CONFIG_GAMEMODE_PATH2 "l4d2_gamemode_configs/"
-#define MT_CONFIG_MAP_PATH "l4d_map_configs/"
-#define MT_CONFIG_MAP_PATH2 "l4d2_map_configs/"
-#define MT_CONFIG_PLAYERCOUNT_PATH "playercount_configs/"
-#define MT_CONFIG_SURVIVORCOUNT_PATH "survivorcount_configs/"
-#define MT_CONFIG_INFECTEDCOUNT_PATH "infectedcount_configs/"
+#define MT_CONFIG_PATH_DAY "daily_configs/"
+#define MT_CONFIG_PATH_DIFFICULTY "difficulty_configs/"
+#define MT_CONFIG_PATH_FINALE "l4d_finale_configs/"
+#define MT_CONFIG_PATH_FINALE2 "l4d2_finale_configs/"
+#define MT_CONFIG_PATH_GAMEMODE "l4d_gamemode_configs/"
+#define MT_CONFIG_PATH_GAMEMODE2 "l4d2_gamemode_configs/"
+#define MT_CONFIG_PATH_INFECTEDCOUNT "infectedcount_configs/"
+#define MT_CONFIG_PATH_MAP "l4d_map_configs/"
+#define MT_CONFIG_PATH_MAP2 "l4d2_map_configs/"
+#define MT_CONFIG_PATH_PLAYERCOUNT "playercount_configs/"
+#define MT_CONFIG_PATH_SURVIVORCOUNT "survivorcount_configs/"
 #define MT_CONFIG_SECTION_MAIN "Mutant Tanks"
 #define MT_CONFIG_SECTION_MAIN2 "MutantTanks"
 #define MT_CONFIG_SECTION_MAIN3 "Mutant_Tanks"
@@ -2415,7 +2415,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH);
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
 			CreateDirectory(sSMPath, 511);
 
 			char sDifficulty[11];
@@ -2429,14 +2429,14 @@ public void OnConfigsExecuted()
 					case 3: sDifficulty = "Impossible";
 				}
 
-				vCreateConfigFile(MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
+				vCreateConfigFile(MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_MAP_PATH2 : MT_CONFIG_MAP_PATH));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
 			CreateDirectory(sSMPath, 511);
 
 			char sMapName[128];
@@ -2453,7 +2453,7 @@ public void OnConfigsExecuted()
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
 						alMaps.GetString(iPos, sMapName, sizeof(sMapName));
-						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_MAP_PATH2 : MT_CONFIG_MAP_PATH), sMapName);
+						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMapName);
 					}
 				}
 
@@ -2464,7 +2464,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
 			CreateDirectory(sSMPath, 511);
 
 			char sGameType[2049], sTypes[64][32];
@@ -2475,7 +2475,7 @@ public void OnConfigsExecuted()
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 				{
-					vCreateConfigFile((g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sTypes[iMode]);
+					vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sTypes[iMode]);
 				}
 			}
 		}
@@ -2483,7 +2483,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH);
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
 			CreateDirectory(sSMPath, 511);
 
 			char sWeekday[32];
@@ -2500,56 +2500,56 @@ public void OnConfigsExecuted()
 					case 6: sWeekday = "sunday";
 				}
 
-				vCreateConfigFile(MT_CONFIG_DAY_PATH, sWeekday);
+				vCreateConfigFile(MT_CONFIG_PATH_DAY, sWeekday);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH);
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile(MT_CONFIG_PLAYERCOUNT_PATH, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH);
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile(MT_CONFIG_SURVIVORCOUNT_PATH, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_PATH_SURVIVORCOUNT, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH);
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile(MT_CONFIG_INFECTEDCOUNT_PATH, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_PATH_INFECTEDCOUNT, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
@@ -2571,7 +2571,7 @@ public void OnConfigsExecuted()
 					case 10: sEvent = "gauntlet_finale_start";
 				}
 
-				vCreateConfigFile((g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH), sEvent);
+				vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE), sEvent);
 			}
 		}
 
@@ -2579,7 +2579,7 @@ public void OnConfigsExecuted()
 		{
 			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
 			{
 				vCustomConfig(sDifficultyConfig);
@@ -2592,7 +2592,7 @@ public void OnConfigsExecuted()
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMap))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMap);
 			if (FileExists(sMapConfig, true))
 			{
 				vCustomConfig(sMapConfig);
@@ -2604,7 +2604,7 @@ public void OnConfigsExecuted()
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				vCustomConfig(sModeConfig);
@@ -2629,7 +2629,7 @@ public void OnConfigsExecuted()
 				default: sDay = "sunday";
 			}
 
-			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH, sDay);
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY, sDay);
 			if (FileExists(sDayConfig, true))
 			{
 				vCustomConfig(sDayConfig);
@@ -2640,7 +2640,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH, iGetPlayerCount());
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2651,7 +2651,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH, iGetHumanCount());
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2662,7 +2662,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH, iGetHumanCount(true));
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -4561,7 +4561,7 @@ static void vConfig(bool manual)
 		{
 			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
@@ -4581,7 +4581,7 @@ static void vConfig(bool manual)
 			if (IsMapValid(sMap))
 			{
 				static char sMapConfig[PLATFORM_MAX_PATH];
-				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMap);
 				if (FileExists(sMapConfig, true))
 				{
 					g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
@@ -4599,7 +4599,7 @@ static void vConfig(bool manual)
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
@@ -4629,7 +4629,7 @@ static void vConfig(bool manual)
 				default: sDay = "sunday";
 			}
 
-			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH, sDay);
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY, sDay);
 			if (FileExists(sDayConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
@@ -4646,7 +4646,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetPlayerCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -4669,7 +4669,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -4692,7 +4692,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount(true);
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -8785,7 +8785,7 @@ static void vExecuteFinaleConfigs(const char[] filename)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH));
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
 		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
 		if (FileExists(sFilePath, true))
 		{
@@ -15527,7 +15527,7 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	{
 		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
+		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
 		if (FileExists(sDifficultyConfig, true))
 		{
 			vCustomConfig(sDifficultyConfig);
