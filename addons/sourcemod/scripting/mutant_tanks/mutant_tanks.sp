@@ -160,6 +160,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_INFECTEDCOUNT (1 << 6) // infectedcount_configs
 #define MT_CONFIG_FINALE (1 << 7) // l4d_finale_configs/l4d2_finale_configs
 
+#define MT_CONFIG_FILE "mutant_tanks.cfg"
+#define MT_CONFIG_PATH "data/mutant_tanks/"
+#define MT_CONFIG_DAY_PATH "daily_configs/"
+#define MT_CONFIG_DIFFICULTY_PATH "difficulty_configs/"
+#define MT_CONFIG_FINALE_PATH "l4d_finale_configs/"
+#define MT_CONFIG_FINALE_PATH2 "l4d2_finale_configs/"
+#define MT_CONFIG_GAMEMODE_PATH "l4d_gamemode_configs/"
+#define MT_CONFIG_GAMEMODE_PATH2 "l4d2_gamemode_configs/"
+#define MT_CONFIG_MAP_PATH "l4d_map_configs/"
+#define MT_CONFIG_MAP_PATH2 "l4d2_map_configs/"
+#define MT_CONFIG_PLAYERCOUNT_PATH "playercount_configs/"
+#define MT_CONFIG_SURVIVORCOUNT_PATH "survivorcount_configs/"
+#define MT_CONFIG_INFECTEDCOUNT_PATH "infectedcount_configs/"
 #define MT_CONFIG_SECTION_MAIN "Mutant Tanks"
 #define MT_CONFIG_SECTION_MAIN2 "MutantTanks"
 #define MT_CONFIG_SECTION_MAIN3 "Mutant_Tanks"
@@ -304,6 +317,7 @@ enum struct esGeneral
 	Address g_adFallingSound;
 
 	ArrayList g_alAbilitySections[4];
+	ArrayList g_alCompTypes;
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
 	ArrayList g_alSections;
@@ -317,6 +331,7 @@ enum struct esGeneral
 	bool g_bLeft4DHooksInstalled;
 	bool g_bLinux;
 	bool g_bMapStarted;
+	bool g_bNextRound;
 	bool g_bPatchDoJumpValue;
 	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
@@ -393,9 +408,12 @@ enum struct esGeneral
 	Cookie g_ckMTPrefs;
 #endif
 	DynamicDetour g_ddActionCompleteDetour;
+	DynamicDetour g_ddBaseEntityCreateDetour;
 	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoAnimationEventDetour;
 	DynamicDetour g_ddDoJumpDetour;
+	DynamicDetour g_ddEndVersusModeRoundDetour;
+	DynamicDetour g_ddEndScavengeRoundDetour;
 	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
 	DynamicDetour g_ddEventKilledDetour;
@@ -1897,9 +1915,9 @@ public void OnPluginStart()
 	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof(esGeneral::g_sLogFile), "logs/mutant_tanks_%s.log", sDate);
 
 	char sSMPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/");
+	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), MT_CONFIG_PATH);
 	CreateDirectory(sSMPath, 511);
-	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%smutant_tanks.cfg", sSMPath);
+	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%s%s", sSMPath, MT_CONFIG_FILE);
 
 	switch (FileExists(g_esGeneral.g_sSavePath, true))
 	{
@@ -1913,7 +1931,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -1957,16 +1974,19 @@ public void OnPluginStart()
 
 				vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "CFirstAidKit::OnActionComplete");
 				vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, gdMutantTanks, "CTerrorPlayer::DoAnimationEvent");
+				vSetupDetour(g_esGeneral.g_ddEndScavengeRoundDetour, gdMutantTanks, "CDirectorScavengeMode::EndScavengeRound");
 				vSetupDetour(g_esGeneral.g_ddFireBulletDetour, gdMutantTanks, "CTerrorGun::FireBullet");
 				vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "CTerrorPlayer::Fling");
 				vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
 				vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
 				vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, gdMutantTanks, "CTerrorPlayer::SelectWeightedSequence");
 				vSetupDetour(g_esGeneral.g_ddStartActionDetour, gdMutantTanks, "CBaseBackpackItem::StartAction");
+				vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "CTankRock::Create");
 				vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "CTerrorMeleeWeapon::TestMeleeSwingCollision");
 			}
 			else
 			{
+				vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, gdMutantTanks, "CBaseEntity::Create");
 				vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, gdMutantTanks, "CFirstAidKit::FinishHealing");
 				vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, gdMutantTanks, "CTerrorPlayer::SetMainActivity");
 				vSetupDetour(g_esGeneral.g_ddStartHealingDetour, gdMutantTanks, "CFirstAidKit::StartHealing");
@@ -2161,6 +2181,7 @@ public void OnPluginStart()
 
 			vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "CDeathFallCamera::Enable");
 			vSetupDetour(g_esGeneral.g_ddDoJumpDetour, gdMutantTanks, "CTerrorGameMovement::DoJump");
+			vSetupDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, gdMutantTanks, "CDirectorVersusMode::EndVersusModeRound");
 			vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, gdMutantTanks, "CTerrorPlayer::OnEnterGhostState");
 			vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, gdMutantTanks, "Tank::EnterStasis");
 			vSetupDetour(g_esGeneral.g_ddEventKilledDetour, gdMutantTanks, "CTerrorPlayer::Event_Killed");
@@ -2180,7 +2201,6 @@ public void OnPluginStart()
 			vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, gdMutantTanks, "CTerrorPlayer::StartReviving");
 			vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "CTankClaw::DoSwing");
 			vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "CTankClaw::OnPlayerHit");
-			vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "CTankRock::Create");
 			vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, gdMutantTanks, "CTerrorPlayer::OnVomitedUpon");
 
 			delete gdMutantTanks;
@@ -2240,6 +2260,7 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_esGeneral.g_bMapStarted = true;
+	g_esGeneral.g_bNextRound = false;
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
 	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 
@@ -2394,7 +2415,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs/");
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH);
 			CreateDirectory(sSMPath, 511);
 
 			char sDifficulty[11];
@@ -2408,14 +2429,14 @@ public void OnConfigsExecuted()
 					case 3: sDifficulty = "Impossible";
 				}
 
-				vCreateConfigFile("difficulty_configs/", sDifficulty);
+				vCreateConfigFile(MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_map_configs/" : "l4d_map_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_MAP_PATH2 : MT_CONFIG_MAP_PATH));
 			CreateDirectory(sSMPath, 511);
 
 			char sMapName[128];
@@ -2432,7 +2453,7 @@ public void OnConfigsExecuted()
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
 						alMaps.GetString(iPos, sMapName, sizeof(sMapName));
-						vCreateConfigFile((g_bSecondGame ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapName);
+						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_MAP_PATH2 : MT_CONFIG_MAP_PATH), sMapName);
 					}
 				}
 
@@ -2443,7 +2464,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH));
 			CreateDirectory(sSMPath, 511);
 
 			char sGameType[2049], sTypes[64][32];
@@ -2454,7 +2475,7 @@ public void OnConfigsExecuted()
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 				{
-					vCreateConfigFile((g_bSecondGame ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
+					vCreateConfigFile((g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sTypes[iMode]);
 				}
 			}
 		}
@@ -2462,7 +2483,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs/");
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH);
 			CreateDirectory(sSMPath, 511);
 
 			char sWeekday[32];
@@ -2479,56 +2500,56 @@ public void OnConfigsExecuted()
 					case 6: sWeekday = "sunday";
 				}
 
-				vCreateConfigFile("daily_configs/", sWeekday);
+				vCreateConfigFile(MT_CONFIG_DAY_PATH, sWeekday);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs/");
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile("playercount_configs/", sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_PLAYERCOUNT_PATH, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/survivorcount_configs/");
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile("survivorcount_configs/", sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_SURVIVORCOUNT_PATH, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/infectedcount_configs/");
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-				vCreateConfigFile("infectedcount_configs/", sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_INFECTEDCOUNT_PATH, sPlayerCount);
 			}
 		}
 
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH));
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
@@ -2550,7 +2571,7 @@ public void OnConfigsExecuted()
 					case 10: sEvent = "gauntlet_finale_start";
 				}
 
-				vCreateConfigFile((g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
+				vCreateConfigFile((g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH), sEvent);
 			}
 		}
 
@@ -2558,7 +2579,7 @@ public void OnConfigsExecuted()
 		{
 			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
 			{
 				vCustomConfig(sDifficultyConfig);
@@ -2571,7 +2592,7 @@ public void OnConfigsExecuted()
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMap))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 			if (FileExists(sMapConfig, true))
 			{
 				vCustomConfig(sMapConfig);
@@ -2583,7 +2604,7 @@ public void OnConfigsExecuted()
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				vCustomConfig(sModeConfig);
@@ -2608,7 +2629,7 @@ public void OnConfigsExecuted()
 				default: sDay = "sunday";
 			}
 
-			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH, sDay);
 			if (FileExists(sDayConfig, true))
 			{
 				vCustomConfig(sDayConfig);
@@ -2619,7 +2640,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH, iGetPlayerCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2630,7 +2651,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/survivorcount_configs/%i.cfg", iGetHumanCount());
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH, iGetHumanCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2641,7 +2662,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/infectedcount_configs/%i.cfg", iGetHumanCount(true));
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH, iGetHumanCount(true));
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2654,6 +2675,7 @@ public void OnConfigsExecuted()
 public void OnMapEnd()
 {
 	g_esGeneral.g_bMapStarted = false;
+	g_esGeneral.g_bNextRound = false;
 
 	vReset();
 	vToggleLogging(0);
@@ -2939,7 +2961,7 @@ public Action cmdMTConfig(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
@@ -2947,13 +2969,13 @@ public Action cmdMTConfig(int client, int args)
 
 			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s.cfg", MT_CONFIG_PATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 					}
 				}
 			}
@@ -3021,7 +3043,7 @@ public Action cmdMTConfig2(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
@@ -3029,13 +3051,13 @@ public Action cmdMTConfig2(int client, int args)
 
 			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s.cfg", MT_CONFIG_PATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 					}
 				}
 			}
@@ -4539,7 +4561,7 @@ static void vConfig(bool manual)
 		{
 			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
@@ -4559,7 +4581,7 @@ static void vConfig(bool manual)
 			if (IsMapValid(sMap))
 			{
 				static char sMapConfig[PLATFORM_MAX_PATH];
-				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 				if (FileExists(sMapConfig, true))
 				{
 					g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
@@ -4577,7 +4599,7 @@ static void vConfig(bool manual)
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_GAMEMODE_PATH2 : MT_CONFIG_GAMEMODE_PATH), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
@@ -4607,7 +4629,7 @@ static void vConfig(bool manual)
 				default: sDay = "sunday";
 			}
 
-			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DAY_PATH, sDay);
 			if (FileExists(sDayConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
@@ -4624,7 +4646,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetPlayerCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PLAYERCOUNT_PATH, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -4647,7 +4669,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/survivorcount_configs/%i.cfg", iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_SURVIVORCOUNT_PATH, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -4670,7 +4692,7 @@ static void vConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount(true);
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/infectedcount_configs/%i.cfg", iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_INFECTEDCOUNT_PATH, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -5824,7 +5846,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			static float flDamage;
 			if (bIsTank(victim))
 			{
-				if (StrEqual(sClassname, "tank_rock") && (bIsTank(iLauncherOwner) || (bIsTank(iRockOwner) && victim != iRockOwner)))
+				if (StrEqual(sClassname, "tank_rock"))
 				{
 					RequestFrame(vDetonateRockFrame, EntIndexToEntRef(inflictor));
 				}
@@ -6506,6 +6528,16 @@ static void vClearAbilityList()
 
 			delete g_esGeneral.g_alAbilitySections[iPos];
 		}
+	}
+}
+
+static void vClearCompTypesList()
+{
+	if (g_esGeneral.g_alCompTypes != null)
+	{
+		g_esGeneral.g_alCompTypes.Clear();
+
+		delete g_esGeneral.g_alCompTypes;
 	}
 }
 
@@ -8753,7 +8785,7 @@ static void vExecuteFinaleConfigs(const char[] filename)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_FINALE_PATH2 : MT_CONFIG_FINALE_PATH));
 		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
 		if (FileExists(sFilePath, true))
 		{
@@ -8793,11 +8825,11 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, true);
 		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, true);
 		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, true);
-		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, true);
 		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, true);
 		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, true, 2);
@@ -8807,8 +8839,10 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, true, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, true, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, true, 1);
 		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, true, 1);
 		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, true, 1);
 		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, true, 1);
@@ -8817,6 +8851,7 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_bLeft4DHooksInstalled)
 		{
+			vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, true);
 			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, true);
 			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, true);
 			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, true);
@@ -8824,6 +8859,11 @@ static void vPluginStatus()
 			vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, true);
 			vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, true);
 			vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, true);
+		}
+
+		if (bIsVersusModeRound(0))
+		{
+			g_esGeneral.g_alCompTypes = new ArrayList();
 		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && !bPluginAllowed)
@@ -8854,11 +8894,11 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, false);
 		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, false);
 		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, false);
-		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, false);
 		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, false);
 		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, false, 2);
@@ -8868,8 +8908,10 @@ static void vPluginStatus()
 		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, false, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, false, 2);
 		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, false, 1);
 		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, false, 1);
 		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, false, 1);
 		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, false, 1);
@@ -8878,6 +8920,7 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_bLeft4DHooksInstalled)
 		{
+			vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, false);
 			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, false);
 			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, false);
 			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, false);
@@ -9480,6 +9523,7 @@ static void vReset()
 
 	vResetRound();
 	vClearAbilityList();
+	vClearCompTypesList();
 	vClearPluginList();
 }
 
@@ -11293,7 +11337,7 @@ static void vSpawnModes(int tank, bool status)
 	g_esPlayer[tank].g_bTransformed = status;
 }
 
-static void vSetColor(int tank, int type = 0, bool change = true, bool revert = false)
+static void vSetColor(int tank, int type = 0, bool change = true, bool revert = false, bool store = false)
 {
 	if (type == -1)
 	{
@@ -11312,7 +11356,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 			vRemoveProps(tank);
 			vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
 
-			g_esPlayer[tank].g_iTankType = type;
+			g_esPlayer[tank].g_iTankType = 0;
 
 			return;
 		}
@@ -11329,6 +11373,11 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 		{
 			g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
 		}
+	}
+
+	if (store && bIsVersusModeRound(1))
+	{
+		g_esGeneral.g_alCompTypes.Push(type);
 	}
 
 	g_esPlayer[tank].g_iTankType = type;
@@ -12033,6 +12082,26 @@ static void vSetProps(int tank)
 			if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLASHLIGHT)
 			{
 				vFlashlightProp(tank, flOrigin, flAngles);
+			}
+		}
+	}
+}
+
+static void vSetRockColor(int rock)
+{
+	if (bIsValidEntity(rock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
+	{
+		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
+		if (bIsValidEntity(g_esGeneral.g_iLauncher))
+		{
+			static int iTank;
+			iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+			if (bIsTankSupported(iTank))
+			{
+				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
+				SetEntPropEnt(rock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
+				SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
+				vSetRockModel(iTank, rock);
 			}
 		}
 	}
@@ -12747,13 +12816,24 @@ static void vMutateTank(int tank, int type)
 {
 	if (bCanTypeSpawn())
 	{
+		bool bVersus = bIsVersusModeRound(2);
 		int iType = 0;
 		if (type == 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
-			switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
+			if (bVersus)
 			{
-				case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave - 1], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave - 1]);
-				case false: iType = (bIsNonFinaleMap() && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
+				iType = g_esGeneral.g_alCompTypes.Get(0);
+				g_esGeneral.g_alCompTypes.Erase(0);
+
+				vSetColor(tank, iType, false);
+			}
+			else
+			{
+				switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
+				{
+					case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave - 1], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave - 1]);
+					case false: iType = (bIsNonFinaleMap() && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
+				}
 			}
 
 			if (!g_esGeneral.g_bForceSpawned)
@@ -12785,8 +12865,21 @@ static void vMutateTank(int tank, int type)
 		}
 		else if (type != -1)
 		{
-			iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
-			vSetColor(tank, iType, false);
+			switch (bVersus)
+			{
+				case true:
+				{
+					iType = g_esGeneral.g_alCompTypes.Get(0);
+					g_esGeneral.g_alCompTypes.Erase(0);
+
+					vSetColor(tank, iType, false);
+				}
+				case false:
+				{
+					iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
+					vSetColor(tank, iType, false, _, true);
+				}
+			}
 		}
 
 		if (g_esPlayer[tank].g_iTankType > 0)
@@ -13149,7 +13242,7 @@ static void vRegisterPatches(GameData dataHandle)
 	g_iPatchCount = 0;
 
 	char sFilePath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "data/mutant_tanks/mutant_tanks_patches.cfg");
+	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "%smutant_tanks_patches.cfg", MT_CONFIG_PATH);
 	if (!FileExists(sFilePath, true))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
@@ -13675,6 +13768,23 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 	return g_esTank[type].g_iAbilityCount == -1 || (g_esTank[type].g_iAbilityCount > 0 && iPluginCount > 0);
 }
 
+static bool bIsVersusModeRound(int type)
+{
+	if (!(g_esGeneral.g_iCurrentMode == 2 || g_esGeneral.g_iCurrentMode == 8))
+	{
+		return false;
+	}
+
+	switch (type)
+	{
+		case 0: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes == null;
+		case 1: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null;
+		case 2: return g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null && g_esGeneral.g_alCompTypes.Length > 0;
+	}
+
+	return false;
+}
+
 static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName, const char[] offsetName, int checkByte, int[] bytes, int length, bool log = false, bool permanent = false)
 {
 	if (iGetPatchIndex(name) >= 0)
@@ -13874,7 +13984,7 @@ static int iChooseTank(int tank, int exclude, int min = -1, int max = -1, bool m
 		{
 			if (mutate)
 			{
-				vSetColor(tank, iRealType, false);
+				vSetColor(tank, iRealType, false, _, true);
 			}
 
 			return iRealType;
@@ -14298,6 +14408,18 @@ public MRESReturn mreActionCompletePost(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParams)
+{
+	char sClassname[32];
+	hParams.GetString(1, sClassname, sizeof(sClassname));
+	if (StrEqual(sClassname, "tank_rock") && hParams.IsNull(4))
+	{
+		vSetRockColor(hReturn.Value);
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreDeathFallCameraEnablePre(int pThis, DHookParam hParams)
 {
 	int iSurvivor = hParams.Get(1);
@@ -14449,6 +14571,20 @@ public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 
 		StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(MT_JUMP_DEFAULTHEIGHT), NumberType_Int32);
 	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreEndScavengeRoundPost()
+{
+	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreEndVersusModeRoundPost(DHookParam hParams)
+{
+	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
 
 	return MRES_Ignored;
 }
@@ -15177,30 +15313,9 @@ public MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 
 public MRESReturn mreTankRockCreatePost(DHookReturn hReturn, DHookParam hParams)
 {
-	static int iRock;
-	iRock = hReturn.Value;
-	if (bIsValidEntity(iRock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
+	if (hParams.IsNull(4))
 	{
-		static int iThrower;
-		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-		if (bIsTank(iThrower))
-		{
-			return MRES_Ignored;
-		}
-
-		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
-		if (bIsValidEntity(g_esGeneral.g_iLauncher))
-		{
-			static int iTank;
-			iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
-			if (bIsTankSupported(iTank))
-			{
-				SetEntPropEnt(iRock, Prop_Data, "m_hThrower", iTank);
-				SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
-				SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
-				vSetRockModel(iTank, iRock);
-			}
-		}
+		vSetRockColor(hReturn.Value);
 	}
 
 	return MRES_Ignored;
@@ -15248,6 +15363,11 @@ public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 }
 
 #if defined _l4dh_included
+public void L4D2_OnEndVersusModeRound_Post()
+{
+	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
+}
+
 public void L4D_OnEnterGhostState(int client)
 {
 	if (bIsTank(client))
@@ -15407,7 +15527,7 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	{
 		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
+		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_DIFFICULTY_PATH, sDifficulty);
 		if (FileExists(sDifficultyConfig, true))
 		{
 			vCustomConfig(sDifficultyConfig);

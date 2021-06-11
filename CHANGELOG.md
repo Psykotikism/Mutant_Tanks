@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.85 (June 10, 2021)
+## Version 8.85 (June 20, 2021)
 
 ### Bug Fixes
 
@@ -17,6 +17,12 @@
 - Necro: Fixed the ability not working. (Thanks to `ddd123` for reporting!)
 
 ### Changes
+
+#### General
+- Mutant Tank types will now be consistently mirrored across both teams on `Versus` and `Scavenge` game modes.
+
+#### Game Data
+- Changed the `CTankRock::Create` detour to a `CBaseEntity::Create` detour in L4D1. (Thanks to `Dragokas` for the idea!)
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
