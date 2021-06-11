@@ -1931,6 +1931,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -9159,7 +9160,11 @@ static void vToggleEffects(int survivor, int type = 0)
 		switch (g_esPlayer[survivor].g_flVisualTime[2] != -1.0 && g_esPlayer[survivor].g_flVisualTime[2] > GetGameTime())
 		{
 			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
-			case false: SetEntityRenderColor(survivor, 255, 255, 255, 255);
+			case false:
+			{
+				SetEntityRenderMode(survivor, RENDER_NORMAL);
+				SetEntityRenderColor(survivor, 255, 255, 255, 255);
+			}
 		}
 	}
 }
@@ -12139,6 +12144,12 @@ static void vSetSurvivorColor(int survivor, const char[] colors, bool apply = tr
 
 	if (apply)
 	{
+		switch (iColor[3] < 255)
+		{
+			case true: SetEntityRenderMode(survivor, RENDER_TRANSCOLOR);
+			case false: SetEntityRenderMode(survivor, RENDER_NORMAL);
+		}
+
 		SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
 	}
 }
@@ -16036,6 +16047,7 @@ public Action tTimerRefreshRewards(Handle timer)
 
 						if (!bIsDeveloper(iSurvivor, 0))
 						{
+							SetEntityRenderMode(iSurvivor, RENDER_NORMAL);
 							SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
 						}
 					}
