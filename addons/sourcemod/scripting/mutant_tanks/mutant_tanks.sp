@@ -338,10 +338,10 @@ enum struct esGeneral
 	bool g_bUsedParser;
 	bool g_bWitchKilled[2048];
 
-	char g_sBodyColorVisual[48];
-	char g_sBodyColorVisual2[48];
-	char g_sBodyColorVisual3[48];
-	char g_sBodyColorVisual4[48];
+	char g_sBodyColorVisual[16];
+	char g_sBodyColorVisual2[16];
+	char g_sBodyColorVisual3[16];
+	char g_sBodyColorVisual4[16];
 	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sCurrentSection[128];
 	char g_sCurrentSubSection[128];
@@ -351,10 +351,10 @@ enum struct esGeneral
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[36];
-	char g_sGlowColorVisual2[36];
-	char g_sGlowColorVisual3[36];
-	char g_sGlowColorVisual4[36];
+	char g_sGlowColorVisual[12];
+	char g_sGlowColorVisual2[12];
+	char g_sGlowColorVisual3[12];
+	char g_sGlowColorVisual4[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -366,10 +366,10 @@ enum struct esGeneral
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
 	char g_sSavePath[PLATFORM_MAX_PATH];
-	char g_sScreenColorVisual[48];
-	char g_sScreenColorVisual2[48];
-	char g_sScreenColorVisual3[48];
-	char g_sScreenColorVisual4[48];
+	char g_sScreenColorVisual[16];
+	char g_sScreenColorVisual2[16];
+	char g_sScreenColorVisual3[16];
+	char g_sScreenColorVisual4[16];
 	char g_sSection[PLATFORM_MAX_PATH];
 
 	ConfigState g_csState;
@@ -741,11 +741,11 @@ enum struct esPlayer
 	bool g_bTriggered;
 	bool g_bVomited;
 
-	char g_sBodyColor[48];
-	char g_sBodyColorVisual[48];
-	char g_sBodyColorVisual2[48];
-	char g_sBodyColorVisual3[48];
-	char g_sBodyColorVisual4[48];
+	char g_sBodyColor[16];
+	char g_sBodyColorVisual[16];
+	char g_sBodyColorVisual2[16];
+	char g_sBodyColorVisual3[16];
+	char g_sBodyColorVisual4[16];
 	char g_sComboSet[320];
 	char g_sHealthCharacters[4];
 	char g_sFallVoiceline[64];
@@ -753,11 +753,11 @@ enum struct esPlayer
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColor[36];
-	char g_sGlowColorVisual[36];
-	char g_sGlowColorVisual2[36];
-	char g_sGlowColorVisual3[36];
-	char g_sGlowColorVisual4[36];
+	char g_sGlowColor[12];
+	char g_sGlowColorVisual[12];
+	char g_sGlowColorVisual2[12];
+	char g_sGlowColorVisual3[12];
+	char g_sGlowColorVisual4[12];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
 	char g_sItemReward3[320];
@@ -767,10 +767,10 @@ enum struct esPlayer
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
-	char g_sScreenColorVisual[48];
-	char g_sScreenColorVisual2[48];
-	char g_sScreenColorVisual3[48];
-	char g_sScreenColorVisual4[48];
+	char g_sScreenColorVisual[16];
+	char g_sScreenColorVisual2[16];
+	char g_sScreenColorVisual3[16];
+	char g_sScreenColorVisual4[16];
 	char g_sSteamID32[32];
 	char g_sSteam3ID[32];
 	char g_sStoredThrowable[32];
@@ -972,19 +972,19 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esTank
 {
-	char g_sBodyColorVisual[48];
-	char g_sBodyColorVisual2[48];
-	char g_sBodyColorVisual3[48];
-	char g_sBodyColorVisual4[48];
+	char g_sBodyColorVisual[16];
+	char g_sBodyColorVisual2[16];
+	char g_sBodyColorVisual3[16];
+	char g_sBodyColorVisual4[16];
 	char g_sComboSet[320];
 	char g_sFallVoicelineReward[64];
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[36];
-	char g_sGlowColorVisual2[36];
-	char g_sGlowColorVisual3[36];
-	char g_sGlowColorVisual4[36];
+	char g_sGlowColorVisual[12];
+	char g_sGlowColorVisual2[12];
+	char g_sGlowColorVisual3[12];
+	char g_sGlowColorVisual4[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -994,10 +994,10 @@ enum struct esTank
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
-	char g_sScreenColorVisual[48];
-	char g_sScreenColorVisual2[48];
-	char g_sScreenColorVisual3[48];
-	char g_sScreenColorVisual4[48];
+	char g_sScreenColorVisual[16];
+	char g_sScreenColorVisual2[16];
+	char g_sScreenColorVisual3[16];
+	char g_sScreenColorVisual4[16];
 	char g_sTankName[33];
 
 	float g_flActionDurationReward[4];
@@ -1141,19 +1141,19 @@ esTank g_esTank[MT_MAXTYPES + 1];
 
 enum struct esCache
 {
-	char g_sBodyColorVisual[48];
-	char g_sBodyColorVisual2[48];
-	char g_sBodyColorVisual3[48];
-	char g_sBodyColorVisual4[48];
+	char g_sBodyColorVisual[16];
+	char g_sBodyColorVisual2[16];
+	char g_sBodyColorVisual3[16];
+	char g_sBodyColorVisual4[16];
 	char g_sComboSet[320];
 	char g_sFallVoicelineReward[64];
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[36];
-	char g_sGlowColorVisual2[36];
-	char g_sGlowColorVisual3[36];
-	char g_sGlowColorVisual4[36];
+	char g_sGlowColorVisual[12];
+	char g_sGlowColorVisual2[12];
+	char g_sGlowColorVisual3[12];
+	char g_sGlowColorVisual4[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -1163,10 +1163,10 @@ enum struct esCache
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
-	char g_sScreenColorVisual[48];
-	char g_sScreenColorVisual2[48];
-	char g_sScreenColorVisual3[48];
-	char g_sScreenColorVisual4[48];
+	char g_sScreenColorVisual[16];
+	char g_sScreenColorVisual2[16];
+	char g_sScreenColorVisual3[16];
+	char g_sScreenColorVisual4[16];
 	char g_sTankName[33];
 
 	float g_flActionDurationReward[4];
@@ -6788,18 +6788,18 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iKillMessage = 0;
 		g_esGeneral.g_iVocalizeArrival = 1;
 		g_esGeneral.g_iVocalizeDeath = 1;
-		g_esGeneral.g_sBodyColorVisual = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sBodyColorVisual2 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sBodyColorVisual3 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sBodyColorVisual4 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
+		g_esGeneral.g_sBodyColorVisual = "-1;-1;-1;-1";
+		g_esGeneral.g_sBodyColorVisual2 = "-1;-1;-1;-1";
+		g_esGeneral.g_sBodyColorVisual3 = "-1;-1;-1;-1";
+		g_esGeneral.g_sBodyColorVisual4 = "-1;-1;-1;-1";
 		g_esGeneral.g_sFallVoicelineReward = "PlayerLaugh";
 		g_esGeneral.g_sFallVoicelineReward2 = "PlayerLaugh";
 		g_esGeneral.g_sFallVoicelineReward3 = "PlayerLaugh";
 		g_esGeneral.g_sFallVoicelineReward4 = "PlayerLaugh";
-		g_esGeneral.g_sGlowColorVisual = "-1;-1;-1,-1;-1;-1,-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual2 = "-1;-1;-1,-1;-1;-1,-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual3 = "-1;-1;-1,-1;-1;-1,-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual4 = "-1;-1;-1,-1;-1;-1,-1;-1;-1";
+		g_esGeneral.g_sGlowColorVisual = "-1;-1;-1";
+		g_esGeneral.g_sGlowColorVisual2 = "-1;-1;-1";
+		g_esGeneral.g_sGlowColorVisual3 = "-1;-1;-1";
+		g_esGeneral.g_sGlowColorVisual4 = "-1;-1;-1";
 		g_esGeneral.g_sItemReward = "first_aid_kit";
 		g_esGeneral.g_sItemReward2 = "first_aid_kit";
 		g_esGeneral.g_sItemReward3 = "first_aid_kit";
@@ -6808,10 +6808,10 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sLoopingVoicelineVisual2 = "PlayerDeath";
 		g_esGeneral.g_sLoopingVoicelineVisual3 = "PlayerDeath";
 		g_esGeneral.g_sLoopingVoicelineVisual4 = "PlayerDeath";
-		g_esGeneral.g_sScreenColorVisual = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sScreenColorVisual2 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sScreenColorVisual3 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
-		g_esGeneral.g_sScreenColorVisual4 = "-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1";
+		g_esGeneral.g_sScreenColorVisual = "-1;-1;-1;-1";
+		g_esGeneral.g_sScreenColorVisual2 = "-1;-1;-1;-1";
+		g_esGeneral.g_sScreenColorVisual3 = "-1;-1;-1;-1";
+		g_esGeneral.g_sScreenColorVisual4 = "-1;-1;-1;-1";
 		g_esGeneral.g_iTeammateLimit = 0;
 		g_esGeneral.g_iAggressiveTanks = 0;
 		g_esGeneral.g_iCreditIgniters = 1;
@@ -10343,7 +10343,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[0] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[0] - flCurrentTime)))
 						{
-							char sColor[48], sValue[4][4];
+							char sColor[16], sValue[4][4];
 
 							switch (priority)
 							{
@@ -12124,7 +12124,7 @@ static void vSetSurvivorColor(int survivor, const char[] colors, bool apply = tr
 		return;
 	}
 
-	char sColor[48], sValue[4][4];
+	char sColor[16], sValue[4][4];
 	strcopy(sColor, sizeof(sColor), colors);
 	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
 
@@ -12201,7 +12201,7 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = 
 		return;
 	}
 
-	char sColor[36], sValue[3][4];
+	char sColor[12], sValue[3][4];
 	strcopy(sColor, sizeof(sColor), colors);
 	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
 
