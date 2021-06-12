@@ -11,6 +11,7 @@
 - Plugin Settings
 	- General
 	- Announcements
+	- Colors
 	- Rewards
 	- Competitive
 	- Difficulty
@@ -476,6 +477,27 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vocalize Death"			"1"
+		}
+		"Colors"
+		{
+			// You can create color presets here with unique nicknames that you can use in any color setting provided by Mutant Tanks.
+			// Each time the config file is read, the presets in this section will be stored with their associated values.
+			// A nickname must be unique and cannot be used more than once.
+			// Any duplicates will overwrite the previous one.
+			// This is just a shortcut method for changing colors.
+			// Here are some examples:
+
+			// All Tanks will be red.
+			"all_tank_skins"			"255,0,0,255" // See "Skin Color" below.
+
+			// All Tank glow outlines will be green.
+			"all_tank_glows"			"0,255,0" // See "Glow Color" below.
+
+			// All Tank rocks will be black.
+			"all_tank_rocks"			"0,0,0,255" // See "Rock Color" below.
+
+			// All shields provided by the Shield ability will be blue and 80% transparent.
+			"all_shields"				"0,0,255,50" // See "Shield Color" below.
 		}
 		"Rewards"
 		{
@@ -2268,6 +2290,7 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			"Skin Color"				"255,255,255,255"
+			//"Skin Color"				"all_tank_skins" // Alternative (See "Colors" section)
 
 			// The Mutant Tank is only effective toward human survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -3471,6 +3494,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			"Glow Color"				"255,255,255"
+			//"Glow Color"				"all_tank_glows" // Alternative (See "Colors" section)
 
 			// The Mutant Tank's glow outline will flash.
 			// Note: This setting can be overridden for specific players.
@@ -4129,6 +4153,7 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			"Rock Color"				"255,255,255,255"
+			//"Rock Color"				"all_tank_rocks" // Alternative (See "Colors" section)
 
 			// This is the model of the Mutant Tank's rocks, which includes the rocks attached to it and the ones that it throws/spawns.
 			// Note: This setting can be overridden for specific players.
@@ -16612,6 +16637,7 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			"Shield Color"				"255,255,255,255"
+			//"Shield Color"			"all_shields" // Alternative (See "Colors" section)
 
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// Note: This setting can be overridden for specific players.

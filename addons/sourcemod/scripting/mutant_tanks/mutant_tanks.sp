@@ -55,6 +55,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_DoesTypeRequireHumans", aNative_DoesTypeRequireHumans);
 	CreateNative("MT_GetAccessFlags", aNative_GetAccessFlags);
 	CreateNative("MT_GetCombinationSetting", aNative_GetCombinationSetting);
+	CreateNative("MT_GetConfigColors", aNative_GetConfigColors);
 	CreateNative("MT_GetCurrentFinaleWave", aNative_GetCurrentFinaleWave);
 	CreateNative("MT_GetGlowRange", aNative_GetGlowRange);
 	CreateNative("MT_GetGlowType", aNative_GetGlowType);
@@ -187,6 +188,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_ANNOUNCE "Announcements"
 #define MT_CONFIG_SECTION_ANNOUNCE2 "announce"
 #define MT_CONFIG_SECTIONS_ANNOUNCE MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2
+#define MT_CONFIG_SECTION_COLORS "Colors"
+#define MT_CONFIG_SECTIONS_COLORS MT_CONFIG_SECTION_COLORS, MT_CONFIG_SECTION_COLORS, MT_CONFIG_SECTION_COLORS, MT_CONFIG_SECTION_COLORS
 #define MT_CONFIG_SECTION_REWARDS "Rewards"
 #define MT_CONFIG_SECTIONS_REWARDS MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS
 #define MT_CONFIG_SECTION_COMP "Competitive"
@@ -317,6 +320,7 @@ enum struct esGeneral
 	Address g_adFallingSound;
 
 	ArrayList g_alAbilitySections[4];
+	ArrayList g_alColorKeys[2];
 	ArrayList g_alCompTypes;
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
@@ -1415,6 +1419,15 @@ public any aNative_GetCombinationSetting(Handle plugin, int numParams)
 	}
 
 	return 0.0;
+}
+
+public any aNative_GetConfigColors(Handle plugin, int numParams)
+{
+	int iSize = GetNativeCell(2);
+	char[] sColor = new char[iSize], sValue = new char[iSize];
+	GetNativeString(3, sColor, iSize);
+	vGetConfigColors(sValue, iSize, sColor);
+	SetNativeString(1, sValue, iSize);
 }
 
 public any aNative_GetCurrentFinaleWave(Handle plugin, int numParams)
@@ -3155,7 +3168,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
-		else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
+		else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			char sSection[33], sIndex[5], sType[5];
 			strcopy(sSection, sizeof(sSection), name);
@@ -3177,7 +3190,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 				g_esGeneral.g_iIgnoreLevel2++;
 			}
 		}
-		else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
+		else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
@@ -3265,7 +3278,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
-		else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank", false) == 0 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1))
+		else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank", false) == 0 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
@@ -3275,7 +3288,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
-		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1)
+		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sSection, ',') != -1 || FindCharInString(g_esGeneral.g_sSection, '-') != -1)
 		{
 			g_esGeneral.g_csState2 = ConfigState_Type;
 
@@ -3488,7 +3501,7 @@ static void vConfigMenu(int admin, int item = 0)
 				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof(sSection));
 				if (sSection[0] != '\0')
 				{
-					switch (StrContains(sSection, "Plugin", false) == 0 || StrContains(sSection, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sSection, "STEAM_", false) == 0 || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || StrContains(sSection, ",") != -1 || StrContains(sSection, "-") != -1)
+					switch (StrContains(sSection, "Plugin", false) == 0 || StrContains(sSection, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sSection, "STEAM_", false) == 0 || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
 					{
 						case true: mConfigMenu.AddItem(sSection, sSection);
 						case false:
@@ -3544,7 +3557,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 			char sInfo[PLATFORM_MAX_PATH];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 
-			switch (StrContains(sInfo, "Plugin", false) == 0 || StrContains(sInfo, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || StrContains(sInfo, ",") != -1 || StrContains(sInfo, "-") != -1)
+			switch (StrContains(sInfo, "Plugin", false) == 0 || StrContains(sInfo, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || FindCharInString(sInfo, ',') != -1 || FindCharInString(sInfo, '-') != -1)
 			{
 				case true: g_esGeneral.g_sSection = sInfo;
 				case false:
@@ -3608,7 +3621,7 @@ public SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quote
 	}
 
 	if (StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false) || StrContains(name, "STEAM_", false) == 0
-		|| strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1
+		|| strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1
 		|| StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]))
 	{
 		g_esGeneral.g_alSections.PushString(name);
@@ -6532,6 +6545,19 @@ static void vClearAbilityList()
 	}
 }
 
+static void vClearColorKeysList()
+{
+	for (int iPos = 0; iPos < sizeof(esGeneral::g_alColorKeys); iPos++)
+	{
+		if (g_esGeneral.g_alColorKeys[iPos] != null)
+		{
+			g_esGeneral.g_alColorKeys[iPos].Clear();
+
+			delete g_esGeneral.g_alColorKeys[iPos];
+		}
+	}
+}
+
 static void vClearCompTypesList()
 {
 	if (g_esGeneral.g_alCompTypes != null)
@@ -6639,7 +6665,11 @@ static void vCustomConfig(const char[] savepath)
 static void vLoadConfigs(const char[] savepath, int mode)
 {
 	vClearAbilityList();
+	vClearColorKeysList();
 	vClearPluginList();
+
+	g_esGeneral.g_alColorKeys[0] = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+	g_esGeneral.g_alColorKeys[1] = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 
 	g_esGeneral.g_alPlugins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	if (g_esGeneral.g_alPlugins != null)
@@ -7340,7 +7370,7 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
 		}
-		else if (StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1)
+		else if (StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
 
@@ -7467,6 +7497,18 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
 					}
 				}
+				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COLORS, false))
+				{
+					if (g_esGeneral.g_alColorKeys[0] != null)
+					{
+						g_esGeneral.g_alColorKeys[0].PushString(key);
+					}
+
+					if (g_esGeneral.g_alColorKeys[1] != null)
+					{
+						g_esGeneral.g_alColorKeys[1].PushString(value);
+					}
+				}
 				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 				{
 					static char sValue[1280], sSet[4][320];
@@ -7513,12 +7555,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esGeneral.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esGeneral.g_iThornsReward[iPos], sSet[iPos], 0, 1);
 						g_esGeneral.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esGeneral.g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-						vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof(esGeneral::g_sBodyColorVisual), g_esGeneral.g_sBodyColorVisual2, sizeof(esGeneral::g_sBodyColorVisual2), g_esGeneral.g_sBodyColorVisual3, sizeof(esGeneral::g_sBodyColorVisual3), g_esGeneral.g_sBodyColorVisual4, sizeof(esGeneral::g_sBodyColorVisual4), sSet[iPos]);
+						vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
+						vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof(esGeneral::g_sBodyColorVisual), g_esGeneral.g_sBodyColorVisual2, sizeof(esGeneral::g_sBodyColorVisual2), g_esGeneral.g_sBodyColorVisual3, sizeof(esGeneral::g_sBodyColorVisual3), g_esGeneral.g_sBodyColorVisual4, sizeof(esGeneral::g_sBodyColorVisual4), sValue);
 						vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esGeneral.g_sFallVoicelineReward, sizeof(esGeneral::g_sFallVoicelineReward), g_esGeneral.g_sFallVoicelineReward2, sizeof(esGeneral::g_sFallVoicelineReward2), g_esGeneral.g_sFallVoicelineReward3, sizeof(esGeneral::g_sFallVoicelineReward3), g_esGeneral.g_sFallVoicelineReward4, sizeof(esGeneral::g_sFallVoicelineReward4), sSet[iPos]);
-						vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sGlowColorVisual, sizeof(esGeneral::g_sGlowColorVisual), g_esGeneral.g_sGlowColorVisual2, sizeof(esGeneral::g_sGlowColorVisual2), g_esGeneral.g_sGlowColorVisual3, sizeof(esGeneral::g_sGlowColorVisual3), g_esGeneral.g_sGlowColorVisual4, sizeof(esGeneral::g_sGlowColorVisual4), sSet[iPos]);
+						vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sGlowColorVisual, sizeof(esGeneral::g_sGlowColorVisual), g_esGeneral.g_sGlowColorVisual2, sizeof(esGeneral::g_sGlowColorVisual2), g_esGeneral.g_sGlowColorVisual3, sizeof(esGeneral::g_sGlowColorVisual3), g_esGeneral.g_sGlowColorVisual4, sizeof(esGeneral::g_sGlowColorVisual4), sValue);
 						vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esGeneral.g_sItemReward, sizeof(esGeneral::g_sItemReward), g_esGeneral.g_sItemReward2, sizeof(esGeneral::g_sItemReward2), g_esGeneral.g_sItemReward3, sizeof(esGeneral::g_sItemReward3), g_esGeneral.g_sItemReward4, sizeof(esGeneral::g_sItemReward4), sSet[iPos]);
 						vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esGeneral.g_sLoopingVoicelineVisual, sizeof(esGeneral::g_sLoopingVoicelineVisual), g_esGeneral.g_sLoopingVoicelineVisual2, sizeof(esGeneral::g_sLoopingVoicelineVisual2), g_esGeneral.g_sLoopingVoicelineVisual3, sizeof(esGeneral::g_sLoopingVoicelineVisual3), g_esGeneral.g_sLoopingVoicelineVisual4, sizeof(esGeneral::g_sLoopingVoicelineVisual4), sSet[iPos]);
-						vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esGeneral.g_sScreenColorVisual, sizeof(esGeneral::g_sScreenColorVisual), g_esGeneral.g_sScreenColorVisual2, sizeof(esGeneral::g_sScreenColorVisual2), g_esGeneral.g_sScreenColorVisual3, sizeof(esGeneral::g_sScreenColorVisual3), g_esGeneral.g_sScreenColorVisual4, sizeof(esGeneral::g_sScreenColorVisual4), sSet[iPos]);
+						vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esGeneral.g_sScreenColorVisual, sizeof(esGeneral::g_sScreenColorVisual), g_esGeneral.g_sScreenColorVisual2, sizeof(esGeneral::g_sScreenColorVisual2), g_esGeneral.g_sScreenColorVisual3, sizeof(esGeneral::g_sScreenColorVisual3), g_esGeneral.g_sScreenColorVisual4, sizeof(esGeneral::g_sScreenColorVisual4), sValue);
 					}
 				}
 				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_DIFF, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_DIFF2, false))
@@ -7637,7 +7680,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				Call_PushCell(g_esGeneral.g_iConfigMode);
 				Call_Finish();
 			}
-			else if (StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1)
+			else if (StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 			{
 				int iStartPos = 0, iIndex = 0, iRealType = 0;
 				if (StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#')
@@ -7645,14 +7688,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
 					vReadTankSettings(iIndex, g_esGeneral.g_sCurrentSubSection, key, value);
 				}
-				else if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1)
+				else if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 				{
-					if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) && (StrContains(g_esGeneral.g_sCurrentSection, ",") == -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") == -1))
+					if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) && (FindCharInString(g_esGeneral.g_sCurrentSection, ',') == -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') == -1))
 					{
 						iIndex = StringToInt(g_esGeneral.g_sCurrentSection);
 						vReadTankSettings(iIndex, g_esGeneral.g_sCurrentSubSection, key, value);
 					}
-					else if (StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1)
+					else if (StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 					{
 						for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 						{
@@ -7740,7 +7783,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
 								static char sValue[16], sSet[4][4];
-								strcopy(sValue, sizeof(sValue), value);
+								vGetConfigColors(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iSkinColor); iPos++)
@@ -7799,12 +7842,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								g_esPlayer[iPlayer].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esPlayer[iPlayer].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 								g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esPlayer[iPlayer].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-								vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof(esPlayer::g_sBodyColorVisual), g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof(esPlayer::g_sBodyColorVisual2), g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof(esPlayer::g_sBodyColorVisual3), g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof(esPlayer::g_sBodyColorVisual4), sSet[iPos]);
+								vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
+								vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof(esPlayer::g_sBodyColorVisual), g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof(esPlayer::g_sBodyColorVisual2), g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof(esPlayer::g_sBodyColorVisual3), g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof(esPlayer::g_sBodyColorVisual4), sValue);
 								vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esPlayer[iPlayer].g_sFallVoicelineReward, sizeof(esPlayer::g_sFallVoicelineReward), g_esPlayer[iPlayer].g_sFallVoicelineReward2, sizeof(esPlayer::g_sFallVoicelineReward2), g_esPlayer[iPlayer].g_sFallVoicelineReward3, sizeof(esPlayer::g_sFallVoicelineReward3), g_esPlayer[iPlayer].g_sFallVoicelineReward4, sizeof(esPlayer::g_sFallVoicelineReward4), sSet[iPos]);
-								vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sGlowColorVisual, sizeof(esPlayer::g_sGlowColorVisual), g_esPlayer[iPlayer].g_sGlowColorVisual2, sizeof(esPlayer::g_sGlowColorVisual2), g_esPlayer[iPlayer].g_sGlowColorVisual3, sizeof(esPlayer::g_sGlowColorVisual3), g_esPlayer[iPlayer].g_sGlowColorVisual4, sizeof(esPlayer::g_sGlowColorVisual4), sSet[iPos]);
+								vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sGlowColorVisual, sizeof(esPlayer::g_sGlowColorVisual), g_esPlayer[iPlayer].g_sGlowColorVisual2, sizeof(esPlayer::g_sGlowColorVisual2), g_esPlayer[iPlayer].g_sGlowColorVisual3, sizeof(esPlayer::g_sGlowColorVisual3), g_esPlayer[iPlayer].g_sGlowColorVisual4, sizeof(esPlayer::g_sGlowColorVisual4), sValue);
 								vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esPlayer[iPlayer].g_sItemReward, sizeof(esPlayer::g_sItemReward), g_esPlayer[iPlayer].g_sItemReward2, sizeof(esPlayer::g_sItemReward2), g_esPlayer[iPlayer].g_sItemReward3, sizeof(esPlayer::g_sItemReward3), g_esPlayer[iPlayer].g_sItemReward4, sizeof(esPlayer::g_sItemReward4), sSet[iPos]);
 								vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual, sizeof(esPlayer::g_sLoopingVoicelineVisual), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual2, sizeof(esPlayer::g_sLoopingVoicelineVisual2), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual3, sizeof(esPlayer::g_sLoopingVoicelineVisual3), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual4, sizeof(esPlayer::g_sLoopingVoicelineVisual4), sSet[iPos]);
-								vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esPlayer[iPlayer].g_sScreenColorVisual, sizeof(esPlayer::g_sScreenColorVisual), g_esPlayer[iPlayer].g_sScreenColorVisual2, sizeof(esPlayer::g_sScreenColorVisual2), g_esPlayer[iPlayer].g_sScreenColorVisual3, sizeof(esPlayer::g_sScreenColorVisual3), g_esPlayer[iPlayer].g_sScreenColorVisual4, sizeof(esPlayer::g_sScreenColorVisual4), sSet[iPos]);
+								vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esPlayer[iPlayer].g_sScreenColorVisual, sizeof(esPlayer::g_sScreenColorVisual), g_esPlayer[iPlayer].g_sScreenColorVisual2, sizeof(esPlayer::g_sScreenColorVisual2), g_esPlayer[iPlayer].g_sScreenColorVisual3, sizeof(esPlayer::g_sScreenColorVisual3), g_esPlayer[iPlayer].g_sScreenColorVisual4, sizeof(esPlayer::g_sScreenColorVisual4), sValue);
 							}
 						}
 						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GLOW, false))
@@ -7812,7 +7856,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 							{
 								static char sValue[12], sSet[3][4];
-								strcopy(sValue, sizeof(sValue), value);
+								vGetConfigColors(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iGlowColor); iPos++)
@@ -7921,7 +7965,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							else
 							{
 								static char sValue[16], sSet[4][4];
-								strcopy(sValue, sizeof(sValue), value);
+								vGetConfigColors(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iLightColor); iPos++)
@@ -7937,7 +7981,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 							}
 						}
-						else if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") != -1)
+						else if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') != -1)
 						{
 							int iStartPos = 0, iIndex = 0, iRealType = 0;
 							if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#')
@@ -7945,14 +7989,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof(esGeneral::g_sCurrentSubSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
 								vReadAdminSettings(iPlayer, iIndex, key, value);
 							}
-							else if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") != -1)
+							else if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') != -1)
 							{
-								if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) && (StrContains(g_esGeneral.g_sCurrentSubSection, ",") == -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") == -1))
+								if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) && (FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') == -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') == -1))
 								{
 									iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection);
 									vReadAdminSettings(iPlayer, iIndex, key, value);
 								}
-								else if (StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") != -1)
+								else if (StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') != -1)
 								{
 									for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 									{
@@ -8013,7 +8057,7 @@ public SMCResult SMCEndSection(SMCParser smc)
 		{
 			g_esGeneral.g_csState = ConfigState_Settings;
 		}
-		else if (StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1)
+		else if (StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
 		}
@@ -8042,6 +8086,7 @@ public void SMCParseEnd(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_sCurrentSubSection[0] = '\0';
 
 	vClearAbilityList();
+	vClearColorKeysList();
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -8049,6 +8094,59 @@ public void SMCParseEnd(SMCParser smc, bool halted, bool failed)
 		{
 			vCacheSettings(iPlayer);
 		}
+	}
+}
+
+static void vGetConfigColors(char[] buffer, int size, const char[] value, char delimiter = ',')
+{
+	switch (FindCharInString(value, delimiter) != -1)
+	{
+		case true: strcopy(buffer, size, value);
+		case false:
+		{
+			if (g_esGeneral.g_alColorKeys[0] != null)
+			{
+				int iIndex = g_esGeneral.g_alColorKeys[0].FindString(value);
+				if (iIndex != -1 && g_esGeneral.g_alColorKeys[1] != null)
+				{
+					g_esGeneral.g_alColorKeys[1].GetString(iIndex, buffer, size);
+				}
+			}
+		}
+	}
+}
+
+static void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
+{
+	static int iType;
+	iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
+	if (tank > 0 && g_esPlayer[tank].g_sTankName[0] != '\0')
+	{
+		static char sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
+		FormatEx(sPhrase, sizeof(sPhrase), "%s Name", g_esPlayer[tank].g_sSteamID32);
+		FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", g_esPlayer[tank].g_sSteam3ID);
+		FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
+
+		switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
+		{
+			case true: strcopy(buffer, size, sSteamIDFinal);
+			case false: strcopy(buffer, size, "NoName");
+		}
+	}
+	else if (g_esTank[iType].g_sTankName[0] != '\0')
+	{
+		static char sTankName[32];
+		FormatEx(sTankName, sizeof(sTankName), "Tank #%i Name", iType);
+
+		switch (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
+		{
+			case true: strcopy(buffer, size, sTankName);
+			case false: strcopy(buffer, size, "NoName");
+		}
+	}
+	else
+	{
+		strcopy(buffer, size, "NoName");
 	}
 }
 
@@ -8521,7 +8619,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 			{
 				static char sValue[16], sSet[4][4];
-				strcopy(sValue, sizeof(sValue), value);
+				vGetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iSkinColor); iPos++)
@@ -8580,12 +8678,13 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				g_esTank[type].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTank[type].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 				g_esTank[type].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTank[type].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-				vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof(esTank::g_sBodyColorVisual), g_esTank[type].g_sBodyColorVisual2, sizeof(esTank::g_sBodyColorVisual2), g_esTank[type].g_sBodyColorVisual3, sizeof(esTank::g_sBodyColorVisual3), g_esTank[type].g_sBodyColorVisual4, sizeof(esTank::g_sBodyColorVisual4), sSet[iPos]);
+				vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
+				vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof(esTank::g_sBodyColorVisual), g_esTank[type].g_sBodyColorVisual2, sizeof(esTank::g_sBodyColorVisual2), g_esTank[type].g_sBodyColorVisual3, sizeof(esTank::g_sBodyColorVisual3), g_esTank[type].g_sBodyColorVisual4, sizeof(esTank::g_sBodyColorVisual4), sValue);
 				vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esTank[type].g_sFallVoicelineReward, sizeof(esTank::g_sFallVoicelineReward), g_esTank[type].g_sFallVoicelineReward2, sizeof(esTank::g_sFallVoicelineReward2), g_esTank[type].g_sFallVoicelineReward3, sizeof(esTank::g_sFallVoicelineReward3), g_esTank[type].g_sFallVoicelineReward4, sizeof(esTank::g_sFallVoicelineReward4), sSet[iPos]);
-				vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sGlowColorVisual, sizeof(esTank::g_sGlowColorVisual), g_esTank[type].g_sGlowColorVisual2, sizeof(esTank::g_sGlowColorVisual2), g_esTank[type].g_sGlowColorVisual3, sizeof(esTank::g_sGlowColorVisual3), g_esTank[type].g_sGlowColorVisual4, sizeof(esTank::g_sGlowColorVisual4), sSet[iPos]);
+				vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sGlowColorVisual, sizeof(esTank::g_sGlowColorVisual), g_esTank[type].g_sGlowColorVisual2, sizeof(esTank::g_sGlowColorVisual2), g_esTank[type].g_sGlowColorVisual3, sizeof(esTank::g_sGlowColorVisual3), g_esTank[type].g_sGlowColorVisual4, sizeof(esTank::g_sGlowColorVisual4), sValue);
 				vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esTank[type].g_sItemReward, sizeof(esTank::g_sItemReward), g_esTank[type].g_sItemReward2, sizeof(esTank::g_sItemReward2), g_esTank[type].g_sItemReward3, sizeof(esTank::g_sItemReward3), g_esTank[type].g_sItemReward4, sizeof(esTank::g_sItemReward4), sSet[iPos]);
 				vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esTank[type].g_sLoopingVoicelineVisual, sizeof(esTank::g_sLoopingVoicelineVisual), g_esTank[type].g_sLoopingVoicelineVisual2, sizeof(esTank::g_sLoopingVoicelineVisual2), g_esTank[type].g_sLoopingVoicelineVisual3, sizeof(esTank::g_sLoopingVoicelineVisual3), g_esTank[type].g_sLoopingVoicelineVisual4, sizeof(esTank::g_sLoopingVoicelineVisual4), sSet[iPos]);
-				vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esTank[type].g_sScreenColorVisual, sizeof(esTank::g_sScreenColorVisual), g_esTank[type].g_sScreenColorVisual2, sizeof(esTank::g_sScreenColorVisual2), g_esTank[type].g_sScreenColorVisual3, sizeof(esTank::g_sScreenColorVisual3), g_esTank[type].g_sScreenColorVisual4, sizeof(esTank::g_sScreenColorVisual4), sSet[iPos]);
+				vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esTank[type].g_sScreenColorVisual, sizeof(esTank::g_sScreenColorVisual), g_esTank[type].g_sScreenColorVisual2, sizeof(esTank::g_sScreenColorVisual2), g_esTank[type].g_sScreenColorVisual3, sizeof(esTank::g_sScreenColorVisual3), g_esTank[type].g_sScreenColorVisual4, sizeof(esTank::g_sScreenColorVisual4), sValue);
 			}
 		}
 		else if (StrEqual(sub, MT_CONFIG_SECTION_GLOW, false))
@@ -8593,7 +8692,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 			{
 				static char sValue[12], sSet[3][4];
-				strcopy(sValue, sizeof(sValue), value);
+				vGetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iGlowColor); iPos++)
@@ -8702,7 +8801,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			else
 			{
 				static char sValue[16], sSet[4][4];
-				strcopy(sValue, sizeof(sValue), value);
+				vGetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iLightColor); iPos++)
@@ -9148,18 +9247,24 @@ static void vToggleEffects(int survivor, int type = 0)
 {
 	if (type == 0 || type == 1)
 	{
+		char sDelimiter[2];
+		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sGlowColor, ';') != -1) ? ";" : ",";
+
 		switch (g_esPlayer[survivor].g_flVisualTime[1] != -1.0 && g_esPlayer[survivor].g_flVisualTime[1] > GetGameTime())
 		{
-			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], _, true);
+			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
 			case false: vRemoveGlow(survivor);
 		}
 	}
 
 	if (type == 0 || type == 2)
 	{
+		char sDelimiter[2];
+		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
+
 		switch (g_esPlayer[survivor].g_flVisualTime[2] != -1.0 && g_esPlayer[survivor].g_flVisualTime[2] > GetGameTime())
 		{
-			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
+			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], sDelimiter, true);
 			case false:
 			{
 				SetEntityRenderMode(survivor, RENDER_NORMAL);
@@ -9528,6 +9633,7 @@ static void vReset()
 
 	vResetRound();
 	vClearAbilityList();
+	vClearColorKeysList();
 	vClearCompTypesList();
 	vClearPluginList();
 }
@@ -10207,7 +10313,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						case 3: strcopy(sLoadout, sizeof(sLoadout), g_esCache[tank].g_sItemReward4);
 					}
 
-					if (StrContains(sLoadout, ";") != -1)
+					if (FindCharInString(sLoadout, ';') != -1)
 					{
 						ExplodeString(sLoadout, ";", sItems, sizeof(sItems), sizeof(sItems[]));
 						for (int iPos = 0; iPos < sizeof(sItems); iPos++)
@@ -10393,7 +10499,9 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 							if (!bIgnore)
 							{
-								vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], _, true);
+								char sDelimiter[2];
+								sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sGlowColor, ';') != -1) ? ";" : ",";
+								vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
 							}
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
@@ -10417,7 +10525,9 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 							if (!bIgnore)
 							{
-								vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], _, true);
+								char sDelimiter[2];
+								sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
+								vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[2], sDelimiter, true);
 							}
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime))
@@ -11573,40 +11683,6 @@ static void vSetReviveHealthCvar(bool reset, int survivor = 0)
 				g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = iHealth;
 			}
 		}
-	}
-}
-
-static void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
-{
-	static int iType;
-	iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
-	if (tank > 0 && g_esPlayer[tank].g_sTankName[0] != '\0')
-	{
-		static char sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
-		FormatEx(sPhrase, sizeof(sPhrase), "%s Name", g_esPlayer[tank].g_sSteamID32);
-		FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", g_esPlayer[tank].g_sSteam3ID);
-		FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
-
-		switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
-		{
-			case true: strcopy(buffer, size, sSteamIDFinal);
-			case false: strcopy(buffer, size, "NoName");
-		}
-	}
-	else if (g_esTank[iType].g_sTankName[0] != '\0')
-	{
-		static char sTankName[32];
-		FormatEx(sTankName, sizeof(sTankName), "Tank #%i Name", iType);
-
-		switch (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
-		{
-			case true: strcopy(buffer, size, sTankName);
-			case false: strcopy(buffer, size, "NoName");
-		}
-	}
-	else
-	{
-		strcopy(buffer, size, "NoName");
 	}
 }
 
@@ -14051,18 +14127,18 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 static int iFindSectionType(const char[] section, int type)
 {
-	if (StrContains(section, ",") != -1 || StrContains(section, "-") != -1)
+	if (FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 	{
 		char sSection[PLATFORM_MAX_PATH], sSet[16][10];
 		int iType = 0;
 		strcopy(sSection, sizeof(sSection), section);
-		if (StrContains(section, ",") != -1)
+		if (FindCharInString(section, ',') != -1)
 		{
 			static char sRange[2][5];
 			ExplodeString(sSection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 			for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 			{
-				if (StrContains(sSet[iPos], "-") != -1)
+				if (FindCharInString(sSet[iPos], '-') != -1)
 				{
 					ExplodeString(sSet[iPos], "-", sRange, sizeof(sRange), sizeof(sRange[]));
 					for (iType = StringToInt(sRange[0]); iType <= StringToInt(sRange[1]); iType++)
@@ -14083,7 +14159,7 @@ static int iFindSectionType(const char[] section, int type)
 				}
 			}
 		}
-		else if (StrContains(section, "-") != -1)
+		else if (FindCharInString(section, '-') != -1)
 		{
 			ExplodeString(sSection, "-", sSet, sizeof(sSet), sizeof(sSet[]));
 			for (iType = StringToInt(sSet[0]); iType <= StringToInt(sSet[1]); iType++)
