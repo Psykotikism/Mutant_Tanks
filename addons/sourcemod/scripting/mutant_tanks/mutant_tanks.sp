@@ -1944,7 +1944,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -8086,7 +8085,6 @@ public void SMCParseEnd(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_sCurrentSubSection[0] = '\0';
 
 	vClearAbilityList();
-	vClearColorKeysList();
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
