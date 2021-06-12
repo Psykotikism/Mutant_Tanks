@@ -5,7 +5,6 @@
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
-
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
@@ -1040,6 +1039,17 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * @error			Invalid client index or client is not in-game.
  **/
 native float MT_GetCombinationSetting(int tank, int type, int pos);
+
+/**
+ * Returns the colors set in the config file.
+ *
+ * @param buffer		Buffer to store the colors in.
+ * @param size			Size of the buffer.
+ * @param value			Value set in the config file.
+ *
+ * @error			Empty value or buffer is too small.
+ **/
+native void MT_GetConfigColors(char[] buffer, int size, const char[] value);
 
 /**
  * Returns the current finale wave.

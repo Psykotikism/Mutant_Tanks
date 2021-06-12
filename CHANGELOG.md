@@ -31,9 +31,11 @@
 - Added support for `8+` players for the `Death Details` setting's messages.
 - Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
 - Removed the `Reward Priority` setting. (No longer used.)
+- Added the `Colors` section under the `Plugin Settings` section which allows to create color presets.
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnRewardSurvivor` forward.
+- Added the `MT_GetConfigColors` native.
 
 ### Files
 

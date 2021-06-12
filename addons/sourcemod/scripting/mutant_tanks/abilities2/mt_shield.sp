@@ -782,7 +782,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				static char sSet[4][4], sValue[16];
-				strcopy(sValue, sizeof(sValue), value);
+				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
@@ -823,7 +823,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				static char sSet[4][4], sValue[16];
-				strcopy(sValue, sizeof(sValue), value);
+				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)

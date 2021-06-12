@@ -37,6 +37,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCombinationSetting");
+	MarkNativeAsOptional("MT_GetConfigColors");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetGlowRange");
 	MarkNativeAsOptional("MT_GetGlowType");
@@ -505,6 +506,17 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * @error			Invalid client index or client is not in-game.
  **/
 native float MT_GetCombinationSetting(int tank, int type, int pos);
+
+/**
+ * Returns the colors set in the config file.
+ *
+ * @param buffer		Buffer to store the colors in.
+ * @param size			Size of the buffer.
+ * @param value			Value set in the config file.
+ *
+ * @error			Empty value or buffer is too small.
+ **/
+native void MT_GetConfigColors(char[] buffer, int size, const char[] value);
 
 /**
  * Returns the current finale wave.
@@ -1461,7 +1473,7 @@ stock void vGetStringValue(const char[] key, const char[] setting1, const char[]
 			case 0: strcopy(buffer1, size1, value);
 			case 1: strcopy(buffer2, size2, value);
 			case 2: strcopy(buffer3, size3, value);
-                        case 3: strcopy(buffer4, size4, value);
+			case 3: strcopy(buffer4, size4, value);
 		}
 	}
 }
@@ -1808,7 +1820,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -2311,7 +2322,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2405,7 +2415,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 
@@ -2418,7 +2427,7 @@ stock float flGetGroundUnits(int entity)
 
 stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
 {
-	if (StrContains(subsection, ",") != -1)
+	if (FindCharInString(subsection, ',') != -1)
 	{
 		static char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -2710,7 +2719,7 @@ stock int iGetIdlePlayer(int bot)
 
 stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
 {
-	if (StrContains(subsection, ",") != -1)
+	if (FindCharInString(subsection, ',') != -1)
 	{
 		static char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
