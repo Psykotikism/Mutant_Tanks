@@ -355,10 +355,6 @@ enum struct esGeneral
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[12];
-	char g_sGlowColorVisual2[12];
-	char g_sGlowColorVisual3[12];
-	char g_sGlowColorVisual4[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -369,6 +365,10 @@ enum struct esGeneral
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
+	char g_sOutlineColorVisual[12];
+	char g_sOutlineColorVisual2[12];
+	char g_sOutlineColorVisual3[12];
+	char g_sOutlineColorVisual4[12];
 	char g_sSavePath[PLATFORM_MAX_PATH];
 	char g_sScreenColorVisual[16];
 	char g_sScreenColorVisual2[16];
@@ -733,6 +733,7 @@ enum struct esPlayer
 	bool g_bLastLife;
 	bool g_bMeteor;
 	bool g_bNeedHealth;
+	bool g_bRainbowColor;
 	bool g_bRandomized;
 	bool g_bReplaceSelf;
 	bool g_bSetup;
@@ -757,11 +758,9 @@ enum struct esPlayer
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
+	char g_sFlameColor[16];
+	char g_sFlashlightColor[16];
 	char g_sGlowColor[12];
-	char g_sGlowColorVisual[12];
-	char g_sGlowColorVisual2[12];
-	char g_sGlowColorVisual3[12];
-	char g_sGlowColorVisual4[12];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
 	char g_sItemReward3[320];
@@ -771,16 +770,26 @@ enum struct esPlayer
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
+	char g_sOutlineColor[12];
+	char g_sOutlineColorVisual[12];
+	char g_sOutlineColorVisual2[12];
+	char g_sOutlineColorVisual3[12];
+	char g_sOutlineColorVisual4[12];
+	char g_sOzTankColor[16];
+	char g_sPropTankColor[16];
+	char g_sRockColor[16];
 	char g_sScreenColorVisual[16];
 	char g_sScreenColorVisual2[16];
 	char g_sScreenColorVisual3[16];
 	char g_sScreenColorVisual4[16];
+	char g_sSkinColor[16];
 	char g_sSteamID32[32];
 	char g_sSteam3ID[32];
 	char g_sStoredThrowable[32];
 	char g_sStoredMedkit[32];
 	char g_sStoredPills[32];
 	char g_sTankName[33];
+	char g_sTireColor[16];
 	char g_sWeaponPrimary[32];
 	char g_sWeaponSecondary[32];
 	char g_sWeaponThrowable[32];
@@ -856,6 +865,7 @@ enum struct esPlayer
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
 	int g_iBaseHealth;
+	int g_iBlur;
 	int g_iBodyEffects;
 	int g_iBossHealth[4];
 	int g_iBossStageCount;
@@ -960,6 +970,7 @@ enum struct esPlayer
 	int g_iTeammateLimit;
 	int g_iThorns;
 	int g_iThornsReward[4];
+	int g_iThrownRock[2048];
 	int g_iTire[2];
 	int g_iTireColor[4];
 	int g_iTransformType[10];
@@ -985,10 +996,9 @@ enum struct esTank
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[12];
-	char g_sGlowColorVisual2[12];
-	char g_sGlowColorVisual3[12];
-	char g_sGlowColorVisual4[12];
+	char g_sFlameColor[16];
+	char g_sFlashlightColor[16];
+	char g_sGlowColor[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -998,11 +1008,20 @@ enum struct esTank
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
+	char g_sOutlineColorVisual[12];
+	char g_sOutlineColorVisual2[12];
+	char g_sOutlineColorVisual3[12];
+	char g_sOutlineColorVisual4[12];
+	char g_sOzTankColor[16];
+	char g_sPropTankColor[16];
+	char g_sRockColor[16];
 	char g_sScreenColorVisual[16];
 	char g_sScreenColorVisual2[16];
 	char g_sScreenColorVisual3[16];
 	char g_sScreenColorVisual4[16];
+	char g_sSkinColor[16];
 	char g_sTankName[33];
+	char g_sTireColor[16];
 
 	float g_flActionDurationReward[4];
 	float g_flAttackBoostReward[4];
@@ -1154,10 +1173,9 @@ enum struct esCache
 	char g_sFallVoicelineReward2[64];
 	char g_sFallVoicelineReward3[64];
 	char g_sFallVoicelineReward4[64];
-	char g_sGlowColorVisual[12];
-	char g_sGlowColorVisual2[12];
-	char g_sGlowColorVisual3[12];
-	char g_sGlowColorVisual4[12];
+	char g_sFlameColor[16];
+	char g_sFlashlightColor[16];
+	char g_sGlowColor[12];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
 	char g_sItemReward2[320];
@@ -1167,11 +1185,20 @@ enum struct esCache
 	char g_sLoopingVoicelineVisual2[64];
 	char g_sLoopingVoicelineVisual3[64];
 	char g_sLoopingVoicelineVisual4[64];
+	char g_sOutlineColorVisual[12];
+	char g_sOutlineColorVisual2[12];
+	char g_sOutlineColorVisual3[12];
+	char g_sOutlineColorVisual4[12];
+	char g_sOzTankColor[16];
+	char g_sPropTankColor[16];
+	char g_sRockColor[16];
 	char g_sScreenColorVisual[16];
 	char g_sScreenColorVisual2[16];
 	char g_sScreenColorVisual3[16];
 	char g_sScreenColorVisual4[16];
+	char g_sSkinColor[16];
 	char g_sTankName[33];
+	char g_sTireColor[16];
 
 	float g_flActionDurationReward[4];
 	float g_flAttackBoostReward[4];
@@ -1487,19 +1514,26 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 8);
 	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
+		bool bRainbow[6] = {false, false, false, false, false, false};
+		bRainbow[0] = StrEqual(g_esCache[iTank].g_sOzTankColor, "rainbow", false);
+		bRainbow[1] = StrEqual(g_esCache[iTank].g_sFlameColor, "rainbow", false);
+		bRainbow[2] = StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false);
+		bRainbow[3] = StrEqual(g_esCache[iTank].g_sTireColor, "rainbow", false);
+		bRainbow[4] = StrEqual(g_esCache[iTank].g_sPropTankColor, "rainbow", false);
+		bRainbow[5] = StrEqual(g_esCache[iTank].g_sFlashlightColor, "rainbow", false);
 		int iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
 		{
 			switch (iType)
 			{
-				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iLightColor[iPos]);
-				case 2: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
-				case 3: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
-				case 4: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
-				case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
-				case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
-				case 7: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
-				case 8: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iCrownColor[iPos]);
+				case 1: iGetRandomColor(g_esCache[iTank].g_iLightColor[iPos]);
+				case 2: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
+				case 3: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
+				case 4: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
+				case 5: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
+				case 6: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
+				case 7: iColor[iPos] = bRainbow[iType - 2] ? -2 : iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
+				case 8: iGetRandomColor(g_esCache[iTank].g_iCrownColor[iPos]);
 			}
 
 			SetNativeCellRef(iPos + 3, iColor[iPos]);
@@ -1534,17 +1568,20 @@ public any aNative_GetTankColors(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 2);
 	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
+		bool bRainbow[2] = {false, false};
+		bRainbow[0] = StrEqual(g_esCache[iTank].g_sSkinColor, "rainbow", false);
+		bRainbow[1] = StrEqual(g_esCache[iTank].g_sGlowColor, "rainbow", false);
 		int iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
 		{
 			switch (iType)
 			{
-				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
+				case 1: iColor[iPos] = bRainbow[iType - 1] ? -2 : iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
 				case 2:
 				{
 					if (iPos < sizeof(esCache::g_iGlowColor))
 					{
-						iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
+						iColor[iPos] = bRainbow[iType - 1] ? -2 : iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
 					}
 				}
 			}
@@ -3731,7 +3768,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 {
 	if (setup)
 	{
-		if (bIsHumanSurvivor(developer))
+		if (bIsSurvivor(developer))
 		{
 			vSetupLoadout(developer, usual);
 			vGiveSpecialAmmo(developer);
@@ -3790,7 +3827,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 				case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 			}
 		}
-		else if (bIsHumanSurvivor(developer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(developer, 10))
+		else if (bIsSurvivor(developer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(developer, 10))
 		{
 			RequestFrame(vRespawnFrame, GetClientUserId(developer));
 		}
@@ -3861,7 +3898,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		g_esDeveloper[guest].g_iDevParticle = iClamp(StringToInt(value), 0, 15);
 	}
-	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "line", false) != -1)
+	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1)
 	{
 		strcopy(g_esDeveloper[guest].g_sDevFallVoiceline, sizeof(esDeveloper::g_sDevFallVoiceline), value);
 	}
@@ -5591,6 +5628,194 @@ public void OnPropSpawnPost(int entity)
 	}
 }
 
+public void OnRainbowPreThinkPost(int player)
+{
+	if (!bIsValidClient(player) || !g_esPlayer[player].g_bRainbowColor)
+	{
+		g_esPlayer[player].g_bRainbowColor = false;
+
+		SDKUnhook(player, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+
+		return;
+	}
+
+	static bool bHook, bRainbow;
+	bHook = false, bRainbow = false;
+	static int iColor[4];
+	GetEntityRenderColor(player, iColor[0], iColor[1], iColor[2], iColor[3]);
+	iColor[0] = RoundToNearest(Cosine((GetGameTime() * 1.0) + player) * 127.5 + 127.5);
+	iColor[1] = RoundToNearest(Cosine((GetGameTime() * 1.0) + player + 2) * 127.5 + 127.5);
+	iColor[2] = RoundToNearest(Cosine((GetGameTime() * 1.0) + player + 4) * 127.5 + 127.5);
+	if (bIsSurvivor(player))
+	{
+		static bool bDeveloper;
+		bDeveloper = bIsDeveloper(player, 0);
+		if ((g_esPlayer[player].g_flVisualTime[2] != -1.0 && g_esPlayer[player].g_flVisualTime[2] > GetGameTime()) || bDeveloper)
+		{
+			switch (bDeveloper)
+			{
+				case true: bRainbow = StrEqual(g_esDeveloper[player].g_sDevSkinColor, "rainbow", false);
+				case false: bRainbow = StrEqual(g_esPlayer[player].g_sBodyColor, "rainbow", false);
+			}
+
+			if (bRainbow)
+			{
+				bHook = true;
+
+				SetEntityRenderColor(player, iColor[0], iColor[1], iColor[2], iColor[3]);
+			}
+		}
+
+		if ((g_esPlayer[player].g_flVisualTime[1] != -1.0 && g_esPlayer[player].g_flVisualTime[1] > GetGameTime()) || bDeveloper)
+		{
+			switch (bDeveloper)
+			{
+				case true: bRainbow = StrEqual(g_esDeveloper[player].g_sDevGlowOutline, "rainbow", false);
+				case false: bRainbow = StrEqual(g_esPlayer[player].g_sOutlineColor, "rainbow", false);
+			}
+
+			if (bRainbow)
+			{
+				bHook = true;
+
+				vSetSurvivorGlow(player, iColor[0], iColor[1], iColor[2]);
+			}
+		}
+	}
+	else if (bIsTank(player))
+	{
+		bRainbow = StrEqual(g_esCache[player].g_sSkinColor, "rainbow", false);
+		if (bRainbow)
+		{
+			bHook = true;
+
+			SetEntityRenderColor(player, iColor[0], iColor[1], iColor[2], iColor[3]);
+		}
+
+		static int iProp;
+		if (bRainbow && bIsValidEntRef(g_esPlayer[player].g_iBlur))
+		{
+			bHook = true;
+			iProp = EntRefToEntIndex(g_esPlayer[player].g_iBlur);
+			if (bIsValidEntity(iProp))
+			{
+				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+			}
+		}
+
+		if (g_bSecondGame && g_esCache[player].g_iGlowEnabled == 1 && !g_esPlayer[player].g_bVomited)
+		{
+			bRainbow = StrEqual(g_esCache[player].g_sGlowColor, "rainbow", false);
+			if (bRainbow)
+			{
+				bHook = true;
+				g_esCache[player].g_iGlowColor[0] = iColor[0];
+				g_esCache[player].g_iGlowColor[1] = iColor[1];
+				g_esCache[player].g_iGlowColor[2] = iColor[2];
+				vSetTankGlow(player);
+			}
+		}
+
+		static bool bRainbow2[4];
+		bRainbow2[0] = StrEqual(g_esCache[player].g_sOzTankColor, "rainbow", false);
+		bRainbow2[1] = StrEqual(g_esCache[player].g_sFlameColor, "rainbow", false);
+		bRainbow2[2] = StrEqual(g_esCache[player].g_sTireColor, "rainbow", false);
+		bRainbow2[3] = StrEqual(g_esCache[player].g_sRockColor, "rainbow", false);
+		for (int iPos = 0; iPos < sizeof(esPlayer::g_iRock); iPos++)
+		{
+			if (iPos < sizeof(esPlayer::g_iOzTank))
+			{
+				if (bRainbow2[0] && bIsValidEntRef(g_esPlayer[player].g_iOzTank[iPos]))
+				{
+					bHook = true;
+					iProp = EntRefToEntIndex(g_esPlayer[player].g_iOzTank[iPos]);
+					if (bIsValidEntity(iProp))
+					{
+						SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+					}
+				}
+
+				if (bRainbow2[1] && bIsValidEntRef(g_esPlayer[player].g_iFlame[iPos]))
+				{
+					bHook = true;
+					iProp = EntRefToEntIndex(g_esPlayer[player].g_iFlame[iPos]);
+					if (bIsValidEntity(iProp))
+					{
+						SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+					}
+				}
+			}
+
+			if (iPos < sizeof(esPlayer::g_iTire))
+			{
+				if (bRainbow2[2] && bIsValidEntRef(g_esPlayer[player].g_iTire[iPos]))
+				{
+					bHook = true;
+					iProp = EntRefToEntIndex(g_esPlayer[player].g_iTire[iPos]);
+					if (bIsValidEntity(iProp))
+					{
+						SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+					}
+				}
+			}
+
+			if (bRainbow2[3] && bIsValidEntRef(g_esPlayer[player].g_iRock[iPos]))
+			{
+				bHook = true;
+				iProp = EntRefToEntIndex(g_esPlayer[player].g_iRock[iPos]);
+				if (bIsValidEntity(iProp))
+				{
+					SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+				}
+			}
+		}
+
+		bRainbow = StrEqual(g_esCache[player].g_sPropTankColor, "rainbow", false);
+		if (bRainbow && bIsValidEntRef(g_esPlayer[player].g_iPropaneTank))
+		{
+			bHook = true;
+			iProp = EntRefToEntIndex(g_esPlayer[player].g_iPropaneTank);
+			if (bIsValidEntity(iProp))
+			{
+				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+			}
+		}
+
+		bRainbow = StrEqual(g_esCache[player].g_sFlashlightColor, "rainbow", false);
+		if (bRainbow && bIsValidEntRef(g_esPlayer[player].g_iFlashlight))
+		{
+			bHook = true;
+			iProp = EntRefToEntIndex(g_esPlayer[player].g_iFlashlight);
+			if (bIsValidEntity(iProp))
+			{
+				static char sColor[16];
+				FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), iGetRandomColor(iColor[3]));
+				DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "_light", sColor);
+			}
+		}
+
+		for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
+		{
+			if (bRainbow2[3] && bIsValidEntRef(g_esPlayer[player].g_iThrownRock[iPos]))
+			{
+				bHook = true;
+				iProp = EntRefToEntIndex(g_esPlayer[player].g_iThrownRock[iPos]);
+				if (bIsValidEntity(iProp))
+				{
+					SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], iColor[3]);
+				}
+			}
+		}
+	}
+
+	if (!bHook)
+	{
+		g_esPlayer[player].g_bRainbowColor = false;
+
+		SDKUnhook(player, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+	}
+}
+
 public void OnSpeedPreThinkPost(int survivor)
 {
 	switch (bIsSurvivor(survivor))
@@ -6358,14 +6583,9 @@ static void vCacheSettings(int tank)
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward3, sizeof(esCache::g_sFallVoicelineReward3), g_esPlayer[tank].g_sFallVoicelineReward3, g_esCache[tank].g_sFallVoicelineReward3);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward4, sizeof(esCache::g_sFallVoicelineReward4), g_esTank[iType].g_sFallVoicelineReward4, g_esGeneral.g_sFallVoicelineReward4);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward4, sizeof(esCache::g_sFallVoicelineReward4), g_esPlayer[tank].g_sFallVoicelineReward4, g_esCache[tank].g_sFallVoicelineReward4);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sGlowColorVisual, sizeof(esCache::g_sGlowColorVisual), g_esTank[iType].g_sGlowColorVisual, g_esGeneral.g_sGlowColorVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColorVisual, sizeof(esCache::g_sGlowColorVisual), g_esPlayer[tank].g_sGlowColorVisual, g_esCache[tank].g_sGlowColorVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sGlowColorVisual2, sizeof(esCache::g_sGlowColorVisual2), g_esTank[iType].g_sGlowColorVisual2, g_esGeneral.g_sGlowColorVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColorVisual2, sizeof(esCache::g_sGlowColorVisual2), g_esPlayer[tank].g_sGlowColorVisual2, g_esCache[tank].g_sGlowColorVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sGlowColorVisual3, sizeof(esCache::g_sGlowColorVisual3), g_esTank[iType].g_sGlowColorVisual3, g_esGeneral.g_sGlowColorVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColorVisual3, sizeof(esCache::g_sGlowColorVisual3), g_esPlayer[tank].g_sGlowColorVisual3, g_esCache[tank].g_sGlowColorVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sGlowColorVisual4, sizeof(esCache::g_sGlowColorVisual4), g_esTank[iType].g_sGlowColorVisual4, g_esGeneral.g_sGlowColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColorVisual4, sizeof(esCache::g_sGlowColorVisual4), g_esPlayer[tank].g_sGlowColorVisual4, g_esCache[tank].g_sGlowColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlameColor, sizeof(esCache::g_sFlameColor), g_esPlayer[tank].g_sFlameColor, g_esTank[iType].g_sFlameColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlashlightColor, sizeof(esCache::g_sFlashlightColor), g_esPlayer[tank].g_sFlashlightColor, g_esTank[iType].g_sFlashlightColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColor, sizeof(esCache::g_sGlowColor), g_esPlayer[tank].g_sGlowColor, g_esTank[iType].g_sGlowColor);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esTank[iType].g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward, sizeof(esCache::g_sItemReward), g_esTank[iType].g_sItemReward, g_esGeneral.g_sItemReward);
@@ -6384,6 +6604,17 @@ static void vCacheSettings(int tank)
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual3, sizeof(esCache::g_sLoopingVoicelineVisual3), g_esPlayer[tank].g_sLoopingVoicelineVisual3, g_esCache[tank].g_sLoopingVoicelineVisual3);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof(esCache::g_sLoopingVoicelineVisual4), g_esTank[iType].g_sLoopingVoicelineVisual4, g_esGeneral.g_sLoopingVoicelineVisual4);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof(esCache::g_sLoopingVoicelineVisual4), g_esPlayer[tank].g_sLoopingVoicelineVisual4, g_esCache[tank].g_sLoopingVoicelineVisual4);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual, sizeof(esCache::g_sOutlineColorVisual), g_esTank[iType].g_sOutlineColorVisual, g_esGeneral.g_sOutlineColorVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual, sizeof(esCache::g_sOutlineColorVisual), g_esPlayer[tank].g_sOutlineColorVisual, g_esCache[tank].g_sOutlineColorVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual2, sizeof(esCache::g_sOutlineColorVisual2), g_esTank[iType].g_sOutlineColorVisual2, g_esGeneral.g_sOutlineColorVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual2, sizeof(esCache::g_sOutlineColorVisual2), g_esPlayer[tank].g_sOutlineColorVisual2, g_esCache[tank].g_sOutlineColorVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual3, sizeof(esCache::g_sOutlineColorVisual3), g_esTank[iType].g_sOutlineColorVisual3, g_esGeneral.g_sOutlineColorVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual3, sizeof(esCache::g_sOutlineColorVisual3), g_esPlayer[tank].g_sOutlineColorVisual3, g_esCache[tank].g_sOutlineColorVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual4, sizeof(esCache::g_sOutlineColorVisual4), g_esTank[iType].g_sOutlineColorVisual4, g_esGeneral.g_sOutlineColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual4, sizeof(esCache::g_sOutlineColorVisual4), g_esPlayer[tank].g_sOutlineColorVisual4, g_esCache[tank].g_sOutlineColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOzTankColor, sizeof(esCache::g_sOzTankColor), g_esPlayer[tank].g_sOzTankColor, g_esTank[iType].g_sOzTankColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sPropTankColor, sizeof(esCache::g_sPropTankColor), g_esPlayer[tank].g_sPropTankColor, g_esTank[iType].g_sPropTankColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sRockColor, sizeof(esCache::g_sRockColor), g_esPlayer[tank].g_sRockColor, g_esTank[iType].g_sRockColor);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual, sizeof(esCache::g_sScreenColorVisual), g_esTank[iType].g_sScreenColorVisual, g_esGeneral.g_sScreenColorVisual);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual, sizeof(esCache::g_sScreenColorVisual), g_esPlayer[tank].g_sScreenColorVisual, g_esCache[tank].g_sScreenColorVisual);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual2, sizeof(esCache::g_sScreenColorVisual2), g_esTank[iType].g_sScreenColorVisual2, g_esGeneral.g_sScreenColorVisual2);
@@ -6392,7 +6623,9 @@ static void vCacheSettings(int tank)
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual3, sizeof(esCache::g_sScreenColorVisual3), g_esPlayer[tank].g_sScreenColorVisual3, g_esCache[tank].g_sScreenColorVisual3);
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual4, sizeof(esCache::g_sScreenColorVisual4), g_esTank[iType].g_sScreenColorVisual4, g_esGeneral.g_sScreenColorVisual4);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual4, sizeof(esCache::g_sScreenColorVisual4), g_esPlayer[tank].g_sScreenColorVisual4, g_esCache[tank].g_sScreenColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSkinColor, sizeof(esCache::g_sSkinColor), g_esPlayer[tank].g_sSkinColor, g_esTank[iType].g_sSkinColor);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof(esCache::g_sTankName), g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTireColor, sizeof(esCache::g_sTireColor), g_esPlayer[tank].g_sTireColor, g_esTank[iType].g_sTireColor);
 
 	for (int iPos = 0; iPos < sizeof(esCache::g_iTransformType); iPos++)
 	{
@@ -6826,10 +7059,6 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sFallVoicelineReward2 = "PlayerLaugh";
 		g_esGeneral.g_sFallVoicelineReward3 = "PlayerLaugh";
 		g_esGeneral.g_sFallVoicelineReward4 = "PlayerLaugh";
-		g_esGeneral.g_sGlowColorVisual = "-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual2 = "-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual3 = "-1;-1;-1";
-		g_esGeneral.g_sGlowColorVisual4 = "-1;-1;-1";
 		g_esGeneral.g_sItemReward = "first_aid_kit";
 		g_esGeneral.g_sItemReward2 = "first_aid_kit";
 		g_esGeneral.g_sItemReward3 = "first_aid_kit";
@@ -6838,6 +7067,10 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sLoopingVoicelineVisual2 = "PlayerDeath";
 		g_esGeneral.g_sLoopingVoicelineVisual3 = "PlayerDeath";
 		g_esGeneral.g_sLoopingVoicelineVisual4 = "PlayerDeath";
+		g_esGeneral.g_sOutlineColorVisual = "-1;-1;-1";
+		g_esGeneral.g_sOutlineColorVisual2 = "-1;-1;-1";
+		g_esGeneral.g_sOutlineColorVisual3 = "-1;-1;-1";
+		g_esGeneral.g_sOutlineColorVisual4 = "-1;-1;-1";
 		g_esGeneral.g_sScreenColorVisual = "-1;-1;-1;-1";
 		g_esGeneral.g_sScreenColorVisual2 = "-1;-1;-1;-1";
 		g_esGeneral.g_sScreenColorVisual3 = "-1;-1;-1;-1";
@@ -6951,9 +7184,16 @@ public void SMCParseStart(SMCParser smc)
 
 		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
 		{
-			FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank", iIndex);
-
 			g_esTank[iIndex].g_iAbilityCount = -1;
+			g_esTank[iIndex].g_sGlowColor = "255,255,255";
+			g_esTank[iIndex].g_sSkinColor = "255,255,255,255";
+			g_esTank[iIndex].g_sFlameColor = "255,255,255,255";
+			g_esTank[iIndex].g_sFlashlightColor = "255,255,255,255";
+			g_esTank[iIndex].g_sOzTankColor = "255,255,255,255";
+			g_esTank[iIndex].g_sPropTankColor = "255,255,255,255";
+			g_esTank[iIndex].g_sRockColor = "255,255,255,255";
+			g_esTank[iIndex].g_sTireColor = "255,255,255,255";
+			g_esTank[iIndex].g_sTankName = "Tank";
 			g_esTank[iIndex].g_iGameType = 0;
 			g_esTank[iIndex].g_iTankEnabled = -1;
 			g_esTank[iIndex].g_flTankChance = 100.0;
@@ -6984,10 +7224,6 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_sFallVoicelineReward2[0] = '\0';
 			g_esTank[iIndex].g_sFallVoicelineReward3[0] = '\0';
 			g_esTank[iIndex].g_sFallVoicelineReward4[0] = '\0';
-			g_esTank[iIndex].g_sGlowColorVisual[0] = '\0';
-			g_esTank[iIndex].g_sGlowColorVisual2[0] = '\0';
-			g_esTank[iIndex].g_sGlowColorVisual3[0] = '\0';
-			g_esTank[iIndex].g_sGlowColorVisual4[0] = '\0';
 			g_esTank[iIndex].g_sItemReward[0] = '\0';
 			g_esTank[iIndex].g_sItemReward2[0] = '\0';
 			g_esTank[iIndex].g_sItemReward3[0] = '\0';
@@ -6996,6 +7232,10 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_sLoopingVoicelineVisual2[0] = '\0';
 			g_esTank[iIndex].g_sLoopingVoicelineVisual3[0] = '\0';
 			g_esTank[iIndex].g_sLoopingVoicelineVisual4[0] = '\0';
+			g_esTank[iIndex].g_sOutlineColorVisual[0] = '\0';
+			g_esTank[iIndex].g_sOutlineColorVisual2[0] = '\0';
+			g_esTank[iIndex].g_sOutlineColorVisual3[0] = '\0';
+			g_esTank[iIndex].g_sOutlineColorVisual4[0] = '\0';
 			g_esTank[iIndex].g_sScreenColorVisual[0] = '\0';
 			g_esTank[iIndex].g_sScreenColorVisual2[0] = '\0';
 			g_esTank[iIndex].g_sScreenColorVisual3[0] = '\0';
@@ -7150,6 +7390,14 @@ public void SMCParseStart(SMCParser smc)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
+				g_esPlayer[iPlayer].g_sGlowColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sSkinColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sFlameColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sFlashlightColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sOzTankColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sPropTankColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sRockColor[0] = '\0';
+				g_esPlayer[iPlayer].g_sTireColor[0] = '\0';
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
 				g_esPlayer[iPlayer].g_iTankModel = 0;
 				g_esPlayer[iPlayer].g_flBurnDuration = 0.0;
@@ -7176,10 +7424,6 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_sFallVoicelineReward2[0] = '\0';
 				g_esPlayer[iPlayer].g_sFallVoicelineReward3[0] = '\0';
 				g_esPlayer[iPlayer].g_sFallVoicelineReward4[0] = '\0';
-				g_esPlayer[iPlayer].g_sGlowColorVisual[0] = '\0';
-				g_esPlayer[iPlayer].g_sGlowColorVisual2[0] = '\0';
-				g_esPlayer[iPlayer].g_sGlowColorVisual3[0] = '\0';
-				g_esPlayer[iPlayer].g_sGlowColorVisual4[0] = '\0';
 				g_esPlayer[iPlayer].g_sItemReward[0] = '\0';
 				g_esPlayer[iPlayer].g_sItemReward2[0] = '\0';
 				g_esPlayer[iPlayer].g_sItemReward3[0] = '\0';
@@ -7188,6 +7432,10 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_sLoopingVoicelineVisual2[0] = '\0';
 				g_esPlayer[iPlayer].g_sLoopingVoicelineVisual3[0] = '\0';
 				g_esPlayer[iPlayer].g_sLoopingVoicelineVisual4[0] = '\0';
+				g_esPlayer[iPlayer].g_sOutlineColorVisual[0] = '\0';
+				g_esPlayer[iPlayer].g_sOutlineColorVisual2[0] = '\0';
+				g_esPlayer[iPlayer].g_sOutlineColorVisual3[0] = '\0';
+				g_esPlayer[iPlayer].g_sOutlineColorVisual4[0] = '\0';
 				g_esPlayer[iPlayer].g_sScreenColorVisual[0] = '\0';
 				g_esPlayer[iPlayer].g_sScreenColorVisual2[0] = '\0';
 				g_esPlayer[iPlayer].g_sScreenColorVisual3[0] = '\0';
@@ -7557,7 +7805,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
 						vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof(esGeneral::g_sBodyColorVisual), g_esGeneral.g_sBodyColorVisual2, sizeof(esGeneral::g_sBodyColorVisual2), g_esGeneral.g_sBodyColorVisual3, sizeof(esGeneral::g_sBodyColorVisual3), g_esGeneral.g_sBodyColorVisual4, sizeof(esGeneral::g_sBodyColorVisual4), sValue);
 						vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esGeneral.g_sFallVoicelineReward, sizeof(esGeneral::g_sFallVoicelineReward), g_esGeneral.g_sFallVoicelineReward2, sizeof(esGeneral::g_sFallVoicelineReward2), g_esGeneral.g_sFallVoicelineReward3, sizeof(esGeneral::g_sFallVoicelineReward3), g_esGeneral.g_sFallVoicelineReward4, sizeof(esGeneral::g_sFallVoicelineReward4), sSet[iPos]);
-						vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sGlowColorVisual, sizeof(esGeneral::g_sGlowColorVisual), g_esGeneral.g_sGlowColorVisual2, sizeof(esGeneral::g_sGlowColorVisual2), g_esGeneral.g_sGlowColorVisual3, sizeof(esGeneral::g_sGlowColorVisual3), g_esGeneral.g_sGlowColorVisual4, sizeof(esGeneral::g_sGlowColorVisual4), sValue);
+						vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sOutlineColorVisual, sizeof(esGeneral::g_sOutlineColorVisual), g_esGeneral.g_sOutlineColorVisual2, sizeof(esGeneral::g_sOutlineColorVisual2), g_esGeneral.g_sOutlineColorVisual3, sizeof(esGeneral::g_sOutlineColorVisual3), g_esGeneral.g_sOutlineColorVisual4, sizeof(esGeneral::g_sOutlineColorVisual4), sValue);
 						vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esGeneral.g_sItemReward, sizeof(esGeneral::g_sItemReward), g_esGeneral.g_sItemReward2, sizeof(esGeneral::g_sItemReward2), g_esGeneral.g_sItemReward3, sizeof(esGeneral::g_sItemReward3), g_esGeneral.g_sItemReward4, sizeof(esGeneral::g_sItemReward4), sSet[iPos]);
 						vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esGeneral.g_sLoopingVoicelineVisual, sizeof(esGeneral::g_sLoopingVoicelineVisual), g_esGeneral.g_sLoopingVoicelineVisual2, sizeof(esGeneral::g_sLoopingVoicelineVisual2), g_esGeneral.g_sLoopingVoicelineVisual3, sizeof(esGeneral::g_sLoopingVoicelineVisual3), g_esGeneral.g_sLoopingVoicelineVisual4, sizeof(esGeneral::g_sLoopingVoicelineVisual4), sSet[iPos]);
 						vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esGeneral.g_sScreenColorVisual, sizeof(esGeneral::g_sScreenColorVisual), g_esGeneral.g_sScreenColorVisual2, sizeof(esGeneral::g_sScreenColorVisual2), g_esGeneral.g_sScreenColorVisual3, sizeof(esGeneral::g_sScreenColorVisual3), g_esGeneral.g_sScreenColorVisual4, sizeof(esGeneral::g_sScreenColorVisual4), sValue);
@@ -7783,6 +8031,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								static char sValue[16], sSet[4][4];
 								vGetConfigColors(sValue, sizeof(sValue), value);
+								strcopy(g_esPlayer[iPlayer].g_sSkinColor, sizeof(esPlayer::g_sSkinColor), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iSkinColor); iPos++)
@@ -7844,7 +8093,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
 								vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof(esPlayer::g_sBodyColorVisual), g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof(esPlayer::g_sBodyColorVisual2), g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof(esPlayer::g_sBodyColorVisual3), g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof(esPlayer::g_sBodyColorVisual4), sValue);
 								vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esPlayer[iPlayer].g_sFallVoicelineReward, sizeof(esPlayer::g_sFallVoicelineReward), g_esPlayer[iPlayer].g_sFallVoicelineReward2, sizeof(esPlayer::g_sFallVoicelineReward2), g_esPlayer[iPlayer].g_sFallVoicelineReward3, sizeof(esPlayer::g_sFallVoicelineReward3), g_esPlayer[iPlayer].g_sFallVoicelineReward4, sizeof(esPlayer::g_sFallVoicelineReward4), sSet[iPos]);
-								vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sGlowColorVisual, sizeof(esPlayer::g_sGlowColorVisual), g_esPlayer[iPlayer].g_sGlowColorVisual2, sizeof(esPlayer::g_sGlowColorVisual2), g_esPlayer[iPlayer].g_sGlowColorVisual3, sizeof(esPlayer::g_sGlowColorVisual3), g_esPlayer[iPlayer].g_sGlowColorVisual4, sizeof(esPlayer::g_sGlowColorVisual4), sValue);
+								vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sOutlineColorVisual, sizeof(esPlayer::g_sOutlineColorVisual), g_esPlayer[iPlayer].g_sOutlineColorVisual2, sizeof(esPlayer::g_sOutlineColorVisual2), g_esPlayer[iPlayer].g_sOutlineColorVisual3, sizeof(esPlayer::g_sOutlineColorVisual3), g_esPlayer[iPlayer].g_sOutlineColorVisual4, sizeof(esPlayer::g_sOutlineColorVisual4), sValue);
 								vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esPlayer[iPlayer].g_sItemReward, sizeof(esPlayer::g_sItemReward), g_esPlayer[iPlayer].g_sItemReward2, sizeof(esPlayer::g_sItemReward2), g_esPlayer[iPlayer].g_sItemReward3, sizeof(esPlayer::g_sItemReward3), g_esPlayer[iPlayer].g_sItemReward4, sizeof(esPlayer::g_sItemReward4), sSet[iPos]);
 								vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual, sizeof(esPlayer::g_sLoopingVoicelineVisual), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual2, sizeof(esPlayer::g_sLoopingVoicelineVisual2), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual3, sizeof(esPlayer::g_sLoopingVoicelineVisual3), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual4, sizeof(esPlayer::g_sLoopingVoicelineVisual4), sSet[iPos]);
 								vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esPlayer[iPlayer].g_sScreenColorVisual, sizeof(esPlayer::g_sScreenColorVisual), g_esPlayer[iPlayer].g_sScreenColorVisual2, sizeof(esPlayer::g_sScreenColorVisual2), g_esPlayer[iPlayer].g_sScreenColorVisual3, sizeof(esPlayer::g_sScreenColorVisual3), g_esPlayer[iPlayer].g_sScreenColorVisual4, sizeof(esPlayer::g_sScreenColorVisual4), sValue);
@@ -7856,6 +8105,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								static char sValue[12], sSet[3][4];
 								vGetConfigColors(sValue, sizeof(sValue), value);
+								strcopy(g_esPlayer[iPlayer].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iGlowColor); iPos++)
@@ -7965,6 +8215,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								static char sValue[16], sSet[4][4];
 								vGetConfigColors(sValue, sizeof(sValue), value);
+								vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esPlayer[iPlayer].g_sOzTankColor, sizeof(esPlayer::g_sOzTankColor), value);
+								vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esPlayer[iPlayer].g_sFlameColor, sizeof(esPlayer::g_sFlameColor), value);
+								vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esPlayer[iPlayer].g_sRockColor, sizeof(esPlayer::g_sRockColor), value);
+								vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esPlayer[iPlayer].g_sTireColor, sizeof(esPlayer::g_sTireColor), value);
+								vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esPlayer[iPlayer].g_sPropTankColor, sizeof(esPlayer::g_sPropTankColor), value);
+								vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esPlayer[iPlayer].g_sFlashlightColor, sizeof(esPlayer::g_sFlashlightColor), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iLightColor); iPos++)
@@ -8618,6 +8874,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			{
 				static char sValue[16], sSet[4][4];
 				vGetConfigColors(sValue, sizeof(sValue), value);
+				strcopy(g_esTank[type].g_sSkinColor, sizeof(esTank::g_sSkinColor), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iSkinColor); iPos++)
@@ -8679,7 +8936,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
 				vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof(esTank::g_sBodyColorVisual), g_esTank[type].g_sBodyColorVisual2, sizeof(esTank::g_sBodyColorVisual2), g_esTank[type].g_sBodyColorVisual3, sizeof(esTank::g_sBodyColorVisual3), g_esTank[type].g_sBodyColorVisual4, sizeof(esTank::g_sBodyColorVisual4), sValue);
 				vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esTank[type].g_sFallVoicelineReward, sizeof(esTank::g_sFallVoicelineReward), g_esTank[type].g_sFallVoicelineReward2, sizeof(esTank::g_sFallVoicelineReward2), g_esTank[type].g_sFallVoicelineReward3, sizeof(esTank::g_sFallVoicelineReward3), g_esTank[type].g_sFallVoicelineReward4, sizeof(esTank::g_sFallVoicelineReward4), sSet[iPos]);
-				vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sGlowColorVisual, sizeof(esTank::g_sGlowColorVisual), g_esTank[type].g_sGlowColorVisual2, sizeof(esTank::g_sGlowColorVisual2), g_esTank[type].g_sGlowColorVisual3, sizeof(esTank::g_sGlowColorVisual3), g_esTank[type].g_sGlowColorVisual4, sizeof(esTank::g_sGlowColorVisual4), sValue);
+				vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sOutlineColorVisual, sizeof(esTank::g_sOutlineColorVisual), g_esTank[type].g_sOutlineColorVisual2, sizeof(esTank::g_sOutlineColorVisual2), g_esTank[type].g_sOutlineColorVisual3, sizeof(esTank::g_sOutlineColorVisual3), g_esTank[type].g_sOutlineColorVisual4, sizeof(esTank::g_sOutlineColorVisual4), sValue);
 				vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esTank[type].g_sItemReward, sizeof(esTank::g_sItemReward), g_esTank[type].g_sItemReward2, sizeof(esTank::g_sItemReward2), g_esTank[type].g_sItemReward3, sizeof(esTank::g_sItemReward3), g_esTank[type].g_sItemReward4, sizeof(esTank::g_sItemReward4), sSet[iPos]);
 				vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esTank[type].g_sLoopingVoicelineVisual, sizeof(esTank::g_sLoopingVoicelineVisual), g_esTank[type].g_sLoopingVoicelineVisual2, sizeof(esTank::g_sLoopingVoicelineVisual2), g_esTank[type].g_sLoopingVoicelineVisual3, sizeof(esTank::g_sLoopingVoicelineVisual3), g_esTank[type].g_sLoopingVoicelineVisual4, sizeof(esTank::g_sLoopingVoicelineVisual4), sSet[iPos]);
 				vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esTank[type].g_sScreenColorVisual, sizeof(esTank::g_sScreenColorVisual), g_esTank[type].g_sScreenColorVisual2, sizeof(esTank::g_sScreenColorVisual2), g_esTank[type].g_sScreenColorVisual3, sizeof(esTank::g_sScreenColorVisual3), g_esTank[type].g_sScreenColorVisual4, sizeof(esTank::g_sScreenColorVisual4), sValue);
@@ -8691,6 +8948,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			{
 				static char sValue[12], sSet[3][4];
 				vGetConfigColors(sValue, sizeof(sValue), value);
+				strcopy(g_esTank[type].g_sGlowColor, sizeof(esTank::g_sGlowColor), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iGlowColor); iPos++)
@@ -8800,6 +9058,12 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 			{
 				static char sValue[16], sSet[4][4];
 				vGetConfigColors(sValue, sizeof(sValue), value);
+				vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esTank[type].g_sOzTankColor, sizeof(esTank::g_sOzTankColor), value);
+				vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esTank[type].g_sFlameColor, sizeof(esTank::g_sFlameColor), value);
+				vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esTank[type].g_sRockColor, sizeof(esTank::g_sRockColor), value);
+				vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esTank[type].g_sTireColor, sizeof(esTank::g_sTireColor), value);
+				vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esTank[type].g_sPropTankColor, sizeof(esTank::g_sPropTankColor), value);
+				vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esTank[type].g_sFlashlightColor, sizeof(esTank::g_sFlashlightColor), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(esTank::g_iLightColor); iPos++)
@@ -9246,11 +9510,11 @@ static void vToggleEffects(int survivor, int type = 0)
 	if (type == 0 || type == 1)
 	{
 		char sDelimiter[2];
-		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sGlowColor, ';') != -1) ? ";" : ",";
+		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
 
 		switch (g_esPlayer[survivor].g_flVisualTime[1] != -1.0 && g_esPlayer[survivor].g_flVisualTime[1] > GetGameTime())
 		{
-			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
+			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
 			case false: vRemoveGlow(survivor);
 		}
 	}
@@ -9336,6 +9600,14 @@ static void vSaveMessage(const char[] message)
 		fLog.WriteLine(message);
 
 		delete fLog;
+	}
+}
+
+static void vSaveConfigColors(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	{
+		strcopy(buffer, size, value);
 	}
 }
 
@@ -9519,6 +9791,18 @@ static void vRemoveGlow(int player)
 
 static void vRemoveProps(int tank, int mode = 1)
 {
+	if (bIsValidEntRef(g_esPlayer[tank].g_iBlur))
+	{
+		g_esPlayer[tank].g_iBlur = EntRefToEntIndex(g_esPlayer[tank].g_iBlur);
+		if (bIsValidEntity(g_esPlayer[tank].g_iBlur))
+		{
+			SDKUnhook(g_esPlayer[tank].g_iBlur, SDKHook_SetTransmit, OnPropSetTransmit);
+			RemoveEntity(g_esPlayer[tank].g_iBlur);
+		}
+	}
+
+	g_esPlayer[tank].g_iBlur = INVALID_ENT_REFERENCE;
+
 	for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iLight[iLight]))
@@ -9660,12 +9944,16 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_bTriggered = false;
-	g_esPlayer[tank].g_bVomited = false;
 	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iOldTankType = 0;
 	g_esPlayer[tank].g_iTankType = 0;
+
+	for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
+	{
+		g_esPlayer[tank].g_iThrownRock[iPos] = INVALID_ENT_REFERENCE;
+	}
 
 	vResetSurvivorStats(tank);
 }
@@ -9750,6 +10038,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bFalling = false;
 	g_esPlayer[survivor].g_bFallTracked = false;
 	g_esPlayer[survivor].g_bFatalFalling = false;
+	g_esPlayer[survivor].g_bRainbowColor = false;
 	g_esPlayer[survivor].g_bSetup = false;
 	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
@@ -10489,17 +10778,17 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						{
 							switch (priority)
 							{
-								case 0: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual);
-								case 1: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual2);
-								case 2: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual3);
-								case 3: strcopy(g_esPlayer[survivor].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), g_esCache[tank].g_sGlowColorVisual4);
+								case 0: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual);
+								case 1: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual2);
+								case 2: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual3);
+								case 3: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual4);
 							}
 
 							if (!bIgnore)
 							{
 								char sDelimiter[2];
-								sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sGlowColor, ';') != -1) ? ";" : ",";
-								vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sGlowColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
+								sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
+								vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[1], sDelimiter, true);
 							}
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
@@ -11500,8 +11789,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vCacheSettings(tank);
 	vSetTankModel(tank);
 	vRemoveGlow(tank);
-	SetEntityRenderMode(tank, RENDER_NORMAL);
-	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
+	vSetTankColor(tank);
 }
 
 static void vSetDurationCvars(int item, bool reset, float duration = 1.0)
@@ -11783,8 +12071,8 @@ static void vSetProps(int tank)
 			GetClientAbsOrigin(tank, flTankPos);
 			GetClientAbsAngles(tank, flTankAng);
 
-			int iTankModel = CreateEntityByName("prop_dynamic");
-			if (bIsValidEntity(iTankModel))
+			g_esPlayer[tank].g_iBlur = CreateEntityByName("prop_dynamic");
+			if (bIsValidEntity(g_esPlayer[tank].g_iBlur))
 			{
 				g_esPlayer[tank].g_bBlur = true;
 
@@ -11793,27 +12081,41 @@ static void vSetProps(int tank)
 
 				switch (sModel[21])
 				{
-					case 'm': SetEntityModel(iTankModel, MODEL_TANK_MAIN);
-					case 'd': SetEntityModel(iTankModel, MODEL_TANK_DLC);
-					case 'l': SetEntityModel(iTankModel, MODEL_TANK_L4D1);
+					case 'm': SetEntityModel(g_esPlayer[tank].g_iBlur, MODEL_TANK_MAIN);
+					case 'd': SetEntityModel(g_esPlayer[tank].g_iBlur, MODEL_TANK_DLC);
+					case 'l': SetEntityModel(g_esPlayer[tank].g_iBlur, MODEL_TANK_L4D1);
 				}
 
-				SetEntityRenderColor(iTankModel, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
-				SetEntPropEnt(iTankModel, Prop_Send, "m_hOwnerEntity", tank);
+				switch (StrEqual(g_esCache[tank].g_sSkinColor, "rainbow", false))
+				{
+					case true:
+					{
+						if (!g_esPlayer[tank].g_bRainbowColor)
+						{
+							g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+						}
+					}
+					case false:
+					{
+						int iColor[4];
+						GetEntityRenderColor(tank, iColor[0], iColor[1], iColor[2], iColor[3]);
+						SetEntityRenderColor(g_esPlayer[tank].g_iBlur, iColor[0], iColor[1], iColor[2], iColor[3]);
+					}
+				}
 
-				TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
-				DispatchSpawn(iTankModel);
+				SetEntPropEnt(g_esPlayer[tank].g_iBlur, Prop_Send, "m_hOwnerEntity", tank);
 
-				AcceptEntityInput(iTankModel, "DisableCollision");
-				SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(tank, Prop_Send, "m_nSequence"));
-				SetEntPropFloat(iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
+				TeleportEntity(g_esPlayer[tank].g_iBlur, flTankPos, flTankAng, NULL_VECTOR);
+				DispatchSpawn(g_esPlayer[tank].g_iBlur);
 
-				SDKHook(iTankModel, SDKHook_SetTransmit, OnPropSetTransmit);
+				AcceptEntityInput(g_esPlayer[tank].g_iBlur, "DisableCollision");
+				SetEntProp(g_esPlayer[tank].g_iBlur, Prop_Send, "m_nSequence", GetEntProp(tank, Prop_Send, "m_nSequence"));
+				SetEntPropFloat(g_esPlayer[tank].g_iBlur, Prop_Send, "m_flPlaybackRate", 5.0);
 
-				DataPack dpBlur;
-				CreateDataTimer(0.25, tTimerBlurEffect, dpBlur, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpBlur.WriteCell(EntIndexToEntRef(iTankModel));
-				dpBlur.WriteCell(GetClientUserId(tank));
+				SDKHook(g_esPlayer[tank].g_iBlur, SDKHook_SetTransmit, OnPropSetTransmit);
+				g_esPlayer[tank].g_iBlur = EntIndexToEntRef(g_esPlayer[tank].g_iBlur);
+
+				CreateTimer(0.1, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			}
 		}
 
@@ -12163,6 +12465,11 @@ static void vSetProps(int tank)
 				vFlashlightProp(tank, flOrigin, flAngles);
 			}
 		}
+
+		if (!g_esPlayer[tank].g_bRainbowColor)
+		{
+			g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+		}
 	}
 }
 
@@ -12179,8 +12486,21 @@ static void vSetRockColor(int rock)
 			{
 				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
 				SetEntPropEnt(rock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
-				SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
 				vSetRockModel(iTank, rock);
+
+				switch (StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false))
+				{
+					case true:
+					{
+						g_esPlayer[iTank].g_iThrownRock[rock] = EntIndexToEntRef(rock);
+
+						if (!g_esPlayer[iTank].g_bRainbowColor)
+						{
+							g_esPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+						}
+					}
+					case false: SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
+				}
 			}
 		}
 	}
@@ -12203,8 +12523,20 @@ static void vSetSurvivorColor(int survivor, const char[] colors, bool apply = tr
 		return;
 	}
 
-	char sColor[16], sValue[4][4];
+	char sColor[16];
 	strcopy(sColor, sizeof(sColor), colors);
+	if (StrEqual(sColor, "rainbow", false))
+	{
+		if (!g_esPlayer[survivor].g_bRainbowColor)
+		{
+			g_esPlayer[survivor].g_bRainbowColor = SDKHookEx(survivor, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+		}
+
+		return;
+	}
+
+	char sValue[4][4];
+	vGetConfigColors(sColor, sizeof(sColor), colors);
 	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
 
 	int iColor[4];
@@ -12286,8 +12618,20 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = 
 		return;
 	}
 
-	char sColor[12], sValue[3][4];
+	char sColor[12];
 	strcopy(sColor, sizeof(sColor), colors);
+	if (StrEqual(sColor, "rainbow", false))
+	{
+		if (!g_esPlayer[survivor].g_bRainbowColor)
+		{
+			g_esPlayer[survivor].g_bRainbowColor = SDKHookEx(survivor, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+		}
+
+		return;
+	}
+
+	char sValue[3][4];
+	vGetConfigColors(sColor, sizeof(sColor), colors);
 	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
 
 	int iColor[3];
@@ -12320,6 +12664,25 @@ static void vSetSurvivorWeaponSkin(int developer)
 			{
 				SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
 			}
+		}
+	}
+}
+
+static void vSetTankColor(int tank)
+{
+	switch (StrEqual(g_esCache[tank].g_sSkinColor, "rainbow", false))
+	{
+		case true:
+		{
+			if (!g_esPlayer[tank].g_bRainbowColor)
+			{
+				g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+			}
+		}
+		case false:
+		{
+			SetEntityRenderMode(tank, RENDER_NORMAL);
+			SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
 		}
 	}
 }
@@ -12444,7 +12807,17 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 			vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
 		}
 
-		vSetTankGlow(tank);
+		switch (StrEqual(g_esCache[tank].g_sGlowColor, "rainbow", false))
+		{
+			case true:
+			{
+				if (!g_esPlayer[tank].g_bRainbowColor)
+				{
+					g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+				}
+			}
+			case false: vSetTankGlow(tank);
+		}
 	}
 }
 
@@ -12705,6 +13078,16 @@ static void vShowDamageList(int tank, const char[] namePhrase, const char[][] li
 	}
 }
 
+static void vColorLight(int light, int red, int green, int blue, int alpha)
+{
+	static char sColor[12];
+	IntToString(alpha, sColor, sizeof(sColor));
+	DispatchKeyValue(light, "renderamt", sColor);
+
+	FormatEx(sColor, sizeof(sColor), "%i %i %i", red, green, blue);
+	DispatchKeyValue(light, "rendercolor", sColor);
+}
+
 static void vFlashlightProp(int tank, float origin[3], float angles[3])
 {
 	g_esPlayer[tank].g_iFlashlight = CreateEntityByName("light_dynamic");
@@ -12763,12 +13146,12 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
 
-			SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
+			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 		}
 		else
 		{
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "haloscale", "100");
-			SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iCrownColor[0]), iGetRandomColor(g_esCache[tank].g_iCrownColor[1]), iGetRandomColor(g_esCache[tank].g_iCrownColor[2]), iGetRandomColor(g_esCache[tank].g_iCrownColor[3]));
+			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iCrownColor[0]), iGetRandomColor(g_esCache[tank].g_iCrownColor[1]), iGetRandomColor(g_esCache[tank].g_iCrownColor[2]), iGetRandomColor(g_esCache[tank].g_iCrownColor[3]));
 		}
 
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightwidth", "10");
@@ -13165,7 +13548,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 public void vRespawnFrame(int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
-	if (g_esGeneral.g_bPluginEnabled && bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 10))
+	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 10))
 	{
 		bRespawnSurvivor(iSurvivor, true);
 	}
@@ -13181,7 +13564,20 @@ public void vRockThrowFrame(int ref)
 		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
 		if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esCache[iThrower].g_iTankEnabled == 1)
 		{
-			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
+			switch (StrEqual(g_esCache[iThrower].g_sRockColor, "rainbow", false))
+			{
+				case true:
+				{
+					g_esPlayer[iThrower].g_iThrownRock[iRock] = ref;
+
+					if (!g_esPlayer[iThrower].g_bRainbowColor)
+					{
+						g_esPlayer[iThrower].g_bRainbowColor = SDKHookEx(iThrower, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+					}
+				}
+				case false: SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
+			}
+
 			vSetRockModel(iThrower, iRock);
 
 			if (g_esCache[iThrower].g_iRockEffects > 0)
@@ -13198,6 +13594,7 @@ public void vRockThrowFrame(int ref)
 			Call_Finish();
 
 			vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKTHROW, _, iRock);
+			StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 		}
 	}
 }
@@ -13242,8 +13639,7 @@ public void vTankSpawnFrame(DataPack pack)
 		{
 			case -1:
 			{
-				SetEntityRenderMode(iTank, RENDER_NORMAL);
-				SetEntityRenderColor(iTank, iGetRandomColor(g_esCache[iTank].g_iSkinColor[0]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[1]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[2]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[3]));
+				vSetTankColor(iTank);
 				vSpawnMessages(iTank);
 			}
 			case 0:
@@ -15709,25 +16105,23 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlurEffect(Handle timer, DataPack pack)
+public Action tTimerBlurEffect(Handle timer, int userid)
 {
-	pack.Reset();
-
-	static int iTankModel, iTank;
-	iTankModel = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (iTankModel == INVALID_ENT_REFERENCE || !bIsValidEntity(iTankModel))
+	static int iTank;
+	iTank = GetClientOfUserId(userid);
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
 		return Plugin_Stop;
 	}
 
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
+	static int iTankModel;
+	iTankModel = EntRefToEntIndex(g_esPlayer[iTank].g_iBlur);
+	if (iTankModel == INVALID_ENT_REFERENCE || !bIsValidEntity(iTankModel))
 	{
 		g_esPlayer[iTank].g_bBlur = false;
-
-		SDKUnhook(iTankModel, SDKHook_SetTransmit, OnPropSetTransmit);
-		RemoveEntity(iTankModel);
+		g_esPlayer[iTank].g_iBlur = INVALID_ENT_REFERENCE;
 
 		return Plugin_Stop;
 	}
@@ -16106,7 +16500,7 @@ public Action tTimerRefreshRewards(Handle timer)
 					if ((g_esPlayer[iSurvivor].g_flVisualTime[1] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[1] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[1] = -1.0;
-						g_esPlayer[iSurvivor].g_sGlowColor[0] = '\0';
+						g_esPlayer[iSurvivor].g_sOutlineColor[0] = '\0';
 
 						if (!bIsDeveloper(iSurvivor, 0))
 						{

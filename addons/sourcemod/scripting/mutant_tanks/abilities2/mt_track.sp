@@ -64,6 +64,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esTrackPlayer
 {
 	bool g_bActivated;
+	bool g_bRainbowColor;
 
 	float g_flOpenAreasOnly;
 	float g_flTrackChance;
@@ -78,6 +79,7 @@ enum struct esTrackPlayer
 	int g_iHumanCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
+	int g_iRock;
 	int g_iTankType;
 	int g_iTrackAbility;
 	int g_iTrackGlow;
@@ -641,8 +643,10 @@ void vTrackCopyStats2(int oldTank, int newTank)
 void vRemoveTrack(int tank)
 {
 	g_esTrackPlayer[tank].g_bActivated = false;
+	g_esTrackPlayer[tank].g_bRainbowColor = false;
 	g_esTrackPlayer[tank].g_iAmmoCount = 0;
 	g_esTrackPlayer[tank].g_iCooldown = -1;
+	g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
 }
 
 void vTrackReset()
@@ -967,7 +971,20 @@ void vTrackThink(int rock)
 				{
 					static int iGlowColor[4];
 					MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-					vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(iTank) ? 1 : 0), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), (MT_GetGlowType(iTank) == 1 ? 3 : 2));
+
+					switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2)
+					{
+						case true:
+						{
+							g_esTrackPlayer[iTank].g_iRock = EntIndexToEntRef(rock);
+
+							if (!g_esTrackPlayer[iTank].g_bRainbowColor)
+							{
+								g_esTrackPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
+							}
+						}
+						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(iTank) ? 1 : 0), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
+					}
 				}
 			}
 		}
@@ -1001,6 +1018,53 @@ int iGetRockTarget(float pos[3], float angle[3], int tank)
 	}
 
 	return iTarget;
+}
+
+public void OnTrackPreThinkPost(int tank)
+{
+	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esTrackPlayer[tank].g_bRainbowColor)
+	{
+		g_esTrackPlayer[tank].g_bRainbowColor = false;
+
+		SDKUnhook(tank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
+
+		return;
+	}
+
+	static int iRock;
+	iRock = EntRefToEntIndex(g_esTrackPlayer[tank].g_iRock);
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	{
+		g_esTrackPlayer[tank].g_bRainbowColor = false;
+		g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
+
+		SDKUnhook(tank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
+
+		return;
+	}
+
+	static bool bHook;
+	bHook = false;
+	static int iColor[3];
+	iColor[0] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank) * 127.5 + 127.5);
+	iColor[1] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5 + 127.5);
+	iColor[2] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5 + 127.5);
+
+	static int iTempColor[4];
+	MT_GetTankColors(tank, 2, iTempColor[0], iTempColor[1], iTempColor[2], iTempColor[3]);
+	if (iTempColor[0] == -2 && iTempColor[1] == -2 && iTempColor[2] == -2 && g_esTrackCache[tank].g_iTrackGlow == 1)
+	{
+		bHook = true;
+
+		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+	}
+
+	if (!bHook)
+	{
+		g_esTrackPlayer[tank].g_bRainbowColor = false;
+
+		SDKUnhook(tank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
+	}
 }
 
 public Action tTimerTrack(Handle timer, DataPack pack)

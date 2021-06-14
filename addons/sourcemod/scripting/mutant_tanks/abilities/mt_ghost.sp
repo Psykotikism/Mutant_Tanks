@@ -1185,7 +1185,7 @@ void vRemoveGhost(int tank)
 
 void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 {
-	static int iProp;
+	static int iProp, iTank;
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 	{
@@ -1193,75 +1193,14 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 		if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
 		{
-			static int iTank;
 			iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iTank == tank)
 			{
-				if (StrEqual(sModel, MODEL_OXYGENTANK, false))
+				if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
 				{
-					static int iOzTankColor[4];
-					MT_GetPropColors(tank, 2, iOzTankColor[0], iOzTankColor[1], iOzTankColor[2], iOzTankColor[3]);
 					SetEntityRenderMode(iProp, mode);
-					SetEntityRenderColor(iProp, iOzTankColor[0], iOzTankColor[1], iOzTankColor[2], alpha);
+					SetEntData(iProp, GetEntSendPropOffs(iProp, "m_clrRender") + 3, alpha, 1, true);
 				}
-
-				if (StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false))
-				{
-					static int iRockColor[4];
-					MT_GetPropColors(tank, 4, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
-					SetEntityRenderMode(iProp, mode);
-					SetEntityRenderColor(iProp, iRockColor[0], iRockColor[1], iRockColor[2], alpha);
-				}
-
-				if (StrEqual(sModel, MODEL_TIRES, false))
-				{
-					static int iTireColor[4];
-					MT_GetPropColors(tank, 5, iTireColor[0], iTireColor[1], iTireColor[2], iTireColor[3]);
-					SetEntityRenderMode(iProp, mode);
-					SetEntityRenderColor(iProp, iTireColor[0], iTireColor[1], iTireColor[2], alpha);
-				}
-
-				if (StrEqual(sModel, MODEL_PROPANETANK, false))
-				{
-					static int iPropTankColor[4];
-					MT_GetPropColors(tank, 6, iPropTankColor[0], iPropTankColor[1], iPropTankColor[2], iPropTankColor[3]);
-					SetEntityRenderMode(iProp, mode);
-					SetEntityRenderColor(iProp, iPropTankColor[0], iPropTankColor[1], iPropTankColor[2], alpha);
-				}
-
-				if (StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
-				{
-					static int iSkinColor[4];
-					MT_GetTankColors(tank, 1, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
-					SetEntityRenderMode(iProp, mode);
-					SetEntityRenderColor(iProp, iSkinColor[0], iSkinColor[1], iSkinColor[2], alpha);
-				}
-			}
-		}
-	}
-
-	iProp = -1;
-	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
-	{
-		static int iTank;
-		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iTank == tank)
-		{
-			static char sParentName[64], sTargetName[64];
-			GetEntPropString(iTank, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
-			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_", iTank, MT_GetTankType(iTank));
-			static int iColor[4];
-			if (StrContains(sTargetName, sParentName, false) == 0)
-			{
-				MT_GetPropColors(tank, 1, iColor[0], iColor[1], iColor[2], iColor[3]);
-				SetEntityRenderMode(iProp, mode);
-				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], alpha);
-			}
-			else
-			{
-				MT_GetPropColors(tank, 8, iColor[0], iColor[1], iColor[2], iColor[3]);
-				SetEntityRenderMode(iProp, mode);
-				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], alpha);
 			}
 		}
 	}
@@ -1269,28 +1208,26 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 	{
-		static int iTank;
 		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iTank == tank)
 		{
-			static int iFlameColor[4];
-			MT_GetPropColors(tank, 3, iFlameColor[0], iFlameColor[1], iFlameColor[2], iFlameColor[3]);
 			SetEntityRenderMode(iProp, mode);
-			SetEntityRenderColor(iProp, iFlameColor[0], iFlameColor[1], iFlameColor[2], alpha);
+			SetEntData(iProp, GetEntSendPropOffs(iProp, "m_clrRender") + 3, alpha, 1, true);
 		}
 	}
 
+	static char sColor[12];
+	static int iColor[4];
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "light_dynamic")) != INVALID_ENT_REFERENCE)
 	{
-		static int iTank;
 		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iTank == tank)
 		{
-			static int iFlashlightColor[4];
-			MT_GetPropColors(tank, 7, iFlashlightColor[0], iFlashlightColor[1], iFlashlightColor[2], iFlashlightColor[3]);
 			SetEntityRenderMode(iProp, mode);
-			SetEntityRenderColor(iProp, iFlashlightColor[0], iFlashlightColor[1], iFlashlightColor[2], alpha);
+			MT_GetPropColors(tank, 7, iColor[0], iColor[1], iColor[2], iColor[3]);
+			FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), alpha);
+			DispatchKeyValue(iProp, "_light", sColor);
 		}
 	}
 }
@@ -1359,7 +1296,7 @@ void vGhostReset2(int tank)
 void vGhostResetRender(int tank)
 {
 	static int iSkinColor[4];
-	MT_GetTankColors(tank, 1, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
+	GetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 	vRenderProps(tank, RENDER_TRANSCOLOR, g_esGhostPlayer[tank].g_iGhostAlpha);
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
@@ -1476,7 +1413,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	if (g_esGhostCache[iTank].g_iGhostSpecials == 1 && flRandom <= g_esGhostCache[iTank].g_flGhostSpecialsChance)
 	{
 		static int iSkinColor[4];
-		MT_GetTankColors(iTank, 1, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
+		GetEntityRenderColor(iTank, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 		vRenderSpecials(iTank, true, iSkinColor[0], iSkinColor[1], iSkinColor[2]);
 	}
 
@@ -1495,10 +1432,8 @@ public Action tTimerRenderRock(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iRockColor[4];
-	MT_GetPropColors(iTank, 4, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
 	SetEntityRenderMode(iRock, GetEntityRenderMode(iTank));
-	SetEntityRenderColor(iRock, iRockColor[0], iRockColor[1], iRockColor[2], g_esGhostPlayer[iTank].g_iGhostAlpha);
+	SetEntData(iRock, GetEntSendPropOffs(iRock, "m_clrRender") + 3, g_esGhostPlayer[iTank].g_iGhostAlpha, 1, true);
 
 	return Plugin_Continue;
 }
