@@ -1093,10 +1093,9 @@ public Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iRed = 0, iGreen = 0, iBlue = 0, iAlpha = 0;
-	GetEntityRenderColor(iTank, iRed, iGreen, iBlue, iAlpha);
+	int iAlpha = GetEntData(iWeapon, GetEntSendPropOffs(iWeapon, "m_clrRender") + 3, 1);
 	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
-	SetEntityRenderColor(iWeapon, _, _, _, iAlpha);
+	SetEntData(iWeapon, GetEntSendPropOffs(iWeapon, "m_clrRender") + 3, iAlpha, 1, true);
 
 	return Plugin_Continue;
 }

@@ -3009,7 +3009,7 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 
 stock int iGetRGBColor(int red, int green, int blue)
 {
-	return (blue * 65536) + (green * 256) + red;
+	return red + (green * 256) + (blue * 65536);
 }
 
 stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, int overrideLevel = 0, int overrideVal = 0)

@@ -32,10 +32,46 @@
 - Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
 - Removed the `Reward Priority` setting. (No longer used.)
 - Added the `Colors` section under the `Plugin Settings` section which allows to create color presets.
+- The following settings can now accept color presets from the new `Colors` section:
+	- `Body Color Visual`
+	- `Glow Color Visual`
+	- `Screen Color Visual`
+	- `Skin Color`
+	- `Glow Color`
+	- `Light Color`
+	- `Oxygen Tank Color`
+	- `Flame Color`
+	- `Rock Color`
+	- `Tire Color`
+	- `Propane Tank Color`
+	- `Flashlight Color`
+	- `Crown Color`
+- The following settings can now accept the `rainbow` keyword to cycle through each color:
+	- `Body Color Visual`
+	- `Glow Color Visual`
+	- `Skin Color`
+	- `Glow Color`
+	- `Oxygen Tank Color`
+	- `Flame Color`
+	- `Rock Color`
+	- `Tire Color`
+	- `Propane Tank Color`
+	- `Flashlight Color`
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnRewardSurvivor` forward.
 - Added the `MT_GetConfigColors` native.
+- Updated the following natives to support the new `rainbow` color feature:
+	- `MT_GetTankColors`
+	- `MT_GetPropColors`
+
+#### Abilities
+- Medic
+	- The `Medic Field Color` setting can now accept color presets from the new `Colors` section.
+
+- Shield
+	- The `Shield Color` setting can now accept color presets from the new `Colors` section.
+	- The `Shield Color` setting can now accept the `rainbow` keyword to cycle through each color.
 
 ### Files
 

@@ -1,8 +1,9 @@
 # Information
 
 ## Notes
-> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `93-94` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `92` and recompile all the plugins, but expect server lag with higher values.)
 - Most of the settings below can be overridden for each player via their Steam ID.
@@ -130,7 +131,7 @@
 
 ### Plugin Settings
 
-#### General, Announcements, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom
+#### General, Announcements, Colors, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -1399,6 +1400,9 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
+			// --
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
@@ -1424,6 +1428,9 @@
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			// --
 			// 1st set = RGB set for killers.
 			// 2nd set = RGB set for assistants.
@@ -2289,6 +2296,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Skin Color"				"255,255,255,255"
 			//"Skin Color"				"all_tank_skins" // Alternative (See "Colors" section)
 
@@ -3381,6 +3391,9 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
+			// --
 			// 1st set = RGBA set for killers.
 			// 2nd set = RGBA set for assistants.
 			// 3rd set = RGBA set for teammates.
@@ -3406,6 +3419,9 @@
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			// --
 			// 1st set = RGB set for killers.
 			// 2nd set = RGB set for assistants.
@@ -3493,6 +3509,9 @@
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Glow Color"				"255,255,255"
 			//"Glow Color"				"all_tank_glows" // Alternative (See "Colors" section)
 
@@ -4130,6 +4149,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Oxygen Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's flame's color.
@@ -4141,6 +4163,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Flame Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's rock prop's color.
@@ -4152,6 +4177,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Rock Color"				"255,255,255,255"
 			//"Rock Color"				"all_tank_rocks" // Alternative (See "Colors" section)
 
@@ -4172,6 +4200,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Tire Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's propane tank prop's color.
@@ -4183,6 +4214,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Propane Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's flashlight's color.
@@ -4194,6 +4228,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Flashlight Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's crown prop's color.
@@ -16636,6 +16673,9 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
 			"Shield Color"				"255,255,255,255"
 			//"Shield Color"			"all_shields" // Alternative (See "Colors" section)
 
@@ -16683,6 +16723,7 @@
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
 			// Note: The glow outline may not appear most of the time when the "Glow Type" setting is set to "0" because the shield must be fully visible to the player in order for the glow outline to appear. Since a part of the shield is always under the ground, it is only fully visible when the Tank is climbing or is in the air.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -18598,6 +18639,7 @@
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
 			// Note: The glow outline may not appear when the "Glow Type" setting is set to "0" if the rock is not fully visible to the player.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
