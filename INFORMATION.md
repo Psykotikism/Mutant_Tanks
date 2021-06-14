@@ -1327,17 +1327,30 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 4
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: 0
+			// Maximum value for each: 2147483647
+			// --
+			// 0: OFF
+			// 1: Health reward
+			// 2: Speed boost reward
+			// 4: Damage boost reward
+			// 8: Attack boost reward
+			// 16: Ammo reward
+			// 32: Item reward (Currently unused)
+			// 64: God mode reward
+			// 128: Health and ammo refill reward (Currently unused)
+			// 256: Respawn reward (Currently unused)
+			// 512: Infinite ammo reward
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Stack rewards for killers.
 			// 2nd number = Stack rewards for assistants.
 			// 3rd number = Stack rewards for teammates.
 			// 4th number = Stack rewards for assistant killers.
-			"Stack Rewards"				"1,1,1,1"
+			"Stack Rewards"				"0,0,0,0"
 
 			// Give thorns as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -3318,11 +3331,24 @@
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 4
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: 0
+			// Maximum value for each: 2147483647
+			// --
+			// 0: OFF
+			// 1: Health reward
+			// 2: Speed boost reward
+			// 4: Damage boost reward
+			// 8: Attack boost reward
+			// 16: Ammo reward
+			// 32: Item reward (Currently unused)
+			// 64: God mode reward
+			// 128: Health and ammo refill reward (Currently unused)
+			// 256: Respawn reward (Currently unused)
+			// 512: Infinite ammo reward
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Stack rewards for killers.
 			// 2nd number = Stack rewards for assistants.

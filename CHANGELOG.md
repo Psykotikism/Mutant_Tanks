@@ -12,6 +12,7 @@
 #### Core Plugin
 - Fixed some developer tools not toggling properly.
 - Fixed the lady killer reward reminding players of their remaining uses even when the reward is disabled.
+- Fixed the heal percent reward being stacked incorrectly.
 
 #### Abilities
 - Necro: Fixed the ability not working. (Thanks to `ddd123` for reporting!)
@@ -57,6 +58,7 @@
 	- `Tire Color`
 	- `Propane Tank Color`
 	- `Flashlight Color`
+- Updated the `Stack Rewards` setting to accept different values.
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnRewardSurvivor` forward.
