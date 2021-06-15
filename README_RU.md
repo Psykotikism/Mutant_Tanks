@@ -2105,6 +2105,8 @@ Overrides
 
 **raoulduke** - За плагин [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175).
 
+**Pelipoika** - За плагин [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533).
+
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
 
 **epz (epzminion)** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
@@ -2133,7 +2135,7 @@ Overrides
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

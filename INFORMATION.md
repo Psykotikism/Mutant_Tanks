@@ -794,20 +794,21 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: 0
-			// Maximum value for each: 31
+			// Maximum value for each: 63
 			// --
 			// 0: OFF
 			// 1: Screen color
-			// 2: Glow outline (Only available in Left 4 Dead 2.)
-			// 3: Body color
-			// 8: Particle effect
-			// 16: Looping voiceline
+			// 2: Particle effect
+			// 4: Looping voiceline
+			// 8: Light color
+			// 16: Body color
+			// 32: Glow outline (Only available in Left 4 Dead 2.)
 			// --
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
 			// 3rd number = Visual effect for teammates.
 			// 4th number = Visual effect for assistant killers.
-			"Reward Visual"				"31,31,31,31"
+			"Reward Visual"				"63,63,63,63"
 
 			// Enable the "sm_mt_prefs" command and notify players about it.
 			// Note: This setting can be used for standard Tanks.
@@ -1450,6 +1451,35 @@
 			// 3rd set = RGB set for teammates.
 			// 4th set = RGB set for assistant killers.
 			"Glow Color Visual"			"-1;-1;-1,-1;-1;-1,-1;-1;-1,-1;-1;-1"
+
+			// These are the RGBA values of the recipients' light color visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 4
+			// Character limit for each set: 16
+			// Character limit for each value: 4
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			// 4th set = RGBA set for assistant killers.
+			"Light Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 
 			// The voiceline that plays on loop throughout a survivor's reward duration.
 			// Note: This setting can be used for standard Tanks.
@@ -2798,14 +2828,15 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: 0
-			// Maximum value for each: 31
+			// Maximum value for each: 63
 			// --
 			// 0: OFF
 			// 1: Screen color
-			// 2: Glow outline (Only available in Left 4 Dead 2.)
-			// 3: Body color
-			// 8: Particle effect
-			// 16: Looping voiceline
+			// 2: Particle effect
+			// 4: Looping voiceline
+			// 8: Light color
+			// 16: Body color
+			// 32: Glow outline (Only available in Left 4 Dead 2.)
 			// --
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
@@ -3454,6 +3485,35 @@
 			// 3rd set = RGB set for teammates.
 			// 4th set = RGB set for assistant killers.
 			"Glow Color Visual"			""
+
+			// These are the RGBA values of the recipients' light color visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 4
+			// Character limit for each set: 16
+			// Character limit for each value: 4
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// Keywords:
+			// "rainbow" - cycle through colors constantly.
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			// 4th set = RGBA set for assistant killers.
+			"Light Color Visual"			""
 
 			// The voiceline that plays on loop throughout a survivor's reward duration.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

@@ -29,6 +29,7 @@
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Prefs Notify` (Requested by `Mi.Cura`.)
 	- `Teammate Limit` (Requested by `Mi.Cura`.)
+	- `Light Color Visual` (Thanks to `DonProof` for the idea!)
 - Added support for `8+` players for the `Death Details` setting's messages.
 - Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
 - Removed the `Reward Priority` setting. (No longer used.)
@@ -36,6 +37,7 @@
 - The following settings can now accept color presets from the new `Colors` section:
 	- `Body Color Visual`
 	- `Glow Color Visual`
+	- `Light Color Visual`
 	- `Screen Color Visual`
 	- `Skin Color`
 	- `Glow Color`
@@ -47,9 +49,10 @@
 	- `Propane Tank Color`
 	- `Flashlight Color`
 	- `Crown Color`
-- The following settings can now accept the `rainbow` keyword to cycle through each color:
+- The following settings can now accept the `rainbow` keyword to cycle through each color (Thanks to `Pelipoika` for the code and `DonProof` for the idea!):
 	- `Body Color Visual`
 	- `Glow Color Visual`
+	- `Light Color Visual`
 	- `Skin Color`
 	- `Glow Color`
 	- `Oxygen Tank Color`
@@ -59,6 +62,13 @@
 	- `Propane Tank Color`
 	- `Flashlight Color`
 - Updated the `Stack Rewards` setting to accept different values.
+- Updated the `Reward Visual` setting's options.
+
+#### Translations
+- Updated English translations with new phrases.
+- Updated Simplified Chinese translations with a new phrase.
+- Updated Hungarian translations with a new phrase.
+- Updated Russian translations with a new phrase.
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnRewardSurvivor` forward.
@@ -68,12 +78,11 @@
 	- `MT_GetPropColors`
 
 #### Abilities
-- Medic
-	- The `Medic Field Color` setting can now accept color presets from the new `Colors` section.
+- Medic: The `Medic Field Color` setting can now accept color presets from the new `Colors` section.
 
 - Shield
 	- The `Shield Color` setting can now accept color presets from the new `Colors` section.
-	- The `Shield Color` setting can now accept the `rainbow` keyword to cycle through each color.
+	- The `Shield Color` setting can now accept the `rainbow` keyword to cycle through each color. (Thanks to `Pelipoika` for the code and `DonProof` for the idea!)
 
 ### Files
 
@@ -81,6 +90,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include files.
+- Updated translation files.
 
 ## Version 8.84 (June 1, 2021)
 
