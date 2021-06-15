@@ -2105,6 +2105,8 @@ Examples:
 
 **raoulduke** - For the [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175) plugin.
 
+**Pelipoika** - For the [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
@@ -2133,7 +2135,7 @@ Examples:
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

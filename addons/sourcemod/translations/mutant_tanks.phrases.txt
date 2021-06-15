@@ -606,6 +606,16 @@
 		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 
+	"LightVisualOn"
+	{
+		"en"			"Light Color Visual: ON"
+	}
+
+	"LightVisualOff"
+	{
+		"en"			"Light Color Visual: OFF"
+	}
+
 	"LogEnded"
 	{
 		"#format"		"{1:s},{2:s}"

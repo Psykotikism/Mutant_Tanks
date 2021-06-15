@@ -542,6 +542,16 @@
 		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
+	"LightVisualOn"
+	{
+		"chi"			"灯颜色: 开"
+	}
+
+	"LightVisualOff"
+	{
+		"chi"			"灯颜色: 关"
+	}
+
 	"LogEnded"
 	{
 		"chi"			"[{1}] --- 地图: {2} 结束日志记录 ---"

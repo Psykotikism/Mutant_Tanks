@@ -542,6 +542,16 @@
 		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}"
 	}
 
+	"LightVisualOn"
+	{
+		"hu"			"Vizuális Fényszóró Szín: BE"
+	}
+
+	"LightVisualOff"
+	{
+		"hu"			"Vizuális Fényszóró Szín: KI"
+	}
+
 	"LogEnded"
 	{
 		"hu"			"[{1}] --- NAPLÓZÁS VÉGE EZEN A PÁLYÁN: {2} ---"
