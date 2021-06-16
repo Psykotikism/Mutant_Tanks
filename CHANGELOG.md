@@ -24,6 +24,7 @@
 
 #### Game Data
 - Changed the `CTankRock::Create` detour to a `CBaseEntity::Create` detour in L4D1. (Thanks to `Dragokas` for the idea!)
+- Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
@@ -53,6 +54,7 @@
 	- `Body Color Visual`
 	- `Glow Color Visual`
 	- `Light Color Visual`
+	- `Screen Color Visual`
 	- `Skin Color`
 	- `Glow Color`
 	- `Oxygen Tank Color`

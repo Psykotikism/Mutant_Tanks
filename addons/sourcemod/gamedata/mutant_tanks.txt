@@ -1234,19 +1234,19 @@
 			"CTankClaw::SweepFist::Check1"
 			{
 				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"2519" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"2554" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
 			"CTankClaw::SweepFist::Check2"
 			{
 				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"3473" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3488" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start"
 			{
 				"windows"	"84" // change DD to D9
-				"linux"		"691" // change F2 to F3
+				"linux"		"675" // change F2 to F3
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start2"
@@ -1270,61 +1270,61 @@
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
 				"windows"	"7368" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"8863" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"9757" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
 				"windows"	"7391" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"8895" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"9789" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
 				"windows"	"7705" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"9060" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7652" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
 			{
 				"windows"	"7559" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"10335" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6417" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
 			{
 				"windows"	"7582" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"10367" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6449" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
 			{
 				"windows"	"7855" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"6490" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6607" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"windows"	"8124" // start at D9 and patch 2 bytes with EB ??
-				"linux"		"10511" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10071" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"windows"	"8218" // start at 8B and patch 2 bytes with EB ??
-				"linux"		"10679" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10227" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
 				"windows"	"8432" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"10839" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
 			{
 				"windows"	"9284" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"linux"		"7635" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"12259" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 			/* CTerrorPlayer::GetLastKnownArea() const */
 			"CTerrorPlayer::GetLastKnownArea"
@@ -1341,8 +1341,8 @@
 			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
-				"windows"	"17236"
-				"linux"		"17208"
+				"windows"	"17204"
+				"linux"		"17176"
 			}
 			/* TankIdle::GetName() const */
 			"TankIdle::GetName"
@@ -1365,8 +1365,8 @@
 			/* CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&) */
 			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
-				"windows"	"16340"
-				"linux"		"16320"
+				"windows"	"16308"
+				"linux"		"16288"
 			}
 		}
 		"Signatures"
@@ -1514,8 +1514,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
-						/* 55 8B EC 83 EC 34 53 56 8B F1 80 BE 9C 1A 00 00 00 */
+				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x7C\x1A\x00\x00\x00"
+						/* 55 8B EC 83 EC 34 53 56 8B F1 80 BE 7C 1A 00 00 00 */
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump"
@@ -1696,8 +1696,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
-						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 8B 5D 08 8B 83 58 2E 00 00 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x38\x2E\x00\x00"
+						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 8B 5D 08 8B 83 38 2E 00 00 */
 			}
 			/* CTerrorWeapon::SecondaryAttack() */
 			"CTerrorWeapon::SecondaryAttack"
