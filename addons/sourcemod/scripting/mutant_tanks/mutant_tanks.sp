@@ -9842,7 +9842,7 @@ static void vRemoveSurvivorLight(int survivor)
 
 static void vRemoveGlow(int player)
 {
-	if (!g_bSecondGame)
+	if (!g_bSecondGame || !bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		return;
 	}
@@ -10086,7 +10086,7 @@ static void vResetRound()
 
 static void vResetSpeed(int tank, bool mode = true)
 {
-	if (bIsValidClient(tank))
+	if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		switch (mode)
 		{
