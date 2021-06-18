@@ -352,10 +352,12 @@
 			{
 				"signature"	"CTerrorPlayer::OnFalling::Sound"
 			}
+			/* CTerrorPlayer::RoundRespawn() */
 			"RoundRespawnStart"
 			{
 				"signature"	"CTerrorPlayer::RoundRespawn"
 			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
 			"SweepFistStart"
 			{
 				"signature"	"CTankClaw::SweepFist"

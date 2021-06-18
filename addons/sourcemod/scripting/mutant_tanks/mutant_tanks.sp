@@ -2447,7 +2447,10 @@ public void OnClientDisconnect(int client)
 		vCalculateDeath(client, 0);
 	}
 
-	vResetPlayer(client);
+	if (bIsValidClient(client))
+	{
+		vResetPlayer(client);
+	}
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -9242,67 +9245,7 @@ static void vPluginStatus()
 	bool bPluginAllowed = bIsPluginEnabled();
 	if (!g_esGeneral.g_bPluginEnabled && bPluginAllowed)
 	{
-		g_esGeneral.g_bPluginEnabled = true;
-
-		vHookEvents(true);
-
-		vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, true);
-		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, true);
-		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, true);
-		vToggleDetour(g_esGeneral.g_ddEnterStasisDetour, "Tank::EnterStasis", Hook_Post, mreEnterStasisPost, true);
-		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Pre, mreEventKilledPre, true);
-		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Post, mreEventKilledPost, true);
-		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, true);
-		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, true);
-		vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, true);
-		vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, true);
-		vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, true);
-		vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, true);
-		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, true);
-		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, true);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, true);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, true);
-		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, true);
-		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, true);
-		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, true);
-		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, true);
-		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, true);
-		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, true);
-		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, true);
-		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, true, 2);
-		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, true, 2);
-		vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, true, 1);
-		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, true, 1);
-		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, true, 1);
-		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, true, 1);
-		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingPre, true, 1);
-		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Post, mreStartHealingPost, true, 1);
-
-		if (!g_esGeneral.g_bLeft4DHooksInstalled)
-		{
-			vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, true);
-			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, true);
-			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, true);
-			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, true);
-			vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, true);
-			vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, true);
-			vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, true);
-			vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, true);
-		}
+		vTogglePlugin(bPluginAllowed);
 
 		if (bIsVersusModeRound(0))
 		{
@@ -9311,67 +9254,7 @@ static void vPluginStatus()
 	}
 	else if (g_esGeneral.g_bPluginEnabled && !bPluginAllowed)
 	{
-		g_esGeneral.g_bPluginEnabled = false;
-
-		vHookEvents(false);
-
-		vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, false);
-		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, false);
-		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, false);
-		vToggleDetour(g_esGeneral.g_ddEnterStasisDetour, "Tank::EnterStasis", Hook_Post, mreEnterStasisPost, false);
-		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Pre, mreEventKilledPre, false);
-		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Post, mreEventKilledPost, false);
-		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, false);
-		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, false);
-		vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, false);
-		vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, false);
-		vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, false);
-		vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, false);
-		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, false);
-		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, false);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, false);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, false);
-		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, false);
-		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, false);
-		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, false);
-		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, false);
-		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, false);
-		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, false);
-		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, false);
-		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, false, 2);
-		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, false, 2);
-		vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, false, 1);
-		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, false, 1);
-		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, false, 1);
-		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, false, 1);
-		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingPre, false, 1);
-		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Post, mreStartHealingPost, false, 1);
-
-		if (!g_esGeneral.g_bLeft4DHooksInstalled)
-		{
-			vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, false);
-			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, false);
-			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, false);
-			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, false);
-			vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, false);
-			vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, false);
-			vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, false);
-			vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, false);
-		}
+		vTogglePlugin(bPluginAllowed);
 	}
 }
 
@@ -9687,6 +9570,71 @@ static void vToggleLogging(int type = -1)
 			vSaveMessage(sMessage);
 			vSaveMessage(sBorder);
 		}
+	}
+}
+
+static void vTogglePlugin(bool toggle)
+{
+	g_esGeneral.g_bPluginEnabled = toggle;
+
+	vHookEvents(toggle);
+
+	vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, toggle);
+	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddEnterStasisDetour, "Tank::EnterStasis", Hook_Post, mreEnterStasisPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Pre, mreEventKilledPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Post, mreEventKilledPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
+	vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "CBaseEntity::Create", Hook_Post, mreBaseEntityCreatePost, toggle, 1);
+	vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, toggle, 1);
+	vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, toggle, 1);
+	vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, toggle, 1);
+	vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingPre, toggle, 1);
+	vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Post, mreStartHealingPost, toggle, 1);
+
+	if (!g_esGeneral.g_bLeft4DHooksInstalled)
+	{
+		vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, toggle);
+		vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, toggle);
+		vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, toggle);
+		vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, toggle);
+		vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, toggle);
+		vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, toggle);
+		vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, toggle);
+		vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, toggle);
 	}
 }
 
