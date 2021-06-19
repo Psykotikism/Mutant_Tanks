@@ -2001,7 +2001,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -3822,11 +3821,12 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			{
 				case true:
 				{
-					SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 					vSetAdrenalineTime(developer, 999999.0);
+					SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 				}
 				case false:
 				{
+					vSetAdrenalineTime(developer, 0.0);
 					SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 					SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 				}
