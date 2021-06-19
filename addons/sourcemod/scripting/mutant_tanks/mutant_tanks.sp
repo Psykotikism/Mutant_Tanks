@@ -2001,6 +2001,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -9814,11 +9815,10 @@ static void vRemoveEffects(int survivor, bool body = false)
 		g_esPlayer[survivor].g_iEffect[iPos] = INVALID_ENT_REFERENCE;
 	}
 
-	vRemoveSurvivorLight(survivor);
-
-	if (body || bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (body || bIsValidClient(survivor))
 	{
 		vRemoveGlow(survivor);
+		vRemoveSurvivorLight(survivor);
 		SetEntityRenderMode(survivor, RENDER_NORMAL);
 		SetEntityRenderColor(survivor, 255, 255, 255, 255);
 	}
@@ -9842,7 +9842,7 @@ static void vRemoveSurvivorLight(int survivor)
 
 static void vRemoveGlow(int player)
 {
-	if (!g_bSecondGame || !bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (!g_bSecondGame || !bIsValidClient(player))
 	{
 		return;
 	}
