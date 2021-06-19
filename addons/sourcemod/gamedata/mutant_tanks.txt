@@ -1192,7 +1192,7 @@
 				}
 				"linux"
 				{
-					"read"		"695"
+					"read"		"671"
 				}
 			}
 			/**
@@ -1208,7 +1208,7 @@
 				}
 				"linux"
 				{
-					"read"		"426"
+					"read"		"671"
 				}
 			}
 		}
@@ -1248,7 +1248,7 @@
 			"CTerrorGameMovement::DoJump::Start"
 			{
 				"windows"	"84" // change DD to D9
-				"linux"		"675" // change F2 to F3
+				"linux"		"667" // change F2 to F3
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start2"
