@@ -946,9 +946,11 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 				if (g_esBuryCache[tank].g_iBuryMessage & messages)
 				{
 					static char sTankName[33];
+					static float flDepth;
+					flDepth = (g_esBuryCache[tank].g_flBuryHeight * 0.75) / 12.0;
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Bury", sTankName, survivor, flOrigin);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury", LANG_SERVER, sTankName, survivor, flOrigin);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Bury", sTankName, survivor, flDepth);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury", LANG_SERVER, sTankName, survivor, flDepth);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esBuryPlayer[tank].g_iCooldown == -1 || g_esBuryPlayer[tank].g_iCooldown < iTime))

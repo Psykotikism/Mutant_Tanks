@@ -15,6 +15,8 @@
 - Fixed the heal percent reward being stacked incorrectly.
 
 #### Abilities
+- Bury: Fixed message displaying the wrong distance of burials.
+
 - Necro: Fixed the ability not working. (Thanks to `ddd123` for reporting!)
 
 ### Changes
