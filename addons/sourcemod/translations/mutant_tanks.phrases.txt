@@ -4352,7 +4352,7 @@
 	"Slow"
 	{
 		"#format"		"{1:t},{2:N},{3:.2f}"
-		"en"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{mint}!"
+		"en"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{mint} HMU/s!"
 	}
 
 	"Slow2"

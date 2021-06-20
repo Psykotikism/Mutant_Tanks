@@ -3984,7 +3984,7 @@
 
 	"Slow"
 	{
-		"ru"			"{olive}{1}{mint} замедлил{olive} {2}{mint} на{yellow} {3}{mint}ед.!"
+		"ru"			"{olive}{1}{mint} замедлил{olive} {2}{mint} на{yellow} {3}{mint} HMU/s!"
 	}
 
 	"Slow2"
