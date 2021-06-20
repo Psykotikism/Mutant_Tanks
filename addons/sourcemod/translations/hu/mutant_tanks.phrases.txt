@@ -3984,7 +3984,7 @@
 
 	"Slow"
 	{
-		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{mint}-t HMU/s!"
+		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{percent}{mint}!"
 	}
 
 	"Slow2"

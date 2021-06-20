@@ -3984,7 +3984,7 @@
 
 	"Slow"
 	{
-		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的速度变成{yellow} {3}{mint} HMU/s!"
+		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的速度变成{yellow} {3}{percent}{mint}!"
 	}
 
 	"Slow2"
