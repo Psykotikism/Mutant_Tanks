@@ -908,9 +908,11 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				if (g_esSlowCache[tank].g_iSlowMessage & messages)
 				{
 					static char sTankName[33];
+					static float flPercent;
+					flPercent = flSpeed * 100.0;
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, flSpeed);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow", LANG_SERVER, sTankName, survivor, flSpeed);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, flPercent);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow", LANG_SERVER, sTankName, survivor, flPercent);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esSlowPlayer[tank].g_iCooldown == -1 || g_esSlowPlayer[tank].g_iCooldown < iTime))
