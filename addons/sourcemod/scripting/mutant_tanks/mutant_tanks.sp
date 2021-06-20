@@ -8547,8 +8547,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (g_esGeneral.g_iCurrentMode == 4 && g_esGeneral.g_iSurvivalBlock == 0)
 			{
-				vKillSurvivalTimer();
 				g_esGeneral.g_iSurvivalBlock = 1;
+				delete g_esGeneral.g_hSurvivalTimer;
 				g_esGeneral.g_hSurvivalTimer = CreateTimer(g_esGeneral.g_flSurvivalDelay, tTimerDelaySurvival);
 			}
 		}
@@ -10079,9 +10079,9 @@ static void vResetRound()
 		}
 	}
 
-	vKillRegularWavesTimer();
-	vKillSurvivalTimer();
-	vKillTankWaveTimer();
+	delete g_esGeneral.g_hRegularWavesTimer;
+	delete g_esGeneral.g_hSurvivalTimer;
+	delete g_esGeneral.g_hTankWaveTimer;
 }
 
 static void vResetSpeed(int tank, bool mode = true)
@@ -10190,33 +10190,6 @@ static void vResetTank(int tank)
 	vRemoveGlow(tank);
 }
 
-static void vKillRegularWavesTimer()
-{
-	if (g_esGeneral.g_hRegularWavesTimer != null)
-	{
-		KillTimer(g_esGeneral.g_hRegularWavesTimer);
-		g_esGeneral.g_hRegularWavesTimer = null;
-	}
-}
-
-static void vKillSurvivalTimer()
-{
-	if (g_esGeneral.g_hSurvivalTimer != null)
-	{
-		KillTimer(g_esGeneral.g_hSurvivalTimer);
-		g_esGeneral.g_hSurvivalTimer = null;
-	}
-}
-
-static void vKillTankWaveTimer()
-{
-	if (g_esGeneral.g_hTankWaveTimer != null)
-	{
-		KillTimer(g_esGeneral.g_hTankWaveTimer);
-		g_esGeneral.g_hTankWaveTimer = null;
-	}
-}
-
 static void vResetTimers(bool delay = false)
 {
 	switch (delay)
@@ -10227,7 +10200,7 @@ static void vResetTimers(bool delay = false)
 			bool bStart = SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector);
 			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null && bStart)
 			{
-				vKillRegularWavesTimer();
+				delete g_esGeneral.g_hRegularWavesTimer;
 				g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
 			}
 		}
@@ -15344,7 +15317,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 
 			if (!g_esPlayer[pThis].g_bArtificial)
 			{
-				vKillTankWaveTimer();
+				delete g_esGeneral.g_hTankWaveTimer;
 				g_esGeneral.g_hTankWaveTimer = CreateTimer(5.0, tTimerTankWave);
 			}
 		}
@@ -16434,7 +16407,7 @@ public Action tTimerCheckTankView(Handle timer, int userid)
 
 public Action tTimerDelayRegularWaves(Handle timer)
 {
-	vKillRegularWavesTimer();
+	delete g_esGeneral.g_hRegularWavesTimer;
 	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
 }
 
