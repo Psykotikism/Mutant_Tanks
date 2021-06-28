@@ -1220,12 +1220,12 @@ void vFlyThink(int tank, int buttons, float duration)
 			flUp2 = flBase2;
 		}
 
-		if (flDown2  < flBase2)
+		if (flDown2 < flBase2)
 		{
 			flDown2 = flBase2;
 		}
 
-		if (flLeft2  < flBase2)
+		if (flLeft2 < flBase2)
 		{
 			flLeft2 = flBase2;
 		}
