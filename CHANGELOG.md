@@ -1,5 +1,31 @@
 # Changelog
 
+## Version 8.86 (TBA)
+
+### Changes
+
+#### Core Plugin
+- The attack boost reward now allows recipients to perform actions while on ladders. (Thanks to `Lux` for the gamedata info!)
+- Renamed some keys for the patch config.
+- Reworked the patch config to make platform-specific patches optional.
+- Improved late-loading and compatibility with `Left 4 DHooks`.
+
+#### Config Files
+- All custom config filenames are now case-insensitive. (Thanks to `Shadowart` for bringing up the subject!)
+
+#### Game Data
+- Updated all of the signatures.
+
+#### Settings
+- Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+
+### Files
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+
 ## Version 8.85 (June 20, 2021)
 
 ### Bug Fixes

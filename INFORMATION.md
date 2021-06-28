@@ -539,7 +539,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// - Bypass shove penalty
+			// - Perform actions on ladders.
+			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -630,7 +631,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// - Bypass shove penalty
+			// - Perform actions on ladders.
+			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -1093,6 +1095,24 @@
 			// 3rd number = Height for teammates.
 			// 4th number = Height for assistant killers.
 			"Jump Height Reward"			"75.0,75.0,75.0,75.0"
+
+			// Allow survivors to perform actions while on ladders.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow actions for killers.
+			// 2nd number = Allow actions for assistants.
+			// 3rd number = Allow actions for teammates.
+			// 4th number = Allow actions for assistant killers.
+			"Ladder Actions Reward"			"1,1,1,1"
 
 			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2576,7 +2596,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// - Bypass shove penalty
+			// - Perform actions on ladders.
+			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -2667,7 +2688,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// - Bypass shove penalty
+			// - Perform actions on ladders.
+			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -3130,6 +3152,24 @@
 			// 3rd number = Height for teammates.
 			// 4th number = Height for assistant killers.
 			"Jump Height Reward"			"0.0,0.0,0.0,0.0"
+
+			// Allow survivors to perform actions while on ladders.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow actions for killers.
+			// 2nd number = Allow actions for assistants.
+			// 3rd number = Allow actions for teammates.
+			// 4th number = Allow actions for assistant killers.
+			"Ladder Actions Reward"			"0,0,0,0"
 
 			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

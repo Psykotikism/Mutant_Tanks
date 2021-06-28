@@ -139,7 +139,7 @@ mt_pluginenabled "1"
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
 
 By default, Mutant Tanks can create and execute the following types of configurations:
-1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `impossible.cfg` is executed (or created if it doesn't exist already).
+1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `Impossible.cfg` is executed (or created if it doesn't exist already).
 2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
@@ -593,7 +593,7 @@ Example:
 	}
 }
 
-// Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
+// Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/Impossible.cfg
 "Mutant Tanks"
 {
 	"Tank #1"
@@ -1963,7 +1963,7 @@ Example:
 	{
 		"Fast Ability"
 		{
-			"Human Ammo"				"5"
+			"Human Ammo"				"2"
 		}
 	}
 }
