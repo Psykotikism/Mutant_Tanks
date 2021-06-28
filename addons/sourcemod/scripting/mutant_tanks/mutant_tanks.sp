@@ -333,12 +333,14 @@ enum struct esGeneral
 	bool g_bCloneInstalled;
 	bool g_bConfigsExecuted;
 	bool g_bFinaleEnded;
+	bool g_bFinaleMap;
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
 	bool g_bLeft4DHooksInstalled;
 	bool g_bLinux;
 	bool g_bMapStarted;
 	bool g_bNextRound;
+	bool g_bNormalMap;
 	bool g_bPatchDoJumpValue;
 	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
@@ -535,12 +537,16 @@ enum struct esGeneral
 
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKGetMaxClip1;
+	Handle g_hSDKGetMissionFirstMap;
 	Handle g_hSDKGetName;
 	Handle g_hSDKGetRefEHandle;
 	Handle g_hSDKGetUseAction;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
+	Handle g_hSDKIsFirstMapInScenario;
 	Handle g_hSDKIsInStasis;
+	Handle g_hSDKIsMissionFinalMap;
 	Handle g_hSDKITExpired;
+	Handle g_hSDKKeyValuesGetString;
 	Handle g_hSDKLeaveStasis;
 	Handle g_hSDKMaterializeGhost;
 	Handle g_hSDKRevive;
@@ -2053,6 +2059,19 @@ public void OnPluginStart()
 					LogError("%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
 				}
 
+				StartPrepSDKCall(SDKCall_Raw);
+				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CDirector::IsFirstMapInScenario"))
+				{
+					LogError("%s Failed to find signature: CDirector::IsFirstMapInScenario", MT_TAG);
+				}
+
+				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+				g_esGeneral.g_hSDKIsFirstMapInScenario = EndPrepSDKCall();
+				if (g_esGeneral.g_hSDKIsFirstMapInScenario == null)
+				{
+					LogError("%s Your \"CDirector::IsFirstMapInScenario\" signature is outdated.", MT_TAG);
+				}
+
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
 
 				vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "CFirstAidKit::OnActionComplete");
@@ -2143,6 +2162,33 @@ public void OnPluginStart()
 				LogError("%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
 			}
 
+			StartPrepSDKCall(SDKCall_Static);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
+			{
+				LogError("%s Failed to find signature: CTerrorGameRules::GetMissionFirstMap", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain, VDECODE_FLAG_ALLOWWORLD);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKGetMissionFirstMap = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKGetMissionFirstMap == null)
+			{
+				LogError("%s Your \"CTerrorGameRules::GetMissionFirstMap\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_GameRules);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::IsMissionFinalMap"))
+			{
+				LogError("%s Failed to find signature: CTerrorGameRules::IsMissionFinalMap", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+			g_esGeneral.g_hSDKIsMissionFinalMap = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKIsMissionFinalMap == null)
+			{
+				LogError("%s Your \"CTerrorGameRules::IsMissionFinalMap\" signature is outdated.", MT_TAG);
+			}
+
 			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::MaterializeFromGhost"))
 			{
@@ -2195,18 +2241,6 @@ public void OnPluginStart()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
-			}
-
-			g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKRoundRespawn == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::OnVomitedUpon", MT_TAG);
@@ -2223,6 +2257,33 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKVomitedUpon == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
+			}
+
+			g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKRoundRespawn == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Raw);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "KeyValues::GetString"))
+			{
+				LogError("%s Failed to find signature: KeyValues::GetString", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
+			g_esGeneral.g_hSDKKeyValuesGetString = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKKeyValuesGetString == null)
+			{
+				LogError("%s Your \"KeyValues::GetString\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -2355,8 +2416,10 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	g_esGeneral.g_bFinaleMap = bIsFinaleMap();
 	g_esGeneral.g_bMapStarted = true;
 	g_esGeneral.g_bNextRound = false;
+	g_esGeneral.g_bNormalMap = bIsNonFinaleMap();
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
 	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 
@@ -13064,7 +13127,7 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 					char sKiller[128];
 					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof(sKiller));
 					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-					//vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					vRecordDamage(tank/*, killer*/, assistant, assistPercentage, sDetails, sizeof(sDetails));//, sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
 					//vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
@@ -13073,7 +13136,7 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 				else if (assistPercentage >= 1.0)
 				{
 					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-					//vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					vRecordDamage(tank/*, killer*/, assistant, assistPercentage, sDetails, sizeof(sDetails));//, sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
 					//vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
@@ -13188,11 +13251,11 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 			strcopy(lists[iPos], listSize, sList[iPos]);
 		}
 	}
-}
+}*/
 
-static void vRecordDamage(int tank, int killer, int assistant, float percentage, char[] solo, int soloSize, char[][] lists, int maxLists, int listSize)
+static void vRecordDamage(int tank/*, int killer*/, int assistant, float percentage, char[] solo, int soloSize)//, char[][] lists, int maxLists, int listSize)
 {
-	char sList[5][768];
+	//char sList[5][768];
 	int iSetting = g_esCache[tank].g_iDeathDetails;
 
 	switch (iSetting)
@@ -13200,28 +13263,28 @@ static void vRecordDamage(int tank, int killer, int assistant, float percentage,
 		case 0, 3:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%i HP{default})", assistant, g_esPlayer[assistant].g_iTankDamage[tank]);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 		case 1, 4:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%.0f{percent}{default})", assistant, percentage);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 		case 2, 5:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", assistant, g_esPlayer[assistant].g_iTankDamage[tank], percentage);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 	}
 
-	for (int iPos = 0; iPos < maxLists; iPos++)
+	/*for (int iPos = 0; iPos < maxLists; iPos++)
 	{
 		if (sList[iPos][0] != '\0')
 		{
 			strcopy(lists[iPos], listSize, sList[iPos]);
 		}
-	}
-}*/
+	}*/
+}
 
 static void vRecordKiller(int tank, int killer, float percentage, int assistant, char[] buffer, int size)
 {
@@ -13486,10 +13549,10 @@ static void vMutateTank(int tank, int type)
 			}
 			else
 			{
-				switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
+				switch (g_esGeneral.g_bFinaleMap && g_esGeneral.g_iTankWave > 0)
 				{
 					case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave - 1], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave - 1]);
-					case false: iType = (bIsNonFinaleMap() && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
+					case false: iType = (g_esGeneral.g_bNormalMap && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
 				}
 			}
 
@@ -13499,7 +13562,7 @@ static void vMutateTank(int tank, int type)
 				CreateDataTimer(g_esGeneral.g_flExtrasDelay, tTimerTankCountCheck, dpCountCheck, TIMER_FLAG_NO_MAPCHANGE);
 				dpCountCheck.WriteCell(GetClientUserId(tank));
 
-				switch (bIsFinaleMap())
+				switch (g_esGeneral.g_bFinaleMap)
 				{
 					case true:
 					{
@@ -14082,10 +14145,10 @@ static bool bCanTypeSpawn(int type = 0)
 	switch (iCondition)
 	{
 		case 0: return true;
-		case 1: return bIsFinaleMap() || g_esGeneral.g_iTankWave > 0;
-		case 2: return bIsNonFinaleMap() && g_esGeneral.g_iTankWave <= 0;
-		case 3: return bIsFinaleMap() && g_esGeneral.g_iTankWave <= 0;
-		case 4: return bIsFinaleMap() && g_esGeneral.g_iTankWave > 0;
+		case 1: return g_esGeneral.g_bFinaleMap || g_esGeneral.g_iTankWave > 0;
+		case 2: return g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave <= 0;
+		case 3: return g_esGeneral.g_bFinaleMap && g_esGeneral.g_iTankWave <= 0;
+		case 4: return g_esGeneral.g_bFinaleMap && g_esGeneral.g_iTankWave > 0;
 	}
 
 	return false;
@@ -14338,7 +14401,17 @@ static bool bIsFinaleConfigFound(const char[] filename, char[] buffer, int size)
 
 static bool bIsFinaleMap()
 {
-	return (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
+#if defined _l4dh_included
+	switch (g_esGeneral.g_bLeft4DHooksInstalled)
+	{
+		case true: return L4D_IsMissionFinalMap();
+		case false: return (g_esGeneral.g_hSDKIsMissionFinalMap != null && SDKCall(g_esGeneral.g_hSDKIsMissionFinalMap)) || (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
+	}
+
+	return false;
+#else
+	return (g_esGeneral.g_hSDKIsMissionFinalMap != null && SDKCall(g_esGeneral.g_hSDKIsMissionFinalMap)) || (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
+#endif
 }
 
 static bool bIsGameModeConfigFound(char[] buffer, int size)
@@ -14401,7 +14474,34 @@ static bool bIsMapConfigFound(char[] buffer, int size)
 
 static bool bIsNonFinaleMap()
 {
-	return FindEntityByClassname(-1, "info_changelevel") != -1 || FindEntityByClassname(-1, "trigger_changelevel") != -1 || (FindEntityByClassname(-1, "trigger_finale") == -1 && FindEntityByClassname(-1, "finale_trigger") == -1);
+#if defined _l4dh_included
+	switch (g_esGeneral.g_bLeft4DHooksInstalled)
+	{
+		case true: return L4D_IsFirstMapInScenario();
+		case false: return bIsNormalMap();
+	}
+
+	return false;
+#else
+	return bIsNormalMap();
+#endif
+}
+
+static bool bIsNormalMap()
+{
+	if (g_esGeneral.g_hSDKGetMissionFirstMap != null && g_esGeneral.g_hSDKKeyValuesGetString != null)
+	{
+		int iKeyvalue = SDKCall(g_esGeneral.g_hSDKGetMissionFirstMap, 0);
+		if (iKeyvalue > 0)
+		{
+			static char sMap[128], sCheck[128];
+			GetCurrentMap(sMap, sizeof(sMap));
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, iKeyvalue, sCheck, sizeof(sCheck), "map", "N/A");
+			return StrEqual(sMap, sCheck);
+		}
+	}
+
+	return (g_bSecondGame && g_esGeneral.g_adDirector != Address_Null && SDKCall(g_esGeneral.g_hSDKIsFirstMapInScenario, g_esGeneral.g_adDirector)) || FindEntityByClassname(-1, "info_changelevel") != -1 || FindEntityByClassname(-1, "trigger_changelevel") != -1 || (FindEntityByClassname(-1, "trigger_finale") == -1 && FindEntityByClassname(-1, "finale_trigger") == -1);
 }
 
 static bool bIsPluginEnabled()
@@ -16106,7 +16206,7 @@ public MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 	bool bBlock = false;
 	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
 
-	switch (bIsFinaleMap())
+	switch (g_esGeneral.g_bFinaleMap)
 	{
 		case true:
 		{
@@ -16424,7 +16524,7 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	bool bBlock = false;
 	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
 
-	switch (bIsFinaleMap())
+	switch (g_esGeneral.g_bFinaleMap)
 	{
 		case true:
 		{
@@ -17246,7 +17346,7 @@ public Action tTimerRegenerateHealth(Handle timer)
 
 public Action tTimerRegularWaves(Handle timer)
 {
-	if (!bCanTypeSpawn() || bIsFinaleMap() || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
+	if (!bCanTypeSpawn() || g_esGeneral.g_bFinaleMap || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
 	{
 		g_esGeneral.g_hRegularWavesTimer = null;
 
@@ -17434,7 +17534,7 @@ public Action tTimerTankCountCheck(Handle timer, DataPack pack)
 
 	static int iTank, iAmount, iCount, iCount2;
 	iTank = GetClientOfUserId(pack.ReadCell()), iAmount = pack.ReadCell(), iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
-	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (bIsNonFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
+	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
 	}
@@ -17519,7 +17619,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 
 public Action tTimerTankWave(Handle timer)
 {
-	if (bIsNonFinaleMap() || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
+	if (g_esGeneral.g_bNormalMap || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
 		g_esGeneral.g_hTankWaveTimer = null;
 
