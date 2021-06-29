@@ -9,11 +9,13 @@
 - Renamed some keys for the patch config.
 - Reworked the patch config to make platform-specific patches optional.
 - Improved late-loading and compatibility with `Left 4 DHooks`.
+- Added extra finale/non-finale map checks.
 
 #### Config Files
 - All custom config filenames are now case-insensitive. (Thanks to `Shadowart` for bringing up the subject!)
 
 #### Game Data
+- Added new signatures for functions that check maps. (Thanks to `Silvers` for the original signatures!)
 - Updated all of the signatures.
 
 #### Settings
