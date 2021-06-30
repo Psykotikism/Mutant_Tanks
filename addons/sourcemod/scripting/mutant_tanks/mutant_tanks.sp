@@ -13120,26 +13120,26 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 			if (iOption > 0)
 			{
-				char sDetails[128], sPhrase[32], sTankName[33];//, sTeammates[5][768];
+				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[7][PLATFORM_MAX_PATH];
 				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
 					char sKiller[128];
 					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof(sKiller));
 					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-					vRecordDamage(tank/*, killer*/, assistant, assistPercentage, sDetails, sizeof(sDetails));//, sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
-					//vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
+					vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else if (assistPercentage >= 1.0)
 				{
 					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-					vRecordDamage(tank/*, killer*/, assistant, assistPercentage, sDetails, sizeof(sDetails));//, sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
-					//vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
+					vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else
@@ -13188,7 +13188,7 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 	}
 }
 
-/*static void vListTeammates(int tank, int killer, int assistant, int setting, char[][] lists, int maxLists, int listSize)
+static void vListTeammates(int tank, int killer, int assistant, int setting, char[][] lists, int maxLists, int listSize)
 {
 	if (setting < 3)
 	{
@@ -13196,7 +13196,7 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 	}
 
 	bool bListed = false;
-	char sList[5][768], sTemp[768];
+	char sList[7][PLATFORM_MAX_PATH], sTemp[PLATFORM_MAX_PATH];
 	float flPercentage = 0.0;
 	int iIndex = 0, iSize = 0;
 	for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
@@ -13235,9 +13235,9 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 
 					switch (setting)
 					{
-						case 3: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
-						case 4: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
-						case 5: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
+						case 3: FormatEx(sList[iIndex], sizeof(sList[]), "\n%s %N{default} ({olive}%i HP{default})", MT_TAG3, iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
+						case 4: FormatEx(sList[iIndex], sizeof(sList[]), "\n%s %N{default} ({olive}%.0f{percent}{default})", MT_TAG3, iTeammate, flPercentage);
+						case 5: FormatEx(sList[iIndex], sizeof(sList[]), "\n%s %N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", MT_TAG3, iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
 					}
 				}
 			}
@@ -13251,11 +13251,11 @@ static void vAnnounceDeath(int tank, int killer, float percentage, int assistant
 			strcopy(lists[iPos], listSize, sList[iPos]);
 		}
 	}
-}*/
+}
 
-static void vRecordDamage(int tank/*, int killer*/, int assistant, float percentage, char[] solo, int soloSize)//, char[][] lists, int maxLists, int listSize)
+static void vRecordDamage(int tank, int killer, int assistant, float percentage, char[] solo, int soloSize, char[][] lists, int maxLists, int listSize)
 {
-	//char sList[5][768];
+	char sList[7][PLATFORM_MAX_PATH];
 	int iSetting = g_esCache[tank].g_iDeathDetails;
 
 	switch (iSetting)
@@ -13263,27 +13263,27 @@ static void vRecordDamage(int tank/*, int killer*/, int assistant, float percent
 		case 0, 3:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%i HP{default})", assistant, g_esPlayer[assistant].g_iTankDamage[tank]);
-			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 		case 1, 4:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%.0f{percent}{default})", assistant, percentage);
-			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 		case 2, 5:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", assistant, g_esPlayer[assistant].g_iTankDamage[tank], percentage);
-			//vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
 		}
 	}
 
-	/*for (int iPos = 0; iPos < maxLists; iPos++)
+	for (int iPos = 0; iPos < maxLists; iPos++)
 	{
 		if (sList[iPos][0] != '\0')
 		{
 			strcopy(lists[iPos], listSize, sList[iPos]);
 		}
-	}*/
+	}
 }
 
 static void vRecordKiller(int tank, int killer, float percentage, int assistant, char[] buffer, int size)
@@ -13303,7 +13303,7 @@ static void vRecordKiller(int tank, int killer, float percentage, int assistant,
 	}
 }
 
-/*static void vShowDamageList(int tank, const char[] namePhrase, const char[][] lists, int maxLists)
+static void vShowDamageList(int tank, const char[] namePhrase, const char[][] lists, int maxLists)
 {
 	for (int iPos = 0; iPos < maxLists; iPos++)
 	{
@@ -13324,7 +13324,7 @@ static void vRecordKiller(int tank, int killer, float percentage, int assistant,
 			}
 		}
 	}
-}*/
+}
 
 static void vColorLight(int light, int red, int green, int blue, int alpha)
 {
