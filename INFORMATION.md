@@ -6,7 +6,7 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `94-95` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `93` and recompile all the plugins, but expect server lag with higher values.)
-- Most of the settings below can be overridden for each player via their Steam IDs.
+- Most of these settings can be overridden for each player via their Steam IDs.
 
 ## Sections
 - Plugin Settings
