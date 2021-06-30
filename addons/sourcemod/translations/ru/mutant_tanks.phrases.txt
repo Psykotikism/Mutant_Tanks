@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{mint} {2}"
+		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{2}"
 	}
 
 	"Transformed"

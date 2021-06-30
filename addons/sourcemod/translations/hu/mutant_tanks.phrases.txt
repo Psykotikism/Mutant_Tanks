@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{mint} {2}"
+		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{2}"
 	}
 
 	"Transformed"

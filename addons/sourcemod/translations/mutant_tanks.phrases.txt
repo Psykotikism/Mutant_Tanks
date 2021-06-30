@@ -861,7 +861,7 @@
 	"TeammatesList"
 	{
 		"#format"		"{1:t},{2:s}"
-		"en"			"Total damage done to{olive} {1}{default}:{mint} {2}"
+		"en"			"Total damage done to{olive} {1}{default}:{2}"
 	}
 
 	"Transformed"

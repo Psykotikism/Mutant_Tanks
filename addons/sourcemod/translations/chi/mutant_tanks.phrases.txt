@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{mint} {2}"
+		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{2}"
 	}
 
 	"Transformed"
