@@ -2,6 +2,11 @@
 
 ## Version 8.86 (TBA)
 
+### Bug Fixes
+
+#### General
+- Fixed the "send reliable stream overflow" error. (Thanks to `Slaven555` and `Mi.Cura` for testing and reporting!)
+
 ### Changes
 
 #### Core Plugin
@@ -10,6 +15,7 @@
 - Reworked the patch config to make platform-specific patches optional.
 - Improved late-loading and compatibility with `Left 4 DHooks`.
 - Added extra finale/non-finale map checks.
+- Reformatted the output of the `Death Details` setting's teammate list.
 
 #### Config Files
 - All custom config filenames are now case-insensitive. (Thanks to `Shadowart` for bringing up the subject!)
@@ -20,6 +26,12 @@
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
 
 ### Files
 
