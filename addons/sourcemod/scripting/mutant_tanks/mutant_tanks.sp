@@ -11751,25 +11751,31 @@ static void vRefillMagazine(int survivor, int weapon, bool reset)
 
 static void vRespawnSurvivor(int survivor)
 {
+	static int iIndex = -1;
+	if (iIndex == -1)
+	{
+		iIndex = iGetPatchIndex("RespawnStats");
+	}
+
+	if (iIndex != -1)
+	{
+		bInstallPatch(iIndex);
+	}
+#if defined _l4dh_included
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRoundRespawn == null)
+	{
+		case true: L4D_RespawnPlayer(survivor);
+		case false: SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
+	}
+#else
 	if (g_esGeneral.g_hSDKRoundRespawn != null)
 	{
-		static int iIndex = -1;
-		if (iIndex == -1)
-		{
-			iIndex = iGetPatchIndex("RespawnStats");
-		}
-
-		if (iIndex != -1)
-		{
-			bInstallPatch(iIndex);
-		}
-
 		SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
-
-		if (iIndex != -1)
-		{
-			bRemovePatch(iIndex);
-		}
+	}
+#endif
+	if (iIndex != -1)
+	{
+		bRemovePatch(iIndex);
 	}
 }
 
