@@ -4891,7 +4891,7 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank creates acid puddles. (Replaced by the Puke ability in Left 4 Dead 1.)
+		// The Mutant Tank creates acid puddles.
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, an acid puddle is created underneath the survivor.
 		// - "Acid Range"
 		// - "Acid Range Chance"
@@ -8636,7 +8636,7 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank flings survivors high into the air. (Replaced by the Puke ability in Left 4 Dead 1.)
+		// The Mutant Tank flings survivors high into the air.
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is flung into the air.
 		// - "Fling Range"
 		// - "Fling Range Chance"

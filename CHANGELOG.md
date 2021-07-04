@@ -1,11 +1,11 @@
 # Changelog
 
-## Version 8.86 (TBA)
+## Version 8.86 (July 10, 2021)
 
 ### Bug Fixes
 
 #### General
-- Fixed the "send reliable stream overflow" error. (Thanks to `Slaven555` and `Mi.Cura` for testing and reporting!)
+- Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
 
 ### Changes
 
@@ -13,9 +13,11 @@
 - The attack boost reward now allows recipients to perform actions while on ladders. (Thanks to `Lux` for the gamedata info!)
 - Renamed some keys for the patch config.
 - Reworked the patch config to make platform-specific patches optional.
-- Improved late-loading and compatibility with `Left 4 DHooks`.
+- Improved late-loading.
+- Improved compatibility with `Left 4 DHooks`.
 - Added extra finale/non-finale map checks.
 - Reformatted the output of the `Death Details` setting's teammate list.
+- Separated the list of rewards shown in chat when receiving rewards.
 
 #### Config Files
 - All custom config filenames are now case-insensitive. (Thanks to `Shadowart` for bringing up the subject!)
@@ -29,9 +31,9 @@
 
 #### Translations
 - Updated English translations.
-- Updated Simplified Chinese translations.
-- Updated Hungarian translations.
-- Updated Russian translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
 
 ### Files
 
