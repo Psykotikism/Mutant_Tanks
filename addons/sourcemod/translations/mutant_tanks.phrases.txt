@@ -734,7 +734,7 @@
 
 	"RewardEnd"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Your{yellow} {1}{default} ended!"
 	}
 
@@ -756,7 +756,7 @@
 	"RewardLadyKiller"
 	{
 		"#format"		"{1:i}"
-		"en"			"{1}{default} use(s) of{mint} Lady Killer"
+		"en"			"You{default} received{yellow} {1}{default} use(s) of{mint} Lady killer{default}."
 	}
 
 	"RewardLadyKiller2"
@@ -767,25 +767,25 @@
 
 	"RewardList"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
 	}
 
 	"RewardList2"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
 	}
 
 	"RewardList3"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
 	}
 
 	"RewardList4"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"You{default} received{yellow} {1}{default} for killing and assisting the most against{olive} {2}{default}!"
 	}
 

@@ -684,7 +684,7 @@
 
 	"RewardLadyKiller"
 	{
-		"hu"			"{1}{mint} nőcsábász{default} használatot"
+		"hu"			"Most{default} kaptál{yellow} {1}{default} nőcsábász{mint} használatot{default}."
 	}
 
 	"RewardLadyKiller2"

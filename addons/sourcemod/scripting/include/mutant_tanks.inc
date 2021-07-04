@@ -1675,12 +1675,13 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[1024], sMessage[1024];
+	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
 	SetGlobalTransTarget(client);
 	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
-	PrintToChat(client, sBuffer);
+	strcopy(sFinal, sizeof(sFinal), sBuffer);
+	PrintToChat(client, sFinal);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
@@ -1699,11 +1700,13 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	VFormat(sBuffer, sizeof(sBuffer), message, 2);
+	strcopy(sMessage, sizeof(sMessage), message);
+	VFormat(sBuffer, sizeof(sBuffer), sMessage, 2);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
-	PrintToServer(sBuffer);
+	strcopy(sFinal, sizeof(sFinal), sBuffer);
+	PrintToServer(sFinal);
 }
 
 stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
@@ -1725,22 +1728,26 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
 	SetGlobalTransTarget(client);
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
+		strcopy(sMessage, sizeof(sMessage), message);
+		VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+		strcopy(sFinal, sizeof(sFinal), sBuffer);
 
 		switch (client == 0)
 		{
-			case true: PrintToServer(sBuffer);
-			case false: PrintToConsole(client, sBuffer);
+			case true: PrintToServer(sFinal);
+			case false: PrintToConsole(client, sFinal);
 		}
 	}
 	else
 	{
+		FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
+		VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 		MT_PrintToChat(client, sBuffer);
 	}
 }
@@ -1820,6 +1827,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -2322,6 +2330,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2415,6 +2424,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
