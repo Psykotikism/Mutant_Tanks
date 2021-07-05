@@ -2089,7 +2089,7 @@ Overrides
 
 **IxAvnoMonvAxI** - За плагин [[L4D2] Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2).
 
-**Uncle Jessie** - За танк-тремор в его [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
+**Uncle Jessie** - За `танк-тремор` в его [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
 **Drixevel** - За плагин [[ANY] Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645).
 

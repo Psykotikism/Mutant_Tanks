@@ -7,14 +7,16 @@
 #### General
 - Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
 
+#### Config Files
+- Fixed the `Combo` section not being read. (Thanks to `Uncle Jessie` for reporting!)
+
 ### Changes
 
 #### Core Plugin
 - The attack boost reward now allows recipients to perform actions while on ladders. (Thanks to `Lux` for the gamedata info!)
 - Renamed some keys for the patch config.
 - Reworked the patch config to make platform-specific patches optional.
-- Improved late-loading.
-- Improved compatibility with `Left 4 DHooks`.
+- Improved late-loading and compatibility with `Left 4 DHooks`.
 - Added extra finale/non-finale map checks.
 - Reformatted the output of the `Death Details` setting's teammate list.
 - Separated the list of rewards shown in chat when receiving rewards.
