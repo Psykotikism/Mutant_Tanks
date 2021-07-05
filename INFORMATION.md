@@ -20590,7 +20590,7 @@
 			"Immunity Flags"			""
 		}
 		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
-		"Absorb Ability"
+		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
 			// Note: This setting overrides all other "Access Flags" settings above.
