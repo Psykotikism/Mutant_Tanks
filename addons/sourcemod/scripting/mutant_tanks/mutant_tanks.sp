@@ -2019,7 +2019,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -7873,6 +7872,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iRegularMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_WAVES, key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_esGeneral.g_iRegularMode, value, 0, 1);
 				g_esGeneral.g_iRegularWave = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_WAVES, key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_esGeneral.g_iRegularWave, value, 0, 1);
 				g_esGeneral.g_iFinaleAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_WAVES, key, "FinaleAmount", "Finale Amount", "Finale_Amount", "finamount", g_esGeneral.g_iFinaleAmount, value, 0, 32);
+				g_esGeneral.g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+				g_esGeneral.g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+
+				vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esGeneral.g_sHealthCharacters, sizeof(esGeneral::g_sHealthCharacters), value);
 
 				if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, false))
 				{
@@ -8044,13 +8047,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						vLogMessage(MT_LOG_SERVER, _, "%s Unable to change cvar: %s", MT_TAG, sKey);
 					}
 				}
-				else
-				{
-					g_esGeneral.g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-					g_esGeneral.g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
-
-					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esGeneral.g_sHealthCharacters, sizeof(esGeneral::g_sHealthCharacters), value);
-				}
 
 				if (g_esGeneral.g_iConfigMode == 1)
 				{
@@ -8169,6 +8165,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esPlayer[iPlayer].g_iMeleeImmunity, value, 0, 1);
 						g_esPlayer[iPlayer].g_iVomitImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "VomitImmunity", "Vomit Immunity", "Vomit_Immunity", "vomit", g_esPlayer[iPlayer].g_iVomitImmunity, value, 0, 1);
 						g_esPlayer[iPlayer].g_iFavoriteType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "FavoriteType", "Favorite Type", "Favorite_Type", "favorite", g_esPlayer[iPlayer].g_iFavoriteType, value, 0, g_esGeneral.g_iMaxType);
+						g_esPlayer[iPlayer].g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+						g_esPlayer[iPlayer].g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+
+						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esPlayer[iPlayer].g_sHealthCharacters, sizeof(esPlayer::g_sHealthCharacters), value);
+						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esPlayer[iPlayer].g_sComboSet, sizeof(esPlayer::g_sComboSet), value);
 
 						if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, false))
 						{
@@ -8415,14 +8416,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 								}
 							}
-						}
-						else
-						{
-							g_esPlayer[iPlayer].g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-							g_esPlayer[iPlayer].g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
-
-							vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esPlayer[iPlayer].g_sHealthCharacters, sizeof(esPlayer::g_sHealthCharacters), value);
-							vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esPlayer[iPlayer].g_sComboSet, sizeof(esPlayer::g_sComboSet), value);
 						}
 
 						Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
@@ -9005,6 +8998,11 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iHittableImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "HittableImmunity", "Hittable Immunity", "Hittable_Immunity", "hittable", g_esTank[type].g_iHittableImmunity, value, 0, 1);
 		g_esTank[type].g_iMeleeImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esTank[type].g_iMeleeImmunity, value, 0, 1);
 		g_esTank[type].g_iVomitImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "VomitImmunity", "Vomit Immunity", "Vomit_Immunity", "vomit", g_esTank[type].g_iVomitImmunity, value, 0, 1);
+		g_esTank[type].g_iAccessFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esTank[type].g_iImmunityFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+
+		vGetKeyValue(sub, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esTank[type].g_sHealthCharacters, sizeof(esTank::g_sHealthCharacters), value);
+		vGetKeyValue(sub, MT_CONFIG_SECTIONS_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esTank[type].g_sComboSet, sizeof(esTank::g_sComboSet), value);
 
 		if (StrEqual(sub, MT_CONFIG_SECTION_GENERAL, false))
 		{
@@ -9218,14 +9216,6 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 					g_esTank[type].g_iCrownColor[iPos] = iGetClampedValue(key, "CrownColor", "Crown Color", "Crown_Color", "crown", g_esTank[type].g_iCrownColor[iPos], sSet[iPos], 0, 255, 0);
 				}
 			}
-		}
-		else
-		{
-			g_esTank[type].g_iAccessFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTIONS_ADMIN, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-			g_esTank[type].g_iImmunityFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTIONS_ADMIN, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
-
-			vGetKeyValue(sub, MT_CONFIG_SECTIONS_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esTank[type].g_sHealthCharacters, sizeof(esTank::g_sHealthCharacters), value);
-			vGetKeyValue(sub, MT_CONFIG_SECTIONS_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esTank[type].g_sComboSet, sizeof(esTank::g_sComboSet), value);
 		}
 
 		if (g_esTank[type].g_iAbilityCount == -1 && (StrContains(sub, "ability", false) != -1 || (((StrContains(key, "ability", false) == 0 && StrContains(key, "enabled", false) != -1) || StrEqual(key, "aenabled", false) || (StrContains(key, " hit", false) != -1 && StrContains(key, "mode", false) == -1) || StrEqual(key, "hit", false)) && StringToInt(value) > 0)))
@@ -13638,9 +13628,9 @@ public void vPlayerSpawnFrame(DataPack pack)
 		{
 			g_esPlayer[iPlayer].g_bSetup = true;
 
-			if (bIsDeveloper(iPlayer, _, true))
+			if (bIsDeveloper(iPlayer))
 			{
-				if (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
+				if (bIsDeveloper(iPlayer, _, true) && !CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
 				{
 					g_esDeveloper[iPlayer].g_iDevAccess = 1661;
 				}
@@ -15724,10 +15714,10 @@ public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
 
 public MRESReturn mreFinishHealingPre(int pThis)
 {
-	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsSurvivor(iSurvivor) && g_esGeneral.g_cvMTFirstAidHealPercent != null)
 	{
-		int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-		if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH)))
+		if (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH))
 		{
 			vSetHealPercentCvar(false, iSurvivor);
 		}
