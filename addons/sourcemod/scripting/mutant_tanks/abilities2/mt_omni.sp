@@ -251,14 +251,14 @@ public int iOmniMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esOmni[param1].g_iOmniAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esOmni[param1].g_iHumanAmmo - g_esOmniPlayer[param1].g_iAmmoCount, g_esOmni[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esOmni[param1].g_iOmniAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esOmni[param1].g_iHumanAmmo - g_esOmniPlayer[param1].g_iAmmoCount), g_esOmni[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esOmni[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esOmni[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esOmni[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "OmniDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esOmni[param1].g_iOmniDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esOmni[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esOmni[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -700,7 +700,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman4", g_esOmniPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman4", (g_esOmniPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -722,7 +722,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman4", g_esOmniPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman4", (g_esOmniPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -769,7 +769,7 @@ void vOmni(int tank, int pos = -1)
 	static int iDuration;
 	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esOmniCache[tank].g_iOmniDuration;
 	g_esOmniPlayer[tank].g_bActivated = true;
-	g_esOmniPlayer[tank].g_iDuration = GetTime() + iDuration;
+	g_esOmniPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 	vOmni2(tank, pos);
 
@@ -909,7 +909,7 @@ void vOmniReset3(int tank)
 	g_esOmniPlayer[tank].g_iCooldown = (g_esOmniPlayer[tank].g_iAmmoCount < g_esOmni[tank].g_iHumanAmmo && g_esOmni[tank].g_iHumanAmmo > 0) ? (iTime + g_esOmni[tank].g_iHumanCooldown) : -1;
 	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman5", g_esOmniPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman5", (g_esOmniPlayer[tank].g_iCooldown - iTime));
 	}
 }
 

@@ -91,7 +91,7 @@ enum struct esVampireAbility
 
 esVampireAbility g_esVampireAbility[MT_MAXTYPES + 1];
 
-enum struct esCache
+enum struct esVampireCache
 {
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
@@ -103,7 +103,7 @@ enum struct esCache
 	int g_iVampireMessage;
 }
 
-esCache esVampireCache[MAXPLAYERS + 1];
+esVampireCache g_esVampireCache[MAXPLAYERS + 1];
 
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
@@ -191,9 +191,9 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, esVampireCache[param1].g_iVampireAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVampireCache[param1].g_iVampireAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "VampireDetails");
-				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, esVampireCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVampireCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -270,28 +270,28 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
-			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && esVampireCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
 			{
-				if (bIsAreaNarrow(attacker, esVampireCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVampirePlayer[attacker].g_iTankType) || (esVampireCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < esVampireCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iAccessFlags, g_esVampirePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVampirePlayer[attacker].g_iTankType, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVampirePlayer[victim].g_iImmunityFlags))
+				if (bIsAreaNarrow(attacker, g_esVampireCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVampirePlayer[attacker].g_iTankType) || (g_esVampireCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVampireCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iAccessFlags, g_esVampirePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVampirePlayer[attacker].g_iTankType, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVampirePlayer[victim].g_iImmunityFlags))
 				{
 					return Plugin_Continue;
 				}
 
-				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || esVampireCache[attacker].g_iHumanAbility == 1)
+				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esVampireCache[attacker].g_iHumanAbility == 1)
 				{
 					static int iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 					iDamage = RoundToNearest(damage);
 					iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
 					iMaxHealth = MT_TankMaxHealth(attacker, 1);
-					iNewHealth = iHealth + iDamage;
+					iNewHealth = (iHealth + iDamage);
 					iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iDamage - MT_MAXHEALTH) : iNewHealth;
 					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
 					iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
-					MT_TankMaxHealth(attacker, 3, iMaxHealth + iTotalHealth);
+					MT_TankMaxHealth(attacker, 3, (iMaxHealth + iTotalHealth));
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
-					vEffect(victim, attacker, esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
+					vEffect(victim, attacker, g_esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
 
-					if (esVampireCache[attacker].g_iVampireMessage == 1)
+					if (g_esVampireCache[attacker].g_iVampireMessage == 1)
 					{
 						static char sTankName[33];
 						MT_GetTankName(attacker, sTankName);
@@ -411,12 +411,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance);
-	esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility);
-	esVampireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly);
-	esVampireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans);
-	esVampireCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility);
-	esVampireCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect);
-	esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage);
+	g_esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance);
+	g_esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility);
+	g_esVampireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly);
+	g_esVampireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans);
+	g_esVampireCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility);
+	g_esVampireCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect);
+	g_esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage);
 	g_esVampirePlayer[tank].g_iTankType = apply ? type : 0;
 }

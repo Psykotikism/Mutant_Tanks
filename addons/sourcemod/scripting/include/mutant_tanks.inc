@@ -1418,11 +1418,9 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
 		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
-		static Handle hFadeTarget;
-		hFadeTarget = StartMessageOne("Fade", survivor);
+		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 
-		static BfWrite bfWrite;
-		bfWrite = UserMessageToBfWrite(hFadeTarget);
+		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
 		bfWrite.WriteShort(800);
 		bfWrite.WriteShort(300);
 		bfWrite.WriteShort((0x0010|0x0001));
@@ -1635,11 +1633,9 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 
 stock void vShakePlayerScreen(int player, float duration = 1.0)
 {
-	static Handle hTarget;
-	hTarget = StartMessageOne("Shake", player);
+	Handle hTarget = StartMessageOne("Shake", player);
 
-	static BfWrite bfWrite;
-	bfWrite = UserMessageToBfWrite(hTarget);
+	BfWrite bfWrite = UserMessageToBfWrite(hTarget);
 	bfWrite.WriteByte(0);
 	bfWrite.WriteFloat(16.0);
 	bfWrite.WriteFloat(0.5);
@@ -1675,18 +1671,17 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
+	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
 	SetGlobalTransTarget(client);
 	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
-	strcopy(sFinal, sizeof(sFinal), sBuffer);
-	PrintToChat(client, sFinal);
+	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	static char sBuffer[PLATFORM_MAX_PATH];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -1700,13 +1695,12 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
+	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
 	SetGlobalTransTarget(LANG_SERVER);
 	strcopy(sMessage, sizeof(sMessage), message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 2);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
-	strcopy(sFinal, sizeof(sFinal), sBuffer);
-	PrintToServer(sFinal);
+	PrintToServer(sBuffer);
 }
 
 stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
@@ -1728,7 +1722,7 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[1024], sFinal[PLATFORM_MAX_PATH], sMessage[1024];
+	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
 	SetGlobalTransTarget(client);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
@@ -1736,12 +1730,11 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 		strcopy(sMessage, sizeof(sMessage), message);
 		VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
-		strcopy(sFinal, sizeof(sFinal), sBuffer);
 
 		switch (client == 0)
 		{
-			case true: PrintToServer(sFinal);
-			case false: PrintToConsole(client, sFinal);
+			case true: PrintToServer(sBuffer);
+			case false: PrintToConsole(client, sBuffer);
 		}
 	}
 	else
@@ -2983,6 +2976,7 @@ stock int iGetRandomTank(int tank)
 stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
 	static Handle hTrace;
+
 	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);

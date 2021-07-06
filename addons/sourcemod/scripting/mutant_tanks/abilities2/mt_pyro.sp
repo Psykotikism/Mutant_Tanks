@@ -253,14 +253,14 @@ public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esPyroCache[param1].g_iPyroAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esPyroCache[param1].g_iHumanAmmo - g_esPyroPlayer[param1].g_iAmmoCount, g_esPyroCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPyroCache[param1].g_iPyroAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esPyroCache[param1].g_iHumanAmmo - g_esPyroPlayer[param1].g_iAmmoCount), g_esPyroCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esPyroCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPyroCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esPyroCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "PyroDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esPyroCache[param1].g_iPyroDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esPyroCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPyroCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -390,12 +390,12 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 					static int iDuration;
 					iDuration = (g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition)) : g_esPyroCache[victim].g_iPyroDuration;
 					g_esPyroPlayer[victim].g_bActivated = true;
-					g_esPyroPlayer[victim].g_iDuration = GetTime() + iDuration;
+					g_esPyroPlayer[victim].g_iDuration = (GetTime() + iDuration);
 				}
 
 				switch (g_esPyroCache[victim].g_iPyroMode)
 				{
-					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esPyroCache[victim].g_flPyroSpeedBoost);
+					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (MT_GetRunSpeed(victim) + g_esPyroCache[victim].g_flPyroSpeedBoost));
 					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esPyroCache[victim].g_flPyroSpeedBoost);
 				}
 
@@ -773,7 +773,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman4", g_esPyroPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman4", (g_esPyroPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -795,7 +795,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman4", g_esPyroPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman4", (g_esPyroPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -848,7 +848,7 @@ void vPyro(int tank, int pos = -1)
 	static int iDuration;
 	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esPyroCache[tank].g_iPyroDuration;
 	g_esPyroPlayer[tank].g_bActivated = true;
-	g_esPyroPlayer[tank].g_iDuration = GetTime() + iDuration;
+	g_esPyroPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 	IgniteEntity(tank, float(iDuration));
 
@@ -946,7 +946,7 @@ void vPyroReset3(int tank)
 	g_esPyroPlayer[tank].g_iCooldown = (g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esPyroCache[tank].g_iHumanCooldown) : -1;
 	if (g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman5", g_esPyroPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman5", (g_esPyroPlayer[tank].g_iCooldown - iTime));
 	}
 }
 

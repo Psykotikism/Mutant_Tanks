@@ -294,12 +294,12 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esThrowCache[param1].g_iThrowAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esThrowCache[param1].g_iHumanAmmo - g_esThrowPlayer[param1].g_iAmmoCount, g_esThrowCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esThrowCache[param1].g_iThrowAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esThrowCache[param1].g_iHumanAmmo - g_esThrowPlayer[param1].g_iAmmoCount), g_esThrowCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esThrowCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ThrowDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esThrowCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esThrowCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -767,7 +767,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				}
 				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman3", g_esThrowPlayer[tank].g_iCooldown - iTime);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman3", (g_esThrowPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -974,7 +974,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 		if (iAbilityCount > 0)
 		{
-			switch (iAbilities[GetRandomInt(0, iAbilityCount - 1)])
+			switch (iAbilities[GetRandomInt(0, (iAbilityCount - 1))])
 			{
 				case 1:
 				{
@@ -996,7 +996,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+						switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
 						{
 							case 1: SetEntityModel(iCar, MODEL_CAR);
 							case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -1031,7 +1031,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_cvMTThrowTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 
 						TeleportEntity(iCar, flPos, NULL_VECTOR, NULL_VECTOR);
 						DispatchSpawn(iCar);
@@ -1079,7 +1079,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+						switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
 						{
 							case 1: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 							case 2: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
@@ -1131,7 +1131,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							}
 
 							NormalizeVector(flVelocity, flVelocity);
-							ScaleVector(flVelocity, g_cvMTThrowTankThrowForce.FloatValue * 1.4);
+							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 							TeleportEntity(iSpecial, flPos, NULL_VECTOR, flVelocity);
 
 							if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
@@ -1152,7 +1152,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
-					ScaleVector(flVelocity, g_cvMTThrowTankThrowForce.FloatValue * 1.4);
+					ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
 					if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL)
@@ -1177,7 +1177,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							RemoveEntity(iRock);
 
 							NormalizeVector(flVelocity, flVelocity);
-							ScaleVector(flVelocity, g_cvMTThrowTankThrowForce.FloatValue * 1.4);
+							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 
 							SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
 							TeleportEntity(iWitch, flPos, NULL_VECTOR, NULL_VECTOR);
@@ -1214,7 +1214,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 			g_esThrowPlayer[iTank].g_iCooldown = (g_esThrowPlayer[iTank].g_iAmmoCount < g_esThrowCache[iTank].g_iHumanAmmo && g_esThrowCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esThrowCache[iTank].g_iHumanCooldown) : -1;
 			if (g_esThrowPlayer[iTank].g_iCooldown != -1 && g_esThrowPlayer[iTank].g_iCooldown > iTime)
 			{
-				MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman4", g_esThrowPlayer[iTank].g_iCooldown - iTime);
+				MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman4", (g_esThrowPlayer[iTank].g_iCooldown - iTime));
 			}
 		}
 

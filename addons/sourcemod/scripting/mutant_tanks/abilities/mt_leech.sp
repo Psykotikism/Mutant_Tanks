@@ -257,13 +257,13 @@ public int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLeechCache[param1].g_iLeechAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esLeechCache[param1].g_iHumanAmmo - g_esLeechPlayer[param1].g_iAmmoCount, g_esLeechCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLeechCache[param1].g_iLeechAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLeechCache[param1].g_iHumanAmmo - g_esLeechPlayer[param1].g_iAmmoCount), g_esLeechCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLeechCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LeechDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLeechCache[param1].g_iLeechDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLeechCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLeechCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -712,7 +712,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vLeechAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman3", g_esLeechPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman3", (g_esLeechPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -807,7 +807,7 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esLeechPlayer[tank].g_iCooldown = (g_esLeechPlayer[tank].g_iAmmoCount < g_esLeechCache[tank].g_iHumanAmmo && g_esLeechCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLeechCache[tank].g_iHumanCooldown) : -1;
 					if (g_esLeechPlayer[tank].g_iCooldown != -1 && g_esLeechPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman5", g_esLeechPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman5", (g_esLeechPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
@@ -991,11 +991,11 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	static int iTankHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 	iTankHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 	iMaxHealth = MT_TankMaxHealth(iTank, 1);
-	iNewHealth = iTankHealth + 1;
+	iNewHealth = (iTankHealth + 1);
 	iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
 	iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
 	iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : 1;
-	MT_TankMaxHealth(iTank, 3, iMaxHealth + iTotalHealth);
+	MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 	vDamagePlayer(iSurvivor, iTank, 1.0);
 

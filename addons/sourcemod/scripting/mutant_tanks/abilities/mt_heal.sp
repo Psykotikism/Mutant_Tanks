@@ -308,22 +308,22 @@ public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHealCache[param1].g_iHealAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHealCache[param1].g_iHealAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1:
 				{
-					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esHealCache[param1].g_iHumanAmmo - g_esHealPlayer[param1].g_iAmmoCount, g_esHealCache[param1].g_iHumanAmmo);
-					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo2", g_esHealCache[param1].g_iHumanAmmo - g_esHealPlayer[param1].g_iAmmoCount2, g_esHealCache[param1].g_iHumanAmmo);
+					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esHealCache[param1].g_iHumanAmmo - g_esHealPlayer[param1].g_iAmmoCount), g_esHealCache[param1].g_iHumanAmmo);
+					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo2", (g_esHealCache[param1].g_iHumanAmmo - g_esHealPlayer[param1].g_iAmmoCount2), g_esHealCache[param1].g_iHumanAmmo);
 				}
 				case 2:
 				{
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				}
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHealCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHealCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esHealCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "HealDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esHealCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHealCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHealCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -855,7 +855,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman5", g_esHealPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman5", (g_esHealPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -877,7 +877,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman5", g_esHealPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman5", (g_esHealPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -895,7 +895,7 @@ public void MT_OnButtonPressed(int tank, int button)
 			{
 				switch (g_esHealPlayer[tank].g_iCooldown2 != -1 && g_esHealPlayer[tank].g_iCooldown2 > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman6", g_esHealPlayer[tank].g_iCooldown2 - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman6", (g_esHealPlayer[tank].g_iCooldown2 - iTime));
 					case false: vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
 				}
 			}
@@ -1069,7 +1069,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 					g_esHealPlayer[tank].g_iCooldown2 = (g_esHealPlayer[tank].g_iAmmoCount2 < g_esHealCache[tank].g_iHumanAmmo && g_esHealCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esHealCache[tank].g_iHumanCooldown) : -1;
 					if (g_esHealPlayer[tank].g_iCooldown2 != -1 && g_esHealPlayer[tank].g_iCooldown2 > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman9", g_esHealPlayer[tank].g_iCooldown2 - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman9", (g_esHealPlayer[tank].g_iCooldown2 - iTime));
 					}
 				}
 
@@ -1159,7 +1159,7 @@ void vHealReset3(int tank)
 	g_esHealPlayer[tank].g_iCooldown = (g_esHealPlayer[tank].g_iAmmoCount < g_esHealCache[tank].g_iHumanAmmo && g_esHealCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esHealCache[tank].g_iHumanCooldown) : -1;
 	if (g_esHealPlayer[tank].g_iCooldown != -1 && g_esHealPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman8", g_esHealPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman8", (g_esHealPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -1302,7 +1302,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 			iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 			if (iHealth >= 500)
 			{
-				iCommonHealth = iHealth + g_esHealCache[iTank].g_iHealCommon;
+				iCommonHealth = (iHealth + g_esHealCache[iTank].g_iHealCommon);
 				iLeftover = (iCommonHealth > MT_MAXHEALTH) ? (iCommonHealth - MT_MAXHEALTH) : iCommonHealth;
 				iExtraHealth = (iCommonHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iCommonHealth;
 				iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
@@ -1324,7 +1324,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 				if (iHealth >= 500)
 				{
-					iSpecialHealth = iHealth + g_esHealCache[iTank].g_iHealSpecial;
+					iSpecialHealth = (iHealth + g_esHealCache[iTank].g_iHealSpecial);
 					iLeftover = (iSpecialHealth > MT_MAXHEALTH) ? (iSpecialHealth - MT_MAXHEALTH) : iSpecialHealth;
 					iExtraHealth = (iSpecialHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iSpecialHealth;
 					iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
@@ -1343,7 +1343,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 				if (iHealth >= 500)
 				{
-					iTankHealth = iHealth + g_esHealCache[iTank].g_iHealTank;
+					iTankHealth = (iHealth + g_esHealCache[iTank].g_iHealTank);
 					iLeftover = (iTankHealth > MT_MAXHEALTH) ? (iTankHealth - MT_MAXHEALTH) : iTankHealth;
 					iExtraHealth = (iTankHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iTankHealth;
 					iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
@@ -1365,7 +1365,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 			MT_GetTankColors(iTank, 2, iColor[0], iColor[1], iColor[2], iColor[3]);
 			if (!(iColor[0] == -2 && iColor[1] == -2 && iColor[2] == -2))
 			{
-				MT_TankMaxHealth(iTank, 3, iMaxHealth + iTotalHealth);
+				MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
 				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), 1, MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), 3);
 			}
 		}

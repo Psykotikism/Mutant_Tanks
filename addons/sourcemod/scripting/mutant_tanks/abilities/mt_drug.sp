@@ -141,7 +141,7 @@ esDrugCache g_esDrugCache[MAXPLAYERS + 1];
 
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 
-UserMsg g_umFade;
+UserMsg g_umDrugFade;
 
 #if defined MT_ABILITIES_MAIN
 void vDrugPluginStart()
@@ -149,7 +149,7 @@ void vDrugPluginStart()
 public void OnPluginStart()
 #endif
 {
-	g_umFade = GetUserMessageId("Fade");
+	g_umDrugFade = GetUserMessageId("Fade");
 #if !defined MT_ABILITIES_MAIN
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
@@ -266,13 +266,13 @@ public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDrugCache[param1].g_iDrugAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esDrugCache[param1].g_iHumanAmmo - g_esDrugPlayer[param1].g_iAmmoCount, g_esDrugCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDrugCache[param1].g_iDrugAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esDrugCache[param1].g_iHumanAmmo - g_esDrugPlayer[param1].g_iAmmoCount), g_esDrugCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esDrugCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "DrugDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esDrugCache[param1].g_iDrugDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDrugCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDrugCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -748,7 +748,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esDrugPlayer[tank].g_iCooldown == -1 || g_esDrugPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vDrugAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman3", g_esDrugPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman3", (g_esDrugPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -783,21 +783,19 @@ void vDrug(int survivor, bool toggle, float angles[20])
 
 	if (toggle)
 	{
-		for (int iPos = 0; iPos < sizeof(iColor) - 1; iPos++)
+		for (int iPos = 0; iPos < (sizeof(iColor) - 1); iPos++)
 		{
 			iColor[iPos] = GetRandomInt(0, 255);
 		}
 	}
 
-	static Handle hTarget;
-	hTarget = StartMessageEx(g_umFade, iClients, 1);
+	Handle hTarget = StartMessageEx(g_umDrugFade, iClients, 1);
 
 	switch (GetUserMessageType() == UM_Protobuf)
 	{
 		case true:
 		{
-			static Protobuf pbSet;
-			pbSet = UserMessageToProtobuf(hTarget);
+			Protobuf pbSet = UserMessageToProtobuf(hTarget);
 			pbSet.SetInt("duration", toggle ? 255: 1536);
 			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
 			pbSet.SetInt("flags", iFlags);
@@ -805,8 +803,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 		}
 		case false:
 		{
-			static BfWrite bfWrite;
-			bfWrite = UserMessageToBfWrite(hTarget);
+			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
 			bfWrite.WriteShort(toggle ? 255 : 1536);
 			bfWrite.WriteShort(toggle ? 255 : 1536);
 			bfWrite.WriteShort(iFlags);
@@ -894,7 +891,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 					g_esDrugPlayer[tank].g_iCooldown = (g_esDrugPlayer[tank].g_iAmmoCount < g_esDrugCache[tank].g_iHumanAmmo && g_esDrugCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esDrugCache[tank].g_iHumanCooldown) : -1;
 					if (g_esDrugPlayer[tank].g_iCooldown != -1 && g_esDrugPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman5", g_esDrugPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman5", (g_esDrugPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

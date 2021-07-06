@@ -343,10 +343,10 @@ public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDropCache[param1].g_iDropAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDropCache[param1].g_iDropAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "DropDetails");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDropCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDropCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -1006,7 +1006,7 @@ public void vDropFrame(int userid)
 					}
 				}
 
-				flScale = 1.5 * g_esDropCache[iTank].g_flDropWeaponScale;
+				flScale = (g_esDropCache[iTank].g_flDropWeaponScale * 1.5);
 			}
 			case false:
 			{
@@ -1093,9 +1093,9 @@ public Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iAlpha = GetEntData(iWeapon, GetEntSendPropOffs(iWeapon, "m_clrRender") + 3, 1);
+	int iAlpha = GetEntData(iWeapon, (GetEntSendPropOffs(iWeapon, "m_clrRender") + 3), 1);
 	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
-	SetEntData(iWeapon, GetEntSendPropOffs(iWeapon, "m_clrRender") + 3, iAlpha, 1, true);
+	SetEntData(iWeapon, (GetEntSendPropOffs(iWeapon, "m_clrRender") + 3), iAlpha, 1, true);
 
 	return Plugin_Continue;
 }

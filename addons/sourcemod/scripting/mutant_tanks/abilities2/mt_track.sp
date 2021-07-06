@@ -232,12 +232,12 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esTrackCache[param1].g_iTrackAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esTrackCache[param1].g_iHumanAmmo - g_esTrackPlayer[param1].g_iAmmoCount, g_esTrackCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esTrackCache[param1].g_iTrackAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esTrackCache[param1].g_iHumanAmmo - g_esTrackPlayer[param1].g_iAmmoCount), g_esTrackCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esTrackCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "TrackDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esTrackCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esTrackCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -592,7 +592,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				}
 				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3", g_esTrackPlayer[tank].g_iCooldown - iTime);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3", (g_esTrackPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -892,43 +892,43 @@ void vTrackThink(int rock)
 						flDistance9 = flBase;
 					}
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flFront2) / flBase;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flFront2)) / flBase);
 					ScaleVector(flFront, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flUp2) / flBase;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flUp2)) / flBase);
 					ScaleVector(flUp, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDown2) / flBase;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDown2)) / flBase);
 					ScaleVector(flDown, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flLeft2) / flBase;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flLeft2)) / flBase);
 					ScaleVector(flLeft, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flRight2) / flBase;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flRight2)) / flBase);
 					ScaleVector(flRight, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance2) / flDistance2;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance2)) / flDistance2);
 					ScaleVector(flVector1, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance3) / flDistance3;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance3)) / flDistance3);
 					ScaleVector(flVector2, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance4) / flDistance4;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance4)) / flDistance4);
 					ScaleVector(flVector3, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance5) / flDistance5;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance5)) / flDistance5);
 					ScaleVector(flVector4, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance6) / flDistance6;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance6)) / flDistance6);
 					ScaleVector(flVector5, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance7) / flDistance7;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance7)) / flDistance7);
 					ScaleVector(flVector6, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance8) / flDistance8;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance8)) / flDistance8);
 					ScaleVector(flVector7, flVector9);
 
-					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance9) / flDistance9;
+					flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance9)) / flDistance9);
 					ScaleVector(flVector8, flVector9);
 
 					if (flDistance >= 500.0)
@@ -936,7 +936,7 @@ void vTrackThink(int rock)
 						flDistance = 500.0;
 					}
 
-					flVector9 = 1.0 * flFactor2 * (1000.0 - flDistance) / 500.0;
+					flVector9 = ((1.0 * flFactor2 * (1000.0 - flDistance)) / 500.0);
 					ScaleVector(flVector, flVector9);
 
 					AddVectors(flFront, flUp, flFront);
@@ -1046,9 +1046,9 @@ public void OnTrackPreThinkPost(int tank)
 	static bool bHook;
 	bHook = false;
 	static int iColor[3];
-	iColor[0] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank) * 127.5 + 127.5);
-	iColor[1] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5 + 127.5);
-	iColor[2] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5 + 127.5);
+	iColor[0] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank) * 127.5) + 127.5);
+	iColor[1] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5) + 127.5);
+	iColor[2] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5) + 127.5);
 
 	static int iTempColor[4];
 	MT_GetTankColors(tank, 2, iTempColor[0], iTempColor[1], iTempColor[2], iTempColor[3]);
@@ -1100,7 +1100,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 		g_esTrackPlayer[iTank].g_iCooldown = (g_esTrackPlayer[iTank].g_iAmmoCount < g_esTrackCache[iTank].g_iHumanAmmo && g_esTrackCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esTrackCache[iTank].g_iHumanCooldown) : -1;
 		if (g_esTrackPlayer[iTank].g_iCooldown != -1 && g_esTrackPlayer[iTank].g_iCooldown > iTime)
 		{
-			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", g_esTrackPlayer[iTank].g_iCooldown - iTime);
+			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", (g_esTrackPlayer[iTank].g_iCooldown - iTime));
 		}
 	}
 

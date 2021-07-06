@@ -288,12 +288,12 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCloneCache[param1].g_iCloneAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCloneCache[param1].g_iHumanAmmo - g_esClonePlayer[param1].g_iAmmoCount, g_esCloneCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCloneCache[param1].g_iCloneAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esCloneCache[param1].g_iHumanAmmo - g_esClonePlayer[param1].g_iAmmoCount), g_esCloneCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCloneCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "CloneDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCloneCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCloneCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -682,7 +682,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 											g_esClonePlayer[iOwner].g_iCooldown = (g_esClonePlayer[iOwner].g_iCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? (iTime + g_esCloneCache[iOwner].g_iHumanCooldown) : -1;
 											if (g_esClonePlayer[iOwner].g_iCooldown != -1 && g_esClonePlayer[iOwner].g_iCooldown > iTime)
 											{
-												MT_PrintToChat(iOwner, "%s %t", MT_TAG3, "CloneHuman6", g_esClonePlayer[iOwner].g_iCooldown - iTime);
+												MT_PrintToChat(iOwner, "%s %t", MT_TAG3, "CloneHuman6", (g_esClonePlayer[iOwner].g_iCooldown - iTime));
 											}
 										}
 									}
@@ -765,7 +765,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				}
 				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman4", g_esClonePlayer[tank].g_iCooldown - iTime);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman4", (g_esClonePlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}

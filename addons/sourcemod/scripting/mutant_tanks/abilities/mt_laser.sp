@@ -254,14 +254,14 @@ public int iLaserMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLaserCache[param1].g_iLaserAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esLaserCache[param1].g_iHumanAmmo - g_esLaserPlayer[param1].g_iAmmoCount, g_esLaserCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLaserCache[param1].g_iLaserAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLaserCache[param1].g_iHumanAmmo - g_esLaserPlayer[param1].g_iAmmoCount), g_esLaserCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLaserCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLaserCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLaserCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LaserDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLaserCache[param1].g_iLaserDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLaserCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLaserCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -644,7 +644,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman4", g_esLaserPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman4", (g_esLaserPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -666,7 +666,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman4", g_esLaserPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman4", (g_esLaserPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -834,7 +834,7 @@ void vLaserReset3(int tank)
 	g_esLaserPlayer[tank].g_iCooldown = (g_esLaserPlayer[tank].g_iAmmoCount < g_esLaserCache[tank].g_iHumanAmmo && g_esLaserCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLaserCache[tank].g_iHumanCooldown) : -1;
 	if (g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman5", g_esLaserPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman5", (g_esLaserPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -857,7 +857,7 @@ int iGetNearestSurvivor(int tank, float pos[3])
 		}
 	}
 
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
+	return iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))];
 }
 
 public Action tTimerLaserCombo(Handle timer, DataPack pack)

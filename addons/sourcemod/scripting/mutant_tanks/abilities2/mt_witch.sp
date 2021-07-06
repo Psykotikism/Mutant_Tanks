@@ -246,12 +246,12 @@ public int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esWitchCache[param1].g_iWitchAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esWitchCache[param1].g_iHumanAmmo - g_esWitchPlayer[param1].g_iAmmoCount, g_esWitchCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWitchCache[param1].g_iWitchAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esWitchCache[param1].g_iHumanAmmo - g_esWitchPlayer[param1].g_iAmmoCount), g_esWitchCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esWitchCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "WitchDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esWitchCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWitchCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -654,7 +654,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman3", g_esWitchPlayer[tank].g_iCooldown - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman3", (g_esWitchPlayer[tank].g_iCooldown - iTime));
 					case false: vWitchAbility(tank);
 				}
 			}
@@ -756,7 +756,7 @@ void vWitch(int tank, int pos = -1)
 			g_esWitchPlayer[tank].g_iCooldown = (g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esWitchCache[tank].g_iHumanCooldown) : -1;
 			if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 			{
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman4", g_esWitchPlayer[tank].g_iCooldown - iTime);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman4", (g_esWitchPlayer[tank].g_iCooldown - iTime));
 			}
 		}
 

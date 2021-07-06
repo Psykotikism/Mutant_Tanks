@@ -251,12 +251,12 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esMinionCache[param1].g_iMinionAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esMinionCache[param1].g_iHumanAmmo - g_esMinionPlayer[param1].g_iAmmoCount, g_esMinionCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMinionCache[param1].g_iMinionAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esMinionCache[param1].g_iHumanAmmo - g_esMinionPlayer[param1].g_iAmmoCount), g_esMinionCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esMinionCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "MinionDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esMinionCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMinionCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -660,7 +660,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vMinionAbility(tank);
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman3", g_esMinionPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman3", (g_esMinionPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -735,7 +735,7 @@ void vMinion(int tank)
 						iTypeCount++;
 					}
 
-					switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+					switch (iTypes[GetRandomInt(0, (iTypeCount - 1))])
 					{
 						case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 						case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
@@ -793,7 +793,7 @@ void vMinion(int tank)
 							g_esMinionPlayer[tank].g_iCooldown = (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esMinionCache[tank].g_iHumanCooldown) : -1;
 							if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman5", g_esMinionPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman5", (g_esMinionPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 

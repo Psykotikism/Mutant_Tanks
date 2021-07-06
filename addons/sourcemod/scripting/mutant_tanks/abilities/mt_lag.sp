@@ -255,13 +255,13 @@ public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLagCache[param1].g_iLagAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esLagCache[param1].g_iHumanAmmo - g_esLagPlayer[param1].g_iAmmoCount, g_esLagCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLagCache[param1].g_iLagAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLagCache[param1].g_iHumanAmmo - g_esLagPlayer[param1].g_iAmmoCount), g_esLagCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLagCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LagDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLagCache[param1].g_iLagDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLagCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLagCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -705,7 +705,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vLagAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman3", g_esLagPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman3", (g_esLagPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -800,7 +800,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 					g_esLagPlayer[tank].g_iCooldown = (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLagCache[tank].g_iHumanCooldown) : -1;
 					if (g_esLagPlayer[tank].g_iCooldown != -1 && g_esLagPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman5", g_esLagPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman5", (g_esLagPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

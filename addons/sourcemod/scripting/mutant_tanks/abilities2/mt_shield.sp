@@ -330,14 +330,14 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iShieldAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esShieldCache[param1].g_iHumanAmmo - g_esShieldPlayer[param1].g_iAmmoCount, g_esShieldCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iShieldAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esShieldCache[param1].g_iHumanAmmo - g_esShieldPlayer[param1].g_iAmmoCount), g_esShieldCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esShieldCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ShieldDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esShieldCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -443,17 +443,17 @@ public void OnGameFrame()
 						MT_GetTankName(iTarget, sTankName);
 
 						sHealthBar[0] = '\0';
-						flPercentage = (g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * 100;
+						flPercentage = ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * 100.0);
 
 						ReplaceString(g_esShieldCache[iTarget].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), " ", "");
 						ExplodeString(g_esShieldCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-						for (int iCount = 0; iCount < (g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * sizeof(sHealthBar) - 1 && iCount < sizeof(sHealthBar) - 1; iCount++)
+						for (int iCount = 0; iCount < ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * (sizeof(sHealthBar) - 1)) && iCount < (sizeof(sHealthBar) - 1); iCount++)
 						{
 							StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
 						}
 
-						for (int iCount = 0; iCount < sizeof(sHealthBar) - 1; iCount++)
+						for (int iCount = 0; iCount < (sizeof(sHealthBar) - 1); iCount++)
 						{
 							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
 						}
@@ -1030,7 +1030,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", g_esShieldPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", (g_esShieldPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -1056,7 +1056,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", g_esShieldPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", (g_esShieldPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -1187,7 +1187,7 @@ void vShieldReset3(int tank)
 	g_esShieldPlayer[tank].g_iCooldown = (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esShieldCache[tank].g_iHumanCooldown) : -1;
 	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", g_esShieldPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", (g_esShieldPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -1292,7 +1292,7 @@ void vShieldAbility(int tank, bool shield)
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 						{
 							g_esShieldPlayer[tank].g_iAmmoCount++;
-							g_esShieldPlayer[tank].g_iDuration = iTime + g_esShieldPlayer[tank].g_iHumanDuration;
+							g_esShieldPlayer[tank].g_iDuration = (iTime + g_esShieldPlayer[tank].g_iHumanDuration);
 
 							vExternalView(tank, 1.5);
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
@@ -1332,7 +1332,7 @@ void vShieldAbility(int tank, bool shield)
 					vExternalView(tank, 1.5);
 					vShieldReset3(tank);
 				}
-				case false: g_esShieldPlayer[tank].g_iCooldown2 = iTime + g_esShieldCache[tank].g_iShieldDelay;
+				case false: g_esShieldPlayer[tank].g_iCooldown2 = (iTime + g_esShieldCache[tank].g_iShieldDelay);
 			}
 
 			if (g_esShieldCache[tank].g_iShieldMessage == 1)
@@ -1371,9 +1371,9 @@ public void OnShieldPreThinkPost(int tank)
 	static bool bHook;
 	bHook = false;
 	static int iColor[4];
-	iColor[0] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank) * 127.5 + 127.5);
-	iColor[1] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5 + 127.5);
-	iColor[2] = RoundToNearest(Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5 + 127.5);
+	iColor[0] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank) * 127.5) + 127.5);
+	iColor[1] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5) + 127.5);
+	iColor[2] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5) + 127.5);
 	iColor[3] = 50;
 
 	if (StrEqual(g_esShieldCache[tank].g_sShieldColor, "rainbow", false))
@@ -1461,7 +1461,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		}
 
 		static int iChosen;
-		iChosen = iTypes[GetRandomInt(0, iTypeCount - 1)];
+		iChosen = iTypes[GetRandomInt(0, (iTypeCount - 1))];
 		if (iChosen == 2 || iChosen == 4)
 		{
 			static int iThrowable;
@@ -1480,7 +1480,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 				RemoveEntity(iRock);
 
 				NormalizeVector(flVelocity, flVelocity);
-				ScaleVector(flVelocity, g_cvMTShieldTankThrowForce.FloatValue * 1.4);
+				ScaleVector(flVelocity, (g_cvMTShieldTankThrowForce.FloatValue * 1.4));
 
 				TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
 				DispatchSpawn(iThrowable);

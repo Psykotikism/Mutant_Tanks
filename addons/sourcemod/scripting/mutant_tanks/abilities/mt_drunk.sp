@@ -260,13 +260,13 @@ public int iDrunkMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDrunkCache[param1].g_iDrunkAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esDrunkCache[param1].g_iHumanAmmo - g_esDrunkPlayer[param1].g_iAmmoCount, g_esDrunkCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDrunkCache[param1].g_iDrunkAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esDrunkCache[param1].g_iHumanAmmo - g_esDrunkPlayer[param1].g_iAmmoCount), g_esDrunkCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esDrunkCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "DrunkDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esDrunkCache[param1].g_iDrunkDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esDrunkCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esDrunkCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -735,7 +735,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esDrunkPlayer[tank].g_iCooldown == -1 || g_esDrunkPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vDrunkAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman3", g_esDrunkPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman3", (g_esDrunkPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -830,7 +830,7 @@ void vDrunkHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esDrunkPlayer[tank].g_iCooldown = (g_esDrunkPlayer[tank].g_iAmmoCount < g_esDrunkCache[tank].g_iHumanAmmo && g_esDrunkCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esDrunkCache[tank].g_iHumanCooldown) : -1;
 					if (g_esDrunkPlayer[tank].g_iCooldown != -1 && g_esDrunkPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman5", g_esDrunkPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman5", (g_esDrunkPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

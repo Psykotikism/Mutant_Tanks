@@ -265,14 +265,14 @@ public int iFragileMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFragileCache[param1].g_iFragileAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esFragileCache[param1].g_iHumanAmmo - g_esFragilePlayer[param1].g_iAmmoCount, g_esFragileCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFragileCache[param1].g_iFragileAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esFragileCache[param1].g_iHumanAmmo - g_esFragilePlayer[param1].g_iAmmoCount), g_esFragileCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFragileCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFragileCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esFragileCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FragileDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esFragileCache[param1].g_iFragileDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFragileCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFragileCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -433,7 +433,7 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 			{
 				switch (g_esFragileCache[victim].g_iFragileMode)
 				{
-					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esFragileCache[victim].g_flFragileSpeedBoost);
+					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (MT_GetRunSpeed(victim) + g_esFragileCache[victim].g_flFragileSpeedBoost));
 					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esFragileCache[victim].g_flFragileSpeedBoost);
 				}
 
@@ -811,7 +811,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman4", g_esFragilePlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman4", (g_esFragilePlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -831,7 +831,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman4", g_esFragilePlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman4", (g_esFragilePlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -884,7 +884,7 @@ void vFragile(int tank, int pos = -1)
 	static int iDuration;
 	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFragileCache[tank].g_iFragileDuration;
 	g_esFragilePlayer[tank].g_bActivated = true;
-	g_esFragilePlayer[tank].g_iDuration = GetTime() + iDuration;
+	g_esFragilePlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
 	{
@@ -967,7 +967,7 @@ void vFragileReset3(int tank)
 	g_esFragilePlayer[tank].g_iCooldown = (g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esFragileCache[tank].g_iHumanCooldown) : -1;
 	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman5", g_esFragilePlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman5", (g_esFragilePlayer[tank].g_iCooldown - iTime));
 	}
 }
 

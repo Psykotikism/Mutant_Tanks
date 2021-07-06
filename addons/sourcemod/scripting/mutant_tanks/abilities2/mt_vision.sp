@@ -257,13 +257,13 @@ public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esVisionCache[param1].g_iVisionAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esVisionCache[param1].g_iHumanAmmo - g_esVisionPlayer[param1].g_iAmmoCount, g_esVisionCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVisionCache[param1].g_iVisionAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esVisionCache[param1].g_iHumanAmmo - g_esVisionPlayer[param1].g_iAmmoCount), g_esVisionCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esVisionCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "VisionDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esVisionCache[param1].g_iVisionDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esVisionCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVisionCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -728,7 +728,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vVisionAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", g_esVisionPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", (g_esVisionPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -874,7 +874,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 					g_esVisionPlayer[tank].g_iCooldown = (g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esVisionCache[tank].g_iHumanCooldown) : -1;
 					if (g_esVisionPlayer[tank].g_iCooldown != -1 && g_esVisionPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman5", g_esVisionPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman5", (g_esVisionPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

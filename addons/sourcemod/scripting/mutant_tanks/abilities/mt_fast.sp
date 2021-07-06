@@ -227,14 +227,14 @@ public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFastCache[param1].g_iFastAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esFastCache[param1].g_iHumanAmmo - g_esFastPlayer[param1].g_iAmmoCount, g_esFastCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFastCache[param1].g_iFastAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esFastCache[param1].g_iHumanAmmo - g_esFastPlayer[param1].g_iAmmoCount), g_esFastCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFastCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFastCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esFastCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FastDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esFastCache[param1].g_iFastDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFastCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFastCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -649,7 +649,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman4", g_esFastPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman4", (g_esFastPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -671,7 +671,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman4", g_esFastPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman4", (g_esFastPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -724,7 +724,7 @@ void vFast(int tank, int pos = -1)
 	static int iDuration;
 	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFastCache[tank].g_iFastDuration;
 	g_esFastPlayer[tank].g_bActivated = true;
-	g_esFastPlayer[tank].g_iDuration = GetTime() + iDuration;
+	g_esFastPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 	static float flSpeed;
 	flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esFastCache[tank].g_flFastSpeed;
@@ -811,7 +811,7 @@ void vFastReset3(int tank)
 	g_esFastPlayer[tank].g_iCooldown = (g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esFastCache[tank].g_iHumanCooldown) : -1;
 	if (g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman5", g_esFastPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman5", (g_esFastPlayer[tank].g_iCooldown - iTime));
 	}
 }
 

@@ -246,14 +246,14 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCarCache[param1].g_iCarAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCarCache[param1].g_iHumanAmmo - g_esCarPlayer[param1].g_iAmmoCount, g_esCarCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCarCache[param1].g_iCarAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esCarCache[param1].g_iHumanAmmo - g_esCarPlayer[param1].g_iAmmoCount), g_esCarCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCarCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCarCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCarCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "CarDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esCarCache[param1].g_iCarDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCarCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esCarCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -677,7 +677,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4", g_esCarPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4", (g_esCarPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -699,7 +699,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4", g_esCarPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4", (g_esCarPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -847,7 +847,7 @@ void vCarReset3(int tank)
 	g_esCarPlayer[tank].g_iCooldown = (g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCarCache[tank].g_iHumanCooldown) : -1;
 	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman5", g_esCarPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman5", (g_esCarPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -903,7 +903,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	static float flVector[3];
 	MakeVectorFromPoints(flPos, flHitpos, flVector);
 	NormalizeVector(flVector, flVector);
-	ScaleVector(flVector, flDistance - 40.0);
+	ScaleVector(flVector, (flDistance - 40.0));
 	AddVectors(flPos, flVector, flHitpos);
 	if (flDistance > 100.0)
 	{
@@ -925,7 +925,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				iOptionCount++;
 			}
 
-			switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+			switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
 			{
 				case 1: SetEntityModel(iCar, MODEL_CAR);
 				case 2: SetEntityModel(iCar, MODEL_CAR2);

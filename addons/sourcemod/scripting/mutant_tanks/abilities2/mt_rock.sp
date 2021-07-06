@@ -237,14 +237,14 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRockCache[param1].g_iRockAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esRockCache[param1].g_iHumanAmmo - g_esRockPlayer[param1].g_iAmmoCount, g_esRockCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iRockAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esRockCache[param1].g_iHumanAmmo - g_esRockPlayer[param1].g_iAmmoCount), g_esRockCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRockCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esRockCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RockDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esRockCache[param1].g_iRockDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRockCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -697,7 +697,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", g_esRockPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", (g_esRockPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -719,7 +719,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", g_esRockPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", (g_esRockPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -822,7 +822,7 @@ void vRockReset3(int tank)
 	g_esRockPlayer[tank].g_iCooldown = (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esRockCache[tank].g_iHumanCooldown) : -1;
 	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman5", g_esRockPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman5", (g_esRockPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -989,7 +989,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	static float flVector[3];
 	MakeVectorFromPoints(flPos, flHitPos, flVector);
 	NormalizeVector(flVector, flVector);
-	ScaleVector(flVector, flDistance - 40.0);
+	ScaleVector(flVector, (flDistance - 40.0));
 	AddVectors(flPos, flVector, flHitPos);
 	if (flDistance > 300.0)
 	{

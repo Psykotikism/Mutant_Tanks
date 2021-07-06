@@ -258,13 +258,13 @@ public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esEnforceCache[param1].g_iEnforceAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esEnforceCache[param1].g_iHumanAmmo - g_esEnforcePlayer[param1].g_iAmmoCount, g_esEnforceCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esEnforceCache[param1].g_iEnforceAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esEnforceCache[param1].g_iHumanAmmo - g_esEnforcePlayer[param1].g_iAmmoCount), g_esEnforceCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esEnforceCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "EnforceDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esEnforceCache[param1].g_flEnforceDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esEnforceCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esEnforceCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -743,7 +743,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vEnforceAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3", g_esEnforcePlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3", (g_esEnforcePlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -838,7 +838,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 					g_esEnforcePlayer[tank].g_iCooldown = (g_esEnforcePlayer[tank].g_iAmmoCount < g_esEnforceCache[tank].g_iHumanAmmo && g_esEnforceCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esEnforceCache[tank].g_iHumanCooldown) : -1;
 					if (g_esEnforcePlayer[tank].g_iCooldown != -1 && g_esEnforcePlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman5", g_esEnforcePlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman5", (g_esEnforcePlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
@@ -862,7 +862,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 						iSlotCount++;
 					}
 
-					switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
+					switch (iSlots[GetRandomInt(0, (iSlotCount - 1))])
 					{
 						case 1: g_esEnforcePlayer[survivor].g_iSlot = 0;
 						case 2: g_esEnforcePlayer[survivor].g_iSlot = 1;
@@ -887,8 +887,8 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, g_esEnforcePlayer[survivor].g_iSlot + 1);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, g_esEnforcePlayer[survivor].g_iSlot + 1);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, (g_esEnforcePlayer[survivor].g_iSlot + 1));
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, (g_esEnforcePlayer[survivor].g_iSlot + 1));
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime))

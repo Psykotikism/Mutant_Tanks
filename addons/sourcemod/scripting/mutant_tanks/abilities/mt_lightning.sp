@@ -253,14 +253,14 @@ public int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int p
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLightningCache[param1].g_iLightningAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esLightningCache[param1].g_iHumanAmmo - g_esLightningPlayer[param1].g_iAmmoCount, g_esLightningCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLightningCache[param1].g_iLightningAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLightningCache[param1].g_iHumanAmmo - g_esLightningPlayer[param1].g_iAmmoCount), g_esLightningCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLightningCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLightningCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLightningCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LightningDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLightningCache[param1].g_iLightningDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esLightningCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLightningCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -638,7 +638,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", g_esLightningPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", (g_esLightningPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -660,7 +660,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", g_esLightningPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", (g_esLightningPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -808,7 +808,7 @@ void vLightningReset3(int tank)
 	g_esLightningPlayer[tank].g_iCooldown = (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLightningCache[tank].g_iHumanCooldown) : -1;
 	if (g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman5", g_esLightningPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman5", (g_esLightningPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -864,8 +864,8 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 	GetClientAbsOrigin(iTank, flOrigin);
 	flRadius = GetRandomFloat(100.0, 360.0);
 	flRadius2 = GetRandomFloat(0.0, 360.0);
-	flOrigin[0] += flRadius * Cosine(DegToRad(flRadius2));
-	flOrigin[1] += flRadius * Sine(DegToRad(flRadius2));
+	flOrigin[0] += (flRadius * Cosine(DegToRad(flRadius2)));
+	flOrigin[1] += (flRadius * Sine(DegToRad(flRadius2)));
 
 	static int iTarget;
 	iTarget = CreateEntityByName("info_particle_target");

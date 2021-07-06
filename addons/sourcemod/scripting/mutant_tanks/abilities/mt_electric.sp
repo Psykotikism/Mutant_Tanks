@@ -277,13 +277,13 @@ public int iElectricMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esElectricCache[param1].g_iElectricAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esElectricCache[param1].g_iHumanAmmo - g_esElectricPlayer[param1].g_iAmmoCount, g_esElectricCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esElectricCache[param1].g_iElectricAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esElectricCache[param1].g_iHumanAmmo - g_esElectricPlayer[param1].g_iAmmoCount), g_esElectricCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esElectricCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ElectricDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esElectricCache[param1].g_iElectricDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esElectricCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esElectricCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -738,7 +738,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vElectricAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman3", g_esElectricPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman3", (g_esElectricPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -842,7 +842,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 					g_esElectricPlayer[tank].g_iCooldown = (g_esElectricPlayer[tank].g_iAmmoCount < g_esElectricCache[tank].g_iHumanAmmo && g_esElectricCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esElectricCache[tank].g_iHumanCooldown) : -1;
 					if (g_esElectricPlayer[tank].g_iCooldown != -1 && g_esElectricPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman5", g_esElectricPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman5", (g_esElectricPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
@@ -1039,7 +1039,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
-	EmitSoundToAll(g_sElectricSounds[GetRandomInt(0, sizeof(g_sElectricSounds) - 1)], iSurvivor);
+	EmitSoundToAll(g_sElectricSounds[GetRandomInt(0, (sizeof(g_sElectricSounds) - 1))], iSurvivor);
 
 	return Plugin_Continue;
 }
