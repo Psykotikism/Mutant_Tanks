@@ -6,11 +6,16 @@
 
 #### General
 - Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
+- Fixed the `CFirstAidKit::StartHealing` detour causing errors on L4D1 Linux. (Thanks to `Neki93` for reporting and `epzminion` for the help!)
+- Fixed null-pointer errors from detours. (Thanks to `Shadowart` for reporting!)
 
 #### Config Files
 - Fixed the `Combo` section not being read. (Thanks to `Uncle Jessie` for reporting!)
 
 ### Changes
+
+#### General
+- Lowered the buffer size for chat messages to avoid the `send reliable stream overflow` error.
 
 #### Core Plugin
 - The attack boost reward now allows recipients to perform actions while on ladders. (Thanks to `Lux` for the gamedata info!)
@@ -27,6 +32,7 @@
 #### Game Data
 - Added new signatures for functions that check maps. (Thanks to `Silvers` for the original signatures!)
 - Updated all of the signatures.
+- Renamed all detours to avoid conflicts with other plugins.
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
