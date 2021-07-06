@@ -327,12 +327,12 @@ public int iFlingMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFlingCache[param1].g_iFlingAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esFlingCache[param1].g_iHumanAmmo - g_esFlingPlayer[param1].g_iAmmoCount, g_esFlingCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlingCache[param1].g_iFlingAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esFlingCache[param1].g_iHumanAmmo - g_esFlingPlayer[param1].g_iAmmoCount), g_esFlingCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esFlingCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FlingDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFlingCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlingCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -791,7 +791,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esFlingPlayer[tank].g_iCooldown != -1 && g_esFlingPlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman3", g_esFlingPlayer[tank].g_iCooldown - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman3", (g_esFlingPlayer[tank].g_iCooldown - iTime));
 					case false: vFlingAbility(tank, GetRandomFloat(0.1, 100.0));
 				}
 			}
@@ -833,11 +833,11 @@ void vFling(int survivor, int tank)
 	flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
 	flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
 
-	flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
-	flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+	flRatio[0] = (flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0]))));
+	flRatio[1] = (flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0]))));
 
-	flVelocity[0] = (flRatio[0] * -1) * g_esFlingCache[tank].g_flFlingForce;
-	flVelocity[1] = (flRatio[1] * -1) * g_esFlingCache[tank].g_flFlingForce;
+	flVelocity[0] = ((flRatio[0] * -1) * g_esFlingCache[tank].g_flFlingForce);
+	flVelocity[1] = ((flRatio[1] * -1) * g_esFlingCache[tank].g_flFlingForce);
 	flVelocity[2] = g_esFlingCache[tank].g_flFlingForce;
 #if defined _l4dh_included
 	switch (g_bLeft4DHooksInstalled || g_hSDKFling == null)
@@ -923,7 +923,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esFlingPlayer[tank].g_iCooldown = (g_esFlingPlayer[tank].g_iAmmoCount < g_esFlingCache[tank].g_iHumanAmmo && g_esFlingCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esFlingCache[tank].g_iHumanCooldown) : -1;
 					if (g_esFlingPlayer[tank].g_iCooldown != -1 && g_esFlingPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman5", g_esFlingPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman5", (g_esFlingPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

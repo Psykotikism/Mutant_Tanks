@@ -221,11 +221,11 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRespawnCache[param1].g_iRespawnAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esRespawnCache[param1].g_iHumanAmmo - g_esRespawnPlayer[param1].g_iAmmoCount, g_esRespawnCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRespawnCache[param1].g_iRespawnAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esRespawnCache[param1].g_iHumanAmmo - g_esRespawnPlayer[param1].g_iAmmoCount), g_esRespawnCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RespawnDetails");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRespawnCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRespawnCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))

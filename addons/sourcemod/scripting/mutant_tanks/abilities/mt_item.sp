@@ -231,10 +231,10 @@ public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esItemCache[param1].g_iItemAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esItemCache[param1].g_iItemAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ItemDetails");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esItemCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esItemCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))

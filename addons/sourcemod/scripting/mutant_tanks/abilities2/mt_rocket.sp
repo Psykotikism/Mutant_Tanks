@@ -270,12 +270,12 @@ public int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRocketCache[param1].g_iRocketAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esRocketCache[param1].g_iHumanAmmo - g_esRocketPlayer[param1].g_iAmmoCount, g_esRocketCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRocketCache[param1].g_iRocketAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esRocketCache[param1].g_iHumanAmmo - g_esRocketPlayer[param1].g_iAmmoCount), g_esRocketCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esRocketCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RocketDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRocketCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRocketCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -768,7 +768,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esRocketPlayer[tank].g_iCooldown != -1 && g_esRocketPlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman3", g_esRocketPlayer[tank].g_iCooldown - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman3", (g_esRocketPlayer[tank].g_iCooldown - iTime));
 					case false: vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
 				}
 			}
@@ -912,7 +912,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 						g_esRocketPlayer[tank].g_iCooldown = (g_esRocketPlayer[tank].g_iAmmoCount < g_esRocketCache[tank].g_iHumanAmmo && g_esRocketCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esRocketCache[tank].g_iHumanCooldown) : -1;
 						if (g_esRocketPlayer[tank].g_iCooldown != -1 && g_esRocketPlayer[tank].g_iCooldown > iTime)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman5", g_esRocketPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman5", (g_esRocketPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 
@@ -955,7 +955,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					dpRocketLaunch.WriteCell(enabled);
 
 					DataPack dpRocketDetonate;
-					CreateDataTimer(flDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer((flDelay + 1.5), tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 					dpRocketDetonate.WriteCell(GetClientUserId(survivor));
 					dpRocketDetonate.WriteCell(GetClientUserId(tank));
 					dpRocketDetonate.WriteCell(g_esRocketPlayer[tank].g_iTankType);

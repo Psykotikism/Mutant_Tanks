@@ -263,12 +263,12 @@ public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esSmiteCache[param1].g_iSmiteAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esSmiteCache[param1].g_iHumanAmmo - g_esSmitePlayer[param1].g_iAmmoCount, g_esSmiteCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSmiteCache[param1].g_iSmiteAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esSmiteCache[param1].g_iHumanAmmo - g_esSmitePlayer[param1].g_iAmmoCount), g_esSmiteCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esSmiteCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SmiteDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esSmiteCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSmiteCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -741,7 +741,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esSmitePlayer[tank].g_iCooldown != -1 && g_esSmitePlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman3", g_esSmitePlayer[tank].g_iCooldown - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman3", (g_esSmitePlayer[tank].g_iCooldown - iTime));
 					case false: vSmiteAbility(tank, GetRandomFloat(0.1, 100.0));
 				}
 			}
@@ -790,9 +790,9 @@ void vSmite(int survivor)
 
 	GetClientAbsOrigin(survivor, flPosition);
 	flPosition[2] -= 26.0;
-	flStartPosition[0] = flPosition[0] + GetRandomFloat(-500.0, 500.0);
-	flStartPosition[1] = flPosition[1] + GetRandomFloat(-500.0, 500.0);
-	flStartPosition[2] = flPosition[2] + 800.0;
+	flStartPosition[0] = (flPosition[0] + GetRandomFloat(-500.0, 500.0));
+	flStartPosition[1] = (flPosition[1] + GetRandomFloat(-500.0, 500.0));
+	flStartPosition[2] = (flPosition[2] + 800.0);
 
 	TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 	TE_SendToAll();
@@ -876,7 +876,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esSmitePlayer[tank].g_iCooldown = (g_esSmitePlayer[tank].g_iAmmoCount < g_esSmiteCache[tank].g_iHumanAmmo && g_esSmiteCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esSmiteCache[tank].g_iHumanCooldown) : -1;
 					if (g_esSmitePlayer[tank].g_iCooldown != -1 && g_esSmitePlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman5", g_esSmitePlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman5", (g_esSmitePlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

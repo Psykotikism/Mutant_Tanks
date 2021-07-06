@@ -234,12 +234,12 @@ public int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esUndeadCache[param1].g_iUndeadAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esUndeadCache[param1].g_iHumanAmmo - g_esUndeadPlayer[param1].g_iAmmoCount, g_esUndeadCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUndeadCache[param1].g_iUndeadAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esUndeadCache[param1].g_iHumanAmmo - g_esUndeadPlayer[param1].g_iAmmoCount), g_esUndeadCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esUndeadCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "UndeadDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esUndeadCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUndeadCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -322,14 +322,14 @@ public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (GetEntProp(victim, Prop_Data, "m_iHealth") - RoundToNearest(damage) <= 0)
+			if ((GetEntProp(victim, Prop_Data, "m_iHealth") - RoundToNearest(damage)) <= 0)
 			{
 				g_esUndeadPlayer[victim].g_bActivated = false;
 
 				static int iMaxHealth, iNewHealth;
 				iMaxHealth = MT_TankMaxHealth(victim, 1);
 				iNewHealth = MT_TankMaxHealth(victim, 2);
-				MT_TankMaxHealth(victim, 3, iMaxHealth + iNewHealth);
+				MT_TankMaxHealth(victim, 3, (iMaxHealth + iNewHealth));
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 
 				static int iTime;
@@ -339,7 +339,7 @@ public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, floa
 					g_esUndeadPlayer[victim].g_iCooldown = (g_esUndeadPlayer[victim].g_iCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? (iTime + g_esUndeadCache[victim].g_iHumanCooldown) : -1;
 					if (g_esUndeadPlayer[victim].g_iCooldown != -1 && g_esUndeadPlayer[victim].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(victim, "%s %t", MT_TAG3, "UndeadHuman5", g_esUndeadPlayer[victim].g_iCooldown - iTime);
+						MT_PrintToChat(victim, "%s %t", MT_TAG3, "UndeadHuman5", (g_esUndeadPlayer[victim].g_iCooldown - iTime));
 					}
 				}
 
@@ -633,7 +633,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				}
 				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman4", g_esUndeadPlayer[tank].g_iCooldown - iTime);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman4", (g_esUndeadPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}

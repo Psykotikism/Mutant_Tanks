@@ -275,13 +275,13 @@ public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esBlindCache[param1].g_iBlindAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esBlindCache[param1].g_iHumanAmmo - g_esBlindPlayer[param1].g_iAmmoCount, g_esBlindCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esBlindCache[param1].g_iBlindAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esBlindCache[param1].g_iHumanAmmo - g_esBlindPlayer[param1].g_iAmmoCount), g_esBlindCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esBlindCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "BlindDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esBlindCache[param1].g_flBlindDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esBlindCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esBlindCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -757,7 +757,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esBlindPlayer[tank].g_iCooldown == -1 || g_esBlindPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vBlindAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindHuman3", g_esBlindPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindHuman3", (g_esBlindPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -777,18 +777,16 @@ void vBlind(int survivor, int intensity)
 {
 	static int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
 	iTargets[0] = survivor;
-	iFlags = intensity == 0 ? (0x0001|0x0010) : (0x0002|0x0008);
+	iFlags = (intensity == 0) ? (0x0001|0x0010) : (0x0002|0x0008);
 	iColor[3] = intensity;
 
-	static Handle hTarget;
-	hTarget = StartMessageEx(g_umBlindFade, iTargets, 1);
+	Handle hTarget = StartMessageEx(g_umBlindFade, iTargets, 1);
 
 	switch (GetUserMessageType() == UM_Protobuf)
 	{
 		case true:
 		{
-			static Protobuf pbSet;
-			pbSet = UserMessageToProtobuf(hTarget);
+			Protobuf pbSet = UserMessageToProtobuf(hTarget);
 			pbSet.SetInt("duration", 1536);
 			pbSet.SetInt("hold_time", 1536);
 			pbSet.SetInt("flags", iFlags);
@@ -796,8 +794,7 @@ void vBlind(int survivor, int intensity)
 		}
 		case false:
 		{
-			static BfWrite bfWrite;
-			bfWrite = UserMessageToBfWrite(hTarget);
+			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
 			bfWrite.WriteShort(1536);
 			bfWrite.WriteShort(1536);
 			bfWrite.WriteShort(iFlags);
@@ -885,7 +882,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esBlindPlayer[tank].g_iCooldown = (g_esBlindPlayer[tank].g_iAmmoCount < g_esBlindCache[tank].g_iHumanAmmo && g_esBlindCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esBlindCache[tank].g_iHumanCooldown) : -1;
 					if (g_esBlindPlayer[tank].g_iCooldown != -1 && g_esBlindPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindHuman5", g_esBlindPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindHuman5", (g_esBlindPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
@@ -903,7 +900,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 				static float flDuration;
 				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esBlindCache[tank].g_flBlindDuration;
 				DataPack dpStopBlind;
-				CreateDataTimer(flDuration + 1.0, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopBlind.WriteCell(iSurvivorId);
 				dpStopBlind.WriteCell(iTankId);
 				dpStopBlind.WriteCell(messages);

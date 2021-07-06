@@ -5,7 +5,7 @@
 		"Functions"
 		{
 			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
-			"CAmmoDef::MaxCarry"
+			"MTDetour_CAmmoDef::MaxCarry"
 			{
 				"signature"	"CAmmoDef::MaxCarry"
 				"callconv"	"thiscall"
@@ -24,7 +24,7 @@
 				}
 			}
 			/* CBaseCombatWeapon::GetMaxClip1() const */
-			"CBaseCombatWeapon::GetMaxClip1"
+			"MTDetour_CBaseCombatWeapon::GetMaxClip1"
 			{
 				"signature"	"CBaseCombatWeapon::GetMaxClip1"
 				"callconv"	"thiscall"
@@ -32,7 +32,7 @@
 				"this"		"entity"
 			}
 			/* CDeathFallCamera::Enable(CBasePlayer*) */
-			"CDeathFallCamera::Enable"
+			"MTDetour_CDeathFallCamera::Enable"
 			{
 				"signature"	"CDeathFallCamera::Enable"
 				"callconv"	"thiscall"
@@ -47,7 +47,7 @@
 				}
 			}
 			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
-			"CDirector::OnFirstSurvivorLeftSafeArea"
+			"MTDetour_CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"signature"	"CDirector::OnFirstSurvivorLeftSafeArea"
 				"callconv"	"thiscall"
@@ -62,12 +62,12 @@
 				}
 			}
 			/* CDirectorVersusMode::EndVersusModeRound(bool) */
-			"CDirectorVersusMode::EndVersusModeRound"
+			"MTDetour_CDirectorVersusMode::EndVersusModeRound"
 			{
-				"signature"		"CDirectorVersusMode::EndVersusModeRound"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"ignore"
+				"signature"	"CDirectorVersusMode::EndVersusModeRound"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
 				"arguments"
 				{
 					"countSurvivors"
@@ -77,7 +77,7 @@
 				}
 			}
 			/* CEnvRockLauncher::LaunchCurrentDir() */
-			"CEnvRockLauncher::LaunchCurrentDir"
+			"MTDetour_CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
 				"callconv"	"thiscall"
@@ -85,7 +85,7 @@
 				"this"		"entity"
 			}
 			/* CTankClaw::DoSwing() */
-			"CTankClaw::DoSwing"
+			"MTDetour_CTankClaw::DoSwing"
 			{
 				"signature"	"CTankClaw::DoSwing"
 				"callconv"	"thiscall"
@@ -93,7 +93,7 @@
 				"this"		"entity"
 			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
-			"CTankClaw::OnPlayerHit"
+			"MTDetour_CTankClaw::OnPlayerHit"
 			{
 				"signature"	"CTankClaw::OnPlayerHit"
 				"callconv"	"thiscall"
@@ -112,7 +112,7 @@
 				}
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
-			"CTerrorGameMovement::DoJump"
+			"MTDetour_CTerrorGameMovement::DoJump"
 			{
 				"signature"	"CTerrorGameMovement::DoJump"
 				"callconv"	"thiscall"
@@ -127,7 +127,7 @@
 				}
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
-			"CTerrorPlayer::Event_Killed"
+			"MTDetour_CTerrorPlayer::Event_Killed"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
 				"callconv"	"thiscall"
@@ -142,7 +142,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnEnterGhostState() */
-			"CTerrorPlayer::OnEnterGhostState"
+			"MTDetour_CTerrorPlayer::OnEnterGhostState"
 			{
 				"signature"	"CTerrorPlayer::OnEnterGhostState"
 				"callconv"	"thiscall"
@@ -150,7 +150,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::OnFalling() */
-			"CTerrorPlayer::OnFalling"
+			"MTDetour_CTerrorPlayer::OnFalling"
 			{
 				"signature"	"CTerrorPlayer::OnFalling"
 				"callconv"	"thiscall"
@@ -158,7 +158,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::OnLadderDismount() */
-			"CTerrorPlayer::OnLadderDismount"
+			"MTDetour_CTerrorPlayer::OnLadderDismount"
 			{
 				"signature"	"CTerrorPlayer::OnLadderDismount"
 				"callconv"	"thiscall"
@@ -166,7 +166,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::OnLadderMount() */
-			"CTerrorPlayer::OnLadderMount"
+			"MTDetour_CTerrorPlayer::OnLadderMount"
 			{
 				"signature"	"CTerrorPlayer::OnLadderMount"
 				"callconv"	"thiscall"
@@ -174,7 +174,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::PreThink() */
-			"CTerrorPlayer::PreThink"
+			"MTDetour_CTerrorPlayer::PreThink"
 			{
 				"signature"	"CTerrorPlayer::PreThink"
 				"callconv"	"thiscall"
@@ -182,7 +182,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::OnRevived() */
-			"CTerrorPlayer::OnRevived"
+			"MTDetour_CTerrorPlayer::OnRevived"
 			{
 				"signature"	"CTerrorPlayer::OnRevived"
 				"callconv"	"thiscall"
@@ -190,7 +190,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
-			"CTerrorPlayer::OnShovedByPounceLanding"
+			"MTDetour_CTerrorPlayer::OnShovedByPounceLanding"
 			{
 				"signature"	"CTerrorPlayer::OnShovedByPounceLanding"
 				"callconv"	"thiscall"
@@ -209,7 +209,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
-			"CTerrorPlayer::OnShovedBySurvivor"
+			"MTDetour_CTerrorPlayer::OnShovedBySurvivor"
 			{
 				"signature"	"CTerrorPlayer::OnShovedBySurvivor"
 				"callconv"	"thiscall"
@@ -228,7 +228,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
-			"CTerrorPlayer::OnStaggered"
+			"MTDetour_CTerrorPlayer::OnStaggered"
 			{
 				"signature"	"CTerrorPlayer::OnStaggered"
 				"callconv"	"thiscall"
@@ -247,7 +247,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
-			"CTerrorPlayer::OnVomitedUpon"
+			"MTDetour_CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"	"CTerrorPlayer::OnVomitedUpon"
 				"callconv"	"thiscall"
@@ -266,7 +266,7 @@
 				}
 			}
 			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
-			"CTerrorPlayer::StartReviving"
+			"MTDetour_CTerrorPlayer::StartReviving"
 			{
 				"signature"	"CTerrorPlayer::StartReviving"
 				"callconv"	"thiscall"
@@ -274,14 +274,14 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"revivee" // Changed from "target" to be compatible with Left 4 Fix
+					"target"
 					{
 						"type"		"cbaseentity"
 					}
 				}
 			}
 			/* CTerrorWeapon::CanDeploy() */
-			"CTerrorWeapon::CanDeployFor"
+			"MTDetour_CTerrorWeapon::CanDeployFor"
 			{
 				"signature"	"CTerrorWeapon::CanDeployFor"
 				"callconv"	"thiscall"
@@ -289,7 +289,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorWeapon::SecondaryAttack() */
-			"CTerrorWeapon::SecondaryAttack"
+			"MTDetour_CTerrorWeapon::SecondaryAttack"
 			{
 				"signature"	"CTerrorWeapon::SecondaryAttack"
 				"callconv"	"thiscall"
@@ -297,7 +297,7 @@
 				"this"		"entity"
 			}
 			/* Tank::EnterStasis() */
-			"Tank::EnterStasis"
+			"MTDetour_Tank::EnterStasis"
 			{
 				"signature"	"Tank::EnterStasis"
 				"callconv"	"thiscall"
@@ -305,7 +305,7 @@
 				"this"		"entity"
 			}
 			/* Tank::LeaveStasis() */
-			"Tank::LeaveStasis"
+			"MTDetour_Tank::LeaveStasis"
 			{
 				"signature"	"Tank::LeaveStasis"
 				"callconv"	"thiscall"
@@ -313,7 +313,7 @@
 				"this"		"entity"
 			}
 			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
-			"ZombieManager::ReplaceTank"
+			"MTDetour_ZombieManager::ReplaceTank"
 			{
 				"signature"	"ZombieManager::ReplaceTank"
 				"callconv"	"thiscall"
@@ -332,7 +332,7 @@
 				}
 			}
 			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
-			"ZombieManager::SpawnTank"
+			"MTDetour_ZombieManager::SpawnTank"
 			{
 				"signature"	"ZombieManager::SpawnTank"
 				"callconv"	"thiscall"
@@ -461,7 +461,7 @@
 		"Functions"
 		{
 			/* CFirstAidKit::FinishHealing() */
-			"CFirstAidKit::FinishHealing"
+			"MTDetour_CFirstAidKit::FinishHealing"
 			{
 				"signature"	"CFirstAidKit::FinishHealing"
 				"callconv"	"thiscall"
@@ -469,22 +469,44 @@
 				"this"		"entity"
 			}
 			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
-			"CFirstAidKit::StartHealing"
+			"MTDetour_CFirstAidKit::StartHealing"
 			{
 				"signature"	"CFirstAidKit::StartHealing"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
+				"linux"
 				{
-					"targetType"
+					"callconv"	"cdecl"
+					"return"	"void"
+					"this"		"ignore"
+					"arguments"
 					{
-						"type"		"int"
+						"this"
+						{
+							"type"		"int"
+							"register"	"eax"
+						}
+						"targetType"
+						{
+							"type"		"int"
+							"register"	"edx"
+						}
+					}
+				}
+				"windows"
+				{
+					"callconv"	"thiscall"
+					"return"	"void"
+					"this"		"entity"
+					"arguments"
+					{
+						"targetType"
+						{
+							"type"		"int"
+						}
 					}
 				}
 			}
 			/* CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*) */
-			"CBaseEntity::Create"
+			"MTDetour_CBaseEntity::Create"
 			{
 				"signature"	"CBaseEntity::Create"
 				"callconv"	"cdecl"
@@ -510,7 +532,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
-			"CTerrorPlayer::OnVomitedUpon"
+			"MTDetour_CTerrorPlayer::OnVomitedUpon"
 			{
 				"arguments" // L4D1 has an extra argument
 				{
@@ -521,7 +543,7 @@
 				}
 			}
 			/* CTerrorPlayer::SetMainActivity(Activity, bool) */
-			"CTerrorPlayer::SetMainActivity"
+			"MTDetour_CTerrorPlayer::SetMainActivity"
 			{
 				"signature"	"CTerrorPlayer::SetMainActivity"
 				"callconv"	"thiscall"
@@ -1117,7 +1139,7 @@
 		"Functions"
 		{
 			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
-			"CBaseBackpackItem::StartAction"
+			"MTDetour_CBaseBackpackItem::StartAction"
 			{
 				"signature"	"CBaseBackpackItem::StartAction"
 				"callconv"	"thiscall"
@@ -1136,15 +1158,15 @@
 				}
 			}
 			/* CDirectorScavengeMode::EndScavengeRound() */
-			"CDirectorScavengeMode::EndScavengeRound"
+			"MTDetour_CDirectorScavengeMode::EndScavengeRound"
 			{
-				"signature"		"CDirectorScavengeMode::EndScavengeRound"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"ignore"
+				"signature"	"CDirectorScavengeMode::EndScavengeRound"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
 			}
 			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
-			"CFirstAidKit::OnActionComplete"
+			"MTDetour_CFirstAidKit::OnActionComplete"
 			{
 				"signature"	"CFirstAidKit::OnActionComplete"
 				"callconv"	"thiscall"
@@ -1163,7 +1185,7 @@
 				}
 			}
 			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
-			"CTankRock::Create"
+			"MTDetour_CTankRock::Create"
 			{
 				"signature"	"CTankRock::Create"
 				"callconv"	"cdecl"
@@ -1189,7 +1211,7 @@
 				}
 			}
 			/* CTerrorGun::FireBullet() */
-			"CTerrorGun::FireBullet"
+			"MTDetour_CTerrorGun::FireBullet"
 			{
 				"signature"	"CTerrorGun::FireBullet"
 				"callconv"	"thiscall"
@@ -1197,7 +1219,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorMeleeWeapon::SecondaryAttack() */
-			"CTerrorMeleeWeapon::SecondaryAttack"
+			"MTDetour_CTerrorMeleeWeapon::SecondaryAttack"
 			{
 				"signature"	"CTerrorMeleeWeapon::SecondaryAttack"
 				"callconv"	"thiscall"
@@ -1205,7 +1227,7 @@
 				"this"		"entity"
 			}
 			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
-			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+			"MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision"
 			{
 				"signature"	"CTerrorMeleeWeapon::TestMeleeSwingCollision"
 				"callconv"	"thiscall"
@@ -1220,7 +1242,7 @@
 				}
 			}
 			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
-			"CTerrorPlayer::DoAnimationEvent"
+			"MTDetour_CTerrorPlayer::DoAnimationEvent"
 			{
 				"signature"	"CTerrorPlayer::DoAnimationEvent"
 				"callconv"	"thiscall"
@@ -1239,7 +1261,7 @@
 				}
 			}
 			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
-			"CTerrorPlayer::Fling"
+			"MTDetour_CTerrorPlayer::Fling"
 			{
 				"signature"	"CTerrorPlayer::Fling"
 				"callconv"	"thiscall"
@@ -1266,7 +1288,7 @@
 				}
 			}
 			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
-			"CTerrorPlayer::OnHitByVomitJar"
+			"MTDetour_CTerrorPlayer::OnHitByVomitJar"
 			{
 				"signature"	"CTerrorPlayer::OnHitByVomitJar"
 				"callconv"	"thiscall"
@@ -1281,7 +1303,7 @@
 				}
 			}
 			/* CTerrorPlayer::SelectWeightedSequence(Activity) */
-			"CTerrorPlayer::SelectWeightedSequence"
+			"MTDetour_CTerrorPlayer::SelectWeightedSequence"
 			{
 				"signature"	"CTerrorPlayer::SelectWeightedSequence"
 				"callconv"	"thiscall"
@@ -1296,7 +1318,7 @@
 				}
 			}
 			/* CTerrorWeapon::CanDeployFor(CTerrorPlayer*) */
-			"CTerrorWeapon::CanDeployFor"
+			"MTDetour_CTerrorWeapon::CanDeployFor"
 			{
 				"arguments"
 				{

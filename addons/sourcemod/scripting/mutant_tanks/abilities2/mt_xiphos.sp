@@ -197,9 +197,9 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esXiphosCache[param1].g_iXiphosAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esXiphosCache[param1].g_iXiphosAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "XiphosDetails");
-				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esXiphosCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esXiphosCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -453,7 +453,7 @@ void vXiphos(int attacker, int victim, float damage, bool tank)
 	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
 	iMaxHealth = tank ? MT_MAXHEALTH : g_esXiphosCache[iTank].g_iXiphosMaxHealth;
 	iMaxHealth = (!tank && g_esXiphosCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
-	iNewHealth = iHealth + iDamage;
+	iNewHealth = (iHealth + iDamage);
 	iLeftover = (iNewHealth > iMaxHealth) ? (iNewHealth - iMaxHealth) : iNewHealth;
 	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
 	iTotalHealth = (iNewHealth > iMaxHealth) ? iLeftover : iDamage;

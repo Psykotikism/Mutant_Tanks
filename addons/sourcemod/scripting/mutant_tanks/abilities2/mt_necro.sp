@@ -232,14 +232,14 @@ public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esNecroCache[param1].g_iNecroAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esNecroCache[param1].g_iHumanAmmo - g_esNecroPlayer[param1].g_iAmmoCount, g_esNecroCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iNecroAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esNecroCache[param1].g_iHumanAmmo - g_esNecroPlayer[param1].g_iAmmoCount), g_esNecroCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esNecroCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esNecroCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "NecroDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esNecroCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esNecroCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -696,7 +696,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", g_esNecroPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", (g_esNecroPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -716,7 +716,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", g_esNecroPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", (g_esNecroPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -826,7 +826,7 @@ void vNecroAbility(int tank)
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 			{
 				g_esNecroPlayer[tank].g_iAmmoCount++;
-				g_esNecroPlayer[tank].g_iDuration = GetTime() + g_esNecroCache[tank].g_iHumanDuration;
+				g_esNecroPlayer[tank].g_iDuration = (GetTime() + g_esNecroCache[tank].g_iHumanDuration);
 
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esNecroPlayer[tank].g_iAmmoCount, g_esNecroCache[tank].g_iHumanAmmo);
 			}
@@ -867,7 +867,7 @@ void vNecroReset2(int tank)
 	g_esNecroPlayer[tank].g_iCooldown = (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esNecroCache[tank].g_iHumanCooldown) : -1;
 	if (g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman5", g_esNecroPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman5", (g_esNecroPlayer[tank].g_iCooldown - iTime));
 	}
 }
 

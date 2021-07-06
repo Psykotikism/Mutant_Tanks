@@ -255,14 +255,14 @@ public int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esZombieCache[param1].g_iZombieAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esZombieCache[param1].g_iHumanAmmo - g_esZombiePlayer[param1].g_iAmmoCount, g_esZombieCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iZombieAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esZombieCache[param1].g_iHumanAmmo - g_esZombiePlayer[param1].g_iAmmoCount), g_esZombieCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esZombieCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esZombieCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ZombieDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esZombieCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esZombieCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -647,7 +647,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", g_esZombiePlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", (g_esZombiePlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -669,7 +669,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", g_esZombiePlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", (g_esZombiePlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -751,7 +751,7 @@ void vZombieReset2(int tank)
 	g_esZombiePlayer[tank].g_iCooldown = (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esZombieCache[tank].g_iHumanCooldown) : -1;
 	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", g_esZombiePlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -762,7 +762,7 @@ void vSpawnUncommon(int tank, const char[] model)
 	if (bIsValidEntity(iInfected))
 	{
 		SetEntityModel(iInfected, model);
-		SetEntProp(iInfected, Prop_Data, "m_nNextThinkTick", RoundToNearest(GetGameTime() / GetTickInterval()) + 5);
+		SetEntProp(iInfected, Prop_Data, "m_nNextThinkTick", (RoundToNearest(GetGameTime() / GetTickInterval()) + 5));
 		DispatchSpawn(iInfected);
 		ActivateEntity(iInfected);
 
@@ -770,8 +770,8 @@ void vSpawnUncommon(int tank, const char[] model)
 		GetClientAbsOrigin(tank, flOrigin);
 		GetClientEyeAngles(tank, flAngles);
 
-		flOrigin[0] += 50.0 * (Cosine(DegToRad(flAngles[1])));
-		flOrigin[1] += 50.0 * (Sine(DegToRad(flAngles[1])));
+		flOrigin[0] += (50.0 * (Cosine(DegToRad(flAngles[1]))));
+		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
 		flOrigin[2] += 5.0;
 
 		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -800,7 +800,7 @@ void vSpawnZombie(int tank, bool uncommon)
 					iTypeCount++;
 				}
 
-				switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+				switch (iTypes[GetRandomInt(0, (iTypeCount - 1))])
 				{
 					case 1: vSpawnUncommon(tank, MODEL_CEDA);
 					case 2: vSpawnUncommon(tank, MODEL_JIMMY);

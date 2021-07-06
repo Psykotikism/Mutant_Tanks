@@ -264,14 +264,14 @@ public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esSplatterCache[param1].g_iSplatterAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esSplatterCache[param1].g_iHumanAmmo - g_esSplatterPlayer[param1].g_iAmmoCount, g_esSplatterCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iSplatterAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esSplatterCache[param1].g_iHumanAmmo - g_esSplatterPlayer[param1].g_iAmmoCount), g_esSplatterCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esSplatterCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esSplatterCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplatterDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esSplatterCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esSplatterCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -646,7 +646,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", g_esSplatterPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -668,7 +668,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", g_esSplatterPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -750,7 +750,7 @@ void vSplatterReset2(int tank)
 	g_esSplatterPlayer[tank].g_iCooldown = (g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esSplatterCache[tank].g_iHumanCooldown) : -1;
 	if (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman5", g_esSplatterPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman5", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -825,7 +825,7 @@ void vSplatterRange(int tank, bool idle)
 			return;
 		}
 
-		vAttachParticle(tank, (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, sizeof(g_sParticles) - 1)], 10.0, _, false);
+		vAttachParticle(tank, (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))], 10.0, _, false);
 	}
 }
 
@@ -869,7 +869,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vAttachParticle(iTank, (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, sizeof(g_sParticles) - 1)], 10.0, _, false);
+	vAttachParticle(iTank, (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))], 10.0, _, false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)
 	{

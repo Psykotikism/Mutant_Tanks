@@ -251,12 +251,12 @@ public int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAmmoCache[param1].g_iAmmoAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAmmoCache[param1].g_iHumanAmmo - g_esAmmoPlayer[param1].g_iAmmoCount, g_esAmmoCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esAmmoCache[param1].g_iAmmoAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esAmmoCache[param1].g_iHumanAmmo - g_esAmmoPlayer[param1].g_iAmmoCount), g_esAmmoCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAmmoCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AmmoDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAmmoCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esAmmoCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -697,7 +697,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esAmmoPlayer[tank].g_iCooldown != -1 && g_esAmmoPlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman3", g_esAmmoPlayer[tank].g_iCooldown - iTime);
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman3", (g_esAmmoPlayer[tank].g_iCooldown - iTime));
 					case false: vAmmoAbility(tank, GetRandomFloat(0.1, 100.0));
 				}
 			}
@@ -786,7 +786,7 @@ void vAmmoHit(int survivor, int tank, float random, float chance, int enabled, i
 					g_esAmmoPlayer[tank].g_iCooldown = (g_esAmmoPlayer[tank].g_iAmmoCount < g_esAmmoCache[tank].g_iHumanAmmo && g_esAmmoCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esAmmoCache[tank].g_iHumanCooldown) : -1;
 					if (g_esAmmoPlayer[tank].g_iCooldown != -1 && g_esAmmoPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman5", g_esAmmoPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman5", (g_esAmmoPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

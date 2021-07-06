@@ -257,13 +257,13 @@ public int iQuietMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esQuietCache[param1].g_iQuietAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esQuietCache[param1].g_iHumanAmmo - g_esQuietPlayer[param1].g_iAmmoCount, g_esQuietCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esQuietCache[param1].g_iQuietAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esQuietCache[param1].g_iHumanAmmo - g_esQuietPlayer[param1].g_iAmmoCount), g_esQuietCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esQuietCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "QuietDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esQuietCache[param1].g_flQuietDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esQuietCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esQuietCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -379,7 +379,7 @@ public Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char samp
 		{
 			if (bIsHumanSurvivor(clients[iSurvivor]) && g_esQuietPlayer[clients[iSurvivor]].g_bAffected)
 			{
-				for (int iPlayer = iSurvivor; iPlayer < numClients - 1; iPlayer++)
+				for (int iPlayer = iSurvivor; iPlayer < (numClients - 1); iPlayer++)
 				{
 					clients[iPlayer] = clients[iPlayer + 1];
 				}
@@ -731,7 +731,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esQuietPlayer[tank].g_iCooldown == -1 || g_esQuietPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman3", g_esQuietPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman3", (g_esQuietPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -826,7 +826,7 @@ void vQuietHit(int survivor, int tank, float random, float chance, int enabled, 
 					g_esQuietPlayer[tank].g_iCooldown = (g_esQuietPlayer[tank].g_iAmmoCount < g_esQuietCache[tank].g_iHumanAmmo && g_esQuietCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esQuietCache[tank].g_iHumanCooldown) : -1;
 					if (g_esQuietPlayer[tank].g_iCooldown != -1 && g_esQuietPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman5", g_esQuietPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman5", (g_esQuietPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

@@ -189,9 +189,9 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHitCache[param1].g_iHitAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHitCache[param1].g_iHitAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "HitDetails");
-				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHitCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHitCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -274,7 +274,7 @@ public Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &d
 			damage *= g_esHitCache[victim].g_flHitDamageMultiplier;
 
 			static int iBit, iFlag;
-			iBit = hitgroup - 1;
+			iBit = (hitgroup - 1);
 			iFlag = (1 << iBit);
 
 			return !!(g_esHitCache[victim].g_iHitGroup & iFlag) ? Plugin_Changed : Plugin_Handled;

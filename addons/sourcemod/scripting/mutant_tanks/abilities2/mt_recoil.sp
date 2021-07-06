@@ -254,13 +254,13 @@ public int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRecoilCache[param1].g_iRecoilAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esRecoilCache[param1].g_iHumanAmmo - g_esRecoilPlayer[param1].g_iAmmoCount, g_esRecoilCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRecoilCache[param1].g_iRecoilAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esRecoilCache[param1].g_iHumanAmmo - g_esRecoilPlayer[param1].g_iAmmoCount), g_esRecoilCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esRecoilCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RecoilDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esRecoilCache[param1].g_flRecoilDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esRecoilCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRecoilCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -718,7 +718,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esRecoilPlayer[tank].g_iCooldown == -1 || g_esRecoilPlayer[tank].g_iCooldown < iTime)
 				{
 					case true: vRecoilAbility(tank, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman3", g_esRecoilPlayer[tank].g_iCooldown - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman3", (g_esRecoilPlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -813,7 +813,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 					g_esRecoilPlayer[tank].g_iCooldown = (g_esRecoilPlayer[tank].g_iAmmoCount < g_esRecoilCache[tank].g_iHumanAmmo && g_esRecoilCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esRecoilCache[tank].g_iHumanCooldown) : -1;
 					if (g_esRecoilPlayer[tank].g_iCooldown != -1 && g_esRecoilPlayer[tank].g_iCooldown > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman5", g_esRecoilPlayer[tank].g_iCooldown - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman5", (g_esRecoilPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 

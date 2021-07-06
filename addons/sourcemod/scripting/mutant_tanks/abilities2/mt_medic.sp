@@ -250,18 +250,18 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esMedicCache[param1].g_iMedicAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esMedicCache[param1].g_iHumanAmmo - g_esMedicPlayer[param1].g_iAmmoCount, g_esMedicCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMedicCache[param1].g_iMedicAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esMedicCache[param1].g_iHumanAmmo - g_esMedicPlayer[param1].g_iAmmoCount), g_esMedicCache[param1].g_iHumanAmmo);
 				case 2:
 				{
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				}
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esMedicCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMedicCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esMedicCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "MedicDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esMedicCache[param1].g_iHumanDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esMedicCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMedicCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -481,7 +481,7 @@ public void MT_OnConfigsLoad(int mode)
 						g_esMedicPlayer[iPlayer].g_iMedicHealth[iPos] = 0;
 						g_esMedicPlayer[iPlayer].g_iMedicMaxHealth[iPos] = 0;
 
-						if (iPos < sizeof(esMedicPlayer::g_iMedicFieldColor) - 1)
+						if (iPos < (sizeof(esMedicPlayer::g_iMedicFieldColor) - 1))
 						{
 							g_esMedicPlayer[iPlayer].g_iMedicFieldColor[iPos] = -1;
 						}
@@ -524,7 +524,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet) - 1; iPos++)
+				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -572,7 +572,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet) - 1; iPos++)
+				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -737,7 +737,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman4", g_esMedicPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman4", (g_esMedicPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -759,7 +759,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman4", g_esMedicPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman4", (g_esMedicPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -907,7 +907,7 @@ void vMedicReset3(int tank)
 	g_esMedicPlayer[tank].g_iCooldown = (g_esMedicPlayer[tank].g_iAmmoCount < g_esMedicCache[tank].g_iHumanAmmo && g_esMedicCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esMedicCache[tank].g_iHumanCooldown) : -1;
 	if (g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman5", g_esMedicPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman5", (g_esMedicPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -951,7 +951,7 @@ int iGetMaxHealth(int tank, int infected)
 
 int[] iGetRandomColors(int tank)
 {
-	for (int iPos = 0; iPos < sizeof(esMedicCache::g_iMedicFieldColor) - 1; iPos++)
+	for (int iPos = 0; iPos < (sizeof(esMedicCache::g_iMedicFieldColor) - 1); iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicFieldColor[iPos] = iGetRandomColor(g_esMedicCache[tank].g_iMedicFieldColor[iPos]);
 	}
@@ -1026,13 +1026,13 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 				iValue = iGetHealth(iTank, iInfected);
 				iLimit = iGetMaxHealth(iTank, iInfected);
 				iMaxHealth = MT_TankMaxHealth(iInfected, 1);
-				iNewHealth = iHealth + iValue;
+				iNewHealth = (iHealth + iValue);
 				iLeftover = (iNewHealth > iLimit) ? (iNewHealth - iLimit) : iNewHealth;
 				iExtraHealth = (iNewHealth > iLimit) ? iLimit : iNewHealth;
 				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
 				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				iTotalHealth = (iNewHealth > iLimit) ? iLeftover : iValue;
-				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iTotalHealth);
+				MT_TankMaxHealth(iInfected, 3, (iMaxHealth + iTotalHealth));
 				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
 
 				if (g_esMedicCache[iTank].g_iMedicMessage == 1)

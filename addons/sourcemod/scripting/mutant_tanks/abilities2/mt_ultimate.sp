@@ -285,13 +285,13 @@ public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esUltimateCache[param1].g_iUltimateAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esUltimateCache[param1].g_iHumanAmmo - g_esUltimatePlayer[param1].g_iAmmoCount, g_esUltimateCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUltimateCache[param1].g_iUltimateAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esUltimateCache[param1].g_iHumanAmmo - g_esUltimatePlayer[param1].g_iAmmoCount), g_esUltimateCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esUltimateCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "UltimateDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esUltimateCache[param1].g_iUltimateDuration);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esUltimateCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUltimateCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -388,7 +388,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_esUltimatePlayer[client].g_iCooldown = (g_esUltimatePlayer[client].g_iCount < g_esUltimateCache[client].g_iHumanAmmo && g_esUltimateCache[client].g_iHumanAmmo > 0) ? (iTime + g_esUltimateCache[client].g_iHumanCooldown) : -1;
 			if (g_esUltimatePlayer[client].g_iCooldown != -1 && g_esUltimatePlayer[client].g_iCooldown > iTime)
 			{
-				MT_PrintToChat(client, "%s %t", MT_TAG3, "UltimateHuman5", g_esUltimatePlayer[client].g_iCooldown - iTime);
+				MT_PrintToChat(client, "%s %t", MT_TAG3, "UltimateHuman5", (g_esUltimatePlayer[client].g_iCooldown - iTime));
 			}
 		}
 
@@ -807,7 +807,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				}
 				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateHuman4", g_esUltimatePlayer[tank].g_iCooldown - iTime);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateHuman4", (g_esUltimatePlayer[tank].g_iCooldown - iTime));
 				}
 			}
 		}
@@ -872,7 +872,7 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_bActivated = true;
 		g_esUltimatePlayer[tank].g_iCount++;
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
-		g_esUltimatePlayer[tank].g_iDuration = GetTime() + iDuration;
+		g_esUltimatePlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 		ExtinguishEntity(tank);
 		vAttachParticle(tank, PARTICLE_ULTIMATE, 2.0, 30.0);
@@ -896,11 +896,11 @@ void vUltimate(int tank, int pos = -1)
 		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 		iValue = RoundToNearest(MT_TankMaxHealth(tank, 2) * g_esUltimateCache[tank].g_flUltimateHealthPortion);
 		iMaxHealth = MT_TankMaxHealth(tank, 1);
-		iNewHealth = iTankHealth + iValue;
+		iNewHealth = (iTankHealth + iValue);
 		iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
 		iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
 		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iValue;
-		MT_TankMaxHealth(tank, 3, iMaxHealth + iTotalHealth);
+		MT_TankMaxHealth(tank, 3, (iMaxHealth + iTotalHealth));
 		SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 

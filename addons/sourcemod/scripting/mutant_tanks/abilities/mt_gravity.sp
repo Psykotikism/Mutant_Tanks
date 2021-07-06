@@ -273,22 +273,22 @@ public int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esGravityCache[param1].g_iGravityAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iGravityAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1:
 				{
-					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esGravityCache[param1].g_iHumanAmmo - g_esGravityPlayer[param1].g_iAmmoCount, g_esGravityCache[param1].g_iHumanAmmo);
-					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo2", g_esGravityCache[param1].g_iHumanAmmo - g_esGravityPlayer[param1].g_iAmmoCount2, g_esGravityCache[param1].g_iHumanAmmo);
+					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esGravityCache[param1].g_iHumanAmmo - g_esGravityPlayer[param1].g_iAmmoCount), g_esGravityCache[param1].g_iHumanAmmo);
+					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo2", (g_esGravityCache[param1].g_iHumanAmmo - g_esGravityPlayer[param1].g_iAmmoCount2), g_esGravityCache[param1].g_iHumanAmmo);
 				}
 				case 2:
 				{
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 					MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
 				}
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esGravityCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esGravityCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GravityDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esGravityCache[param1].g_iGravityDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esGravityCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -835,7 +835,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman5", g_esGravityPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman5", (g_esGravityPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -861,7 +861,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman5", g_esGravityPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman5", (g_esGravityPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -880,7 +880,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esGravityPlayer[tank].g_iCooldown2 == -1 || g_esGravityPlayer[tank].g_iCooldown2 < iTime)
 				{
 					case true: vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman6", g_esGravityPlayer[tank].g_iCooldown2 - iTime);
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman6", (g_esGravityPlayer[tank].g_iCooldown2 - iTime));
 				}
 			}
 		}
@@ -1014,7 +1014,7 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 						static int iDuration;
 						iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGravityCache[tank].g_iGravityDuration;
 						g_esGravityPlayer[tank].g_bActivated = true;
-						g_esGravityPlayer[tank].g_iDuration = GetTime() + iDuration;
+						g_esGravityPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
 						vGravity(tank);
 
@@ -1070,7 +1070,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 					g_esGravityPlayer[tank].g_iCooldown2 = (g_esGravityPlayer[tank].g_iAmmoCount2 < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esGravityCache[tank].g_iHumanCooldown) : -1;
 					if (g_esGravityPlayer[tank].g_iCooldown2 != -1 && g_esGravityPlayer[tank].g_iCooldown2 > iTime)
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman9", g_esGravityPlayer[tank].g_iCooldown2 - iTime);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman9", (g_esGravityPlayer[tank].g_iCooldown2 - iTime));
 					}
 				}
 
@@ -1190,7 +1190,7 @@ void vGravityReset4(int tank)
 	g_esGravityPlayer[tank].g_iCooldown = (g_esGravityPlayer[tank].g_iAmmoCount < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esGravityCache[tank].g_iHumanCooldown) : -1;
 	if (g_esGravityPlayer[tank].g_iCooldown != -1 && g_esGravityPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman8", g_esGravityPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman8", (g_esGravityPlayer[tank].g_iCooldown - iTime));
 	}
 }
 

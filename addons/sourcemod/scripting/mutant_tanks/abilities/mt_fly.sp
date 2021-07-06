@@ -255,14 +255,14 @@ public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFlyCache[param1].g_iFlyAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esFlyCache[param1].g_iHumanAmmo - g_esFlyPlayer[param1].g_iAmmoCount, g_esFlyCache[param1].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlyCache[param1].g_iFlyAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esFlyCache[param1].g_iHumanAmmo - g_esFlyPlayer[param1].g_iAmmoCount), g_esFlyCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFlyCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlyCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esFlyCache[param1].g_iHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FlyDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esFlyCache[param1].g_iFlyDuration);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esFlyCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlyCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -412,7 +412,7 @@ public Action OnFlyPreThink(int tank)
 		{
 			static float flDuration;
 			static int iButtons;
-			flDuration = GetEngineTime() - g_esFlyPlayer[tank].g_flLastTime;
+			flDuration = (GetEngineTime() - g_esFlyPlayer[tank].g_flLastTime);
 			iButtons = GetClientButtons(tank);
 
 			vFlyThink(tank, iButtons, flDuration);
@@ -746,7 +746,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						}
 						else if (bRecharging)
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman4", g_esFlyPlayer[tank].g_iCooldown - iTime);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman4", (g_esFlyPlayer[tank].g_iCooldown - iTime));
 						}
 					}
 					case 1:
@@ -763,7 +763,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							}
 							else if (bRecharging)
 							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman4", g_esFlyPlayer[tank].g_iCooldown - iTime);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman4", (g_esFlyPlayer[tank].g_iCooldown - iTime));
 							}
 						}
 						else
@@ -843,8 +843,8 @@ void vFly(int tank, bool announce, int pos = -1)
 	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFlyCache[tank].g_iFlyDuration;
 	g_esFlyPlayer[tank].g_bActivated = true;
 	g_esFlyPlayer[tank].g_iAmmoCount++;
-	g_esFlyPlayer[tank].g_iDuration = GetTime() + iDuration;
-	g_esFlyPlayer[tank].g_flLastTime = GetEngineTime() - 0.01;
+	g_esFlyPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esFlyPlayer[tank].g_flLastTime = (GetEngineTime() - 0.01);
 
 	static float flOrigin[3], flEyeAngles[3];
 	GetEntPropVector(tank, Prop_Data, "m_vecAbsOrigin", flOrigin);
@@ -966,7 +966,7 @@ void vFlyThink(int tank, int buttons, float duration)
 
 			if ((buttons & IN_SPEED) && !bJumping)
 			{
-				flSpeed3 = flSpeed * 75.0 / 100.0;
+				flSpeed3 = ((flSpeed * 75.0) / 100.0);
 				if (buttons & IN_FORWARD)
 				{
 					flSpeed3 = flSpeed;
@@ -981,10 +981,10 @@ void vFlyThink(int tank, int buttons, float duration)
 			}
 			else if (!(buttons & IN_SPEED) && (buttons & IN_DUCK) && !bJumping)
 			{
-				flSpeed3 = flSpeed * 33.33 / 100.0;
+				flSpeed3 = ((flSpeed * 33.33) / 100.0);
 				if (buttons & IN_FORWARD)
 				{
-					flSpeed3 = flSpeed * 50.0 / 100.0;
+					flSpeed3 = ((flSpeed * 50.0) / 100.0);
 				}
 
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
@@ -1275,43 +1275,43 @@ void vFlyThink(int tank, int buttons, float duration)
 			flDistance9 = flBase2;
 		}
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flFront2) / flBase;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flFront2)) / flBase);
 		ScaleVector(flFront, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flUp2) / flBase;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flUp2)) / flBase);
 		ScaleVector(flUp, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDown2) / flBase;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDown2)) / flBase);
 		ScaleVector(flDown, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flLeft2) / flBase;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flLeft2)) / flBase);
 		ScaleVector(flLeft, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flRight2) / flBase;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flRight2)) / flBase);
 		ScaleVector(flRight, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance2) / flDistance2;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance2)) / flDistance2);
 		ScaleVector(flVector1, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance3) / flDistance3;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance3)) / flDistance3);
 		ScaleVector(flVector2, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance4) / flDistance4;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance4)) / flDistance4);
 		ScaleVector(flVector3, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance5) / flDistance5;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance5)) / flDistance5);
 		ScaleVector(flVector4, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance6) / flDistance6;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance6)) / flDistance6);
 		ScaleVector(flVector5, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance7) / flDistance7;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance7)) / flDistance7);
 		ScaleVector(flVector6, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance8) / flDistance8;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance8)) / flDistance8);
 		ScaleVector(flVector7, flVector9);
 
-		flVector9 =- 1.0 * flFactor1 * (flBase - flDistance9) / flDistance9;
+		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance9)) / flDistance9);
 		ScaleVector(flVector8, flVector9);
 
 		if (flDistance >= 500.0)
@@ -1319,7 +1319,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			flDistance = 500.0;
 		}
 
-		flVector9 = 1.0 * flFactor2 * (1000.0 - flDistance) / 500.0;
+		flVector9 = ((1.0 * flFactor2 * (1000.0 - flDistance)) / 500.0);
 		ScaleVector(flVector, flVector9);
 
 		AddVectors(flFront, flUp, flFront);
@@ -1337,7 +1337,7 @@ void vFlyThink(int tank, int buttons, float duration)
 		AddVectors(flFront, flVector, flFront);
 
 		NormalizeVector(flFront, flFront);
-		ScaleVector(flFront, 3.141592 * duration * 2.0);
+		ScaleVector(flFront, (FLOAT_PI * duration * 2.0));
 
 		static float flVelocity3[3];
 		AddVectors(flVelocity, flFront, flVelocity3);
@@ -1388,7 +1388,7 @@ void vFlyReset3(int tank)
 	g_esFlyPlayer[tank].g_iCooldown = (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esFlyCache[tank].g_iHumanCooldown) : -1;
 	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman5", g_esFlyPlayer[tank].g_iCooldown - iTime);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman5", (g_esFlyPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
