@@ -8,9 +8,13 @@
 - Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
 - Fixed the `CFirstAidKit::StartHealing` detour causing errors on L4D1 Linux. (Thanks to `Neki93` for reporting and `epzminion` for the help!)
 - Fixed null-pointer errors from detours. (Thanks to `Shadowart` for reporting!)
+- Fixed the `mutant_tanks_patches.cfg` causing errors on Linux servers.
 
 #### Config Files
 - Fixed the `Combo` section not being read. (Thanks to `Uncle Jessie` for reporting!)
+
+#### Game Data
+- Fixed the `CTerrorGameMovement::DoJump` jump height patch causing a crash on L4D1 Linux and glitching out on L4D2 Linux. (Thanks to `epzminion` for the help!)
 
 ### Changes
 
@@ -20,7 +24,6 @@
 #### Core Plugin
 - The attack boost reward now allows recipients to perform actions while on ladders. (Thanks to `Lux` for the gamedata info!)
 - Renamed some keys for the patch config.
-- Reworked the patch config to make platform-specific patches optional.
 - Improved late-loading and compatibility with `Left 4 DHooks`.
 - Added extra finale/non-finale map checks.
 - Reformatted the output of the `Death Details` setting's teammate list.
@@ -33,6 +36,7 @@
 - Added new signatures for functions that check maps. (Thanks to `Silvers` for the original signatures!)
 - Updated all of the signatures.
 - Renamed all detours to avoid conflicts with other plugins.
+- Replaced patches for the `CTerrorGameMovement::DoJump` function with a conversion function. (Thanks to `epzminion` for the code!)
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
