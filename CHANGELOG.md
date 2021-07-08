@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.86 (July 10, 2021)
+## Version 8.86 (July 8, 2021)
 
 ### Bug Fixes
 
@@ -34,9 +34,10 @@
 
 #### Game Data
 - Added new signatures for functions that check maps. (Thanks to `Silvers` for the original signatures!)
-- Updated all of the signatures.
+- Updated all of the signatures to be compatible with detours.
 - Renamed all detours to avoid conflicts with other plugins.
 - Replaced patches for the `CTerrorGameMovement::DoJump` function with a conversion function. (Thanks to `epzminion` for the code!)
+- Updated several offsets for the `2.2.2.0` update.
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
@@ -53,6 +54,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
+- Updated translation files.
 
 ## Version 8.85 (June 20, 2021)
 
