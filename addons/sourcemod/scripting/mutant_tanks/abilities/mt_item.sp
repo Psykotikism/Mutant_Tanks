@@ -347,7 +347,7 @@ public void OnItemUse(int entity, int activator, int caller, UseType type, float
 	{
 		return;
 	}
-
+	
 	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }
@@ -869,7 +869,7 @@ public Action tTimerRemoveItemHooks(Handle timer, int ref)
 	{
 		return Plugin_Stop;
 	}
-
+	
 	SDKUnhook(iItem, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(iItem, SDKHook_Use, OnItemUse);
 

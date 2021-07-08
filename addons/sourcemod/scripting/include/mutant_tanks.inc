@@ -1442,18 +1442,6 @@ stock void vExternalView(int player, float time)
 	}
 }
 
-stock void vGetDoubleFromFloat(float value, int save[2])
-{
-        int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
-                iExponent = (((iValue & 0x7F800000) >> 23) - 127) + 1023,
-                iMantissa = (iValue & 0x7FFFFF) << 1;
-
-        save[0] = iSign << 31;
-        save[0] |= iExponent << 20;
-        save[0] |= (iMantissa >> 4) & 0xFFFFF;
-        save[1] = iMantissa << 28;
-}
-
 stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
 {
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
