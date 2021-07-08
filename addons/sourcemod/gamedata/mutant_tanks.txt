@@ -23,7 +23,7 @@
 					}
 				}
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() const */
+			/* CBaseCombatWeapon::GetMaxClip1() */
 			"MTDetour_CBaseCombatWeapon::GetMaxClip1"
 			{
 				"signature"	"CBaseCombatWeapon::GetMaxClip1"
@@ -422,25 +422,25 @@
 				"windows"	"0"
 				"linux"		"1"
 			}
-			/* Action<Tank>::FirstContainedResponder() const */
+			/* Action<Tank>::FirstContainedResponder() */
 			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"16"
 				"linux"		"16"
 			}
-			/* Behavior<Tank>::FirstContainedResponder() const */
+			/* Behavior<Tank>::FirstContainedResponder() */
 			"Behavior<Tank>::FirstContainedResponder"
 			{
 				"windows"	"8"
 				"linux"		"8"
 			}
-			/* CBaseEntity::GetRefEHandle() const */
+			/* CBaseEntity::GetRefEHandle() */
 			"CBaseEntity::GetRefEHandle"
 			{
 				"windows"	"2"
 				"linux"		"3"
 			}
-			/* TankIntention::FirstContainedResponder() const */
+			/* TankIntention::FirstContainedResponder() */
 			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"28"
@@ -481,7 +481,7 @@
 					{
 						"this"
 						{
-							"type"		"int"
+							"type"		"cbaseentity"
 							"register"	"eax"
 						}
 						"targetType"
@@ -587,11 +587,7 @@
 				"windows"
 				{
 					"read"		"174"
-				}
-				"linux"
-				{
-					"read"		"184"
-				}
+				} // Doesn't work on Linux; points to offset's address not value's actual address
 			}
 			/**
 			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
@@ -603,21 +599,25 @@
 				"windows"
 				{
 					"read"		"361"
-				}
-				"linux"
-				{
-					"read"		"386"
-				}
+				} // Doesn't work on Linux; points to offset's address not string's actual address
 			}
 			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
 			"OnInjuredStart"
 			{
 				"signature"	"InfectedExecAction::OnInjured"
 			}
+			/* PlayerLocomotion::GetMaxJumpHeight() */
+			"GetMaxJumpHeightStart"
+			{
+				"linux"
+				{
+					"signature"	"PlayerLocomotion::GetMaxJumpHeight"
+				}
+			}
 		}
 		"Offsets"
 		{
-			/* CBaseCombatWeapon::GetMaxClip1() const */
+			/* CBaseCombatWeapon::GetMaxClip1() */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"300"
@@ -634,17 +634,6 @@
 			{
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
-			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
-			"CTerrorGameMovement::DoJump::Start"
-			{
-				"windows"	"71" // change DD to D9
-			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
-			"CTerrorGameMovement::DoJump::Start2"
-			{
-				// Windows references the default jump height (57.0) twice
-				"windows"	"172" // change DC to D8
 			}
 			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
@@ -695,7 +684,7 @@
 				"windows"	"5606" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::GetLastKnownArea() const */
+			/* CTerrorPlayer::GetLastKnownArea() */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"309"
@@ -706,6 +695,24 @@
 			{
 				"windows"	"41" // start at FF and patch 2 bytes with NOPs (0x90)
 				"linux"		"61" // start at 8B and patch 11 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::OnLadderMount() */
+			"CTerrorPlayer::OnLadderMount::Add"
+			{
+				// Windows doesn't need this
+				"linux"		"12"
+			}
+			/* CTerrorPlayer::OnLadderMount() */
+			"CTerrorPlayer::OnLadderMount::Call"
+			{
+				// Windows doesn't need this
+				"linux"		"10"
+			}
+			/* CTerrorPlayer::OnLadderMount() */
+			"CTerrorPlayer::OnLadderMount::Sound"
+			{
+				// Windows doesn't need this
+				"linux"		"22"
 			}
 			/* CTerrorPlayer::OnLadderMount() */
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
@@ -737,25 +744,43 @@
 				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
-			/* Tank::GetIntentionInterface() const */
+			/* PlayerLocomotion::GetMaxJumpHeight() */
+			"PlayerLocomotion::GetMaxJumpHeight::Add"
+			{
+				// Windows doesn't need this
+				"linux"		"7"
+			}
+			/* PlayerLocomotion::GetMaxJumpHeight() */
+			"PlayerLocomotion::GetMaxJumpHeight::Call"
+			{
+				// Windows doesn't need this
+				"linux"		"5"
+			}
+			/* PlayerLocomotion::GetMaxJumpHeight() */
+			"PlayerLocomotion::GetMaxJumpHeight::Value"
+			{
+				// Windows doesn't need this
+				"linux"		"13"
+			}
+			/* Tank::GetIntentionInterface() */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
-			/* TankIdle::GetName() const */
+			/* TankIdle::GetName() */
 			"TankIdle::GetName"
 			{
 				"windows"	"35"
 				"linux"		"36"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"300"
 				"linux"		"304"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
 			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"340"
@@ -772,7 +797,7 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x7C\x2A\x3B\x2A\x2A\x7D\x2A\x6B\x2A\x2A\x03\x2A\x8B\x2A\x2A\x83\x2A\x2A\x75\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x8B\x2A\x2A\xC2"
 						/* ? ? ? ? ? ? ? 7C ? 3B ? ? 7D ? 6B ? ? 03 ? 8B ? ? 83 ? ? 75 ? 8B ? ? 85 ? 74 ? 8B ? ? 8B ? ? C2 */
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() const */
+			/* CBaseCombatWeapon::GetMaxClip1() */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"library"	"server"
@@ -896,7 +921,7 @@
 			"CTerrorGameMovement::DoJump::Value"
 			{
 				"library"	"server"
-				"linux"		"\x00\x00\x64\x42\x00"
+				"linux"		"\x00\x00\x64\x42\x00\x00\xC8\x44"
 				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
 			}
 			/* CTerrorGameRules::GetMissionFirstMap(KeyValues**) */
@@ -1089,6 +1114,15 @@
 				"linux"		"@_ZN9KeyValues9GetStringEPKcS1_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x2A\x2A\x2A\x2A\x2A\x56\x57\x6A\x2A\x53\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? 53 8B 9C ? ? ? ? ? 56 57 6A ? 53 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 0F ? ? ? 83 ? ? 83 ? ? 0F */
+			}
+			/**
+			 * PlayerLocomotion::GetMaxJumpHeight()
+			 * Used for the default jump height (57.0) address on Linux.
+			 **/
+			"PlayerLocomotion::GetMaxJumpHeight"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK16PlayerLocomotion16GetMaxJumpHeightEv"
 			}
 			/**
 			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
@@ -1379,19 +1413,19 @@
 		}
 		"Offsets"
 		{
-			/* CBaseBackpackItem::GetUseAction() const */
+			/* CBaseBackpackItem::GetUseAction() */
 			"CBaseBackpackItem::GetUseAction"
 			{
 				"windows"	"451"
 				"linux"		"453"
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() const */
+			/* CBaseCombatWeapon::GetMaxClip1() */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"323"
 				"linux"		"324"
 			}
-			/* CBaseEntity::IsInStasis() const */
+			/* CBaseEntity::IsInStasis() */
 			"CBaseEntity::IsInStasis"
 			{
 				"windows"	"39"
@@ -1409,18 +1443,6 @@
 				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3488" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
-			"CTerrorGameMovement::DoJump::Start"
-			{
-				"windows"	"84" // change DD to D9
-				"linux"		"667" // change F2 to F3
-			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
-			"CTerrorGameMovement::DoJump::Start2"
-			{
-				// Windows references the default jump height (57.0) twice
-				"windows"	"186" // change DC to D8
-			}
 			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
 			{
@@ -1436,64 +1458,64 @@
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"windows"	"7368" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"9757" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7411" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10925" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"windows"	"7391" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"9789" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7434" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10957" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"windows"	"7705" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"7652" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7749" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"8228" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
 			{
-				"windows"	"7559" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"6417" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7603" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6353" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
 			{
-				"windows"	"7582" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"6449" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7626" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6385" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
 			{
-				"windows"	"7855" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"6607" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7905" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6543" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				"windows"	"8124" // start at D9 and patch 2 bytes with EB ??
-				"linux"		"10071" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8174" // start at D9 and patch 2 bytes with EB ??
+				"linux"		"10263" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"windows"	"8218" // start at 8B and patch 2 bytes with EB ??
-				"linux"		"10227" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8266" // start at 8B and patch 2 bytes with EB ??
+				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"windows"	"8432" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8480" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10611" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
 			{
-				"windows"	"9284" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"linux"		"12259" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"9332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"12526" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
-			/* CTerrorPlayer::GetLastKnownArea() const */
+			/* CTerrorPlayer::GetLastKnownArea() */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"330"
@@ -1527,27 +1549,27 @@
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
 				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
-				"linux"		"75" // start at 09 and patch 1 byte with CALL (0xFF)
+				"linux"		"76" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
-			/* Tank::GetIntentionInterface() const */
+			/* Tank::GetIntentionInterface() */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"17204"
 				"linux"		"17176"
 			}
-			/* TankIdle::GetName() const */
+			/* TankIdle::GetName() */
 			"TankIdle::GetName"
 			{
 				"windows"	"40"
 				"linux"		"41"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"296"
 				"linux"		"300"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
 			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"332"
@@ -1578,7 +1600,7 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x75\x2A\x5F\x32\x2A\x5E\x8B"
 						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? 85 ? 75 ? 5F 32 ? 5E 8B */
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() const */
+			/* CBaseCombatWeapon::GetMaxClip1() */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"library"	"server"
@@ -1602,7 +1624,7 @@
 				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
 						/* 8A ? A0 00 00 00 C3 */
 			}
-			/* CDirector::IsFirstMapInScenario() const */
+			/* CDirector::IsFirstMapInScenario() */
 			"CDirector::IsFirstMapInScenario"
 			{
 				"library"	"server"
@@ -1760,8 +1782,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN18CTerrorMeleeWeapon15SecondaryAttackEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x15\x2A\x2A\x2A\x2A\x8B\x2A\x81\xE1\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x83"
-						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B 83 ? ? ? ? 83 ? ? 74 ? 8B 15 ? ? ? ? 8B ? 81 E1 ? ? ? ? 03 ? 8D ? ? ? C1 ? ? 39 ? ? 75 ? 83 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
+						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 84 ? 0F */
 			}
 			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
 			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
