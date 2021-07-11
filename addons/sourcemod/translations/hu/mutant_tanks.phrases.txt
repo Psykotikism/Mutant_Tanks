@@ -684,7 +684,7 @@
 
 	"RewardLadyKiller"
 	{
-		"hu"			"Most{default} kaptál{yellow} {1}{default} nőcsábász{mint} használatot{default}."
+		"hu"			"{1}{mint} nőcsábász{default} használatot"
 	}
 
 	"RewardLadyKiller2"
@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{2}"
+		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{mint} {2}"
 	}
 
 	"Transformed"

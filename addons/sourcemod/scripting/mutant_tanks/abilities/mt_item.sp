@@ -750,13 +750,13 @@ void vSpawnItem(const char[] name, float pos[3])
 	{
 		iType = 1;
 	}
-	else if (StrEqual(name, "grenade_launcher") || StrContains(name, "pistol") == 0 || StrContains(name, "rifle") != -1
-		|| StrContains(name, "smg") == 0 || StrContains(name, "shotgun") != -1 || StrContains(name, "sniper") == 0)
+	else if (StrEqual(name, "grenade_launcher") || strncmp(name, "pistol", 6) == 0 || strncmp(name, "rifle", 6) != -1
+		|| strncmp(name, "smg", 3) == 0 || strncmp(name, "shotgun", 7) != -1 || strncmp(name, "sniper", 6) == 0)
 	{
 		iType = 2;
 	}
 	else if (StrEqual(name, "molotov") || StrEqual(name, "pipe_bomb") || StrEqual(name, "vomitjar") || StrEqual(name, "first_aid_kit")
-		|| StrEqual(name, "defibrillator") || StrContains(name, "upgrade") != -1 || StrEqual(name, "pain_pills") || StrEqual(name, "adrenaline"))
+		|| StrEqual(name, "defibrillator") || strncmp(name, "upgrade", 7) != -1 || StrEqual(name, "pain_pills") || StrEqual(name, "adrenaline"))
 	{
 		iType = 3;
 	}
@@ -825,11 +825,11 @@ void vSpawnItem(const char[] name, float pos[3])
 
 		if (iType == 2)
 		{
-			if (StrContains(name, "rifle") == 0)
+			if (strncmp(name, "rifle", 6) == 0)
 			{
 				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 300);
 			}
-			else if (StrContains(name, "smg") == 0)
+			else if (strncmp(name, "smg", 3) == 0)
 			{
 				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 600);
 			}
@@ -841,7 +841,7 @@ void vSpawnItem(const char[] name, float pos[3])
 			{
 				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 50);
 			}
-			else if (StrEqual(name, "hunting_rifle") || StrContains(name, "sniper") == 0)
+			else if (StrEqual(name, "hunting_rifle") || strncmp(name, "sniper", 6) == 0)
 			{
 				SetEntProp(iItem, Prop_Send, "m_iExtraPrimaryAmmo", 150);
 			}
