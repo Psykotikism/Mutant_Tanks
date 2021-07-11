@@ -1,11 +1,33 @@
 # Changelog
 
-## Version 8.86 (July 8, 2021)
+## Version 8.87 (TBA)
 
 ### Bug Fixes
 
 #### General
 - Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
+
+#### Core Plugin
+- Fixed the lady killer reward not resetting when the server changes the map without finishing a campaign first.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+
+### Files
+
+#### Updates
+- Updated include file.
+- Updated translation files.
+
+## Version 8.86 (July 8, 2021)
+
+### Bug Fixes
+
+#### General
+- Fixed the `send reliable stream overflow` error (hopefully). (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
 - Fixed the `CFirstAidKit::StartHealing` detour causing errors on L4D1 Linux. (Thanks to `Neki93` for reporting and `epzminion` for the help!)
 - Fixed null-pointer errors from detours. (Thanks to `Shadowart` for reporting!)
 - Fixed the `mutant_tanks_patches.cfg` causing errors on Linux servers.
