@@ -684,7 +684,7 @@
 
 	"RewardLadyKiller"
 	{
-		"chi"			"你{default} 获得了{yellow} {1}{default} 次{mint} 女巫杀手{default} 的使用权."
+		"chi"			"{1}{default} 次{mint} 女巫杀手{default} 的使用权"
 	}
 
 	"RewardLadyKiller2"
@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{2}"
+		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{mint} {2}"
 	}
 
 	"Transformed"

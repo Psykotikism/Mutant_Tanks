@@ -747,7 +747,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 		GetClientEyePosition(tank, flPos);
 		GetClientAbsAngles(tank, flAngles);
 
-		if (g_esDropCache[tank].g_iDropMode != 2 && StrContains(sWeapon, "weapon") != -1)
+		if (g_esDropCache[tank].g_iDropMode != 2 && strncmp(sWeapon, "weapon", 6) != -1)
 		{
 			static int iDrop;
 			iDrop = CreateEntityByName(sWeapon);
@@ -880,9 +880,9 @@ int iGetNamedWeapon(int tank)
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof(sName), (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
-		if (StrContains(sName, "weapon_") != -1)
+		if (strncmp(sName, "weapon_", 7) != -1)
 		{
-			ExplodeString(sName, "eapon_", sSet, sizeof(sSet), sizeof(sSet[]));
+			ExplodeString(sName, "_", sSet, sizeof(sSet), sizeof(sSet[]));
 			if (StrEqual(sSet[1], g_esDropCache[tank].g_sDropWeaponName, false))
 			{
 				return iPos;

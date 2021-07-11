@@ -684,7 +684,7 @@
 
 	"RewardLadyKiller"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} {1}{default} использований{mint} Женоубийцы{default}."
+		"ru"			"{1}{default} использований{mint} Женоубийцы"
 	}
 
 	"RewardLadyKiller2"
@@ -779,7 +779,7 @@
 
 	"TeammatesList"
 	{
-		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{2}"
+		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{mint} {2}"
 	}
 
 	"Transformed"

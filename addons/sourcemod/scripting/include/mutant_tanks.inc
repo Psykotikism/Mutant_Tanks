@@ -21,7 +21,7 @@
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.86"
+#define MT_VERSION "8.87"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 public SharedPlugin __pl_mutanttanks =
@@ -1444,14 +1444,14 @@ stock void vExternalView(int player, float time)
 
 stock void vGetDoubleFromFloat(float value, int save[2])
 {
-        int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
-                iExponent = (((iValue & 0x7F800000) >> 23) - 127) + 1023,
-                iMantissa = (iValue & 0x7FFFFF) << 1;
+	int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
+		iExponent = (((iValue & 0x7F800000) >> 23) - 127) + 1023,
+		iMantissa = (iValue & 0x7FFFFF) << 1;
 
-        save[0] = iSign << 31;
-        save[0] |= iExponent << 20;
-        save[0] |= (iMantissa >> 4) & 0xFFFFF;
-        save[1] = iMantissa << 28;
+	save[0] = iSign << 31;
+	save[0] |= iExponent << 20;
+	save[0] |= (iMantissa >> 4) & 0xFFFFF;
+	save[1] = iMantissa << 28;
 }
 
 stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
@@ -1683,7 +1683,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
+	static char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
 	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
@@ -1693,7 +1693,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[PLATFORM_MAX_PATH];
+	static char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -1707,10 +1707,9 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	strcopy(sMessage, sizeof(sMessage), message);
-	VFormat(sBuffer, sizeof(sBuffer), sMessage, 2);
+	VFormat(sBuffer, sizeof(sBuffer), message, 2);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 	PrintToServer(sBuffer);
 }
@@ -1734,13 +1733,12 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(client);
+	VFormat(sBuffer, sizeof(sBuffer), message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		strcopy(sMessage, sizeof(sMessage), message);
-		VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 
 		switch (client == 0)
@@ -1751,8 +1749,6 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 	else
 	{
-		FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
-		VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
 		MT_PrintToChat(client, sBuffer);
 	}
 }
