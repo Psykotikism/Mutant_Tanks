@@ -1942,7 +1942,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
-
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
@@ -3943,6 +3942,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 						vUnvomitPlayer(developer);
 					}
 
+					vSaveCaughtSurvivor(developer);
 					SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
 				}
 				case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
@@ -10584,12 +10584,12 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 	{
 		case true:
 		{
-			char sSet[9][64], sTankName[33];
-			int iRewardCount = 0;
-			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 			g_esPlayer[survivor].g_iNotify = g_esCache[tank].g_iRewardNotify[priority];
 			g_esPlayer[survivor].g_iPrefsAccess = g_esCache[tank].g_iPrefsNotify[priority];
 
+			char sSet[9][64], sTankName[33];
+			int iRewardCount = 0;
+			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 			if ((iType & MT_REWARD_RESPAWN) && bRespawnSurvivor(survivor, (bDeveloper || g_esCache[tank].g_iRespawnLoadoutReward[priority] == 1)) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_RESPAWN))
 			{
 				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardRespawn", survivor);
@@ -10607,12 +10607,11 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					{
 						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardHealth", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_HEALTH);
+						vSaveCaughtSurvivor(survivor);
+						vRefillHealth(survivor);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
 						iRewardCount++;
-
-						vSaveCaughtSurvivor(survivor);
-						vRefillHealth(survivor);
 					}
 					else
 					{
@@ -10852,11 +10851,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 				if ((iType & MT_REWARD_REFILL) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
 				{
-					FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardRefill", survivor);
-
 					g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_REFILL;
 					iRewardCount++;
 
+					FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardRefill", survivor);
 					vSaveCaughtSurvivor(survivor);
 					vCheckClipSizes(survivor);
 					vRefillAmmo(survivor, _, !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO));
