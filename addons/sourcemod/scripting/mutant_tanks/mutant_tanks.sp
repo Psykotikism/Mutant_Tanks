@@ -15444,7 +15444,13 @@ public MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParam
 public MRESReturn mreCanDeployForPre(int pThis, DHookReturn hReturn, DHookParam hParams)
 {
 	static int iSurvivor;
-	iSurvivor = (!g_bSecondGame || hParams.IsNull(1)) ? GetEntPropEnt(pThis, Prop_Send, "m_hOwner") : hParams.Get(1);
+
+	switch (g_bSecondGame && !hParams.IsNull(1))
+	{
+		case true: iSurvivor = hParams.Get(1);
+		case false: iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	}
+
 	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[iSurvivor].g_iLadderActions == 1)))
 	{
 		static int iIndex = -1;
