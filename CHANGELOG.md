@@ -15,6 +15,8 @@
 #### Core Plugin
 - Reformatted the output of the `Death Details` setting's teammate list again.
 - Re-combined the list of rewards shown in chat when receiving rewards.
+- Removed thirdperson check for survivors.
+- Updated developer tools code.
 
 #### Translations
 - Updated English translations.
