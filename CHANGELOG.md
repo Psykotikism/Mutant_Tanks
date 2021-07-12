@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.87 (TBA)
+## Version 8.87 (July 12, 2021)
 
 ### Bug Fixes
 
@@ -9,6 +9,12 @@
 
 #### Core Plugin
 - Fixed the lady killer reward not resetting when the server changes the map without finishing a campaign first.
+
+### Changes
+
+#### Core Plugin
+- Reformatted the output of the `Death Details` setting's teammate list again.
+- Re-combined the list of rewards shown in chat when receiving rewards.
 
 #### Translations
 - Updated English translations.
