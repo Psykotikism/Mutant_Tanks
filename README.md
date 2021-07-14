@@ -2151,6 +2151,8 @@ Examples:
 
 **Oliver** - For helping to test the Reward system, Combination feature, and overall support.
 
+**FusionFlarez** - For helping to test the Reward system.
+
 **SourceMod Team** - For continually updating/improving SourceMod.
 
 ## 3rd-Party Revisions Notice

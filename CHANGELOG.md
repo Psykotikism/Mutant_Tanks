@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.87 (July 12, 2021)
+## Version 8.87 (July 20, 2021)
 
 ### Bug Fixes
 
@@ -8,7 +8,7 @@
 - Fixed the `send reliable stream overflow` error. (Thanks to `Slaven555`, `Mi.Cura`, and `GL_INS` for testing and reporting!)
 
 #### Core Plugin
-- Fixed the lady killer reward not resetting when the server changes the map without finishing a campaign first.
+- Fixed the lady killer reward not resetting when the server changes to a different campaign without finishing the previous one first.
 
 ### Changes
 
@@ -16,17 +16,25 @@
 - Reformatted the output of the `Death Details` setting's teammate list again.
 - Re-combined the list of rewards shown in chat when receiving rewards.
 - Removed thirdperson check for survivors.
-- Updated developer tools code.
+- Rewards are now transferred over properly between bots and idle players (and vice-versa).
+- Tank spawn and death announcements will no longer appear when the rescue vehicle leaves.
+
+#### Settings
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Share Rewards` (Thanks to `peachie` and `FusionFlarez` for the idea!)
+	- `Stack Limits`
 
 #### Translations
 - Updated English translations.
-- Updated Simplified Chinese translations.
-- Updated Hungarian translations.
-- Updated Russian translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
 
 ### Files
 
 #### Updates
+- Updated config files.
+- Updated gamedata file.
 - Updated include file.
 - Updated translation files.
 

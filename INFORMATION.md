@@ -830,6 +830,17 @@
 			// 4th number = Notify and enable command for assistant killers.
 			"Prefs Notify"				"1,1,1,1"
 
+			// Allow players to share their rewards with teammates when they have reached the stack limits.
+			// --
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// 0: OFF, let players keep their rewards.
+			// 1: ON, allow players to share their rewards with only human-controlled teammates.
+			// 2: ON, allow players to share their rewards with only bot teammates.
+			// 3: ON, allow players to share their rewards with teammates.
+			"Share Rewards"				"0"
+
 			// The total number of teammates to reward for assisting against Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -1341,6 +1352,27 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Speed Boost Reward"			"1.25,1.25,1.25,1.25"
+
+			// How many times each reward can be stacked for each recipient.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate limits with commas (",").
+			// --
+			// Limits limit: 7
+			// Character limit for each limit: 7
+			// --
+			// Minimum value for each limit: 0 (No limit)
+			// Maximum value for each limit: 999999 (Highest limit)
+			// --
+			// 1st number = Health reward stack limit.
+			// 2nd number = Speed boost reward stack limit.
+			// 3rd number = Damage boost reward stack limit.
+			// 4th number = Attack boost reward stack limit.
+			// 5th number = Ammo reward stack limit.
+			// 6th number = God mode reward stack limit.
+			// 7th number = Infinite ammo reward stack limit.
+			"Stack Limits"				"1,1,1,1,1,1,1"
 
 			// Allow rewards from Mutant Tanks to be stacked.
 			// Note: This setting can be used for standard Tanks.
@@ -2887,6 +2919,17 @@
 			// 4th number = Notify and enable command for assistant killers.
 			"Prefs Notify"				"0,0,0,0"
 
+			// Allow players to share their rewards with teammates when they have reached the stack limits.
+			// --
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF, let players keep their rewards.
+			// 1: ON, allow players to share their rewards with only human-controlled teammates.
+			// 2: ON, allow players to share their rewards with only bot teammates.
+			// 3: ON, allow players to share their rewards with teammates.
+			"Share Rewards"				"0"
+
 			// The total number of teammates to reward for assisting against the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -3398,6 +3441,27 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Speed Boost Reward"			"0.0,0.0,0.0,0.0"
+
+			// How many times each reward can be stacked for each recipient.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate limits with commas (",").
+			// --
+			// Limits limit: 7
+			// Character limit for each limit: 7
+			// --
+			// Minimum value for each limit: 0 (No limit)
+			// Maximum value for each limit: 999999 (Highest limit)
+			// --
+			// 1st number = Health reward stack limit.
+			// 2nd number = Speed boost reward stack limit.
+			// 3rd number = Damage boost reward stack limit.
+			// 4th number = Attack boost reward stack limit.
+			// 5th number = Ammo reward stack limit.
+			// 6th number = God mode reward stack limit.
+			// 7th number = Infinite ammo reward stack limit.
+			"Stack Limits"				"0,0,0,0,0,0,0"
 
 			// Allow rewards from the Mutant Tank to be stacked.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
