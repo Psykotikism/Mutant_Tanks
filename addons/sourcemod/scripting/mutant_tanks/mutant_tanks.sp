@@ -1923,7 +1923,8 @@ public void OnPluginStart()
 	AddCommandListener(cmdMTCommandListener, "give");
 	AddCommandListener(cmdMTCommandListener2, "go_away_from_keyboard");
 	AddCommandListener(cmdMTCommandListener2, "vocalize");
-	AddCommandListener(cmdMTCommandListener3);
+	AddCommandListener(cmdMTCommandListener3, "sm_mt_dev");
+	AddCommandListener(cmdMTCommandListener4);
 
 	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
@@ -2872,7 +2873,8 @@ public void OnMapEnd()
 
 public void OnPluginEnd()
 {
-	RemoveCommandListener(cmdMTCommandListener3);
+	RemoveCommandListener(cmdMTCommandListener4);
+	RemoveCommandListener(cmdMTCommandListener3, "sm_mt_dev");
 	RemoveCommandListener(cmdMTCommandListener2, "vocalize");
 	RemoveCommandListener(cmdMTCommandListener2, "go_away_from_keyboard");
 	RemoveCommandListener(cmdMTCommandListener, "give");
@@ -3077,6 +3079,46 @@ public Action cmdMTCommandListener2(int client, const char[] command, int argc)
 }
 
 public Action cmdMTCommandListener3(int client, const char[] command, int argc)
+{
+	if (!bIsValidClient(client) || !bIsDeveloper(client, _, true) || CheckCommandAccess(client, "sm_mt_dev", ADMFLAG_ROOT, false))
+	{
+		return Plugin_Continue;
+	}
+
+	char sCommand[32];
+	GetCmdArg(0, sCommand, sizeof(sCommand));
+	if (StrEqual(sCommand, "sm_mt_dev", false))
+	{
+		switch (argc)
+		{
+			case 2:
+			{
+				char sKeyword[32], sValue[320];
+				GetCmdArg(1, sKeyword, sizeof(sKeyword));
+				GetCmdArg(2, sValue, sizeof(sValue));
+				vSetupGuest(client, sKeyword, sValue);
+
+				switch (StrContains(sKeyword, "access", false) != -1)
+				{
+					case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+					case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
+				}
+			}
+			default:
+			{
+				switch (IsVoteInProgress())
+				{
+					case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+					case false: vDeveloperPanel(client);
+				}
+			}
+		}
+	}
+
+	return Plugin_Stop;
+}
+
+public Action cmdMTCommandListener4(int client, const char[] command, int argc)
 {
 	if (client > 0 || (!g_esGeneral.g_cvMTListenSupport.BoolValue && g_esGeneral.g_iListenSupport == 0) || GetCmdReplySource() != SM_REPLY_TO_CONSOLE || g_bDedicated)
 	{
@@ -4297,7 +4339,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 	g_esDeveloper[developer].g_iDevPanelLevel = level;
 
 	static char sDisplay[PLATFORM_MAX_PATH];
-	FormatEx(sDisplay, sizeof(sDisplay), "%s Developer Panel", MT_CONFIG_SECTION_MAIN);
+	FormatEx(sDisplay, sizeof(sDisplay), "%s Developer Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
 	static float flValue;
 
 	Panel pDevPanel = new Panel();
