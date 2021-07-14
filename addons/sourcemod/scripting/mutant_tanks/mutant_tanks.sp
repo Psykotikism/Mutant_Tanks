@@ -4005,140 +4005,188 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 
 static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 {
+	bool bPanel = false;
 	if (StrContains(keyword, "access", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(value), 0, 4095);
+
 		vSetupDeveloper(guest, ((g_esDeveloper[guest].g_iDevAccess == 0) ? false : true), true);
 	}
 	else if (StrContains(keyword, "action", false) != -1 || StrContains(keyword, "actdur", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevActionDuration = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "regenammo", false) != -1 || StrContains(keyword, "ammoregen", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevAmmoRegen = iClamp(StringToInt(value), 0, 999999);
 	}
 	else if (StrContains(keyword, "attack", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgboost", false) != -1 || StrContains(keyword, "damageboost", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevDamageBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgres", false) != -1 || StrContains(keyword, "damageres", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevDamageResistance = flClamp(StringToFloat(value), 0.0, 0.99);
 	}
 	else if (StrContains(keyword, "effect", false) != -1 || StrContains(keyword, "particle", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevParticle = iClamp(StringToInt(value), 0, 15);
 	}
 	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1)
 	{
+		bPanel = true;
+
 		strcopy(g_esDeveloper[guest].g_sDevFallVoiceline, sizeof(esDeveloper::g_sDevFallVoiceline), value);
 	}
 	else if (StrContains(keyword, "glow", false) != -1 || StrContains(keyword, "outline", false) != -1)
 	{
+		bPanel = true;
+
 		strcopy(g_esDeveloper[guest].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
 		vSetSurvivorOutline(guest, g_esDeveloper[guest].g_sDevGlowOutline, _, ",");
 	}
 	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevHealPercent = flClamp(StringToFloat(value), 0.0, 100.0);
 	}
 	else if (StrContains(keyword, "regenhp", false) != -1 || StrContains(keyword, "hpregen", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "infammo", false) != -1 || StrContains(keyword, "infinite", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevInfiniteAmmo = iClamp(StringToInt(value), 0, 31);
 	}
 	else if (StrContains(keyword, "jump", false) != -1 || StrContains(keyword, "height", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "leechhp", false) != -1 || StrContains(keyword, "hpleech", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "light", false) != -1)
 	{
+		bPanel = true;
+
 		strcopy(g_esDeveloper[guest].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
 		vSetSurvivorLight(guest, g_esDeveloper[guest].g_sDevFlashlight, _, ",");
 	}
 	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
 	{
+		bPanel = true;
+
 		strcopy(g_esDeveloper[guest].g_sDevLoadout, sizeof(esDeveloper::g_sDevLoadout), value);
 		vSetupLoadout(guest);
 	}
 	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(StringToInt(value), 0, 999999);
 	}
 	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "force", false) != -1 || StrContains(keyword, "punchres", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevPunchResistance = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "revivehp", false) != -1 || StrContains(keyword, "hprevive", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevReviveHealth = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "rdur", false) != -1 || StrContains(keyword, "rewarddur", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevRewardDuration = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "rtypes", false) != -1 || StrContains(keyword, "rewardtypes", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevRewardTypes = iClamp(StringToInt(value), -1, 2147483647);
 	}
 	else if (StrContains(keyword, "sdmg", false) != -1 || StrContains(keyword, "shovedmg", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevShoveDamage = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "srate", false) != -1 || StrContains(keyword, "shoverate", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevShoveRate = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "survskin", false) != -1 || StrContains(keyword, "color", false) != -1)
 	{
+		bPanel = true;
+
 		strcopy(g_esDeveloper[guest].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
 		vSetSurvivorColor(guest, g_esDeveloper[guest].g_sDevSkinColor, _, ",");
 	}
 	else if (StrContains(keyword, "specammo", false) != -1 || StrContains(keyword, "special", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevSpecialAmmo = iClamp(StringToInt(value), 0, 3);
+
 		vGiveSpecialAmmo(guest);
 	}
 	else if (StrContains(keyword, "speed", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
+
 		vSetAdrenalineTime(guest, 999999.0);
 	}
 	else if (StrContains(keyword, "wepskin", false) != -1 || StrContains(keyword, "skin", false) != -1)
 	{
+		bPanel = true;
 		g_esDeveloper[guest].g_iDevWeaponSkin = iClamp(StringToInt(value), -1, iGetMaxWeaponSkins(guest));
+
 		vSetSurvivorWeaponSkin(guest);
 	}
 	else if (StrContains(keyword, "config", false) != -1)
 	{
+		bPanel = !!StringToInt(value);
+
 		cmdMTConfig2(guest, 0);
 	}
 	else if (StrContains(keyword, "list", false) != -1)
 	{
+		bPanel = !!StringToInt(value);
+
 		cmdMTList2(guest, 0);
 	}
 	else if (StrContains(keyword, "tank", false) != -1)
 	{
+		bPanel = !!StringToInt(value);
+
 		cmdTank2(guest, 0);
 	}
 	else if (StrContains(keyword, "version", false) != -1)
 	{
+		bPanel = !!StringToInt(value);
+
 		cmdMTVersion2(guest, 0);
 	}
 
-	vDeveloperPanel(guest);
+	if (bPanel)
+	{
+		vDeveloperPanel(guest);
+	}
 }
 
 static void vSetupLoadout(int developer, bool usual = true)
