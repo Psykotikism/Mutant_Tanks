@@ -951,7 +951,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			static bool bJumping;
 			bJumping = false;
 
-			if (buttons & IN_JUMP) 
+			if (buttons & IN_JUMP)
 			{
 				bJumping = true;
 				flEyeAngles[0] = -50.0;

@@ -840,7 +840,7 @@ void vSpam2(int tank, int pos = -1)
 	}
 
 	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSpamCache[tank].g_flSpamInterval; 
+	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSpamCache[tank].g_flSpamInterval;
 	DataPack dpSpam;
 	CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSpam.WriteCell(iLauncher);

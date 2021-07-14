@@ -2913,7 +2913,7 @@ public Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int 
 
 	static char sMessage[255];
 	msg.ReadString(sMessage, sizeof(sMessage), true);
-	if (StrEqual(sMessage, "#Cstrike_Name_Change")) 
+	if (StrEqual(sMessage, "#Cstrike_Name_Change"))
 	{
 		g_esGeneral.g_bHideNameChange = false;
 
@@ -5744,7 +5744,7 @@ public void OnInfectedSpawnPost(int entity)
 public Action OnInfectedSetTransmit(int entity, int client)
 {
 	return Plugin_Handled;
-} 
+}
 
 public Action OnPropSetTransmit(int entity, int client)
 {
