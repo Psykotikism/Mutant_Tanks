@@ -10947,7 +10947,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 				if (survivor != iRecipient && sShared[0] != '\0')
 				{
-					MT_PrintToChat(iRecipient, "%s %t", MT_TAG3, "RewardShared", sShared);
+					MT_PrintToChat(iRecipient, "%s %t", MT_TAG3, "RewardShared", survivor, sShared);
 				}
 
 				if (iType & MT_REWARD_GODMODE)
