@@ -732,6 +732,11 @@
 		"hu"			"újjászületést"
 	}
 
+	"RewardShared"
+	{
+		"hu"			"{1}{default} megosztotta{yellow} {2}{default} a{mint} veled{default}!"
+	}
+
 	"RewardSolo"
 	{
 		"hu"			"{1}{default} legyőzte{olive} {2}{default}-ot!"

@@ -811,6 +811,12 @@
 		"en"			"respawn"
 	}
 
+	"RewardShared"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{1}{default} shared their{yellow} {2}{default} with{mint} you{default}!"
+	}
+
 	"RewardSolo"
 	{
 		"#format"		"{1:N},{2:t}"

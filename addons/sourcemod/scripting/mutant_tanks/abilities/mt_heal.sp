@@ -54,7 +54,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
-#define SOUND_HEARTBEAT	 "player/heartbeatloop.wav"
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 
 #define MT_HEAL_SECTION "healability"
 #define MT_HEAL_SECTION2 "heal ability"

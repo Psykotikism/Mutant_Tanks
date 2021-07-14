@@ -732,6 +732,11 @@
 		"ru"			"возрождение"
 	}
 
+	"RewardShared"
+	{
+		"ru"			"{1}{default} поделился своим{yellow} {2}{default} с{mint} вами{default}!"
+	}
+
 	"RewardSolo"
 	{
 		"ru"			"{1}{default} убили в одиночку:{olive} '{2}'{default}!"
