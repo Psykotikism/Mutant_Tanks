@@ -4121,6 +4121,22 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		g_esDeveloper[guest].g_iDevWeaponSkin = iClamp(StringToInt(value), -1, iGetMaxWeaponSkins(guest));
 		vSetSurvivorWeaponSkin(guest);
 	}
+	else if (StrContains(keyword, "config", false) != -1)
+	{
+		cmdMTConfig2(guest, 0);
+	}
+	else if (StrContains(keyword, "list", false) != -1)
+	{
+		cmdMTList2(guest, 0);
+	}
+	else if (StrContains(keyword, "tank", false) != -1)
+	{
+		cmdTank2(guest, 0);
+	}
+	else if (StrContains(keyword, "version", false) != -1)
+	{
+		cmdMTVersion2(guest, 0);
+	}
 
 	vDeveloperPanel(guest);
 }
