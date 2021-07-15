@@ -17,7 +17,7 @@
 - Re-combined the list of rewards shown in chat when receiving rewards.
 - Removed thirdperson check for survivors.
 - Rewards are now transferred over properly between bots and idle players (and vice-versa).
-- Tank spawn and death announcements will no longer appear when the rescue vehicle leaves.
+- Tank spawn and death announcements will no longer appear once the rescue vehicle leaves.
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:

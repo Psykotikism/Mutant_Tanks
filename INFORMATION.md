@@ -831,15 +831,27 @@
 			"Prefs Notify"				"1,1,1,1"
 
 			// Allow players to share their rewards with teammates when they have reached the stack limits.
-			// --
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
 			// --
 			// 0: OFF, let players keep their rewards.
 			// 1: ON, allow players to share their rewards with only human-controlled teammates.
 			// 2: ON, allow players to share their rewards with only bot teammates.
-			// 3: ON, allow players to share their rewards with teammates.
-			"Share Rewards"				"0"
+			// 3: ON, allow players to share their rewards with all teammates.
+			// --
+			// 1st number = Allow killers to share.
+			// 2nd number = Allow assistants to share.
+			// 3rd number = Allow teammates to share.
+			// 4th number = Allow assistant killers to share.
+			"Share Rewards"				"0,0,0,0"
 
 			// The total number of teammates to reward for assisting against Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -1372,7 +1384,7 @@
 			// 5th number = Ammo reward stack limit.
 			// 6th number = God mode reward stack limit.
 			// 7th number = Infinite ammo reward stack limit.
-			"Stack Limits"				"1,1,1,1,1,1,1"
+			"Stack Limits"				"0,0,0,0,0,0,0"
 
 			// Allow rewards from Mutant Tanks to be stacked.
 			// Note: This setting can be used for standard Tanks.
@@ -2920,15 +2932,27 @@
 			"Prefs Notify"				"0,0,0,0"
 
 			// Allow players to share their rewards with teammates when they have reached the stack limits.
-			// --
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
 			// --
 			// 0: OFF, let players keep their rewards.
 			// 1: ON, allow players to share their rewards with only human-controlled teammates.
 			// 2: ON, allow players to share their rewards with only bot teammates.
-			// 3: ON, allow players to share their rewards with teammates.
-			"Share Rewards"				"0"
+			// 3: ON, allow players to share their rewards with all teammates.
+			// --
+			// 1st number = Allow killers to share.
+			// 2nd number = Allow assistants to share.
+			// 3rd number = Allow teammates to share.
+			// 4th number = Allow assistant killers to share.
+			"Share Rewards"				"0,0,0,0"
 
 			// The total number of teammates to reward for assisting against the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
