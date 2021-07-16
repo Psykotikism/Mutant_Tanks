@@ -18,6 +18,8 @@
 - Removed thirdperson check for survivors.
 - Rewards are now transferred over properly between bots and idle players (and vice-versa).
 - Tank spawn and death announcements will no longer appear once the rescue vehicle leaves.
+- Added the `sm_mt_admin` command to allow admins to set their visual perks. (Requested by `XXrevoltadoXX`.)
+- Changed the logic for stacking rewards.
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
