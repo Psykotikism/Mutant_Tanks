@@ -1967,7 +1967,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
-
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
@@ -3209,6 +3208,7 @@ public Action cmdMTAdmin(int client, int args)
 			g_esDeveloper[client].g_iDevAccess = iClamp(StringToInt(sValue), 0, 1);
 
 			vSetupPerks(client, (g_esDeveloper[client].g_iDevAccess == 1));
+			MT_ReplyToCommand(client, "%s %N{mint}, your visual effects are{yellow} %s{mint}.", MT_TAG4, client, ((g_esDeveloper[client].g_iDevAccess == 1) ? "on" : "off"));
 #if defined _clientprefs_included
 			g_esGeneral.g_ckMTAdmin[0].Set(client, sValue);
 #endif
@@ -7365,7 +7365,6 @@ static void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_bFalling = g_esPlayer[oldSurvivor].g_bFalling;
 	g_esPlayer[newSurvivor].g_bFallTracked = g_esPlayer[oldSurvivor].g_bFallTracked;
 	g_esPlayer[newSurvivor].g_bFatalFalling = g_esPlayer[oldSurvivor].g_bFatalFalling;
-	g_esPlayer[newSurvivor].g_bRainbowColor = g_esPlayer[oldSurvivor].g_bRainbowColor;
 	g_esPlayer[newSurvivor].g_bSetup = g_esPlayer[oldSurvivor].g_bSetup;
 	g_esPlayer[newSurvivor].g_bVomited = g_esPlayer[oldSurvivor].g_bVomited;
 	g_esPlayer[newSurvivor].g_sLoopingVoiceline = g_esPlayer[oldSurvivor].g_sLoopingVoiceline;
@@ -7422,6 +7421,12 @@ static void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		g_esPlayer[newSurvivor].g_iTankDamage[iTank] = g_esPlayer[oldSurvivor].g_iTankDamage[iTank];
+	}
+
+	if (g_esPlayer[oldSurvivor].g_bRainbowColor)
+	{
+		g_esPlayer[oldSurvivor].g_bRainbowColor = false;
+		g_esPlayer[newSurvivor].g_bRainbowColor = SDKHookEx(newSurvivor, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
 	}
 }
 
@@ -9059,9 +9064,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 				else if (bIsSurvivor(iPlayer))
 				{
+					vRemoveEffects(iBot);
 					vCopySurvivorStats(iBot, iPlayer);
 					vSetupDeveloper(iPlayer, _, true);
-					vRemoveEffects(iBot);
+					vResetSurvivorStats(iBot, false);
 				}
 			}
 		}
@@ -9182,9 +9188,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 				else if (bIsSurvivor(iBot))
 				{
+					vRemoveEffects(iPlayer);
 					vCopySurvivorStats(iPlayer, iBot);
 					vSetupDeveloper(iPlayer, false);
-					vRemoveEffects(iPlayer);
+					vResetSurvivorStats(iPlayer, false);
 				}
 			}
 		}
@@ -10588,7 +10595,7 @@ static void vReset3(int tank, bool full = true)
 
 	if (full)
 	{
-		vResetSurvivorStats(tank);
+		vResetSurvivorStats(tank, true);
 	}
 }
 
@@ -10678,7 +10685,7 @@ static void vResetSpeed(int tank, bool mode = true)
 	}
 }
 
-static void vResetSurvivorStats(int survivor)
+static void vResetSurvivorStats(int survivor, bool all)
 {
 	g_esDeveloper[survivor].g_bDevVisual = false;
 	g_esPlayer[survivor].g_bFallDamage = false;
@@ -10686,7 +10693,6 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bFallTracked = false;
 	g_esPlayer[survivor].g_bFatalFalling = false;
 	g_esPlayer[survivor].g_bRainbowColor = false;
-	g_esPlayer[survivor].g_bSetup = false;
 	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
 	g_esPlayer[survivor].g_flActionDuration = 0.0;
@@ -10722,6 +10728,11 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_sLightColor[0] = '\0';
 	g_esPlayer[survivor].g_sOutlineColor[0] = '\0';
 	g_esPlayer[survivor].g_sScreenColor[0] = '\0';
+
+	if (all)
+	{
+		g_esPlayer[survivor].g_bSetup = false;
+	}
 
 	for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
 	{
@@ -11876,18 +11887,11 @@ static void vSetupRewardDuration(int survivor, int pos, float time, float curren
 
 static void vSetupRewardDurations(int survivor, int recipient, int pos, int limit, float time, float time2, float current, float duration, float duration2)
 {
-	switch (limit == 0 || (g_esPlayer[survivor].g_iRewardStack[pos] < limit))
-	{
-		case true: vSetupRewardDuration(survivor, pos, time, current, duration);
-		case false:
-		{
-			vSetupRewardDuration(survivor, pos, time, current, duration);
+	vSetupRewardDuration(survivor, pos, time, current, duration);
 
-			if (survivor != recipient)
-			{
-				vSetupRewardDuration(recipient, pos, time2, current, duration2);
-			}
-		}
+	if (g_esPlayer[survivor].g_iRewardStack[pos] >= limit && survivor != recipient)
+	{
+		vSetupRewardDuration(recipient, pos, time2, current, duration2);
 	}
 }
 
@@ -13544,7 +13548,7 @@ static void vSetSurvivorLight(int survivor, const char[] colors, bool apply = tr
 
 static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = true, const char[] delimiter = ";", bool save = false)
 {
-	if (!save && !bIsDeveloper(survivor, 0))
+	if (!g_bSecondGame || (!save && !bIsDeveloper(survivor, 0)))
 	{
 		return;
 	}
@@ -14449,30 +14453,34 @@ public void vPlayerSpawnFrame(DataPack pack)
 
 				vSetupDeveloper(iPlayer, _, true);
 			}
+		}
 
-			if (!bIsDeveloper(iPlayer, 0))
+		if (!bIsDeveloper(iPlayer, 0))
+		{
+			static char sDelimiter[2];
+			static float flTime;
+			flTime = GetGameTime();
+			if (g_esPlayer[iPlayer].g_flVisualTime[3] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[3] > flTime)
 			{
-				static char sDelimiter[2];
-				static float flTime;
-				flTime = GetGameTime();
-				if (g_esPlayer[iPlayer].g_flVisualTime[3] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[3] > flTime)
-				{
-					sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sLightColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorLight(iPlayer, g_esPlayer[iPlayer].g_sLightColor, g_esPlayer[iPlayer].g_bApplyVisuals[3], sDelimiter, true);
-				}
-
-				if (g_esPlayer[iPlayer].g_flVisualTime[4] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[4] > flTime)
-				{
-					sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sBodyColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorColor(iPlayer, g_esPlayer[iPlayer].g_sBodyColor, g_esPlayer[iPlayer].g_bApplyVisuals[4], sDelimiter, true);
-				}
-
-				if (g_esPlayer[iPlayer].g_flVisualTime[5] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[5] > flTime)
-				{
-					sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sOutlineColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorOutline(iPlayer, g_esPlayer[iPlayer].g_sOutlineColor, g_esPlayer[iPlayer].g_bApplyVisuals[5], sDelimiter, true);
-				}
+				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sLightColor, ';') != -1) ? ";" : ",";
+				vSetSurvivorLight(iPlayer, g_esPlayer[iPlayer].g_sLightColor, g_esPlayer[iPlayer].g_bApplyVisuals[3], sDelimiter, true);
 			}
+
+			if (g_esPlayer[iPlayer].g_flVisualTime[4] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[4] > flTime)
+			{
+				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sBodyColor, ';') != -1) ? ";" : ",";
+				vSetSurvivorColor(iPlayer, g_esPlayer[iPlayer].g_sBodyColor, g_esPlayer[iPlayer].g_bApplyVisuals[4], sDelimiter, true);
+			}
+
+			if (g_esPlayer[iPlayer].g_flVisualTime[5] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[5] > flTime)
+			{
+				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sOutlineColor, ';') != -1) ? ";" : ",";
+				vSetSurvivorOutline(iPlayer, g_esPlayer[iPlayer].g_sOutlineColor, g_esPlayer[iPlayer].g_bApplyVisuals[5], sDelimiter, true);
+			}
+		}
+		else if (g_esDeveloper[iPlayer].g_iDevAccess == 1)
+		{
+			vSetupPerks(iPlayer);
 		}
 
 		vRefillAmmo(iPlayer, _, true);
@@ -16398,7 +16406,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		g_esPlayer[pThis].g_bLastLife = false;
 		g_esPlayer[pThis].g_iReviveCount = 0;
 
-		vResetSurvivorStats(pThis);
+		vResetSurvivorStats(pThis, true);
 		vSaveWeapons(pThis);
 	}
 	else if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
