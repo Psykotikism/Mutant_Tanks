@@ -734,7 +734,7 @@
 
 	"RewardShared"
 	{
-		"ru"			"{1}{default} поделился своим{yellow} {2}{default} с{mint} вами{default}!"
+		"ru"			"{1}{default} поделился(ась) с{mint} вами{yellow} {2}!"
 	}
 
 	"RewardSolo"

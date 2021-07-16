@@ -1877,6 +1877,23 @@ public void OnAllPluginsLoaded()
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
 	g_esGeneral.g_cvCSLaddersVersion = FindConVar("l4d2_cs_ladders");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks != null)
+	{
+		vRegisterPatches(gdMutantTanks);
+		vInstallPermanentPatches();
+
+		if (g_esGeneral.g_cvCSLaddersVersion == null)
+		{
+			vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::CanDeployFor");
+			vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderDismount");
+			vSetupDetour(g_esGeneral.g_ddLadderMountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderMount");
+			vSetupDetour(g_esGeneral.g_ddPreThinkDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::PreThink");
+		}
+
+		delete gdMutantTanks;
+	}
 }
 
 public void OnPluginStart()
@@ -2379,9 +2396,6 @@ public void OnPluginStart()
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
-			vRegisterPatches(gdMutantTanks);
-			vInstallPermanentPatches();
-
 			vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "MTDetour_CDeathFallCamera::Enable");
 			vSetupDetour(g_esGeneral.g_ddDoJumpDetour, gdMutantTanks, "MTDetour_CTerrorGameMovement::DoJump");
 			vSetupDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, gdMutantTanks, "MTDetour_CDirectorVersusMode::EndVersusModeRound");
@@ -2405,14 +2419,6 @@ public void OnPluginStart()
 			vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "MTDetour_CTankClaw::DoSwing");
 			vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "MTDetour_CTankClaw::OnPlayerHit");
 			vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnVomitedUpon");
-
-			if (g_esGeneral.g_cvCSLaddersVersion == null)
-			{
-				vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::CanDeployFor");
-				vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderDismount");
-				vSetupDetour(g_esGeneral.g_ddLadderMountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderMount");
-				vSetupDetour(g_esGeneral.g_ddPreThinkDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::PreThink");
-			}
 
 			delete gdMutantTanks;
 		}
@@ -14754,13 +14760,14 @@ static void vRegisterPatches(GameData dataHandle)
 	}
 
 	bool bPlatform = false;
-	char sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sType[10];
+	char sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[64], sType[10];
 	int iVerify[MT_PATCH_MAXLEN], iVLength = 0, iPatch[MT_PATCH_MAXLEN], iPLength = 0;
 
 	do
 	{
 		kvPatches.GetSectionName(sName, sizeof(sName));
 		kvPatches.GetString("log", sLog, sizeof(sLog));
+		kvPatches.GetString("cvarcheck", sCvar, sizeof(sCvar));
 		kvPatches.GetString("type", sType, sizeof(sType));
 		kvPatches.GetString("signature", sSignature, sizeof(sSignature));
 		kvPatches.GetString("offset", sOffset, sizeof(sOffset));
@@ -14801,14 +14808,35 @@ static void vRegisterPatches(GameData dataHandle)
 		{
 			bPlatform = false;
 
+			if (sLog[0] == 'y')
+			{
+				vLogMessage(-1, _, "%s No patch for \"%s\" on %s was found.", MT_TAG, sName, (g_esGeneral.g_bLinux ? "Linux" : "Windows"));
+			}
+
 			continue;
 		}
 
 		bPlatform = false;
 
+		if (sCvar[0] != '\0')
+		{
+			g_esGeneral.g_cvMTTempSetting = FindConVar(sCvar);
+			if (g_esGeneral.g_cvMTTempSetting != null)
+			{
+				g_esGeneral.g_cvMTTempSetting = null;
+
+				if (sLog[0] == 'y')
+				{
+					vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvar, sName);
+				}
+
+				continue;
+			}
+		}
+
 		if (sLog[0] == 'y')
 		{
-			vLogMessage(-1, _, "%s Reading bytes: %s - %s", MT_TAG, sVerify, sPatch);
+			vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, sName, sVerify, sPatch);
 		}
 
 		ReplaceString(sVerify, sizeof(sVerify), "\\x", " ", false);
@@ -14821,7 +14849,7 @@ static void vRegisterPatches(GameData dataHandle)
 
 		if (sLog[0] == 'y')
 		{
-			vLogMessage(-1, _, "%s Storing bytes: %s - %s", MT_TAG, sVerify, sPatch);
+			vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s", MT_TAG, sName, sVerify, sPatch);
 		}
 
 		for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
