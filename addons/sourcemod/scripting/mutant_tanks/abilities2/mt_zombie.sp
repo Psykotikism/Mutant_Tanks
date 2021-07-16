@@ -888,7 +888,7 @@ void vZombie3(int tank)
 	{
 		switch (g_esZombieCache[tank].g_iZombieMode)
 		{
-			case 0: vSpawnZombie(tank, ((GetRandomInt(1, 2) == 2) ? true : false));
+			case 0: vSpawnZombie(tank, (GetRandomInt(1, 2) == 2));
 			case 1: vSpawnZombie(tank, false);
 			case 2: vSpawnZombie(tank, true);
 		}
