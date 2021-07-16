@@ -392,6 +392,7 @@ enum struct esGeneral
 	ConVar g_cvMTUpgradePackUseDuration;
 	ConVar g_cvCSLaddersVersion;
 #if defined _clientprefs_included
+	Cookie g_ckMTAdmin[5];
 	Cookie g_ckMTPrefs;
 #endif
 	DynamicDetour g_ddActionCompleteDetour;
@@ -1748,13 +1749,13 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 		{
 			case true:
 			{
-				vSetColor(iTank, iType, _, (g_esPlayer[iTank].g_iTankType == iType ? true : false));
+				vSetColor(iTank, iType, _, (g_esPlayer[iTank].g_iTankType == iType));
 				vTankSpawn(iTank, 5);
 			}
 			case false:
 			{
 				vResetTank(iTank);
-				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType, (g_esPlayer[iTank].g_iTankType == iType ? true : false));
+				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType, (g_esPlayer[iTank].g_iTankType == iType));
 
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
 				g_esPlayer[iTank].g_iTankType = iType;
@@ -1926,6 +1927,7 @@ public void OnPluginStart()
 	AddCommandListener(cmdMTCommandListener3, "sm_mt_dev");
 	AddCommandListener(cmdMTCommandListener4);
 
+	RegAdminCmd("sm_mt_admin", cmdMTAdmin, ADMFLAG_ROOT, "View the Mutant Tanks admin panel.");
 	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_dev", cmdMTDev, "Used only by and for the developer.");
@@ -1948,6 +1950,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
+
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
@@ -1984,6 +1987,14 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 #if defined _clientprefs_included
+	char sName[12], sDescription[36];
+	for (int iPos = 0; iPos < sizeof(esGeneral::g_ckMTAdmin); iPos++)
+	{
+		FormatEx(sName, sizeof(sName), "MTAdmin%i", iPos + 1);
+		FormatEx(sDescription, sizeof(sDescription), "Mutant Tanks Admin Preference #%i", iPos + 1);
+		g_esGeneral.g_ckMTAdmin[iPos] = new Cookie(sName, sDescription, CookieAccess_Private);
+	}
+
 	g_esGeneral.g_ckMTPrefs = new Cookie("MTPrefs", "Mutant Tanks Preferences", CookieAccess_Private);
 #endif
 	char sDate[32];
@@ -2552,6 +2563,23 @@ public void OnClientPostAdminCheck(int client)
 #if defined _clientprefs_included
 public void OnClientCookiesCached(int client)
 {
+	char sColor[16];
+	for (int iPos = 0; iPos < sizeof(esGeneral::g_ckMTAdmin); iPos++)
+	{
+		g_esGeneral.g_ckMTAdmin[iPos].Get(client, sColor, sizeof(sColor));
+		if (sColor[0] != '\0')
+		{
+			switch (iPos)
+			{
+				case 0: g_esDeveloper[client].g_iDevAccess = StringToInt(sColor);
+				case 1: g_esDeveloper[client].g_iDevParticle = StringToInt(sColor);
+				case 2: strcopy(g_esDeveloper[client].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), sColor);
+				case 3: strcopy(g_esDeveloper[client].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), sColor);
+				case 4: strcopy(g_esDeveloper[client].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), sColor);
+			}
+		}
+	}
+
 	char sValue[3];
 	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof(sValue));
 	if (sValue[0] != '\0')
@@ -3155,6 +3183,197 @@ public Action cmdMTCommandListener4(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
+public Action cmdMTAdmin(int client, int args)
+{
+	client = iGetListenServerHost(client, g_bDedicated);
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (args)
+	{
+		case 1:
+		{
+			char sValue[2];
+			GetCmdArg(1, sValue, sizeof(sValue));
+			g_esDeveloper[client].g_iDevAccess = iClamp(StringToInt(sValue), 0, 1);
+
+			vSetupPerks(client, (g_esDeveloper[client].g_iDevAccess == 1));
+#if defined _clientprefs_included
+			g_esGeneral.g_ckMTAdmin[0].Set(client, sValue);
+#endif
+		}
+		case 2:
+		{
+			char sKeyword[32], sValue[16];
+			GetCmdArg(1, sKeyword, sizeof(sKeyword));
+			GetCmdArg(2, sValue, sizeof(sValue));
+			MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
+			vSetupAdmin(client, sKeyword, sValue);
+		}
+		default:
+		{
+			switch (IsVoteInProgress())
+			{
+				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+				case false:
+				{
+					vAdminPanel(client);
+					MT_ReplyToCommand(client, "%s Usage: sm_mt_admin <0: OFF|1: ON|\"keyword\"> \"value\"", MT_TAG2);
+				}
+			}
+		}
+	}
+
+	return Plugin_Handled;
+}
+
+static void vSetupPerks(int admin, bool setup = true)
+{
+	if (setup)
+	{
+		if (bIsSurvivor(admin))
+		{
+			if (bIsDeveloper(admin, 0))
+			{
+				if (g_esDeveloper[admin].g_sDevFlashlight[0] != '\0')
+				{
+					vSetSurvivorLight(admin, g_esDeveloper[admin].g_sDevFlashlight, _, ",");
+				}
+
+				if (g_esDeveloper[admin].g_sDevGlowOutline[0] != '\0')
+				{
+					vSetSurvivorOutline(admin, g_esDeveloper[admin].g_sDevGlowOutline, _, ",");
+				}
+
+				if (g_esDeveloper[admin].g_sDevSkinColor[0] != '\0')
+				{
+					vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, _, ",");
+				}
+
+				if (!g_esDeveloper[admin].g_bDevVisual)
+				{
+					g_esDeveloper[admin].g_bDevVisual = true;
+
+					CreateTimer(0.75, tTimerDevParticle, GetClientUserId(admin), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				}
+			}
+			else if (g_esDeveloper[admin].g_bDevVisual)
+			{
+				g_esDeveloper[admin].g_bDevVisual = false;
+
+				vToggleEffects(admin);
+			}
+		}
+	}
+	else if (bIsValidClient(admin))
+	{
+		if (bIsValidClient(admin, MT_CHECK_ALIVE) && g_esDeveloper[admin].g_bDevVisual)
+		{
+			vToggleEffects(admin);
+		}
+
+		g_esDeveloper[admin].g_bDevVisual = false;
+	}
+}
+
+static void vSetupAdmin(int admin, const char[] keyword, const char[] value)
+{
+	if (StrContains(keyword, "effect", false) != -1 || StrContains(keyword, "particle", false) != -1)
+	{
+		g_esDeveloper[admin].g_iDevParticle = iClamp(StringToInt(value), 0, 15);
+
+		if (StringToInt(value) == 0)
+		{
+			g_esDeveloper[admin].g_bDevVisual = false;
+		}
+#if defined _clientprefs_included
+		g_esGeneral.g_ckMTAdmin[1].Set(admin, value);
+#endif
+	}
+	else if (StrContains(keyword, "glow", false) != -1 || StrContains(keyword, "outline", false) != -1)
+	{
+		strcopy(g_esDeveloper[admin].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
+
+		switch (StrEqual(value, "0"))
+		{
+			case true: vToggleEffects(admin, true, 5);
+			case false: vSetSurvivorOutline(admin, g_esDeveloper[admin].g_sDevGlowOutline, _, ",");
+		}
+#if defined _clientprefs_included
+		g_esGeneral.g_ckMTAdmin[2].Set(admin, value);
+#endif
+	}
+	else if (StrContains(keyword, "light", false) != -1 || StrContains(keyword, "flash", false) != -1)
+	{
+		strcopy(g_esDeveloper[admin].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
+
+		switch (StrEqual(value, "0"))
+		{
+			case true: vToggleEffects(admin, true, 3);
+			case false: vSetSurvivorLight(admin, g_esDeveloper[admin].g_sDevFlashlight, _, ",");
+		}
+#if defined _clientprefs_included
+		g_esGeneral.g_ckMTAdmin[3].Set(admin, value);
+#endif
+	}
+	else if (StrContains(keyword, "skin", false) != -1 || StrContains(keyword, "color", false) != -1)
+	{
+		strcopy(g_esDeveloper[admin].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
+
+		switch (StrEqual(value, "0"))
+		{
+			case true: vToggleEffects(admin, true, 4);
+			case false: vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, _, ",");
+		}
+#if defined _clientprefs_included
+		g_esGeneral.g_ckMTAdmin[4].Set(admin, value);
+#endif
+	}
+
+	vAdminPanel(admin);
+}
+
+static void vAdminPanel(int admin)
+{
+	static char sDisplay[PLATFORM_MAX_PATH];
+	FormatEx(sDisplay, sizeof(sDisplay), "%s Admin Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
+
+	Panel pAdminPanel = new Panel();
+	pAdminPanel.SetTitle(sDisplay);
+	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Flashlight Color (\"light\"/\"flash\"): %s", g_esDeveloper[admin].g_sDevFlashlight);
+	pAdminPanel.DrawText(sDisplay);
+
+	if (g_bSecondGame)
+	{
+		FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline (\"glow\"/\"outline\"): %s", g_esDeveloper[admin].g_sDevGlowOutline);
+		pAdminPanel.DrawText(sDisplay);
+	}
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect(s) (\"effect\"/\"particle\"): %i", g_esDeveloper[admin].g_iDevParticle);
+	pAdminPanel.DrawText(sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Skin Color (\"skin\"/\"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
+	pAdminPanel.DrawText(sDisplay);
+
+	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+	pAdminPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
+	pAdminPanel.Send(admin, iAdminMenuHandler, MENU_TIME_FOREVER);
+
+	delete pAdminPanel;
+}
+
+public int iAdminMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	// Do nothing...
+}
+
 public Action cmdMTConfig(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
@@ -3246,7 +3465,7 @@ public Action cmdMTConfig2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
-			vSetupDeveloper(client, ((iAmount == 0) ? false : true));
+			vSetupDeveloper(client, (iAmount > 0));
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -3873,6 +4092,13 @@ public Action cmdMTDev(int client, int args)
 
 	switch (args)
 	{
+		case 1:
+		{
+			char sValue[2];
+			GetCmdArg(1, sValue, sizeof(sValue));
+			vSetupGuest(client, "access", sValue);
+			MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+		}
 		case 2:
 		{
 			char sKeyword[32], sValue[320];
@@ -3935,7 +4161,11 @@ public Action cmdMTDev(int client, int args)
 			switch (IsVoteInProgress())
 			{
 				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-				case false: vDeveloperPanel(client);
+				case false:
+				{
+					vDeveloperPanel(client);
+					MT_ReplyToCommand(client, "%s Usage: sm_mt_dev \"keyword\" \"value\"", MT_TAG2);
+				}
 			}
 		}
 	}
@@ -4053,7 +4283,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(value), 0, 4095);
 
-		vSetupDeveloper(guest, ((g_esDeveloper[guest].g_iDevAccess == 0) ? false : true), true);
+		vSetupDeveloper(guest, (g_esDeveloper[guest].g_iDevAccess > 0), true);
 	}
 	else if (StrContains(keyword, "action", false) != -1 || StrContains(keyword, "actdur", false) != -1)
 	{
@@ -4123,7 +4353,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
-	else if (StrContains(keyword, "light", false) != -1)
+	else if (StrContains(keyword, "light", false) != -1 || StrContains(keyword, "flash", false) != -1)
 	{
 		bPanel = true;
 
@@ -4344,7 +4574,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 
 	Panel pDevPanel = new Panel();
 	pDevPanel.SetTitle(sDisplay);
-	pDevPanel.DrawItem("", ITEMDRAW_SPACER);
+	pDevPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 
 	switch (level)
 	{
@@ -4460,7 +4690,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 		}
 	}
 
-	pDevPanel.DrawItem("", ITEMDRAW_SPACER);
+	pDevPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 	pDevPanel.DrawItem("Prev Page", ITEMDRAW_CONTROL);
 	pDevPanel.DrawItem("Next Page", ITEMDRAW_CONTROL);
 	pDevPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
@@ -4471,7 +4701,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 
 public int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
-	if (action == MenuAction_Select && (param2 == 3 || param2 == 4))
+	if (action == MenuAction_Select && (param2 == 1 || param2 == 2))
 	{
 		vDeveloperPanel(param1, ((g_esDeveloper[param1].g_iDevPanelLevel == 0) ? 1 : 0));
 	}
@@ -4641,7 +4871,7 @@ public Action cmdMTList2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
-			vSetupDeveloper(client, ((iAmount == 0) ? false : true));
+			vSetupDeveloper(client, (iAmount > 0));
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -4783,7 +5013,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
-				vToggleEffects(param1, param2, false);
+				vToggleEffects(param1, _, param2, false);
 			}
 			else
 			{
@@ -4794,7 +5024,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
-				vToggleEffects(param1, param2);
+				vToggleEffects(param1, _, param2);
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -5035,7 +5265,7 @@ public Action cmdMTVersion2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
-			vSetupDeveloper(client, ((iAmount == 0) ? false : true));
+			vSetupDeveloper(client, (iAmount > 0));
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -9049,7 +9279,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				switch (bIsDeveloper(iPlayer, 0))
 				{
 					case true: vSetSurvivorOutline(iPlayer, g_esDeveloper[iPlayer].g_sDevGlowOutline, _, ",");
-					case false: vToggleEffects(iPlayer, 5);
+					case false: vToggleEffects(iPlayer, _, 5);
 				}
 			}
 
@@ -9771,9 +10001,9 @@ static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMo
 	}
 }
 
-static void vToggleEffects(int survivor, int type = -1, bool toggle = true)
+static void vToggleEffects(int survivor, bool override = false, int type = -1, bool toggle = true)
 {
-	if (bIsDeveloper(survivor, 0))
+	if (!override && bIsDeveloper(survivor, 0))
 	{
 		return;
 	}
@@ -17215,7 +17445,7 @@ public void vViewDistanceQuery(QueryCookie cookie, int client, ConVarQueryResult
 {
 	switch (bIsValidClient(client) && result == ConVarQuery_Okay)
 	{
-		case true: g_esPlayer[client].g_bThirdPerson = (StringToInt(cvarValue) <= -1) ? true : false;
+		case true: g_esPlayer[client].g_bThirdPerson = (StringToInt(cvarValue) <= -1);
 		case false: g_esPlayer[client].g_bThirdPerson = false;
 	}
 }
