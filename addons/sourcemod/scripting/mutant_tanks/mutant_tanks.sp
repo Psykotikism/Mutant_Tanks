@@ -3261,12 +3261,7 @@ static void vSetupPerks(int admin, bool setup = true)
 					vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, _, ",");
 				}
 
-				if (!g_esDeveloper[admin].g_bDevVisual)
-				{
-					g_esDeveloper[admin].g_bDevVisual = true;
-
-					CreateTimer(0.75, tTimerDevParticle, GetClientUserId(admin), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
+				vSetSurvivorParticle(admin);
 			}
 			else if (g_esDeveloper[admin].g_bDevVisual)
 			{
@@ -3293,9 +3288,10 @@ static void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 	{
 		g_esDeveloper[admin].g_iDevParticle = iClamp(StringToInt(value), 0, 15);
 
-		if (StringToInt(value) == 0)
+		switch (StringToInt(value) == 0)
 		{
-			g_esDeveloper[admin].g_bDevVisual = false;
+			case true: g_esDeveloper[admin].g_bDevVisual = false;
+			case false: vSetSurvivorParticle(admin);
 		}
 #if defined _clientprefs_included
 		g_esGeneral.g_ckMTAdmin[1].Set(admin, value);
@@ -3303,12 +3299,19 @@ static void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "glow", false) != -1 || StrContains(keyword, "outline", false) != -1)
 	{
-		strcopy(g_esDeveloper[admin].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
-
 		switch (StrEqual(value, "0"))
 		{
-			case true: vToggleEffects(admin, true, 5);
-			case false: vSetSurvivorOutline(admin, g_esDeveloper[admin].g_sDevGlowOutline, _, ",");
+			case true:
+			{
+				g_esDeveloper[admin].g_sDevGlowOutline[0] = '\0';
+
+				vToggleEffects(admin, true, 5);
+			}
+			case false:
+			{
+				strcopy(g_esDeveloper[admin].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
+				vSetSurvivorOutline(admin, g_esDeveloper[admin].g_sDevGlowOutline, _, ",");
+			}
 		}
 #if defined _clientprefs_included
 		g_esGeneral.g_ckMTAdmin[2].Set(admin, value);
@@ -3316,12 +3319,19 @@ static void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "light", false) != -1 || StrContains(keyword, "flash", false) != -1)
 	{
-		strcopy(g_esDeveloper[admin].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
-
 		switch (StrEqual(value, "0"))
 		{
-			case true: vToggleEffects(admin, true, 3);
-			case false: vSetSurvivorLight(admin, g_esDeveloper[admin].g_sDevFlashlight, _, ",");
+			case true:
+			{
+				g_esDeveloper[admin].g_sDevFlashlight[0] = '\0';
+
+				vToggleEffects(admin, true, 3);
+			}
+			case false:
+			{
+				strcopy(g_esDeveloper[admin].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
+				vSetSurvivorLight(admin, g_esDeveloper[admin].g_sDevFlashlight, _, ",");
+			}
 		}
 #if defined _clientprefs_included
 		g_esGeneral.g_ckMTAdmin[3].Set(admin, value);
@@ -3329,12 +3339,19 @@ static void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "skin", false) != -1 || StrContains(keyword, "color", false) != -1)
 	{
-		strcopy(g_esDeveloper[admin].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
-
 		switch (StrEqual(value, "0"))
 		{
-			case true: vToggleEffects(admin, true, 4);
-			case false: vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, _, ",");
+			case true:
+			{
+				g_esDeveloper[admin].g_sDevSkinColor[0] = '\0';
+
+				vToggleEffects(admin, true, 4);
+			}
+			case false:
+			{
+				strcopy(g_esDeveloper[admin].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
+				vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, _, ",");
+			}
 		}
 #if defined _clientprefs_included
 		g_esGeneral.g_ckMTAdmin[4].Set(admin, value);
@@ -4194,13 +4211,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 				vSetSurvivorLight(developer, g_esDeveloper[developer].g_sDevFlashlight, _, ",");
 				vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, _, ",");
 				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, _, ",");
-
-				if (!g_esDeveloper[developer].g_bDevVisual)
-				{
-					g_esDeveloper[developer].g_bDevVisual = true;
-
-					CreateTimer(0.75, tTimerDevParticle, GetClientUserId(developer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
+				vSetSurvivorParticle(developer);
 			}
 			else if (g_esDeveloper[developer].g_bDevVisual)
 			{
@@ -13582,6 +13593,16 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = 
 	{
 		case true: vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
 		case false: vRemoveGlow(survivor);
+	}
+}
+
+static void vSetSurvivorParticle(int survivor)
+{
+	if (!g_esDeveloper[survivor].g_bDevVisual)
+	{
+		g_esDeveloper[survivor].g_bDevVisual = true;
+
+		CreateTimer(0.75, tTimerDevParticle, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
