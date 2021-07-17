@@ -12025,7 +12025,7 @@ static void vSetupVisual(int survivor, int recipient, int tank, int priority, in
 					case 3: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof(esPlayer::g_sLightColor), g_esCache[tank].g_sLightColorVisual4);
 				}
 
-				if (!bIgnore)
+				if (!bIgnore || g_esDeveloper[survivor].g_sDevFlashlight[0] == '\0')
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sLightColor, ';') != -1) ? ";" : ",";
@@ -12051,7 +12051,7 @@ static void vSetupVisual(int survivor, int recipient, int tank, int priority, in
 					case 3: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual4);
 				}
 
-				if (!bIgnore)
+				if (!bIgnore || g_esDeveloper[survivor].g_sDevSkinColor[0] == '\0')
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
@@ -12077,7 +12077,7 @@ static void vSetupVisual(int survivor, int recipient, int tank, int priority, in
 					case 3: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual4);
 				}
 
-				if (!bIgnore)
+				if (!bIgnore || g_esDeveloper[survivor].g_sDevGlowOutline[0] == '\0')
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
@@ -17859,7 +17859,7 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsDeveloper(iSurvivor, 0) || !(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_PARTICLE) || bHasIdlePlayer(iSurvivor) || bIsPlayerIdle(iSurvivor))
+	if ((bIsDeveloper(iSurvivor, 0) && g_esDeveloper[iSurvivor].g_bDevVisual && g_esDeveloper[iSurvivor].g_iDevParticle > 0) || !(g_esPlayer[iSurvivor].g_iRewardVisuals & MT_VISUAL_PARTICLE) || bHasIdlePlayer(iSurvivor) || bIsPlayerIdle(iSurvivor))
 	{
 		return Plugin_Continue;
 	}
