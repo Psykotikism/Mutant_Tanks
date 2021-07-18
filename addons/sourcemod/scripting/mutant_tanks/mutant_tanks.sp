@@ -2111,75 +2111,8 @@ public void OnPluginStart()
 				LogError("%s Failed to find address: CDirector", MT_TAG);
 			}
 
-			g_esGeneral.g_adDoJumpValue = gdMutantTanks.GetAddress("DoJumpValueBytes");
-			if (g_esGeneral.g_adDoJumpValue == Address_Null)
-			{
-				LogError("%s Failed to find address from \"DoJumpValueBytes\". Retrieving from \"DoJumpValueRead\" instead.", MT_TAG);
-
-				if (g_bSecondGame || !g_esGeneral.g_bLinux)
-				{
-					g_esGeneral.g_adDoJumpValue = gdMutantTanks.GetAddress("DoJumpValueRead");
-					if (g_esGeneral.g_adDoJumpValue == Address_Null)
-					{
-						LogError("%s Failed to find address from \"DoJumpValueRead\". Failed to retrieve address from both methods.", MT_TAG);
-					}
-				}
-				else
-				{
-					Address adJumpHeight[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
-					int iOffset[3] = {-1, -1, -1};
-					iOffset[0] = gdMutantTanks.GetOffset("PlayerLocomotion::GetMaxJumpHeight::Call");
-					iOffset[1] = gdMutantTanks.GetOffset("PlayerLocomotion::GetMaxJumpHeight::Add");
-					iOffset[2] = gdMutantTanks.GetOffset("PlayerLocomotion::GetMaxJumpHeight::Value");
-					adJumpHeight[0] = gdMutantTanks.GetAddress("GetMaxJumpHeightStart");
-					if (adJumpHeight[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
-					{
-						LogError("%s Failed to find address from \"DoJumpValueRead\". Failed to retrieve address from both methods.", MT_TAG);
-					}
-					else
-					{
-						adJumpHeight[1] = adJumpHeight[0] + view_as<Address>(iOffset[0]);
-						adJumpHeight[2] = LoadFromAddress((adJumpHeight[0] + view_as<Address>(iOffset[1])), NumberType_Int32);
-						adJumpHeight[3] = LoadFromAddress((adJumpHeight[0] + view_as<Address>(iOffset[2])), NumberType_Int32);
-						g_esGeneral.g_adDoJumpValue = (adJumpHeight[1] + adJumpHeight[2] + adJumpHeight[3]);
-					}
-				}
-			}
-
-			g_esGeneral.g_adFallingSound = gdMutantTanks.GetAddress("OnFallingSoundBytes");
-			if (g_esGeneral.g_adFallingSound == Address_Null)
-			{
-				LogError("%s Failed to find address from \"OnFallingSoundBytes\". Retrieving from \"OnFallingSoundRead\" instead.", MT_TAG);
-
-				if (g_bSecondGame || !g_esGeneral.g_bLinux)
-				{
-					g_esGeneral.g_adFallingSound = gdMutantTanks.GetAddress("OnFallingSoundRead");
-					if (g_esGeneral.g_adFallingSound == Address_Null)
-					{
-						LogError("%s Failed to find address from \"OnFallingSoundRead\". Failed to retrieve address from both methods.", MT_TAG);
-					}
-				}
-				else
-				{
-					Address adFallingSound[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
-					int iOffset[3] = {-1, -1, -1};
-					iOffset[0] = gdMutantTanks.GetOffset("CTerrorPlayer::OnLadderMount::Call");
-					iOffset[1] = gdMutantTanks.GetOffset("CTerrorPlayer::OnLadderMount::Add");
-					iOffset[2] = gdMutantTanks.GetOffset("CTerrorPlayer::OnLadderMount::Sound");
-					adFallingSound[0] = gdMutantTanks.GetAddress("OnLadderMountStart");
-					if (adFallingSound[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
-					{
-						LogError("%s Failed to find address from \"OnFallingSoundRead\". Failed to retrieve address from both methods.", MT_TAG);
-					}
-					else
-					{
-						adFallingSound[1] = adFallingSound[0] + view_as<Address>(iOffset[0]);
-						adFallingSound[2] = LoadFromAddress((adFallingSound[0] + view_as<Address>(iOffset[1])), NumberType_Int32);
-						adFallingSound[3] = LoadFromAddress((adFallingSound[0] + view_as<Address>(iOffset[2])), NumberType_Int32);
-						g_esGeneral.g_adFallingSound = (adFallingSound[1] + adFallingSound[2] + adFallingSound[3]);
-					}
-				}
-			}
+			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress(gdMutantTanks, "DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
+			g_esGeneral.g_adFallingSound = adGetGameDataAddress(gdMutantTanks, "OnFallingSoundBytes", "OnFallingSoundRead", "OnLadderMountStart", "CTerrorPlayer::OnLadderMount::Call", "CTerrorPlayer::OnLadderMount::Add", "CTerrorPlayer::OnLadderMount::Sound");
 
 			StartPrepSDKCall(SDKCall_Raw);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::GetRefEHandle"))
@@ -14789,9 +14722,8 @@ static void vRegisterPatches(GameData dataHandle)
 	}
 
 	bool bPlatform = false;
-	char sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[64], sType[10];
+	char sOS[8], sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[64], sType[10];
 	int iVerify[MT_PATCH_MAXLEN], iVLength = 0, iPatch[MT_PATCH_MAXLEN], iPLength = 0;
-
 	do
 	{
 		kvPatches.GetSectionName(sName, sizeof(sName));
@@ -14801,29 +14733,19 @@ static void vRegisterPatches(GameData dataHandle)
 		kvPatches.GetString("signature", sSignature, sizeof(sSignature));
 		kvPatches.GetString("offset", sOffset, sizeof(sOffset));
 
-		if (g_esGeneral.g_bLinux)
+		switch (g_esGeneral.g_bLinux)
 		{
-			if (kvPatches.JumpToKey("linux"))
-			{
-				bPlatform = true;
-
-				kvPatches.GetString("verify", sVerify, sizeof(sVerify), sVerify);
-				kvPatches.GetString("patch", sPatch, sizeof(sPatch), sPatch);
-
-				kvPatches.GoBack();
-			}
+			case true: sOS = "linux";
+			case false: sOS = "windows";
 		}
-		else
+
+		if (kvPatches.JumpToKey(sOS))
 		{
-			if (kvPatches.JumpToKey("windows"))
-			{
-				bPlatform = true;
+			bPlatform = true;
 
-				kvPatches.GetString("verify", sVerify, sizeof(sVerify), sVerify);
-				kvPatches.GetString("patch", sPatch, sizeof(sPatch), sPatch);
-
-				kvPatches.GoBack();
-			}
+			kvPatches.GetString("verify", sVerify, sizeof(sVerify));
+			kvPatches.GetString("patch", sPatch, sizeof(sPatch));
+			kvPatches.GoBack();
 		}
 
 		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand")) || sSignature[0] == '\0' || (bPlatform && (sVerify[0] == '\0' || sPatch[0] == '\0')))
@@ -14835,11 +14757,9 @@ static void vRegisterPatches(GameData dataHandle)
 
 		if (!bPlatform && (sOffset[0] != '\0' || sVerify[0] == '\0' || sPatch[0] == '\0'))
 		{
-			bPlatform = false;
-
 			if (sLog[0] == 'y')
 			{
-				vLogMessage(-1, _, "%s No patch for \"%s\" on %s was found.", MT_TAG, sName, (g_esGeneral.g_bLinux ? "Linux" : "Windows"));
+				vLogMessage(-1, _, "%s No patch for \"%s\" on %s was found.", MT_TAG, sName, sOS);
 			}
 
 			continue;
@@ -14900,9 +14820,50 @@ static void vRegisterPatches(GameData dataHandle)
 		}
 
 		bRegisterPatch(dataHandle, sName, sSignature, sOffset, iVerify, iVLength, iPatch, iPLength, (sLog[0] == 'y'), (sType[0] == 'p'));
-	} while (kvPatches.GotoNextKey());
+	}
+	while (kvPatches.GotoNextKey());
 
 	delete kvPatches;
+}
+
+static Address adGetGameDataAddress(GameData dataHandle, const char[] name, const char[] backup, const char[] start, const char[] offset1, const char[] offset2, const char[] offset3)
+{
+	Address adResult = dataHandle.GetAddress(name);
+	if (adResult == Address_Null)
+	{
+		LogError("%s Failed to find address from \"%s\". Retrieving from \"%s\" instead.", MT_TAG, name, backup);
+
+		if (g_bSecondGame || !g_esGeneral.g_bLinux)
+		{
+			adResult = dataHandle.GetAddress(backup);
+			if (adResult == Address_Null)
+			{
+				LogError("%s Failed to find address from \"%s\". Failed to retrieve address from both methods.", MT_TAG, backup);
+			}
+		}
+		else
+		{
+			Address adValue[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
+			int iOffset[3] = {-1, -1, -1};
+			iOffset[0] = dataHandle.GetOffset(offset1);
+			iOffset[1] = dataHandle.GetOffset(offset2);
+			iOffset[2] = dataHandle.GetOffset(offset3);
+			adValue[0] = dataHandle.GetAddress(start);
+			if (adValue[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
+			{
+				LogError("%s Failed to find address from \"%s\". Failed to retrieve address from both methods.", MT_TAG, backup);
+			}
+			else
+			{
+				adValue[1] = adValue[0] + view_as<Address>(iOffset[0]);
+				adValue[2] = LoadFromAddress((adValue[0] + view_as<Address>(iOffset[1])), NumberType_Int32);
+				adValue[3] = LoadFromAddress((adValue[0] + view_as<Address>(iOffset[2])), NumberType_Int32);
+				adResult = (adValue[1] + adValue[2] + adValue[3]);
+			}
+		}
+	}
+
+	return adResult;
 }
 
 static bool bAreHumansRequired(int type)
@@ -18164,8 +18125,7 @@ public Action tTimerRegularWaves(Handle timer)
 	}
 
 	static int iCount;
-	iCount = iGetTankCount(true);
-	iCount = (iCount > 0) ? iCount : iGetTankCount(false);
+	iCount = iGetTankCount(true), iCount = (iCount > 0) ? iCount : iGetTankCount(false);
 	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
 		return Plugin_Continue;
