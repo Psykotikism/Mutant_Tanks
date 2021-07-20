@@ -734,7 +734,7 @@
 
 	"RewardShared"
 	{
-		"chi"			"{1}{default} 与{mint} 你{default} 分享了他们的{yellow} {2}{default}！"
+		"chi"			"{1}{default} 与你分享他们的{yellow} {2}{default}{mint}你{default}！"
 	}
 
 	"RewardSolo"
