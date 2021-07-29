@@ -21,7 +21,7 @@
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.87"
+#define MT_VERSION "8.88"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 public SharedPlugin __pl_mutanttanks =
@@ -1298,15 +1298,18 @@ stock void vCopyVector(float source[3], float target[3])
 
 stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...)
 {
-	static char sConfigFilename[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH];
+	static char sConfig[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
 	VFormat(sFilename, sizeof(sFilename), filename, 3);
-	BuildPath(Path_SM, sConfigFilename, sizeof(sConfigFilename), "data/mutant_tanks/%s%s.cfg", folder, sFilename);
-	if (FileExists(sConfigFilename))
+	FormatEx(sConfig, sizeof(sConfig), "%s.cfg", sFilename);
+	BuildPath(Path_SM, sPath, sizeof(sPath), "%s%s", folder, sConfig);
+	if (MT_FileExists(folder, sConfig, sPath, sOutput, sizeof(sOutput)))
 	{
+		RenameFile(sOutput, sPath);
+
 		return;
 	}
 
-	File fFilename = OpenFile(sConfigFilename, "w+");
+	File fFilename = OpenFile(sPath, "w+");
 	if (fFilename != null)
 	{
 		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)", MT_NAME, MT_VERSION);
@@ -1442,6 +1445,20 @@ stock void vExternalView(int player, float time)
 	}
 }
 
+stock void vGetDayName(int day, char[] buffer, int size)
+{
+	switch (day)
+	{
+		case 0: strcopy(buffer, size, "sunday");
+		case 1: strcopy(buffer, size, "monday");
+		case 2: strcopy(buffer, size, "tuesday");
+		case 3: strcopy(buffer, size, "wednesday");
+		case 4: strcopy(buffer, size, "thursday");
+		case 5: strcopy(buffer, size, "friday");
+		case 6: strcopy(buffer, size, "saturday");
+	}
+}
+
 stock void vGetDoubleFromFloat(float value, int save[2])
 {
 	int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
@@ -1454,6 +1471,18 @@ stock void vGetDoubleFromFloat(float value, int save[2])
 	save[1] = iMantissa << 28;
 }
 
+stock void vGetEntityMidOrigin(int entity, float origin[3])
+{
+	float flMins[3], flMaxes[3];
+	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
+	GetEntPropVector(entity, Prop_Send, "m_vecMins", flMins);
+	GetEntPropVector(entity, Prop_Send, "m_vecMaxs", flMaxes);
+
+	origin[0] += (flMins[0] + flMaxes[0]) * 0.5;
+	origin[1] += (flMins[1] + flMaxes[1]) * 0.5;
+	origin[2] += (flMins[2] + flMaxes[2]) * 0.5;
+}
+
 stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
 {
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
@@ -1462,6 +1491,26 @@ stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[]
 		{
 			strcopy(buffer, size, value);
 		}
+	}
+}
+
+stock void vGetMatchingFilename(const char[] directory, const char[] filename, char[] buffer, int size)
+{
+	DirectoryListing dlList = OpenDirectory(directory);
+	if (dlList != null)
+	{
+		char sFilename[PLATFORM_MAX_PATH];
+		while (dlList.GetNext(sFilename, sizeof(sFilename)))
+		{
+			if (StrEqual(sFilename, filename, false))
+			{
+				strcopy(buffer, size, sFilename);
+
+				break;
+			}
+		}
+
+		delete dlList;
 	}
 }
 
@@ -1670,7 +1719,27 @@ stock void vStopSound(int client, const char[] sound)
 	StopSound(client, SNDCHAN_USER_BASE, sound);
 }
 
-// Chat
+// Files
+stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
+{
+	if (FileExists(path, use_valve_fs, valve_path_id))
+	{
+		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		if (!StrEqual(filename, sOutput))
+		{
+			static char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			strcopy(output, size, sTemp);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
@@ -1828,7 +1897,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1931,7 +1999,7 @@ stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 
 stock bool bIsInfectedGhost(int infected)
 {
-	return GetEntProp(infected, Prop_Send, "m_isGhost") == 1;
+	return !!GetEntProp(infected, Prop_Send, "m_isGhost");
 }
 
 stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1973,7 +2041,7 @@ stock bool bIsPlayerIdle(int survivor)
 
 stock bool bIsPlayerIncapacitated(int player)
 {
-	return GetEntProp(player, Prop_Send, "m_isIncapacitated", 1) == 1;
+	return !!GetEntProp(player, Prop_Send, "m_isIncapacitated", 1);
 }
 
 stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT)
@@ -2113,7 +2181,7 @@ stock bool bIsSurvivorDisabled(int survivor)
 
 stock bool bIsSurvivorHanging(int survivor)
 {
-	return GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") == 1 || GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge") == 1;
+	return !!GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") || !!GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge");
 }
 
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -2124,7 +2192,7 @@ stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK
 
 stock bool bIsTankInStasis(int tank)
 {
-	return bIsSecondGame() && GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
+	return bIsSecondGame() && !!GetEntProp(tank, Prop_Data, "m_bIsInStasis");
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -2331,7 +2399,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2425,7 +2492,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 
@@ -3037,6 +3103,88 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 	}
 
 	return (overrideLevel == 1) ? -1 : 0;
+}
+
+stock int iGetSurvivorCount(bool human = false)
+{
+	static bool bValidPlayer;
+	bValidPlayer = false;
+	static int iCount;
+	iCount = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
+		if (bIsSurvivor(iSurvivor))
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
+}
+
+stock int iGetSaferoomDoor(bool enddoor)
+{
+	int iEndDoor = -1, iStartDoor = -1, iSafeZone = FindEntityByClassname(-1, "info_changelevel");
+	switch (bIsValidEntity(iSafeZone))
+	{
+		case true:
+		{
+			float flSafePos[3], flEndDistance = -1.0, flStartDistance = -1.0, flDistance, flDoorPos[3];
+			vGetEntityMidOrigin(iSafeZone, flSafePos);
+
+			int iDoor = -1;
+			while ((iDoor = FindEntityByClassname(iDoor, "prop_door_rotating_checkpoint")) != -1)
+			{
+				if (GetEntProp(iDoor, Prop_Data, "m_spawnflags") & 32768)
+				{
+					continue;
+				}
+
+				vGetEntityMidOrigin(iDoor, flDoorPos);
+				flDistance = GetVectorDistance(flSafePos, flDoorPos);
+				if (flDistance < flEndDistance || flEndDistance == -1.0)
+				{
+					flEndDistance = flDistance;
+					iEndDoor = iDoor;
+				}
+
+				if (flDistance >= flStartDistance || flStartDistance == -1.0)
+				{
+					flStartDistance = flDistance;
+					iStartDoor = iDoor;
+				}
+			}
+
+			switch (enddoor)
+			{
+				case true: return iEndDoor;
+				case false: return (iStartDoor == iEndDoor) ? -1 : iStartDoor;
+			}
+		}
+		case false:
+		{
+			if (enddoor)
+			{
+				return -1;
+			}
+
+			int iDoor = -1;
+			while ((iDoor = FindEntityByClassname(iDoor, "prop_door_rotating_checkpoint")) != -1)
+			{
+				if (GetEntProp(iDoor, Prop_Data, "m_spawnflags") & 32768)
+				{
+					continue;
+				}
+
+				return iDoor;
+			}
+
+			return -1;
+		}
+	}
+
+	return -1;
 }
 
 stock int iGetWeaponOffset(int weapon)

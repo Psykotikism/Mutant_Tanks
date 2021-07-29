@@ -222,6 +222,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_IMMUNE "Immunities"
 #define MT_CONFIG_SECTION_IMMUNE2 "immune"
 
+#define MT_DETOUR_LIMIT 100 // number of detours allowed
+
 #define MT_EFFECT_TROPHY (1 << 0) // trophy
 #define MT_EFFECT_FIREWORKS (1 << 1) // fireworks particles
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
@@ -302,6 +304,7 @@ enum struct esGeneral
 	bool g_bClientPrefsInstalled;
 	bool g_bCloneInstalled;
 	bool g_bConfigsExecuted;
+	bool g_bDoorClosed;
 	bool g_bFinaleEnded;
 	bool g_bFinalMap;
 	bool g_bForceSpawned;
@@ -390,7 +393,6 @@ enum struct esGeneral
 	ConVar g_cvMTSurvivorReviveHealth;
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
-	ConVar g_cvCSLaddersVersion;
 #if defined _clientprefs_included
 	Cookie g_ckMTAdmin[5];
 	Cookie g_ckMTPrefs;
@@ -401,8 +403,6 @@ enum struct esGeneral
 	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoAnimationEventDetour;
 	DynamicDetour g_ddDoJumpDetour;
-	DynamicDetour g_ddEndVersusModeRoundDetour;
-	DynamicDetour g_ddEndScavengeRoundDetour;
 	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
 	DynamicDetour g_ddEventKilledDetour;
@@ -510,6 +510,7 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
+	Handle g_hSDKGetLastKnownArea;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetMissionFirstMap;
 	Handle g_hSDKGetMissionInfo;
@@ -543,6 +544,7 @@ enum struct esGeneral
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
+	int g_iAttributeFlagsOffset;
 	int g_iBaseHealth;
 	int g_iBehaviorOffset;
 	int g_iBulletImmunity;
@@ -945,6 +947,7 @@ enum struct esPlayer
 	int g_iReviveCount;
 	int g_iReviveHealth;
 	int g_iReviveHealthReward[4];
+	int g_iReviver;
 	int g_iRewardBots[4];
 	int g_iRewardEffect[4];
 	int g_iRewardEnabled[4];
@@ -1353,11 +1356,11 @@ esCache g_esCache[MAXPLAYERS + 1];
 
 Address g_adPatchAddress[MT_PATCH_LIMIT];
 
-bool g_bPatchInstalled[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT];
+bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT];
 
-char g_sPatchName[MT_PATCH_LIMIT][64];
+char g_sDetourName[MT_DETOUR_LIMIT][128], g_sPatchName[MT_PATCH_LIMIT][128];
 
-int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iOriginalBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchCount = 0, g_iPatchLength[MT_PATCH_LIMIT], g_iPatchOffset[MT_PATCH_LIMIT];
+int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iDetourCount = 0, g_iDetourType[MT_DETOUR_LIMIT], g_iOriginalBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchCount = 0, g_iPatchLength[MT_PATCH_LIMIT], g_iPatchOffset[MT_PATCH_LIMIT];
 
 public any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
@@ -1754,7 +1757,7 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 			}
 			case false:
 			{
-				vResetTank(iTank);
+				vResetTank3(iTank);
 				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType, (g_esPlayer[iTank].g_iTankType == iType));
 
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
@@ -1846,6 +1849,7 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = true;
+
 		vToggleLeft4DHooks(false);
 	}
 	else if (StrEqual(name, "mt_clone"))
@@ -1863,6 +1867,7 @@ public void OnLibraryRemoved(const char[] name)
 	else if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = false;
+
 		vToggleLeft4DHooks(true);
 	}
 	else if (StrEqual(name, "mt_clone"))
@@ -1876,21 +1881,54 @@ public void OnAllPluginsLoaded()
 	g_esGeneral.g_bClientPrefsInstalled = LibraryExists("clientprefs");
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-	g_esGeneral.g_cvCSLaddersVersion = FindConVar("l4d2_cs_ladders");
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 	if (gdMutantTanks != null)
 	{
+		vRegisterDetours();
 		vRegisterPatches(gdMutantTanks);
 		vInstallPermanentPatches();
 
-		if (g_esGeneral.g_cvCSLaddersVersion == null)
-		{
-			vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::CanDeployFor");
-			vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderDismount");
-			vSetupDetour(g_esGeneral.g_ddLadderMountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderMount");
-			vSetupDetour(g_esGeneral.g_ddPreThinkDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::PreThink");
-		}
+		vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "MTDetour_CFirstAidKit::OnActionComplete");
+		vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, gdMutantTanks, "MTDetour_CBaseEntity::Create");
+		vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::CanDeployFor");
+		vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "MTDetour_CDeathFallCamera::Enable");
+		vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::DoAnimationEvent");
+		vSetupDetour(g_esGeneral.g_ddDoJumpDetour, gdMutantTanks, "MTDetour_CTerrorGameMovement::DoJump");
+		vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnEnterGhostState");
+		vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, gdMutantTanks, "MTDetour_Tank::EnterStasis");
+		vSetupDetour(g_esGeneral.g_ddEventKilledDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::Event_Killed");
+		vSetupDetour(g_esGeneral.g_ddFallingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnFalling");
+		vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, gdMutantTanks, "MTDetour_CFirstAidKit::FinishHealing");
+		vSetupDetour(g_esGeneral.g_ddFireBulletDetour, gdMutantTanks, "MTDetour_CTerrorGun::FireBullet");
+		vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, gdMutantTanks, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
+		vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::Fling");
+		vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, gdMutantTanks, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
+		vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
+		vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderDismount");
+		vSetupDetour(g_esGeneral.g_ddLadderMountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderMount");
+		vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, gdMutantTanks, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
+		vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, gdMutantTanks, "MTDetour_Tank::LeaveStasis");
+		vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, gdMutantTanks, "MTDetour_CAmmoDef::MaxCarry");
+		vSetupDetour(g_esGeneral.g_ddPreThinkDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::PreThink");
+		vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, gdMutantTanks, "MTDetour_ZombieManager::ReplaceTank");
+		vSetupDetour(g_esGeneral.g_ddRevivedDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnRevived");
+		vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::SecondaryAttack");
+		vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, gdMutantTanks, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack");
+		vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::SelectWeightedSequence");
+		vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::SetMainActivity");
+		vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
+		vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
+		vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, gdMutantTanks, "MTDetour_ZombieManager::SpawnTank");
+		vSetupDetour(g_esGeneral.g_ddStaggerDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnStaggered");
+		vSetupDetour(g_esGeneral.g_ddStartActionDetour, gdMutantTanks, "MTDetour_CBaseBackpackItem::StartAction");
+		vSetupDetour(g_esGeneral.g_ddStartHealingDetour, gdMutantTanks, "MTDetour_CFirstAidKit::StartHealing");
+		vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::StartReviving");
+		vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "MTDetour_CTankClaw::DoSwing");
+		vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "MTDetour_CTankClaw::OnPlayerHit");
+		vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "MTDetour_CTankRock::Create");
+		vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
+		vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnVomitedUpon");
 
 		delete gdMutantTanks;
 	}
@@ -2022,7 +2060,7 @@ public void OnPluginStart()
 	CreateDirectory(sSMPath, 511);
 	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%s%s", sSMPath, MT_CONFIG_FILE);
 
-	switch (FileExists(g_esGeneral.g_sSavePath, true))
+	switch (MT_FileExists(MT_CONFIG_PATH, MT_CONFIG_FILE, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath)))
 	{
 		case true: g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		case false: SetFailState("Unable to load the \"%s\" config file.", g_esGeneral.g_sSavePath);
@@ -2084,25 +2122,6 @@ public void OnPluginStart()
 				}
 
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
-
-				vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "MTDetour_CFirstAidKit::OnActionComplete");
-				vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::DoAnimationEvent");
-				vSetupDetour(g_esGeneral.g_ddEndScavengeRoundDetour, gdMutantTanks, "MTDetour_CDirectorScavengeMode::EndScavengeRound");
-				vSetupDetour(g_esGeneral.g_ddFireBulletDetour, gdMutantTanks, "MTDetour_CTerrorGun::FireBullet");
-				vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::Fling");
-				vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
-				vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, gdMutantTanks, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack");
-				vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::SelectWeightedSequence");
-				vSetupDetour(g_esGeneral.g_ddStartActionDetour, gdMutantTanks, "MTDetour_CBaseBackpackItem::StartAction");
-				vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "MTDetour_CTankRock::Create");
-				vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
-			}
-			else
-			{
-				vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, gdMutantTanks, "MTDetour_CBaseEntity::Create");
-				vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, gdMutantTanks, "MTDetour_CFirstAidKit::FinishHealing");
-				vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::SetMainActivity");
-				vSetupDetour(g_esGeneral.g_ddStartHealingDetour, gdMutantTanks, "MTDetour_CFirstAidKit::StartHealing");
 			}
 
 			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
@@ -2190,6 +2209,19 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKIsMissionFinalMap == null)
 			{
 				LogError("%s Your \"CTerrorGameRules::IsMissionFinalMap\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
+			{
+				LogError("%s Failed to load offset: CTerrorPlayer::GetLastKnownArea", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKGetLastKnownArea == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -2307,6 +2339,7 @@ public void OnPluginStart()
 			g_esGeneral.g_iBehaviorOffset = iGetGameDataOffset(gdMutantTanks, "TankIntention::FirstContainedResponder");
 			g_esGeneral.g_iActionOffset = iGetGameDataOffset(gdMutantTanks, "Behavior<Tank>::FirstContainedResponder");
 			g_esGeneral.g_iChildActionOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
+			g_esGeneral.g_iAttributeFlagsOffset = iGetGameDataOffset(gdMutantTanks, "WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 
 			int iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
 			StartPrepSDKCall(SDKCall_Entity);
@@ -2328,30 +2361,6 @@ public void OnPluginStart()
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
-			vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "MTDetour_CDeathFallCamera::Enable");
-			vSetupDetour(g_esGeneral.g_ddDoJumpDetour, gdMutantTanks, "MTDetour_CTerrorGameMovement::DoJump");
-			vSetupDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, gdMutantTanks, "MTDetour_CDirectorVersusMode::EndVersusModeRound");
-			vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnEnterGhostState");
-			vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, gdMutantTanks, "MTDetour_Tank::EnterStasis");
-			vSetupDetour(g_esGeneral.g_ddEventKilledDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::Event_Killed");
-			vSetupDetour(g_esGeneral.g_ddFallingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnFalling");
-			vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, gdMutantTanks, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
-			vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, gdMutantTanks, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
-			vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, gdMutantTanks, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
-			vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, gdMutantTanks, "MTDetour_Tank::LeaveStasis");
-			vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, gdMutantTanks, "MTDetour_CAmmoDef::MaxCarry");
-			vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, gdMutantTanks, "MTDetour_ZombieManager::ReplaceTank");
-			vSetupDetour(g_esGeneral.g_ddRevivedDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnRevived");
-			vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::SecondaryAttack");
-			vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
-			vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
-			vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, gdMutantTanks, "MTDetour_ZombieManager::SpawnTank");
-			vSetupDetour(g_esGeneral.g_ddStaggerDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnStaggered");
-			vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::StartReviving");
-			vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "MTDetour_CTankClaw::DoSwing");
-			vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "MTDetour_CTankClaw::OnPlayerHit");
-			vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnVomitedUpon");
-
 			delete gdMutantTanks;
 		}
 	}
@@ -2362,6 +2371,7 @@ public void OnPluginStart()
 	{
 #if defined _adminmenu_included
 		TopMenu tmAdminMenu = null;
+
 		if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
 		{
 			OnAdminMenuReady(tmAdminMenu);
@@ -2386,20 +2396,31 @@ public void OnPluginStart()
 			}
 		}
 
-		int iInfected = -1;
-		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
+		int iEntity = -1;
+		while ((iEntity = FindEntityByClassname(iEntity, "infected")) != INVALID_ENT_REFERENCE)
 		{
-			SDKHook(iInfected, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-			SDKHook(iInfected, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-			SDKHook(iInfected, SDKHook_OnTakeDamage, OnTakePropDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
 		}
 
-		iInfected = -1;
-		while ((iInfected = FindEntityByClassname(iInfected, "witch")) != INVALID_ENT_REFERENCE)
+		iEntity = -1;
+		while ((iEntity = FindEntityByClassname(iEntity, "witch")) != INVALID_ENT_REFERENCE)
 		{
-			SDKHook(iInfected, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-			SDKHook(iInfected, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-			SDKHook(iInfected, SDKHook_OnTakeDamage, OnTakePropDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
+		}
+
+		iEntity = -1;
+		while ((iEntity = FindEntityByClassname(iEntity, "prop_door_rotating_checkpoint")) != -1)
+		{
+			int iDoor = iGetSaferoomDoor(true);
+			if (bIsValidEntity(iDoor) && iDoor == iEntity)
+			{
+				HookSingleEntityOutput(iDoor, "OnFullyOpen", vSaferoomDoor);
+				HookSingleEntityOutput(iDoor, "OnFullyClosed", vSaferoomDoor);
+			}
 		}
 
 		g_bLateLoad = false;
@@ -2410,7 +2431,6 @@ public void OnMapStart()
 {
 	g_esGeneral.g_bFinalMap = bIsFinalMap();
 	g_esGeneral.g_bMapStarted = true;
-	g_esGeneral.g_bNextRound = false;
 	g_esGeneral.g_bNormalMap = bIsNormalMap();
 	g_esGeneral.g_bSameMission = bGetMissionName();
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
@@ -2479,10 +2499,12 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeCombineDamage);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakePlayerDamage);
 	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
+	SDKHook(client, SDKHook_OnTakeDamageAlive, OnTakePlayerDamageAlive);
+	SDKHook(client, SDKHook_OnTakeDamageAlivePost, OnTakePlayerDamageAlivePost);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 	SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 
-	vReset3(client);
+	vResetTank2(client);
 	vCacheSettings(client);
 	vResetCore(client);
 }
@@ -2564,7 +2586,7 @@ public void OnConfigsExecuted()
 	vPluginStatus();
 	vResetTimers();
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateTimer(10.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateAmmo, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateHealth, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
@@ -2663,17 +2685,7 @@ public void OnConfigsExecuted()
 			char sWeekday[32];
 			for (int iDay = 0; iDay < 7; iDay++)
 			{
-				switch (iDay)
-				{
-					case 0: sWeekday = "monday";
-					case 1: sWeekday = "tuesday";
-					case 2: sWeekday = "wednesday";
-					case 3: sWeekday = "thursday";
-					case 4: sWeekday = "friday";
-					case 5: sWeekday = "saturday";
-					case 6: sWeekday = "sunday";
-				}
-
+				vGetDayName(iDay, sWeekday, sizeof(sWeekday));
 				vCreateConfigFile(MT_CONFIG_PATH_DAY, sWeekday);
 			}
 		}
@@ -2828,7 +2840,6 @@ public void OnMapEnd()
 {
 	g_esGeneral.g_bMapStarted = false;
 	g_esGeneral.g_bConfigsExecuted = false;
-	g_esGeneral.g_bNextRound = false;
 
 	vReset();
 	vToggleLogging(0);
@@ -2861,7 +2872,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			vReset2(iTank);
+			vResetTank(iTank);
 		}
 	}
 
@@ -3319,6 +3330,7 @@ static void vAdminPanel(int admin)
 	pAdminPanel.DrawText(sDisplay);
 
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+	pAdminPanel.CurrentKey = 10;
 	pAdminPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
 	pAdminPanel.Send(admin, iAdminMenuHandler, MENU_TIME_FOREVER);
 
@@ -3371,7 +3383,7 @@ public Action cmdMTConfig(int client, int args)
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
 
-			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
 				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
@@ -3453,7 +3465,7 @@ public Action cmdMTConfig2(int client, int args)
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
 
-			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
 				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
@@ -3864,7 +3876,6 @@ static void vConfigMenu(int admin, int item = 0)
 
 				delete smcConfig;
 				delete mConfigMenu;
-
 				return;
 			}
 
@@ -3875,7 +3886,6 @@ static void vConfigMenu(int admin, int item = 0)
 			LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 
 			delete mConfigMenu;
-
 			return;
 		}
 
@@ -4641,8 +4651,11 @@ static void vDeveloperPanel(int developer, int level = 0)
 	}
 
 	pDevPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+	pDevPanel.CurrentKey = 8;
 	pDevPanel.DrawItem("Prev Page", ITEMDRAW_CONTROL);
+	pDevPanel.CurrentKey = 9;
 	pDevPanel.DrawItem("Next Page", ITEMDRAW_CONTROL);
+	pDevPanel.CurrentKey = 10;
 	pDevPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
 	pDevPanel.Send(developer, iDeveloperMenuHandler, MENU_TIME_FOREVER);
 
@@ -4651,7 +4664,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 
 public int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
-	if (action == MenuAction_Select && (param2 == 1 || param2 == 2))
+	if (action == MenuAction_Select && (param2 == 8 || param2 == 9))
 	{
 		vDeveloperPanel(param1, ((g_esDeveloper[param1].g_iDevPanelLevel == 0) ? 1 : 0));
 	}
@@ -5024,7 +5037,7 @@ public Action cmdMTReload(int client, int args)
 	return Plugin_Handled;
 }
 
-static void vConfig(bool manual)
+static void vCheckConfig(bool manual)
 {
 	if (FileExists(g_esGeneral.g_sSavePath, true))
 	{
@@ -5175,7 +5188,7 @@ static void vConfig(bool manual)
 
 static void vReloadConfig(int admin)
 {
-	vConfig(true);
+	vCheckConfig(true);
 
 	switch (bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -5738,7 +5751,11 @@ public void OnEntityCreated(int entity, const char[] classname)
 		g_esGeneral.g_bWitchKilled[entity] = false;
 		g_esGeneral.g_iTeamID[entity] = 0;
 
-		if (StrEqual(classname, "tank_rock"))
+		if (!g_esGeneral.g_bFinalMap && StrEqual(classname, "prop_door_rotating_checkpoint", false))
+		{
+			RequestFrame(vSaferoomDoorFrame, EntIndexToEntRef(entity));
+		}
+		else if (StrEqual(classname, "tank_rock"))
 		{
 			RequestFrame(vRockThrowFrame, EntIndexToEntRef(entity));
 		}
@@ -6734,6 +6751,44 @@ public void OnTakePlayerDamagePost(int victim, int attacker, int inflictor, floa
 	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(attacker) && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && g_esGeneral.g_iInfectedHealth[victim] > GetEntProp(victim, Prop_Data, "m_iHealth") && damage >= 1.0)
 	{
 		vLifeLeech(attacker, damagetype, victim);
+	}
+}
+
+public Action OnTakePlayerDamageAlive(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (g_esGeneral.g_bPluginEnabled && damage > 0.0 && bIsSurvivor(victim) && bIsSurvivorDisabled(victim))
+	{
+		static int iReviver;
+		iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
+		if ((bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST)) || (bIsSurvivor(iReviver) && (bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST))))
+		{
+			static int iIndex = -1;
+			if (iIndex == -1)
+			{
+				iIndex = iGetPatchIndex("ReviveInterrupt");
+			}
+
+			if (iIndex != -1)
+			{
+				bInstallPatch(iIndex);
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+public void OnTakePlayerDamageAlivePost(int victim, int attacker, int inflictor, float damage, int damagetype)
+{
+	static int iIndex = -1;
+	if (iIndex == -1)
+	{
+		iIndex = iGetPatchIndex("ReviveInterrupt");
+	}
+
+	if (iIndex != -1)
+	{
+		bRemovePatch(iIndex);
 	}
 }
 
@@ -9002,8 +9057,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vSetColor(iPlayer, g_esPlayer[iBot].g_iTankType);
 					vCopyTankStats(iBot, iPlayer);
 					vTankSpawn(iPlayer, -1);
-					vReset2(iBot, 0);
-					vReset3(iBot, false);
+					vResetTank(iBot, 0);
+					vResetTank2(iBot, false);
 					vCacheSettings(iBot);
 				}
 				else if (bIsSurvivor(iPlayer))
@@ -9064,14 +9119,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 			vExecuteFinaleConfigs(name);
 		}
+		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering"))
+		{
+			vExecuteFinaleConfigs(name);
+		}
 		else if (StrEqual(name, "finale_start") || StrEqual(name, "gauntlet_finale_start"))
 		{
 			g_esGeneral.g_iTankWave = 1;
 
-			vExecuteFinaleConfigs(name);
-		}
-		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering"))
-		{
 			vExecuteFinaleConfigs(name);
 		}
 		else if (StrEqual(name, "finale_win"))
@@ -9111,7 +9166,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
-		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_end"))
 		{
 			vResetRound();
 		}
@@ -9126,8 +9181,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vSetColor(iBot, g_esPlayer[iPlayer].g_iTankType);
 					vCopyTankStats(iPlayer, iBot);
 					vTankSpawn(iBot, -1);
-					vReset2(iPlayer, 0);
-					vReset3(iPlayer, false);
+					vResetTank(iPlayer, 0);
+					vResetTank2(iPlayer, false);
 					vCacheSettings(iPlayer);
 				}
 				else if (bIsSurvivor(iBot))
@@ -9146,7 +9201,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
 
 			vDeveloperSettings(iSurvivor);
-			vReset3(iSurvivor);
+			vResetTank2(iSurvivor);
 		}
 		else if (StrEqual(name, "player_death"))
 		{
@@ -9169,7 +9224,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
-					vReset2(iVictim, g_esCache[iVictim].g_iDeathRevert);
+					vResetTank(iVictim, g_esCache[iVictim].g_iDeathRevert);
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
@@ -9290,7 +9345,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				g_esPlayer[iSurvivor].g_bLastLife = event.GetBool("lastlife");
 				g_esPlayer[iSurvivor].g_iReviveCount++;
+				g_esPlayer[iSurvivor].g_iReviver = 0;
 			}
+		}
+		else if (StrEqual(name, "round_start"))
+		{
+			g_esGeneral.g_bNextRound = !!GameRules_GetProp("m_bInSecondHalfOfRound");
+
+			vResetRound();
 		}
 		else if (StrEqual(name, "weapon_fire"))
 		{
@@ -9930,16 +9992,30 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 
 static void vSetupDetour(DynamicDetour &detourHandle, GameData dataHandle, const char[] name)
 {
+	int iIndex = iGetDetourIndex(name);
+	if (iIndex == -1 || g_iDetourType[iIndex] == 0)
+	{
+		return;
+	}
+
 	detourHandle = DynamicDetour.FromConf(dataHandle, name);
 	if (detourHandle == null)
 	{
 		LogError("%s Failed to detour: %s", MT_TAG, name);
+
+		return;
+	}
+
+	if (g_bDetourLog[iIndex])
+	{
+		vLogMessage(-1, _, "%s Setup the \"%s\" detour.", MT_TAG, name);
 	}
 }
 
 static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode, DHookCallback callback, bool toggle, int game = 0)
 {
-	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame))
+	int iIndex = iGetDetourIndex(name);
+	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (g_iDetourType[iIndex] < 2 && !g_bDetourBypass[iIndex]))
 	{
 		return;
 	}
@@ -9955,6 +10031,13 @@ static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMo
 	if (!bToggle)
 	{
 		LogError("%s Failed to %s the %s-hook detour for the \"%s\" function.", MT_TAG, (toggle ? "enable" : "disable"), ((mode == Hook_Pre) ? "pre" : "post"), name);
+
+		return;
+	}
+
+	if (g_bDetourLog[iIndex])
+	{
+		vLogMessage(-1, _, "%s %sabled the \"%s\" detour.", MT_TAG, (toggle ? "En" : "Dis"), name);
 	}
 }
 
@@ -10011,7 +10094,6 @@ static void vToggleLeft4DHooks(bool toggle)
 	if (g_esGeneral.g_bConfigsExecuted)
 	{
 		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
-		vToggleDetour(g_esGeneral.g_ddEndVersusModeRoundDetour, "MTDetour_CDirectorVersusMode::EndVersusModeRound", Hook_Post, mreEndVersusModeRoundPost, toggle);
 		vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "MTDetour_CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, toggle);
 		vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, toggle);
 		vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, toggle);
@@ -10090,7 +10172,6 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, toggle, 2);
-	vToggleDetour(g_esGeneral.g_ddEndScavengeRoundDetour, "MTDetour_CDirectorScavengeMode::EndScavengeRound", Hook_Post, mreEndScavengeRoundPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, toggle, 2);
@@ -10103,6 +10184,8 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, toggle, 2);
 
+	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Pre, mreCanDeployForPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Post, mreCanDeployForPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "MTDetour_CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, toggle);
@@ -10112,9 +10195,15 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
+	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Pre, mreLadderDismountPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Post, mreLadderDismountPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Pre, mreLadderMountPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Post, mreLadderMountPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle);
@@ -10143,18 +10232,6 @@ static void vTogglePlugin(bool toggle)
 	if (!g_esGeneral.g_bLeft4DHooksInstalled)
 	{
 		vToggleLeft4DHooks(toggle);
-	}
-
-	if (g_esGeneral.g_cvCSLaddersVersion == null)
-	{
-		vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Pre, mreCanDeployForPre, toggle);
-		vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Post, mreCanDeployForPost, toggle);
-		vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Pre, mreLadderDismountPre, toggle);
-		vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Post, mreLadderDismountPost, toggle);
-		vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Pre, mreLadderMountPre, toggle);
-		vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Post, mreLadderMountPost, toggle);
-		vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
-		vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	}
 }
 
@@ -10274,8 +10351,10 @@ static void vSurvivorReactions(int tank)
 			DispatchKeyValueFloat(iTimescale, "acceleration", 2.0);
 			DispatchKeyValueFloat(iTimescale, "minBlendRate", 1.0);
 			DispatchKeyValueFloat(iTimescale, "blendDeltaMultiplier", 2.0);
+
 			DispatchSpawn(iTimescale);
 			AcceptEntityInput(iTimescale, "Start");
+
 			CreateTimer(0.75, tTimerRemoveTimescale, EntIndexToEntRef(iTimescale), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
@@ -10492,6 +10571,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 static void vReset()
 {
+	g_esGeneral.g_bDoorClosed = false;
 	g_esGeneral.g_iPlayerCount[1] = iGetHumanCount();
 	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount(true);
 
@@ -10500,47 +10580,6 @@ static void vReset()
 	vClearColorKeysList();
 	vClearCompTypesList();
 	vClearPluginList();
-}
-
-static void vReset2(int tank, int mode = 1)
-{
-	vRemoveProps(tank, mode);
-	vResetSpeed(tank);
-	vSpawnModes(tank, false);
-}
-
-static void vReset3(int tank, bool full = true)
-{
-	g_esPlayer[tank].g_bArtificial = false;
-	g_esPlayer[tank].g_bAttackedAgain = false;
-	g_esPlayer[tank].g_bBlood = false;
-	g_esPlayer[tank].g_bBlur = false;
-	g_esPlayer[tank].g_bElectric = false;
-	g_esPlayer[tank].g_bFire = false;
-	g_esPlayer[tank].g_bFirstSpawn = false;
-	g_esPlayer[tank].g_bIce = false;
-	g_esPlayer[tank].g_bKeepCurrentType = false;
-	g_esPlayer[tank].g_bMeteor = false;
-	g_esPlayer[tank].g_bNeedHealth = false;
-	g_esPlayer[tank].g_bReplaceSelf = false;
-	g_esPlayer[tank].g_bSmoke = false;
-	g_esPlayer[tank].g_bSpit = false;
-	g_esPlayer[tank].g_bTriggered = false;
-	g_esPlayer[tank].g_flAttackDelay = -1.0;
-	g_esPlayer[tank].g_iBossStageCount = 0;
-	g_esPlayer[tank].g_iCooldown = -1;
-	g_esPlayer[tank].g_iOldTankType = 0;
-	g_esPlayer[tank].g_iTankType = 0;
-
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
-	{
-		g_esPlayer[tank].g_iThrownRock[iPos] = INVALID_ENT_REFERENCE;
-	}
-
-	if (full)
-	{
-		vResetSurvivorStats(tank, true);
-	}
 }
 
 static void vResetCore(int client)
@@ -10585,8 +10624,8 @@ static void vResetLadyKiller(bool override)
 
 static void vResetPlayer(int player)
 {
-	vReset2(player);
-	vReset3(player);
+	vResetTank(player);
+	vResetTank2(player);
 	vResetCore(player);
 	vRemoveEffects(player);
 	vCacheSettings(player);
@@ -10713,7 +10752,48 @@ static void vResetSurvivorStats2(int survivor)
 	}
 }
 
-static void vResetTank(int tank)
+static void vResetTank(int tank, int mode = 1)
+{
+	vRemoveProps(tank, mode);
+	vResetSpeed(tank);
+	vSpawnModes(tank, false);
+}
+
+static void vResetTank2(int tank, bool full = true)
+{
+	g_esPlayer[tank].g_bArtificial = false;
+	g_esPlayer[tank].g_bAttackedAgain = false;
+	g_esPlayer[tank].g_bBlood = false;
+	g_esPlayer[tank].g_bBlur = false;
+	g_esPlayer[tank].g_bElectric = false;
+	g_esPlayer[tank].g_bFire = false;
+	g_esPlayer[tank].g_bFirstSpawn = false;
+	g_esPlayer[tank].g_bIce = false;
+	g_esPlayer[tank].g_bKeepCurrentType = false;
+	g_esPlayer[tank].g_bMeteor = false;
+	g_esPlayer[tank].g_bNeedHealth = false;
+	g_esPlayer[tank].g_bReplaceSelf = false;
+	g_esPlayer[tank].g_bSmoke = false;
+	g_esPlayer[tank].g_bSpit = false;
+	g_esPlayer[tank].g_bTriggered = false;
+	g_esPlayer[tank].g_flAttackDelay = -1.0;
+	g_esPlayer[tank].g_iBossStageCount = 0;
+	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iOldTankType = 0;
+	g_esPlayer[tank].g_iTankType = 0;
+
+	for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
+	{
+		g_esPlayer[tank].g_iThrownRock[iPos] = INVALID_ENT_REFERENCE;
+	}
+
+	if (full)
+	{
+		vResetSurvivorStats(tank, true);
+	}
+}
+
+static void vResetTank3(int tank)
 {
 	ExtinguishEntity(tank);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
@@ -11474,7 +11554,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 			char sRewards[1024];
 			vListRewards(survivor, iRewardCount, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
-			vRewardEndMessage(survivor, iRewardCount, "RewardEnd", sRewards);
+			if (bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && iRewardCount > 0 && g_esPlayer[survivor].g_iNotify >= 2)
+			{
+				MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardEnd", sRewards);
+			}
 
 			if (g_esPlayer[survivor].g_iRewardTypes <= 0)
 			{
@@ -11483,16 +11566,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 			}
 		}
 	}
-}
-
-static void vRewardEndMessage(int survivor, int count, const char[] phrase, const char[] list)
-{
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || count == 0 || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 1)
-	{
-		return;
-	}
-
-	MT_PrintToChat(survivor, "%s %t", MT_TAG2, phrase, list);
 }
 
 static void vRewardItemMessage(int survivor, const char[] list, char[] buffer, int size, bool set)
@@ -11527,7 +11600,7 @@ static void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[
 	iNewUses = (iReward + iUses),
 	iFinalUses = iClamp(iNewUses, 0, iLimit),
 	iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : iReward;
-	if ((g_esPlayer[survivor].g_iNotify == 2 || g_esPlayer[survivor].g_iNotify == 3) && iReceivedUses > 0)
+	if (g_esPlayer[survivor].g_iNotify >= 2 && iReceivedUses > 0)
 	{
 		char sTemp[64];
 		FormatEx(sTemp, sizeof(sTemp), "%T", "RewardLadyKiller", survivor, iReceivedUses);
@@ -11540,7 +11613,7 @@ static void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[
 
 static void vRewardMessage(int survivor, int recipient, int priority, int count, const char[] list, const char[] namePhrase)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || count == 0 || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 1)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || count == 0 || g_esPlayer[survivor].g_iNotify <= 1)
 	{
 		return;
 	}
@@ -12561,7 +12634,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	{
 		if (change)
 		{
-			vResetTank(tank);
+			vResetTank3(tank);
 		}
 
 		if (type == 0)
@@ -14551,6 +14624,16 @@ public void vRockThrowFrame(int ref)
 	}
 }
 
+public void vSaferoomDoorFrame(int ref)
+{
+	int iDoor = iGetSaferoomDoor(true), iEntity = EntRefToEntIndex(ref);
+	if (bIsValidEntity(iDoor) && iDoor == iEntity)
+	{
+		HookSingleEntityOutput(iDoor, "OnFullyOpen", vSaferoomDoor);
+		HookSingleEntityOutput(iDoor, "OnFullyClosed", vSaferoomDoor);
+	}
+}
+
 public void vTankSpawnFrame(DataPack pack)
 {
 	pack.Reset();
@@ -14654,7 +14737,7 @@ static void vInstallPermanentPatches()
 	{
 		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos] && !g_bPatchInstalled[iPos])
 		{
-			bInstallPatch(iPos);
+			bInstallPatch(iPos, true);
 		}
 	}
 }
@@ -14663,11 +14746,144 @@ static void vRemovePermanentPatches()
 {
 	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
 	{
-		if (g_bPermanentPatch[iPos] && g_bPatchInstalled[iPos])
+		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos] && g_bPatchInstalled[iPos])
 		{
-			bRemovePatch(iPos);
+			bRemovePatch(iPos, true);
 		}
 	}
+}
+
+static void vRegisterDetours()
+{
+	g_iDetourCount = 0;
+
+	char sFilePath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "%smutant_tanks_detours.cfg", MT_CONFIG_PATH);
+	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_detours.cfg", sFilePath, sFilePath, sizeof(sFilePath)))
+	{
+		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
+
+		return;
+	}
+
+	KeyValues kvDetours = new KeyValues("MTDetours");
+	if (!kvDetours.ImportFromFile(sFilePath))
+	{
+		LogError("%s Unable to read the \"%s\" config file.", MT_TAG, sFilePath);
+
+		delete kvDetours;
+		return;
+	}
+
+	if (g_bSecondGame)
+	{
+		if (!kvDetours.JumpToKey("left4dead2"))
+		{
+			delete kvDetours;
+			return;
+		}
+	}
+	else
+	{
+		if (!kvDetours.JumpToKey("left4dead"))
+		{
+			delete kvDetours;
+			return;
+		}
+	}
+
+	if (!kvDetours.GotoFirstSubKey())
+	{
+		LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
+
+		delete kvDetours;
+		return;
+	}
+
+	bool bPlatform = false;
+	char sOS[8], sName[128], sLog[4], sCvar[320], sCvarSet[10][32], sType[14];
+	do
+	{
+		kvDetours.GetSectionName(sName, sizeof(sName));
+		kvDetours.GetString("log", sLog, sizeof(sLog));
+		kvDetours.GetString("cvarcheck", sCvar, sizeof(sCvar));
+
+		switch (g_esGeneral.g_bLinux)
+		{
+			case true: sOS = "Linux";
+			case false: sOS = "Windows";
+		}
+
+		if (kvDetours.JumpToKey(sOS))
+		{
+			bPlatform = true;
+
+			kvDetours.GetString("type", sType, sizeof(sType));
+			kvDetours.GoBack();
+		}
+
+		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (strncmp(sType, "full", 4) == -1 && strncmp(sType, "setup", 5) == -1 && strncmp(sType, "ignore", 6) == -1) || (bPlatform && sType[0] == '\0'))
+		{
+			LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
+
+			continue;
+		}
+
+		if ((!bPlatform && sType[0] == '\0') || (bPlatform && StrEqual(sType, "ignore")))
+		{
+			if (sLog[0] == 'y')
+			{
+				vLogMessage(-1, _, "%s No detour for \"%s\" on %s was found.", MT_TAG, sName, sOS);
+			}
+
+			continue;
+		}
+
+		bPlatform = false;
+
+		bool bBypass = (StrContains(sType, "_bypass") != -1);
+		if (sCvar[0] != '\0' && !bBypass)
+		{
+			ExplodeString(sCvar, ",", sCvarSet, sizeof(sCvarSet), sizeof(sCvarSet[]));
+			for (int iPos = 0; iPos < sizeof(sCvarSet); iPos++)
+			{
+				if (sCvarSet[iPos][0] != '\0')
+				{
+					g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
+					if (g_esGeneral.g_cvMTTempSetting != null)
+					{
+						if (sLog[0] == 'y')
+						{
+							vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], sName);
+						}
+
+						break;
+					}
+				}
+			}
+
+			if (g_esGeneral.g_cvMTTempSetting != null)
+			{
+				g_esGeneral.g_cvMTTempSetting = null;
+
+				continue;
+			}
+		}
+
+		bBypass = (bBypass && sCvar[0] != '\0');
+
+		switch (sType[0])
+		{
+			case 'i': bRegisterDetour(sName, (sLog[0] == 'y'), 0, bBypass);
+			case 's': bRegisterDetour(sName, (sLog[0] == 'y'), 1, bBypass);
+			case 'f': bRegisterDetour(sName, (sLog[0] == 'y'), 2, bBypass);
+		}
+	}
+	while (kvDetours.GotoNextKey());
+
+	vLogMessage(-1, _, "%s Registered %i detours.", MT_TAG, g_iDetourCount);
+
+	delete kvDetours;
 }
 
 static void vRegisterPatches(GameData dataHandle)
@@ -14676,7 +14892,7 @@ static void vRegisterPatches(GameData dataHandle)
 
 	char sFilePath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "%smutant_tanks_patches.cfg", MT_CONFIG_PATH);
-	if (!FileExists(sFilePath, true))
+	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_patches.cfg", sFilePath, sFilePath, sizeof(sFilePath)))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
 
@@ -14689,7 +14905,6 @@ static void vRegisterPatches(GameData dataHandle)
 		LogError("%s Unable to read the \"%s\" config file.", MT_TAG, sFilePath);
 
 		delete kvPatches;
-
 		return;
 	}
 
@@ -14698,7 +14913,6 @@ static void vRegisterPatches(GameData dataHandle)
 		if (!kvPatches.JumpToKey("left4dead2"))
 		{
 			delete kvPatches;
-
 			return;
 		}
 	}
@@ -14707,7 +14921,6 @@ static void vRegisterPatches(GameData dataHandle)
 		if (!kvPatches.JumpToKey("left4dead"))
 		{
 			delete kvPatches;
-
 			return;
 		}
 	}
@@ -14717,12 +14930,11 @@ static void vRegisterPatches(GameData dataHandle)
 		LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
 
 		delete kvPatches;
-
 		return;
 	}
 
 	bool bPlatform = false;
-	char sOS[8], sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[64], sType[10];
+	char sOS[8], sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[320], sCvarSet[10][32], sType[10];
 	int iVerify[MT_PATCH_MAXLEN], iVLength = 0, iPatch[MT_PATCH_MAXLEN], iPLength = 0;
 	do
 	{
@@ -14735,8 +14947,8 @@ static void vRegisterPatches(GameData dataHandle)
 
 		switch (g_esGeneral.g_bLinux)
 		{
-			case true: sOS = "linux";
-			case false: sOS = "windows";
+			case true: sOS = "Linux";
+			case false: sOS = "Windows";
 		}
 
 		if (kvPatches.JumpToKey(sOS))
@@ -14748,14 +14960,14 @@ static void vRegisterPatches(GameData dataHandle)
 			kvPatches.GoBack();
 		}
 
-		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand")) || sSignature[0] == '\0' || (bPlatform && (sVerify[0] == '\0' || sPatch[0] == '\0')))
+		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand") && !StrEqual(sType, "unused")) || sSignature[0] == '\0' || (bPlatform && (sVerify[0] == '\0' || sPatch[0] == '\0')))
 		{
 			LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
 
 			continue;
 		}
 
-		if (!bPlatform && (sOffset[0] != '\0' || sVerify[0] == '\0' || sPatch[0] == '\0'))
+		if ((!bPlatform && (sOffset[0] != '\0' || sVerify[0] == '\0' || sPatch[0] == '\0')) || StrEqual(sType, "unused"))
 		{
 			if (sLog[0] == 'y')
 			{
@@ -14769,15 +14981,27 @@ static void vRegisterPatches(GameData dataHandle)
 
 		if (sCvar[0] != '\0')
 		{
-			g_esGeneral.g_cvMTTempSetting = FindConVar(sCvar);
+			ExplodeString(sCvar, ",", sCvarSet, sizeof(sCvarSet), sizeof(sCvarSet[]));
+			for (int iPos = 0; iPos < sizeof(sCvarSet); iPos++)
+			{
+				if (sCvarSet[iPos][0] != '\0')
+				{
+					g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
+					if (g_esGeneral.g_cvMTTempSetting != null)
+					{
+						if (sLog[0] == 'y')
+						{
+							vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], sName);
+						}
+
+						break;
+					}
+				}
+			}
+
 			if (g_esGeneral.g_cvMTTempSetting != null)
 			{
 				g_esGeneral.g_cvMTTempSetting = null;
-
-				if (sLog[0] == 'y')
-				{
-					vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvar, sName);
-				}
 
 				continue;
 			}
@@ -14823,6 +15047,8 @@ static void vRegisterPatches(GameData dataHandle)
 	}
 	while (kvPatches.GotoNextKey());
 
+	vLogMessage(-1, _, "%s Registered %i patches.", MT_TAG, g_iPatchCount);
+
 	delete kvPatches;
 }
 
@@ -14844,11 +15070,13 @@ static Address adGetGameDataAddress(GameData dataHandle, const char[] name, cons
 		else
 		{
 			Address adValue[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
+			adValue[0] = dataHandle.GetAddress(start);
+
 			int iOffset[3] = {-1, -1, -1};
 			iOffset[0] = dataHandle.GetOffset(offset1);
 			iOffset[1] = dataHandle.GetOffset(offset2);
 			iOffset[2] = dataHandle.GetOffset(offset3);
-			adValue[0] = dataHandle.GetAddress(start);
+
 			if (adValue[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
 			{
 				LogError("%s Failed to find address from \"%s\". Failed to retrieve address from both methods.", MT_TAG, backup);
@@ -14918,6 +15146,7 @@ static bool bGetMissionName()
 			char sTemp[64], sTemp2[64];
 			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp, sizeof(sTemp), "Name", "");
 			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp2, sizeof(sTemp2), "DisplayTitle", "");
+
 			bool bSame = StrEqual(g_esGeneral.g_sCurrentMissionName, sTemp) || StrEqual(g_esGeneral.g_sCurrentMissionDisplayTitle, sTemp2);
 			if (!bSame)
 			{
@@ -14955,7 +15184,7 @@ static bool bHasCoreAdminAccess(int admin, int type = 0)
 	return true;
 }
 
-static bool bInstallPatch(int index)
+static bool bInstallPatch(int index, bool override = false)
 {
 	if (index >= g_iPatchCount)
 	{
@@ -14964,7 +15193,7 @@ static bool bInstallPatch(int index)
 		return false;
 	}
 
-	if (g_bPatchInstalled[index])
+	if ((g_bPermanentPatch[index] && !override) || g_bPatchInstalled[index])
 	{
 		return false;
 	}
@@ -14972,11 +15201,15 @@ static bool bInstallPatch(int index)
 	for (int iPos = 0; iPos < g_iPatchLength[index]; iPos++)
 	{
 		g_iOriginalBytes[index][iPos] = LoadFromAddress((g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos)), NumberType_Int8);
-
 		StoreToAddress((g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos)), g_iPatchBytes[index][iPos], NumberType_Int8);
 	}
 
 	g_bPatchInstalled[index] = true;
+
+	if (g_bPermanentPatch[index] && g_bPatchLog[index])
+	{
+		vLogMessage(-1, _, "%s Enabled the \"%s\" patch.", MT_TAG, g_sPatchName[index]);
+	}
 
 	return true;
 }
@@ -15029,36 +15262,18 @@ static bool bIsCustomTankSupported(int tank)
 
 static bool bIsDayConfigFound(char[] buffer, int size)
 {
-	char sDay[10], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
+	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+
+	char sDayNumber[2], sDay[10], sFilename[14];
 	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
+	vGetDayName(StringToInt(sDayNumber), sDay, sizeof(sDay));
+	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sDay);
 
-	switch (StringToInt(sDayNumber))
-	{
-		case 1: sDay = "monday";
-		case 2: sDay = "tuesday";
-		case 3: sDay = "wednesday";
-		case 4: sDay = "thursday";
-		case 5: sDay = "friday";
-		case 6: sDay = "saturday";
-		default: sDay = "sunday";
-	}
-
-	BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY, sDay);
-	if (FileExists(sDayConfig, true))
-	{
-		strcopy(buffer, size, sDayConfig);
-
-		return true;
-	}
-
-	switch (IsCharUpper(sDay[0]))
-	{
-		case true: sDay[0] = CharToLower(sDay[0]);
-		case false: sDay[0] = CharToUpper(sDay[0]);
-	}
-
-	BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY, sDay);
-	if (FileExists(sDayConfig, true))
+	char sDayConfig[PLATFORM_MAX_PATH];
+	FormatEx(sDayConfig, sizeof(sDayConfig), "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sDayConfig, sDayConfig, sizeof(sDayConfig)))
 	{
 		strcopy(buffer, size, sDayConfig);
 
@@ -15103,24 +15318,17 @@ static bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 
 static bool bIsDifficultyConfigFound(char[] buffer, int size)
 {
-	char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
+	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+
+	char sDifficulty[11], sFilename[15];
 	g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-	BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
-	if (FileExists(sDifficultyConfig, true))
-	{
-		strcopy(buffer, size, sDifficultyConfig);
+	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sDifficulty);
 
-		return true;
-	}
-
-	switch (IsCharUpper(sDifficulty[0]))
-	{
-		case true: sDifficulty[0] = CharToLower(sDifficulty[0]);
-		case false: sDifficulty[0] = CharToUpper(sDifficulty[0]);
-	}
-
-	BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s%s.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
-	if (FileExists(sDifficultyConfig, true))
+	char sDifficultyConfig[PLATFORM_MAX_PATH];
+	FormatEx(sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sDifficultyConfig, sDifficultyConfig, sizeof(sDifficultyConfig)))
 	{
 		strcopy(buffer, size, sDifficultyConfig);
 
@@ -15132,24 +15340,17 @@ static bool bIsDifficultyConfigFound(char[] buffer, int size)
 
 static bool bIsFinaleConfigFound(const char[] filename, char[] buffer, int size)
 {
-	char sFinale[32], sFinaleConfig[PLATFORM_MAX_PATH];
+	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
+	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+
+	char sFinale[32], sFilename[36];
 	strcopy(sFinale, sizeof(sFinale), filename);
-	BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE), sFinale);
-	if (FileExists(sFinaleConfig, true))
-	{
-		strcopy(buffer, size, sFinaleConfig);
+	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sFinale);
 
-		return true;
-	}
-
-	switch (IsCharUpper(sFinale[0]))
-	{
-		case true: sFinale[0] = CharToLower(sFinale[0]);
-		case false: sFinale[0] = CharToUpper(sFinale[0]);
-	}
-
-	BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE), sFinale);
-	if (FileExists(sFinaleConfig, true))
+	char sFinaleConfig[PLATFORM_MAX_PATH];
+	FormatEx(sFinaleConfig, sizeof(sFinaleConfig), "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sFinaleConfig, sFinaleConfig, sizeof(sFinaleConfig)))
 	{
 		strcopy(buffer, size, sFinaleConfig);
 
@@ -15193,24 +15394,17 @@ static bool bIsFirstMap()
 
 static bool bIsGameModeConfigFound(char[] buffer, int size)
 {
-	char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
+	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
+	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+
+	char sMode[64], sFilename[68];
 	g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-	BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sMode);
-	if (FileExists(sModeConfig, true))
-	{
-		strcopy(buffer, size, sModeConfig);
+	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sMode);
 
-		return true;
-	}
-
-	switch (IsCharUpper(sMode[0]))
-	{
-		case true: sMode[0] = CharToLower(sMode[0]);
-		case false: sMode[0] = CharToUpper(sMode[0]);
-	}
-
-	BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sMode);
-	if (FileExists(sModeConfig, true))
+	char sModeConfig[PLATFORM_MAX_PATH];
+	FormatEx(sModeConfig, sizeof(sModeConfig), "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sModeConfig, sModeConfig, sizeof(sModeConfig)))
 	{
 		strcopy(buffer, size, sModeConfig);
 
@@ -15220,26 +15414,43 @@ static bool bIsGameModeConfigFound(char[] buffer, int size)
 	return false;
 }
 
+static bool bIsInsideSaferoom(int survivor)
+{
+#if defined _l4dh_included
+	if (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKGetLastKnownArea == null)
+	{
+		return L4D_IsInLastCheckpoint(survivor);
+	}
+#endif
+	if (g_esGeneral.g_iAttributeFlagsOffset != -1)
+	{
+		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
+		if (iArea > 0)
+		{
+			int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
+			if (iAttributeFlags & 2048)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 static bool bIsMapConfigFound(char[] buffer, int size)
 {
-	char sMap[128], sMapConfig[PLATFORM_MAX_PATH];
+	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
+	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+
+	char sMap[128], sFilename[132];
 	GetCurrentMap(sMap, sizeof(sMap));
-	BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMap);
-	if (FileExists(sMapConfig, true))
-	{
-		strcopy(buffer, size, sMapConfig);
+	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sMap);
 
-		return true;
-	}
-
-	switch (IsCharUpper(sMap[0]))
-	{
-		case true: sMap[0] = CharToLower(sMap[0]);
-		case false: sMap[0] = CharToUpper(sMap[0]);
-	}
-
-	BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "%s%s%s.cfg", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMap);
-	if (FileExists(sMapConfig, true))
+	char sMapConfig[PLATFORM_MAX_PATH];
+	FormatEx(sMapConfig, sizeof(sMapConfig), "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sMapConfig, sMapConfig, sizeof(sMapConfig)))
 	{
 		strcopy(buffer, size, sMapConfig);
 
@@ -15492,6 +15703,30 @@ static bool bIsVersusModeRound(int type)
 	return false;
 }
 
+static bool bRegisterDetour(const char[] name, bool log = false, int type = 2, bool bypass)
+{
+	if (iGetDetourIndex(name) >= 0)
+	{
+		LogError("%s The \"%s\" detour has already been registered.", MT_TAG, name);
+
+		return false;
+	}
+
+	strcopy(g_sDetourName[g_iDetourCount], sizeof(g_sDetourName), name);
+
+	g_bDetourBypass[g_iDetourCount] = bypass;
+	g_bDetourLog[g_iDetourCount] = log;
+	g_iDetourType[g_iDetourCount] = type;
+	g_iDetourCount++;
+
+	if (log)
+	{
+		vLogMessage(-1, _, "%s Registered the \"%s\" detour.", MT_TAG, name);
+	}
+
+	return true;
+}
+
 static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName, const char[] offsetName, int[] verify, int vlength, int[] patch, int plength, bool log = false, bool permanent = false)
 {
 	if (iGetPatchIndex(name) >= 0)
@@ -15513,7 +15748,7 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 	if (offsetName[0] != '\0')
 	{
 		iOffset = dataHandle.GetOffset(offsetName);
-		if (iOffset < 0)
+		if (iOffset == -1)
 		{
 			LogError("%s Failed to load offset: %s", MT_TAG, offsetName);
 
@@ -15536,7 +15771,7 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 			iActualByte = LoadFromAddress((adPatch + view_as<Address>(iOffset + iPos)), NumberType_Int8);
 			if (iActualByte != verify[iPos])
 			{
-				LogError("%s Failed to locate patch: %s (%s) [Expected %02X | Found %02X]", MT_TAG, name, offsetName, verify[iPos], iActualByte);
+				LogError("%s Failed to locate patch: %s (%s) [Expected: %02X | Found: %02X]", MT_TAG, name, offsetName, verify[iPos], iActualByte);
 
 				return false;
 			}
@@ -15544,8 +15779,13 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 	}
 
 	strcopy(g_sPatchName[g_iPatchCount], sizeof(g_sPatchName), name);
+
 	g_adPatchAddress[g_iPatchCount] = adPatch;
+	g_bPatchInstalled[g_iPatchCount] = false;
+	g_bPatchLog[g_iPatchCount] = log;
+	g_bPermanentPatch[g_iPatchCount] = permanent;
 	g_iPatchOffset[g_iPatchCount] = iOffset;
+	g_iPatchLength[g_iPatchCount] = plength;
 
 	for (int iPos = 0; iPos < plength; iPos++)
 	{
@@ -15553,9 +15793,6 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 		g_iOriginalBytes[g_iPatchCount][iPos] = 0x00;
 	}
 
-	g_bPermanentPatch[g_iPatchCount] = permanent;
-	g_bPatchInstalled[g_iPatchCount] = false;
-	g_iPatchLength[g_iPatchCount] = plength;
 	g_iPatchCount++;
 
 	if (log)
@@ -15566,7 +15803,7 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 	return true;
 }
 
-static bool bRemovePatch(int index)
+static bool bRemovePatch(int index, bool override = false)
 {
 	if (index >= g_iPatchCount)
 	{
@@ -15575,7 +15812,7 @@ static bool bRemovePatch(int index)
 		return false;
 	}
 
-	if (!g_bPatchInstalled[index])
+	if ((g_bPermanentPatch[index] && !override) || !g_bPatchInstalled[index])
 	{
 		return false;
 	}
@@ -15586,6 +15823,11 @@ static bool bRemovePatch(int index)
 	}
 
 	g_bPatchInstalled[index] = false;
+
+	if (g_bPermanentPatch[index] && g_bPatchLog[index])
+	{
+		vLogMessage(-1, _, "%s Disabled the \"%s\" patch.", MT_TAG, g_sPatchName[index]);
+	}
 
 	return true;
 }
@@ -15843,6 +16085,19 @@ static int iGetDecimalFromHex(int character)
 	return -1;
 }
 
+static int iGetDetourIndex(const char[] name)
+{
+	for (int iPos = 0; iPos < g_iDetourCount; iPos++)
+	{
+		if (StrEqual(name, g_sDetourName[iPos]))
+		{
+			return iPos;
+		}
+	}
+
+	return -1;
+}
+
 static int iGetGameDataOffset(GameData dataHandle, const char[] name)
 {
 	int iOffset = dataHandle.GetOffset(name);
@@ -16069,6 +16324,24 @@ static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = -1, i
 	}
 
 	return type;
+}
+
+static int iGetSurvivorInsideSaferoomCount(bool human = false)
+{
+	static bool bValidPlayer;
+	bValidPlayer = false;
+	static int iCount;
+	iCount = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
+		if (bIsSurvivor(iSurvivor) && bIsInsideSaferoom(iSurvivor))
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
 }
 
 static int iGetTankCount(bool manual, bool include = false)
@@ -16299,7 +16572,6 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 						case true:
 						{
 							g_esGeneral.g_adOriginalJumpHeight[0] = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
-
 							StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32);
 						}
 						case false:
@@ -16337,20 +16609,6 @@ public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 			}
 		}
 	}
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreEndScavengeRoundPost()
-{
-	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreEndVersusModeRoundPost(DHookParam hParams)
-{
-	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
 
 	return MRES_Ignored;
 }
@@ -16831,8 +17089,8 @@ public MRESReturn mreReplaceTankPost(DHookParam hParams)
 	vSetColor(iNewTank, g_esPlayer[iOldTank].g_iTankType);
 	vCopyTankStats(iOldTank, iNewTank);
 	vTankSpawn(iNewTank, -1);
-	vReset2(iOldTank, 0);
-	vReset3(iOldTank);
+	vResetTank(iOldTank, 0);
+	vResetTank2(iOldTank);
 	vCacheSettings(iOldTank);
 
 	return MRES_Ignored;
@@ -17113,6 +17371,8 @@ public MRESReturn mreStartRevivingPre(int pThis, DHookParam hParams)
 		{
 			vSetReviveDurationCvar(iTarget);
 		}
+
+		g_esPlayer[iTarget].g_iReviver = GetClientUserId(pThis);
 	}
 
 	return MRES_Ignored;
@@ -17261,11 +17521,6 @@ public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 }
 
 #if defined _l4dh_included
-public void L4D2_OnEndVersusModeRound_Post()
-{
-	g_esGeneral.g_bNextRound = !g_esGeneral.g_bNextRound;
-}
-
 public void L4D_OnEnterGhostState(int client)
 {
 	if (bIsTank(client))
@@ -17291,8 +17546,8 @@ public void L4D_OnReplaceTank(int tank, int newtank)
 	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
 	vCopyTankStats(tank, newtank);
 	vTankSpawn(newtank, -1);
-	vReset2(tank, 0);
-	vReset3(tank);
+	vResetTank(tank, 0);
+	vResetTank2(tank);
 	vCacheSettings(tank);
 }
 
@@ -17437,6 +17692,21 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	else if (StrEqual(output, "OnScavenge"))
 	{
 		g_esGeneral.g_iCurrentMode = 8;
+	}
+}
+
+public void vSaferoomDoor(const char[] output, int caller, int activator, float delay)
+{
+	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(caller) && bIsSurvivor(activator) && !g_esGeneral.g_bFinalMap)
+	{
+		if (StrEqual(output, "OnFullyOpen", false))
+		{
+			g_esGeneral.g_bDoorClosed = false;
+		}
+		else if (StrEqual(output, "OnFullyClosed", false))
+		{
+			g_esGeneral.g_bDoorClosed = true;
+		}
 	}
 }
 
@@ -17887,11 +18157,6 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 
 public Action tTimerRefreshRewards(Handle timer)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
-
 	static bool bCheck;
 	bCheck = false;
 	static float flDuration, flTime;
@@ -17976,7 +18241,7 @@ public Action tTimerRefreshRewards(Handle timer)
 				}
 
 				flDuration = g_esPlayer[iSurvivor].g_flRewardTime[iPos];
-				if (bCheck && ((flDuration != -1.0 && flDuration < flTime) || g_esGeneral.g_bFinaleEnded))
+				if (bCheck && ((flDuration != -1.0 && flDuration < flTime) || (g_esGeneral.g_bDoorClosed && iGetSurvivorInsideSaferoomCount() >= iGetSurvivorCount()) || g_esGeneral.g_bFinaleEnded))
 				{
 					switch (iPos)
 					{
@@ -18034,7 +18299,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 		}
 
 		iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
-		if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[0] && GetEntProp(iSlot, Prop_Send, "m_bInReload") == 0)
+		if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[0] && !GetEntProp(iSlot, Prop_Send, "m_bInReload"))
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", (iClip + iRegen));
 		}
@@ -18150,7 +18415,7 @@ public Action tTimerRegularWaves(Handle timer)
 
 public Action tTimerReloadConfigs(Handle timer)
 {
-	vConfig(false);
+	vCheckConfig(false);
 
 	return Plugin_Continue;
 }
@@ -18187,12 +18452,12 @@ public Action tTimerResetType(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!bIsValidClient(iTank))
 	{
-		vReset3(iTank);
+		vResetTank2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	vReset3(iTank);
+	vResetTank2(iTank);
 	vCacheSettings(iTank);
 
 	return Plugin_Continue;
