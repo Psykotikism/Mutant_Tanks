@@ -20677,7 +20677,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above, as well as override any other setting that the ability provides above.
+		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above, as well as override any other setting that the ability provides.
 		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.

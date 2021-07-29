@@ -1426,6 +1426,26 @@ native bool MT_IsTankClone(int tank);
 Stocks:
 
 ```
+stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
+{
+	if (FileExists(path, use_valve_fs, valve_path_id))
+	{
+		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		if (!StrEqual(filename, sOutput))
+		{
+			static char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			strcopy(output, size, sTemp);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))

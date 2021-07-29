@@ -1,5 +1,37 @@
 # Changelog
 
+## Version 8.88 (August 25, 2021)
+
+### Bug Fixes
+
+#### Config Files
+- Fixed custom config filenames being case-sensitive. (Thanks to `ricksfishin` for testing and reporting!)
+
+### Changes
+
+#### General
+- The `mutant_tanks_patches.cfg`'s `cvarcheck` key now allows up to `10` convar checks.
+- The `mutant_tanks_patches.cfg`'s `type` key now accepts the `unused` value to disable patches.
+
+#### Core Plugin
+- The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
+- Increased the interval for checking config files for changes from `1` to `10` seconds.
+- Rewards now end properly at the end of each non-finale map. (Thanks to `Lux` for the saferoom door detection code!)
+- Switched to a simpler method for checking `Versus` and `Scavenge` rounds.
+
+### Game Data
+- Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
+
+### Files
+
+#### Requirements
+- The `mutant_tanks_detours.cfg` config file is now used by the core plugin.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+
 ## Version 8.87 (July 20, 2021)
 
 ### Bug Fixes
