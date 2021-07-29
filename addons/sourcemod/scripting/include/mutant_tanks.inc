@@ -1719,7 +1719,7 @@ stock void vStopSound(int client, const char[] sound)
 	StopSound(client, SNDCHAN_USER_BASE, sound);
 }
 
-// Files
+// Stocks
 stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
 {
 	if (FileExists(path, use_valve_fs, valve_path_id))
