@@ -7,6 +7,9 @@
 #### Config Files
 - Fixed custom config filenames being case-sensitive. (Thanks to `ricksfishin` for testing and reporting!)
 
+#### Settings
+- Fixed the `Skip Taunt` setting not working in different config formats.
+
 ### Changes
 
 #### General
@@ -21,6 +24,9 @@
 
 ### Game Data
 - Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
+
+### Settings
+1. Added the `Skip Incap` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `epzminion` for the help!)
 
 ### Files
 

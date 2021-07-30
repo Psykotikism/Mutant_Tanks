@@ -1874,6 +1874,14 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
+			// Skip every Mutant Tank's dying animation.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Incap"				"0"
+
 			// Skip every Mutant Tank's taunting animation after incapacitating survivors.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be used for standard Tanks.
@@ -4691,10 +4699,18 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
+			// Skip the Mutant Tank's dying animation.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Incap"				"0"
+
 			// Skip the Mutant Tank's taunting animation after incapacitating survivors.
 			// Note: Only available in Left 4 Dead 2.
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
