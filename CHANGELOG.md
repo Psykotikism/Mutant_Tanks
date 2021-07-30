@@ -19,7 +19,7 @@
 #### Core Plugin
 - The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
 - Increased the interval for checking config files for changes from `1` to `10` seconds.
-- Rewards now end properly at the end of each non-finale map. (Thanks to `Lux` for the saferoom door detection code!)
+- Rewards now end properly at the end of each non-finale map. (Thanks to `epzminion` for the help!)
 - Switched to a simpler method for checking `Versus` and `Scavenge` rounds.
 
 ### Game Data
