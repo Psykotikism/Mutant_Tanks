@@ -391,6 +391,7 @@ enum struct esGeneral
 	ConVar g_cvMTSniperRifleAmmo;
 	ConVar g_cvMTSurvivorReviveDuration;
 	ConVar g_cvMTSurvivorReviveHealth;
+	ConVar g_cvMTTankIncapHealth;
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
 #if defined _clientprefs_included
@@ -413,6 +414,7 @@ enum struct esGeneral
 	DynamicDetour g_ddFlingDetour;
 	DynamicDetour g_ddGetMaxClip1Detour;
 	DynamicDetour g_ddHitByVomitJarDetour;
+	DynamicDetour g_ddIncapacitatedAsTankDetour;
 	DynamicDetour g_ddLadderDismountDetour;
 	DynamicDetour g_ddLadderMountDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
@@ -564,6 +566,7 @@ enum struct esGeneral
 	int g_iDeathSound;
 	int g_iDefaultMeleeRange;
 	int g_iDefaultSurvivorReviveHealth;
+	int g_iDefaultTankIncapHealth;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iEventKilledAttackerOffset;
@@ -630,6 +633,7 @@ enum struct esGeneral
 	int g_iSection;
 	int g_iShareRewards[4];
 	int g_iShovePenaltyReward[4];
+	int g_iSkipIncap;
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnLimit;
@@ -965,6 +969,7 @@ enum struct esPlayer
 	int g_iShovePenalty;
 	int g_iShovePenaltyReward[4];
 	int g_iSkinColor[4];
+	int g_iSkipIncap;
 	int g_iSkipTaunt;
 	int g_iSledgehammerRounds;
 	int g_iSledgehammerRoundsReward[4];
@@ -1157,6 +1162,7 @@ enum struct esTank
 	int g_iShareRewards[4];
 	int g_iShovePenaltyReward[4];
 	int g_iSkinColor[4];
+	int g_iSkipIncap;
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
@@ -1331,6 +1337,7 @@ enum struct esCache
 	int g_iShareRewards[4];
 	int g_iShovePenaltyReward[4];
 	int g_iSkinColor[4];
+	int g_iSkipIncap;
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
 	int g_iSpawnEnabled;
@@ -1905,6 +1912,7 @@ public void OnAllPluginsLoaded()
 		vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::Fling");
 		vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, gdMutantTanks, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
 		vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
+		vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
 		vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderDismount");
 		vSetupDetour(g_esGeneral.g_ddLadderMountDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnLadderMount");
 		vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, gdMutantTanks, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
@@ -2023,6 +2031,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTSurvivorReviveDuration = FindConVar("survivor_revive_duration");
 	g_esGeneral.g_cvMTSurvivorReviveHealth = FindConVar("survivor_revive_health");
 	g_esGeneral.g_cvMTGunSwingInterval = FindConVar("z_gun_swing_interval");
+	g_esGeneral.g_cvMTTankIncapHealth = FindConVar("z_tank_incapacitated_health");
 
 	if (g_bSecondGame)
 	{
@@ -2603,6 +2612,7 @@ public void OnConfigsExecuted()
 	g_esGeneral.g_iChosenType = 0;
 	g_esGeneral.g_iDefaultMeleeRange = -1;
 	g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
+	g_esGeneral.g_iDefaultTankIncapHealth = -1;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
 
@@ -7052,6 +7062,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iRandomTank = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRandomTank, g_esTank[iType].g_iRandomTank);
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
 	g_esCache[tank].g_iRockModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockModel, g_esTank[iType].g_iRockModel);
+	g_esCache[tank].g_iSkipIncap = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSkipIncap, g_esGeneral.g_iSkipIncap);
+	g_esCache[tank].g_iSkipIncap = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkipIncap, g_esCache[tank].g_iSkipIncap);
 	g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSkipTaunt, g_esGeneral.g_iSkipTaunt);
 	g_esCache[tank].g_iSkipTaunt = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkipTaunt, g_esCache[tank].g_iSkipTaunt);
 	g_esCache[tank].g_iSpawnType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnType, g_esTank[iType].g_iSpawnType);
@@ -7685,6 +7697,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_flPunchThrow = 0.0;
 		g_esGeneral.g_flRockDamage = -1.0;
 		g_esGeneral.g_flRunSpeed = 0.0;
+		g_esGeneral.g_iSkipIncap = 0;
 		g_esGeneral.g_iSkipTaunt = 0;
 		g_esGeneral.g_iSweepFist = 0;
 		g_esGeneral.g_flThrowInterval = 0.0;
@@ -7879,6 +7892,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flPunchThrow = 0.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = 0.0;
+			g_esTank[iIndex].g_iSkipIncap = 0;
 			g_esTank[iIndex].g_iSkipTaunt = 0;
 			g_esTank[iIndex].g_iSweepFist = 0;
 			g_esTank[iIndex].g_flThrowInterval = 0.0;
@@ -8086,6 +8100,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_flPunchThrow = 0.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = 0.0;
+				g_esPlayer[iPlayer].g_iSkipIncap = 0;
 				g_esPlayer[iPlayer].g_iSkipTaunt = 0;
 				g_esPlayer[iPlayer].g_iSweepFist = 0;
 				g_esPlayer[iPlayer].g_flThrowInterval = 0.0;
@@ -8326,7 +8341,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esGeneral.g_flPunchThrow, value, 0.0, 100.0);
 				g_esGeneral.g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esGeneral.g_flRockDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, 0.0, 3.0);
-				g_esGeneral.g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esGeneral.g_iSkipTaunt, value, 0, 1);
+				g_esGeneral.g_iSkipIncap = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esGeneral.g_iSkipIncap, value, 0, 1);
+				g_esGeneral.g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esGeneral.g_iSkipTaunt, value, 0, 1);
 				g_esGeneral.g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esGeneral.g_iSweepFist, value, 0, 1);
 				g_esGeneral.g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esGeneral.g_flThrowInterval, value, 0.0, 999999.0);
 				g_esGeneral.g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esGeneral.g_iBulletImmunity, value, 0, 1);
@@ -8637,7 +8653,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esPlayer[iPlayer].g_flPunchThrow, value, 0.0, 100.0);
 						g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, 0.0, 3.0);
-						g_esPlayer[iPlayer].g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esPlayer[iPlayer].g_iSkipTaunt, value, 0, 1);
+						g_esPlayer[iPlayer].g_iSkipIncap = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esPlayer[iPlayer].g_iSkipIncap, value, 0, 1);
+						g_esPlayer[iPlayer].g_iSkipTaunt = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esPlayer[iPlayer].g_iSkipTaunt, value, 0, 1);
 						g_esPlayer[iPlayer].g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esPlayer[iPlayer].g_iSweepFist, value, 0, 1);
 						g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
@@ -9481,7 +9498,8 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_flPunchThrow = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esTank[type].g_flPunchThrow, value, 0.0, 100.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[type].g_flRockDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, 0.0, 3.0);
-		g_esTank[type].g_iSkipTaunt = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "SkipTaunt", "Skip_Taunt", "taunt", g_esTank[type].g_iSkipTaunt, value, 0, 1);
+		g_esTank[type].g_iSkipIncap = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipIncap", "Skip Incap", "Skip_Incap", "incap", g_esTank[type].g_iSkipIncap, value, 0, 1);
+		g_esTank[type].g_iSkipTaunt = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SkipTaunt", "Skip Taunt", "Skip_Taunt", "taunt", g_esTank[type].g_iSkipTaunt, value, 0, 1);
 		g_esTank[type].g_iSweepFist = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esTank[type].g_iSweepFist, value, 0, 1);
 		g_esTank[type].g_flThrowInterval = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[type].g_flThrowInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_iBulletImmunity = iGetKeyValue(sub, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[type].g_iBulletImmunity, value, 0, 1);
@@ -10195,6 +10213,8 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
+	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Pre, mreIncapacitatedAsTankPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Post, mreIncapacitatedAsTankPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Pre, mreLadderDismountPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Post, mreLadderDismountPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Pre, mreLadderMountPre, toggle);
@@ -16934,6 +16954,30 @@ public MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
 	if (aResult == Plugin_Handled)
 	{
 		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreIncapacitatedAsTankPre(int pThis, DHookParam hParams)
+{
+	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipIncap == 1 && g_esGeneral.g_cvMTTankIncapHealth != null)
+	{
+		g_esGeneral.g_iDefaultTankIncapHealth = g_esGeneral.g_cvMTTankIncapHealth.IntValue;
+		g_esGeneral.g_cvMTTankIncapHealth.IntValue = 0;
+
+		return MRES_Override;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreIncapacitatedAsTankPost(int pThis, DHookParam hParams)
+{
+	if (g_esGeneral.g_iDefaultTankIncapHealth != -1)
+	{
+		g_esGeneral.g_cvMTTankIncapHealth.IntValue = g_esGeneral.g_iDefaultTankIncapHealth;
+		g_esGeneral.g_iDefaultTankIncapHealth = -1;
 	}
 
 	return MRES_Ignored;

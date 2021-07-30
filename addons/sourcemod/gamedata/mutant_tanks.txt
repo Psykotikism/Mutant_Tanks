@@ -202,6 +202,27 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * Note: Detouring as a pre-hook for changing "z_tank_incapacitated_health" per Tank before the dying animation starts.
+			 * Note: Detouring as a post-hook for changing "z_tank_incapacitated_health" back to default value after the dying animation starts.
+			 **/
+			"MTDetour_CTerrorPlayer::OnIncapacitatedAsTank"
+			{
+				"signature"	"CTerrorPlayer::OnIncapacitatedAsTank"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"info"
+					{
+						"type"		"objectptr"
+					}
+				}
+			}
+
+			/**
 			 * CTerrorPlayer::OnLadderDismount()
 			 *
 			 * Note: Detouring as a pre-hook for patching weapon deploy per player when getting off ladders.
@@ -1779,6 +1800,21 @@
 				"library"	"server"
 				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
 				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+			}
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 2. One of the functions that references that string is this function.
+			 **/
+			"CTerrorPlayer::OnIncapacitatedAsTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer21OnIncapacitatedAsTankERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x81"
+						/* ? ? ? ? ? ? ? ? ? ? 50 E8 ? ? ? ? 84 ? 74 ? 81 */
 			}
 
 			/**
@@ -3529,6 +3565,21 @@
 				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F"
 						/* ? ? ? ? ? ? 56 8B ? E8 ? ? ? ? 84 ? 74 ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F */
+			}
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 2. One of the functions that references that string is this function.
+			 **/
+			"CTerrorPlayer::OnIncapacitatedAsTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer21OnIncapacitatedAsTankERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x50\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74"
+						/* ? ? ? ? ? ? ? 8B 8E ? ? ? ? E8 ? ? ? ? 50 8B ? E8 ? ? ? ? 84 ? 74 */
 			}
 
 			/**
