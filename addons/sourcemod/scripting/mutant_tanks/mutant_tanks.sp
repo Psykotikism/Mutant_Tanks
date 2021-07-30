@@ -304,7 +304,6 @@ enum struct esGeneral
 	bool g_bClientPrefsInstalled;
 	bool g_bCloneInstalled;
 	bool g_bConfigsExecuted;
-	bool g_bDoorClosed;
 	bool g_bFinaleEnded;
 	bool g_bFinalMap;
 	bool g_bForceSpawned;
@@ -400,6 +399,7 @@ enum struct esGeneral
 #endif
 	DynamicDetour g_ddActionCompleteDetour;
 	DynamicDetour g_ddBaseEntityCreateDetour;
+	DynamicDetour g_ddBeginChangeLevelDetour;
 	DynamicDetour g_ddCanDeployForDetour;
 	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoAnimationEventDetour;
@@ -512,7 +512,6 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
-	Handle g_hSDKGetLastKnownArea;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetMissionFirstMap;
 	Handle g_hSDKGetMissionInfo;
@@ -546,7 +545,6 @@ enum struct esGeneral
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
-	int g_iAttributeFlagsOffset;
 	int g_iBaseHealth;
 	int g_iBehaviorOffset;
 	int g_iBulletImmunity;
@@ -1898,6 +1896,7 @@ public void OnAllPluginsLoaded()
 
 		vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "MTDetour_CFirstAidKit::OnActionComplete");
 		vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, gdMutantTanks, "MTDetour_CBaseEntity::Create");
+		vSetupDetour(g_esGeneral.g_ddBeginChangeLevelDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::OnBeginChangeLevel");
 		vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, gdMutantTanks, "MTDetour_CTerrorWeapon::CanDeployFor");
 		vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "MTDetour_CDeathFallCamera::Enable");
 		vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::DoAnimationEvent");
@@ -2221,19 +2220,6 @@ public void OnPluginStart()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
-			{
-				LogError("%s Failed to load offset: CTerrorPlayer::GetLastKnownArea", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKGetLastKnownArea == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::MaterializeFromGhost"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::MaterializeFromGhost", MT_TAG);
@@ -2348,7 +2334,6 @@ public void OnPluginStart()
 			g_esGeneral.g_iBehaviorOffset = iGetGameDataOffset(gdMutantTanks, "TankIntention::FirstContainedResponder");
 			g_esGeneral.g_iActionOffset = iGetGameDataOffset(gdMutantTanks, "Behavior<Tank>::FirstContainedResponder");
 			g_esGeneral.g_iChildActionOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
-			g_esGeneral.g_iAttributeFlagsOffset = iGetGameDataOffset(gdMutantTanks, "WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 
 			int iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
 			StartPrepSDKCall(SDKCall_Entity);
@@ -2421,17 +2406,6 @@ public void OnPluginStart()
 			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
 		}
 
-		iEntity = -1;
-		while ((iEntity = FindEntityByClassname(iEntity, "prop_door_rotating_checkpoint")) != -1)
-		{
-			int iDoor = iGetSaferoomDoor(true);
-			if (bIsValidEntity(iDoor) && iDoor == iEntity)
-			{
-				HookSingleEntityOutput(iDoor, "OnFullyOpen", vSaferoomDoor);
-				HookSingleEntityOutput(iDoor, "OnFullyClosed", vSaferoomDoor);
-			}
-		}
-
 		g_bLateLoad = false;
 	}
 }
@@ -2492,7 +2466,7 @@ public void OnMapStart()
 	PrecacheSound(SOUND_NULL, true);
 	PrecacheSound(SOUND_SPAWN, true);
 
-	vReset();
+	vResetPlugin();
 	vResetLadyKiller(false);
 	vToggleLogging(1);
 
@@ -2540,7 +2514,13 @@ public void OnClientCookiesCached(int client)
 		{
 			switch (iPos)
 			{
-				case 0: g_esDeveloper[client].g_iDevAccess = StringToInt(sColor);
+				case 0:
+				{
+					if (g_esDeveloper[client].g_iDevAccess < 2)
+					{
+						g_esDeveloper[client].g_iDevAccess = StringToInt(sColor);
+					}
+				}
 				case 1: g_esDeveloper[client].g_iDevParticle = StringToInt(sColor);
 				case 2: strcopy(g_esDeveloper[client].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), sColor);
 				case 3: strcopy(g_esDeveloper[client].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), sColor);
@@ -2851,7 +2831,7 @@ public void OnMapEnd()
 	g_esGeneral.g_bMapStarted = false;
 	g_esGeneral.g_bConfigsExecuted = false;
 
-	vReset();
+	vResetPlugin();
 	vToggleLogging(0);
 
 	RemoveNormalSoundHook(FallSoundHook);
@@ -5761,11 +5741,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 		g_esGeneral.g_bWitchKilled[entity] = false;
 		g_esGeneral.g_iTeamID[entity] = 0;
 
-		if (!g_esGeneral.g_bFinalMap && StrEqual(classname, "prop_door_rotating_checkpoint", false))
-		{
-			RequestFrame(vSaferoomDoorFrame, EntIndexToEntRef(entity));
-		}
-		else if (StrEqual(classname, "tank_rock"))
+		if (StrEqual(classname, "tank_rock"))
 		{
 			RequestFrame(vRockThrowFrame, EntIndexToEntRef(entity));
 		}
@@ -6468,6 +6444,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		{
 			bDeveloper = bIsDeveloper(victim, 4);
 			bRewarded = bDeveloper || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
+			static int iIndex = -1;
+			if (iIndex == -1)
+			{
+				iIndex = iGetPatchIndex("DoJumpHeight");
+			}
+
 			if (bIsDeveloper(victim, 11) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_GODMODE))
 			{
 				if (((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || ((damagetype & DMG_FALL) && !bIsSafeFalling(victim) && g_esPlayer[victim].g_bFatalFalling))
@@ -6479,7 +6461,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				return Plugin_Handled;
 			}
-			else if ((g_esPlayer[victim].g_iFallPasses > 0 || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
+			else if ((g_esPlayer[victim].g_iFallPasses > 0 || (iIndex != -1 && g_bPermanentPatch[iIndex]) || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
 			{
 				if (g_esPlayer[victim].g_iFallPasses > 0)
 				{
@@ -6863,21 +6845,30 @@ public void OnWeaponSwitchPost(int client, int weapon)
 
 public Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity) && (g_esPlayer[entity].g_iFallPasses > 0 || bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE)))
+	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity))
 	{
-		static float flOrigin[3];
-		GetEntPropVector(entity, Prop_Data, "m_vecOrigin", flOrigin);
-		if ((g_esPlayer[entity].g_bFallDamage && !g_esPlayer[entity].g_bFatalFalling) || (0.0 < (g_esPlayer[entity].g_flPreFallZ - flOrigin[2]) < 900.0 && !g_esPlayer[entity].g_bFalling))
+		static int iIndex = -1;
+		if (iIndex == -1)
 		{
-			if (StrEqual(sample, SOUND_NULL, false))
-			{
-				return Plugin_Stop;
-			}
-			else if (0 <= StrContains(sample, SOUND_DAMAGE, false) <= 1 || 0 <= StrContains(sample, SOUND_DAMAGE2, false) <= 1)
-			{
-				g_esPlayer[entity].g_bFallDamage = false;
+			iIndex = iGetPatchIndex("DoJumpHeight");
+		}
 
-				return Plugin_Stop;
+		if (g_esPlayer[entity].g_iFallPasses > 0 || (iIndex != -1 && g_bPermanentPatch[iIndex]) || bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE))
+		{
+			static float flOrigin[3];
+			GetEntPropVector(entity, Prop_Data, "m_vecOrigin", flOrigin);
+			if ((g_esPlayer[entity].g_bFallDamage && !g_esPlayer[entity].g_bFatalFalling) || (0.0 < (g_esPlayer[entity].g_flPreFallZ - flOrigin[2]) < 900.0 && !g_esPlayer[entity].g_bFalling))
+			{
+				if (StrEqual(sample, SOUND_NULL, false))
+				{
+					return Plugin_Stop;
+				}
+				else if (0 <= StrContains(sample, SOUND_DAMAGE, false) <= 1 || 0 <= StrContains(sample, SOUND_DAMAGE2, false) <= 1)
+				{
+					g_esPlayer[entity].g_bFallDamage = false;
+
+					return Plugin_Stop;
+				}
 			}
 		}
 	}
@@ -10202,6 +10193,7 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, toggle, 2);
 
+	vToggleDetour(g_esGeneral.g_ddBeginChangeLevelDetour, "MTDetour_CTerrorPlayer::OnBeginChangeLevel", Hook_Pre, mreBeginChangeLevelPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Pre, mreCanDeployForPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Post, mreCanDeployForPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "MTDetour_CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, toggle);
@@ -10350,7 +10342,6 @@ static void vSurvivorReactions(int tank)
 
 		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iExplosion);
-
 		SetEntPropEnt(iExplosion, Prop_Send, "m_hOwnerEntity", tank);
 		SetEntProp(iExplosion, Prop_Send, "m_iTeamNum", 3);
 		AcceptEntityInput(iExplosion, "Explode");
@@ -10589,19 +10580,6 @@ static void vRemoveProps(int tank, int mode = 1)
 	}
 }
 
-static void vReset()
-{
-	g_esGeneral.g_bDoorClosed = false;
-	g_esGeneral.g_iPlayerCount[1] = iGetHumanCount();
-	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount(true);
-
-	vResetRound();
-	vClearAbilityList();
-	vClearColorKeysList();
-	vClearCompTypesList();
-	vClearPluginList();
-}
-
 static void vResetCore(int client)
 {
 	g_esPlayer[client].g_bAdminMenu = false;
@@ -10649,6 +10627,18 @@ static void vResetPlayer(int player)
 	vResetCore(player);
 	vRemoveEffects(player);
 	vCacheSettings(player);
+}
+
+static void vResetPlugin()
+{
+	g_esGeneral.g_iPlayerCount[1] = iGetHumanCount();
+	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount(true);
+
+	vResetRound();
+	vClearAbilityList();
+	vClearColorKeysList();
+	vClearCompTypesList();
+	vClearPluginList();
 }
 
 static void vResetRound()
@@ -10955,6 +10945,108 @@ static void vChooseReward(int survivor, int tank, int priority, int setting)
 
 	iType |= iGetUsefulRewards(survivor, tank, iType, priority);
 	vRewardSurvivor(survivor, iType, tank, true, priority);
+}
+
+static void vEndRewards(int survivor, bool force)
+{
+	static bool bCheck;
+	bCheck = false;
+	static float flDuration, flTime;
+	flDuration = 0.0, flTime = GetGameTime();
+	static int iType;
+	iType = 0;
+	for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
+	{
+		if (iPos < sizeof(esPlayer::g_flVisualTime))
+		{
+			if ((g_esPlayer[survivor].g_flVisualTime[0] != -1.0 && g_esPlayer[survivor].g_flVisualTime[0] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[0] = -1.0;
+				g_esPlayer[survivor].g_sScreenColor[0] = '\0';
+				g_esPlayer[survivor].g_iScreenColorVisual[0] = -1;
+				g_esPlayer[survivor].g_iScreenColorVisual[1] = -1;
+				g_esPlayer[survivor].g_iScreenColorVisual[2] = -1;
+				g_esPlayer[survivor].g_iScreenColorVisual[3] = -1;
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[1] != -1.0 && g_esPlayer[survivor].g_flVisualTime[1] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[1] = -1.0;
+				g_esPlayer[survivor].g_iParticleEffect = 0;
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[2] != -1.0 && g_esPlayer[survivor].g_flVisualTime[2] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[2] = -1.0;
+				g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[3] != -1.0 && g_esPlayer[survivor].g_flVisualTime[3] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[3] = -1.0;
+				g_esPlayer[survivor].g_sLightColor[0] = '\0';
+
+				if (!bIsDeveloper(survivor, 0))
+				{
+					vRemoveSurvivorLight(survivor);
+				}
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[4] != -1.0 && g_esPlayer[survivor].g_flVisualTime[4] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[4] = -1.0;
+				g_esPlayer[survivor].g_sBodyColor[0] = '\0';
+
+				if (!bIsDeveloper(survivor, 0))
+				{
+					SetEntityRenderMode(survivor, RENDER_NORMAL);
+					SetEntityRenderColor(survivor, 255, 255, 255, 255);
+				}
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[5] = -1.0;
+				g_esPlayer[survivor].g_sOutlineColor[0] = '\0';
+
+				if (!bIsDeveloper(survivor, 0))
+				{
+					vRemoveGlow(survivor);
+				}
+			}
+		}
+
+		switch (iPos)
+		{
+			case 0: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH);
+			case 1: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST);
+			case 2: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
+			case 3: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
+			case 4: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO);
+			case 5: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE);
+			case 6: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO);
+		}
+
+		flDuration = g_esPlayer[survivor].g_flRewardTime[iPos];
+		if (bCheck && ((flDuration != -1.0 && flDuration < flTime) || g_esGeneral.g_bFinaleEnded || force))
+		{
+			switch (iPos)
+			{
+				case 0: iType |= MT_REWARD_HEALTH;
+				case 1: iType |= MT_REWARD_SPEEDBOOST;
+				case 2: iType |= MT_REWARD_DAMAGEBOOST;
+				case 3: iType |= MT_REWARD_ATTACKBOOST;
+				case 4: iType |= MT_REWARD_AMMO;
+				case 5: iType |= MT_REWARD_GODMODE;
+				case 6: iType |= MT_REWARD_INFAMMO;
+			}
+		}
+	}
+
+	if (iType > 0)
+	{
+		vRewardSurvivor(survivor, iType);
+	}
 }
 
 static void vListRewards(int survivor, int count, const char[][] buffers, int maxStrings, char[] buffer, int size)
@@ -14624,6 +14716,7 @@ public void vRockThrowFrame(int ref)
 			}
 
 			vSetRockModel(iThrower, iRock);
+			StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 
 			if (g_esCache[iThrower].g_iRockEffects > 0)
 			{
@@ -14639,18 +14732,7 @@ public void vRockThrowFrame(int ref)
 			Call_Finish();
 
 			vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKTHROW, _, iRock);
-			StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 		}
-	}
-}
-
-public void vSaferoomDoorFrame(int ref)
-{
-	int iDoor = iGetSaferoomDoor(true), iEntity = EntRefToEntIndex(ref);
-	if (bIsValidEntity(iDoor) && iDoor == iEntity)
-	{
-		HookSingleEntityOutput(iDoor, "OnFullyOpen", vSaferoomDoor);
-		HookSingleEntityOutput(iDoor, "OnFullyClosed", vSaferoomDoor);
 	}
 }
 
@@ -15429,30 +15511,6 @@ static bool bIsGameModeConfigFound(char[] buffer, int size)
 		strcopy(buffer, size, sModeConfig);
 
 		return true;
-	}
-
-	return false;
-}
-
-static bool bIsInsideSaferoom(int survivor)
-{
-#if defined _l4dh_included
-	if (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKGetLastKnownArea == null)
-	{
-		return L4D_IsInLastCheckpoint(survivor);
-	}
-#endif
-	if (g_esGeneral.g_iAttributeFlagsOffset != -1)
-	{
-		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
-		if (iArea > 0)
-		{
-			int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
-			if (iAttributeFlags & 2048)
-			{
-				return true;
-			}
-		}
 	}
 
 	return false;
@@ -16346,24 +16404,6 @@ static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = -1, i
 	return type;
 }
 
-static int iGetSurvivorInsideSaferoomCount(bool human = false)
-{
-	static bool bValidPlayer;
-	bValidPlayer = false;
-	static int iCount;
-	iCount = 0;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
-		if (bIsSurvivor(iSurvivor) && bIsInsideSaferoom(iSurvivor))
-		{
-			iCount++;
-		}
-	}
-
-	return iCount;
-}
-
 static int iGetTankCount(bool manual, bool include = false)
 {
 	switch (manual)
@@ -16481,6 +16521,16 @@ public MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParam
 	if (StrEqual(sClassname, "tank_rock") && hParams.IsNull(4))
 	{
 		vSetRockColor(hReturn.Value);
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreBeginChangeLevelPre(int pThis, DHookParam hParams)
+{
+	if (bIsSurvivor(pThis) && g_esPlayer[pThis].g_iRewardTypes > 0)
+	{
+		vEndRewards(pThis, true);
 	}
 
 	return MRES_Ignored;
@@ -16807,19 +16857,40 @@ public MRESReturn mreFallingPre(int pThis)
 		g_esPlayer[pThis].g_bFallDamage = true;
 		g_esPlayer[pThis].g_bFalling = true;
 
-		if ((bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)) && !g_esGeneral.g_bPatchFallingSound)
+		static int iIndex[2] = {-1, -1};
+		if (iIndex[0] == -1)
+		{
+			iIndex[0] = iGetPatchIndex("DoJumpHeight");
+		}
+
+		if (((iIndex[0] != -1 && g_bPermanentPatch[iIndex[0]]) || bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)) && !g_esGeneral.g_bPatchFallingSound)
 		{
 			g_esGeneral.g_bPatchFallingSound = true;
 
-			char sSound[] = "Player.Fail";
-			for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+			if (iIndex[1] == -1)
 			{
-				StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8);
+				iIndex[1] = iGetPatchIndex("FallScreamMute");
+			}
+
+			if (iIndex[1] != -1)
+			{
+				bInstallPatch(iIndex[1]);
+			}
+			else
+			{
+				char sSound[] = "Player.Fail";
+				for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+				{
+					StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8);
+				}
 			}
 
 			char sVoiceLine[64];
 			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevFallVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevFallVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
-			vVocalize(pThis, sVoiceLine);
+			if (sVoiceLine[0] != '\0')
+			{
+				vVocalize(pThis, sVoiceLine);
+			}
 		}
 	}
 
@@ -16832,10 +16903,23 @@ public MRESReturn mreFallingPost(int pThis)
 	{
 		g_esGeneral.g_bPatchFallingSound = false;
 
-		char sSound[] = "Player.Fall";
-		for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+		static int iIndex = -1;
+		if (iIndex == -1)
 		{
-			StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8);
+			iIndex = iGetPatchIndex("FallScreamMute");
+		}
+
+		if (iIndex != -1)
+		{
+			bRemovePatch(iIndex);
+		}
+		else
+		{
+			char sSound[] = "Player.Fall";
+			for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+			{
+				StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8);
+			}
 		}
 	}
 
@@ -17739,21 +17823,6 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-public void vSaferoomDoor(const char[] output, int caller, int activator, float delay)
-{
-	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(caller) && bIsSurvivor(activator) && !g_esGeneral.g_bFinalMap)
-	{
-		if (StrEqual(output, "OnFullyOpen", false))
-		{
-			g_esGeneral.g_bDoorClosed = false;
-		}
-		else if (StrEqual(output, "OnFullyClosed", false))
-		{
-			g_esGeneral.g_bDoorClosed = true;
-		}
-	}
-}
-
 public void vMTPluginStatusCvar(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	vPluginStatus();
@@ -18201,109 +18270,11 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 
 public Action tTimerRefreshRewards(Handle timer)
 {
-	static bool bCheck;
-	bCheck = false;
-	static float flDuration, flTime;
-	flDuration = 0.0, flTime = GetGameTime();
-	static int iType;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			iType = 0;
-
-			for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
-			{
-				if (iPos < sizeof(esPlayer::g_flVisualTime))
-				{
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[0] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[0] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[0] = -1.0;
-						g_esPlayer[iSurvivor].g_sScreenColor[0] = '\0';
-						g_esPlayer[iSurvivor].g_iScreenColorVisual[0] = -1;
-						g_esPlayer[iSurvivor].g_iScreenColorVisual[1] = -1;
-						g_esPlayer[iSurvivor].g_iScreenColorVisual[2] = -1;
-						g_esPlayer[iSurvivor].g_iScreenColorVisual[3] = -1;
-					}
-
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[1] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[1] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[1] = -1.0;
-						g_esPlayer[iSurvivor].g_iParticleEffect = 0;
-					}
-
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[2] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[2] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[2] = -1.0;
-						g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] = '\0';
-					}
-
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[3] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[3] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
-						g_esPlayer[iSurvivor].g_sLightColor[0] = '\0';
-
-						if (!bIsDeveloper(iSurvivor, 0))
-						{
-							vRemoveSurvivorLight(iSurvivor);
-						}
-					}
-
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[4] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[4] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[4] = -1.0;
-						g_esPlayer[iSurvivor].g_sBodyColor[0] = '\0';
-
-						if (!bIsDeveloper(iSurvivor, 0))
-						{
-							SetEntityRenderMode(iSurvivor, RENDER_NORMAL);
-							SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
-						}
-					}
-
-					if ((g_esPlayer[iSurvivor].g_flVisualTime[5] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[5] < flTime) || g_esGeneral.g_bFinaleEnded)
-					{
-						g_esPlayer[iSurvivor].g_flVisualTime[5] = -1.0;
-						g_esPlayer[iSurvivor].g_sOutlineColor[0] = '\0';
-
-						if (!bIsDeveloper(iSurvivor, 0))
-						{
-							vRemoveGlow(iSurvivor);
-						}
-					}
-				}
-
-				switch (iPos)
-				{
-					case 0: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH);
-					case 1: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST);
-					case 2: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
-					case 3: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
-					case 4: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO);
-					case 5: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE);
-					case 6: bCheck = !!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_INFAMMO);
-				}
-
-				flDuration = g_esPlayer[iSurvivor].g_flRewardTime[iPos];
-				if (bCheck && ((flDuration != -1.0 && flDuration < flTime) || (g_esGeneral.g_bDoorClosed && iGetSurvivorInsideSaferoomCount() >= iGetSurvivorCount()) || g_esGeneral.g_bFinaleEnded))
-				{
-					switch (iPos)
-					{
-						case 0: iType |= MT_REWARD_HEALTH;
-						case 1: iType |= MT_REWARD_SPEEDBOOST;
-						case 2: iType |= MT_REWARD_DAMAGEBOOST;
-						case 3: iType |= MT_REWARD_ATTACKBOOST;
-						case 4: iType |= MT_REWARD_AMMO;
-						case 5: iType |= MT_REWARD_GODMODE;
-						case 6: iType |= MT_REWARD_INFAMMO;
-					}
-				}
-			}
-
-			if (iType > 0)
-			{
-				vRewardSurvivor(iSurvivor, iType);
-			}
+			vEndRewards(iSurvivor, false);
 		}
 	}
 

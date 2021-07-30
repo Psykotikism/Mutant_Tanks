@@ -1976,10 +1976,14 @@ stock bool bIsGunWeapon(int survivor)
 	return false;
 }
 
+stock bool bIsHumanInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
+{
+	return bIsInfected(infected, flags|MT_CHECK_FAKECLIENT);
+}
+
 stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	flags |= MT_CHECK_FAKECLIENT;
-	return bIsSurvivor(survivor, flags) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
+	return bIsSurvivor(survivor, flags|MT_CHECK_FAKECLIENT) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
 stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -2794,6 +2798,24 @@ stock int iGetIdlePlayer(int bot)
 	return 0;
 }
 
+stock int iGetInfectedCount(bool human = false)
+{
+	static bool bValidPlayer;
+	bValidPlayer = false;
+	static int iCount;
+	iCount = 0;
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+	{
+		bValidPlayer = human ? bIsHumanInfected(iSpecial) : bIsInfected(iSpecial);
+		if (bValidPlayer)
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
+}
+
 stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
 {
 	if (FindCharInString(subsection, ',') != -1)
@@ -3114,77 +3136,13 @@ stock int iGetSurvivorCount(bool human = false)
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
-		if (bIsSurvivor(iSurvivor))
+		if (bValidPlayer)
 		{
 			iCount++;
 		}
 	}
 
 	return iCount;
-}
-
-stock int iGetSaferoomDoor(bool enddoor)
-{
-	int iEndDoor = -1, iStartDoor = -1, iSafeZone = FindEntityByClassname(-1, "info_changelevel");
-	switch (bIsValidEntity(iSafeZone))
-	{
-		case true:
-		{
-			float flSafePos[3], flEndDistance = -1.0, flStartDistance = -1.0, flDistance, flDoorPos[3];
-			vGetEntityMidOrigin(iSafeZone, flSafePos);
-
-			int iDoor = -1;
-			while ((iDoor = FindEntityByClassname(iDoor, "prop_door_rotating_checkpoint")) != -1)
-			{
-				if (GetEntProp(iDoor, Prop_Data, "m_spawnflags") & 32768)
-				{
-					continue;
-				}
-
-				vGetEntityMidOrigin(iDoor, flDoorPos);
-				flDistance = GetVectorDistance(flSafePos, flDoorPos);
-				if (flDistance < flEndDistance || flEndDistance == -1.0)
-				{
-					flEndDistance = flDistance;
-					iEndDoor = iDoor;
-				}
-
-				if (flDistance >= flStartDistance || flStartDistance == -1.0)
-				{
-					flStartDistance = flDistance;
-					iStartDoor = iDoor;
-				}
-			}
-
-			switch (enddoor)
-			{
-				case true: return iEndDoor;
-				case false: return (iStartDoor == iEndDoor) ? -1 : iStartDoor;
-			}
-		}
-		case false:
-		{
-			if (enddoor)
-			{
-				return -1;
-			}
-
-			int iDoor = -1;
-			while ((iDoor = FindEntityByClassname(iDoor, "prop_door_rotating_checkpoint")) != -1)
-			{
-				if (GetEntProp(iDoor, Prop_Data, "m_spawnflags") & 32768)
-				{
-					continue;
-				}
-
-				return iDoor;
-			}
-
-			return -1;
-		}
-	}
-
-	return -1;
 }
 
 stock int iGetWeaponOffset(int weapon)
