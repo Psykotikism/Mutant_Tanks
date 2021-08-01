@@ -653,15 +653,14 @@
 			/**
 			 * Action<Tank>::FirstContainedResponder()
 			 * 
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Action<Tank>" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Use the member variable offset.
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Action<Tank>::FirstContainedResponder"
 			{
@@ -672,15 +671,14 @@
 			/**
 			 * Behavior<Tank>::FirstContainedResponder()
 			 * 
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Use the member variable offset.
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Behavior<Tank>::FirstContainedResponder"
 			{
@@ -690,7 +688,9 @@
 
 			/**
 			 * CBaseEntity::GetRefEHandle()
-			 * Note: Found via VTable offsets.
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CBaseEntity::GetRefEHandle"
 			{
@@ -701,15 +701,14 @@
 			/**
 			 * TankIntention::FirstContainedResponder()
 			 * 
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "TankIntention" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Windows binary.
 			 * 5. Multiply the member variable offset by 4.
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"TankIntention::FirstContainedResponder"
 			{
@@ -967,13 +966,7 @@
 			/**
 			 * CBaseCombatWeapon::GetMaxClip1()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CBaseCombatWeapon" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
@@ -1017,13 +1010,7 @@
 			/**
 			 * CTerrorPlayer::Deafen(float, float, float)
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CTerrorPlayer::Deafen"
@@ -1151,7 +1138,7 @@
 			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
 			 *
 			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
+			 * 1. Locate the function.
 			 * 2. Look for the 7-byte float (FLD) instruction.
 			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 **/
@@ -1164,13 +1151,7 @@
 			/**
 			 * CTerrorPlayer::GetLastKnownArea()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CTerrorPlayer::GetLastKnownArea"
@@ -1385,15 +1366,14 @@
 			/**
 			 * Tank::GetIntentionInterface()
 			 *
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Tank" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Multiply the member variable offset by 4.
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Tank::GetIntentionInterface"
 			{
@@ -1404,15 +1384,7 @@
 			/**
 			 * TankIdle::GetName()
 			 *
-			 * How to find on Windows:
-			 * 1a. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "TankIdle" class on Windows.
-			 * 3a. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 1b. Search for the "TankIdle" string.
-			 * 2b. The string can only be found in this function.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"TankIdle::GetName"
@@ -1424,16 +1396,15 @@
 			/**
 			 * WitchLocomotion::IsAreaTraversable(CNavArea const*)
 			 *
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "WitchLocomotion" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Look for the first 10-byte TEST instruction.
 			 * 6. The offset in that instruction is the offset for "m_attributeFlags".
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
@@ -2562,13 +2533,7 @@
 			/**
 			 * CBaseBackpackItem::GetUseAction()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CBaseBackpackItem" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CBaseBackpackItem::GetUseAction"
@@ -2580,13 +2545,7 @@
 			/**
 			 * CBaseCombatWeapon::GetMaxClip1()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CBaseCombatWeapon" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
@@ -2598,13 +2557,7 @@
 			/**
 			 * CBaseEntity::IsInStasis()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CBaseEntity" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CBaseEntity::IsInStasis"
@@ -2648,13 +2601,7 @@
 			/**
 			 * CTerrorPlayer::Deafen(float, float, float)
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CTerrorPlayer::Deafen"
@@ -2859,7 +2806,7 @@
 			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
 			 *
 			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
+			 * 1. Locate the function.
 			 * 2. Look for the 9-byte move (MOVSS) instruction.
 			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 **/
@@ -2872,13 +2819,7 @@
 			/**
 			 * CTerrorPlayer::GetLastKnownArea()
 			 *
-			 * How to find on Windows:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"CTerrorPlayer::GetLastKnownArea"
@@ -2898,7 +2839,7 @@
 			 * 5. The offset will be the offset for the hidden melee weapon.
 			 *
 			 * How to find on Linux:
-			 * 1. Go to the "CTerrorPlayer::OnIncapacitatedAsSurvivor" function.
+			 * 1. Locate the function.
 			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
 			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
 			 * 4. The variable that is being assigned a value below those two function calls has an offset.
@@ -3007,15 +2948,14 @@
 			/**
 			 * Tank::GetIntentionInterface()
 			 *
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Tank" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Multiply the member variable offset by 4.
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Tank::GetIntentionInterface"
 			{
@@ -3026,15 +2966,7 @@
 			/**
 			 * TankIdle::GetName()
 			 *
-			 * How to find on Windows:
-			 * 1a. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "TankIdle" class on Windows.
-			 * 3a. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 1b. Search for the "TankIdle" string.
-			 * 2b. The string can only be found in this function.
-			 *
-			 * How to find on Linux:
+			 * How to find:
 			 * 1. Use asherkin's VTable dump.
 			 **/
 			"TankIdle::GetName"
@@ -3046,16 +2978,15 @@
 			/**
 			 * WitchLocomotion::IsAreaTraversable(CNavArea const*)
 			 *
-			 * How to find on Windows:
+			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2a. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "WitchLocomotion" class on Linux.
 			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4. Look for the target function in the Windows binary.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
 			 * 5. Look for the first 10-byte TEST instruction.
 			 * 6. The offset in that instruction is the offset for "m_attributeFlags".
-			 *
-			 * How to find on Linux:
-			 * 1. Use asherkin's VTable dump.
 			 **/
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
