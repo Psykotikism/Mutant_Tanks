@@ -1473,7 +1473,7 @@
 			 * 2. The string can only be found in "CTerrorPlayer::OnGroundChanged".
 			 * 3. Look for the "point_deathfall_camera" string in "CTerrorPlayer::OnGroundChanged".
 			 * 4. The first function call after that string's reference should be "CBasePlayer::ClearZoomOwner".
-			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" is this function.
+			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" should be this function.
 			 **/
 			"CDeathFallCamera::Enable"
 			{
@@ -1597,8 +1597,13 @@
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "PlayerGroundPoundedByTank" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankClaw" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTankClaw::OnPlayerHit"
 			{
@@ -1627,8 +1632,13 @@
 			 * CTankRock::Detonate()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "tank_rock_throw_impact_stump" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankRock" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTankRock::Detonate"
 			{
@@ -1719,7 +1729,7 @@
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
 			 * - "blood_bleedout"
 			 * - "SubjectIsA:%s,Distance:%f"
 			 * - "KilledZombie"
@@ -1729,6 +1739,11 @@
 			 * - "infected_explosive_barrel_kill"
 			 * - "boomer_exploded"
 			 * - "splashedbile"
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::Event_Killed"
 			{
@@ -1772,8 +1787,13 @@
 			 * CTerrorPlayer::OnBeginChangeLevel(char const*, KeyValues *)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "Saving %s for transition at %f %f %f\n" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnBeginChangeLevel"
 			{
@@ -1787,9 +1807,14 @@
 			 * CTerrorPlayer::OnEnterGhostState()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "spawnmode_bar" string.
-			 * 2. One of the functions that references that string is this function.
-			 * 3. This function should also contain "data" and "zombieClass" strings.
+			 * 1a. Search for the "spawnmode_bar" string.
+			 * 2a. One of the functions that references that string is this function.
+			 * 3a. This function should also contain "data" and "zombieClass" strings.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnEnterGhostState"
 			{
@@ -1894,8 +1919,13 @@
 			 * CTerrorPlayer::OnRevived()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "ReviveType"/"RevivedByFriend" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnRevived"
 			{
@@ -1990,8 +2020,13 @@
 			 * CTerrorPlayer::PreThink()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "#L4D_idle_spectator" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "#L4D_idle_spectator" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::PreThink"
 			{
@@ -2141,8 +2176,13 @@
 			 * Note: This is only used for the "CDirector" address on Windows.
 			 *
 			 * How to find:
-			 * 1. Search for the "The rescue vehicle is here!!!"/"%3.2f: %s ERROR: No RESCUE_VEHICLE area" string.
-			 * 2. One of the functions that references that string is this function.
+			 * 1a. Search for the "The rescue vehicle is here!!!" or "%3.2f: %s ERROR: No RESCUE_VEHICLE area" string.
+			 * 2a. One of the functions that references that string is this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "SurvivorLegsMeetRescueVehicleArrival" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"SurvivorLegsMeetRescueVehicleArrival::Update"
 			{
@@ -3056,7 +3096,7 @@
 			 * 2. The string can only be found in "CTerrorPlayer::OnGroundChanged".
 			 * 3. Look for the "point_deathfall_camera" string in "CTerrorPlayer::OnGroundChanged".
 			 * 4. The first function call after that string's second reference should be "CBasePlayer::ClearZoomOwner".
-			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" is this function.
+			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" should be this function.
 			 **/
 			"CDeathFallCamera::Enable"
 			{
@@ -3101,8 +3141,13 @@
 			 * CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "Allowing spawning - %s left safe area\n" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "Allowing spawning - %s left safe area\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CDirector" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
@@ -3118,8 +3163,13 @@
 			 * Note: This is only used for the "CDirector" address on Windows.
 			 *
 			 * How to find:
-			 * 1. Search for the "Event.Reveal" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "Event.Reveal" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CDirectorMusicBanks" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 ***/
 			"CDirectorMusicBanks::OnRoundStart"
 			{
@@ -3148,8 +3198,13 @@
 			 * CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "RelaxedSigh"/"HealedByFriend" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "RelaxedSigh" or "HealedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CFirstAidKit" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CFirstAidKit::OnActionComplete"
 			{
@@ -3212,8 +3267,13 @@
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "PlayerGroundPoundedByTank" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankClaw" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTankClaw::OnPlayerHit"
 			{
@@ -3257,8 +3317,13 @@
 			 * CTankRock::Detonate()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "tank_rock_throw_impact_stump" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankRock" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTankRock::Detonate"
 			{
@@ -3420,7 +3485,7 @@
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
 			 * - "charger_carry_kill"
 			 * - "blood_bleedout"
 			 * - "spitter_killed"
@@ -3436,6 +3501,11 @@
 			 * - "jockey_killed"
 			 * - "boomer_exploded"
 			 * - "splashedbile"
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::Event_Killed"
 			{
@@ -3495,8 +3565,13 @@
 			 * CTerrorPlayer::OnBeginChangeLevel(char const*)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "Saving %s for transition at %f %f %f\n" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnBeginChangeLevel"
 			{
@@ -3510,9 +3585,14 @@
 			 * CTerrorPlayer::OnEnterGhostState()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "spawnmode_bar" string.
-			 * 2. One of the functions that references that string is this function.
-			 * 3. This function should also contain "data" and "zombieClass" strings.
+			 * 1a. Search for the "spawnmode_bar" string.
+			 * 2a. One of the functions that references that string is this function.
+			 * 3a. This function should also contain "data" and "zombieClass" strings.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnEnterGhostState"
 			{
@@ -3634,8 +3714,13 @@
 			 * CTerrorPlayer::OnRevived()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "ReviveType"/"RevivedByFriend" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::OnRevived"
 			{
@@ -3728,8 +3813,13 @@
 			 * CTerrorPlayer::PreThink()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "#L4D_idle_spectator" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "#L4D_idle_spectator" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::PreThink"
 			{
@@ -3760,8 +3850,13 @@
 			 * CTerrorPlayer::SelectWeightedSequence(Activity)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "Hulk_RunAttack1_Gesture" string.
-			 * 2. The string can only be found in this function.
+			 * 1a. Search for the "Hulk_RunAttack1_Gesture" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"CTerrorPlayer::SelectWeightedSequence"
 			{
