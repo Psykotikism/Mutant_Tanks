@@ -825,7 +825,9 @@ void vSplatterRange(int tank, bool idle)
 			return;
 		}
 
-		vAttachParticle(tank, (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))], 10.0, _, false);
+		static char sParticle[40];
+		FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
+		vAttachParticle(tank, sParticle, 10.0, .teleport = false);
 	}
 }
 
@@ -869,7 +871,9 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vAttachParticle(iTank, (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))], 10.0, _, false);
+	static char sParticle[40];
+	FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
+	vAttachParticle(iTank, sParticle, 10.0, .teleport = false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)
 	{

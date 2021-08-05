@@ -47,7 +47,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 ## Requirements
 1. `SourceMod 1.10` or `SourceMod 1.11`:
 - `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
-- `SourceMod 1.11.0.6511` or higher (Only if compiling the `.sp` files yourself.)
+- `SourceMod 1.11.0.6711` or higher (Only if compiling the `.sp` files yourself.)
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
@@ -2131,9 +2131,9 @@ Examples:
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
-**epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**epz/epzminion** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
-**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
+**Lux/LuxLuma** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -2143,9 +2143,9 @@ Examples:
 
 **hmmmmm (SlidyBat)** - For showing how to pick a random character out of a dynamic string.
 
-**KasperH (Ladis)** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
+**KasperH/Ladis** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
-**Blueberry (Kleiner)** - For Russian translations and suggesting ideas.
+**Blueberry/Kleiner** - For Russian translations and suggesting ideas.
 
 **yuzumi** - For Simplified Chinese translations, reporting issues, and suggesting ideas.
 

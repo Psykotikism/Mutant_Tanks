@@ -47,7 +47,7 @@
 ## Требования
 1. `SourceMod 1.10` или `SourceMod 1.11`:
 - `SourceMod 1.10` (Только при использовании файлов `.smx`, включенных в пакет.)
-- `SourceMod 1.11.0.6511` или выше (только при самостоятельной компиляции файлов `.sp`.)
+- `SourceMod 1.11.0.6711` или выше (только при самостоятельной компиляции файлов `.sp`.)
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
@@ -2131,9 +2131,9 @@ Overrides
 
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
 
-**epz (epzminion)** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
+**epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
 
-**Lux** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагины [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
+**Lux/LuxLuma** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагины [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
 
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
@@ -2143,9 +2143,9 @@ Overrides
 
 **hmmmmm (SlidyBat)** - За демонстрации того, как выбрать случайный символ из динамической строки.
 
-**KasperH (Ladis)** - За перевод на венгерский, сообщения о проблемах, предложения идей и общую поддержку.
+**KasperH/Ladis** - За перевод на венгерский, сообщения о проблемах, предложения идей и общую поддержку.
 
-**Blueberry (Kleiner)** - За перевод на русский и предложение идей.
+**Blueberry/Kleiner** - За перевод на русский и предложение идей.
 
 **yuzumi** - За перевод на упрощённый китайский, сообщения о проблемах и предложения идей.
 

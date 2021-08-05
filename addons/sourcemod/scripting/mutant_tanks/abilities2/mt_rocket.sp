@@ -942,7 +942,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					vDeleteEntity(iFlame, 3.0);
 
 					vEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
-					EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
+					EmitSoundToAll(SOUND_FIRE, survivor);
 
 					static float flDelay;
 					flDelay = (pos != -1) ? 0.1 : g_esRocketCache[tank].g_flRocketDelay;
@@ -1061,8 +1061,8 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	flVelocity[1] = 0.0;
 	flVelocity[2] = 800.0;
 
-	EmitSoundToAll(SOUND_EXPLOSION, iSurvivor, _, _, _, 1.0);
-	EmitSoundToAll(SOUND_LAUNCH, iSurvivor, _, _, _, 1.0);
+	EmitSoundToAll(SOUND_EXPLOSION, iSurvivor);
+	EmitSoundToAll(SOUND_LAUNCH, iSurvivor);
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);

@@ -13,8 +13,12 @@
 ### Changes
 
 #### General
+- Increased performance when patching the same address repeatedly. (Thanks to `Lux` for the example!)
+- `SourceMod 1.11.0.6711` or higher is now required when recompiling the plugin.
 - The `mutant_tanks_patches.cfg`'s `cvarcheck` key now allows up to `10` convar checks.
 - The `mutant_tanks_patches.cfg`'s `type` key now accepts the `unused` value to disable patches.
+- Improved readability by using named parameters instead of positional parameters.
+- Improved readability by storing dynamic strings in buffers.
 
 #### Core Plugin
 - The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
