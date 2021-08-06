@@ -2195,7 +2195,7 @@
 			 * Tank::EnterStasis()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * 1. Search for any of the following strings (they can each only be found in one function):
 			 * - "Tank offer: Starting the lottery\n"
 			 * - "Tank offer: Going to the only PZ\n"
 			 * - "Tank offer: making a bot, and giving him to nobody\n"
@@ -3941,7 +3941,7 @@
 			 * Tank::EnterStasis()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * 1. Search for any of the following strings (they can each only be found in one function):
 			 * - "Tank offer: Starting the lottery\n"
 			 * - "Tank offer: Going to the only PZ\n"
 			 * - "Tank offer: making a bot, and giving him to nobody\n"
