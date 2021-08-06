@@ -599,6 +599,16 @@
 			}
 
 			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Uses the signature for "CTankRock::OnRelease" to find the address.
+			 **/
+			"OnReleaseStart"
+			{
+				"signature"	"CTankRock::OnRelease"
+			}
+
+			/**
 			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
 			 *
 			 * Note: Uses the signature for "CTerrorPlayer::OnTakeDamage_Alive" to find the address.
@@ -652,7 +662,7 @@
 
 			/**
 			 * Action<Tank>::FirstContainedResponder()
-			 * 
+			 *
 			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2a. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
@@ -670,7 +680,7 @@
 
 			/**
 			 * Behavior<Tank>::FirstContainedResponder()
-			 * 
+			 *
 			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2a. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
@@ -700,7 +710,7 @@
 
 			/**
 			 * TankIntention::FirstContainedResponder()
-			 * 
+			 *
 			 * How to find:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2a. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
@@ -1005,6 +1015,30 @@
 			{
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTankRock::OnRelease::SoundLoop"
+			{
+				"windows"	"117" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"182" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1646,6 +1680,21 @@
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xD9"
 						/* ? ? ? ? ? ? 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? D9 */
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. One of the functions that references that string is this function.
+			 **/
+			"CTankRock::OnRelease"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_.constprop.121"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC7\x86\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x57"
+						/* ? ? ? ? ? ? ? ? ? ? ? C7 86 ? ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? 57 */
 			}
 
 			/**
@@ -2639,6 +2688,30 @@
 			}
 
 			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTankRock::OnRelease::SoundLoop"
+			{
+				"windows"	"122" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
 			 * CTerrorPlayer::Deafen(float, float, float)
 			 *
 			 * How to find:
@@ -3331,6 +3404,21 @@
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xA1"
 						/* ? ? ? ? ? ? 53 56 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? A1 */
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. One of the functions that references that string is this function.
+			 **/
+			"CTankRock::OnRelease"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\xC6\x86\x2A\x2A\x2A\x2A\x2A\xC7"
+						/* ? ? ? ? ? ? 57 C6 86 ? ? ? ? ? C7 */
 			}
 
 			/**
