@@ -134,7 +134,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_EXPLOSION1 "animation/van_inside_debris.wav" // Only used in L4D1
 #define SOUND_LADYKILLER "ui/alert_clink.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
-#define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 #define SOUND_NULL "common/null.wav"
 #define SOUND_SPAWN "ui/pickup_secret01.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav" // Only available in L4D2
@@ -2469,7 +2468,6 @@ public void OnMapStart()
 	vToggleLogging(1);
 
 	AddNormalSoundHook(FallSoundHook);
-	AddNormalSoundHook(RockSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -2827,7 +2825,6 @@ public void OnMapEnd()
 	vToggleLogging(0);
 
 	RemoveNormalSoundHook(FallSoundHook);
-	RemoveNormalSoundHook(RockSoundHook);
 }
 
 public void OnPluginEnd()
@@ -5775,8 +5772,6 @@ public void OnEntityDestroyed(int entity)
 
 				vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKBREAK, .weapon = entity);
 			}
-
-			StopSound(entity, SNDCHAN_BODY, SOUND_MISSILE);
 		}
 		else if (StrEqual(sClassname, "infected") || StrEqual(sClassname, "witch"))
 		{
@@ -6863,18 +6858,6 @@ public Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 				}
 			}
 		}
-	}
-
-	return Plugin_Continue;
-}
-
-public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
-{
-	if (g_esGeneral.g_bPluginEnabled && StrEqual(sample, SOUND_MISSILE, false))
-	{
-		numClients = 0;
-
-		return Plugin_Changed;
 	}
 
 	return Plugin_Continue;
@@ -14709,7 +14692,6 @@ public void vRockThrowFrame(int ref)
 			}
 
 			vSetRockModel(iThrower, iRock);
-			StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 
 			if (g_esCache[iThrower].g_iRockEffects > 0)
 			{

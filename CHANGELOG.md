@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.88 (August 25, 2021)
+## Version 8.88 (TBA)
 
 ### Bug Fixes
 
@@ -19,12 +19,14 @@
 - The `mutant_tanks_patches.cfg`'s `type` key now accepts the `unused` value to disable patches.
 - Improved readability by using named parameters instead of positional parameters.
 - Patched the strong wind sound caused by Tank rock debris.
+- Removed old method for blocking the strong wind sound caused by Tank rock debris.
 
 #### Core Plugin
 - The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
 - Increased the interval for checking config files for changes from `1` to `10` seconds.
 - Rewards now end properly at the end of each non-finale map. (Thanks to `epzminion` for the help!)
 - Switched to a simpler method for checking `Versus` and `Scavenge` rounds.
+- Switched to a better method for patching survivor fall screams.
 
 ### Game Data
 - Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
