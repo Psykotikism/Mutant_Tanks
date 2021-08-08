@@ -3460,11 +3460,11 @@
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
-			 * - "IsHoldingFireButton() && !IsFullyAutomatic()"
-			 * - "IsFirePreventedUntilButtonRelease"
 			 * - "CTerrorGun::FireBullet HorizSpread"
 			 * - "CTerrorGun::FireBullet VertSpread"
 			 * - "m_iClip1 <= 0"
+			 * - "IsFirePreventedUntilButtonRelease"
+			 * - "IsHoldingFireButton() && !IsFullyAutomatic()"
 			 **/
 			"CTerrorGun::FireBullet"
 			{
