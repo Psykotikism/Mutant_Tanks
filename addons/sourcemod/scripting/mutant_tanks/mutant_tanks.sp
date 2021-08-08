@@ -290,7 +290,6 @@ enum struct esGeneral
 {
 	Address g_adDirector;
 	Address g_adDoJumpValue;
-	Address g_adFallingSound;
 	Address g_adOriginalJumpHeight[2];
 
 	ArrayList g_alAbilitySections[4];
@@ -1361,7 +1360,7 @@ esCache g_esCache[MAXPLAYERS + 1];
 
 Address g_adPatchAddress[MT_PATCH_LIMIT];
 
-bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT], g_bUpdateMemAccess[MT_PATCH_LIMIT] = {true, ...}, g_bUpdateMemAccess2[2] = {true, ...};
+bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT], g_bUpdateMemAccess[MT_PATCH_LIMIT] = {true, ...}, g_bUpdateMemAccess2 = true;
 
 char g_sDetourName[MT_DETOUR_LIMIT][128], g_sPatchName[MT_PATCH_LIMIT][128];
 
@@ -2139,7 +2138,6 @@ public void OnPluginStart()
 			}
 
 			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress(gdMutantTanks, "DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
-			g_esGeneral.g_adFallingSound = adGetGameDataAddress(gdMutantTanks, "OnFallingSoundBytes", "OnFallingSoundRead", "OnLadderMountStart", "CTerrorPlayer::OnLadderMount::Call", "CTerrorPlayer::OnLadderMount::Add", "CTerrorPlayer::OnLadderMount::Sound");
 
 			StartPrepSDKCall(SDKCall_Raw);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::GetRefEHandle"))
@@ -16638,8 +16636,8 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 						case true:
 						{
 							g_esGeneral.g_adOriginalJumpHeight[0] = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
-							StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32, g_bUpdateMemAccess2[0]);
-							g_bUpdateMemAccess2[0] = false;
+							StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32, g_bUpdateMemAccess2);
+							g_bUpdateMemAccess2 = false;
 						}
 						case false:
 						{
@@ -16648,10 +16646,10 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 
 							int iDouble[2];
 							vGetDoubleFromFloat(flHeight, iDouble);
-							StoreToAddress(g_esGeneral.g_adDoJumpValue, iDouble[1], NumberType_Int32, g_bUpdateMemAccess2[0]);
-							StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), iDouble[0], NumberType_Int32, g_bUpdateMemAccess2[0]);
+							StoreToAddress(g_esGeneral.g_adDoJumpValue, iDouble[1], NumberType_Int32, g_bUpdateMemAccess2);
+							StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), iDouble[0], NumberType_Int32, g_bUpdateMemAccess2);
 
-							g_bUpdateMemAccess2[0] = false;
+							g_bUpdateMemAccess2 = false;
 						}
 					}
 				}
@@ -16670,11 +16668,11 @@ public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 
 		switch (!g_bSecondGame && g_esGeneral.g_bLinux)
 		{
-			case true: StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2[0]);
+			case true: StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2);
 			case false:
 			{
-				StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[1], NumberType_Int32, g_bUpdateMemAccess2[0]);
-				StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2[0]);
+				StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[1], NumberType_Int32, g_bUpdateMemAccess2);
+				StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2);
 			}
 		}
 	}
@@ -16875,16 +16873,6 @@ public MRESReturn mreFallingPre(int pThis)
 			{
 				bInstallPatch(iIndex[1]);
 			}
-			else
-			{
-				char sSound[] = "Player.Fail";
-				for (int iPos = 0; iPos < sizeof(sSound); iPos++)
-				{
-					StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8, g_bUpdateMemAccess2[1]);
-				}
-
-				g_bUpdateMemAccess2[1] = false;
-			}
 
 			char sVoiceLine[64];
 			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevFallVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevFallVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
@@ -16913,14 +16901,6 @@ public MRESReturn mreFallingPost(int pThis)
 		if (iIndex != -1)
 		{
 			bRemovePatch(iIndex);
-		}
-		else
-		{
-			char sSound[] = "Player.Fall";
-			for (int iPos = 0; iPos < sizeof(sSound); iPos++)
-			{
-				StoreToAddress((g_esGeneral.g_adFallingSound + view_as<Address>(iPos)), sSound[iPos], NumberType_Int8, g_bUpdateMemAccess2[1]);
-			}
 		}
 	}
 
