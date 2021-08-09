@@ -1065,7 +1065,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"windows"	"4954" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1080,7 +1080,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"windows"	"4977" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1096,7 +1096,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"windows"	"5095" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1112,7 +1112,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				"windows"	"5342" // start at D9 and patch 2 bytes with EB ??
+				"windows"	"5502" // start at D9 and patch 2 bytes with EB ??
 				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1127,7 +1127,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"windows"	"5418" // start at 8B and patch 2 bytes with EB ??
+				"windows"	"5578" // start at 8B and patch 2 bytes with EB ??
 				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1142,7 +1142,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"windows"	"5606" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1200,7 +1200,7 @@
 			 **/
 			"CTerrorPlayer::OnFalling::Scream"
 			{
-				"windows"	"607" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"611" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1249,7 +1249,7 @@
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
-				"windows"	"1736" // start at 6A and patch 9 bytes with NOPs (0x90)
+				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
 				"linux"		"2247" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1300,7 +1300,7 @@
 			 **/
 			"InfectedExecAction::OnInjured::Requirement"
 			{
-				"windows"	"143" // start at 6A and patch 11 bytes with a different instruction
+				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
 			}
 
