@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.88 (TBA)
+## Version 8.88 (August 10, 2021)
 
 ### Bug Fixes
 
@@ -8,7 +8,7 @@
 - Fixed custom config filenames being case-sensitive. (Thanks to `ricksfishin` for testing and reporting!)
 
 #### Settings
-- Fixed the `Skip Taunt` setting not working in different config formats.
+- Fixed the `Skip Taunt` setting not working in some config formats.
 
 ### Changes
 
@@ -18,8 +18,8 @@
 - The `mutant_tanks_patches.cfg`'s `cvarcheck` key now allows up to `10` convar checks.
 - The `mutant_tanks_patches.cfg`'s `type` key now accepts the `unused` value to disable patches.
 - Improved readability by using named parameters instead of positional parameters.
-- Patched the strong wind sound caused by Tank rock debris.
-- Removed old method for blocking the strong wind sound caused by Tank rock debris.
+- Replaced the method for blocking the strong wind sound caused by Tank rock debris with a patch.
+- L4D1: Updated several offsets for the `1.0.4.0` update.
 
 #### Core Plugin
 - The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
@@ -121,7 +121,7 @@
 - Updated all of the signatures to be compatible with detours.
 - Renamed all detours to avoid conflicts with other plugins.
 - Replaced patches for the `CTerrorGameMovement::DoJump` function with a conversion function. (Thanks to `epzminion` for the code!)
-- Updated several offsets for the `2.2.2.0` update.
+- L4D2: Updated several offsets for the `2.2.2.0` update.
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
@@ -166,7 +166,7 @@
 
 #### Game Data
 - Changed the `CTankRock::Create` detour to a `CBaseEntity::Create` detour in L4D1. (Thanks to `Dragokas` for the idea!)
-- Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
+- L4D2: Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
