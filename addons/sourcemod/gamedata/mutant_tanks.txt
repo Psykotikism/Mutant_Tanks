@@ -2199,8 +2199,8 @@
 			 * - "Tank offer: Starting the lottery\n"
 			 * - "Tank offer: Going to the only PZ\n"
 			 * - "Tank offer: making a bot, and giving him to nobody\n"
-			 * 2. This function will be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
-			 * 3. This function will be the last function call in that function.
+			 * 2. This function should be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
+			 * 3. This function should be the last function call in that function.
 			 **/
 			"Tank::EnterStasis"
 			{
@@ -3976,8 +3976,8 @@
 			 * - "Tank offer: Starting the lottery\n"
 			 * - "Tank offer: Going to the only PZ\n"
 			 * - "Tank offer: making a bot, and giving him to nobody\n"
-			 * 2. This function will be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
-			 * 3. This function will be the last function call in that function.
+			 * 2. This function should be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
+			 * 3. This function should be the last function call in that function.
 			 **/
 			"Tank::EnterStasis"
 			{
