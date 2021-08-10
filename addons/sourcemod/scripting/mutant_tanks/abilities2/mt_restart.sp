@@ -192,10 +192,10 @@ public void OnPluginStart()
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 	}
 
-	g_esRestartGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_flow");
+	g_esRestartGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("CTerrorPlayer::GetFlowDistance::m_flow");
 	if (g_esRestartGeneral.g_iFlowOffset == -1)
 	{
-		LogError("%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_flow", MT_TAG);
+		LogError("%s Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -1071,7 +1071,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 #if defined _l4dh_included
 	if (g_bLeft4DHooksInstalled || g_esRestartGeneral.g_hSDKGetLastKnownArea == null)
 	{
-		return start ? (L4D_IsInFirstCheckpoint(survivor) || GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1) : L4D_IsInLastCheckpoint(survivor);
+		return start ? (L4D_IsInFirstCheckpoint(survivor) || !!GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea")) : L4D_IsInLastCheckpoint(survivor);
 	}
 #endif
 	bool bReturn = false;
@@ -1085,7 +1085,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 		}
 	}
 
-	bool bReturn2 = start ? (GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1) : false;
+	bool bReturn2 = start ? !!GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") : false;
 	return bReturn || bReturn2;
 }
 

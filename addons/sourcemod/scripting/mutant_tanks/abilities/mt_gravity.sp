@@ -500,7 +500,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							switch (flDelay)
 							{
-								case 0.0: vGravityAbility(tank, false, _, iPos);
+								case 0.0: vGravityAbility(tank, false, .pos = iPos);
 								default:
 								{
 									DataPack dpCombo;
@@ -1230,7 +1230,7 @@ public Action tTimerGravityCombo2(Handle timer, DataPack pack)
 	}
 
 	int iPos = pack.ReadCell();
-	vGravityAbility(iTank, false, _, iPos);
+	vGravityAbility(iTank, false, .pos = iPos);
 
 	return Plugin_Continue;
 }

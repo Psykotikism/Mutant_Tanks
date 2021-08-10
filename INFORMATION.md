@@ -4,8 +4,8 @@
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `94-95` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
-- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `93` and recompile all the plugins, but expect server lag with higher values.)
+- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `94-95` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`] {I will not provide support if you set this to a higher value.}
+- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `93` and recompile all the plugins, but expect server lag with higher values.) {I will not provide support if you set this to a higher value.}
 - Most of these settings can be overridden for each player via their Steam IDs.
 
 ## Sections
@@ -1873,6 +1873,14 @@
 			// Minimum: 0.1
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
+
+			// Skip every Mutant Tank's dying animation.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Incap"				"0"
 
 			// Skip every Mutant Tank's taunting animation after incapacitating survivors.
 			// Note: Only available in Left 4 Dead 2.
@@ -4691,10 +4699,18 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
+			// Skip the Mutant Tank's dying animation.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Skip Incap"				"0"
+
 			// Skip the Mutant Tank's taunting animation after incapacitating survivors.
 			// Note: Only available in Left 4 Dead 2.
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -20677,7 +20693,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above, as well as override any other setting that the ability provides above.
+		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above, as well as override any other setting that the ability provides.
 		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.

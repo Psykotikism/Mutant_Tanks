@@ -536,7 +536,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							switch (flDelay)
 							{
-								case 0.0: vGhostAbility(tank, false, _, iPos);
+								case 0.0: vGhostAbility(tank, false, .pos = iPos);
 								default:
 								{
 									DataPack dpCombo;
@@ -1330,7 +1330,7 @@ public Action tTimerGhostCombo2(Handle timer, DataPack pack)
 	}
 
 	int iPos = pack.ReadCell();
-	vGhostAbility(iTank, false, _, iPos);
+	vGhostAbility(iTank, false, .pos = iPos);
 
 	return Plugin_Continue;
 }

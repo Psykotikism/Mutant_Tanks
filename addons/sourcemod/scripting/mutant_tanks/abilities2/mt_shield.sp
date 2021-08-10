@@ -59,7 +59,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
-#define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 
 #define MT_SHIELD_SECTION "shieldability"
 #define MT_SHIELD_SECTION2 "shield ability"
@@ -1476,7 +1475,6 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 
 				static float flPos[3];
 				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-				StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 				RemoveEntity(iRock);
 
 				NormalizeVector(flVelocity, flVelocity);

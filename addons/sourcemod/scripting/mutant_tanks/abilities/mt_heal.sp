@@ -504,7 +504,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							switch (flDelay)
 							{
-								case 0.0: vHealAbility(tank, false, _, iPos);
+								case 0.0: vHealAbility(tank, false, .pos = iPos);
 								default:
 								{
 									DataPack dpCombo;
@@ -1224,7 +1224,7 @@ public Action tTimerHealCombo2(Handle timer, DataPack pack)
 	}
 
 	int iPos = pack.ReadCell();
-	vHealAbility(iTank, false, _, iPos);
+	vHealAbility(iTank, false, .pos = iPos);
 
 	return Plugin_Continue;
 }

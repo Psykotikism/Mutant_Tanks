@@ -1,5 +1,49 @@
 # Changelog
 
+## Version 8.88 (August 10, 2021)
+
+### Bug Fixes
+
+#### Config Files
+- Fixed custom config filenames being case-sensitive. (Thanks to `ricksfishin` for testing and reporting!)
+
+#### Settings
+- Fixed the `Skip Taunt` setting not working in some config formats.
+
+### Changes
+
+#### General
+- Increased performance when patching the same address repeatedly. (Thanks to `Lux` for the example!)
+- `SourceMod 1.11.0.6711` or higher is now required when recompiling the plugin.
+- The `mutant_tanks_patches.cfg`'s `cvarcheck` key now allows up to `10` convar checks.
+- The `mutant_tanks_patches.cfg`'s `type` key now accepts the `unused` value to disable patches.
+- Improved readability by using named parameters instead of positional parameters.
+- Replaced the method for blocking the strong wind sound caused by Tank rock debris with a patch.
+- L4D1: Updated several offsets for the `1.0.4.0` update.
+
+#### Core Plugin
+- The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
+- Increased the interval for checking config files for changes from `1` to `10` seconds.
+- Rewards now end properly at the end of each non-finale map. (Thanks to `epzminion` for the help!)
+- Switched to a simpler method for checking `Versus` and `Scavenge` rounds.
+- Switched to a better method for patching survivor fall screams.
+
+### Game Data
+- Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
+
+### Settings
+1. Added the `Skip Incap` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `epzminion` for the help!)
+
+### Files
+
+#### Requirements
+- The `mutant_tanks_detours.cfg` config file is now used by the core plugin.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+
 ## Version 8.87 (July 20, 2021)
 
 ### Bug Fixes
@@ -77,7 +121,7 @@
 - Updated all of the signatures to be compatible with detours.
 - Renamed all detours to avoid conflicts with other plugins.
 - Replaced patches for the `CTerrorGameMovement::DoJump` function with a conversion function. (Thanks to `epzminion` for the code!)
-- Updated several offsets for the `2.2.2.0` update.
+- L4D2: Updated several offsets for the `2.2.2.0` update.
 
 #### Settings
 - Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
@@ -122,7 +166,7 @@
 
 #### Game Data
 - Changed the `CTankRock::Create` detour to a `CBaseEntity::Create` detour in L4D1. (Thanks to `Dragokas` for the idea!)
-- Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
+- L4D2: Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:

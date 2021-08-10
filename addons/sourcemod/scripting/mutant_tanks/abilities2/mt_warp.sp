@@ -534,7 +534,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							switch (flDelay)
 							{
-								case 0.0: vWarpAbility(tank, false, _, iPos);
+								case 0.0: vWarpAbility(tank, false, .pos = iPos);
 								default:
 								{
 									DataPack dpCombo;
@@ -1243,7 +1243,7 @@ public Action tTimerWarpCombo2(Handle timer, DataPack pack)
 	}
 
 	int iPos = pack.ReadCell();
-	vWarpAbility(iTank, false, _, iPos);
+	vWarpAbility(iTank, false, .pos = iPos);
 
 	return Plugin_Continue;
 }

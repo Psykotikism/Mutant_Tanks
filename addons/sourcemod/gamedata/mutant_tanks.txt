@@ -4,7 +4,11 @@
 	{
 		"Functions"
 		{
-			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			/**
+			 * CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*)
+			 *
+			 * Note: Detouring as a pre-hook for changing max magazine sizes.
+			 **/
 			"MTDetour_CAmmoDef::MaxCarry"
 			{
 				"signature"	"CAmmoDef::MaxCarry"
@@ -23,7 +27,12 @@
 					}
 				}
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() */
+
+			/**
+			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * Note: Detouring as a pre-hook for changing max clip sizes.
+			 **/
 			"MTDetour_CBaseCombatWeapon::GetMaxClip1"
 			{
 				"signature"	"CBaseCombatWeapon::GetMaxClip1"
@@ -31,7 +40,12 @@
 				"return"	"int"
 				"this"		"entity"
 			}
-			/* CDeathFallCamera::Enable(CBasePlayer*) */
+
+			/**
+			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for disabling "death_fall_camera" entity per player.
+			 **/
 			"MTDetour_CDeathFallCamera::Enable"
 			{
 				"signature"	"CDeathFallCamera::Enable"
@@ -46,7 +60,12 @@
 					}
 				}
 			}
-			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+
+			/**
+			 * CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a post-hook for determining when to start the Tank wave spawner timer.
+			 **/
 			"MTDetour_CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"signature"	"CDirector::OnFirstSurvivorLeftSafeArea"
@@ -61,22 +80,12 @@
 					}
 				}
 			}
-			/* CDirectorVersusMode::EndVersusModeRound(bool) */
-			"MTDetour_CDirectorVersusMode::EndVersusModeRound"
-			{
-				"signature"	"CDirectorVersusMode::EndVersusModeRound"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"ignore"
-				"arguments"
-				{
-					"countSurvivors"
-					{
-						"type"		"bool"
-					}
-				}
-			}
-			/* CEnvRockLauncher::LaunchCurrentDir() */
+
+			/**
+			 * CEnvRockLauncher::LaunchCurrentDir()
+			 *
+			 * Note: Detouring as a pre-hook for setting the Tank owner of rocks launched by "env_rock_launcher" entity.
+			 **/
 			"MTDetour_CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
@@ -84,7 +93,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTankClaw::DoSwing() */
+
+			/**
+			 * CTankClaw::DoSwing()
+			 *
+			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" in "coop" modes.
+			 **/
 			"MTDetour_CTankClaw::DoSwing"
 			{
 				"signature"	"CTankClaw::DoSwing"
@@ -92,7 +106,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Tank hits per player.
+			 * Note: Detouring as a post-hook for lessening/cancelling Tank hit velocities per player.
+			 **/
 			"MTDetour_CTankClaw::OnPlayerHit"
 			{
 				"signature"	"CTankClaw::OnPlayerHit"
@@ -111,7 +131,13 @@
 					}
 				}
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: Detouring as a pre-hook for patching max jump height per player.
+			 * Note: Detouring as a post-hook for removing patch for max jump height.
+			 **/
 			"MTDetour_CTerrorGameMovement::DoJump"
 			{
 				"signature"	"CTerrorGameMovement::DoJump"
@@ -126,7 +152,13 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Detouring as a pre-hook for patching special infected kill effects per player.
+			 * Note: Detouring as a post-hook for removing patches for special infected kill effects.
+			 **/
 			"MTDetour_CTerrorPlayer::Event_Killed"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
@@ -141,7 +173,32 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnEnterGhostState() */
+
+			/**
+			 * CTerrorPlayer::OnBeginChangeLevel(char const*)
+			 *
+			 * Note: Detouring as a pre-hook for ending each player's active rewards before transitioning.
+			 **/
+			"MTDetour_CTerrorPlayer::OnBeginChangeLevel"
+			{
+				"signature"	"CTerrorPlayer::OnBeginChangeLevel"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"targetMap"
+					{
+						"type"		"charptr"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::OnEnterGhostState()
+			 *
+			 * Note: Detouring as a post-hook for force-spawning human-controlled Tanks in "coop" modes.
+			 **/
 			"MTDetour_CTerrorPlayer::OnEnterGhostState"
 			{
 				"signature"	"CTerrorPlayer::OnEnterGhostState"
@@ -149,7 +206,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorPlayer::OnFalling() */
+
+			/**
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * Note: Detouring as a pre-hook for catching falling survivors and patching fall scream cancellation.
+			 * Note: Detouring as a post-hook for removing patch for fall scream cancellation.
+			 **/
 			"MTDetour_CTerrorPlayer::OnFalling"
 			{
 				"signature"	"CTerrorPlayer::OnFalling"
@@ -157,7 +220,34 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * Note: Detouring as a pre-hook for changing "z_tank_incapacitated_health" per Tank before the dying animation starts.
+			 * Note: Detouring as a post-hook for changing "z_tank_incapacitated_health" back to default value after the dying animation starts.
+			 **/
+			"MTDetour_CTerrorPlayer::OnIncapacitatedAsTank"
+			{
+				"signature"	"CTerrorPlayer::OnIncapacitatedAsTank"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"info"
+					{
+						"type"		"objectptr"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Detouring as a pre-hook for patching weapon deploy per player when getting off ladders.
+			 * Note: Detouring as a post-hook for removing patch for weapon deploy when getting off ladders.
+			 **/
 			"MTDetour_CTerrorPlayer::OnLadderDismount"
 			{
 				"signature"	"CTerrorPlayer::OnLadderDismount"
@@ -165,7 +255,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorPlayer::OnLadderMount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * Note: Detouring as a pre-hook for patching weapon holster per player when getting on ladders.
+			 * Note: Detouring as a post-hook for removing patch for weapon holster when getting on ladders.
+			 **/
 			"MTDetour_CTerrorPlayer::OnLadderMount"
 			{
 				"signature"	"CTerrorPlayer::OnLadderMount"
@@ -173,15 +269,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorPlayer::PreThink() */
-			"MTDetour_CTerrorPlayer::PreThink"
-			{
-				"signature"	"CTerrorPlayer::PreThink"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-			}
-			/* CTerrorPlayer::OnRevived() */
+
+			/**
+			 * CTerrorPlayer::OnRevived()
+			 *
+			 * Note: Detouring as a pre-hook for changing "survivor_revive_health" per player before reviving finishes.
+			 * Note: Detouring as a post-hook for changing "survivor_revive_health" back to default value after reviving finishes.
+			 **/
 			"MTDetour_CTerrorPlayer::OnRevived"
 			{
 				"signature"	"CTerrorPlayer::OnRevived"
@@ -189,7 +283,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool)
+			 *
+			 * Note: Detouring as a pre-hook for blocking shoves per player via pounces.
+			 **/
 			"MTDetour_CTerrorPlayer::OnShovedByPounceLanding"
 			{
 				"signature"	"CTerrorPlayer::OnShovedByPounceLanding"
@@ -208,7 +307,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+
+			/**
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 *
+			 * Note: Detouring as a pre-hook for blocking shoves per special infected via survivors.
+			 **/
 			"MTDetour_CTerrorPlayer::OnShovedBySurvivor"
 			{
 				"signature"	"CTerrorPlayer::OnShovedBySurvivor"
@@ -227,7 +331,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
+
+			/**
+			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking staggers per player.
+			 **/
 			"MTDetour_CTerrorPlayer::OnStaggered"
 			{
 				"signature"	"CTerrorPlayer::OnStaggered"
@@ -246,7 +355,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Boomer vomits per player.
+			 **/
 			"MTDetour_CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"	"CTerrorPlayer::OnVomitedUpon"
@@ -265,7 +379,27 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Detouring as a pre-hook for patching auto-dismount per player when shooting while on ladders.
+			 * Note: Detouring as a post-hook for removing patch for auto-dismount when shooting while on ladders.
+			 **/
+			"MTDetour_CTerrorPlayer::PreThink"
+			{
+				"signature"	"CTerrorPlayer::PreThink"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
+			 * CTerrorPlayer::StartReviving(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for changing "survivor_revive_duration" per player before reviving someone.
+			 * Note: Detouring as a post-hook for changing "survivor_revive_duration" back to default value after reviving starts.
+			 **/
 			"MTDetour_CTerrorPlayer::StartReviving"
 			{
 				"signature"	"CTerrorPlayer::StartReviving"
@@ -280,7 +414,13 @@
 					}
 				}
 			}
-			/* CTerrorWeapon::CanDeploy() */
+
+			/**
+			 * CTerrorWeapon::CanDeploy()
+			 *
+			 * Note: Detouring as a pre-hook for patching move type per player while on ladders.
+			 * Note: Detouring as a post-hook for removing patch for move type while on ladders.
+			 **/
 			"MTDetour_CTerrorWeapon::CanDeployFor"
 			{
 				"signature"	"CTerrorWeapon::CanDeployFor"
@@ -288,7 +428,13 @@
 				"return"	"bool"
 				"this"		"entity"
 			}
-			/* CTerrorWeapon::SecondaryAttack() */
+
+			/**
+			 * CTerrorWeapon::SecondaryAttack()
+			 *
+			 * Note: Detouring as a pre-hook for changing "z_gun_swing_interval" per player before shoving.
+			 * Note: Detouring as a post-hook for changing "z_gun_swing_interval" back to default value after shoving.
+			 **/
 			"MTDetour_CTerrorWeapon::SecondaryAttack"
 			{
 				"signature"	"CTerrorWeapon::SecondaryAttack"
@@ -296,7 +442,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* Tank::EnterStasis() */
+
+			/**
+			 * Tank::EnterStasis()
+			 *
+			 * Note: Detouring as a post-hook for checking when a Tank enters stasis mode.
+			 **/
 			"MTDetour_Tank::EnterStasis"
 			{
 				"signature"	"Tank::EnterStasis"
@@ -304,7 +455,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* Tank::LeaveStasis() */
+
+			/**
+			 * Tank::LeaveStasis()
+			 *
+			 * Note: Detouring as a post-hook for checking when a Tank leaves stasis mode.
+			 **/
 			"MTDetour_Tank::LeaveStasis"
 			{
 				"signature"	"Tank::LeaveStasis"
@@ -312,7 +468,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+
+			/**
+			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a post-hook for catching Tank passes.
+			 **/
 			"MTDetour_ZombieManager::ReplaceTank"
 			{
 				"signature"	"ZombieManager::ReplaceTank"
@@ -331,7 +492,12 @@
 					}
 				}
 			}
-			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+
+			/**
+			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * Note: Detouring as a pre-hook for determining when to allow/block Tank spawns.
+			 **/
 			"MTDetour_ZombieManager::SpawnTank"
 			{
 				"signature"	"ZombieManager::SpawnTank"
@@ -351,104 +517,222 @@
 				}
 			}
 		}
+
 		"Addresses"
 		{
-			/* CTerrorWeapon::CanDeployFor(CTerrorPlayer*) */
+			/**
+			 * CTerrorWeapon::CanDeployFor(CTerrorPlayer*)
+			 *
+			 * Note: Uses the signature for "CTerrorWeapon::CanDeployFor" to find the address.
+			 **/
 			"CanDeployForStart"
 			{
 				"signature"	"CTerrorWeapon::CanDeployFor"
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: Uses the signature for "CTerrorGameMovement::DoJump" to find the address.
+			 **/
 			"DoJumpStart"
 			{
 				"signature"	"CTerrorGameMovement::DoJump"
 			}
+
 			/**
-			 * Failsafe method for finding default jump height (57.0) using byte signatures
-			 * Used in case "DoJumpValueRead" fails
+			 * This is the initial method for finding the default jump height (57.0) using its byte signature.
+			 * If this method fails, the plugin will rely on the "DoJumpValueRead" method instead.
 			 **/
 			"DoJumpValueBytes"
 			{
 				"signature"	"CTerrorGameMovement::DoJump::Value"
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::Event_Killed" to find the address.
+			 **/
 			"Event_KilledStart"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
 			}
-			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+
+			/**
+			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
+			 *
+			 * Note: Uses the signature for "CSmokeCloudSystem::FireGameEvent" to find the address.
+			 **/
 			"FireSmokerCloud"
 			{
 				"signature"	"CSmokeCloudSystem::FireGameEvent"
 			}
+
 			/**
-			 * Failsafe method for finding default sound string ("Player.Fall") using byte signatures
-			 * Used in case "OnFallingSoundRead" fails
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::OnFalling" to find the address.
 			 **/
-			"OnFallingSoundBytes"
+			"OnFallingStart"
 			{
-				"signature"	"CTerrorPlayer::OnFalling::Sound"
+				"signature"	"CTerrorPlayer::OnFalling"
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::OnLadderDismount" to find the address.
+			 **/
 			"OnLadderDismountStart"
 			{
 				"signature"	"CTerrorPlayer::OnLadderDismount"
 			}
-			/* CTerrorPlayer::OnLadderMount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::OnLadderMount" to find the address.
+			 **/
 			"OnLadderMountStart"
 			{
 				"signature"	"CTerrorPlayer::OnLadderMount"
 			}
-			/* CTerrorPlayer::PreThink() */
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Uses the signature for "CTankRock::OnRelease" to find the address.
+			 **/
+			"OnReleaseStart"
+			{
+				"signature"	"CTankRock::OnRelease"
+			}
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::OnTakeDamage_Alive" to find the address.
+			 **/
+			"OnTakeDamageAliveStart"
+			{
+				"signature"	"CTerrorPlayer::OnTakeDamage_Alive"
+			}
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::PreThink" to find the address.
+			 **/
 			"PreThinkStart"
 			{
 				"signature"	"CTerrorPlayer::PreThink"
 			}
-			/* CTerrorPlayer::RoundRespawn() */
+
+			/**
+			 * CTerrorPlayer::RoundRespawn()
+			 *
+			 * Note: Uses the signature for "CTerrorPlayer::RoundRespawn" to find the address.
+			 **/
 			"RoundRespawnStart"
 			{
 				"signature"	"CTerrorPlayer::RoundRespawn"
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * Note: Uses the signature for "CTankClaw::SweepFist" to find the address.
+			 **/
 			"SweepFistStart"
 			{
 				"signature"	"CTankClaw::SweepFist"
 			}
 		}
+
 		"Offsets"
 		{
+			/**
+			 * Only Windows and Linux servers are supported.
+			 **/
 			"OS"
 			{
 				"windows"	"0"
 				"linux"		"1"
 			}
-			/* Action<Tank>::FirstContainedResponder() */
+
+			/**
+			 * Action<Tank>::FirstContainedResponder()
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Action<Tank>" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Use the member variable offset.
+			 **/
 			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"16"
 				"linux"		"16"
 			}
-			/* Behavior<Tank>::FirstContainedResponder() */
+
+			/**
+			 * Behavior<Tank>::FirstContainedResponder()
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Use the member variable offset.
+			 **/
 			"Behavior<Tank>::FirstContainedResponder"
 			{
 				"windows"	"8"
 				"linux"		"8"
 			}
-			/* CBaseEntity::GetRefEHandle() */
+
+			/**
+			 * CBaseEntity::GetRefEHandle()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CBaseEntity::GetRefEHandle"
 			{
 				"windows"	"2"
 				"linux"		"3"
 			}
-			/* TankIntention::FirstContainedResponder() */
+
+			/**
+			 * TankIntention::FirstContainedResponder()
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "TankIntention" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Windows binary.
+			 * 5. Multiply the member variable offset by 4.
+			 **/
 			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"28"
 				"linux"		"28"
 			}
 		}
+
 		"Signatures"
 		{
+			/**
+			 * Linux has symbols so the plugin can just directly access the Director's address via its symbol.
+			 **/
 			"TheDirector"
 			{
 				"library"	"server"
@@ -456,11 +740,17 @@
 			}
 		}
 	}
+
 	"left4dead"
 	{
 		"Functions"
 		{
-			/* CFirstAidKit::FinishHealing() */
+			/**
+			 * CFirstAidKit::FinishHealing()
+			 *
+			 * Note: Detouring as a pre-hook for changing "first_aid_heal_percent" per player before healing finishes.
+			 * Note: Detouring as a post-hook for changing "first_aid_heal_percent" back to default value after healing finishes.
+			 **/
 			"MTDetour_CFirstAidKit::FinishHealing"
 			{
 				"signature"	"CFirstAidKit::FinishHealing"
@@ -468,7 +758,14 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+
+			/**
+			 * CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType)
+			 *
+			 * Note: Detouring as a pre-hook for changing "first_aid_kit_use_duration" per player before healing starts.
+			 * Note: Detouring as a post-hook for changing "first_aid_kit_use_duration" back to default value after healing starts.
+			 * Note for Linux users: Function prototype uses custom registers including the "this" pointer which needs to be registered as param 1.
+			 **/
 			"MTDetour_CFirstAidKit::StartHealing"
 			{
 				"signature"	"CFirstAidKit::StartHealing"
@@ -505,7 +802,13 @@
 					}
 				}
 			}
-			/* CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*) */
+
+			/**
+			 * CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*)
+			 *
+			 * Note: Detouring as a post-hook for setting Tank rock colors after they are spawned by "env_rock_launcher" entity.
+			 * Note for Linux users: The "CTankRock::Create" function was previously used but it was causing crashes due to custom registers.
+			 **/
 			"MTDetour_CBaseEntity::Create"
 			{
 				"signature"	"CBaseEntity::Create"
@@ -531,10 +834,37 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
+
+			/**
+			 * CTerrorPlayer::OnBeginChangeLevel(char const*, KeyValues *)
+			 *
+			 * Note: Detouring as a pre-hook for ending each player's active rewards before transitioning.
+			 * Note: L4D1 has a second param.
+			 **/
+			"MTDetour_CTerrorPlayer::OnBeginChangeLevel"
+			{
+				"signature"	"CTerrorPlayer::OnBeginChangeLevel"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"kvPointer"
+					{
+						"type"		"int"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Boomer vomits per player.
+			 * Note: L4D1 has a third param.
+			 **/
 			"MTDetour_CTerrorPlayer::OnVomitedUpon"
 			{
-				"arguments" // L4D1 has an extra argument
+				"arguments"
 				{
 					"a3"
 					{
@@ -542,7 +872,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::SetMainActivity(Activity, bool) */
+
+			/**
+			 * CTerrorPlayer::SetMainActivity(Activity, bool)
+			 *
+			 * Note: Detouring as a pre-hook for skipping animations after Tank hits per player for faster recovery.
+			 **/
 			"MTDetour_CTerrorPlayer::SetMainActivity"
 			{
 				"signature"	"CTerrorPlayer::SetMainActivity"
@@ -562,8 +897,13 @@
 				}
 			}
 		}
+
 		"Addresses"
 		{
+			/**
+			 * Windows: Uses an offset of "SurvivorLegsMeetRescueVehicleArrival::Update" to get the Director's address.
+			 * Linux: Uses a symbol pointing to the Director's address.
+			 **/
 			"CDirector"
 			{
 				"windows"
@@ -577,9 +917,12 @@
 				}
 				"read"		"0"
 			}
+
 			/**
-			 * Initial method for finding default jump height (57.0) by jumping to location
-			 * Relies on "DoJumpValueBytes" in case of failure
+			 * This is the failsafe method for finding the default jump height (57.0) by jumping to its location.
+			 * If the "DoJumpValueBytes" method fails, the plugin will rely on this method instead.
+			 *
+			 * Note: This method only works on Windows since on Linux it just points to the offset's address not the value's actual address.
 			 **/
 			"DoJumpValueRead"
 			{
@@ -587,26 +930,24 @@
 				"windows"
 				{
 					"read"		"174"
-				} // Doesn't work on Linux; points to offset's address not value's actual address
+				}
 			}
+
 			/**
-			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
-			 * Relies on "OnFallingSoundBytes" in case of failure
+			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
+			 *
+			 * Note: Uses the signature for "InfectedExecAction::OnInjured" to find the address.
 			 **/
-			"OnFallingSoundRead"
-			{
-				"signature"	"CTerrorPlayer::OnFalling"
-				"windows"
-				{
-					"read"		"361"
-				} // Doesn't work on Linux; points to offset's address not string's actual address
-			}
-			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
 			"OnInjuredStart"
 			{
 				"signature"	"InfectedExecAction::OnInjured"
 			}
-			/* PlayerLocomotion::GetMaxJumpHeight() */
+
+			/**
+			 * PlayerLocomotion::GetMaxJumpHeight()
+			 *
+			 * Note: Uses the signature for "PlayerLocomotion::GetMaxJumpHeight" to find the address.
+			 **/
 			"GetMaxJumpHeightStart"
 			{
 				"linux"
@@ -615,181 +956,474 @@
 				}
 			}
 		}
+
 		"Offsets"
 		{
-			/* CBaseCombatWeapon::GetMaxClip1() */
+			/**
+			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"300"
 				"linux"		"301"
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "IsVersusMode" check.
+			 *
+			 * How to find:
+			 * 1. Look in the "CTankClaw::SweepFist" function for a condition that validates "IsVersusMode" or "IsHoldoutMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTankClaw::SweepFist::Check1"
 			{
 				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"1051" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "IsHoldoutMode" check.
+			 *
+			 * How to find:
+			 * 1. Look in the "CTankClaw::SweepFist" function for a condition that validates "IsVersusMode" or "IsHoldoutMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTankClaw::SweepFist::Check2"
 			{
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Deafen(float, float, float) */
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTankRock::OnRelease::SoundLoop"
+			{
+				"windows"	"117" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"182" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::Deafen(float, float, float)
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"491"
 				"linux"		"494"
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: This is the offset for the "m_hAttacker" member variable in the "CTakeDamageInfo" class.
+			 *
+			 * How to find:
+			 * 1. Look in the alliedmodders/hl2sdk-l4d "takedamageinfo.h" file.
+			 * 2. Each member variable takes up 4 bytes for each of its cells (12 bytes for floats).
+			 **/
 			"CTerrorPlayer::Event_Killed::Attacker"
 			{
 				"windows"	"40"
 				"linux"		"40"
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "boomer_explode".
+			 *
+			 * How to find:
+			 * 1. Locate the "boomer_explode" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"windows"	"4954" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "BoomerZombie.Detonate".
+			 *
+			 * How to find:
+			 * 1. Locate the "BoomerZombie.Detonate" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"windows"	"4977" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CreateExplosion" call.
+			 *
+			 * How to find:
+			 * 1. Locate the "boomer_exploded" string.
+			 * 2. The function is located in the previous code block above that function call.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"windows"	"5095" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "SmokerZombie.Explode".
+			 * Note for Windows users: The server crashes when patching 5 bytes with NOPs (0x90), so do a jump (JMP) instruction instead.
+			 *
+			 * How to find:
+			 * 1. Locate the "SmokerZombie.Explode" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				// Crashes on Windows when patching 5 bytes with NOPs (0x90), so do a jump (JMP) instruction instead
-				"windows"	"5342" // start at D9 and patch 2 bytes with EB ??
+				"windows"	"5502" // start at D9 and patch 2 bytes with EB ??
 				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "smoker_smokecloud".
+			 *
+			 * How to find:
+			 * 1. Locate the "smoker_smokecloud" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"windows"	"5418" // start at 8B and patch 2 bytes with EB ??
+				"windows"	"5578" // start at 8B and patch 2 bytes with EB ??
 				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "smoker_smokecloud_camera".
+			 *
+			 * How to find:
+			 * 1. Locate the "smoker_smokecloud_camera" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"windows"	"5606" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::GetLastKnownArea() */
+
+			/**
+			 * CTerrorPlayer::GetFlowDistance(CNavArea const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 * 5. Look for the 7-byte float (FLD) instruction.
+			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the function.
+			 * 2. Look for the 7-byte float (FLD) instruction.
+			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
+			 **/
+			"CTerrorPlayer::GetFlowDistance::m_flow"
+			{
+				"windows"	"340"
+				"linux"		"348"
+			}
+
+			/**
+			 * CTerrorPlayer::GetLastKnownArea()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"309"
 				"linux"		"310"
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
+
+			/**
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * Note: Patches the "CBaseEntity::EmitTrackedSound" call for "Player.Fall".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 6-byte float (FLD) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTerrorPlayer::OnFalling::Scream"
+			{
+				"windows"	"611" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Patches weapon deploy logic.
+			 *
+			 * How to find:
+			 * 1. Locate the second call to "CBaseCombatCharacter::GetActiveWeapon".
+			 * 2. The patch location is at the line of code below that function call.
+			 **/
 			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
 			{
 				"windows"	"41" // start at FF and patch 2 bytes with NOPs (0x90)
 				"linux"		"61" // start at 8B and patch 11 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::OnLadderMount() */
-			"CTerrorPlayer::OnLadderMount::Add"
-			{
-				// Windows doesn't need this
-				"linux"		"12"
-			}
-			/* CTerrorPlayer::OnLadderMount() */
-			"CTerrorPlayer::OnLadderMount::Call"
-			{
-				// Windows doesn't need this
-				"linux"		"10"
-			}
-			/* CTerrorPlayer::OnLadderMount() */
-			"CTerrorPlayer::OnLadderMount::Sound"
-			{
-				// Windows doesn't need this
-				"linux"		"22"
-			}
-			/* CTerrorPlayer::OnLadderMount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * Note: Patches weapon holster logic.
+			 *
+			 * How to find:
+			 * 1. Look for the team check.
+			 * 2. The patch location should be a jump (JZ/JNZ) instruction.
+			 **/
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
 			{
 				"windows"	"39" // start at 75 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 				"linux"		"73" // start at 74 and patch 2 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::PreThink() */
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CTerrorPlayer::StopBeingRevived" function call.
+			 *
+			 * How to find on Windows:
+			 * 1. Find a 2-byte instruction that pushes a "1" to a function call.
+			 * 2. The function call that the "1" is being passed to is the patch location.
+			 *
+			 * How to find on Linux:
+			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
+			 * 2. The function call that the bool value is being passed to is the patch location.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
+			{
+				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
+				"linux"		"2247" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Patches the safe drop logic.
+			 *
+			 * How to find:
+			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
+			 * 2. Get the offset of the last byte.
+			 **/
 			"CTerrorPlayer::PreThink::SafeDropLogic"
 			{
 				"windows"	"470" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"161" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
-			/* CTerrorPlayer::RoundRespawn() */
+
+			/**
+			 * CTerrorPlayer::RoundRespawn()
+			 *
+			 * Note: Patches the stats reset function.
+			 *
+			 * How to find:
+			 * 1. Look for a jump (JNZ) instruction.
+			 * 2. That is the patch location.
+			 **/
 			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
 				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
 			}
-			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
+
+			/**
+			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the damage check to trigger hollow point ammo.
+			 *
+			 * How to find on Windows:
+			 * 1. Look for the team check.
+			 * 2. Look for an if statement inside that team check's code block.
+			 * 3. The first function in that if statement is the target function to patch.
+			 * 4. The patch starts at the PUSH instruction that pushes an offset to the function call.
+			 *
+			 * How to find on Linux:
+			 * 1. Find a 7-byte instruction that tests an offset before doing a jump (JZ) instruction.
+			 * 2. The patch location should be a TEST instruction that is a few instructions above the "CTerrorPlayer::GetMinigun" function call.
+			 **/
 			"InfectedExecAction::OnInjured::Requirement"
 			{
-				"windows"	"143" // start at 6A and patch 11 bytes with a different instruction
+				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
 			}
-			/* CTerrorWeapon::CanDeploy() */
+
+			/**
+			 * CTerrorWeapon::CanDeploy()
+			 *
+			 * Note: Patches the move type logic.
+			 *
+			 * How to find:
+			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
+			 * 2. Get the offset of the last byte.
+			 **/
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
 				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
-			/* PlayerLocomotion::GetMaxJumpHeight() */
+
+			/**
+			 * PlayerLocomotion::GetMaxJumpHeight()
+			 *
+			 * Note for Windows users: This isn't required.
+			 *
+			 * How to find:
+			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
+			 * 2. Find the instruction that adds an offset before pushing "57.0" value.
+			 * 3. Get the offset of the third byte.
+			 **/
 			"PlayerLocomotion::GetMaxJumpHeight::Add"
 			{
-				// Windows doesn't need this
 				"linux"		"7"
 			}
-			/* PlayerLocomotion::GetMaxJumpHeight() */
+
+			/**
+			 * PlayerLocomotion::GetMaxJumpHeight()
+			 *
+			 * Note for Windows users: This isn't required.
+			 *
+			 * How to find:
+			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
+			 * 2. Find the instruction that adds an offset before pushing "57.0" value.
+			 **/
 			"PlayerLocomotion::GetMaxJumpHeight::Call"
 			{
-				// Windows doesn't need this
 				"linux"		"5"
 			}
-			/* PlayerLocomotion::GetMaxJumpHeight() */
+
+			/**
+			 * PlayerLocomotion::GetMaxJumpHeight()
+			 *
+			 * Note for Windows users: This isn't required.
+			 *
+			 * How to find:
+			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
+			 * 2. Find the instruction that pushes the "57.0" value.
+			 * 3. Get the offset of the third byte.
+			 **/
 			"PlayerLocomotion::GetMaxJumpHeight::Value"
 			{
-				// Windows doesn't need this
 				"linux"		"13"
 			}
-			/* Tank::GetIntentionInterface() */
+
+			/**
+			 * Tank::GetIntentionInterface()
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Tank" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Multiply the member variable offset by 4.
+			 **/
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
-			/* TankIdle::GetName() */
+
+			/**
+			 * TankIdle::GetName()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"TankIdle::GetName"
 			{
 				"windows"	"35"
 				"linux"		"36"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
+
+			/**
+			 * WitchLocomotion::IsAreaTraversable(CNavArea const*)
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "WitchLocomotion" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Look for the first 10-byte TEST instruction.
+			 * 6. The offset in that instruction is the offset for "m_attributeFlags".
+			 **/
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"300"
 				"linux"		"304"
 			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
-			"WitchLocomotion::IsAreaTraversable::m_flow"
-			{
-				"windows"	"340"
-				"linux"		"348"
-			}
 		}
+
 		"Signatures"
 		{
-			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			/**
+			 * CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CAmmoDef" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CAmmoDef::MaxCarry"
 			{
 				"library"	"server"
@@ -797,7 +1431,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x7C\x2A\x3B\x2A\x2A\x7D\x2A\x6B\x2A\x2A\x03\x2A\x8B\x2A\x2A\x83\x2A\x2A\x75\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x8B\x2A\x2A\xC2"
 						/* ? ? ? ? ? ? ? 7C ? 3B ? ? 7D ? 6B ? ? 03 ? 8B ? ? 83 ? ? 75 ? 8B ? ? 85 ? 74 ? 8B ? ? 8B ? ? C2 */
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() */
+
+			/**
+			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CBaseCombatWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"library"	"server"
@@ -805,7 +1448,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60"
 						/* ? ? ? ? ? ? ? 50 E8 ? ? ? ? 8B 80 60 */
 			}
-			/* CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*) */
+
+			/**
+			 * CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "tank_rock" string.
+			 * 2. One of the functions that references that string is "CTankRock::Create".
+			 * 3. The first function call inside "CTankRock::Create" should be this function.
+			 **/
 			"CBaseEntity::Create"
 			{
 				"library"	"server"
@@ -813,7 +1464,17 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x6A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x85\x2A\x75\x2A\x56"
 						/* ? ? ? ? ? ? ? 6A ? 50 E8 ? ? ? ? 8B ? 83 ? ? 85 ? 75 ? 56 */
 			}
-			/* CDeathFallCamera::Enable(CBasePlayer*) */
+
+			/**
+			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "SurvivorStandingOnCar" string.
+			 * 2. The string can only be found in "CTerrorPlayer::OnGroundChanged".
+			 * 3. Look for the "point_deathfall_camera" string in "CTerrorPlayer::OnGroundChanged".
+			 * 4. The first function call after that string's reference should be "CBasePlayer::ClearZoomOwner".
+			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" should be this function.
+			 **/
 			"CDeathFallCamera::Enable"
 			{
 				"library"	"server"
@@ -821,7 +1482,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x6A"
 						/* ? ? ? ? ? ? 8B ? 8B ? E8 ? ? ? ? 85 ? 74 ? 6A */
 			}
-			/* Director::HasAnySurvivorLeftSafeArea() */
+
+			/**
+			 * Director::HasAnySurvivorLeftSafeArea()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "I've walked out of the checkpoint" string.
+			 * 2. The first function call below the string should be this function.
+			 **/
 			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
 				"library"	"server"
@@ -829,7 +1497,14 @@
 				"windows"	"\x8A\x2A\x68\x01\x00\x00\xC3"
 						/* 8A ? 68 01 00 00 C3 */
 			}
-			/* Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+
+			/**
+			 * Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Allowing spawning - %s left safe area\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"library"	"server"
@@ -837,15 +1512,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\x3D"
 						/* ? ? ? ? ? ? ? ? 56 8B ? 80 BE ? ? ? ? ? 75 ? 80 3D */
 			}
-			/* DirectorVersusMode::EndVersusModeRound(bool) */
-			"CDirectorVersusMode::EndVersusModeRound"
-			{
-				"library"	"server"
-				"linux"		"@_ZN8Director18EndVersusModeRoundEb"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x53\x33\x2A\x38\x2A\x2A\x2A\x55"
-						/* ? ? ? ? ? ? E8 ? ? ? ? 84 ? 0F 84 ? ? ? ? 53 33 ? 38 ? ? ? 55 */
-			}
-			/* CEnvRockLauncher::LaunchCurrentDir() */
+
+			/**
+			 * CEnvRockLauncher::LaunchCurrentDir()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "tank_rock" string.
+			 * 2. One of the functions that references that string is "CTankRock::Create".
+			 * 3. One of the functions that calls "CTankRock::Create" should be this function.
+			 **/
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
@@ -853,7 +1528,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\xC1\x2A\x2A\xA8\x2A\x57\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\xC1\x2A\x2A\xF6\x2A\x2A\x89\x2A\x2A\x2A\x89\x2A\x2A\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x6A\x2A\x89\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x89\x2A\x2A\x2A\x52\x8D\x2A\x2A\x2A\x50\x89\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x2A\x8D"
 						/* ? ? ? ? ? ? 8B 86 ? ? ? ? C1 ? ? A8 ? 57 74 ? E8 ? ? ? ? 8B 8E ? ? ? ? 8B 96 ? ? ? ? 8B 86 ? ? ? ? 89 ? ? ? 8B 8E ? ? ? ? C1 ? ? F6 ? ? 89 ? ? ? 89 ? ? ? 74 ? 8B ? E8 ? ? ? ? 8B 96 ? ? ? ? 8B 86 ? ? ? ? 8B 8E ? ? ? ? 6A ? 89 ? ? ? 68 ? ? ? ? 8D ? ? ? 89 ? ? ? 52 8D ? ? ? 50 89 ? ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 8B ? 8D */
 			}
-			/* CFirstAidKit::FinishHealing() */
+
+			/**
+			 * CFirstAidKit::FinishHealing()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "HealedByFriend" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CFirstAidKit::FinishHealing"
 			{
 				"library"	"server"
@@ -861,7 +1543,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x89\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F"
 						/* ? ? ? ? ? ? 55 89 ? ? ? E8 ? ? ? ? 8B ? 85 ? 0F */
 			}
-			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+
+			/**
+			 * CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerHealing"/"PlayerHealingOther" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CFirstAidKit::StartHealing"
 			{
 				"library"	"server"
@@ -869,7 +1558,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8D\xB1\x2A\x2A\x2A\x2A\x57\x89"
 						/* ? ? ? ? ? ? ? ? 53 55 56 8D B1 ? ? ? ? 57 89 */
 			}
-			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+
+			/**
+			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CSmokeCloudSystem" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CSmokeCloudSystem::FireGameEvent"
 			{
 				"library"	"server"
@@ -877,7 +1575,16 @@
 				"windows"	"\x83\x2A\x2A\x56\x8B\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x57\x8B\x2A\x8B\x2A\xFF\x2A\x3D\x2A\x2A\x2A\x2A\x74\x2A\x68\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x85\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* 83 ? ? 56 8B ? ? ? 8B ? 8B ? ? 57 8B ? 8B ? FF ? 3D ? ? ? ? 74 ? 68 ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 85 ? 0F 85 ? ? ? ? 8B ? 8B ? ? 6A ? 68 ? ? ? ? 8B ? FF ? 50 E8 ? ? ? ? 8B */ // change 83 ?? ?? to C2 04 00
 			}
-			/* CTankClaw::DoSwing() */
+
+			/**
+			 * CTankClaw::DoSwing()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "rhand" string.
+			 * 2a. The string can only be found in this function.
+			 * 1b. Search for the "ValveBiped.Bip01_R_Hand" string.
+			 * 2b. One of the functions that references that string should be this function.
+			 **/
 			"CTankClaw::DoSwing"
 			{
 				"library"	"server"
@@ -885,7 +1592,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x74\x2A\x8D\x2A\x2A\x2A\x50\x8D\x2A\x2A\x2A\x51\x68"
 						/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? 85 ? 74 ? 8D ? ? ? 50 8D ? ? ? 51 68 */
 			}
-			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankClaw" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTankClaw::OnPlayerHit"
 			{
 				"library"	"server"
@@ -893,7 +1612,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xB4"
 						/* ? ? ? ? ? ? 53 55 56 57 8B ? E8 ? ? ? ? 8B B4 */
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::DoSwing" function.
+			 * 2. The last function call should be this function.
+			 **/
 			"CTankClaw::SweepFist"
 			{
 				"library"	"server"
@@ -901,7 +1627,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x0D"
 						/* ? ? ? ? ? ? 55 56 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B 0D */
 			}
-			/* CTankRock::Detonate() */
+
+			/**
+			 * CTankRock::Detonate()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankRock" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
@@ -909,7 +1647,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xD9"
 						/* ? ? ? ? ? ? 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? D9 */
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTankRock::OnRelease"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_.constprop.121"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC7\x86\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x57"
+						/* ? ? ? ? ? ? ? ? ? ? ? C7 86 ? ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? 57 */
+			}
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "player_jump" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorGameMovement::DoJump"
 			{
 				"library"	"server"
@@ -917,14 +1677,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\x6A\x2A\xFF\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x6A\x2A\x6A"
 						/* ? ? ? ? ? ? 8B ? 8B 90 ? ? ? ? 57 6A ? FF ? 8B 8E ? ? ? ? 8B ? 8B 90 ? ? ? ? 6A ? 6A */
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "57.0" value in the "CTerrorGameMovement::DoJump" function.
+			 * 2. Go to the instruction for that line in the code.
+			 * 3. Double-click the offset that represents that value to get the address.
+			 **/
 			"CTerrorGameMovement::DoJump::Value"
 			{
 				"library"	"server"
 				"linux"		"\x00\x00\x64\x42\x00\x00\xC8\x44"
 				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
 			}
-			/* CTerrorGameRules::GetMissionFirstMap(KeyValues**) */
+
+			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Game/chapter" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorGameRules::GetMissionFirstMap"
 			{
 				"library"	"server"
@@ -932,7 +1707,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\xC7\x07\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\x5F\x5E\xC3\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x57\x56\xFF\x2A\x6A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? 85 ? 74 ? C7 07 ? ? ? ? 8B 0D ? ? ? ? 8B ? 8B ? ? FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? 5F 5E C3 8B 0D ? ? ? ? 8B ? 8B ? ? 57 56 FF ? 6A ? 68 ? ? ? ? 8B ? 8B */
 			}
-			/* CTerrorGameRules::GetMissionInfo() */
+
+			/**
+			 * CTerrorGameRules::GetMissionInfo()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%3.2f: Director: Finale state = FINALE_HORDE_ATTACK_1\n" string.
+			 * 2. Both functions that reference the string call this function.
+			 * 3. The first function call below the string should be this function.
+			 **/
 			"CTerrorGameRules::GetMissionInfo"
 			{
 				"library"	"server"
@@ -940,7 +1723,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\x5E"
 						/* ? ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? 5E */
 			}
-			/* CTerrorGameRules::IsMissionFinalMap() */
+
+			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Game/chapter" string.
+			 * 2. One of the functions that references that string should be this function.
+			 * 3. This function references the string twice.
+			 **/
 			"CTerrorGameRules::IsMissionFinalMap"
 			{
 				"library"	"server"
@@ -948,7 +1739,27 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\xB0"
 						/* ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? B0 */
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
+			 * - "blood_bleedout"
+			 * - "SubjectIsA:%s,Distance:%f"
+			 * - "KilledZombie"
+			 * - "DeadCharacter:"
+			 * - ",SubjectTeam:Survivor"
+			 * - "SurvivorDied"
+			 * - "infected_explosive_barrel_kill"
+			 * - "boomer_exploded"
+			 * - "splashedbile"
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
@@ -956,7 +1767,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\x2A\x88"
 						/* ? ? ? ? ? ? 53 55 56 8B ? 8B ? 8B 90 ? ? ? ? 57 FF ? 88 */
 			}
-			/* CTerrorPlayer::GoAwayFromKeyboard() */
+
+			/**
+			 * CTerrorPlayer::GoAwayFromKeyboard()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "player_afk" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
@@ -964,7 +1782,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x9E"
 						/* ? ? ? ? ? ? 8B ? 8B ? 8B 90 ? ? ? ? 8B 9E */
 			}
-			/* CTerrorPlayer::MaterializeFromGhost() */
+
+			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%s materialized from spawn mode as a %s\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::MaterializeFromGhost"
 			{
 				"library"	"server"
@@ -972,7 +1797,40 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x50\xE8\x2A\x2A\x2A\x2A\x50\x8D\x86"
 						/* ? ? ? ? ? ? ? ? ? ? ? FF ? 50 E8 ? ? ? ? 50 8D 86 */
 			}
-			/* CTerrorPlayer::OnEnterGhostState() */
+
+			/**
+			 * CTerrorPlayer::OnBeginChangeLevel(char const*, KeyValues *)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnBeginChangeLevel"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnBeginChangeLevelEPKcP9KeyValues"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
+						/* ? ? ? ? ? ? ? ? 56 8B ? 74 ? E8 ? ? ? ? 84 ? 0F */
+			}
+
+			/**
+			 * CTerrorPlayer::OnEnterGhostState()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "spawnmode_bar" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 * 3a. This function should also contain "data" and "zombieClass" strings.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::OnEnterGhostState"
 			{
 				"library"	"server"
@@ -980,7 +1838,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x57\xFF\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? ? 8B ? ? 8D 8E ? ? ? ? 57 FF ? 8B */
 			}
-			/* CTerrorPlayer::OnFalling() */
+
+			/**
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerZombie.Fall" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnFalling"
 			{
 				"library"	"server"
@@ -988,14 +1853,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8D"
 						/* ? ? ? ? ? ? 57 8B ? E8 ? ? ? ? 83 ? ? 0F 85 ? ? ? ? 8D */
 			}
-			/* CTerrorPlayer::OnFalling() */
-			"CTerrorPlayer::OnFalling::Sound"
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorPlayer::OnIncapacitatedAsTank"
 			{
 				"library"	"server"
-				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
-				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+				"linux"		"@_ZN13CTerrorPlayer21OnIncapacitatedAsTankERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x81"
+						/* ? ? ? ? ? ? ? ? ? ? 50 E8 ? ? ? ? 84 ? 74 ? 81 */
 			}
-			/* CTerrorPlayer::OnITExpired() */
+
+			/**
+			 * CTerrorPlayer::OnITExpired()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerVomitExpired" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::OnITExpired"
 			{
 				"library"	"server"
@@ -1003,7 +1883,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\xD8\x9F\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xD9\x05\x2A\x2A\x2A\x2A\xD9\x2A\x8B\x2A\x6A"
 						/* ? ? ? ? ? ? 56 57 8B ? D8 9F ? ? ? ? 8D B7 ? ? ? ? DF ? F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 56 FF ? D9 05 ? ? ? ? D9 ? 8B ? 6A */
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "CTerrorPlayer::PlayerRunCommand" string.
+			 * 2. The string can only be found in "CTerrorPlayer::PlayerRunCommand".
+			 * 3. The last function call in "CTerrorPlayer::PlayerRunCommand" should be this function.
+			 **/
 			"CTerrorPlayer::OnLadderDismount"
 			{
 				"library"	"server"
@@ -1011,7 +1899,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x75\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x82\x2A\x2A\x2A\x2A\xFF"
 						/* ? ? ? ? ? ? ? ? 83 ? ? 75 ? 8B ? E8 ? ? ? ? 85 ? 74 ? 8B ? E8 ? ? ? ? 8B ? 8B ? 8B 82 ? ? ? ? FF */
 			}
-			/* CTerrorPlayer::OnLadderMount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Player.Fall" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnLadderMount"
 			{
 				"library"	"server"
@@ -1019,7 +1914,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
 						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 6A ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 83 */
 			}
-			/* CTerrorPlayer::OnRevived() */
+
+			/**
+			 * CTerrorPlayer::OnRevived()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::OnRevived"
 			{
 				"library"	"server"
@@ -1027,7 +1934,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
 						/* ? ? ? ? ? ? 57 8B ? 8B ? 8B 90 ? ? ? ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 */
 			}
-			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tongue letting go on getting bashed." string.
+			 * 2. The string can only be found in "CTerrorPlayer::OnStunned".
+			 * 3. One of the functions that calls "CTerrorPlayer::OnStunned" should be this function.
+			 **/
 			"CTerrorPlayer::OnShovedByPounceLanding"
 			{
 				"library"	"server"
@@ -1035,7 +1950,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B\x2A\x2A\x2A\x85"
 						/* ? ? ? ? ? ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 57 8B ? ? ? 85 */
 			}
-			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+
+			/**
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Survivor was lunged while %sfacing the hunter and %sbashing\n" string.
+			 * 2. The string can only be found in one function.
+			 * 3. The very last function call in the code block that comes after the line where that string is referenced should be this function.
+			 **/
 			"CTerrorPlayer::OnShovedBySurvivor"
 			{
 				"library"	"server"
@@ -1043,7 +1966,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x8C"
 						/* ? ? ? ? ? ? 56 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B 8C */
 			}
-			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
+
+			/**
+			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerShoved" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
@@ -1051,7 +1981,33 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x53\x55"
 						/* ? ? ? ? ? ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 53 55 */
 			}
-			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnTakeDamage_AliveERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x83\x2A\x2A\x8B\x2A\x0F\x84"
+						/* ? ? ? ? ? ? ? ? ? 8B ? ? 83 ? ? 8B ? 0F 84 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "#L4D_NOTIFY_VOMIT_ON"
+			 * - "PlayerNeutralizedVomit"
+			 * - "PlayerVomitInFace"
+			 **/
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
@@ -1059,7 +2015,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\xA1\x2A\x2A\x2A\x2A\x80"
 						/* ? ? ? ? ? ? 57 8B ? E8 ? ? ? ? 84 ? 74 ? A1 ? ? ? ? 80 */
 			}
-			/* CTerrorPlayer::PreThink() */
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "#L4D_idle_spectator" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::PreThink"
 			{
 				"library"	"server"
@@ -1067,7 +2035,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x85"
 						/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 85 */
 			}
-			/* CTerrorPlayer::RoundRespawn() */
+
+			/**
+			 * CTerrorPlayer::RoundRespawn()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
@@ -1075,7 +2052,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x75\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xC6"
 						/* ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 ? 75 ? 8B ? E8 ? ? ? ? C6 */
 			}
-			/* CTerrorPlayer::SetMainActivity(Activity, bool) */
+
+			/**
+			 * CTerrorPlayer::SetMainActivity(Activity, bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%f: %s plays %s\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::SetMainActivity"
 			{
 				"library"	"server"
@@ -1083,7 +2067,23 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x3D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x89\x2A\x2A\x2A\xFF\x2A\x8B"
 						/* ? ? ? ? ? ? 8B 3D ? ? ? ? 8B ? 8B ? ? 8B ? 8B ? 89 ? ? ? FF ? 8B */
 			}
-			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+
+			/**
+			 * CTerrorPlayer::StartReviving(CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "Tongue letting because victim is being revived"
+			 * - "%s starts reviving %s"
+			 * - "revive_begin"
+			 * - "Reviving Friend..."
+			 * - "Getting Revived..."
+			 * - "PlayerHeal"
+			 * - "PlayerLedgeSaveCritical"
+			 * - "PlayerReviveFriendCritical"
+			 * - "PlayerLedgeSave"
+			 * - "PlayerReviveFriend"
+			 **/
 			"CTerrorPlayer::StartReviving"
 			{
 				"library"	"server"
@@ -1091,7 +2091,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x2A\x2A\x2A\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x83"
 						/* ? ? ? ? ? ? 53 8B 9C ? ? ? ? ? 8B 83 ? ? ? ? 83 */
 			}
-			/* CTerrorWeapon::CanDeploy() */
+
+			/**
+			 * CTerrorWeapon::CanDeploy()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorWeapon::CanDeployFor"
 			{
 				"library"	"server"
@@ -1099,7 +2108,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 */
 			}
-			/* CTerrorWeapon::SecondaryAttack() */
+
+			/**
+			 * CTerrorWeapon::SecondaryAttack()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorWeapon::SecondaryAttack"
 			{
 				"library"	"server"
@@ -1107,7 +2125,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
 			}
-			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
+
+			/**
+			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "InfectedExecAction" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"InfectedExecAction::OnInjured"
 			{
 				"library"	"server"
@@ -1115,7 +2142,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\x2A\x2A\x32\x2A\xF7"
 						/* ? ? ? ? ? ? ? ? ? 56 57 8B ? ? ? 32 ? F7 */
 			}
-			/* KeyValues::GetString(char const*, char const*) */
+
+			/**
+			 * KeyValues::GetString(char const*, char const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%3.2f: Director: Finale state = FINALE_HORDE_ATTACK_1\n" string.
+			 * 2. Both functions that reference the string call this function.
+			 * 3. The second function call below the string should be this function.
+			 **/
 			"KeyValues::GetString"
 			{
 				"library"	"server"
@@ -1123,18 +2158,31 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x2A\x2A\x2A\x2A\x2A\x56\x57\x6A\x2A\x53\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? 53 8B 9C ? ? ? ? ? 56 57 6A ? 53 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 0F ? ? ? 83 ? ? 83 ? ? 0F */
 			}
+
 			/**
 			 * PlayerLocomotion::GetMaxJumpHeight()
-			 * Used for the default jump height (57.0) address on Linux.
+			 *
+			 * Note: This is only used for the default jump height (57.0) address on Linux.
 			 **/
 			"PlayerLocomotion::GetMaxJumpHeight"
 			{
 				"library"	"server"
 				"linux"		"@_ZNK16PlayerLocomotion16GetMaxJumpHeightEv"
 			}
+
 			/**
 			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
-			 * Used for the "CDirector" address on Windows.
+			 *
+			 * Note: This is only used for the "CDirector" address on Windows.
+			 *
+			 * How to find:
+			 * 1a. Search for the "The rescue vehicle is here!!!" or "%3.2f: %s ERROR: No RESCUE_VEHICLE area" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "SurvivorLegsMeetRescueVehicleArrival" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 **/
 			"SurvivorLegsMeetRescueVehicleArrival::Update"
 			{
@@ -1142,7 +2190,18 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x33\x2A\x38"
 						/* ? ? ? ? ? ? ? 8B 0D ? ? ? ? 33 ? 38 */
 			}
-			/* Tank::EnterStasis() */
+
+			/**
+			 * Tank::EnterStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in one function):
+			 * - "Tank offer: Starting the lottery\n"
+			 * - "Tank offer: Going to the only PZ\n"
+			 * - "Tank offer: making a bot, and giving him to nobody\n"
+			 * 2. This function should be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
+			 * 3. This function should be the last function call in that function.
+			 **/
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
@@ -1150,7 +2209,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? ? ? ? ? 0F 85 ? ? ? ? 83 ? ? ? 0F 84 ? ? ? ? 0F */
 			}
-			/* Tank::LeaveStasis() */
+
+			/**
+			 * Tank::LeaveStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tank committing suicide\n" string.
+			 * 2. This function is called above the string.
+			 **/
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
@@ -1158,7 +2224,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x74\x2A\x0F"
 						/* ? ? ? ? ? ? ? ? ? ? 0F 84 ? ? ? ? 83 ? ? ? 74 ? 0F */
 			}
-			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+
+			/**
+			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "TANK OFFER: Looking for players\n" string.
+			 * 2. The last function call in that function should be this function.
+			 **/
 			"ZombieManager::ReplaceTank"
 			{
 				"library"	"server"
@@ -1166,7 +2239,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\x57\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x83"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? 57 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 83 ? ? 0F 85 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 83 */
 			}
-			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+
+			/**
+			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.
+			 * 2. The second function call in that function should be this function.
+			 **/
 			"ZombieManager::SpawnTank"
 			{
 				"library"	"server"
@@ -1176,11 +2256,23 @@
 			}
 		}
 	}
+
 	"left4dead2"
 	{
 		"Functions"
 		{
-			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+			/**
+			 * CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger)
+			 *
+			 * Note: Detouring as a pre-hook for changing the following per player before starting any actions:
+			 * - "first_aid_kit_use_duration"
+			 * - "ammo_pack_use_duration"
+			 * - "cola_bottles_use_duration"
+			 * - "defibrillator_use_duration"
+			 * - "gas_can_use_duration"
+			 * - "upgrade_pack_use_duration"
+			 * Note: Detouring as a post-hook for changing the above back to default values after starting any actions.
+			 **/
 			"MTDetour_CBaseBackpackItem::StartAction"
 			{
 				"signature"	"CBaseBackpackItem::StartAction"
@@ -1199,15 +2291,13 @@
 					}
 				}
 			}
-			/* CDirectorScavengeMode::EndScavengeRound() */
-			"MTDetour_CDirectorScavengeMode::EndScavengeRound"
-			{
-				"signature"	"CDirectorScavengeMode::EndScavengeRound"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"ignore"
-			}
-			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+
+			/**
+			 * CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*)
+			 *
+			 * Note: Detouring as a pre-hook for changing "first_aid_heal_percent" per player before healing finishes.
+			 * Note: Detouring as a post-hook for changing "first_aid_heal_percent" back to default value after healing finishes.
+			 **/
 			"MTDetour_CFirstAidKit::OnActionComplete"
 			{
 				"signature"	"CFirstAidKit::OnActionComplete"
@@ -1226,7 +2316,12 @@
 					}
 				}
 			}
-			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
+
+			/**
+			 * CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*)
+			 *
+			 * Note: Detouring as a post-hook for setting Tank rock colors after they are spawned by "env_rock_launcher" entity.
+			 **/
 			"MTDetour_CTankRock::Create"
 			{
 				"signature"	"CTankRock::Create"
@@ -1252,7 +2347,13 @@
 					}
 				}
 			}
-			/* CTerrorGun::FireBullet() */
+
+			/**
+			 * CTerrorGun::FireBullet()
+			 *
+			 * Note: Detouring as a pre-hook for changing "phys_pushscale" per player before firing a bullet.
+			 * Note: Detouring as a post-hook for changing "phys_pushscale" back to default value after firing a bullet.
+			 **/
 			"MTDetour_CTerrorGun::FireBullet"
 			{
 				"signature"	"CTerrorGun::FireBullet"
@@ -1260,7 +2361,12 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorMeleeWeapon::SecondaryAttack() */
+
+			/**
+			 * CTerrorMeleeWeapon::SecondaryAttack()
+			 * Note: Detouring as a pre-hook for changing "z_gun_swing_interval" per player before shoving with a melee weapon.
+			 * Note: Detouring as a post-hook for changing "z_gun_swing_interval" back to default value after shoving with a melee weapon.
+			 **/
 			"MTDetour_CTerrorMeleeWeapon::SecondaryAttack"
 			{
 				"signature"	"CTerrorMeleeWeapon::SecondaryAttack"
@@ -1268,7 +2374,13 @@
 				"return"	"void"
 				"this"		"entity"
 			}
-			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+
+			/**
+			 * CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&)
+			 *
+			 * Note: Detouring as a pre-hook for changing "melee_range" per player before swinging melee weapon.
+			 * Note: Detouring as a post-hook for changing "melee_range" back to default value after swinging melee weapon.
+			 **/
 			"MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision"
 			{
 				"signature"	"CTerrorMeleeWeapon::TestMeleeSwingCollision"
@@ -1283,7 +2395,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
+
+			/**
+			 * CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int)
+			 *
+			 * Note: Detouring as a pre-hook for skipping animations after Tank hits per player for faster recovery.
+			 **/
 			"MTDetour_CTerrorPlayer::DoAnimationEvent"
 			{
 				"signature"	"CTerrorPlayer::DoAnimationEvent"
@@ -1302,7 +2419,13 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
+
+			/**
+			 * CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Charger flings per player before survivors are flung.
+			 * Note: Detouring as a pre-hook for shortening recovery time per player before survivors are flung.
+			 **/
 			"MTDetour_CTerrorPlayer::Fling"
 			{
 				"signature"	"CTerrorPlayer::Fling"
@@ -1329,7 +2452,13 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
+
+			/**
+			 * CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking bile bomb effects before players are affected.
+			 * Note: Detouring as a pre-hook for providing a forward for other plugins to use.
+			 **/
 			"MTDetour_CTerrorPlayer::OnHitByVomitJar"
 			{
 				"signature"	"CTerrorPlayer::OnHitByVomitJar"
@@ -1344,7 +2473,12 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::SelectWeightedSequence(Activity) */
+
+			/**
+			 * CTerrorPlayer::SelectWeightedSequence(Activity)
+			 *
+			 * Note: Detouring as a post-hook for accelerating Tank taunting animations after incapacitating a survivor.
+			 **/
 			"MTDetour_CTerrorPlayer::SelectWeightedSequence"
 			{
 				"signature"	"CTerrorPlayer::SelectWeightedSequence"
@@ -1359,20 +2493,32 @@
 					}
 				}
 			}
-			/* CTerrorWeapon::CanDeployFor(CTerrorPlayer*) */
+
+			/**
+			 * CTerrorWeapon::CanDeployFor(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for patching move type per player while on ladders.
+			 * Note: Detouring as a post-hook for removing patch for move type while on ladders.
+			 * Note: L4D2 has one param.
+			 **/
 			"MTDetour_CTerrorWeapon::CanDeployFor"
 			{
 				"arguments"
 				{
-					"player" // L4D2 has one argument
+					"player"
 					{
 						"type"		"cbaseentity"
 					}
 				}
 			}
 		}
+
 		"Addresses"
 		{
+			/**
+			 * Windows: Uses an offset of "CDirectorMusicBanks::OnRoundStart" to get the Director's address.
+			 * Linux: Uses a symbol pointing to the Director's address.
+			 **/
 			"CDirector"
 			{
 				"windows"
@@ -1386,9 +2532,10 @@
 				}
 				"read"		"0"
 			}
+
 			/**
-			 * Initial method for finding default jump height (57.0) by jumping to location
-			 * Relies on "DoJumpValueBytes" in case of failure
+			 * This is the failsafe method for finding the default jump height (57.0) by jumping to its location.
+			 * If the "DoJumpValueBytes" method fails, the plugin will rely on this method instead.
 			 **/
 			"DoJumpValueRead"
 			{
@@ -1402,197 +2549,534 @@
 					"read"		"671"
 				}
 			}
-			/**
-			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
-			 * Relies on "OnFallingSoundBytes" in case of failure
-			 **/
-			"OnFallingSoundRead"
-			{
-				"signature"	"CTerrorPlayer::OnFalling"
-				"windows"
-				{
-					"read"		"297"
-				}
-				"linux"
-				{
-					"read"		"671"
-				}
-			}
 		}
+
 		"Offsets"
 		{
-			/* CBaseBackpackItem::GetUseAction() */
+			/**
+			 * CBaseBackpackItem::GetUseAction()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CBaseBackpackItem::GetUseAction"
 			{
 				"windows"	"451"
 				"linux"		"453"
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() */
+
+			/**
+			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"323"
 				"linux"		"324"
 			}
-			/* CBaseEntity::IsInStasis() */
+
+			/**
+			 * CBaseEntity::IsInStasis()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CBaseEntity::IsInStasis"
 			{
 				"windows"	"39"
 				"linux"		"40"
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "HasPlayerControlledZombies" check.
+			 *
+			 * How to find:
+			 * 1. Look in the "CTankClaw::SweepFist" function for a condition that validates "HasPlayerControlledZombies" or "IsSurvivalMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTankClaw::SweepFist::Check1"
 			{
 				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"2554" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "IsSurvivalMode" check.
+			 *
+			 * How to find:
+			 * 1. Look in the "CTankClaw::SweepFist" function for a condition that validates "HasPlayerControlledZombies" or "IsSurvivalMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTankClaw::SweepFist::Check2"
 			{
 				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3488" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Deafen(float, float, float) */
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTankRock::OnRelease::SoundLoop"
+			{
+				"windows"	"122" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::Deafen(float, float, float)
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"517"
 				"linux"		"518"
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: This is the offset for the "m_hAttacker" member variable in the "CTakeDamageInfo" class.
+			 *
+			 * How to find:
+			 * 1. Look in the alliedmodders/hl2sdk-l4d2 "takedamageinfo.h" file.
+			 * 2. Each member variable takes up 4 bytes for each of its cells (12 bytes for floats).
+			 **/
 			"CTerrorPlayer::Event_Killed::Attacker"
 			{
 				"windows"	"52"
 				"linux"		"52"
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "boomer_explode".
+			 *
+			 * How to find:
+			 * 1. Locate the "boomer_explode" string.
+			 * 2. There should be two references to the string.
+			 * 3. This patch will be for the first reference.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
 				"windows"	"7411" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10925" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "BoomerZombie.Detonate".
+			 *
+			 * How to find:
+			 * 1. Locate the "BoomerZombie.Detonate" string.
+			 * 2. There should be two references to the string.
+			 * 3. This patch will be for the first reference.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
 				"windows"	"7434" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10957" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CreateExplosion" call.
+			 *
+			 * How to find:
+			 * 1. Locate the "BoomerZombie.Detonate" string.
+			 * 2. There should be two references to the string.
+			 * 3. This patch will use the first reference.
+			 * 4. The function is the second function call after the string reference.
+			 * 5. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
 				"windows"	"7749" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"8228" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "boomer_explode".
+			 *
+			 * How to find:
+			 * 1. Locate the "boomer_explode" string.
+			 * 2. There should be two references to the string.
+			 * 3. This patch will be for the second reference.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
 			{
 				"windows"	"7603" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6353" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "BoomerZombie.Detonate".
+			 *
+			 * How to find:
+			 * 1. Locate the "BoomerZombie.Detonate" string.
+			 * 2. There should be two references to the string.
+			 * 3. This patch will be for the second reference.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
 			{
 				"windows"	"7626" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6385" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CreateExplosion" call.
+			 *
+			 * How to find:
+			 * 1. Locate the "boomer_exploded" string.
+			 * 2. The function is located in the previous code block above that function call.
+			 * 3. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
 			{
 				"windows"	"7905" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6543" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBaseEntity::EmitSound" call for "SmokerZombie.Explode".
+			 * Note for Windows users: The server crashes when patching 5 bytes with NOPs (0x90), so do a jump (JMP) instruction instead.
+			 *
+			 * How to find:
+			 * 1. Locate the "SmokerZombie.Explode" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"windows"	"8174" // start at D9 and patch 2 bytes with EB ??
 				"linux"		"10263" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "smoker_smokecloud".
+			 *
+			 * How to find:
+			 * 1. Locate the "smoker_smokecloud" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"windows"	"8266" // start at 8B and patch 2 bytes with EB ??
 				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "DispatchParticleEffect" call for "smoker_smokecloud_camera".
+			 *
+			 * How to find:
+			 * 1. Locate the "smoker_smokecloud_camera" string.
+			 * 2. The instruction should look like a function call.
+			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
 				"windows"	"8480" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10611" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches
+			 *
+			 * How to find:
+			 * 1. Locate the "insect_swarm" string.
+			 * 2. Scroll up until you reach the if statement that checks for the Spitter class (4).
+			 * 3a. (Windows) The patch location should be a MOV instruction two lines before a 2-byte CALL instruction.
+			 * 3b. (Linux) The patch location should be a MOV instruction three lines before a 6-byte CALL instruction.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the "CBaseEntity::EmitSound" call for "SpitterZombie.Death"
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
 			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
 			{
 				"windows"	"9332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"12526" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
-			/* CTerrorPlayer::GetLastKnownArea() */
+
+			/**
+			 * CTerrorPlayer::GetFlowDistance(CNavArea const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 * 5. Look for the 7-byte float (FLD) instruction.
+			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the function.
+			 * 2. Look for the 9-byte move (MOVSS) instruction.
+			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
+			 **/
+			"CTerrorPlayer::GetFlowDistance::m_flow"
+			{
+				"windows"	"332"
+				"linux"		"340"
+			}
+
+			/**
+			 * CTerrorPlayer::GetLastKnownArea()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"330"
 				"linux"		"331"
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
-			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
+
+			/**
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * Note: Patches the "CBaseEntity::EmitTrackedSound" call for "Player.Fall".
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. Look for the 6-byte float (FLD) instruction right before a PUSH instruction above that function call.
+			 * 4. The length of the JMP instruction patch will be determined by the following equation:
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 **/
+			"CTerrorPlayer::OnFalling::Scream"
 			{
-				"windows"	"49" // start at FF and patch 2 bytes with NOPs (0x90)
-				"linux"		"68" // start at 8B and patch 11 bytes with NOPs (0x90)
+				"windows"	"552" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"678" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
-			/* CTerrorPlayer::OnLadderMount() */
-			"CTerrorPlayer::OnLadderMount::WeaponHolster"
-			{
-				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
-				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
-			}
-			/* CTerrorPlayer::PreThink() */
-			"CTerrorPlayer::PreThink::SafeDropLogic"
-			{
-				"windows"	"498" // start at 09 and patch 1 byte with CALL (0xFF)
-				"linux"		"181" // start at 09 and patch 1 byte with CALL (0xFF)
-			}
-			/* CTerrorPlayer::RoundRespawn() */
-			"CTerrorPlayer::RoundRespawn::StatsCondition"
-			{
-				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
-				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
-			}
-			/* CTerrorWeapon::CanDeployFor(CTerrorPlayer*) */
-			"CTerrorWeapon::CanDeployFor::MoveType"
-			{
-				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
-				"linux"		"76" // start at 09 and patch 1 byte with CALL (0xFF)
-			}
-			/* Tank::GetIntentionInterface() */
-			"Tank::GetIntentionInterface"
-			{
-				"windows"	"17204"
-				"linux"		"17176"
-			}
-			/* TankIdle::GetName() */
-			"TankIdle::GetName"
-			{
-				"windows"	"40"
-				"linux"		"41"
-			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
-			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
-			{
-				"windows"	"296"
-				"linux"		"300"
-			}
-			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) */
-			"WitchLocomotion::IsAreaTraversable::m_flow"
-			{
-				"windows"	"332"
-				"linux"		"340"
-			}
-			/* CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerIncapacitated" string to locate the "CTerrorPlayer::OnIncapacitatedAsSurvivor" function.
+			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
+			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
+			 * 4. The variable that is being assigned a value below those two function calls has an offset.
+			 * 5. The offset will be the offset for the hidden melee weapon.
+			 *
+			 * How to find on Linux:
+			 * 1. Locate the function.
+			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
+			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
+			 * 4. The variable that is being assigned a value below those two function calls has an offset.
+			 * 5. Multiply the offset by 4 to get the offset for the hidden melee weapon.
+			 **/
 			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
 				"windows"	"16308"
 				"linux"		"16288"
 			}
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Patches weapon deploy logic.
+			 *
+			 * How to find:
+			 * 1. Locate the second call to "CBaseCombatCharacter::GetActiveWeapon".
+			 * 2. The patch location is at the line of code below that function call.
+			 **/
+			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
+			{
+				"windows"	"49" // start at FF and patch 2 bytes with NOPs (0x90)
+				"linux"		"68" // start at 8B and patch 11 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * Note: Patches weapon holster logic.
+			 *
+			 * How to find:
+			 * 1. Look for the team check.
+			 * 2. The patch location should be a jump (JZ/JNZ) instruction.
+			 **/
+			"CTerrorPlayer::OnLadderMount::WeaponHolster"
+			{
+				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
+				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CTerrorPlayer::StopBeingRevived" function call.
+			 *
+			 * How to find on Windows:
+			 * 1. Find a 2-byte instruction that pushes a "1" to a function call.
+			 * 2. The function call that the "1" is being passed to is the patch location.
+			 *
+			 * How to find on Linux:
+			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
+			 * 2. The function call that the bool value is being passed to is the patch location.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
+			{
+				"windows"	"2387" // start at 6A and patch 9 bytes with NOPs (0x90)
+				"linux"		"3217" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Patches the safe drop logic.
+			 *
+			 * How to find:
+			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
+			 * 2. Get the offset of the last byte.
+			 **/
+			"CTerrorPlayer::PreThink::SafeDropLogic"
+			{
+				"windows"	"498" // start at 09 and patch 1 byte with CALL (0xFF)
+				"linux"		"181" // start at 09 and patch 1 byte with CALL (0xFF)
+			}
+
+			/**
+			 * CTerrorPlayer::RoundRespawn()
+			 *
+			 * Note: Patches the stats reset function.
+			 *
+			 * How to find:
+			 * 1. Look for a jump (JNZ) instruction.
+			 * 2. That is the patch location.
+			 **/
+			"CTerrorPlayer::RoundRespawn::StatsCondition"
+			{
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
+				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
+			}
+
+			/**
+			 * CTerrorWeapon::CanDeploy()
+			 *
+			 * Note: Patches the move type logic.
+			 *
+			 * How to find:
+			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
+			 * 2. Get the offset of the last byte.
+			 **/
+			"CTerrorWeapon::CanDeployFor::MoveType"
+			{
+				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
+				"linux"		"76" // start at 09 and patch 1 byte with CALL (0xFF)
+			}
+
+			/**
+			 * Tank::GetIntentionInterface()
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "Tank" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "Tank" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Multiply the member variable offset by 4.
+			 **/
+			"Tank::GetIntentionInterface"
+			{
+				"windows"	"17204"
+				"linux"		"17176"
+			}
+
+			/**
+			 * TankIdle::GetName()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
+			"TankIdle::GetName"
+			{
+				"windows"	"40"
+				"linux"		"41"
+			}
+
+			/**
+			 * WitchLocomotion::IsAreaTraversable(CNavArea const*)
+			 *
+			 * How to find:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2a. Use IDA to get the VTable dump for the "WitchLocomotion" class on Windows.
+			 * 2b. Use IDA to get the VTable dump for the "WitchLocomotion" class on Linux.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4a. Look for the target function in the Windows binary.
+			 * 4b. Look for the target function in the Linux binary.
+			 * 5. Look for the first 10-byte TEST instruction.
+			 * 6. The offset in that instruction is the offset for "m_attributeFlags".
+			 **/
+			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
+			{
+				"windows"	"296"
+				"linux"		"300"
+			}
 		}
+
 		"Signatures"
 		{
-			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			/**
+			 * CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CAmmoDef" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CAmmoDef::MaxCarry"
 			{
 				"library"	"server"
@@ -1600,7 +3084,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x7C\x2A\x3B\x2A\x2A\x7D\x2A\x6B\x2A\x2A\x03\x2A\x8B\x2A\x2A\x83\x2A\x2A\x75\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x5D"
 						/* ? ? ? ? ? ? 83 ? ? 7C ? 3B ? ? 7D ? 6B ? ? 03 ? 8B ? ? 83 ? ? 75 ? 8B ? ? 85 ? 74 ? 8B ? ? 8B ? ? 5D */
 			}
-			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+
+			/**
+			 * CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CBaseBackpackItem" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CBaseBackpackItem::StartAction"
 			{
 				"library"	"server"
@@ -1608,7 +3101,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x75\x2A\x5F\x32\x2A\x5E\x8B"
 						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? 85 ? 75 ? 5F 32 ? 5E 8B */
 			}
-			/* CBaseCombatWeapon::GetMaxClip1() */
+
+			/**
+			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CBaseCombatWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"library"	"server"
@@ -1616,7 +3118,17 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01"
 						/* ? ? ? ? ? ? ? 50 E8 ? ? ? ? 8B 80 60 01 */
 			}
-			/* CDeathFallCamera::Enable(CBasePlayer*) */
+
+			/**
+			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "SurvivorStandingOnCar" string.
+			 * 2. The string can only be found in "CTerrorPlayer::OnGroundChanged".
+			 * 3. Look for the "point_deathfall_camera" string in "CTerrorPlayer::OnGroundChanged".
+			 * 4. The first function call after that string's second reference should be "CBasePlayer::ClearZoomOwner".
+			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" should be this function.
+			 **/
 			"CDeathFallCamera::Enable"
 			{
 				"library"	"server"
@@ -1624,7 +3136,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85"
 						/* ? ? ? ? ? ? ? ? 57 8B ? 8B ? 89 ? ? E8 ? ? ? ? 85 */
 			}
-			/* CDirector::HasAnySurvivorLeftSafeArea() */
+
+			/**
+			 * CDirector::HasAnySurvivorLeftSafeArea()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "I've walked out of the checkpoint" string.
+			 * 2. The first function call below the string should be this function.
+			 **/
 			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
 				"library"	"server"
@@ -1632,7 +3151,15 @@
 				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
 						/* 8A ? A0 00 00 00 C3 */
 			}
-			/* CDirector::IsFirstMapInScenario() */
+
+			/**
+			 * CDirector::IsFirstMapInScenario()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Game/chapter" string.
+			 * 2. One of the functions that references that string is referenced by this function.
+			 * 3. This function should contain a "map" string.
+			 **/
 			"CDirector::IsFirstMapInScenario"
 			{
 				"library"	"server"
@@ -1640,17 +3167,40 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x85\x2A\x75\x2A\xBE\x2A\x2A\x2A\x2A\x6A"
 						/* ? ? ? ? ? ? ? ? 56 8B ? 85 ? 75 ? BE ? ? ? ? 6A */
 			}
-			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+
+			/**
+			 * CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Allowing spawning - %s left safe area\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CDirector" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x8B\x8F"
-						/* ? ? ? ? ? ? 53 8B ? ? 57 8B ? 8B 8F */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x8B\x8F\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? 53 8B ? ? 57 8B ? 8B 8F ? ? ? ? 53 */
 			}
+
 			/**
 			 * CDirectorMusicBanks::OnRoundStart()
-			 * Used for the "CDirector" address on Windows.
+			 *
+			 * Note: This is only used for the "CDirector" address on Windows.
+			 *
+			 * How to find:
+			 * 1a. Search for the "Event.Reveal" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CDirectorMusicBanks" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
 			 ***/
 			"CDirectorMusicBanks::OnRoundStart"
 			{
@@ -1658,23 +3208,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
 						/* ? ? ? ? ? ? 56 57 8B ? 8B 0D ? ? ? ? E8 ? ? ? ? 84 ? 0F */
 			}
-			/* CDirectorScavengeMode::EndScavengeRound() */
-			"CDirectorScavengeMode::EndScavengeRound"
-			{
-				"library"	"server"
-				"linux"		"@_ZN21CDirectorScavengeMode16EndScavengeRoundEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x53\xC6"
-						/* ? ? ? ? ? ? 56 8B ? 80 ? ? ? 0F 84 ? ? ? ? 53 C6 */
-			}
-			/* CDirectorVersusMode::EndVersusModeRound(bool) */
-			"CDirectorVersusMode::EndVersusModeRound"
-			{
-				"library"	"server"
-				"linux"		"@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x80"
-						/* ? ? ? ? ? ? 57 8B ? E8 ? ? ? ? 84 ? 0F 84 ? ? ? ? 80 */
-			}
-			/* CEnvRockLauncher::LaunchCurrentDir() */
+
+			/**
+			 * CEnvRockLauncher::LaunchCurrentDir()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "tank_rock" string.
+			 * 2. One of the functions that references that string is "CTankRock::Create".
+			 * 3. One of the functions that calls "CTankRock::Create" should be this function.
+			 **/
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
@@ -1682,7 +3224,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x8B\x86\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x57\xA8\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x89\x2A\x2A\x89\x2A\x2A\xF6\x2A\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x6A\x2A\x89\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x89\x2A\x2A\x52\x8D\x2A\x2A\x50\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x2A\x8D"
 						/* ? ? ? ? ? ? 56 8B ? 8B 86 ? ? ? ? C1 ? ? 57 A8 ? 74 ? E8 ? ? ? ? 8B 8E ? ? ? ? 8B 96 ? ? ? ? 8B 86 ? ? ? ? 89 ? ? 8B 8E ? ? ? ? C1 ? ? 89 ? ? 89 ? ? F6 ? ? 74 ? 8B ? E8 ? ? ? ? 8B 96 ? ? ? ? 8B 86 ? ? ? ? 8B 8E ? ? ? ? 6A ? 89 ? ? 68 ? ? ? ? 8D ? ? 89 ? ? 52 8D ? ? 50 89 ? ? E8 ? ? ? ? 8B 8E ? ? ? ? 8B ? 8D */
 			}
-			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+
+			/**
+			 * CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "RelaxedSigh" or "HealedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CFirstAidKit" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CFirstAidKit::OnActionComplete"
 			{
 				"library"	"server"
@@ -1690,7 +3244,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x90"
 						/* ? ? ? ? ? ? 53 56 57 8B ? ? 85 ? 74 ? 8B ? 8B 90 */
 			}
-			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+
+			/**
+			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CSmokeCloudSystem" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CSmokeCloudSystem::FireGameEvent"
 			{
 				"library"	"server" // change 55 to C3
@@ -1698,7 +3261,14 @@
 				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x56\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x57\x8B\x2A\x8B\x2A\xFF\x2A\x3D\x2A\x2A\x2A\x2A\x74\x2A\x68\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x85\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* 55 8B ? 83 ? ? 56 8B ? ? 8B ? 8B ? ? 57 8B ? 8B ? FF ? 3D ? ? ? ? 74 ? 68 ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 85 ? 0F 85 ? ? ? ? 8B ? 8B ? ? 6A ? 68 ? ? ? ? 8B ? FF ? 50 E8 ? ? ? ? 8B */
 			}
-			/* CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*) */
+
+			/**
+			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Spitter projectile spawned at %f %f %f, velocity %f %f %f\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CSpitterProjectile::Create"
 			{
 				"library"	"server"
@@ -1706,7 +3276,16 @@
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x05\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x57"
 						/* 55 8B ? 8B ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? D9 05 ? ? ? ? 83 ? ? 8B ? D9 ? ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? 8B ? ? 57 */
 			}
-			/* CTankClaw::DoSwing() */
+
+			/**
+			 * CTankClaw::DoSwing()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "rhand"/"lhand"/"ValveBiped.Bip01_L_Hand" string.
+			 * 2a. The string can only be found in this function.
+			 * 1b. Search for the "ValveBiped.Bip01_R_Hand" string.
+			 * 2b. One of the functions that references that string should be this function.
+			 **/
 			"CTankClaw::DoSwing"
 			{
 				"library"	"server"
@@ -1714,7 +3293,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85"
 						/* ? ? ? ? ? ? 56 89 ? ? E8 ? ? ? ? 8B ? 85 */
 			}
-			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankClaw" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTankClaw::OnPlayerHit"
 			{
 				"library"	"server"
@@ -1722,7 +3313,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\xE8"
 						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 8B ? ? 57 8B ? 89 ? ? E8 */
 			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::DoSwing" function.
+			 * 2. The last function call should be this function.
+			 **/
 			"CTankClaw::SweepFist"
 			{
 				"library"	"server"
@@ -1730,7 +3328,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x57\x8B\x2A\x2A\x89\x8D"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 57 8B ? ? 89 8D */
 			}
-			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
+
+			/**
+			 * CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "tank_rock" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTankRock::Create"
 			{
 				"library"	"server"
@@ -1738,7 +3343,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x53\x50"
 						/* ? ? ? ? ? ? 8B ? ? 53 8B ? ? 56 57 53 50 */
 			}
-			/* CTankRock::Detonate() */
+
+			/**
+			 * CTankRock::Detonate()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTankRock" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
@@ -1746,7 +3363,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xA1"
 						/* ? ? ? ? ? ? 53 56 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? A1 */
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTankRock::OnRelease"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\xC6\x86\x2A\x2A\x2A\x2A\x2A\xC7"
+						/* ? ? ? ? ? ? 57 C6 86 ? ? ? ? ? C7 */
+			}
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "player_jump" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorGameMovement::DoJump"
 			{
 				"library"	"server"
@@ -1754,14 +3393,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\x6A\x2A\xFF\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x6A\x2A\x6A"
 						/* ? ? ? ? ? ? 56 8B ? 8B ? 8B 90 ? ? ? ? 57 6A ? FF ? 8B 8E ? ? ? ? 8B ? 8B 90 ? ? ? ? 6A ? 6A */
 			}
-			/* CTerrorGameMovement::DoJump(Vector*) */
+
+			/**
+			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "57.0" value in the "CTerrorGameMovement::DoJump" function.
+			 * 2. Go to the instruction for that line in the code.
+			 * 3. Double-click the offset that represents that value to get the address.
+			 **/
 			"CTerrorGameMovement::DoJump::Value"
 			{
 				"library"	"server"
 				"linux"		"\x00\x00\x00\x00\x00\x80\x4C\x40"
 				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
 			}
-			/* CTerrorGameRules::GetMissionFirstMap(KeyValues**) */
+
+			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Game/chapter" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorGameRules::GetMissionFirstMap"
 			{
 				"library"	"server"
@@ -1769,7 +3423,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
 						/* ? ? ? ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 ? 8B ? E8 ? ? ? ? 83 */
 			}
-			/* CTerrorGameRules::GetMissionInfo() */
+
+			/**
+			 * CTerrorGameRules::GetMissionInfo()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "L4D2C" string.
+			 * 2. Both functions that reference the string call this function.
+			 **/
 			"CTerrorGameRules::GetMissionInfo"
 			{
 				"library"	"server"
@@ -1777,7 +3438,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\x5E"
 						/* ? ? ? ? ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? 5E */
 			}
-			/* CTerrorGameRules::IsMissionFinalMap() */
+
+			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Game/chapter" string.
+			 * 2. One of the functions that references that string should be this function.
+			 * 3. This function references the string twice.
+			 **/
 			"CTerrorGameRules::IsMissionFinalMap"
 			{
 				"library"	"server"
@@ -1785,7 +3454,18 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\xB0"
 						/* ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? B0 */
 			}
-			/* CTerrorGun::FireBullet() */
+
+			/**
+			 * CTerrorGun::FireBullet()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "CTerrorGun::FireBullet HorizSpread"
+			 * - "CTerrorGun::FireBullet VertSpread"
+			 * - "m_iClip1 <= 0"
+			 * - "IsFirePreventedUntilButtonRelease"
+			 * - "IsHoldingFireButton() && !IsFullyAutomatic()"
+			 **/
 			"CTerrorGun::FireBullet"
 			{
 				"library"	"server"
@@ -1793,7 +3473,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x80"
 						/* ? ? ? ? ? ? 53 56 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 80 */
 			}
-			/* CTerrorMeleeWeapon::SecondaryAttack() */
+
+			/**
+			 * CTerrorMeleeWeapon::SecondaryAttack()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorMeleeWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorMeleeWeapon::SecondaryAttack"
 			{
 				"library"	"server"
@@ -1801,7 +3490,18 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 84 ? 0F */
 			}
-			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+
+			/**
+			 * CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings:
+			 * - "MeleeSlashSplatter"
+			 * - "MeleeClubSplatter"
+			 * - "CollectClosestCommonInfectedScan()"
+			 * - "bloodslash"
+			 * 2. One of the functions that references any of these strings should be this function.
+			 **/
 			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
 			{
 				"library"	"server"
@@ -1809,7 +3509,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x89\x2A\x2A\xE8"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? ? 57 89 ? ? E8 */
 			}
-			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
+
+			/**
+			 * CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::DoAnimationEvent"
 			{
 				"library"	"server"
@@ -1817,7 +3526,33 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x83\x2A\x2A\x74\x2A\x8B\x8F"
 						/* ? ? ? ? ? ? ? 57 8B ? 83 ? ? 74 ? 8B 8F */
 			}
-			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+
+			/**
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
+			 * - "charger_carry_kill"
+			 * - "blood_bleedout"
+			 * - "spitter_killed"
+			 * - "SubjectIsA:%s,Distance:%f"
+			 * - "DeadCharacter:"
+			 * - ",SubjectTeam:Survivor"
+			 * - "SurvivorDied"
+			 * - "pounce_attempt_stopped"
+			 * - "infected_explosive_barrel_kill"
+			 * - "mulletTongue"
+			 * - "charger_killed"
+			 * - "charging"
+			 * - "jockey_killed"
+			 * - "boomer_exploded"
+			 * - "splashedbile"
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
@@ -1825,7 +3560,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x8B\x2A\x89\x85\x2A\x2A\x2A\x2A\x8B\x82\x2A\x2A\x2A\x2A\x57\xFF\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 8B ? 8B ? 89 85 ? ? ? ? 8B 82 ? ? ? ? 57 FF ? 8B ? 8B */
 			}
-			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
+
+			/**
+			 * CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "charger_impact" string.
+			 * 2. The string can only be found in "ThrowImpactedSurvivor".
+			 * 3. The function call before the line where that string is referenced should be this function.
+			 **/
 			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
@@ -1833,7 +3576,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x6A"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 8B ? ? 57 6A */
 			}
-			/* CTerrorPlayer::GoAwayFromKeyboard() */
+
+			/**
+			 * CTerrorPlayer::GoAwayFromKeyboard()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "player_afk" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
@@ -1841,7 +3591,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? 53 56 57 8B ? 8B ? 8B 90 ? ? ? ? 8B */
 			}
-			/* CTerrorPlayer::MaterializeFromGhost() */
+
+			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%s materialized from spawn mode as a %s\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::MaterializeFromGhost"
 			{
 				"library"	"server"
@@ -1849,7 +3606,40 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x50\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x50\x68\x2A\x2A\x2A\x2A\xE8"
 						/* ? ? ? ? ? ? ? ? ? ? ? FF ? 50 E8 ? ? ? ? 83 ? ? 50 8B ? 8B 90 ? ? ? ? 8B ? FF ? 50 68 ? ? ? ? E8 */
 			}
-			/* CTerrorPlayer::OnEnterGhostState() */
+
+			/**
+			 * CTerrorPlayer::OnBeginChangeLevel(char const*)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnBeginChangeLevel"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnBeginChangeLevelEPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 53 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnEnterGhostState()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "spawnmode_bar" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 * 3a. This function should also contain "data" and "zombieClass" strings.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::OnEnterGhostState"
 			{
 				"library"	"server"
@@ -1857,7 +3647,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x57"
 						/* ? ? ? ? ? ? 53 56 8B ? 8B 86 ? ? ? ? 8B ? ? 8D 8E ? ? ? ? 57 */
 			}
-			/* CTerrorPlayer::OnFalling() */
+
+			/**
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerZombie.Fall" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnFalling"
 			{
 				"library"	"server"
@@ -1865,14 +3662,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 57 8B ? E8 ? ? ? ? 83 ? ? 0F */
 			}
-			/* CTerrorPlayer::OnFalling() */
-			"CTerrorPlayer::OnFalling::Sound"
-			{
-				"library"	"server"
-				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
-				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
-			}
-			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
+
+			/**
+			 * CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::OnHitByVomitJar"
 			{
 				"library"	"server"
@@ -1880,7 +3679,29 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F"
 						/* ? ? ? ? ? ? 56 8B ? E8 ? ? ? ? 84 ? 74 ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F */
 			}
-			/* CTerrorPlayer::OnITExpired() */
+
+			/**
+			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorPlayer::OnIncapacitatedAsTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer21OnIncapacitatedAsTankERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x50\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74"
+						/* ? ? ? ? ? ? ? 8B 8E ? ? ? ? E8 ? ? ? ? 50 8B ? E8 ? ? ? ? 84 ? 74 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnITExpired()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerVomitExpired" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::OnITExpired"
 			{
 				"library"	"server"
@@ -1888,7 +3709,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A"
 						/* ? ? ? ? ? ? ? ? ? ? ? ? 0F 2E ? ? ? ? ? 8D B7 ? ? ? ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 56 FF ? F3 0F ? ? ? ? ? ? F3 ? ? ? 8B ? 6A */
 			}
-			/* CTerrorPlayer::OnLadderDismount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "CTerrorPlayer::PlayerRunCommand" string.
+			 * 2. The string can only be found in "CTerrorPlayer::PlayerRunCommand".
+			 * 3. The last function call in "CTerrorPlayer::PlayerRunCommand" should be this function.
+			 **/
 			"CTerrorPlayer::OnLadderDismount"
 			{
 				"library"	"server"
@@ -1896,7 +3725,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x82\x2A\x2A\x2A\x2A\xFF"
 						/* ? ? ? ? ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 84 ? 74 ? 8B ? E8 ? ? ? ? 85 ? 74 ? 8B ? E8 ? ? ? ? 8B ? 8B ? 8B 82 ? ? ? ? FF */
 			}
-			/* CTerrorPlayer::OnLadderMount() */
+
+			/**
+			 * CTerrorPlayer::OnLadderMount()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Player.Fall" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnLadderMount"
 			{
 				"library"	"server"
@@ -1904,7 +3740,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x50"
 						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 6A ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 50 */
 			}
-			/* CTerrorPlayer::OnRevived() */
+
+			/**
+			 * CTerrorPlayer::OnRevived()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::OnRevived"
 			{
 				"library"	"server"
@@ -1912,7 +3760,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
 						/* ? ? ? ? ? ? 53 56 8B ? 8B ? 8B 90 ? ? ? ? 57 FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 */
 			}
-			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tongue letting go on getting bashed." string.
+			 * 2. The string can only be found in "CTerrorPlayer::OnStunned".
+			 * 3. One of the functions that calls "CTerrorPlayer::OnStunned" should be this function.
+			 **/
 			"CTerrorPlayer::OnShovedByPounceLanding"
 			{
 				"library"	"server"
@@ -1920,7 +3776,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57"
 						/* ? ? ? ? ? ? 56 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 57 */
 			}
-			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+
+			/**
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Survivor was lunged while %sfacing the hunter and %sbashing\n" string.
+			 * 2. The string can only be found in one function.
+			 * 3. The very last function call in the code block that comes after the line where that string is referenced should be this function.
+			 **/
 			"CTerrorPlayer::OnShovedBySurvivor"
 			{
 				"library"	"server"
@@ -1928,7 +3792,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x89"
 						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 57 8B ? ? 8B ? 89 */
 			}
-			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
+
+			/**
+			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerShoved" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
 			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
@@ -1936,7 +3807,31 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
 			}
-			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnTakeDamage_AliveERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x8B\x2A\x2A\x57\x83\x2A\x2A\x74"
+						/* ? ? ? ? ? ? ? ? ? 53 8B ? ? 56 8B ? 8B ? ? 57 83 ? ? 74 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerVomitInFace" string.
+			 * 2. The string can only be found in this function.
+			 **/
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
@@ -1944,7 +3839,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? 53 56 57 8B ? E8 ? ? ? ? 84 ? 74 ? 8B ? 8B */
 			}
-			/* CTerrorPlayer::PreThink() */
+
+			/**
+			 * CTerrorPlayer::PreThink()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "#L4D_idle_spectator" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::PreThink"
 			{
 				"library"	"server"
@@ -1952,7 +3859,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
 						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? E8 ? ? ? ? 8B ? E8 */
 			}
-			/* CTerrorPlayer::RoundRespawn() */
+
+			/**
+			 * CTerrorPlayer::RoundRespawn()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
@@ -1960,7 +3876,19 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x75\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xC6\x86"
 						/* ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 ? 75 ? 8B ? E8 ? ? ? ? C6 86 */
 			}
-			/* CTerrorPlayer::SelectWeightedSequence(Activity) */
+
+			/**
+			 * CTerrorPlayer::SelectWeightedSequence(Activity)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Hulk_RunAttack1_Gesture" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorPlayer" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorPlayer::SelectWeightedSequence"
 			{
 				"library"	"server"
@@ -1968,7 +3896,21 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\xFF\x2A\x2A\x2A\x2A\x75"
 						/* ? ? ? ? ? ? ? ? 8B ? 81 FF ? ? ? ? 75 */
 			}
-			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+
+			/**
+			 * CTerrorPlayer::StartReviving(CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "Tongue letting because victim is being revived"
+			 * - "%s starts reviving %s"
+			 * - "revive_begin"
+			 * - "PlayerHeal"
+			 * - "PlayerLedgeSaveCritical"
+			 * - "PlayerReviveFriendCritical"
+			 * - "PlayerLedgeSave"
+			 * - "PlayerReviveFriend"
+			 **/
 			"CTerrorPlayer::StartReviving"
 			{
 				"library"	"server"
@@ -1976,7 +3918,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x56"
 						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 8B 83 ? ? ? ? 56 */
 			}
-			/* CTerrorWeapon::CanDeployFor(CTerrorPlayer*) */
+
+			/**
+			 * CTerrorWeapon::CanDeployFor(CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorWeapon::CanDeployFor"
 			{
 				"library"	"server"
@@ -1984,7 +3935,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
 						/* ? ? ? ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 ? 8B ? E8 ? ? ? ? 83 */
 			}
-			/* CTerrorWeapon::SecondaryAttack() */
+
+			/**
+			 * CTerrorWeapon::SecondaryAttack()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorWeapon" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
 			"CTerrorWeapon::SecondaryAttack"
 			{
 				"library"	"server"
@@ -1992,7 +3952,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
 			}
-			/* KeyValues::GetString(char const*, char const*) */
+
+			/**
+			 * KeyValues::GetString(char const*, char const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "L4D2C" string.
+			 * 2. Both functions that reference the string call this function.
+			 **/
 			"KeyValues::GetString"
 			{
 				"library"	"server"
@@ -2000,7 +3967,18 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x6A\x2A\x53\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x48\x83\x2A\x2A\x0F\x87\x2A\x2A\x2A\x2A\xFF\x24\x2A\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x68"
 						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 57 6A ? 53 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 0F ? ? ? 48 83 ? ? 0F 87 ? ? ? ? FF 24 ? ? ? ? ? D9 ? ? 83 ? ? DD ? ? 68 */
 			}
-			/* Tank::EnterStasis() */
+
+			/**
+			 * Tank::EnterStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in one function):
+			 * - "Tank offer: Starting the lottery\n"
+			 * - "Tank offer: Going to the only PZ\n"
+			 * - "Tank offer: making a bot, and giving him to nobody\n"
+			 * 2. This function should be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
+			 * 3. This function should be the last function call in that function.
+			 **/
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
@@ -2008,7 +3986,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x6A"
 						/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 6A */
 			}
-			/* Tank::LeaveStasis() */
+
+			/**
+			 * Tank::LeaveStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tank committing suicide at %f %f %f\n" string.
+			 * 2. There should be two function calls above the string.
+			 * 2. The first function call should be this function.
+			 **/
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
@@ -2016,7 +4002,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 8B */
 			}
-			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+
+			/**
+			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "TANK OFFER: Looking for players\n" string.
+			 * 2. The last function call in that function should be this function.
+			 **/
 			"ZombieManager::ReplaceTank"
 			{
 				"library"	"server"
@@ -2024,7 +4017,14 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x83"
 						/* ? ? ? ? ? ? 53 56 8B ? ? 8B ? 8B 90 ? ? ? ? 57 8B ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 83 ? ? 0F 85 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 83 */
 			}
-			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+
+			/**
+			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.
+			 * 2. The second function call in that function should be this function.
+			 **/
 			"ZombieManager::SpawnTank"
 			{
 				"library"	"server"

@@ -472,7 +472,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							switch (flDelay)
 							{
-								case 0.0: vJumpAbility(tank, false, _, iPos);
+								case 0.0: vJumpAbility(tank, false, .pos = iPos);
 								default:
 								{
 									DataPack dpCombo;
@@ -1194,7 +1194,7 @@ public Action tTimerJumpCombo2(Handle timer, DataPack pack)
 	}
 
 	int iPos = pack.ReadCell();
-	vJumpAbility(iTank, false, _, iPos);
+	vJumpAbility(iTank, false, .pos = iPos);
 
 	return Plugin_Continue;
 }

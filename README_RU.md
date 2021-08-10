@@ -47,7 +47,7 @@
 ## Требования
 1. `SourceMod 1.10` или `SourceMod 1.11`:
 - `SourceMod 1.10` (Только при использовании файлов `.smx`, включенных в пакет.)
-- `SourceMod 1.11.0.6511` или выше (только при самостоятельной компиляции файлов `.sp`.)
+- `SourceMod 1.11.0.6711` или выше (только при самостоятельной компиляции файлов `.sp`.)
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
@@ -1426,6 +1426,26 @@ native bool MT_IsTankClone(int tank);
 Stock'и:
 
 ```
+stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
+{
+	if (FileExists(path, use_valve_fs, valve_path_id))
+	{
+		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		if (!StrEqual(filename, sOutput))
+		{
+			static char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			strcopy(output, size, sTemp);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
@@ -2111,9 +2131,9 @@ Overrides
 
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
 
-**epz (epzminion)** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
+**epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
 
-**Lux** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагины [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
+**Lux/LuxLuma** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагины [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
 
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
@@ -2123,9 +2143,9 @@ Overrides
 
 **hmmmmm (SlidyBat)** - За демонстрации того, как выбрать случайный символ из динамической строки.
 
-**KasperH (Ladis)** - За перевод на венгерский, сообщения о проблемах, предложения идей и общую поддержку.
+**KasperH/Ladis** - За перевод на венгерский, сообщения о проблемах, предложения идей и общую поддержку.
 
-**Blueberry (Kleiner)** - За перевод на русский и предложение идей.
+**Blueberry/Kleiner** - За перевод на русский и предложение идей.
 
 **yuzumi** - За перевод на упрощённый китайский, сообщения о проблемах и предложения идей.
 
@@ -2159,6 +2179,8 @@ Overrides
 
 ## Уведомление о сторонних изменениях
 Если вы хотите поделиться своими собственными версиями этого плагина, переименуйте файлы, чтобы не было путаницы для пользователей.
+
+
 
 ## Заключительные слова
 Наслаждайтесь всей моей тяжёлой работой и получайте от неё удовольствие!

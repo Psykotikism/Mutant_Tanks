@@ -58,8 +58,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
 #define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
 
-#define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
-
 #define MT_THROW_SECTION "throwability"
 #define MT_THROW_SECTION2 "throw ability"
 #define MT_THROW_SECTION3 "throw_ability"
@@ -1027,7 +1025,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-						StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
@@ -1119,7 +1116,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static float flPos[3];
 							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-							StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 							RemoveEntity(iRock);
 
 							g_esThrowPlayer[iSpecial].g_bThrown = true;
@@ -1148,7 +1144,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				{
 					static float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
@@ -1173,7 +1168,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static float flPos[3];
 							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-							StopSound(iRock, SNDCHAN_BODY, SOUND_MISSILE);
 							RemoveEntity(iRock);
 
 							NormalizeVector(flVelocity, flVelocity);
