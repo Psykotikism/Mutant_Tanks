@@ -1971,7 +1971,7 @@
 			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "PlayerShoved" string.
+			 * 1. Search for the "Player.Shoved" string.
 			 * 2. One of the functions that references that string should be this function.
 			 **/
 			"CTerrorPlayer::OnStaggered"
@@ -2176,7 +2176,7 @@
 			 * Note: This is only used for the "CDirector" address on Windows.
 			 *
 			 * How to find:
-			 * 1a. Search for the "The rescue vehicle is here!!!" or "%3.2f: %s ERROR: No RESCUE_VEHICLE area" string.
+			 * 1a. Search for the "The rescue vehicle is here!!!" or "%3.2f: %s ERROR: No RESCUE_VEHICLE area!\n" string.
 			 * 2a. One of the functions that references that string should be this function.
 			 *
 			 * 1b. Find the function's offsets with asherkin's VTable dump.
@@ -3281,8 +3281,10 @@
 			 * CTankClaw::DoSwing()
 			 *
 			 * How to find on Windows:
-			 * 1a. Search for the "rhand"/"lhand"/"ValveBiped.Bip01_L_Hand" string.
-			 * 2a. The string can only be found in this function.
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
+			 * - "rhand"
+			 * - "lhand"
+			 * - "ValveBiped.Bip01_L_Hand"
 			 * 1b. Search for the "ValveBiped.Bip01_R_Hand" string.
 			 * 2b. One of the functions that references that string should be this function.
 			 **/
