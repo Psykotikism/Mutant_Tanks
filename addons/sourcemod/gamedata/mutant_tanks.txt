@@ -1548,7 +1548,7 @@
 			 * CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "PlayerHealing"/"PlayerHealingOther" string.
+			 * 1. Search for the "PlayerHealing" or "PlayerHealingOther" string.
 			 * 2. The string can only be found in this function.
 			 **/
 			"CFirstAidKit::StartHealing"
@@ -1858,7 +1858,7 @@
 			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 1. Search for the "deathEvent" or "HulkZombie.Die" string.
 			 * 2. One of the functions that references that string should be this function.
 			 **/
 			"CTerrorPlayer::OnIncapacitatedAsTank"
@@ -3686,7 +3686,7 @@
 			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "deathEvent"/"HulkZombie.Die" string.
+			 * 1. Search for the "deathEvent" or "HulkZombie.Die" string.
 			 * 2. One of the functions that references that string should be this function.
 			 **/
 			"CTerrorPlayer::OnIncapacitatedAsTank"
