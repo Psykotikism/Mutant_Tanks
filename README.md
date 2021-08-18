@@ -2135,6 +2135,8 @@ Examples:
 
 **Lux/LuxLuma** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
+**Forgetest** - For help with gamedata offsets.
+
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
 **exvel** - For the [Colors](https://forums.alliedmods.net/showthread.php?t=96831) include.
@@ -2157,7 +2159,7 @@ Examples:
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

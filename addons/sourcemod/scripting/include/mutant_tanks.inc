@@ -21,7 +21,7 @@
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.88"
+#define MT_VERSION "8.89"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 public SharedPlugin __pl_mutanttanks =

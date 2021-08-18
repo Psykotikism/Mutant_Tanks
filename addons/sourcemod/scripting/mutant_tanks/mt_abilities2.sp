@@ -2062,7 +2062,7 @@ static void vAbilityPlayer(int type, int client)
 		case 0: vOmniClientPutInServer(client);
 		case 2: vOmniClientDisconnect_Post(client);
 		case 3: vOmniAbilityActivated(client);
-		case 5: vOmniPostTankSpawn(client);
+		case 4: vOmniPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_PANIC

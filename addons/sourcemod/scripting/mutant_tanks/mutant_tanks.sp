@@ -433,6 +433,7 @@ enum struct esGeneral
 	DynamicDetour g_ddStartRevivingDetour;
 	DynamicDetour g_ddStartActionDetour;
 	DynamicDetour g_ddTankClawDoSwingDetour;
+	DynamicDetour g_ddTankClawGroundPoundDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
@@ -577,6 +578,7 @@ enum struct esGeneral
 	int g_iFinaleWave[10];
 	int g_iFireImmunity;
 	int g_iGameModeTypes;
+	int g_iGroundPound;
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
@@ -906,6 +908,7 @@ enum struct esPlayer
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iGroundPound;
 	int g_iHealthRegen;
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
@@ -1122,6 +1125,7 @@ enum struct esTank
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iGroundPound;
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
@@ -1301,6 +1305,7 @@ enum struct esCache
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iGroundPound;
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
@@ -1359,7 +1364,7 @@ esCache g_esCache[MAXPLAYERS + 1];
 
 Address g_adPatchAddress[MT_PATCH_LIMIT];
 
-bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT], g_bUpdateMemAccess[MT_PATCH_LIMIT] = {true, ...}, g_bUpdateMemAccess2 = true;
+bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourInstalled[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT], g_bUpdateMemAccess[MT_PATCH_LIMIT] = {true, ...}, g_bUpdateMemAccess2 = true;
 
 char g_sDetourName[MT_DETOUR_LIMIT][128], g_sPatchName[MT_PATCH_LIMIT][128];
 
@@ -1930,6 +1935,7 @@ public void OnAllPluginsLoaded()
 		vSetupDetour(g_esGeneral.g_ddStartHealingDetour, gdMutantTanks, "MTDetour_CFirstAidKit::StartHealing");
 		vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, gdMutantTanks, "MTDetour_CTerrorPlayer::StartReviving");
 		vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "MTDetour_CTankClaw::DoSwing");
+		vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, gdMutantTanks, "MTDetour_CTankClaw::GroundPound");
 		vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "MTDetour_CTankClaw::OnPlayerHit");
 		vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "MTDetour_CTankRock::Create");
 		vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
@@ -7014,6 +7020,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iGlowMaxRange = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange);
 	g_esCache[tank].g_iGlowMinRange = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowMinRange, g_esTank[iType].g_iGlowMinRange);
 	g_esCache[tank].g_iGlowType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowType, g_esTank[iType].g_iGlowType);
+	g_esCache[tank].g_iGroundPound = iGetSettingValue(bAccess, true, g_esTank[iType].g_iGroundPound, g_esGeneral.g_iGroundPound);
+	g_esCache[tank].g_iGroundPound = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGroundPound, g_esCache[tank].g_iGroundPound);
 	g_esCache[tank].g_iHittableImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iHittableImmunity, g_esGeneral.g_iHittableImmunity);
 	g_esCache[tank].g_iHittableImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity);
 	g_esCache[tank].g_iKillMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iKillMessage, g_esGeneral.g_iKillMessage);
@@ -7658,6 +7666,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iMultiplyHealth = 0;
 		g_esGeneral.g_flAttackInterval = 0.0;
 		g_esGeneral.g_flClawDamage = -1.0;
+		g_esGeneral.g_iGroundPound = 0;
 		g_esGeneral.g_flHittableDamage = -1.0;
 		g_esGeneral.g_flPunchForce = -1.0;
 		g_esGeneral.g_flPunchThrow = 0.0;
@@ -7853,6 +7862,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iRockModel = 2;
 			g_esTank[iIndex].g_flAttackInterval = 0.0;
 			g_esTank[iIndex].g_flClawDamage = -1.0;
+			g_esTank[iIndex].g_iGroundPound = 0;
 			g_esTank[iIndex].g_flHittableDamage = -1.0;
 			g_esTank[iIndex].g_flPunchForce = -1.0;
 			g_esTank[iIndex].g_flPunchThrow = 0.0;
@@ -8061,6 +8071,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iRockModel = 0;
 				g_esPlayer[iPlayer].g_flAttackInterval = 0.0;
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
+				g_esPlayer[iPlayer].g_iGroundPound = 0;
 				g_esPlayer[iPlayer].g_flHittableDamage = -1.0;
 				g_esPlayer[iPlayer].g_flPunchForce = -1.0;
 				g_esPlayer[iPlayer].g_flPunchThrow = 0.0;
@@ -8302,6 +8313,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iMultiplyHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiplyHealth, value, 0, 3);
 				g_esGeneral.g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esGeneral.g_flAttackInterval, value, 0.0, 999999.0);
 				g_esGeneral.g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esGeneral.g_flClawDamage, value, -1.0, 999999.0);
+				g_esGeneral.g_iGroundPound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esGeneral.g_iGroundPound, value, 0, 1);
 				g_esGeneral.g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esGeneral.g_flHittableDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esGeneral.g_flPunchForce, value, -1.0, 999999.0);
 				g_esGeneral.g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esGeneral.g_flPunchThrow, value, 0.0, 100.0);
@@ -8614,6 +8626,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
 						g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 999999.0);
+						g_esPlayer[iPlayer].g_iGroundPound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esPlayer[iPlayer].g_iGroundPound, value, 0, 1);
 						g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esPlayer[iPlayer].g_flPunchThrow, value, 0.0, 100.0);
@@ -9459,6 +9472,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iRockEffects = iGetKeyValue(sub, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, MT_CONFIG_SECTION_PARTICLES, key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[type].g_iRockEffects, value, 0, 15);
 		g_esTank[type].g_flAttackInterval = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[type].g_flAttackInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_flClawDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[type].g_flClawDamage, value, -1.0, 999999.0);
+		g_esTank[type].g_iGroundPound = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esTank[type].g_iGroundPound, value, 0, 1);
 		g_esTank[type].g_flHittableDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[type].g_flHittableDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esTank[type].g_flPunchForce, value, -1.0, 999999.0);
 		g_esTank[type].g_flPunchThrow = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esTank[type].g_flPunchThrow, value, 0.0, 100.0);
@@ -9999,25 +10013,20 @@ static void vSetupDetour(DynamicDetour &detourHandle, GameData dataHandle, const
 static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode, DHookCallback callback, bool toggle, int game = 0)
 {
 	int iIndex = iGetDetourIndex(name);
-	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (g_iDetourType[iIndex] < 2 && !g_bDetourBypass[iIndex]))
+	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (!toggle && !g_bDetourInstalled[iIndex]) || (g_iDetourType[iIndex] < 2 && !g_bDetourBypass[iIndex]))
 	{
 		return;
 	}
 
-	bool bToggle = false;
-
-	switch (toggle)
-	{
-		case true: bToggle = detourHandle.Enable(mode, callback);
-		case false: bToggle = detourHandle.Disable(mode, callback);
-	}
-
+	bool bToggle = toggle ? detourHandle.Enable(mode, callback) : detourHandle.Disable(mode, callback);
 	if (!bToggle)
 	{
 		LogError("%s Failed to %s the %s-hook detour for the \"%s\" function.", MT_TAG, (toggle ? "enable" : "disable"), ((mode == Hook_Pre) ? "pre" : "post"), name);
 
 		return;
 	}
+
+	g_bDetourInstalled[iIndex] = toggle;
 
 	if (g_bDetourLog[iIndex])
 	{
@@ -10199,6 +10208,8 @@ static void vTogglePlugin(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound", Hook_Pre, mreTankClawGroundPoundPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound", Hook_Post, mreTankClawGroundPoundPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
 
@@ -15769,6 +15780,7 @@ static bool bRegisterDetour(const char[] name, bool log = false, int type = 2, b
 	strcopy(g_sDetourName[g_iDetourCount], sizeof(g_sDetourName), name);
 
 	g_bDetourBypass[g_iDetourCount] = bypass;
+	g_bDetourInstalled[g_iDetourCount] = false;
 	g_bDetourLog[g_iDetourCount] = log;
 	g_iDetourType[g_iDetourCount] = type;
 	g_iDetourCount++;
@@ -17521,6 +17533,42 @@ public MRESReturn mreTankClawDoSwingPost(int pThis)
 		{
 			bRemovePatch(iIndex[iPos]);
 		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawGroundPoundPre(int pThis)
+{
+	int iTank = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsTank(iTank) && g_esCache[iTank].g_iGroundPound == 1)
+	{
+		static int iIndex = -1;
+		if (iIndex == -1)
+		{
+			iIndex = iGetPatchIndex("TankGroundPound");
+		}
+
+		if (iIndex != -1)
+		{
+			bInstallPatch(iIndex);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawGroundPoundPost(int pThis)
+{
+	static int iIndex = -1;
+	if (iIndex == -1)
+	{
+		iIndex = iGetPatchIndex("TankGroundPound");
+	}
+
+	if (iIndex != -1)
+	{
+		bRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;

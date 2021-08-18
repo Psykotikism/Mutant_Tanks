@@ -1807,6 +1807,15 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
+			// Every Mutant Tank's ground pounds hit all survivors within range.
+			// Note: Both games already do this by default in Survival modes.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ground Pound"				"0"
+
 			// Every Mutant Tank's hittables do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -4631,6 +4640,15 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
+
+			// The Mutant Tank's ground pounds hit all survivors within range.
+			// Note: Both games already do this by default in Survival modes.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ground Pound"				"0"
 
 			// The Mutant Tank's hittables do this much damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.

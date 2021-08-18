@@ -97,11 +97,26 @@
 			/**
 			 * CTankClaw::DoSwing()
 			 *
-			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" in "coop" modes.
+			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" to hit all survivors within range in "coop" modes.
+			 * Note: Detouring as a post-hook for removing patch to hit all survivors within range in "coop" modes.
 			 **/
 			"MTDetour_CTankClaw::DoSwing"
 			{
 				"signature"	"CTankClaw::DoSwing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Detouring as a pre-hook for patching "CTankClaw::GroundPound" to hit all survivors within range in "coop" modes.
+			 * Note: Detouring as a post-hook for removing patch to hit all survivors within range in "coop" modes.
+			 **/
+			"MTDetour_CTankClaw::GroundPound"
+			{
+				"signature"	"CTankClaw::GroundPound"
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
@@ -570,6 +585,16 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Uses the signature for "CTankClaw::GroundPound" to find the address.
+			 **/
+			"GroundPoundStart"
+			{
+				"signature"	"CTankClaw::GroundPound"
+			}
+
+			/**
 			 * CTerrorPlayer::OnFalling()
 			 *
 			 * Note: Uses the signature for "CTerrorPlayer::OnFalling" to find the address.
@@ -969,6 +994,28 @@
 			{
 				"windows"	"300"
 				"linux"		"301"
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Patches the "IsVersusMode" check.
+			 *
+			 * How to find on Windows:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable assigned to another variable right below a funtion call to "CBaseEntity::GetTeamNumber".
+			 * 2. Verify that it starts with "74" and is 2 bytes long.
+			 * 3. Verify that the next line starts with "80" and is 5 bytes long.
+			 * 4. Verify that the next line starts with "74" and is 2 bytes long.
+			 *
+			 * How to find on Linux:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "IsVersusMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. Verify that the next line starts with "84" and is 2 bytes long.
+			 **/
+			"CTankClaw::GroundPound::Check"
+			{
+				"windows"	"761" // start at 74 and patch 9 bytes with NOPs (0x90)
+				"linux"		"1043" // start at E8 and patch 7 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1591,6 +1638,23 @@
 				"linux"		"@_ZN9CTankClaw7DoSwingEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x74\x2A\x8D\x2A\x2A\x2A\x50\x8D\x2A\x2A\x2A\x51\x68"
 						/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? 85 ? 74 ? 8D ? ? ? 50 8D ? ? ? 51 68 */
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::SweepFist" function.
+			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
+			 * 3. This function calls "CTerrorWeapon::MarkAsHit" twice.
+			 * 4. To pinpoint the right function, look for the one that sets multiple variables to "0".
+			 **/
+			"CTankClaw::GroundPound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11GroundPoundEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x81\xEC\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85"
+						/* ? ? ? ? ? ? 81 EC ? ? ? ? 53 56 57 8B ? E8 ? ? ? ? 8B ? 85 */
 			}
 
 			/**
@@ -2590,6 +2654,29 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Patches the "HasPlayerControlledZombies" check.
+			 *
+			 * How to find on Windows:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Look for a condition that validates that variable.
+			 * 3. Verify that it starts with "74" and is 2 bytes long.
+			 * 4. Verify that the next line starts with "80" and is 4 bytes long.
+			 * 5. Verify that the next line starts with "74" and is 2 bytes long.
+			 *
+			 * How to find on Linux:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Look for a condition that validates that variable.
+			 * 3. Verify that it starts with "0F" and is 6 bytes long.
+			 **/
+			"CTankClaw::GroundPound::Check"
+			{
+				"windows"	"923" // start at 74 and patch 8 bytes with NOPs (0x90)
+				"linux"		"988" // start at 0F and patch 2 bytes with NOP (0x90) and an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
 			 * CTankClaw::SweepFist(Vector const&, Vector const&)
 			 *
 			 * Note: Patches the "HasPlayerControlledZombies" check.
@@ -3294,6 +3381,23 @@
 				"linux"		"@_ZN9CTankClaw7DoSwingEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85"
 						/* ? ? ? ? ? ? 56 89 ? ? E8 ? ? ? ? 8B ? 85 */
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::SweepFist" function.
+			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
+			 * 3. This function calls "CTerrorWeapon::MarkAsHit" twice.
+			 * 4. To pinpoint the right function, look for the one that sets multiple variables to "0".
+			 **/
+			"CTankClaw::GroundPound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11GroundPoundEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x89"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? E8 ? ? ? ? 8B ? 89 */
 			}
 
 			/**

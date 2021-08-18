@@ -2135,6 +2135,8 @@ Overrides
 
 **Lux/LuxLuma** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагины [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
 
+**Forgetest** - За помощь с смещениями.
+
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
 **exvel** - За include [Colors](https://forums.alliedmods.net/showthread.php?t=96831).
@@ -2157,7 +2159,7 @@ Overrides
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

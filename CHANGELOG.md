@@ -1,5 +1,35 @@
 # Changelog
 
+## Version 8.89 (August 25, 2021)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed error regarding functions that are not detoured. (Thanks to `KasperH`/`Ladis` for testing and reporting!)
+
+#### Abilities
+- Omni: Fixed settings not being cached properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
+
+### Changes
+
+#### Game Data
+- Updated documentation to be more detailed and accurate.
+- Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
+
+#### Settings
+- Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC`)
+
+#### Translations
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+
+### Files
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+
 ## Version 8.88 (August 10, 2021)
 
 ### Bug Fixes
