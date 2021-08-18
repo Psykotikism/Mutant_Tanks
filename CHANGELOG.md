@@ -17,7 +17,7 @@
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
 
 #### Settings
-- Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC`)
+- Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC` for the idea!)
 
 #### Translations
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
