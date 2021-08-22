@@ -1,11 +1,13 @@
 # Mutant Tanks
 
+## PayPal
+[Donate to Motivate](https://paypal.me/Psyk0tikism?locale.x=en_US)
+
 ## Languages
 - Click on one of the flags to view in another language.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
-
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
@@ -49,7 +51,9 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 - `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
 - `SourceMod 1.11.0.6711` or higher (Only if compiling the `.sp` files yourself.)
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+3. Recommended:
+- [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
+- [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
 
 ## Notes
@@ -2129,13 +2133,13 @@ Examples:
 
 **Pelipoika** - For the [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533) plugin.
 
-**Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
-**epz/epzminion** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**epz/epzminion** - For helping with gamedata signatures, offsets, addresses, and invaluable input.
 
 **Lux/LuxLuma** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
-**Forgetest** - For help with gamedata offsets.
+**Forgetest** - For helping with gamedata offsets.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -2181,8 +2185,6 @@ Examples:
 
 ## 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
-
-
 
 ## Final Words
 Enjoy all my hard work and have fun with it!

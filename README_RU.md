@@ -1,11 +1,13 @@
 # Танки-мутанты
 
+## PayPal
+[Пожертвовать, чтобы мотивировать](https://paypal.me/Psyk0tikism?locale.x=en_US)
+
 ## Языки
 - Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32">
 </a>
-
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Русский" width = "32">
 </a>
@@ -49,7 +51,9 @@
 - `SourceMod 1.10` (Только при использовании файлов `.smx`, включенных в пакет.)
 - `SourceMod 1.11.0.6711` или выше (только при самостоятельной компиляции файлов `.sp`.)
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+3. Рекомендуется:
+- [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
+- [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
 
 ## Примечание
@@ -2129,7 +2133,7 @@ Overrides
 
 **Pelipoika** - За плагин [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533).
 
-**Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
+**Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помощь с подписями игровых данных и помощь оптимизировать/исправить различные части кода.
 
 **epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
 
@@ -2181,8 +2185,6 @@ Overrides
 
 ## Уведомление о сторонних изменениях
 Если вы хотите поделиться своими собственными версиями этого плагина, переименуйте файлы, чтобы не было путаницы для пользователей.
-
-
 
 ## Заключительные слова
 Наслаждайтесь всей моей тяжёлой работой и получайте от неё удовольствие!

@@ -536,7 +536,6 @@ enum struct esGeneral
 	int g_iAccessFlags;
 	int g_iActionOffset;
 	int g_iAggressiveTanks;
-	int g_iAllowDeveloper;
 	int g_iAmmoBoostReward[4];
 	int g_iAmmoRegenReward[4];
 	int g_iAnnounceArrival;
@@ -5515,10 +5514,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 											case false: vTankSpawn(admin, 5);
 										}
 
-										if (bIsTank(admin, MT_CHECK_FAKECLIENT))
-										{
-											vExternalView(admin, 1.5);
-										}
+										vExternalView(admin, 1.5);
 
 										if (g_esGeneral.g_iMasterControl == 0 && (!CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT) && !bIsDeveloper(admin, 0)))
 										{
@@ -5556,11 +5552,7 @@ static void vChangeTank(int admin, int amount, int mode)
 		{
 			vSetColor(iTarget, g_esGeneral.g_iChosenType);
 			vTankSpawn(iTarget, 5);
-
-			if (bIsTank(iTarget, MT_CHECK_FAKECLIENT))
-			{
-				vExternalView(iTarget, 1.5);
-			}
+			vExternalView(iTarget, 1.5);
 
 			g_esGeneral.g_iChosenType = 0;
 		}
@@ -7682,7 +7674,6 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iHittableImmunity = 0;
 		g_esGeneral.g_iMeleeImmunity = 0;
 		g_esGeneral.g_iVomitImmunity = 0;
-		g_esGeneral.g_iAllowDeveloper = 0;
 		g_esGeneral.g_iAccessFlags = 0;
 		g_esGeneral.g_iImmunityFlags = 0;
 		g_esGeneral.g_iHumanCooldown = 600;
@@ -8329,7 +8320,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iHittableImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "HittableImmunity", "Hittable Immunity", "Hittable_Immunity", "hittable", g_esGeneral.g_iHittableImmunity, value, 0, 1);
 				g_esGeneral.g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esGeneral.g_iMeleeImmunity, value, 0, 1);
 				g_esGeneral.g_iVomitImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "VomitImmunity", "Vomit Immunity", "Vomit_Immunity", "vomit", g_esGeneral.g_iVomitImmunity, value, 0, 1);
-				g_esGeneral.g_iAllowDeveloper = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "AllowDeveloper", "Allow Developer", "Allow_Developer", "developer", g_esGeneral.g_iAllowDeveloper, value, 0, 1);
 				g_esGeneral.g_iHumanCooldown = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_esGeneral.g_iHumanCooldown, value, 0, 999999);
 				g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
 				g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
@@ -12231,7 +12221,7 @@ static void vSetupVisual(int survivor, int recipient, int tank, int priority, in
 			EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
 		}
 
-		if ((dev || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+		if (dev || (iEffect & MT_EFFECT_THIRDPERSON))
 		{
 			vExternalView(survivor, 1.5);
 		}
@@ -15392,7 +15382,7 @@ static bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 	static bool bGuest, bReturn;
 	bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit)));
 	bReturn = false;
-	if (g_esGeneral.g_iAllowDeveloper == 1 || bit == -1 || bGuest)
+	if (bit == -1 || bGuest)
 	{
 		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
 			|| StrEqual(g_esPlayer[developer].g_sSteam3ID, "[U:1:96399607]", false) || StrEqual(g_esPlayer[developer].g_sSteam3ID, "[U:1:209964062]", false)

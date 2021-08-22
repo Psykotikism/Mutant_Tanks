@@ -1439,7 +1439,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 
 stock void vExternalView(int player, float time)
 {
-	if (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
+	if (bIsSecondGame() && bIsValidClient(player, MT_CHECK_FAKECLIENT) && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
 	{
 		SetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView", GetGameTime() + time);
 	}

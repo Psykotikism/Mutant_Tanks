@@ -1984,12 +1984,6 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
-			// Allow the developer to access the plugin when joining your server.
-			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Allow Developer"			"0"
-
 			// Admins with one or more of these immunity flags are immune to all Mutant Tanks' attacks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Administration" section of their settings.
 			// --

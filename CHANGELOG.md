@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.89 (August 25, 2021)
+## Version 8.89 (September 10, 2021)
 
 ### Bug Fixes
 
@@ -13,11 +13,11 @@
 ### Changes
 
 #### Game Data
-- Updated documentation to be more detailed and accurate.
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
 
 #### Settings
 - Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC` for the idea!)
+- Removed the `Allow Developer` setting. (No longer used.)
 
 #### Translations
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
