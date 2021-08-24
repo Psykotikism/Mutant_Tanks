@@ -2910,7 +2910,7 @@
 			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
-			 * Note: Patches
+			 * Note: Patches the "CTerrorPlayer::Event_Killed" function to skip a large portion of the Spitter death logic.
 			 *
 			 * How to find:
 			 * 1. Locate the "insect_swarm" string.
