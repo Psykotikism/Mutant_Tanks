@@ -3989,7 +3989,7 @@
 
 	"Slow"
 	{
-		"hu"			"{olive}{1}{mint} lelassította{olive} {2}{mint} -t{yellow} {3}{percent}{mint}-ra!"
+		"hu"			"{olive}{1}{mint} lelassította{olive} {2}{mint}-t{yellow} {3}{percent}{mint}-ra!"
 	}
 
 	"Slow2"
