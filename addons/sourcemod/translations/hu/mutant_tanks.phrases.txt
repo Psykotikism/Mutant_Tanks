@@ -459,7 +459,7 @@
 
 	"Kill4"
 	{
-		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
+		"hu"			"Biztos hogy a{olive} {1}{default} tényleg megölte{mint} {2}{default}-t...?"
 	}
 
 	"Kill5"
@@ -479,7 +479,7 @@
 
 	"Kill8"
 	{
-		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
+		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}-nak!"
 	}
 
 	"Kill9"
@@ -509,7 +509,7 @@
 
 	"Killer4"
 	{
-		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
+		"hu"			"Biztos hogy a{mint} {1}{default} tényleg megölte{olive} {2}{default}-t...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
@@ -2089,17 +2089,17 @@
 
 	"Gravity3"
 	{
-		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
+		"hu"			"{olive}{1}{mint} gravitációs vonzást/taszítást hozott létre!"
 	}
 
 	"Gravity4"
 	{
-		"hu"			"{olive}{1}{mint} gravitációs vonzása véget ért!"
+		"hu"			"{olive}{1}{mint} gravitációs vonzása/taszítása véget ért!"
 	}
 
 	"GravityAmmo"
 	{
-		"hu"			"Elhasználtad a gravitációs vonzásod összes lőszerét."
+		"hu"			"Elhasználtad a gravitációs vonzásod/taszításod összes lőszerét."
 	}
 
 	"GravityAmmo2"
@@ -2114,7 +2114,7 @@
 
 	"GravityHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás/taszítás képességedet!"
 	}
 
 	"GravityHuman2"
@@ -2129,12 +2129,12 @@
 
 	"GravityHuman4"
 	{
-		"hu"			"Már aktiváltad a gravitációs vonzás képességedet."
+		"hu"			"Már aktiváltad a gravitációs vonzás/taszítás képességedet."
 	}
 
 	"GravityHuman5"
 	{
-		"hu"			"A gravitációs vonzás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A gravitációs vonzás/taszítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GravityHuman6"
@@ -2149,7 +2149,7 @@
 
 	"GravityHuman8"
 	{
-		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A gravitációs vonzás/taszítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"GravityHuman9"
