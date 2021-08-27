@@ -274,7 +274,7 @@ public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pFly = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "FlyMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "FlyMenu", param1);
 			pFly.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -285,14 +285,14 @@ public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -373,7 +373,7 @@ public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &
 			}
 
 			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				if ((g_esFlyCache[attacker].g_iFlyType == 0 || (g_esFlyCache[attacker].g_iFlyType & MT_FLY_ATTACK)) && !g_esFlyPlayer[attacker].g_bActivated)
@@ -459,18 +459,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FLY_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FLY_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_FLY_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_FLY_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_FLY_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_FLY_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_FLY_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_FLY_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iComboAbility == 1 && !g_esFlyPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_FLY_SECTION, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION2, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION3, false) || StrEqual(sSubset[iPos], MT_FLY_SECTION4, false))
 				{
@@ -509,7 +509,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esFlyAbility[iIndex].g_iAccessFlags = 0;
 				g_esFlyAbility[iIndex].g_iImmunityFlags = 0;

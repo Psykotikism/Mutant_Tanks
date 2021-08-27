@@ -218,7 +218,7 @@ public Action cmdAbilityInfo(int client, int args)
 				case false:
 				{
 					char sName[32];
-					GetCmdArg(1, sName, sizeof(sName));
+					GetCmdArg(1, sName, sizeof sName);
 					vAbilityMenu(client, sName);
 				}
 			}
@@ -226,7 +226,7 @@ public Action cmdAbilityInfo(int client, int args)
 		default:
 		{
 			char sCmd[15];
-			GetCmdArg(0, sCmd, sizeof(sCmd));
+			GetCmdArg(0, sCmd, sizeof sCmd);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage2", sCmd);
 		}
 	}

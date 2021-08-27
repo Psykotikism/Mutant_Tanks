@@ -211,7 +211,7 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pXiphos = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "XiphosMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "XiphosMenu", param1);
 			pXiphos.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -222,9 +222,9 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -280,7 +280,7 @@ public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, floa
 			}
 
 			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
 				vXiphos(attacker, victim, damage, true);
@@ -356,7 +356,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esXiphosAbility[iIndex].g_iAccessFlags = 0;
 				g_esXiphosAbility[iIndex].g_iImmunityFlags = 0;

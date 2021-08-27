@@ -1555,7 +1555,7 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 		bRainbow[4] = StrEqual(g_esCache[iTank].g_sPropTankColor, "rainbow", false);
 		bRainbow[5] = StrEqual(g_esCache[iTank].g_sFlashlightColor, "rainbow", false);
 		int iColor[4];
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		for (int iPos = 0; iPos < sizeof iColor; iPos++)
 		{
 			switch (iType)
 			{
@@ -1605,14 +1605,14 @@ public any aNative_GetTankColors(Handle plugin, int numParams)
 		bRainbow[0] = StrEqual(g_esCache[iTank].g_sSkinColor, "rainbow", false);
 		bRainbow[1] = StrEqual(g_esCache[iTank].g_sGlowColor, "rainbow", false);
 		int iColor[4];
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		for (int iPos = 0; iPos < sizeof iColor; iPos++)
 		{
 			switch (iType)
 			{
 				case 1: iColor[iPos] = bRainbow[iType - 1] ? -2 : iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
 				case 2:
 				{
-					if (iPos < sizeof(esCache::g_iGlowColor))
+					if (iPos < sizeof esCache::g_iGlowColor)
 					{
 						iColor[iPos] = bRainbow[iType - 1] ? -2 : iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
 					}
@@ -1630,8 +1630,8 @@ public any aNative_GetTankName(Handle plugin, int numParams)
 	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		char sTankName[33];
-		vGetTranslatedName(sTankName, sizeof(sTankName), iTank);
-		SetNativeString(2, sTankName, sizeof(sTankName));
+		vGetTranslatedName(sTankName, sizeof sTankName, iTank);
+		SetNativeString(2, sTankName, sizeof sTankName);
 	}
 }
 
@@ -1732,7 +1732,7 @@ public any aNative_LogMessage(Handle plugin, int numParams)
 	if (g_esGeneral.g_iLogMessages > 0 && iType > 0 && (g_esGeneral.g_iLogMessages & iType))
 	{
 		char sBuffer[PLATFORM_MAX_PATH];
-		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof(sBuffer), iSize, sBuffer);
+		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof sBuffer, iSize, sBuffer);
 		if (iResult == SP_ERROR_NONE)
 		{
 			vLogMessage(iType, _, sBuffer);
@@ -1780,7 +1780,7 @@ public any aNative_ShoveBySurvivor(Handle plugin, int numParams)
 {
 	int iSpecial = GetNativeCell(1), iSurvivor = GetNativeCell(2);
 	float flDirection[3];
-	GetNativeArray(3, flDirection, sizeof(flDirection));
+	GetNativeArray(3, flDirection, sizeof flDirection);
 	if (bIsInfected(iSpecial) && bIsSurvivor(iSurvivor) && g_esGeneral.g_hSDKShovedBySurvivor != null)
 	{
 		SDKCall(g_esGeneral.g_hSDKShovedBySurvivor, iSpecial, iSurvivor, flDirection);
@@ -2053,25 +2053,25 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 #if defined _clientprefs_included
 	char sName[12], sDescription[36];
-	for (int iPos = 0; iPos < sizeof(esGeneral::g_ckMTAdmin); iPos++)
+	for (int iPos = 0; iPos < sizeof esGeneral::g_ckMTAdmin; iPos++)
 	{
-		FormatEx(sName, sizeof(sName), "MTAdmin%i", iPos + 1);
-		FormatEx(sDescription, sizeof(sDescription), "Mutant Tanks Admin Preference #%i", iPos + 1);
+		FormatEx(sName, sizeof sName, "MTAdmin%i", iPos + 1);
+		FormatEx(sDescription, sizeof sDescription, "Mutant Tanks Admin Preference #%i", iPos + 1);
 		g_esGeneral.g_ckMTAdmin[iPos] = new Cookie(sName, sDescription, CookieAccess_Private);
 	}
 
 	g_esGeneral.g_ckMTPrefs = new Cookie("MTPrefs", "Mutant Tanks Preferences", CookieAccess_Private);
 #endif
 	char sDate[32];
-	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
-	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof(esGeneral::g_sLogFile), "logs/mutant_tanks_%s.log", sDate);
+	FormatTime(sDate, sizeof sDate, "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
 
 	char sSMPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), MT_CONFIG_PATH);
+	BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_PATH);
 	CreateDirectory(sSMPath, 511);
-	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%s%s", sSMPath, MT_CONFIG_FILE);
+	FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s", sSMPath, MT_CONFIG_FILE);
 
-	switch (MT_FileExists(MT_CONFIG_PATH, MT_CONFIG_FILE, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath)))
+	switch (MT_FileExists(MT_CONFIG_PATH, MT_CONFIG_FILE, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
 	{
 		case true: g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		case false: SetFailState("Unable to load the \"%s\" config file.", g_esGeneral.g_sSavePath);
@@ -2500,32 +2500,32 @@ public void OnClientPostAdminCheck(int client)
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
 
-	GetClientAuthId(client, AuthId_Steam2, g_esPlayer[client].g_sSteamID32, sizeof(esPlayer::g_sSteamID32));
-	GetClientAuthId(client, AuthId_Steam3, g_esPlayer[client].g_sSteam3ID, sizeof(esPlayer::g_sSteam3ID));
+	GetClientAuthId(client, AuthId_Steam2, g_esPlayer[client].g_sSteamID32, sizeof esPlayer::g_sSteamID32);
+	GetClientAuthId(client, AuthId_Steam3, g_esPlayer[client].g_sSteam3ID, sizeof esPlayer::g_sSteam3ID);
 }
 
 #if defined _clientprefs_included
 public void OnClientCookiesCached(int client)
 {
 	char sColor[16];
-	for (int iPos = 0; iPos < sizeof(esGeneral::g_ckMTAdmin); iPos++)
+	for (int iPos = 0; iPos < sizeof esGeneral::g_ckMTAdmin; iPos++)
 	{
-		g_esGeneral.g_ckMTAdmin[iPos].Get(client, sColor, sizeof(sColor));
+		g_esGeneral.g_ckMTAdmin[iPos].Get(client, sColor, sizeof sColor);
 		if (sColor[0] != '\0')
 		{
 			switch (iPos)
 			{
 				case 0: g_esDeveloper[client].g_iDevAccess = (g_esDeveloper[client].g_iDevAccess < 2) ? StringToInt(sColor) : g_esDeveloper[client].g_iDevAccess;
 				case 1: g_esDeveloper[client].g_iDevParticle = StringToInt(sColor);
-				case 2: strcopy(g_esDeveloper[client].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), sColor);
-				case 3: strcopy(g_esDeveloper[client].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), sColor);
-				case 4: strcopy(g_esDeveloper[client].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), sColor);
+				case 2: strcopy(g_esDeveloper[client].g_sDevGlowOutline, sizeof esDeveloper::g_sDevGlowOutline, sColor);
+				case 3: strcopy(g_esDeveloper[client].g_sDevFlashlight, sizeof esDeveloper::g_sDevFlashlight, sColor);
+				case 4: strcopy(g_esDeveloper[client].g_sDevSkinColor, sizeof esDeveloper::g_sDevSkinColor, sColor);
 			}
 		}
 	}
 
 	char sValue[3];
-	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof(sValue));
+	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof sValue);
 	if (sValue[0] != '\0')
 	{
 		g_esPlayer[client].g_iRewardVisuals = StringToInt(sValue);
@@ -2596,7 +2596,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
 			CreateDirectory(sSMPath, 511);
 
 			char sDifficulty[11];
@@ -2617,7 +2617,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
 			CreateDirectory(sSMPath, 511);
 
 			char sMapName[128];
@@ -2628,12 +2628,12 @@ public void OnConfigsExecuted()
 				ReadMapList(alMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
 				ReadMapList(alMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
 
-				int iMapCount = (alMaps.Length > 0) ? alMaps.Length : 0;
+				int iListSize = alMaps.Length, iMapCount = (iListSize > 0) ? iListSize : 0;
 				if (iMapCount > 0)
 				{
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
-						alMaps.GetString(iPos, sMapName, sizeof(sMapName));
+						alMaps.GetString(iPos, sMapName, sizeof sMapName);
 						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMapName);
 					}
 				}
@@ -2645,14 +2645,14 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
 			CreateDirectory(sSMPath, 511);
 
 			char sGameType[2049], sTypes[64][32];
-			g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof(sGameType));
-			ReplaceString(sGameType, sizeof(sGameType), " ", "");
-			ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
-			for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
+			g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof sGameType);
+			ReplaceString(sGameType, sizeof sGameType, " ", "");
+			ExplodeString(sGameType, ",", sTypes, sizeof sTypes, sizeof sTypes[]);
+			for (int iMode = 0; iMode < sizeof sTypes; iMode++)
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 				{
@@ -2664,13 +2664,13 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
 			CreateDirectory(sSMPath, 511);
 
 			char sWeekday[32];
 			for (int iDay = 0; iDay < 7; iDay++)
 			{
-				vGetDayName(iDay, sWeekday, sizeof(sWeekday));
+				vGetDayName(iDay, sWeekday, sizeof sWeekday);
 				vCreateConfigFile(MT_CONFIG_PATH_DAY, sWeekday);
 			}
 		}
@@ -2678,13 +2678,13 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
-				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
 				vCreateConfigFile(MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
 			}
 		}
@@ -2692,13 +2692,13 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
-				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
 				vCreateConfigFile(MT_CONFIG_PATH_SURVIVORCOUNT, sPlayerCount);
 			}
 		}
@@ -2706,13 +2706,13 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
-				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
 				vCreateConfigFile(MT_CONFIG_PATH_INFECTEDCOUNT, sPlayerCount);
 			}
 		}
@@ -2720,7 +2720,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
@@ -2749,7 +2749,7 @@ public void OnConfigsExecuted()
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
 		{
 			char sDifficultyConfig[PLATFORM_MAX_PATH];
-			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof(sDifficultyConfig)))
+			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
 			{
 				vCustomConfig(sDifficultyConfig);
 				g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
@@ -2759,7 +2759,7 @@ public void OnConfigsExecuted()
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			if (bIsMapConfigFound(sMapConfig, sizeof(sMapConfig)))
+			if (bIsMapConfigFound(sMapConfig, sizeof sMapConfig))
 			{
 				vCustomConfig(sMapConfig);
 				g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
@@ -2769,7 +2769,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
 		{
 			char sModeConfig[PLATFORM_MAX_PATH];
-			if (bIsGameModeConfigFound(sModeConfig, sizeof(sModeConfig)))
+			if (bIsGameModeConfigFound(sModeConfig, sizeof sModeConfig))
 			{
 				vCustomConfig(sModeConfig);
 				g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
@@ -2779,7 +2779,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
 		{
 			char sDayConfig[PLATFORM_MAX_PATH];
-			if (bIsDayConfigFound(sDayConfig, sizeof(sDayConfig)))
+			if (bIsDayConfigFound(sDayConfig, sizeof sDayConfig))
 			{
 				vCustomConfig(sDayConfig);
 				g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
@@ -2789,7 +2789,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2800,7 +2800,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2811,7 +2811,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -2875,7 +2875,7 @@ public Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int 
 	msg.ReadByte();
 
 	char sMessage[255];
-	msg.ReadString(sMessage, sizeof(sMessage), true);
+	msg.ReadString(sMessage, sizeof sMessage, true);
 	if (StrEqual(sMessage, "#Cstrike_Name_Change"))
 	{
 		g_esGeneral.g_bHideNameChange = false;
@@ -3016,7 +3016,7 @@ public Action cmdMTCommandListener(int client, const char[] command, int argc)
 	if (argc > 0)
 	{
 		char sArg[32];
-		GetCmdArg(1, sArg, sizeof(sArg));
+		GetCmdArg(1, sArg, sizeof sArg);
 		if (StrEqual(sArg, "health"))
 		{
 			g_esPlayer[client].g_bLastLife = false;
@@ -3047,7 +3047,7 @@ public Action cmdMTCommandListener3(int client, const char[] command, int argc)
 	}
 
 	char sCommand[32];
-	GetCmdArg(0, sCommand, sizeof(sCommand));
+	GetCmdArg(0, sCommand, sizeof sCommand);
 	if (StrEqual(sCommand, "sm_mt_dev", false))
 	{
 		switch (argc)
@@ -3055,8 +3055,8 @@ public Action cmdMTCommandListener3(int client, const char[] command, int argc)
 			case 2:
 			{
 				char sKeyword[32], sValue[320];
-				GetCmdArg(1, sKeyword, sizeof(sKeyword));
-				GetCmdArg(2, sValue, sizeof(sValue));
+				GetCmdArg(1, sKeyword, sizeof sKeyword);
+				GetCmdArg(2, sValue, sizeof sValue);
 				vSetupGuest(client, sKeyword, sValue);
 
 				switch (StrContains(sKeyword, "access", false) != -1)
@@ -3097,7 +3097,7 @@ public Action cmdMTCommandListener4(int client, const char[] command, int argc)
 			if (argc > 0)
 			{
 				char sArgs[PLATFORM_MAX_PATH];
-				GetCmdArgString(sArgs, sizeof(sArgs));
+				GetCmdArgString(sArgs, sizeof sArgs);
 				FakeClientCommand(client, "%s %s", command, sArgs);
 			}
 			else
@@ -3132,7 +3132,7 @@ public Action cmdMTAdmin(int client, int args)
 		case 1:
 		{
 			char sValue[2];
-			GetCmdArg(1, sValue, sizeof(sValue));
+			GetCmdArg(1, sValue, sizeof sValue);
 			g_esDeveloper[client].g_iDevAccess = iClamp(StringToInt(sValue), 0, 1);
 
 			vSetupPerks(client, (g_esDeveloper[client].g_iDevAccess == 1));
@@ -3144,8 +3144,8 @@ public Action cmdMTAdmin(int client, int args)
 		case 2:
 		{
 			char sKeyword[32], sValue[16];
-			GetCmdArg(1, sKeyword, sizeof(sKeyword));
-			GetCmdArg(2, sValue, sizeof(sValue));
+			GetCmdArg(1, sKeyword, sizeof sKeyword);
+			GetCmdArg(2, sValue, sizeof sValue);
 			MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
 			vSetupAdmin(client, sKeyword, sValue);
 		}
@@ -3237,7 +3237,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			}
 			case false:
 			{
-				strcopy(g_esDeveloper[admin].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
+				strcopy(g_esDeveloper[admin].g_sDevGlowOutline, sizeof esDeveloper::g_sDevGlowOutline, value);
 				vSetSurvivorOutline(admin, g_esDeveloper[admin].g_sDevGlowOutline, .delimiter = ",");
 			}
 		}
@@ -3257,7 +3257,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			}
 			case false:
 			{
-				strcopy(g_esDeveloper[admin].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
+				strcopy(g_esDeveloper[admin].g_sDevFlashlight, sizeof esDeveloper::g_sDevFlashlight, value);
 				vSetSurvivorLight(admin, g_esDeveloper[admin].g_sDevFlashlight, .delimiter = ",");
 			}
 		}
@@ -3277,7 +3277,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			}
 			case false:
 			{
-				strcopy(g_esDeveloper[admin].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
+				strcopy(g_esDeveloper[admin].g_sDevSkinColor, sizeof esDeveloper::g_sDevSkinColor, value);
 				vSetSurvivorColor(admin, g_esDeveloper[admin].g_sDevSkinColor, .delimiter = ",");
 			}
 		}
@@ -3292,25 +3292,25 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 void vAdminPanel(int admin)
 {
 	char sDisplay[PLATFORM_MAX_PATH];
-	FormatEx(sDisplay, sizeof(sDisplay), "%s Admin Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
+	FormatEx(sDisplay, sizeof sDisplay, "%s Admin Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
 
 	Panel pAdminPanel = new Panel();
 	pAdminPanel.SetTitle(sDisplay);
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Flashlight Color (\"light\"/\"flash\"): %s", g_esDeveloper[admin].g_sDevFlashlight);
+	FormatEx(sDisplay, sizeof sDisplay, "Flashlight Color (\"light\"/\"flash\"): %s", g_esDeveloper[admin].g_sDevFlashlight);
 	pAdminPanel.DrawText(sDisplay);
 
 	if (g_bSecondGame)
 	{
-		FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline (\"glow\"/\"outline\"): %s", g_esDeveloper[admin].g_sDevGlowOutline);
+		FormatEx(sDisplay, sizeof sDisplay, "Glow Outline (\"glow\"/\"outline\"): %s", g_esDeveloper[admin].g_sDevGlowOutline);
 		pAdminPanel.DrawText(sDisplay);
 	}
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect(s) (\"effect\"/\"particle\"): %i", g_esDeveloper[admin].g_iDevParticle);
+	FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s) (\"effect\"/\"particle\"): %i", g_esDeveloper[admin].g_iDevParticle);
 	pAdminPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Skin Color (\"skin\"/\"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
+	FormatEx(sDisplay, sizeof sDisplay, "Skin Color (\"skin\"/\"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
 	pAdminPanel.DrawText(sDisplay);
 
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
@@ -3352,8 +3352,8 @@ public Action cmdMTConfig(int client, int args)
 	}
 
 	char sSection[PLATFORM_MAX_PATH];
-	GetCmdArg(1, sSection, sizeof(sSection));
-	strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sSection);
+	GetCmdArg(1, sSection, sizeof sSection);
+	strcopy(g_esGeneral.g_sSection, sizeof esGeneral::g_sSection, sSection);
 	if (IsCharNumeric(sSection[0]))
 	{
 		g_esGeneral.g_iSection = StringToInt(sSection);
@@ -3361,21 +3361,21 @@ public Action cmdMTConfig(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
-			GetCmdArg(2, sFilename, sizeof(sFilename));
+			GetCmdArg(2, sFilename, sizeof sFilename);
 
 			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s.cfg", MT_CONFIG_PATH, sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_PATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 					}
 				}
 			}
@@ -3390,7 +3390,7 @@ public Action cmdMTConfig(int client, int args)
 
 	char sFilePath[PLATFORM_MAX_PATH];
 	int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
-	FormatEx(sFilePath, sizeof(sFilePath), "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
+	FormatEx(sFilePath, sizeof sFilePath, "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
 	vLogCommand(client, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG4, client, sSection, sFilePath);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, client, sSection, sFilePath);
 
@@ -3411,7 +3411,7 @@ public Action cmdMTConfig2(int client, int args)
 	if (args == 2)
 	{
 		char sCode[15];
-		GetCmdArg(1, sCode, sizeof(sCode));
+		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
@@ -3435,7 +3435,7 @@ public Action cmdMTConfig2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	GetCmdArg(1, g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection));
+	GetCmdArg(1, g_esGeneral.g_sSection, sizeof esGeneral::g_sSection);
 	if (IsCharNumeric(g_esGeneral.g_sSection[0]))
 	{
 		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
@@ -3443,21 +3443,21 @@ public Action cmdMTConfig2(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
-			GetCmdArg(2, sFilename, sizeof(sFilename));
+			GetCmdArg(2, sFilename, sizeof sFilename);
 
 			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s.cfg", MT_CONFIG_PATH, sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_PATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
 					}
 				}
 			}
@@ -3491,7 +3491,7 @@ void vParseConfig(int client)
 		if (smcError != SMCError_Okay)
 		{
 			char sSmcError[64];
-			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
+			smcParser.GetErrorString(smcError, sSmcError, sizeof sSmcError);
 			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
@@ -3557,10 +3557,10 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 		else if (g_esGeneral.g_iSection > 0 && (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1))
 		{
 			char sSection[33], sIndex[5], sType[5];
-			strcopy(sSection, sizeof(sSection), name);
-			int iIndex = iFindSectionType(name, g_esGeneral.g_iSection), iStartPos = iGetConfigSectionNumber(sSection, sizeof(sSection));
-			IntToString(iIndex, sIndex, sizeof(sIndex));
-			IntToString(g_esGeneral.g_iSection, sType, sizeof(sType));
+			strcopy(sSection, sizeof sSection, name);
+			int iIndex = iFindSectionType(name, g_esGeneral.g_iSection), iStartPos = iGetConfigSectionNumber(sSection, sizeof sSection);
+			IntToString(iIndex, sIndex, sizeof sIndex);
+			IntToString(g_esGeneral.g_iSection, sType, sizeof sType);
 			if (StrContains(name, sType) != -1 && (StrEqual(sType, sSection[iStartPos]) || StrEqual(sType, sIndex) || StrContains(name, "all", false) != -1))
 			{
 				g_esGeneral.g_csState2 = ConfigState_Type;
@@ -3629,8 +3629,8 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 	if (g_esGeneral.g_csState2 == ConfigState_Specific)
 	{
 		char sKey[64], sValue[384];
-		FormatEx(sKey, sizeof(sKey), (key_quotes ? "\"%s\"" : "%s"), key);
-		FormatEx(sValue, sizeof(sValue), (value_quotes ? "\"%s\"" : "%s"), value);
+		FormatEx(sKey, sizeof sKey, (key_quotes ? "\"%s\"" : "%s"), key);
+		FormatEx(sValue, sizeof sValue, (value_quotes ? "\"%s\"" : "%s"), value);
 
 		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
@@ -3745,19 +3745,18 @@ void vPathMenu(int admin, bool adminmenu = false, int item = 0)
 	mPathMenu.SetTitle("File Path Menu");
 
 	int iCount = 0;
-
 	if (g_esGeneral.g_alFilePaths != null)
 	{
-		int iListSize = (g_esGeneral.g_alFilePaths.Length > 0) ? g_esGeneral.g_alFilePaths.Length : 0;
+		int iLength = g_esGeneral.g_alFilePaths.Length, iListSize = (iLength > 0) ? iLength : 0;
 		if (iListSize > 0)
 		{
 			char sFilePath[PLATFORM_MAX_PATH], sMenuName[64];
 			int iIndex = -1;
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
-				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof(sFilePath));
+				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof sFilePath);
 				iIndex = StrContains(sFilePath, "mutant_tanks", false);
-				FormatEx(sMenuName, sizeof(sMenuName), "%s", sFilePath[iIndex + 13]);
+				FormatEx(sMenuName, sizeof sMenuName, "%s", sFilePath[iIndex + 13]);
 				mPathMenu.AddItem(sFilePath, sMenuName);
 				iCount++;
 			}
@@ -3806,7 +3805,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Select:
 		{
 			char sInfo[PLATFORM_MAX_PATH];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 			g_esGeneral.g_sChosenPath = sInfo;
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -3818,7 +3817,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pPath = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTPathMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTPathMenu", param1);
 			pPath.SetTitle(sMenuTitle);
 		}
 	}
@@ -3851,7 +3850,7 @@ void vConfigMenu(int admin, int item = 0)
 			if (smcError != SMCError_Okay)
 			{
 				char sSmcError[64];
-				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
+				smcConfig.GetErrorString(smcError, sSmcError, sizeof sSmcError);
 				LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
@@ -3869,14 +3868,14 @@ void vConfigMenu(int admin, int item = 0)
 			return;
 		}
 
-		int iListSize = (g_esGeneral.g_alSections.Length > 0) ? g_esGeneral.g_alSections.Length : 0;
+		int iLength = g_esGeneral.g_alSections.Length, iListSize = (iLength > 0) ? iLength : 0;
 		if (iListSize > 0)
 		{
 			char sSection[PLATFORM_MAX_PATH], sDisplay[PLATFORM_MAX_PATH];
 			int iStartPos = 0, iIndex = 0;
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
-				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof(sSection));
+				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof sSection);
 				if (sSection[0] != '\0')
 				{
 					switch (!strncmp(sSection, "Plugin", 6, false) || !strncmp(sSection, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sSection, "STEAM_", 6, false) || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || FindCharInString(sSection, ',') != -1 || FindCharInString(sSection, '-') != -1)
@@ -3884,8 +3883,8 @@ void vConfigMenu(int admin, int item = 0)
 						case true: mConfigMenu.AddItem(sSection, sSection);
 						case false:
 						{
-							iStartPos = iGetConfigSectionNumber(sSection, sizeof(sSection)), iIndex = StringToInt(sSection[iStartPos]);
-							FormatEx(sDisplay, sizeof(sDisplay), "%s (%s)", g_esTank[iIndex].g_sTankName, sSection);
+							iStartPos = iGetConfigSectionNumber(sSection, sizeof sSection), iIndex = StringToInt(sSection[iStartPos]);
+							FormatEx(sDisplay, sizeof sDisplay, "%s (%s)", g_esTank[iIndex].g_sTankName, sSection);
 							mConfigMenu.AddItem(sSection, sDisplay);
 						}
 					}
@@ -3933,15 +3932,15 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Select:
 		{
 			char sInfo[PLATFORM_MAX_PATH];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 
 			switch (!strncmp(sInfo, "Plugin", 6, false) || !strncmp(sInfo, MT_CONFIG_SECTION_SETTINGS4, strlen(MT_CONFIG_SECTION_SETTINGS4), false) || !strncmp(sInfo, "STEAM_", 6, false) || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || FindCharInString(sInfo, ',') != -1 || FindCharInString(sInfo, '-') != -1)
 			{
 				case true: g_esGeneral.g_sSection = sInfo;
 				case false:
 				{
-					int iStartPos = iGetConfigSectionNumber(sInfo, sizeof(sInfo));
-					strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sInfo[iStartPos]);
+					int iStartPos = iGetConfigSectionNumber(sInfo, sizeof sInfo);
+					strcopy(g_esGeneral.g_sSection, sizeof esGeneral::g_sSection, sInfo[iStartPos]);
 					g_esGeneral.g_iSection = StringToInt(sInfo[iStartPos]);
 				}
 			}
@@ -3954,7 +3953,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 			char sFilePath[PLATFORM_MAX_PATH];
 			int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
-			FormatEx(sFilePath, sizeof(sFilePath), "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
+			FormatEx(sFilePath, sizeof sFilePath, "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
 			vLogCommand(param1, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG4, param1, sInfo, sFilePath);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, param1, sInfo, sFilePath);
 
@@ -3967,16 +3966,16 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pConfig = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTConfigMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTConfigMenu", param1);
 			pConfig.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
 			char sMenuOption[PLATFORM_MAX_PATH], sInfo[33];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 			if (StrEqual(sInfo, MT_CONFIG_SECTION_SETTINGS2, false))
 			{
-				FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "MTSettingsItem", param1);
+				FormatEx(sMenuOption, sizeof sMenuOption, "%T", "MTSettingsItem", param1);
 
 				return RedrawMenuItem(sMenuOption);
 			}
@@ -4039,15 +4038,15 @@ public Action cmdMTDev(int client, int args)
 		case 1:
 		{
 			char sValue[2];
-			GetCmdArg(1, sValue, sizeof(sValue));
+			GetCmdArg(1, sValue, sizeof sValue);
 			vSetupGuest(client, "access", sValue);
 			MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
 		}
 		case 2:
 		{
 			char sKeyword[32], sValue[320];
-			GetCmdArg(1, sKeyword, sizeof(sKeyword));
-			GetCmdArg(2, sValue, sizeof(sValue));
+			GetCmdArg(1, sKeyword, sizeof sKeyword);
+			GetCmdArg(2, sValue, sizeof sValue);
 			vSetupGuest(client, sKeyword, sValue);
 
 			switch (StrContains(sKeyword, "access", false) != -1)
@@ -4068,10 +4067,10 @@ public Action cmdMTDev(int client, int args)
 			bool tn_is_ml;
 			char target[32], target_name[32], sKeyword[32], sValue[320];
 			int target_list[MAXPLAYERS], target_count;
-			GetCmdArg(1, target, sizeof(target));
-			GetCmdArg(2, sKeyword, sizeof(sKeyword));
-			GetCmdArg(3, sValue, sizeof(sValue));
-			if ((target_count = ProcessTargetString(target, client, target_list, MAXPLAYERS, COMMAND_FILTER_NO_IMMUNITY, target_name, sizeof(target_name), tn_is_ml)) <= 0)
+			GetCmdArg(1, target, sizeof target);
+			GetCmdArg(2, sKeyword, sizeof sKeyword);
+			GetCmdArg(3, sValue, sizeof sValue);
+			if ((target_count = ProcessTargetString(target, client, target_list, MAXPLAYERS, COMMAND_FILTER_NO_IMMUNITY, target_name, sizeof target_name, tn_is_ml)) <= 0)
 			{
 				ReplyToTargetError(client, target_count);
 
@@ -4257,13 +4256,13 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		bPanel = true;
 
-		strcopy(g_esDeveloper[guest].g_sDevFallVoiceline, sizeof(esDeveloper::g_sDevFallVoiceline), value);
+		strcopy(g_esDeveloper[guest].g_sDevFallVoiceline, sizeof esDeveloper::g_sDevFallVoiceline, value);
 	}
 	else if (StrContains(keyword, "glow", false) != -1 || StrContains(keyword, "outline", false) != -1)
 	{
 		bPanel = true;
 
-		strcopy(g_esDeveloper[guest].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
+		strcopy(g_esDeveloper[guest].g_sDevGlowOutline, sizeof esDeveloper::g_sDevGlowOutline, value);
 		vSetSurvivorOutline(guest, g_esDeveloper[guest].g_sDevGlowOutline, .delimiter = ",");
 	}
 	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
@@ -4295,14 +4294,14 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		bPanel = true;
 
-		strcopy(g_esDeveloper[guest].g_sDevFlashlight, sizeof(esDeveloper::g_sDevFlashlight), value);
+		strcopy(g_esDeveloper[guest].g_sDevFlashlight, sizeof esDeveloper::g_sDevFlashlight, value);
 		vSetSurvivorLight(guest, g_esDeveloper[guest].g_sDevFlashlight, .delimiter = ",");
 	}
 	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
 	{
 		bPanel = true;
 
-		strcopy(g_esDeveloper[guest].g_sDevLoadout, sizeof(esDeveloper::g_sDevLoadout), value);
+		strcopy(g_esDeveloper[guest].g_sDevLoadout, sizeof esDeveloper::g_sDevLoadout, value);
 		vSetupLoadout(guest);
 	}
 	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
@@ -4344,7 +4343,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		bPanel = true;
 
-		strcopy(g_esDeveloper[guest].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
+		strcopy(g_esDeveloper[guest].g_sDevSkinColor, sizeof esDeveloper::g_sDevSkinColor, value);
 		vSetSurvivorColor(guest, g_esDeveloper[guest].g_sDevSkinColor, .delimiter = ",");
 	}
 	else if (StrContains(keyword, "specammo", false) != -1 || StrContains(keyword, "special", false) != -1)
@@ -4408,7 +4407,7 @@ void vSetupLoadout(int developer, bool usual = true)
 		if (usual)
 		{
 			char sSet[6][64];
-			ExplodeString(g_esDeveloper[developer].g_sDevLoadout, ";", sSet, sizeof(sSet), sizeof(sSet[]));
+			ExplodeString(g_esDeveloper[developer].g_sDevLoadout, ";", sSet, sizeof sSet, sizeof sSet[]);
 			vCheatCommand(developer, "give", "health");
 
 			switch (g_bSecondGame && StrContains(sSet[1], "pistol") == -1 && StrContains(sSet[1], "chainsaw") == -1)
@@ -4434,7 +4433,7 @@ void vSetupLoadout(int developer, bool usual = true)
 				}
 			}
 
-			for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
+			for (int iPos = 0; iPos < (sizeof sSet - 1); iPos++)
 			{
 				if (iPos != 1 && sSet[iPos][0] != '\0')
 				{
@@ -4507,7 +4506,7 @@ void vDeveloperPanel(int developer, int level = 0)
 	g_esDeveloper[developer].g_iDevPanelLevel = level;
 
 	char sDisplay[PLATFORM_MAX_PATH];
-	FormatEx(sDisplay, sizeof(sDisplay), "%s Developer Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
+	FormatEx(sDisplay, sizeof sDisplay, "%s Developer Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
 	float flValue;
 
 	Panel pDevPanel = new Panel();
@@ -4518,55 +4517,55 @@ void vDeveloperPanel(int developer, int level = 0)
 	{
 		case 0:
 		{
-			FormatEx(sDisplay, sizeof(sDisplay), "Access Level: %i", g_esDeveloper[developer].g_iDevAccess);
+			FormatEx(sDisplay, sizeof sDisplay, "Access Level: %i", g_esDeveloper[developer].g_iDevAccess);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Action Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevActionDuration);
+			FormatEx(sDisplay, sizeof sDisplay, "Action Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevActionDuration);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Ammo Regen: %i Bullet/s", g_esDeveloper[developer].g_iDevAmmoRegen);
+			FormatEx(sDisplay, sizeof sDisplay, "Ammo Regen: %i Bullet/s", g_esDeveloper[developer].g_iDevAmmoRegen);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevAttackBoost;
-			FormatEx(sDisplay, sizeof(sDisplay), "Attack Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Attack Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevDamageBoost;
-			FormatEx(sDisplay, sizeof(sDisplay), "Damage Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Damage Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevDamageResistance;
-			FormatEx(sDisplay, sizeof(sDisplay), "Damage Resistance: %.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Damage Resistance: %.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Fall Voiceline: %s", g_esDeveloper[developer].g_sDevFallVoiceline);
+			FormatEx(sDisplay, sizeof sDisplay, "Fall Voiceline: %s", g_esDeveloper[developer].g_sDevFallVoiceline);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Flashlight Color: %s", g_esDeveloper[developer].g_sDevFlashlight);
+			FormatEx(sDisplay, sizeof sDisplay, "Flashlight Color: %s", g_esDeveloper[developer].g_sDevFlashlight);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline: %s", g_esDeveloper[developer].g_sDevGlowOutline);
+				FormatEx(sDisplay, sizeof sDisplay, "Glow Outline: %s", g_esDeveloper[developer].g_sDevGlowOutline);
 				pDevPanel.DrawText(sDisplay);
 			}
 
 			flValue = g_esDeveloper[developer].g_flDevHealPercent;
-			FormatEx(sDisplay, sizeof(sDisplay), "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
+			FormatEx(sDisplay, sizeof sDisplay, "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Health Regen: %i HP/s", g_esDeveloper[developer].g_iDevHealthRegen);
+			FormatEx(sDisplay, sizeof sDisplay, "Health Regen: %i HP/s", g_esDeveloper[developer].g_iDevHealthRegen);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Infinite Ammo Slots: %i (0: OFF, 31: ALL)", g_esDeveloper[developer].g_iDevInfiniteAmmo);
+			FormatEx(sDisplay, sizeof sDisplay, "Infinite Ammo Slots: %i (0: OFF, 31: ALL)", g_esDeveloper[developer].g_iDevInfiniteAmmo);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
+			FormatEx(sDisplay, sizeof sDisplay, "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
+				FormatEx(sDisplay, sizeof sDisplay, "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
 				pDevPanel.DrawText(sDisplay);
 			}
 		}
@@ -4574,55 +4573,55 @@ void vDeveloperPanel(int developer, int level = 0)
 		{
 			if (!g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
+				FormatEx(sDisplay, sizeof sDisplay, "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
 				pDevPanel.DrawText(sDisplay);
 			}
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
+			FormatEx(sDisplay, sizeof sDisplay, "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Melee Range: %i HMU, Punch Resistance: %.2f", g_esDeveloper[developer].g_iDevMeleeRange, g_esDeveloper[developer].g_flDevPunchResistance);
+				FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU, Punch Resistance: %.2f", g_esDeveloper[developer].g_iDevMeleeRange, g_esDeveloper[developer].g_flDevPunchResistance);
 				pDevPanel.DrawText(sDisplay);
 			}
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
+			FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Revive Health: %i HP", g_esDeveloper[developer].g_iDevReviveHealth);
+			FormatEx(sDisplay, sizeof sDisplay, "Revive Health: %i HP", g_esDeveloper[developer].g_iDevReviveHealth);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Reward Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevRewardDuration);
+			FormatEx(sDisplay, sizeof sDisplay, "Reward Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevRewardDuration);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Reward Types: %i", g_esDeveloper[developer].g_iDevRewardTypes);
+			FormatEx(sDisplay, sizeof sDisplay, "Reward Types: %i", g_esDeveloper[developer].g_iDevRewardTypes);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
-			FormatEx(sDisplay, sizeof(sDisplay), "Shove Damage: %.2f%% (%.2f)", (flValue * 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Shove Damage: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
 			flValue = g_esDeveloper[developer].g_flDevShoveRate;
-			FormatEx(sDisplay, sizeof(sDisplay), "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
+			FormatEx(sDisplay, sizeof sDisplay, "Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Special Ammo Type(s): %i (1: Incendiary ammo, 2: Explosive ammo, 3: Random)", g_esDeveloper[developer].g_iDevSpecialAmmo);
+				FormatEx(sDisplay, sizeof sDisplay, "Special Ammo Type(s): %i (1: Incendiary ammo, 2: Explosive ammo, 3: Random)", g_esDeveloper[developer].g_iDevSpecialAmmo);
 				pDevPanel.DrawText(sDisplay);
 			}
 
 			flValue = g_esDeveloper[developer].g_flDevSpeedBoost;
-			FormatEx(sDisplay, sizeof(sDisplay), "Speed Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Speed Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Weapon Skin: %i (Max: %i)", g_esDeveloper[developer].g_iDevWeaponSkin, iGetMaxWeaponSkins(developer));
+				FormatEx(sDisplay, sizeof sDisplay, "Weapon Skin: %i (Max: %i)", g_esDeveloper[developer].g_iDevWeaponSkin, iGetMaxWeaponSkins(developer));
 				pDevPanel.DrawText(sDisplay);
 			}
 		}
@@ -4713,7 +4712,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			}
 
 			char sInfo[33];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 			Call_StartForward(g_esGeneral.g_gfMenuItemSelectedForward);
 			Call_PushCell(param1);
 			Call_PushString(sInfo);
@@ -4728,7 +4727,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pInfo = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTInfoMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTInfoMenu", param1);
 			pInfo.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -4739,19 +4738,19 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 					default:
 					{
 						char sInfo[33];
-						menu.GetItem(param2, sInfo, sizeof(sInfo));
+						menu.GetItem(param2, sInfo, sizeof sInfo);
 
 						Call_StartForward(g_esGeneral.g_gfMenuItemDisplayedForward);
 						Call_PushCell(param1);
 						Call_PushString(sInfo);
 						Call_PushString(sMenuOption);
-						Call_PushCell(sizeof(sMenuOption));
+						Call_PushCell(sizeof sMenuOption);
 						Call_Finish();
 					}
 				}
@@ -4806,7 +4805,7 @@ public Action cmdMTList2(int client, int args)
 	if (args == 2)
 	{
 		char sCode[15];
-		GetCmdArg(1, sCode, sizeof(sCode));
+		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
@@ -4829,13 +4828,13 @@ void vListAbilities(int admin)
 	bool bHuman = bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 	if (g_esGeneral.g_alPlugins != null)
 	{
-		int iListSize = (g_esGeneral.g_alPlugins.Length > 0) ? g_esGeneral.g_alPlugins.Length : 0;
+		int iLength = g_esGeneral.g_alPlugins.Length, iListSize = (iLength > 0) ? iLength : 0;
 		if (iListSize > 0)
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
-				g_esGeneral.g_alPlugins.GetString(iPos, sFilename, sizeof(sFilename));
+				g_esGeneral.g_alPlugins.GetString(iPos, sFilename, sizeof sFilename);
 
 				switch (bHuman)
 				{
@@ -4903,30 +4902,30 @@ void vPrefsMenu(int client, int item = 0)
 	mPrefsMenu.SetTitle("Mutant Tanks Preferences Menu");
 
 	char sDisplay[PLATFORM_MAX_PATH], sInfo[3];
-	FormatEx(sDisplay, sizeof(sDisplay), "Screen Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_SCREEN, sInfo, sizeof(sInfo));
+	FormatEx(sDisplay, sizeof sDisplay, "Screen Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_SCREEN, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_PARTICLE, sInfo, sizeof(sInfo));
+	FormatEx(sDisplay, sizeof sDisplay, "Particle Effect Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_PARTICLE, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Looping Voiceline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_VOICELINE, sInfo, sizeof(sInfo));
+	FormatEx(sDisplay, sizeof sDisplay, "Looping Voiceline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_VOICELINE, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Light Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_LIGHT, sInfo, sizeof(sInfo));
+	FormatEx(sDisplay, sizeof sDisplay, "Light Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_LIGHT, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Body Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY) ? "ON" : "OFF"));
-	IntToString(MT_VISUAL_BODY, sInfo, sizeof(sInfo));
+	FormatEx(sDisplay, sizeof sDisplay, "Body Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_BODY, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
 	if (g_bSecondGame)
 	{
-		FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW) ? "ON" : "OFF"));
-		IntToString(MT_VISUAL_GLOW, sInfo, sizeof(sInfo));
+		FormatEx(sDisplay, sizeof sDisplay, "Glow Outline Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW) ? "ON" : "OFF"));
+		IntToString(MT_VISUAL_GLOW, sInfo, sizeof sInfo);
 		mPrefsMenu.AddItem(sInfo, sDisplay);
 	}
 
@@ -4941,7 +4940,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 		case MenuAction_Select:
 		{
 			char sInfo[3];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 			int iBit = StringToInt(sInfo);
 			if (g_esPlayer[param1].g_bApplyVisuals[param2])
 			{
@@ -4949,7 +4948,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				g_esPlayer[param1].g_iRewardVisuals &= ~iBit;
 #if defined _clientprefs_included
 				char sValue[3];
-				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
+				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof sValue);
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
 				vToggleEffects(param1, .type = param2, .toggle = false);
@@ -4960,7 +4959,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 				g_esPlayer[param1].g_iRewardVisuals |= iBit;
 #if defined _clientprefs_included
 				char sValue[3];
-				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof(sValue));
+				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof sValue);
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
 				vToggleEffects(param1, .type = param2);
@@ -4975,7 +4974,7 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pPrefs = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTPrefsMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTPrefsMenu", param1);
 			pPrefs.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -4986,12 +4985,12 @@ public int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ScreenVisualOn" : "ScreenVisualOff"), param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ParticleVisualOn" : "ParticleVisualOff"), param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "VoicelineVisualOn" : "VoicelineVisualOff"), param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "LightVisualOn" : "LightVisualOff"), param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_BODY) ? "BodyVisualOn" : "BodyVisualOff"), param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_GLOW) ? "GlowVisualOn" : "GlowVisualOff"), param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ScreenVisualOn" : "ScreenVisualOff"), param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ParticleVisualOn" : "ParticleVisualOff"), param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "VoicelineVisualOn" : "VoicelineVisualOff"), param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "LightVisualOn" : "LightVisualOff"), param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_BODY) ? "BodyVisualOn" : "BodyVisualOff"), param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_GLOW) ? "GlowVisualOn" : "GlowVisualOff"), param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -5034,7 +5033,7 @@ void vCheckConfig(bool manual)
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
 		{
 			char sDifficultyConfig[PLATFORM_MAX_PATH];
-			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof(sDifficultyConfig)))
+			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || manual)
@@ -5049,7 +5048,7 @@ void vCheckConfig(bool manual)
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP)
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			if (bIsMapConfigFound(sMapConfig, sizeof(sMapConfig)))
+			if (bIsMapConfigFound(sMapConfig, sizeof sMapConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
@@ -5064,7 +5063,7 @@ void vCheckConfig(bool manual)
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_cvMTGameMode != null)
 		{
 			char sModeConfig[PLATFORM_MAX_PATH];
-			if (bIsGameModeConfigFound(sModeConfig, sizeof(sModeConfig)))
+			if (bIsGameModeConfigFound(sModeConfig, sizeof sModeConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || manual)
@@ -5079,7 +5078,7 @@ void vCheckConfig(bool manual)
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
 		{
 			char sDayConfig[PLATFORM_MAX_PATH];
-			if (bIsDayConfigFound(sDayConfig, sizeof(sDayConfig)))
+			if (bIsDayConfigFound(sDayConfig, sizeof sDayConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || manual)
@@ -5095,7 +5094,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetPlayerCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -5118,7 +5117,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount();
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -5141,7 +5140,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount(true);
-			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -5198,7 +5197,7 @@ public Action cmdMTVersion2(int client, int args)
 	if (args == 2)
 	{
 		char sCode[15];
-		GetCmdArg(1, sCode, sizeof(sCode));
+		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
 			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
@@ -5249,8 +5248,8 @@ public Action cmdTank(int client, int args)
 	}
 
 	char sCmd[15], sType[33];
-	GetCmdArg(0, sCmd, sizeof(sCmd));
-	GetCmdArg(1, sType, sizeof(sType));
+	GetCmdArg(0, sCmd, sizeof sCmd);
+	GetCmdArg(1, sType, sizeof sType);
 	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -5259,12 +5258,12 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vFixRandomPick(sType, sizeof(sType));
+	vFixRandomPick(sType, sizeof sType);
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
-		vGetTranslatedName(sTankName, sizeof(sTankName), .type = iType);
+		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
@@ -5305,8 +5304,8 @@ public Action cmdTank2(int client, int args)
 	}
 
 	char sCmd[15], sType[33];
-	GetCmdArg(0, sCmd, sizeof(sCmd));
-	GetCmdArg(1, sType, sizeof(sType));
+	GetCmdArg(0, sCmd, sizeof sCmd);
+	GetCmdArg(1, sType, sizeof sType);
 	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -5315,12 +5314,12 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vFixRandomPick(sType, sizeof(sType));
+	vFixRandomPick(sType, sizeof sType);
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
-		vGetTranslatedName(sTankName, sizeof(sTankName), .type = iType);
+		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
@@ -5368,8 +5367,8 @@ public Action cmdMutantTank(int client, int args)
 	}
 
 	char sCmd[15], sType[33];
-	GetCmdArg(0, sCmd, sizeof(sCmd));
-	GetCmdArg(1, sType, sizeof(sType));
+	GetCmdArg(0, sCmd, sizeof sCmd);
+	GetCmdArg(1, sType, sizeof sType);
 	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -5378,12 +5377,12 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vFixRandomPick(sType, sizeof(sType));
+	vFixRandomPick(sType, sizeof sType);
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
-		vGetTranslatedName(sTankName, sizeof(sTankName), .type = iType);
+		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
@@ -5431,9 +5430,9 @@ void vTank(int admin, char[] type, bool spawn = false, bool log = true, int amou
 						continue;
 					}
 
-					vGetTranslatedName(sPhrase, sizeof(sPhrase), .type = iIndex);
+					vGetTranslatedName(sPhrase, sizeof sPhrase, .type = iIndex);
 					SetGlobalTransTarget(admin);
-					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
+					FormatEx(sTankName, sizeof sTankName, "%T", sPhrase, admin);
 					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || !bIsRightGame(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || (!StrEqual(type, "random", false) && StrContains(sTankName, type, false) == -1))
 					{
 						continue;
@@ -5555,7 +5554,7 @@ void vChangeTank(int admin, int amount, int mode)
 void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 {
 	char sType[5];
-	IntToString(type, sType, sizeof(sType));
+	IntToString(type, sType, sizeof sType);
 	vTank(admin, sType, mode, log);
 }
 
@@ -5598,8 +5597,8 @@ void vSpawnTank(int admin, bool log = true, int amount, int mode)
 
 		switch (iType)
 		{
-			case -1: FormatEx(sTankName, sizeof(sTankName), "Tank");
-			default: strcopy(sTankName, sizeof(sTankName), g_esTank[iType].g_sTankName);
+			case -1: FormatEx(sTankName, sizeof sTankName, "Tank");
+			default: strcopy(sTankName, sizeof sTankName, g_esTank[iType].g_sTankName);
 		}
 
 		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
@@ -5619,7 +5618,7 @@ void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 		case true:
 		{
 			SetGlobalTransTarget(admin);
-			FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, "MTDefaultItem", 0);
+			FormatEx(sMenuItem, sizeof sMenuItem, "%T", "MTTankItem", admin, "MTDefaultItem", 0);
 			mTankMenu.AddItem("Default", sMenuItem, ((g_esPlayer[admin].g_iTankType > 0) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
 		}
 		case false:
@@ -5627,8 +5626,8 @@ void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 			for (int iIndex = -1; iIndex <= 0; iIndex++)
 			{
 				SetGlobalTransTarget(admin);
-				FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, "NoName", iIndex);
-				IntToString(iIndex, sIndex, sizeof(sIndex));
+				FormatEx(sMenuItem, sizeof sMenuItem, "%T", "MTTankItem", admin, "NoName", iIndex);
+				IntToString(iIndex, sIndex, sizeof sIndex);
 				mTankMenu.AddItem(sIndex, sMenuItem);
 			}
 		}
@@ -5641,10 +5640,10 @@ void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 			continue;
 		}
 
-		vGetTranslatedName(sTankName, sizeof(sTankName), .type = iIndex);
+		vGetTranslatedName(sTankName, sizeof sTankName, .type = iIndex);
 		SetGlobalTransTarget(admin);
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, sTankName, iIndex);
-		IntToString(iIndex, sIndex, sizeof(sIndex));
+		FormatEx(sMenuItem, sizeof sMenuItem, "%T", "MTTankItem", admin, sTankName, iIndex);
+		IntToString(iIndex, sIndex, sizeof sIndex);
 		mTankMenu.AddItem(sIndex, sMenuItem, ((g_esPlayer[admin].g_iTankType != iIndex) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
 	}
 
@@ -5674,7 +5673,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Select:
 		{
 			char sInfo[33];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			menu.GetItem(param2, sInfo, sizeof sInfo);
 			int iIndex = StringToInt(sInfo);
 			if (StrEqual(sInfo, "Default", false) && bIsTank(param1))
 			{
@@ -5705,7 +5704,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pList = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTListMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTListMenu", param1);
 			pList.SetTitle(sMenuTitle);
 		}
 	}
@@ -5748,7 +5747,7 @@ public void OnEntityDestroyed(int entity)
 	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(entity))
 	{
 		char sClassname[32];
-		GetEntityClassname(entity, sClassname, sizeof(sClassname));
+		GetEntityClassname(entity, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
 			int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
@@ -5796,23 +5795,23 @@ public void OnGameFrame()
 					iTotalHealth = (iHealth > iMaxHealth) ? iHealth : iMaxHealth;
 					flPercentage = ((float(iHealth) / float(iTotalHealth)) * 100.0);
 
-					ReplaceString(g_esCache[iTarget].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), " ", "");
-					ExplodeString(g_esCache[iTarget].g_sHealthCharacters, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+					ReplaceString(g_esCache[iTarget].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, " ", "");
+					ExplodeString(g_esCache[iTarget].g_sHealthCharacters, ",", sSet, sizeof sSet, sizeof sSet[]);
 
-					for (int iCount = 0; iCount < (float(iHealth) / float(iTotalHealth)) * (sizeof(sHealthBar) - 1) && iCount < (sizeof(sHealthBar) - 1); iCount++)
+					for (int iCount = 0; iCount < (float(iHealth) / float(iTotalHealth)) * (sizeof sHealthBar - 1) && iCount < (sizeof sHealthBar - 1); iCount++)
 					{
-						StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
+						StrCat(sHealthBar, sizeof sHealthBar, sSet[0]);
 					}
 
-					for (int iCount = 0; iCount < (sizeof(sHealthBar) - 1); iCount++)
+					for (int iCount = 0; iCount < (sizeof sHealthBar - 1); iCount++)
 					{
-						StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
+						StrCat(sHealthBar, sizeof sHealthBar, sSet[1]);
 					}
 
 					bool bHuman = bIsValidClient(iTarget, MT_CHECK_FAKECLIENT);
 					char sHumanTag[128], sTankName[33];
-					FormatEx(sHumanTag, sizeof(sHumanTag), "%T", "HumanTag", iPlayer);
-					vGetTranslatedName(sTankName, sizeof(sTankName), iTarget);
+					FormatEx(sHumanTag, sizeof sHumanTag, "%T", "HumanTag", iPlayer);
+					vGetTranslatedName(sTankName, sizeof sTankName, iTarget);
 
 					switch (g_esCache[iTarget].g_iDisplayHealthType)
 					{
@@ -6022,7 +6021,7 @@ public Action OnPropSetTransmit(int entity, int client)
 public void OnPropSpawnPost(int entity)
 {
 	char sModel[45];
-	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 	if (StrEqual(sModel, MODEL_OXYGENTANK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (g_bSecondGame && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 	{
 		SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
@@ -6144,9 +6143,9 @@ public void OnRainbowPreThinkPost(int player)
 		bRainbow2[1] = StrEqual(g_esCache[player].g_sFlameColor, "rainbow", false);
 		bRainbow2[2] = StrEqual(g_esCache[player].g_sTireColor, "rainbow", false);
 		bRainbow2[3] = StrEqual(g_esCache[player].g_sRockColor, "rainbow", false);
-		for (int iPos = 0; iPos < sizeof(esPlayer::g_iRock); iPos++)
+		for (int iPos = 0; iPos < sizeof esPlayer::g_iRock; iPos++)
 		{
-			if (iPos < sizeof(esPlayer::g_iOzTank))
+			if (iPos < sizeof esPlayer::g_iOzTank)
 			{
 				if (bRainbow2[0] && bIsValidEntRef(g_esPlayer[player].g_iOzTank[iPos]))
 				{
@@ -6169,7 +6168,7 @@ public void OnRainbowPreThinkPost(int player)
 				}
 			}
 
-			if (iPos < sizeof(esPlayer::g_iTire))
+			if (iPos < sizeof esPlayer::g_iTire)
 			{
 				if (bRainbow2[2] && bIsValidEntRef(g_esPlayer[player].g_iTire[iPos]))
 				{
@@ -6212,12 +6211,12 @@ public void OnRainbowPreThinkPost(int player)
 			if (bIsValidEntity(iProp))
 			{
 				char sColor[16];
-				FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), iGetRandomColor(iColor[3]));
+				FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), iGetRandomColor(iColor[3]));
 				DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "_light", sColor);
 			}
 		}
 
-		for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
+		for (int iPos = 0; iPos < sizeof esPlayer::g_iThrownRock; iPos++)
 		{
 			if (bRainbow2[3] && bIsValidEntRef(g_esPlayer[player].g_iThrownRock[iPos]))
 			{
@@ -6283,7 +6282,7 @@ public void OnSurvivorPostThinkPost(int survivor)
 				{
 					char sModel[40];
 					int iSequence = GetEntProp(survivor, Prop_Send, "m_nSequence");
-					GetEntPropString(survivor, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+					GetEntPropString(survivor, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 
 					switch (sModel[29])
 					{
@@ -6358,7 +6357,7 @@ public Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, flo
 	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			if (!bHasCoreAdminAccess(attacker) || bIsCoreAdminImmune(victim, attacker))
@@ -6399,7 +6398,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		{
 			iLauncherOwner = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
 			iRockOwner = HasEntProp(inflictor, Prop_Data, "m_hThrower") ? GetEntPropEnt(inflictor, Prop_Data, "m_hThrower") : 0;
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		}
 
 		bool bDeveloper, bRewarded;
@@ -6479,7 +6478,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (bIsSpecialInfected(attacker))
 					{
 						char sDamageType[32];
-						IntToString(damagetype, sDamageType, sizeof(sDamageType));
+						IntToString(damagetype, sDamageType, sizeof sDamageType);
 						vDamagePlayer(attacker, victim, damage, sDamageType);
 					}
 					else if (bIsCommonInfected(attacker))
@@ -6781,18 +6780,18 @@ public void OnWeaponEquipPost(int client, int weapon)
 		vCheckClipSizes(client);
 
 		char sWeapon[32];
-		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
 		if (GetPlayerWeaponSlot(client, 2) == weapon)
 		{
-			strcopy(g_esPlayer[client].g_sStoredThrowable, sizeof(esPlayer::g_sStoredThrowable), sWeapon);
+			strcopy(g_esPlayer[client].g_sStoredThrowable, sizeof esPlayer::g_sStoredThrowable, sWeapon);
 		}
 		else if (GetPlayerWeaponSlot(client, 3) == weapon)
 		{
-			strcopy(g_esPlayer[client].g_sStoredMedkit, sizeof(esPlayer::g_sStoredMedkit), sWeapon);
+			strcopy(g_esPlayer[client].g_sStoredMedkit, sizeof esPlayer::g_sStoredMedkit, sWeapon);
 		}
 		else if (GetPlayerWeaponSlot(client, 4) == weapon)
 		{
-			strcopy(g_esPlayer[client].g_sStoredPills, sizeof(esPlayer::g_sStoredPills), sWeapon);
+			strcopy(g_esPlayer[client].g_sStoredPills, sizeof esPlayer::g_sStoredPills, sWeapon);
 		}
 	}
 }
@@ -7018,80 +7017,80 @@ void vCacheSettings(int tank)
 	g_esCache[tank].g_iVomitImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVomitImmunity, g_esGeneral.g_iVomitImmunity);
 	g_esCache[tank].g_iVomitImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVomitImmunity, g_esCache[tank].g_iVomitImmunity);
 
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual, sizeof(esCache::g_sBodyColorVisual), g_esTank[iType].g_sBodyColorVisual, g_esGeneral.g_sBodyColorVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual, sizeof(esCache::g_sBodyColorVisual), g_esPlayer[tank].g_sBodyColorVisual, g_esCache[tank].g_sBodyColorVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual2, sizeof(esCache::g_sBodyColorVisual2), g_esTank[iType].g_sBodyColorVisual2, g_esGeneral.g_sBodyColorVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual2, sizeof(esCache::g_sBodyColorVisual2), g_esPlayer[tank].g_sBodyColorVisual2, g_esCache[tank].g_sBodyColorVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual3, sizeof(esCache::g_sBodyColorVisual3), g_esTank[iType].g_sBodyColorVisual3, g_esGeneral.g_sBodyColorVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual3, sizeof(esCache::g_sBodyColorVisual3), g_esPlayer[tank].g_sBodyColorVisual3, g_esCache[tank].g_sBodyColorVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual4, sizeof(esCache::g_sBodyColorVisual4), g_esTank[iType].g_sBodyColorVisual4, g_esGeneral.g_sBodyColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual4, sizeof(esCache::g_sBodyColorVisual4), g_esPlayer[tank].g_sBodyColorVisual4, g_esCache[tank].g_sBodyColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sComboSet, sizeof(esCache::g_sComboSet), g_esPlayer[tank].g_sComboSet, g_esTank[iType].g_sComboSet);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward, sizeof(esCache::g_sFallVoicelineReward), g_esTank[iType].g_sFallVoicelineReward, g_esGeneral.g_sFallVoicelineReward);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward, sizeof(esCache::g_sFallVoicelineReward), g_esPlayer[tank].g_sFallVoicelineReward, g_esCache[tank].g_sFallVoicelineReward);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward2, sizeof(esCache::g_sFallVoicelineReward2), g_esTank[iType].g_sFallVoicelineReward2, g_esGeneral.g_sFallVoicelineReward2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward2, sizeof(esCache::g_sFallVoicelineReward2), g_esPlayer[tank].g_sFallVoicelineReward2, g_esCache[tank].g_sFallVoicelineReward2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward3, sizeof(esCache::g_sFallVoicelineReward3), g_esTank[iType].g_sFallVoicelineReward3, g_esGeneral.g_sFallVoicelineReward3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward3, sizeof(esCache::g_sFallVoicelineReward3), g_esPlayer[tank].g_sFallVoicelineReward3, g_esCache[tank].g_sFallVoicelineReward3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward4, sizeof(esCache::g_sFallVoicelineReward4), g_esTank[iType].g_sFallVoicelineReward4, g_esGeneral.g_sFallVoicelineReward4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward4, sizeof(esCache::g_sFallVoicelineReward4), g_esPlayer[tank].g_sFallVoicelineReward4, g_esCache[tank].g_sFallVoicelineReward4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlameColor, sizeof(esCache::g_sFlameColor), g_esPlayer[tank].g_sFlameColor, g_esTank[iType].g_sFlameColor);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlashlightColor, sizeof(esCache::g_sFlashlightColor), g_esPlayer[tank].g_sFlashlightColor, g_esTank[iType].g_sFlashlightColor);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColor, sizeof(esCache::g_sGlowColor), g_esPlayer[tank].g_sGlowColor, g_esTank[iType].g_sGlowColor);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esTank[iType].g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward, sizeof(esCache::g_sItemReward), g_esTank[iType].g_sItemReward, g_esGeneral.g_sItemReward);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward, sizeof(esCache::g_sItemReward), g_esPlayer[tank].g_sItemReward, g_esCache[tank].g_sItemReward);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward2, sizeof(esCache::g_sItemReward2), g_esTank[iType].g_sItemReward2, g_esGeneral.g_sItemReward2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward2, sizeof(esCache::g_sItemReward2), g_esPlayer[tank].g_sItemReward2, g_esCache[tank].g_sItemReward2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward3, sizeof(esCache::g_sItemReward3), g_esTank[iType].g_sItemReward3, g_esGeneral.g_sItemReward3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward3, sizeof(esCache::g_sItemReward3), g_esPlayer[tank].g_sItemReward3, g_esCache[tank].g_sItemReward3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward4, sizeof(esCache::g_sItemReward4), g_esTank[iType].g_sItemReward4, g_esGeneral.g_sItemReward4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward4, sizeof(esCache::g_sItemReward4), g_esPlayer[tank].g_sItemReward4, g_esCache[tank].g_sItemReward4);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual, sizeof(esCache::g_sLightColorVisual), g_esTank[iType].g_sLightColorVisual, g_esGeneral.g_sLightColorVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual, sizeof(esCache::g_sLightColorVisual), g_esPlayer[tank].g_sLightColorVisual, g_esCache[tank].g_sLightColorVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual2, sizeof(esCache::g_sLightColorVisual2), g_esTank[iType].g_sLightColorVisual2, g_esGeneral.g_sLightColorVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual2, sizeof(esCache::g_sLightColorVisual2), g_esPlayer[tank].g_sLightColorVisual2, g_esCache[tank].g_sLightColorVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual3, sizeof(esCache::g_sLightColorVisual3), g_esTank[iType].g_sLightColorVisual3, g_esGeneral.g_sLightColorVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual3, sizeof(esCache::g_sLightColorVisual3), g_esPlayer[tank].g_sLightColorVisual3, g_esCache[tank].g_sLightColorVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual4, sizeof(esCache::g_sLightColorVisual4), g_esTank[iType].g_sLightColorVisual4, g_esGeneral.g_sLightColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual4, sizeof(esCache::g_sLightColorVisual4), g_esPlayer[tank].g_sLightColorVisual4, g_esCache[tank].g_sLightColorVisual4);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual, sizeof(esCache::g_sLoopingVoicelineVisual), g_esTank[iType].g_sLoopingVoicelineVisual, g_esGeneral.g_sLoopingVoicelineVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual, sizeof(esCache::g_sLoopingVoicelineVisual), g_esPlayer[tank].g_sLoopingVoicelineVisual, g_esCache[tank].g_sLoopingVoicelineVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual2, sizeof(esCache::g_sLoopingVoicelineVisual2), g_esTank[iType].g_sLoopingVoicelineVisual2, g_esGeneral.g_sLoopingVoicelineVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual2, sizeof(esCache::g_sLoopingVoicelineVisual2), g_esPlayer[tank].g_sLoopingVoicelineVisual2, g_esCache[tank].g_sLoopingVoicelineVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual3, sizeof(esCache::g_sLoopingVoicelineVisual3), g_esTank[iType].g_sLoopingVoicelineVisual3, g_esGeneral.g_sLoopingVoicelineVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual3, sizeof(esCache::g_sLoopingVoicelineVisual3), g_esPlayer[tank].g_sLoopingVoicelineVisual3, g_esCache[tank].g_sLoopingVoicelineVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof(esCache::g_sLoopingVoicelineVisual4), g_esTank[iType].g_sLoopingVoicelineVisual4, g_esGeneral.g_sLoopingVoicelineVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof(esCache::g_sLoopingVoicelineVisual4), g_esPlayer[tank].g_sLoopingVoicelineVisual4, g_esCache[tank].g_sLoopingVoicelineVisual4);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual, sizeof(esCache::g_sOutlineColorVisual), g_esTank[iType].g_sOutlineColorVisual, g_esGeneral.g_sOutlineColorVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual, sizeof(esCache::g_sOutlineColorVisual), g_esPlayer[tank].g_sOutlineColorVisual, g_esCache[tank].g_sOutlineColorVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual2, sizeof(esCache::g_sOutlineColorVisual2), g_esTank[iType].g_sOutlineColorVisual2, g_esGeneral.g_sOutlineColorVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual2, sizeof(esCache::g_sOutlineColorVisual2), g_esPlayer[tank].g_sOutlineColorVisual2, g_esCache[tank].g_sOutlineColorVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual3, sizeof(esCache::g_sOutlineColorVisual3), g_esTank[iType].g_sOutlineColorVisual3, g_esGeneral.g_sOutlineColorVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual3, sizeof(esCache::g_sOutlineColorVisual3), g_esPlayer[tank].g_sOutlineColorVisual3, g_esCache[tank].g_sOutlineColorVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual4, sizeof(esCache::g_sOutlineColorVisual4), g_esTank[iType].g_sOutlineColorVisual4, g_esGeneral.g_sOutlineColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual4, sizeof(esCache::g_sOutlineColorVisual4), g_esPlayer[tank].g_sOutlineColorVisual4, g_esCache[tank].g_sOutlineColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOzTankColor, sizeof(esCache::g_sOzTankColor), g_esPlayer[tank].g_sOzTankColor, g_esTank[iType].g_sOzTankColor);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sPropTankColor, sizeof(esCache::g_sPropTankColor), g_esPlayer[tank].g_sPropTankColor, g_esTank[iType].g_sPropTankColor);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sRockColor, sizeof(esCache::g_sRockColor), g_esPlayer[tank].g_sRockColor, g_esTank[iType].g_sRockColor);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual, sizeof(esCache::g_sScreenColorVisual), g_esTank[iType].g_sScreenColorVisual, g_esGeneral.g_sScreenColorVisual);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual, sizeof(esCache::g_sScreenColorVisual), g_esPlayer[tank].g_sScreenColorVisual, g_esCache[tank].g_sScreenColorVisual);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual2, sizeof(esCache::g_sScreenColorVisual2), g_esTank[iType].g_sScreenColorVisual2, g_esGeneral.g_sScreenColorVisual2);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual2, sizeof(esCache::g_sScreenColorVisual2), g_esPlayer[tank].g_sScreenColorVisual2, g_esCache[tank].g_sScreenColorVisual2);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual3, sizeof(esCache::g_sScreenColorVisual3), g_esTank[iType].g_sScreenColorVisual3, g_esGeneral.g_sScreenColorVisual3);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual3, sizeof(esCache::g_sScreenColorVisual3), g_esPlayer[tank].g_sScreenColorVisual3, g_esCache[tank].g_sScreenColorVisual3);
-	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual4, sizeof(esCache::g_sScreenColorVisual4), g_esTank[iType].g_sScreenColorVisual4, g_esGeneral.g_sScreenColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual4, sizeof(esCache::g_sScreenColorVisual4), g_esPlayer[tank].g_sScreenColorVisual4, g_esCache[tank].g_sScreenColorVisual4);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSkinColor, sizeof(esCache::g_sSkinColor), g_esPlayer[tank].g_sSkinColor, g_esTank[iType].g_sSkinColor);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof(esCache::g_sTankName), g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
-	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTireColor, sizeof(esCache::g_sTireColor), g_esPlayer[tank].g_sTireColor, g_esTank[iType].g_sTireColor);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual, sizeof esCache::g_sBodyColorVisual, g_esTank[iType].g_sBodyColorVisual, g_esGeneral.g_sBodyColorVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual, sizeof esCache::g_sBodyColorVisual, g_esPlayer[tank].g_sBodyColorVisual, g_esCache[tank].g_sBodyColorVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual2, sizeof esCache::g_sBodyColorVisual2, g_esTank[iType].g_sBodyColorVisual2, g_esGeneral.g_sBodyColorVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual2, sizeof esCache::g_sBodyColorVisual2, g_esPlayer[tank].g_sBodyColorVisual2, g_esCache[tank].g_sBodyColorVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual3, sizeof esCache::g_sBodyColorVisual3, g_esTank[iType].g_sBodyColorVisual3, g_esGeneral.g_sBodyColorVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual3, sizeof esCache::g_sBodyColorVisual3, g_esPlayer[tank].g_sBodyColorVisual3, g_esCache[tank].g_sBodyColorVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sBodyColorVisual4, sizeof esCache::g_sBodyColorVisual4, g_esTank[iType].g_sBodyColorVisual4, g_esGeneral.g_sBodyColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sBodyColorVisual4, sizeof esCache::g_sBodyColorVisual4, g_esPlayer[tank].g_sBodyColorVisual4, g_esCache[tank].g_sBodyColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sComboSet, sizeof esCache::g_sComboSet, g_esPlayer[tank].g_sComboSet, g_esTank[iType].g_sComboSet);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward, sizeof esCache::g_sFallVoicelineReward, g_esTank[iType].g_sFallVoicelineReward, g_esGeneral.g_sFallVoicelineReward);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward, sizeof esCache::g_sFallVoicelineReward, g_esPlayer[tank].g_sFallVoicelineReward, g_esCache[tank].g_sFallVoicelineReward);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward2, sizeof esCache::g_sFallVoicelineReward2, g_esTank[iType].g_sFallVoicelineReward2, g_esGeneral.g_sFallVoicelineReward2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward2, sizeof esCache::g_sFallVoicelineReward2, g_esPlayer[tank].g_sFallVoicelineReward2, g_esCache[tank].g_sFallVoicelineReward2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward3, sizeof esCache::g_sFallVoicelineReward3, g_esTank[iType].g_sFallVoicelineReward3, g_esGeneral.g_sFallVoicelineReward3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward3, sizeof esCache::g_sFallVoicelineReward3, g_esPlayer[tank].g_sFallVoicelineReward3, g_esCache[tank].g_sFallVoicelineReward3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sFallVoicelineReward4, sizeof esCache::g_sFallVoicelineReward4, g_esTank[iType].g_sFallVoicelineReward4, g_esGeneral.g_sFallVoicelineReward4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFallVoicelineReward4, sizeof esCache::g_sFallVoicelineReward4, g_esPlayer[tank].g_sFallVoicelineReward4, g_esCache[tank].g_sFallVoicelineReward4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlameColor, sizeof esCache::g_sFlameColor, g_esPlayer[tank].g_sFlameColor, g_esTank[iType].g_sFlameColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sFlashlightColor, sizeof esCache::g_sFlashlightColor, g_esPlayer[tank].g_sFlashlightColor, g_esTank[iType].g_sFlashlightColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sGlowColor, sizeof esCache::g_sGlowColor, g_esPlayer[tank].g_sGlowColor, g_esTank[iType].g_sGlowColor);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esTank[iType].g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof esCache::g_sHealthCharacters, g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward, sizeof esCache::g_sItemReward, g_esTank[iType].g_sItemReward, g_esGeneral.g_sItemReward);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward, sizeof esCache::g_sItemReward, g_esPlayer[tank].g_sItemReward, g_esCache[tank].g_sItemReward);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward2, sizeof esCache::g_sItemReward2, g_esTank[iType].g_sItemReward2, g_esGeneral.g_sItemReward2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward2, sizeof esCache::g_sItemReward2, g_esPlayer[tank].g_sItemReward2, g_esCache[tank].g_sItemReward2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward3, sizeof esCache::g_sItemReward3, g_esTank[iType].g_sItemReward3, g_esGeneral.g_sItemReward3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward3, sizeof esCache::g_sItemReward3, g_esPlayer[tank].g_sItemReward3, g_esCache[tank].g_sItemReward3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward4, sizeof esCache::g_sItemReward4, g_esTank[iType].g_sItemReward4, g_esGeneral.g_sItemReward4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward4, sizeof esCache::g_sItemReward4, g_esPlayer[tank].g_sItemReward4, g_esCache[tank].g_sItemReward4);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual, sizeof esCache::g_sLightColorVisual, g_esTank[iType].g_sLightColorVisual, g_esGeneral.g_sLightColorVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual, sizeof esCache::g_sLightColorVisual, g_esPlayer[tank].g_sLightColorVisual, g_esCache[tank].g_sLightColorVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual2, sizeof esCache::g_sLightColorVisual2, g_esTank[iType].g_sLightColorVisual2, g_esGeneral.g_sLightColorVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual2, sizeof esCache::g_sLightColorVisual2, g_esPlayer[tank].g_sLightColorVisual2, g_esCache[tank].g_sLightColorVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual3, sizeof esCache::g_sLightColorVisual3, g_esTank[iType].g_sLightColorVisual3, g_esGeneral.g_sLightColorVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual3, sizeof esCache::g_sLightColorVisual3, g_esPlayer[tank].g_sLightColorVisual3, g_esCache[tank].g_sLightColorVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLightColorVisual4, sizeof esCache::g_sLightColorVisual4, g_esTank[iType].g_sLightColorVisual4, g_esGeneral.g_sLightColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLightColorVisual4, sizeof esCache::g_sLightColorVisual4, g_esPlayer[tank].g_sLightColorVisual4, g_esCache[tank].g_sLightColorVisual4);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual, sizeof esCache::g_sLoopingVoicelineVisual, g_esTank[iType].g_sLoopingVoicelineVisual, g_esGeneral.g_sLoopingVoicelineVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual, sizeof esCache::g_sLoopingVoicelineVisual, g_esPlayer[tank].g_sLoopingVoicelineVisual, g_esCache[tank].g_sLoopingVoicelineVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual2, sizeof esCache::g_sLoopingVoicelineVisual2, g_esTank[iType].g_sLoopingVoicelineVisual2, g_esGeneral.g_sLoopingVoicelineVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual2, sizeof esCache::g_sLoopingVoicelineVisual2, g_esPlayer[tank].g_sLoopingVoicelineVisual2, g_esCache[tank].g_sLoopingVoicelineVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual3, sizeof esCache::g_sLoopingVoicelineVisual3, g_esTank[iType].g_sLoopingVoicelineVisual3, g_esGeneral.g_sLoopingVoicelineVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual3, sizeof esCache::g_sLoopingVoicelineVisual3, g_esPlayer[tank].g_sLoopingVoicelineVisual3, g_esCache[tank].g_sLoopingVoicelineVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof esCache::g_sLoopingVoicelineVisual4, g_esTank[iType].g_sLoopingVoicelineVisual4, g_esGeneral.g_sLoopingVoicelineVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sLoopingVoicelineVisual4, sizeof esCache::g_sLoopingVoicelineVisual4, g_esPlayer[tank].g_sLoopingVoicelineVisual4, g_esCache[tank].g_sLoopingVoicelineVisual4);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual, sizeof esCache::g_sOutlineColorVisual, g_esTank[iType].g_sOutlineColorVisual, g_esGeneral.g_sOutlineColorVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual, sizeof esCache::g_sOutlineColorVisual, g_esPlayer[tank].g_sOutlineColorVisual, g_esCache[tank].g_sOutlineColorVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual2, sizeof esCache::g_sOutlineColorVisual2, g_esTank[iType].g_sOutlineColorVisual2, g_esGeneral.g_sOutlineColorVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual2, sizeof esCache::g_sOutlineColorVisual2, g_esPlayer[tank].g_sOutlineColorVisual2, g_esCache[tank].g_sOutlineColorVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual3, sizeof esCache::g_sOutlineColorVisual3, g_esTank[iType].g_sOutlineColorVisual3, g_esGeneral.g_sOutlineColorVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual3, sizeof esCache::g_sOutlineColorVisual3, g_esPlayer[tank].g_sOutlineColorVisual3, g_esCache[tank].g_sOutlineColorVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sOutlineColorVisual4, sizeof esCache::g_sOutlineColorVisual4, g_esTank[iType].g_sOutlineColorVisual4, g_esGeneral.g_sOutlineColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOutlineColorVisual4, sizeof esCache::g_sOutlineColorVisual4, g_esPlayer[tank].g_sOutlineColorVisual4, g_esCache[tank].g_sOutlineColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sOzTankColor, sizeof esCache::g_sOzTankColor, g_esPlayer[tank].g_sOzTankColor, g_esTank[iType].g_sOzTankColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sPropTankColor, sizeof esCache::g_sPropTankColor, g_esPlayer[tank].g_sPropTankColor, g_esTank[iType].g_sPropTankColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sRockColor, sizeof esCache::g_sRockColor, g_esPlayer[tank].g_sRockColor, g_esTank[iType].g_sRockColor);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual, sizeof esCache::g_sScreenColorVisual, g_esTank[iType].g_sScreenColorVisual, g_esGeneral.g_sScreenColorVisual);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual, sizeof esCache::g_sScreenColorVisual, g_esPlayer[tank].g_sScreenColorVisual, g_esCache[tank].g_sScreenColorVisual);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual2, sizeof esCache::g_sScreenColorVisual2, g_esTank[iType].g_sScreenColorVisual2, g_esGeneral.g_sScreenColorVisual2);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual2, sizeof esCache::g_sScreenColorVisual2, g_esPlayer[tank].g_sScreenColorVisual2, g_esCache[tank].g_sScreenColorVisual2);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual3, sizeof esCache::g_sScreenColorVisual3, g_esTank[iType].g_sScreenColorVisual3, g_esGeneral.g_sScreenColorVisual3);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual3, sizeof esCache::g_sScreenColorVisual3, g_esPlayer[tank].g_sScreenColorVisual3, g_esCache[tank].g_sScreenColorVisual3);
+	vGetSettingValue(bAccess, true, g_esCache[tank].g_sScreenColorVisual4, sizeof esCache::g_sScreenColorVisual4, g_esTank[iType].g_sScreenColorVisual4, g_esGeneral.g_sScreenColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sScreenColorVisual4, sizeof esCache::g_sScreenColorVisual4, g_esPlayer[tank].g_sScreenColorVisual4, g_esCache[tank].g_sScreenColorVisual4);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sSkinColor, sizeof esCache::g_sSkinColor, g_esPlayer[tank].g_sSkinColor, g_esTank[iType].g_sSkinColor);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof esCache::g_sTankName, g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
+	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTireColor, sizeof esCache::g_sTireColor, g_esPlayer[tank].g_sTireColor, g_esTank[iType].g_sTireColor);
 
-	for (int iPos = 0; iPos < sizeof(esCache::g_iTransformType); iPos++)
+	for (int iPos = 0; iPos < sizeof esCache::g_iTransformType; iPos++)
 	{
 		g_esCache[tank].g_iTransformType[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTransformType[iPos], g_esTank[iType].g_iTransformType[iPos]);
 
-		if (iPos < sizeof(esCache::g_iRewardEnabled))
+		if (iPos < sizeof esCache::g_iRewardEnabled)
 		{
 			g_esCache[tank].g_flActionDurationReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flActionDurationReward[iPos], g_esGeneral.g_flActionDurationReward[iPos]);
 			g_esCache[tank].g_flActionDurationReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos]);
@@ -7173,13 +7172,13 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos]);
 		}
 
-		if (iPos < sizeof(esCache::g_iStackLimits))
+		if (iPos < sizeof esCache::g_iStackLimits)
 		{
 			g_esCache[tank].g_iStackLimits[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iStackLimits[iPos], g_esGeneral.g_iStackLimits[iPos]);
 			g_esCache[tank].g_iStackLimits[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iStackLimits[iPos], g_esCache[tank].g_iStackLimits[iPos]);
 		}
 
-		if (iPos < sizeof(esCache::g_flComboChance))
+		if (iPos < sizeof esCache::g_flComboChance)
 		{
 			g_esCache[tank].g_flComboChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboChance[iPos], g_esTank[iType].g_flComboChance[iPos]);
 			g_esCache[tank].g_flComboDamage[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboDamage[iPos], g_esTank[iType].g_flComboDamage[iPos]);
@@ -7196,17 +7195,17 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flComboSpeed[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboSpeed[iPos], g_esTank[iType].g_flComboSpeed[iPos]);
 		}
 
-		if (iPos < sizeof(esCache::g_flComboTypeChance))
+		if (iPos < sizeof esCache::g_flComboTypeChance)
 		{
 			g_esCache[tank].g_flComboTypeChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboTypeChance[iPos], g_esTank[iType].g_flComboTypeChance[iPos]);
 		}
 
-		if (iPos < sizeof(esCache::g_flPropsChance))
+		if (iPos < sizeof esCache::g_flPropsChance)
 		{
 			g_esCache[tank].g_flPropsChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPropsChance[iPos], g_esTank[iType].g_flPropsChance[iPos]);
 		}
 
-		if (iPos < sizeof(esCache::g_iSkinColor))
+		if (iPos < sizeof esCache::g_iSkinColor)
 		{
 			g_esCache[tank].g_iSkinColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSkinColor[iPos], g_esTank[iType].g_iSkinColor[iPos], 1);
 			g_esCache[tank].g_iBossHealth[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBossHealth[iPos], g_esTank[iType].g_iBossHealth[iPos]);
@@ -7221,7 +7220,7 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iCrownColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iCrownColor[iPos], g_esTank[iType].g_iCrownColor[iPos], 1);
 		}
 
-		if (iPos < sizeof(esCache::g_iGlowColor))
+		if (iPos < sizeof esCache::g_iGlowColor)
 		{
 			g_esCache[tank].g_iGlowColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowColor[iPos], g_esTank[iType].g_iGlowColor[iPos], 1);
 		}
@@ -7236,7 +7235,7 @@ void vCacheSettings(int tank)
 
 void vClearAbilityList()
 {
-	for (int iPos = 0; iPos < sizeof(esGeneral::g_alAbilitySections); iPos++)
+	for (int iPos = 0; iPos < sizeof esGeneral::g_alAbilitySections; iPos++)
 	{
 		if (g_esGeneral.g_alAbilitySections[iPos] != null)
 		{
@@ -7249,7 +7248,7 @@ void vClearAbilityList()
 
 void vClearColorKeysList()
 {
-	for (int iPos = 0; iPos < sizeof(esGeneral::g_alColorKeys); iPos++)
+	for (int iPos = 0; iPos < sizeof esGeneral::g_alColorKeys; iPos++)
 	{
 		if (g_esGeneral.g_alColorKeys[iPos] != null)
 		{
@@ -7349,17 +7348,17 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_sOutlineColor = g_esPlayer[oldSurvivor].g_sOutlineColor;
 	g_esPlayer[newSurvivor].g_sScreenColor = g_esPlayer[oldSurvivor].g_sScreenColor;
 
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_flRewardTime; iPos++)
 	{
 		g_esPlayer[newSurvivor].g_flRewardTime[iPos] = g_esPlayer[oldSurvivor].g_flRewardTime[iPos];
 		g_esPlayer[newSurvivor].g_iRewardStack[iPos] = g_esPlayer[oldSurvivor].g_iRewardStack[iPos];
 
-		if (iPos < sizeof(esPlayer::g_flVisualTime))
+		if (iPos < sizeof esPlayer::g_flVisualTime)
 		{
 			g_esPlayer[newSurvivor].g_flVisualTime[iPos] = g_esPlayer[oldSurvivor].g_flVisualTime[iPos];
 		}
 
-		if (iPos < sizeof(esPlayer::g_iScreenColorVisual))
+		if (iPos < sizeof esPlayer::g_iScreenColorVisual)
 		{
 			g_esPlayer[newSurvivor].g_iScreenColorVisual[iPos] = g_esPlayer[oldSurvivor].g_iScreenColorVisual[iPos];
 		}
@@ -7447,7 +7446,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 	bool bFinish = true;
 	Call_StartForward(g_esGeneral.g_gfAbilityCheckForward);
 
-	for (int iPos = 0; iPos < sizeof(esGeneral::g_alAbilitySections); iPos++)
+	for (int iPos = 0; iPos < sizeof esGeneral::g_alAbilitySections; iPos++)
 	{
 		g_esGeneral.g_alAbilitySections[iPos] = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 
@@ -7477,7 +7476,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 
 	if (g_esGeneral.g_alPlugins != null)
 	{
-		int iListSize = (g_esGeneral.g_alPlugins.Length > 0) ? g_esGeneral.g_alPlugins.Length : 0;
+		int iLength = g_esGeneral.g_alPlugins.Length, iListSize = (iLength > 0) ? iLength : 0;
 		if (iListSize > 0)
 		{
 			for (int iPos = 0; iPos < iListSize; iPos++)
@@ -7491,14 +7490,14 @@ void vLoadConfigs(const char[] savepath, int mode)
 
 	if (g_esGeneral.g_alFilePaths != null)
 	{
-		int iListSize = (g_esGeneral.g_alFilePaths.Length > 0) ? g_esGeneral.g_alFilePaths.Length : 0;
+		int iLength = g_esGeneral.g_alFilePaths.Length, iListSize = (iLength > 0) ? iLength : 0;
 		if (iListSize > 0)
 		{
 			bool bAdd = true;
 			char sFilePath[PLATFORM_MAX_PATH];
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
-				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof(sFilePath));
+				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof sFilePath);
 				if (StrEqual(savepath, sFilePath, false))
 				{
 					bAdd = false;
@@ -7531,7 +7530,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 		if (smcError != SMCError_Okay)
 		{
 			char sSmcError[64];
-			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
+			smcLoader.GetErrorString(smcError, sSmcError, sizeof sSmcError);
 			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
 		}
 
@@ -7664,13 +7663,13 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iConfigCreate = 0;
 		g_esGeneral.g_iConfigExecute = 0;
 
-		for (int iPos = 0; iPos < sizeof(esGeneral::g_iFinaleWave); iPos++)
+		for (int iPos = 0; iPos < sizeof esGeneral::g_iFinaleWave; iPos++)
 		{
 			g_esGeneral.g_iFinaleMaxTypes[iPos] = MT_MAXTYPES;
 			g_esGeneral.g_iFinaleMinTypes[iPos] = 1;
 			g_esGeneral.g_iFinaleWave[iPos] = 0;
 
-			if (iPos < sizeof(esGeneral::g_iRewardEnabled))
+			if (iPos < sizeof esGeneral::g_iRewardEnabled)
 			{
 				g_esGeneral.g_iRewardEnabled[iPos] = -1;
 				g_esGeneral.g_iRewardBots[iPos] = -1;
@@ -7713,12 +7712,12 @@ public void SMCParseStart(SMCParser smc)
 				g_esGeneral.g_iUsefulRewards[iPos] = 15;
 			}
 
-			if (iPos < sizeof(esGeneral::g_iStackLimits))
+			if (iPos < sizeof esGeneral::g_iStackLimits)
 			{
 				g_esGeneral.g_iStackLimits[iPos] = 0;
 			}
 
-			if (iPos < sizeof(esGeneral::g_flDifficultyDamage))
+			if (iPos < sizeof esGeneral::g_flDifficultyDamage)
 			{
 				g_esGeneral.g_flDifficultyDamage[iPos] = 0.0;
 			}
@@ -7837,11 +7836,11 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iMeleeImmunity = 0;
 			g_esTank[iIndex].g_iVomitImmunity = 0;
 
-			for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
+			for (int iPos = 0; iPos < sizeof esTank::g_iTransformType; iPos++)
 			{
 				g_esTank[iIndex].g_iTransformType[iPos] = (iPos + 1);
 
-				if (iPos < sizeof(esTank::g_iRewardEnabled))
+				if (iPos < sizeof esTank::g_iRewardEnabled)
 				{
 					g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
 					g_esTank[iIndex].g_iRewardBots[iPos] = -1;
@@ -7884,12 +7883,12 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iUsefulRewards[iPos] = 0;
 				}
 
-				if (iPos < sizeof(esTank::g_iStackLimits))
+				if (iPos < sizeof esTank::g_iStackLimits)
 				{
 					g_esTank[iIndex].g_iStackLimits[iPos] = 0;
 				}
 
-				if (iPos < sizeof(esTank::g_flComboChance))
+				if (iPos < sizeof esTank::g_flComboChance)
 				{
 					g_esTank[iIndex].g_flComboChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flComboDamage[iPos] = 0.0;
@@ -7906,17 +7905,17 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_flComboSpeed[iPos] = 0.0;
 				}
 
-				if (iPos < sizeof(esTank::g_flComboTypeChance))
+				if (iPos < sizeof esTank::g_flComboTypeChance)
 				{
 					g_esTank[iIndex].g_flComboTypeChance[iPos] = 0.0;
 				}
 
-				if (iPos < sizeof(esTank::g_flPropsChance))
+				if (iPos < sizeof esTank::g_flPropsChance)
 				{
 					g_esTank[iIndex].g_flPropsChance[iPos] = 33.3;
 				}
 
-				if (iPos < sizeof(esTank::g_iSkinColor))
+				if (iPos < sizeof esTank::g_iSkinColor)
 				{
 					g_esTank[iIndex].g_iSkinColor[iPos] = 255;
 					g_esTank[iIndex].g_iBossHealth[iPos] = 5000 / (iPos + 1);
@@ -7931,7 +7930,7 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iCrownColor[iPos] = 255;
 				}
 
-				if (iPos < sizeof(esTank::g_iGlowColor))
+				if (iPos < sizeof esTank::g_iGlowColor)
 				{
 					g_esTank[iIndex].g_iGlowColor[iPos] = 255;
 				}
@@ -8046,11 +8045,11 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iMeleeImmunity = 0;
 				g_esPlayer[iPlayer].g_iVomitImmunity = 0;
 
-				for (int iPos = 0; iPos < sizeof(esPlayer::g_iTransformType); iPos++)
+				for (int iPos = 0; iPos < sizeof esPlayer::g_iTransformType; iPos++)
 				{
 					g_esPlayer[iPlayer].g_iTransformType[iPos] = 0;
 
-					if (iPos < sizeof(esPlayer::g_iRewardEnabled))
+					if (iPos < sizeof esPlayer::g_iRewardEnabled)
 					{
 						g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = -1;
 						g_esPlayer[iPlayer].g_iRewardBots[iPos] = -1;
@@ -8093,12 +8092,12 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = 0;
 					}
 
-					if (iPos < sizeof(esPlayer::g_iStackLimits))
+					if (iPos < sizeof esPlayer::g_iStackLimits)
 					{
 						g_esPlayer[iPlayer].g_iStackLimits[iPos] = 0;
 					}
 
-					if (iPos < sizeof(esPlayer::g_flComboChance))
+					if (iPos < sizeof esPlayer::g_flComboChance)
 					{
 						g_esPlayer[iPlayer].g_flComboChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flComboDamage[iPos] = 0.0;
@@ -8115,17 +8114,17 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_flComboSpeed[iPos] = 0.0;
 					}
 
-					if (iPos < sizeof(esPlayer::g_flComboTypeChance))
+					if (iPos < sizeof esPlayer::g_flComboTypeChance)
 					{
 						g_esPlayer[iPlayer].g_flComboTypeChance[iPos] = 0.0;
 					}
 
-					if (iPos < sizeof(esPlayer::g_flPropsChance))
+					if (iPos < sizeof esPlayer::g_flPropsChance)
 					{
 						g_esPlayer[iPlayer].g_flPropsChance[iPos] = 0.0;
 					}
 
-					if (iPos < sizeof(esPlayer::g_iSkinColor))
+					if (iPos < sizeof esPlayer::g_iSkinColor)
 					{
 						g_esPlayer[iPlayer].g_iSkinColor[iPos] = -1;
 						g_esPlayer[iPlayer].g_iBossHealth[iPos] = 0;
@@ -8140,7 +8139,7 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iCrownColor[iPos] = -1;
 					}
 
-					if (iPos < sizeof(esPlayer::g_iGlowColor))
+					if (iPos < sizeof esPlayer::g_iGlowColor)
 					{
 						g_esPlayer[iPlayer].g_iGlowColor[iPos] = -1;
 					}
@@ -8183,19 +8182,19 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 		{
 			g_esGeneral.g_csState = ConfigState_Settings;
 
-			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
+			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 		}
 		else if (!strncmp(name, "Tank", 4, false) || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || FindCharInString(name, ',') != -1 || FindCharInString(name, '-') != -1)
 		{
 			g_esGeneral.g_csState = ConfigState_Type;
 
-			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
+			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 		}
 		else if (!strncmp(name, "STEAM_", 6, false) || !strncmp("0:", name, 2) || !strncmp("1:", name, 2) || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']'))
 		{
 			g_esGeneral.g_csState = ConfigState_Admin;
 
-			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
+			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 		}
 		else
 		{
@@ -8206,7 +8205,7 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 	{
 		g_esGeneral.g_csState = ConfigState_Specific;
 
-		strcopy(g_esGeneral.g_sCurrentSubSection, sizeof(esGeneral::g_sCurrentSubSection), name);
+		strcopy(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection, name);
 	}
 	else
 	{
@@ -8302,16 +8301,16 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 				g_esGeneral.g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-				vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esGeneral.g_sHealthCharacters, sizeof(esGeneral::g_sHealthCharacters), value);
+				vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esGeneral.g_sHealthCharacters, sizeof esGeneral::g_sHealthCharacters, value);
 
 				if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, false))
 				{
 					if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
 					{
 						char sValue[10], sRange[2][5];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
-						ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
+						ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 						g_esGeneral.g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esGeneral.g_iMinType;
 						g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
@@ -8332,12 +8331,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 				{
 					char sValue[1280], sSet[7][320];
-					strcopy(sValue, sizeof(sValue), value);
-					ReplaceString(sValue, sizeof(sValue), " ", "");
-					ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-					for (int iPos = 0; iPos < sizeof(esGeneral::g_iStackLimits); iPos++)
+					strcopy(sValue, sizeof sValue, value);
+					ReplaceString(sValue, sizeof sValue, " ", "");
+					ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+					for (int iPos = 0; iPos < sizeof esGeneral::g_iStackLimits; iPos++)
 					{
-						if (iPos < sizeof(esGeneral::g_iRewardEnabled))
+						if (iPos < sizeof esGeneral::g_iRewardEnabled)
 						{
 							g_esGeneral.g_flRewardChance[iPos] = flGetClampedValue(key, "RewardChance", "Reward Chance", "Reward_Chance", "chance", g_esGeneral.g_flRewardChance[iPos], sSet[iPos], 0.1, 100.0);
 							g_esGeneral.g_flRewardDuration[iPos] = flGetClampedValue(key, "RewardDuration", "Reward Duration", "Reward_Duration", "duration", g_esGeneral.g_flRewardDuration[iPos], sSet[iPos], 0.1, 999999.0);
@@ -8379,14 +8378,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esGeneral.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esGeneral.g_iThornsReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esGeneral.g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-							vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
-							vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof(esGeneral::g_sBodyColorVisual), g_esGeneral.g_sBodyColorVisual2, sizeof(esGeneral::g_sBodyColorVisual2), g_esGeneral.g_sBodyColorVisual3, sizeof(esGeneral::g_sBodyColorVisual3), g_esGeneral.g_sBodyColorVisual4, sizeof(esGeneral::g_sBodyColorVisual4), sValue);
-							vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esGeneral.g_sFallVoicelineReward, sizeof(esGeneral::g_sFallVoicelineReward), g_esGeneral.g_sFallVoicelineReward2, sizeof(esGeneral::g_sFallVoicelineReward2), g_esGeneral.g_sFallVoicelineReward3, sizeof(esGeneral::g_sFallVoicelineReward3), g_esGeneral.g_sFallVoicelineReward4, sizeof(esGeneral::g_sFallVoicelineReward4), sSet[iPos]);
-							vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sOutlineColorVisual, sizeof(esGeneral::g_sOutlineColorVisual), g_esGeneral.g_sOutlineColorVisual2, sizeof(esGeneral::g_sOutlineColorVisual2), g_esGeneral.g_sOutlineColorVisual3, sizeof(esGeneral::g_sOutlineColorVisual3), g_esGeneral.g_sOutlineColorVisual4, sizeof(esGeneral::g_sOutlineColorVisual4), sValue);
-							vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esGeneral.g_sItemReward, sizeof(esGeneral::g_sItemReward), g_esGeneral.g_sItemReward2, sizeof(esGeneral::g_sItemReward2), g_esGeneral.g_sItemReward3, sizeof(esGeneral::g_sItemReward3), g_esGeneral.g_sItemReward4, sizeof(esGeneral::g_sItemReward4), sSet[iPos]);
-							vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esGeneral.g_sLightColorVisual, sizeof(esGeneral::g_sLightColorVisual), g_esGeneral.g_sLightColorVisual2, sizeof(esGeneral::g_sLightColorVisual2), g_esGeneral.g_sLightColorVisual3, sizeof(esGeneral::g_sLightColorVisual3), g_esGeneral.g_sLightColorVisual4, sizeof(esGeneral::g_sLightColorVisual4), sValue);
-							vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esGeneral.g_sLoopingVoicelineVisual, sizeof(esGeneral::g_sLoopingVoicelineVisual), g_esGeneral.g_sLoopingVoicelineVisual2, sizeof(esGeneral::g_sLoopingVoicelineVisual2), g_esGeneral.g_sLoopingVoicelineVisual3, sizeof(esGeneral::g_sLoopingVoicelineVisual3), g_esGeneral.g_sLoopingVoicelineVisual4, sizeof(esGeneral::g_sLoopingVoicelineVisual4), sSet[iPos]);
-							vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esGeneral.g_sScreenColorVisual, sizeof(esGeneral::g_sScreenColorVisual), g_esGeneral.g_sScreenColorVisual2, sizeof(esGeneral::g_sScreenColorVisual2), g_esGeneral.g_sScreenColorVisual3, sizeof(esGeneral::g_sScreenColorVisual3), g_esGeneral.g_sScreenColorVisual4, sizeof(esGeneral::g_sScreenColorVisual4), sValue);
+							vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
+							vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof esGeneral::g_sBodyColorVisual, g_esGeneral.g_sBodyColorVisual2, sizeof esGeneral::g_sBodyColorVisual2, g_esGeneral.g_sBodyColorVisual3, sizeof esGeneral::g_sBodyColorVisual3, g_esGeneral.g_sBodyColorVisual4, sizeof esGeneral::g_sBodyColorVisual4, sValue);
+							vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esGeneral.g_sFallVoicelineReward, sizeof esGeneral::g_sFallVoicelineReward, g_esGeneral.g_sFallVoicelineReward2, sizeof esGeneral::g_sFallVoicelineReward2, g_esGeneral.g_sFallVoicelineReward3, sizeof esGeneral::g_sFallVoicelineReward3, g_esGeneral.g_sFallVoicelineReward4, sizeof esGeneral::g_sFallVoicelineReward4, sSet[iPos]);
+							vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esGeneral.g_sOutlineColorVisual, sizeof esGeneral::g_sOutlineColorVisual, g_esGeneral.g_sOutlineColorVisual2, sizeof esGeneral::g_sOutlineColorVisual2, g_esGeneral.g_sOutlineColorVisual3, sizeof esGeneral::g_sOutlineColorVisual3, g_esGeneral.g_sOutlineColorVisual4, sizeof esGeneral::g_sOutlineColorVisual4, sValue);
+							vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esGeneral.g_sItemReward, sizeof esGeneral::g_sItemReward, g_esGeneral.g_sItemReward2, sizeof esGeneral::g_sItemReward2, g_esGeneral.g_sItemReward3, sizeof esGeneral::g_sItemReward3, g_esGeneral.g_sItemReward4, sizeof esGeneral::g_sItemReward4, sSet[iPos]);
+							vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esGeneral.g_sLightColorVisual, sizeof esGeneral::g_sLightColorVisual, g_esGeneral.g_sLightColorVisual2, sizeof esGeneral::g_sLightColorVisual2, g_esGeneral.g_sLightColorVisual3, sizeof esGeneral::g_sLightColorVisual3, g_esGeneral.g_sLightColorVisual4, sizeof esGeneral::g_sLightColorVisual4, sValue);
+							vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esGeneral.g_sLoopingVoicelineVisual, sizeof esGeneral::g_sLoopingVoicelineVisual, g_esGeneral.g_sLoopingVoicelineVisual2, sizeof esGeneral::g_sLoopingVoicelineVisual2, g_esGeneral.g_sLoopingVoicelineVisual3, sizeof esGeneral::g_sLoopingVoicelineVisual3, g_esGeneral.g_sLoopingVoicelineVisual4, sizeof esGeneral::g_sLoopingVoicelineVisual4, sSet[iPos]);
+							vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esGeneral.g_sScreenColorVisual, sizeof esGeneral::g_sScreenColorVisual, g_esGeneral.g_sScreenColorVisual2, sizeof esGeneral::g_sScreenColorVisual2, g_esGeneral.g_sScreenColorVisual3, sizeof esGeneral::g_sScreenColorVisual3, g_esGeneral.g_sScreenColorVisual4, sizeof esGeneral::g_sScreenColorVisual4, sValue);
 						}
 
 						g_esGeneral.g_iStackLimits[iPos] = iGetClampedValue(key, "StackLimits", "Stack Limits", "Stack_Limits", "limits", g_esGeneral.g_iStackLimits[iPos], sSet[iPos], 0, 999999);
@@ -8397,10 +8396,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					if (StrEqual(key, "DifficultyDamage", false) || StrEqual(key, "Difficulty Damage", false) || StrEqual(key, "Difficulty_Damage", false) || StrEqual(key, "diffdmg", false))
 					{
 						char sValue[36], sSet[4][9];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
-						ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-						for (int iPos = 0; iPos < sizeof(esGeneral::g_flDifficultyDamage); iPos++)
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
+						ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+						for (int iPos = 0; iPos < sizeof esGeneral::g_flDifficultyDamage; iPos++)
 						{
 							g_esGeneral.g_flDifficultyDamage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esGeneral.g_flDifficultyDamage[iPos];
 						}
@@ -8411,9 +8410,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					if (StrEqual(key, "RegularType", false) || StrEqual(key, "Regular Type", false) || StrEqual(key, "Regular_Type", false) || StrEqual(key, "regtype", false))
 					{
 						char sValue[10], sRange[2][5];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
-						ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
+						ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 						g_esGeneral.g_iRegularMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esGeneral.g_iRegularMinType;
 						g_esGeneral.g_iRegularMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esGeneral.g_iRegularMaxType;
@@ -8421,17 +8420,17 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					else if (StrEqual(key, "FinaleTypes", false) || StrEqual(key, "Finale Types", false) || StrEqual(key, "Finale_Types", false) || StrEqual(key, "fintypes", false))
 					{
 						char sValue[100], sRange[10][10], sSet[2][5];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
-						ExplodeString(sValue, ",", sRange, sizeof(sRange), sizeof(sRange[]));
-						for (int iPos = 0; iPos < sizeof(sRange); iPos++)
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
+						ExplodeString(sValue, ",", sRange, sizeof sRange, sizeof sRange[]);
+						for (int iPos = 0; iPos < sizeof sRange; iPos++)
 						{
 							if (sRange[iPos][0] == '\0')
 							{
 								continue;
 							}
 
-							ExplodeString(sRange[iPos], "-", sSet, sizeof(sSet), sizeof(sSet[]));
+							ExplodeString(sRange[iPos], "-", sSet, sizeof sSet, sizeof sSet[]);
 							g_esGeneral.g_iFinaleMinTypes[iPos] = (sSet[0][0] != '\0') ? iClamp(StringToInt(sSet[0]), 0, MT_MAXTYPES) : g_esGeneral.g_iFinaleMinTypes[iPos];
 							g_esGeneral.g_iFinaleMaxTypes[iPos] = (sSet[1][0] != '\0') ? iClamp(StringToInt(sSet[1]), 0, MT_MAXTYPES) : g_esGeneral.g_iFinaleMaxTypes[iPos];
 						}
@@ -8439,10 +8438,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					else if (StrEqual(key, "FinaleWaves", false) || StrEqual(key, "Finale Waves", false) || StrEqual(key, "Finale_Waves", false) || StrEqual(key, "finwaves", false))
 					{
 						char sValue[30], sSet[10][3];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
-						ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-						for (int iPos = 0; iPos < sizeof(esGeneral::g_iFinaleWave); iPos++)
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
+						ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+						for (int iPos = 0; iPos < sizeof esGeneral::g_iFinaleWave; iPos++)
 						{
 							g_esGeneral.g_iFinaleWave[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 32) : g_esGeneral.g_iFinaleWave[iPos];
 						}
@@ -8451,13 +8450,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				else if ((StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CONVARS, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CONVARS2, false)) && key[0] != '\0')
 				{
 					char sKey[128];
-					strcopy(sKey, sizeof(sKey), key);
-					ReplaceString(sKey, sizeof(sKey), " ", "");
+					strcopy(sKey, sizeof sKey, key);
+					ReplaceString(sKey, sizeof sKey, " ", "");
 					if (StrContains(sKey, "mt_disabledgamemodes", false) == -1 && StrContains(sKey, "mt_enabledgamemodes", false) == -1 && StrContains(sKey, "mt_gamemodetypes", false) == -1 && StrContains(sKey, "mt_pluginenabled", false) == -1 && StrContains(sKey, "mt_pluginversion", false) == -1)
 					{
 						char sValue[PLATFORM_MAX_PATH];
-						strcopy(sValue, sizeof(sValue), value);
-						ReplaceString(sValue, sizeof(sValue), " ", "");
+						strcopy(sValue, sizeof sValue, value);
+						ReplaceString(sValue, sizeof sValue, " ", "");
 						g_esGeneral.g_cvMTTempSetting = FindConVar(sKey);
 						if (g_esGeneral.g_cvMTTempSetting != null)
 						{
@@ -8487,8 +8486,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 255);
 					g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 255);
 
-					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "EnabledGameModes", "Enabled Game Modes", "Enabled_Game_Modes", "gmenabled", g_esGeneral.g_sEnabledGameModes, sizeof(esGeneral::g_sEnabledGameModes), value);
-					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "DisabledGameModes", "Disabled Game Modes", "Disabled_Game_Modes", "gmdisabled", g_esGeneral.g_sDisabledGameModes, sizeof(esGeneral::g_sDisabledGameModes), value);
+					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "EnabledGameModes", "Enabled Game Modes", "Enabled_Game_Modes", "gmenabled", g_esGeneral.g_sEnabledGameModes, sizeof esGeneral::g_sEnabledGameModes, value);
+					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "DisabledGameModes", "Disabled Game Modes", "Disabled_Game_Modes", "gmdisabled", g_esGeneral.g_sDisabledGameModes, sizeof esGeneral::g_sDisabledGameModes, value);
 				}
 
 				Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
@@ -8505,7 +8504,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				int iStartPos = 0, iIndex = 0, iRealType = 0;
 				if (!strncmp(g_esGeneral.g_sCurrentSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSection[0] == '#')
 				{
-					iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
+					iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
 					vReadTankSettings(iIndex, g_esGeneral.g_sCurrentSubSection, key, value);
 				}
 				else if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
@@ -8602,37 +8601,37 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_iAccessFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 						g_esPlayer[iPlayer].g_iImmunityFlags = iGetAdminFlagsValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esPlayer[iPlayer].g_sHealthCharacters, sizeof(esPlayer::g_sHealthCharacters), value);
-						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esPlayer[iPlayer].g_sComboSet, sizeof(esPlayer::g_sComboSet), value);
+						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esPlayer[iPlayer].g_sHealthCharacters, sizeof esPlayer::g_sHealthCharacters, value);
+						vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esPlayer[iPlayer].g_sComboSet, sizeof esPlayer::g_sComboSet, value);
 
 						if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, false))
 						{
 							if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
 								char sValue[64], sSet[4][4];
-								vGetConfigColors(sValue, sizeof(sValue), value);
-								strcopy(g_esPlayer[iPlayer].g_sSkinColor, sizeof(esPlayer::g_sSkinColor), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_iSkinColor); iPos++)
+								vGetConfigColors(sValue, sizeof sValue, value);
+								strcopy(g_esPlayer[iPlayer].g_sSkinColor, sizeof esPlayer::g_sSkinColor, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_iSkinColor; iPos++)
 								{
 									g_esPlayer[iPlayer].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 								}
 							}
 							else
 							{
-								vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankName", "Tank Name", "Tank_Name", "name", g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
+								vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankName", "Tank Name", "Tank_Name", "name", g_esPlayer[iPlayer].g_sTankName, sizeof esPlayer::g_sTankName, value);
 							}
 						}
 						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 						{
 							char sValue[1280], sSet[7][320];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-							for (int iPos = 0; iPos < sizeof(esPlayer::g_iStackLimits); iPos++)
+							strcopy(sValue, sizeof sValue, value);
+							ReplaceString(sValue, sizeof sValue, " ", "");
+							ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+							for (int iPos = 0; iPos < sizeof esPlayer::g_iStackLimits; iPos++)
 							{
-								if (iPos < sizeof(esPlayer::g_iRewardEnabled))
+								if (iPos < sizeof esPlayer::g_iRewardEnabled)
 								{
 									g_esPlayer[iPlayer].g_flRewardChance[iPos] = flGetClampedValue(key, "RewardChance", "Reward Chance", "Reward_Chance", "chance", g_esPlayer[iPlayer].g_flRewardChance[iPos], sSet[iPos], 0.1, 100.0);
 									g_esPlayer[iPlayer].g_flRewardDuration[iPos] = flGetClampedValue(key, "RewardDuration", "Reward Duration", "Reward_Duration", "duration", g_esPlayer[iPlayer].g_flRewardDuration[iPos], sSet[iPos], 0.1, 999999.0);
@@ -8674,14 +8673,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									g_esPlayer[iPlayer].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esPlayer[iPlayer].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esPlayer[iPlayer].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-									vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
-									vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof(esPlayer::g_sBodyColorVisual), g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof(esPlayer::g_sBodyColorVisual2), g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof(esPlayer::g_sBodyColorVisual3), g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof(esPlayer::g_sBodyColorVisual4), sValue);
-									vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esPlayer[iPlayer].g_sFallVoicelineReward, sizeof(esPlayer::g_sFallVoicelineReward), g_esPlayer[iPlayer].g_sFallVoicelineReward2, sizeof(esPlayer::g_sFallVoicelineReward2), g_esPlayer[iPlayer].g_sFallVoicelineReward3, sizeof(esPlayer::g_sFallVoicelineReward3), g_esPlayer[iPlayer].g_sFallVoicelineReward4, sizeof(esPlayer::g_sFallVoicelineReward4), sSet[iPos]);
-									vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sOutlineColorVisual, sizeof(esPlayer::g_sOutlineColorVisual), g_esPlayer[iPlayer].g_sOutlineColorVisual2, sizeof(esPlayer::g_sOutlineColorVisual2), g_esPlayer[iPlayer].g_sOutlineColorVisual3, sizeof(esPlayer::g_sOutlineColorVisual3), g_esPlayer[iPlayer].g_sOutlineColorVisual4, sizeof(esPlayer::g_sOutlineColorVisual4), sValue);
-									vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esPlayer[iPlayer].g_sItemReward, sizeof(esPlayer::g_sItemReward), g_esPlayer[iPlayer].g_sItemReward2, sizeof(esPlayer::g_sItemReward2), g_esPlayer[iPlayer].g_sItemReward3, sizeof(esPlayer::g_sItemReward3), g_esPlayer[iPlayer].g_sItemReward4, sizeof(esPlayer::g_sItemReward4), sSet[iPos]);
-									vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esPlayer[iPlayer].g_sLightColorVisual, sizeof(esPlayer::g_sLightColorVisual), g_esPlayer[iPlayer].g_sLightColorVisual2, sizeof(esPlayer::g_sLightColorVisual2), g_esPlayer[iPlayer].g_sLightColorVisual3, sizeof(esPlayer::g_sLightColorVisual3), g_esPlayer[iPlayer].g_sLightColorVisual4, sizeof(esPlayer::g_sLightColorVisual4), sValue);
-									vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual, sizeof(esPlayer::g_sLoopingVoicelineVisual), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual2, sizeof(esPlayer::g_sLoopingVoicelineVisual2), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual3, sizeof(esPlayer::g_sLoopingVoicelineVisual3), g_esPlayer[iPlayer].g_sLoopingVoicelineVisual4, sizeof(esPlayer::g_sLoopingVoicelineVisual4), sSet[iPos]);
-									vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esPlayer[iPlayer].g_sScreenColorVisual, sizeof(esPlayer::g_sScreenColorVisual), g_esPlayer[iPlayer].g_sScreenColorVisual2, sizeof(esPlayer::g_sScreenColorVisual2), g_esPlayer[iPlayer].g_sScreenColorVisual3, sizeof(esPlayer::g_sScreenColorVisual3), g_esPlayer[iPlayer].g_sScreenColorVisual4, sizeof(esPlayer::g_sScreenColorVisual4), sValue);
+									vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
+									vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof esPlayer::g_sBodyColorVisual, g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof esPlayer::g_sBodyColorVisual2, g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof esPlayer::g_sBodyColorVisual3, g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof esPlayer::g_sBodyColorVisual4, sValue);
+									vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esPlayer[iPlayer].g_sFallVoicelineReward, sizeof esPlayer::g_sFallVoicelineReward, g_esPlayer[iPlayer].g_sFallVoicelineReward2, sizeof esPlayer::g_sFallVoicelineReward2, g_esPlayer[iPlayer].g_sFallVoicelineReward3, sizeof esPlayer::g_sFallVoicelineReward3, g_esPlayer[iPlayer].g_sFallVoicelineReward4, sizeof esPlayer::g_sFallVoicelineReward4, sSet[iPos]);
+									vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esPlayer[iPlayer].g_sOutlineColorVisual, sizeof esPlayer::g_sOutlineColorVisual, g_esPlayer[iPlayer].g_sOutlineColorVisual2, sizeof esPlayer::g_sOutlineColorVisual2, g_esPlayer[iPlayer].g_sOutlineColorVisual3, sizeof esPlayer::g_sOutlineColorVisual3, g_esPlayer[iPlayer].g_sOutlineColorVisual4, sizeof esPlayer::g_sOutlineColorVisual4, sValue);
+									vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esPlayer[iPlayer].g_sItemReward, sizeof esPlayer::g_sItemReward, g_esPlayer[iPlayer].g_sItemReward2, sizeof esPlayer::g_sItemReward2, g_esPlayer[iPlayer].g_sItemReward3, sizeof esPlayer::g_sItemReward3, g_esPlayer[iPlayer].g_sItemReward4, sizeof esPlayer::g_sItemReward4, sSet[iPos]);
+									vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esPlayer[iPlayer].g_sLightColorVisual, sizeof esPlayer::g_sLightColorVisual, g_esPlayer[iPlayer].g_sLightColorVisual2, sizeof esPlayer::g_sLightColorVisual2, g_esPlayer[iPlayer].g_sLightColorVisual3, sizeof esPlayer::g_sLightColorVisual3, g_esPlayer[iPlayer].g_sLightColorVisual4, sizeof esPlayer::g_sLightColorVisual4, sValue);
+									vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual, sizeof esPlayer::g_sLoopingVoicelineVisual, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual2, sizeof esPlayer::g_sLoopingVoicelineVisual2, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual3, sizeof esPlayer::g_sLoopingVoicelineVisual3, g_esPlayer[iPlayer].g_sLoopingVoicelineVisual4, sizeof esPlayer::g_sLoopingVoicelineVisual4, sSet[iPos]);
+									vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esPlayer[iPlayer].g_sScreenColorVisual, sizeof esPlayer::g_sScreenColorVisual, g_esPlayer[iPlayer].g_sScreenColorVisual2, sizeof esPlayer::g_sScreenColorVisual2, g_esPlayer[iPlayer].g_sScreenColorVisual3, sizeof esPlayer::g_sScreenColorVisual3, g_esPlayer[iPlayer].g_sScreenColorVisual4, sizeof esPlayer::g_sScreenColorVisual4, sValue);
 								}
 
 								g_esPlayer[iPlayer].g_iStackLimits[iPos] = iGetClampedValue(key, "StackLimits", "Stack Limits", "Stack_Limits", "limits", g_esPlayer[iPlayer].g_iStackLimits[iPos], sSet[iPos], 0, 999999);
@@ -8692,11 +8691,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 							{
 								char sValue[64], sSet[3][4];
-								vGetConfigColors(sValue, sizeof(sValue), value);
-								strcopy(g_esPlayer[iPlayer].g_sGlowColor, sizeof(esPlayer::g_sGlowColor), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_iGlowColor); iPos++)
+								vGetConfigColors(sValue, sizeof sValue, value);
+								strcopy(g_esPlayer[iPlayer].g_sGlowColor, sizeof esPlayer::g_sGlowColor, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_iGlowColor; iPos++)
 								{
 									g_esPlayer[iPlayer].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 								}
@@ -8704,9 +8703,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 							{
 								char sValue[14], sRange[2][7];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+								strcopy(sValue, sizeof sValue, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 								g_esPlayer[iPlayer].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMinRange;
 								g_esPlayer[iPlayer].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMaxRange;
@@ -8715,10 +8714,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_BOSS, false))
 						{
 							char sValue[44], sSet[4][11];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-							for (int iPos = 0; iPos < sizeof(esPlayer::g_iBossHealth); iPos++)
+							strcopy(sValue, sizeof sValue, value);
+							ReplaceString(sValue, sizeof sValue, " ", "");
+							ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+							for (int iPos = 0; iPos < sizeof esPlayer::g_iBossHealth; iPos++)
 							{
 								g_esPlayer[iPlayer].g_iBossHealth[iPos] = iGetClampedValue(key, "BossHealthStages", "Boss Health Stages", "Boss_Health_Stages", "bosshpstages", g_esPlayer[iPlayer].g_iBossHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
 								g_esPlayer[iPlayer].g_iBossType[iPos] = iGetClampedValue(key, "BossTypes", "Boss Types", "Boss_Types", "bosstypes", g_esPlayer[iPlayer].g_iBossType[iPos], sSet[iPos], 1, MT_MAXTYPES);
@@ -8729,10 +8728,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "ComboTypeChance", false) || StrEqual(key, "Combo Type Chance", false) || StrEqual(key, "Combo_Type_Chance", false) || StrEqual(key, "typechance", false))
 							{
 								char sValue[42], sSet[7][6];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_flComboTypeChance); iPos++)
+								strcopy(sValue, sizeof sValue, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_flComboTypeChance; iPos++)
 								{
 									g_esPlayer[iPlayer].g_flComboTypeChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esPlayer[iPlayer].g_flComboTypeChance[iPos];
 								}
@@ -8740,17 +8739,17 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							else
 							{
 								char sValue[140], sSet[10][14];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_flComboChance); iPos++)
+								strcopy(sValue, sizeof sValue, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_flComboChance; iPos++)
 								{
 									if (StrEqual(key, "ComboRadius", false) || StrEqual(key, "Combo Radius", false) || StrEqual(key, "Combo_Radius", false) || StrEqual(key, "radius", false))
 									{
 										char sRange[2][7], sSubset[14];
-										strcopy(sSubset, sizeof(sSubset), sSet[iPos]);
-										ReplaceString(sSubset, sizeof(sSubset), " ", "");
-										ExplodeString(sSubset, ";", sRange, sizeof(sRange), sizeof(sRange[]));
+										strcopy(sSubset, sizeof sSubset, sSet[iPos]);
+										ReplaceString(sSubset, sizeof sSubset, " ", "");
+										ExplodeString(sSubset, ";", sRange, sizeof sRange, sizeof sRange[]);
 
 										g_esPlayer[iPlayer].g_flComboMinRadius[iPos] = (sRange[0][0] != '\0') ? flClamp(StringToFloat(sRange[0]), -200.0, 0.0) : g_esPlayer[iPlayer].g_flComboMinRadius[iPos];
 										g_esPlayer[iPlayer].g_flComboMaxRadius[iPos] = (sRange[1][0] != '\0') ? flClamp(StringToFloat(sRange[1]), 0.0, 200.0) : g_esPlayer[iPlayer].g_flComboMaxRadius[iPos];
@@ -8777,10 +8776,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 							{
 								char sValue[50], sSet[10][5];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_iTransformType); iPos++)
+								strcopy(sValue, sizeof sValue, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_iTransformType; iPos++)
 								{
 									g_esPlayer[iPlayer].g_iTransformType[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, MT_MAXTYPES) : g_esPlayer[iPlayer].g_iTransformType[iPos];
 								}
@@ -8791,10 +8790,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 							{
 								char sValue[54], sSet[9][6];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_flPropsChance); iPos++)
+								strcopy(sValue, sizeof sValue, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_flPropsChance; iPos++)
 								{
 									g_esPlayer[iPlayer].g_flPropsChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esPlayer[iPlayer].g_flPropsChance[iPos];
 								}
@@ -8802,16 +8801,16 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							else
 							{
 								char sValue[64], sSet[4][4];
-								vGetConfigColors(sValue, sizeof(sValue), value);
-								vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esPlayer[iPlayer].g_sOzTankColor, sizeof(esPlayer::g_sOzTankColor), value);
-								vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esPlayer[iPlayer].g_sFlameColor, sizeof(esPlayer::g_sFlameColor), value);
-								vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esPlayer[iPlayer].g_sRockColor, sizeof(esPlayer::g_sRockColor), value);
-								vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esPlayer[iPlayer].g_sTireColor, sizeof(esPlayer::g_sTireColor), value);
-								vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esPlayer[iPlayer].g_sPropTankColor, sizeof(esPlayer::g_sPropTankColor), value);
-								vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esPlayer[iPlayer].g_sFlashlightColor, sizeof(esPlayer::g_sFlashlightColor), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-								for (int iPos = 0; iPos < sizeof(esPlayer::g_iLightColor); iPos++)
+								vGetConfigColors(sValue, sizeof sValue, value);
+								vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esPlayer[iPlayer].g_sOzTankColor, sizeof esPlayer::g_sOzTankColor, value);
+								vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esPlayer[iPlayer].g_sFlameColor, sizeof esPlayer::g_sFlameColor, value);
+								vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esPlayer[iPlayer].g_sRockColor, sizeof esPlayer::g_sRockColor, value);
+								vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esPlayer[iPlayer].g_sTireColor, sizeof esPlayer::g_sTireColor, value);
+								vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esPlayer[iPlayer].g_sPropTankColor, sizeof esPlayer::g_sPropTankColor, value);
+								vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esPlayer[iPlayer].g_sFlashlightColor, sizeof esPlayer::g_sFlashlightColor, value);
+								ReplaceString(sValue, sizeof sValue, " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+								for (int iPos = 0; iPos < sizeof esPlayer::g_iLightColor; iPos++)
 								{
 									g_esPlayer[iPlayer].g_iLightColor[iPos] = iGetClampedValue(key, "LightColor", "Light Color", "Light_Color", "light", g_esPlayer[iPlayer].g_iLightColor[iPos], sSet[iPos], 0, 255, 0);
 									g_esPlayer[iPlayer].g_iOzTankColor[iPos] = iGetClampedValue(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esPlayer[iPlayer].g_iOzTankColor[iPos], sSet[iPos], 0, 255, 0);
@@ -8829,7 +8828,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							int iStartPos = 0, iIndex = 0, iRealType = 0;
 							if (!strncmp(g_esGeneral.g_sCurrentSubSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSubSection[0] == '#')
 							{
-								iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof(esGeneral::g_sCurrentSubSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
+								iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
 								vReadAdminSettings(iPlayer, iIndex, key, value);
 							}
 							else if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') != -1)
@@ -8958,9 +8957,9 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
 	if (tank > 0 && g_esPlayer[tank].g_sTankName[0] != '\0')
 	{
 		char sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
-		FormatEx(sPhrase, sizeof(sPhrase), "%s Name", g_esPlayer[tank].g_sSteamID32);
-		FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", g_esPlayer[tank].g_sSteam3ID);
-		FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
+		FormatEx(sPhrase, sizeof sPhrase, "%s Name", g_esPlayer[tank].g_sSteamID32);
+		FormatEx(sPhrase2, sizeof sPhrase2, "%s Name", g_esPlayer[tank].g_sSteam3ID);
+		FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
 
 		switch (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
 		{
@@ -8971,7 +8970,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
 	else if (g_esTank[iType].g_sTankName[0] != '\0')
 	{
 		char sTankName[32];
-		FormatEx(sTankName, sizeof(sTankName), "Tank #%i Name", iType);
+		FormatEx(sTankName, sizeof sTankName, "Tank #%i Name", iType);
 
 		switch (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
 		{
@@ -9187,8 +9186,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					if (iOption > 0)
 					{
 						char sPhrase[32], sTankName[33];
-						FormatEx(sPhrase, sizeof(sPhrase), "Kill%i", iOption);
-						vGetTranslatedName(sTankName, sizeof(sTankName), iAttacker);
+						FormatEx(sPhrase, sizeof sPhrase, "Kill%i", iOption);
+						vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
 						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
 						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
 					}
@@ -9311,7 +9310,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsTank(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
 			{
 				char sWeapon[32];
-				event.GetString("weapon", sWeapon, sizeof(sWeapon));
+				event.GetString("weapon", sWeapon, sizeof sWeapon);
 				if (StrEqual(sWeapon, "tank_claw"))
 				{
 					if (!g_esPlayer[iTank].g_bAttacked)
@@ -9445,37 +9444,37 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		g_esTank[type].g_iAccessFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esTank[type].g_iImmunityFlags = iGetAdminFlagsValue(sub, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN, MT_CONFIG_SECTION_ADMIN2, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esTank[type].g_sHealthCharacters, sizeof(esTank::g_sHealthCharacters), value);
-		vGetKeyValue(sub, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esTank[type].g_sComboSet, sizeof(esTank::g_sComboSet), value);
+		vGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthCharacters", "Health Characters", "Health_Characters", "hpchars", g_esTank[type].g_sHealthCharacters, sizeof esTank::g_sHealthCharacters, value);
+		vGetKeyValue(sub, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, MT_CONFIG_SECTION_COMBO, key, "ComboSet", "Combo Set", "Combo_Set", "set", g_esTank[type].g_sComboSet, sizeof esTank::g_sComboSet, value);
 
 		if (StrEqual(sub, MT_CONFIG_SECTION_GENERAL, false))
 		{
 			if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 			{
 				char sValue[64], sSet[4][4];
-				vGetConfigColors(sValue, sizeof(sValue), value);
-				strcopy(g_esTank[type].g_sSkinColor, sizeof(esTank::g_sSkinColor), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_iSkinColor); iPos++)
+				vGetConfigColors(sValue, sizeof sValue, value);
+				strcopy(g_esTank[type].g_sSkinColor, sizeof esTank::g_sSkinColor, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_iSkinColor; iPos++)
 				{
 					g_esTank[type].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
 			}
 			else
 			{
-				vGetKeyValue(sub, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankName", "Tank Name", "Tank_Name", "name", g_esTank[type].g_sTankName, sizeof(esTank::g_sTankName), value);
+				vGetKeyValue(sub, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "TankName", "Tank Name", "Tank_Name", "name", g_esTank[type].g_sTankName, sizeof esTank::g_sTankName, value);
 			}
 		}
 		else if (StrEqual(sub, MT_CONFIG_SECTION_REWARDS, false))
 		{
 			char sValue[1280], sSet[7][320];
-			strcopy(sValue, sizeof(sValue), value);
-			ReplaceString(sValue, sizeof(sValue), " ", "");
-			ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-			for (int iPos = 0; iPos < sizeof(esTank::g_iStackLimits); iPos++)
+			strcopy(sValue, sizeof sValue, value);
+			ReplaceString(sValue, sizeof sValue, " ", "");
+			ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+			for (int iPos = 0; iPos < sizeof esTank::g_iStackLimits; iPos++)
 			{
-				if (iPos < sizeof(esTank::g_iRewardEnabled))
+				if (iPos < sizeof esTank::g_iRewardEnabled)
 				{
 					g_esTank[type].g_flRewardChance[iPos] = flGetClampedValue(key, "RewardChance", "Reward Chance", "Reward_Chance", "chance", g_esTank[type].g_flRewardChance[iPos], sSet[iPos], 0.1, 100.0);
 					g_esTank[type].g_flRewardDuration[iPos] = flGetClampedValue(key, "RewardDuration", "Reward Duration", "Reward_Duration", "duration", g_esTank[type].g_flRewardDuration[iPos], sSet[iPos], 0.1, 999999.0);
@@ -9517,14 +9516,14 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTank[type].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTank[type].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
 
-					vGetConfigColors(sValue, sizeof(sValue), sSet[iPos], ';');
-					vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof(esTank::g_sBodyColorVisual), g_esTank[type].g_sBodyColorVisual2, sizeof(esTank::g_sBodyColorVisual2), g_esTank[type].g_sBodyColorVisual3, sizeof(esTank::g_sBodyColorVisual3), g_esTank[type].g_sBodyColorVisual4, sizeof(esTank::g_sBodyColorVisual4), sValue);
-					vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esTank[type].g_sFallVoicelineReward, sizeof(esTank::g_sFallVoicelineReward), g_esTank[type].g_sFallVoicelineReward2, sizeof(esTank::g_sFallVoicelineReward2), g_esTank[type].g_sFallVoicelineReward3, sizeof(esTank::g_sFallVoicelineReward3), g_esTank[type].g_sFallVoicelineReward4, sizeof(esTank::g_sFallVoicelineReward4), sSet[iPos]);
-					vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sOutlineColorVisual, sizeof(esTank::g_sOutlineColorVisual), g_esTank[type].g_sOutlineColorVisual2, sizeof(esTank::g_sOutlineColorVisual2), g_esTank[type].g_sOutlineColorVisual3, sizeof(esTank::g_sOutlineColorVisual3), g_esTank[type].g_sOutlineColorVisual4, sizeof(esTank::g_sOutlineColorVisual4), sValue);
-					vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esTank[type].g_sItemReward, sizeof(esTank::g_sItemReward), g_esTank[type].g_sItemReward2, sizeof(esTank::g_sItemReward2), g_esTank[type].g_sItemReward3, sizeof(esTank::g_sItemReward3), g_esTank[type].g_sItemReward4, sizeof(esTank::g_sItemReward4), sValue);
-					vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esTank[type].g_sLightColorVisual, sizeof(esTank::g_sLightColorVisual), g_esTank[type].g_sLightColorVisual2, sizeof(esTank::g_sLightColorVisual2), g_esTank[type].g_sLightColorVisual3, sizeof(esTank::g_sLightColorVisual3), g_esTank[type].g_sLightColorVisual4, sizeof(esTank::g_sLightColorVisual4), sValue);
-					vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esTank[type].g_sLoopingVoicelineVisual, sizeof(esTank::g_sLoopingVoicelineVisual), g_esTank[type].g_sLoopingVoicelineVisual2, sizeof(esTank::g_sLoopingVoicelineVisual2), g_esTank[type].g_sLoopingVoicelineVisual3, sizeof(esTank::g_sLoopingVoicelineVisual3), g_esTank[type].g_sLoopingVoicelineVisual4, sizeof(esTank::g_sLoopingVoicelineVisual4), sSet[iPos]);
-					vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esTank[type].g_sScreenColorVisual, sizeof(esTank::g_sScreenColorVisual), g_esTank[type].g_sScreenColorVisual2, sizeof(esTank::g_sScreenColorVisual2), g_esTank[type].g_sScreenColorVisual3, sizeof(esTank::g_sScreenColorVisual3), g_esTank[type].g_sScreenColorVisual4, sizeof(esTank::g_sScreenColorVisual4), sValue);
+					vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
+					vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof esTank::g_sBodyColorVisual, g_esTank[type].g_sBodyColorVisual2, sizeof esTank::g_sBodyColorVisual2, g_esTank[type].g_sBodyColorVisual3, sizeof esTank::g_sBodyColorVisual3, g_esTank[type].g_sBodyColorVisual4, sizeof esTank::g_sBodyColorVisual4, sValue);
+					vGetStringValue(key, "FallVoicelineReward", "Fall Voiceline Reward", "Fall_Voiceline_Reward", "fallvoice", iPos, g_esTank[type].g_sFallVoicelineReward, sizeof esTank::g_sFallVoicelineReward, g_esTank[type].g_sFallVoicelineReward2, sizeof esTank::g_sFallVoicelineReward2, g_esTank[type].g_sFallVoicelineReward3, sizeof esTank::g_sFallVoicelineReward3, g_esTank[type].g_sFallVoicelineReward4, sizeof esTank::g_sFallVoicelineReward4, sSet[iPos]);
+					vGetStringValue(key, "GlowColorVisual", "Glow Color Visual", "Glow_Color_Visual", "glowcolor", iPos, g_esTank[type].g_sOutlineColorVisual, sizeof esTank::g_sOutlineColorVisual, g_esTank[type].g_sOutlineColorVisual2, sizeof esTank::g_sOutlineColorVisual2, g_esTank[type].g_sOutlineColorVisual3, sizeof esTank::g_sOutlineColorVisual3, g_esTank[type].g_sOutlineColorVisual4, sizeof esTank::g_sOutlineColorVisual4, sValue);
+					vGetStringValue(key, "ItemReward", "Item Reward", "Item_Reward", "item", iPos, g_esTank[type].g_sItemReward, sizeof esTank::g_sItemReward, g_esTank[type].g_sItemReward2, sizeof esTank::g_sItemReward2, g_esTank[type].g_sItemReward3, sizeof esTank::g_sItemReward3, g_esTank[type].g_sItemReward4, sizeof esTank::g_sItemReward4, sValue);
+					vGetStringValue(key, "LightColorVisual", "Light Color Visual", "Light_Color_Visual", "lightcolor", iPos, g_esTank[type].g_sLightColorVisual, sizeof esTank::g_sLightColorVisual, g_esTank[type].g_sLightColorVisual2, sizeof esTank::g_sLightColorVisual2, g_esTank[type].g_sLightColorVisual3, sizeof esTank::g_sLightColorVisual3, g_esTank[type].g_sLightColorVisual4, sizeof esTank::g_sLightColorVisual4, sValue);
+					vGetStringValue(key, "LoopingVoicelineVisual", "Looping Voiceline Visual", "Looping_Voiceline_Visual", "loopvoice", iPos, g_esTank[type].g_sLoopingVoicelineVisual, sizeof esTank::g_sLoopingVoicelineVisual, g_esTank[type].g_sLoopingVoicelineVisual2, sizeof esTank::g_sLoopingVoicelineVisual2, g_esTank[type].g_sLoopingVoicelineVisual3, sizeof esTank::g_sLoopingVoicelineVisual3, g_esTank[type].g_sLoopingVoicelineVisual4, sizeof esTank::g_sLoopingVoicelineVisual4, sSet[iPos]);
+					vGetStringValue(key, "ScreenColorVisual", "Screen Color Visual", "Screen_Color_Visual", "screencolor", iPos, g_esTank[type].g_sScreenColorVisual, sizeof esTank::g_sScreenColorVisual, g_esTank[type].g_sScreenColorVisual2, sizeof esTank::g_sScreenColorVisual2, g_esTank[type].g_sScreenColorVisual3, sizeof esTank::g_sScreenColorVisual3, g_esTank[type].g_sScreenColorVisual4, sizeof esTank::g_sScreenColorVisual4, sValue);
 				}
 
 				g_esTank[type].g_iStackLimits[iPos] = iGetClampedValue(key, "StackLimits", "Stack Limits", "Stack_Limits", "limits", g_esTank[type].g_iStackLimits[iPos], sSet[iPos], 0, 999999);
@@ -9535,11 +9534,11 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 			{
 				char sValue[64], sSet[3][4];
-				vGetConfigColors(sValue, sizeof(sValue), value);
-				strcopy(g_esTank[type].g_sGlowColor, sizeof(esTank::g_sGlowColor), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_iGlowColor); iPos++)
+				vGetConfigColors(sValue, sizeof sValue, value);
+				strcopy(g_esTank[type].g_sGlowColor, sizeof esTank::g_sGlowColor, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_iGlowColor; iPos++)
 				{
 					g_esTank[type].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -9547,9 +9546,9 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 			{
 				char sValue[50], sRange[2][7];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esTank[type].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esTank[type].g_iGlowMinRange;
 				g_esTank[type].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esTank[type].g_iGlowMaxRange;
@@ -9558,10 +9557,10 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		else if (StrEqual(sub, MT_CONFIG_SECTION_BOSS, false))
 		{
 			char sValue[44], sSet[4][11];
-			strcopy(sValue, sizeof(sValue), value);
-			ReplaceString(sValue, sizeof(sValue), " ", "");
-			ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-			for (int iPos = 0; iPos < sizeof(esTank::g_iBossHealth); iPos++)
+			strcopy(sValue, sizeof sValue, value);
+			ReplaceString(sValue, sizeof sValue, " ", "");
+			ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+			for (int iPos = 0; iPos < sizeof esTank::g_iBossHealth; iPos++)
 			{
 				g_esTank[type].g_iBossHealth[iPos] = iGetClampedValue(key, "BossHealthStages", "Boss Health Stages", "Boss_Health_Stages", "bosshpstages", g_esTank[type].g_iBossHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
 				g_esTank[type].g_iBossType[iPos] = iGetClampedValue(key, "BossTypes", "Boss Types", "Boss_Types", "bosstypes", g_esTank[type].g_iBossType[iPos], sSet[iPos], 1, MT_MAXTYPES);
@@ -9572,10 +9571,10 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			if (StrEqual(key, "ComboTypeChance", false) || StrEqual(key, "Combo Type Chance", false) || StrEqual(key, "Combo_Type_Chance", false) || StrEqual(key, "typechance", false))
 			{
 				char sValue[42], sSet[7][6];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_flComboTypeChance); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_flComboTypeChance; iPos++)
 				{
 					g_esTank[type].g_flComboTypeChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esTank[type].g_flComboTypeChance[iPos];
 				}
@@ -9583,17 +9582,17 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			else
 			{
 				char sValue[140], sSet[10][14];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_flComboChance); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_flComboChance; iPos++)
 				{
 					if (StrEqual(key, "ComboRadius", false) || StrEqual(key, "Combo Radius", false) || StrEqual(key, "Combo_Radius", false) || StrEqual(key, "radius", false))
 					{
 						char sRange[2][7], sSubset[14];
-						strcopy(sSubset, sizeof(sSubset), sSet[iPos]);
-						ReplaceString(sSubset, sizeof(sSubset), " ", "");
-						ExplodeString(sSubset, ";", sRange, sizeof(sRange), sizeof(sRange[]));
+						strcopy(sSubset, sizeof sSubset, sSet[iPos]);
+						ReplaceString(sSubset, sizeof sSubset, " ", "");
+						ExplodeString(sSubset, ";", sRange, sizeof sRange, sizeof sRange[]);
 
 						g_esTank[type].g_flComboMinRadius[iPos] = (sRange[0][0] != '\0') ? flClamp(StringToFloat(sRange[0]), -200.0, 0.0) : g_esTank[type].g_flComboMinRadius[iPos];
 						g_esTank[type].g_flComboMaxRadius[iPos] = (sRange[1][0] != '\0') ? flClamp(StringToFloat(sRange[1]), 0.0, 200.0) : g_esTank[type].g_flComboMaxRadius[iPos];
@@ -9620,10 +9619,10 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 			{
 				char sValue[50], sSet[10][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_iTransformType; iPos++)
 				{
 					g_esTank[type].g_iTransformType[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, MT_MAXTYPES) : g_esTank[type].g_iTransformType[iPos];
 				}
@@ -9634,10 +9633,10 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 			{
 				char sValue[54], sSet[9][6];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_flPropsChance); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_flPropsChance; iPos++)
 				{
 					g_esTank[type].g_flPropsChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esTank[type].g_flPropsChance[iPos];
 				}
@@ -9645,16 +9644,16 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			else
 			{
 				char sValue[64], sSet[4][4];
-				vGetConfigColors(sValue, sizeof(sValue), value);
-				vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esTank[type].g_sOzTankColor, sizeof(esTank::g_sOzTankColor), value);
-				vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esTank[type].g_sFlameColor, sizeof(esTank::g_sFlameColor), value);
-				vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esTank[type].g_sRockColor, sizeof(esTank::g_sRockColor), value);
-				vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esTank[type].g_sTireColor, sizeof(esTank::g_sTireColor), value);
-				vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esTank[type].g_sPropTankColor, sizeof(esTank::g_sPropTankColor), value);
-				vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esTank[type].g_sFlashlightColor, sizeof(esTank::g_sFlashlightColor), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(esTank::g_iLightColor); iPos++)
+				vGetConfigColors(sValue, sizeof sValue, value);
+				vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esTank[type].g_sOzTankColor, sizeof esTank::g_sOzTankColor, value);
+				vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esTank[type].g_sFlameColor, sizeof esTank::g_sFlameColor, value);
+				vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esTank[type].g_sRockColor, sizeof esTank::g_sRockColor, value);
+				vSaveConfigColors(key, "TireColor", "Tire Color", "Tire_Color", "tire", g_esTank[type].g_sTireColor, sizeof esTank::g_sTireColor, value);
+				vSaveConfigColors(key, "PropaneTankColor", "Propane Tank Color", "Propane_Tank_Color", "propane", g_esTank[type].g_sPropTankColor, sizeof esTank::g_sPropTankColor, value);
+				vSaveConfigColors(key, "FlashlightColor", "Flashlight Color", "Flashlight_Color", "flashlight", g_esTank[type].g_sFlashlightColor, sizeof esTank::g_sFlashlightColor, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof esTank::g_iLightColor; iPos++)
 				{
 					g_esTank[type].g_iLightColor[iPos] = iGetClampedValue(key, "LightColor", "Light Color", "Light_Color", "light", g_esTank[type].g_iLightColor[iPos], sSet[iPos], 0, 255, 0);
 					g_esTank[type].g_iOzTankColor[iPos] = iGetClampedValue(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esTank[type].g_iOzTankColor[iPos], sSet[iPos], 0, 255, 0);
@@ -9727,7 +9726,7 @@ void vExecuteFinaleConfigs(const char[] filename)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		char sFinaleConfig[PLATFORM_MAX_PATH];
-		if (bIsFinaleConfigFound(filename, sFinaleConfig, sizeof(sFinaleConfig)))
+		if (bIsFinaleConfigFound(filename, sFinaleConfig, sizeof sFinaleConfig))
 		{
 			vCustomConfig(sFinaleConfig);
 		}
@@ -9813,7 +9812,7 @@ void vHookEvents(bool hook)
 		bool bPreHook[41];
 		char sEvent[32];
 
-		for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
+		for (int iPos = 0; iPos < sizeof bCheck; iPos++)
 		{
 			switch (iPos)
 			{
@@ -9894,7 +9893,7 @@ void vLogCommand(int admin, int type, const char[] activity, any ...)
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && CheckCommandAccess(iPlayer, "sm_admin", ADMFLAG_ROOT, true) && iPlayer != admin)
 			{
 				SetGlobalTransTarget(iPlayer);
-				VFormat(sMessage, sizeof(sMessage), activity, 4);
+				VFormat(sMessage, sizeof sMessage, activity, 4);
 				MT_PrintToChat(iPlayer, sMessage);
 			}
 		}
@@ -9919,17 +9918,17 @@ void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 			{
 				char sBuffer[PLATFORM_MAX_PATH], sMessage[PLATFORM_MAX_PATH];
 				SetGlobalTransTarget(LANG_SERVER);
-				strcopy(sMessage, sizeof(sMessage), message);
-				VFormat(sBuffer, sizeof(sBuffer), sMessage, 4);
-				MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+				strcopy(sMessage, sizeof sMessage, message);
+				VFormat(sBuffer, sizeof sBuffer, sMessage, 4);
+				MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 
 				switch (timestamp)
 				{
 					case true:
 					{
 						char sTime[32];
-						FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
-						FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
+						FormatTime(sTime, sizeof sTime, "%Y-%m-%d - %H:%M:%S", GetTime());
+						FormatEx(sMessage, sizeof sMessage, "[%s] %s", sTime, sBuffer);
 						vSaveMessage(sMessage);
 					}
 					case false: vSaveMessage(sBuffer);
@@ -10054,10 +10053,10 @@ void vToggleLeft4DHooks(bool toggle)
 void vToggleLogging(int type = -1)
 {
 	char sMessage[PLATFORM_MAX_PATH], sMap[128], sTime[32], sDate[32];
-	GetCurrentMap(sMap, sizeof(sMap));
-	FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
-	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
-	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof(esGeneral::g_sLogFile), "logs/mutant_tanks_%s.log", sDate);
+	GetCurrentMap(sMap, sizeof sMap);
+	FormatTime(sTime, sizeof sTime, "%m/%d/%Y %H:%M:%S", GetTime());
+	FormatTime(sDate, sizeof sDate, "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
 
 	bool bLog = false;
 	int iType;
@@ -10071,7 +10070,7 @@ void vToggleLogging(int type = -1)
 				bLog = true;
 				iType = g_esGeneral.g_iLogMessages;
 
-				FormatEx(sMessage, sizeof(sMessage), "%T", ((iType != 0) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+				FormatEx(sMessage, sizeof sMessage, "%T", ((iType != 0) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
 			}
 		}
 		case 0, 1:
@@ -10081,7 +10080,7 @@ void vToggleLogging(int type = -1)
 				bLog = true;
 				iType = g_esGeneral.g_iLogMessages;
 
-				FormatEx(sMessage, sizeof(sMessage), "%T", ((type == 1) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+				FormatEx(sMessage, sizeof sMessage, "%T", ((type == 1) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
 			}
 		}
 	}
@@ -10251,7 +10250,7 @@ void vSurvivorReactions(int tank)
 			{
 				case 1:
 				{
-					GetEntPropString(iSurvivor, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+					GetEntPropString(iSurvivor, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 
 					switch (sModel[29])
 					{
@@ -10348,7 +10347,7 @@ void vRemoveDamage(int victim, int damagetype)
 void vRemoveEffects(int survivor, bool body = false)
 {
 	int iEffect = -1;
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_iEffect); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_iEffect; iPos++)
 	{
 		iEffect = g_esPlayer[survivor].g_iEffect[iPos];
 		if (bIsValidEntRef(iEffect))
@@ -10410,7 +10409,7 @@ void vRemoveProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iBlur = INVALID_ENT_REFERENCE;
 
-	for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
+	for (int iLight = 0; iLight < sizeof esPlayer::g_iLight; iLight++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iLight[iLight]))
 		{
@@ -10425,7 +10424,7 @@ void vRemoveProps(int tank, int mode = 1)
 		g_esPlayer[tank].g_iLight[iLight] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iOzTank = 0; iOzTank < sizeof(esPlayer::g_iFlame); iOzTank++)
+	for (int iOzTank = 0; iOzTank < sizeof esPlayer::g_iFlame; iOzTank++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iFlame[iOzTank]))
 		{
@@ -10452,7 +10451,7 @@ void vRemoveProps(int tank, int mode = 1)
 		g_esPlayer[tank].g_iOzTank[iOzTank] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iRock = 0; iRock < sizeof(esPlayer::g_iRock); iRock++)
+	for (int iRock = 0; iRock < sizeof esPlayer::g_iRock; iRock++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iRock[iRock]))
 		{
@@ -10467,7 +10466,7 @@ void vRemoveProps(int tank, int mode = 1)
 		g_esPlayer[tank].g_iRock[iRock] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iTire = 0; iTire < sizeof(esPlayer::g_iTire); iTire++)
+	for (int iTire = 0; iTire < sizeof esPlayer::g_iTire; iTire++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iTire[iTire]))
 		{
@@ -10662,17 +10661,17 @@ void vResetSurvivorStats(int survivor, bool all)
 		g_esPlayer[survivor].g_bSetup = false;
 	}
 
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_flRewardTime; iPos++)
 	{
 		g_esPlayer[survivor].g_flRewardTime[iPos] = -1.0;
 		g_esPlayer[survivor].g_iRewardStack[iPos] = 0;
 
-		if (iPos < sizeof(esPlayer::g_flVisualTime))
+		if (iPos < sizeof esPlayer::g_flVisualTime)
 		{
 			g_esPlayer[survivor].g_flVisualTime[iPos] = -1.0;
 		}
 
-		if (iPos < sizeof(esPlayer::g_iScreenColorVisual))
+		if (iPos < sizeof esPlayer::g_iScreenColorVisual)
 		{
 			g_esPlayer[survivor].g_iScreenColorVisual[iPos] = -1;
 		}
@@ -10727,7 +10726,7 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_iOldTankType = 0;
 	g_esPlayer[tank].g_iTankType = 0;
 
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_iThrownRock); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_iThrownRock; iPos++)
 	{
 		g_esPlayer[tank].g_iThrownRock[iPos] = INVALID_ENT_REFERENCE;
 	}
@@ -10887,9 +10886,9 @@ void vEndRewards(int survivor, bool force)
 	bool bCheck = false;
 	float flDuration = 0.0, flTime = GetGameTime();
 	int iType = 0;
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_flRewardTime); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_flRewardTime; iPos++)
 	{
-		if (iPos < sizeof(esPlayer::g_flVisualTime))
+		if (iPos < sizeof esPlayer::g_flVisualTime)
 		{
 			if ((g_esPlayer[survivor].g_flVisualTime[0] != -1.0 && g_esPlayer[survivor].g_flVisualTime[0] < flTime) || g_esGeneral.g_bFinaleEnded)
 			{
@@ -11019,7 +11018,7 @@ void vListRewards(int survivor, int count, const char[][] buffers, int maxString
 void vRewardPriority(int tank, int priority, int recipient = 0, int recipient2 = 0)
 {
 	char sTankName[33];
-	vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+	vGetTranslatedName(sTankName, sizeof sTankName, tank);
 	float flPercentage = 0.0, flRandom = GetRandomFloat(0.1, 100.0);
 	int iPriority = (priority - 1), iSetting = 0;
 
@@ -11143,7 +11142,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 		{
 			char sSet[9][64], sSet2[9][64], sTankName[33];
 			int iRewardCount = 0, iRewardCount2 = 0;
-			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+			vGetTranslatedName(sTankName, sizeof sTankName, tank);
 
 			g_esPlayer[survivor].g_iNotify = g_esCache[tank].g_iRewardNotify[priority];
 			g_esPlayer[survivor].g_iPrefsAccess = g_esCache[tank].g_iPrefsNotify[priority];
@@ -11152,7 +11151,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_RESPAWN) && bRespawnSurvivor(survivor, (bDeveloper || g_esCache[tank].g_iRespawnLoadoutReward[priority] == 1)) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_RESPAWN))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardRespawn", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardRespawn", survivor);
 				g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_RESPAWN;
 				iRewardCount++;
 			}
@@ -11165,7 +11164,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardHealth", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardHealth", survivor);
 						vSetupHealthReward(survivor, tank, priority);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
@@ -11173,7 +11172,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardHealth", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[0] >= g_esCache[tank].g_iStackLimits[0]));
+						vChooseRecipient(survivor, iRecipient, "RewardHealth", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[0] >= g_esCache[tank].g_iStackLimits[0]));
 						if (g_esPlayer[survivor].g_iRewardStack[0] >= g_esCache[tank].g_iStackLimits[0] && survivor != iRecipient)
 						{
 							vSetupHealthReward(iRecipient, tank, priority);
@@ -11198,7 +11197,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardSpeedBoost", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardSpeedBoost", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_SPEEDBOOST);
 						vSetupSpeedBoostReward(survivor, tank, priority, flDuration);
 
@@ -11207,7 +11206,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardSpeedBoost", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[1] >= g_esCache[tank].g_iStackLimits[1]));
+						vChooseRecipient(survivor, iRecipient, "RewardSpeedBoost", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[1] >= g_esCache[tank].g_iStackLimits[1]));
 						if (g_esPlayer[survivor].g_iRewardStack[1] >= g_esCache[tank].g_iStackLimits[1] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_SPEEDBOOST);
@@ -11233,8 +11232,8 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardDamageBoost", survivor);
-						vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardDamageBoost", survivor);
+						vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof sReceived);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_DAMAGEBOOST);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_DAMAGEBOOST;
@@ -11242,14 +11241,14 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardDamageBoost", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[2] >= g_esCache[tank].g_iStackLimits[2]));
+						vChooseRecipient(survivor, iRecipient, "RewardDamageBoost", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[2] >= g_esCache[tank].g_iStackLimits[2]));
 						if (g_esPlayer[survivor].g_iRewardStack[2] >= g_esCache[tank].g_iStackLimits[2] && survivor != iRecipient)
 						{
-							vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
+							vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof sReceived);
 
 							if (survivor != iRecipient)
 							{
-								vRewardLadyKillerMessage(iRecipient, tank, priority, sShared, sizeof(sShared));
+								vRewardLadyKillerMessage(iRecipient, tank, priority, sShared, sizeof sShared);
 							}
 
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_DAMAGEBOOST);
@@ -11262,7 +11261,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 						}
 						else
 						{
-							vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof(sReceived));
+							vRewardLadyKillerMessage(survivor, tank, priority, sReceived, sizeof sReceived);
 							vSetupRewardCounts(survivor, tank, priority, MT_REWARD_DAMAGEBOOST);
 
 							iRewardCount++;
@@ -11276,7 +11275,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAttackBoost", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardAttackBoost", survivor);
 						SDKHook(survivor, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_ATTACKBOOST);
 
@@ -11285,7 +11284,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardAttackBoost", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[3] >= g_esCache[tank].g_iStackLimits[3]));
+						vChooseRecipient(survivor, iRecipient, "RewardAttackBoost", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[3] >= g_esCache[tank].g_iStackLimits[3]));
 						if (g_esPlayer[survivor].g_iRewardStack[3] >= g_esCache[tank].g_iStackLimits[3] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_ATTACKBOOST);
@@ -11311,7 +11310,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAmmo", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardAmmo", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_AMMO);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_AMMO;
@@ -11321,7 +11320,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardAmmo", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[4] >= g_esCache[tank].g_iStackLimits[4]));
+						vChooseRecipient(survivor, iRecipient, "RewardAmmo", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[4] >= g_esCache[tank].g_iStackLimits[4]));
 						if (g_esPlayer[survivor].g_iRewardStack[4] >= g_esCache[tank].g_iStackLimits[4] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_AMMO);
@@ -11350,13 +11349,13 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ITEM))
 					{
-						vSetupItemReward(survivor, tank, priority, sReceived, sizeof(sReceived));
+						vSetupItemReward(survivor, tank, priority, sReceived, sizeof sReceived);
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_ITEM;
 					}
 
 					if (survivor != iRecipient && !(g_esPlayer[iRecipient].g_iRewardTypes & MT_REWARD_ITEM))
 					{
-						vSetupItemReward(iRecipient, tank, priority, sShared, sizeof(sShared));
+						vSetupItemReward(iRecipient, tank, priority, sShared, sizeof sShared);
 						g_esPlayer[iRecipient].g_iRewardTypes |= MT_REWARD_ITEM;
 					}
 				}
@@ -11375,7 +11374,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardGod", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardGod", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_GODMODE);
 						vSetupGodmodeReward(survivor);
 
@@ -11384,7 +11383,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardGod", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[5] >= g_esCache[tank].g_iStackLimits[5]));
+						vChooseRecipient(survivor, iRecipient, "RewardGod", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[5] >= g_esCache[tank].g_iStackLimits[5]));
 						if (g_esPlayer[survivor].g_iRewardStack[5] >= g_esCache[tank].g_iStackLimits[5] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_GODMODE);
@@ -11410,13 +11409,13 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
 					{
-						vSetupRefillReward(survivor, sSet[iRewardCount], sizeof(sSet[]));
+						vSetupRefillReward(survivor, sSet[iRewardCount], sizeof sSet[]);
 						iRewardCount++;
 					}
 
 					if (survivor != iRecipient && !(g_esPlayer[iRecipient].g_iRewardTypes & MT_REWARD_REFILL))
 					{
-						vSetupRefillReward(iRecipient, sSet2[iRewardCount2], sizeof(sSet2[]));
+						vSetupRefillReward(iRecipient, sSet2[iRewardCount2], sizeof sSet2[]);
 						iRewardCount2++;
 					}
 				}
@@ -11425,7 +11424,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO))
 					{
-						FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardInfAmmo", survivor);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardInfAmmo", survivor);
 						vSetupRewardCounts(survivor, tank, priority, MT_REWARD_INFAMMO);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_INFAMMO;
@@ -11433,7 +11432,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardInfAmmo", sSet[iRewardCount], sizeof(sSet[]), sSet2[iRewardCount2], sizeof(sSet2[]), (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6]));
+						vChooseRecipient(survivor, iRecipient, "RewardInfAmmo", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6]));
 						if (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_INFAMMO);
@@ -11455,7 +11454,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				}
 
 				char sRewards[1024];
-				vListRewards(survivor, iRewardCount, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
+				vListRewards(survivor, iRewardCount, sSet, sizeof sSet, sRewards, sizeof sRewards);
 				if (sRewards[0] != '\0')
 				{
 					vRewardMessage(survivor, survivor, priority, iRewardCount, sRewards, sTankName);
@@ -11465,7 +11464,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				if (survivor != iRecipient)
 				{
 					char sRewards2[1024];
-					vListRewards(iRecipient, iRewardCount2, sSet2, sizeof(sSet2), sRewards2, sizeof(sRewards2));
+					vListRewards(iRecipient, iRewardCount2, sSet2, sizeof sSet2, sRewards2, sizeof sRewards2);
 					if (sRewards2[0] != '\0')
 					{
 						vRewardMessage(iRecipient, survivor, priority, iRewardCount2, sRewards2, sTankName);
@@ -11482,7 +11481,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 			int iRewardCount = 0;
 			if ((iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardHealth", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardHealth", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_HEALTH;
 				g_esPlayer[survivor].g_flRewardTime[0] = -1.0;
@@ -11496,7 +11495,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_SPEEDBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardSpeedBoost", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardSpeedBoost", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_SPEEDBOOST;
 				g_esPlayer[survivor].g_flRewardTime[1] = -1.0;
@@ -11520,7 +11519,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_DAMAGEBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardDamageBoost", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardDamageBoost", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_DAMAGEBOOST;
 				g_esPlayer[survivor].g_flRewardTime[2] = -1.0;
@@ -11536,7 +11535,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_ATTACKBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAttackBoost", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardAttackBoost", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_ATTACKBOOST;
 				g_esPlayer[survivor].g_flRewardTime[3] = -1.0;
@@ -11552,7 +11551,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_AMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardAmmo", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardAmmo", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_AMMO;
 				g_esPlayer[survivor].g_flRewardTime[4] = -1.0;
@@ -11570,7 +11569,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_GODMODE) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardGod", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardGod", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_GODMODE;
 				g_esPlayer[survivor].g_flRewardTime[5] = -1.0;
@@ -11587,7 +11586,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 			if ((iType & MT_REWARD_INFAMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO))
 			{
-				FormatEx(sSet[iRewardCount], sizeof(sSet[]), "%T", "RewardInfAmmo", survivor);
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardInfAmmo", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_INFAMMO;
 				g_esPlayer[survivor].g_flRewardTime[6] = -1.0;
@@ -11597,7 +11596,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 			}
 
 			char sRewards[1024];
-			vListRewards(survivor, iRewardCount, sSet, sizeof(sSet), sRewards, sizeof(sRewards));
+			vListRewards(survivor, iRewardCount, sSet, sizeof sSet, sRewards, sizeof sRewards);
 			if (bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && iRewardCount > 0 && g_esPlayer[survivor].g_iNotify >= 2)
 			{
 				MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardEnd", sRewards);
@@ -11622,8 +11621,8 @@ void vRewardItemMessage(int survivor, const char[] list, char[] buffer, int size
 		{
 			switch (set)
 			{
-				case true: FormatEx(sTemp, sizeof(sTemp), "{default}, {yellow}%s", list);
-				case false: FormatEx(sTemp, sizeof(sTemp), "{default} %T{yellow} %s", "AndConjunction", survivor, list);
+				case true: FormatEx(sTemp, sizeof sTemp, "{default}, {yellow}%s", list);
+				case false: FormatEx(sTemp, sizeof sTemp, "{default} %T{yellow} %s", "AndConjunction", survivor, list);
 			}
 
 			StrCat(buffer, size, sTemp);
@@ -11647,7 +11646,7 @@ void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffe
 	if (g_esPlayer[survivor].g_iNotify >= 2 && iReceivedUses > 0)
 	{
 		char sTemp[64];
-		FormatEx(sTemp, sizeof(sTemp), "%T", "RewardLadyKiller", survivor, iReceivedUses);
+		FormatEx(sTemp, sizeof sTemp, "%T", "RewardLadyKiller", survivor, iReceivedUses);
 		StrCat(buffer, size, sTemp);
 	}
 
@@ -11727,38 +11726,38 @@ void vSetupItemReward(int survivor, int tank, int priority, char[] buffer, int s
 
 	switch (priority)
 	{
-		case 0: strcopy(sLoadout, sizeof(sLoadout), g_esCache[tank].g_sItemReward);
-		case 1: strcopy(sLoadout, sizeof(sLoadout), g_esCache[tank].g_sItemReward2);
-		case 2: strcopy(sLoadout, sizeof(sLoadout), g_esCache[tank].g_sItemReward3);
-		case 3: strcopy(sLoadout, sizeof(sLoadout), g_esCache[tank].g_sItemReward4);
+		case 0: strcopy(sLoadout, sizeof sLoadout, g_esCache[tank].g_sItemReward);
+		case 1: strcopy(sLoadout, sizeof sLoadout, g_esCache[tank].g_sItemReward2);
+		case 2: strcopy(sLoadout, sizeof sLoadout, g_esCache[tank].g_sItemReward3);
+		case 3: strcopy(sLoadout, sizeof sLoadout, g_esCache[tank].g_sItemReward4);
 	}
 
 	if (FindCharInString(sLoadout, ';') != -1)
 	{
 		int iItemCount = 0;
-		ExplodeString(sLoadout, ";", sItems, sizeof(sItems), sizeof(sItems[]));
-		for (int iPos = 0; iPos < sizeof(sItems); iPos++)
+		ExplodeString(sLoadout, ";", sItems, sizeof sItems, sizeof sItems[]);
+		for (int iPos = 0; iPos < sizeof sItems; iPos++)
 		{
 			if (sItems[iPos][0] != '\0')
 			{
 				iItemCount++;
 
 				vCheatCommand(survivor, "give", sItems[iPos]);
-				ReplaceString(sItems[iPos], sizeof(sItems[]), "_", " ");
+				ReplaceString(sItems[iPos], sizeof sItems[], "_", " ");
 
 				switch (bListed)
 				{
 					case true:
 					{
-						switch (iPos < (sizeof(sItems) - 1) && sItems[iPos + 1][0] != '\0')
+						switch (iPos < (sizeof sItems - 1) && sItems[iPos + 1][0] != '\0')
 						{
-							case true: Format(sList, sizeof(sList), "%s{default}, {yellow}%s", sList, sItems[iPos]);
+							case true: Format(sList, sizeof sList, "%s{default}, {yellow}%s", sList, sItems[iPos]);
 							case false:
 							{
 								switch (iItemCount == 2 && buffer[0] == '\0')
 								{
-									case true: Format(sList, sizeof(sList), "%s{default} %T{yellow} %s", sList, "AndConjunction", survivor, sItems[iPos]);
-									case false: Format(sList, sizeof(sList), "%s{default}, %T{yellow} %s", sList, "AndConjunction", survivor, sItems[iPos]);
+									case true: Format(sList, sizeof sList, "%s{default} %T{yellow} %s", sList, "AndConjunction", survivor, sItems[iPos]);
+									case false: Format(sList, sizeof sList, "%s{default}, %T{yellow} %s", sList, "AndConjunction", survivor, sItems[iPos]);
 								}
 							}
 						}
@@ -11767,7 +11766,7 @@ void vSetupItemReward(int survivor, int tank, int priority, char[] buffer, int s
 					{
 						bListed = true;
 
-						FormatEx(sList, sizeof(sList), "%s", sItems[iPos]);
+						FormatEx(sList, sizeof sList, "%s", sItems[iPos]);
 					}
 				}
 			}
@@ -11778,7 +11777,7 @@ void vSetupItemReward(int survivor, int tank, int priority, char[] buffer, int s
 	else
 	{
 		vCheatCommand(survivor, "give", sLoadout);
-		ReplaceString(sLoadout, sizeof(sLoadout), "_", " ");
+		ReplaceString(sLoadout, sizeof sLoadout, "_", " ");
 		vRewardItemMessage(survivor, sLoadout, buffer, size, false);
 	}
 }
@@ -11967,10 +11966,10 @@ void vSetupSpeedBoostReward(int survivor, int tank, int priority, float duration
 
 	switch (priority)
 	{
-		case 0: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward);
-		case 1: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward2);
-		case 2: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward3);
-		case 3: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward4);
+		case 0: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof esPlayer::g_sFallVoiceline, g_esCache[tank].g_sFallVoicelineReward);
+		case 1: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof esPlayer::g_sFallVoiceline, g_esCache[tank].g_sFallVoicelineReward2);
+		case 2: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof esPlayer::g_sFallVoiceline, g_esCache[tank].g_sFallVoicelineReward3);
+		case 3: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof esPlayer::g_sFallVoiceline, g_esCache[tank].g_sFallVoicelineReward4);
 	}
 }
 
@@ -12006,10 +12005,10 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			{
 				switch (priority)
 				{
-					case 0: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof(esPlayer::g_sScreenColor), g_esCache[tank].g_sScreenColorVisual);
-					case 1: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof(esPlayer::g_sScreenColor), g_esCache[tank].g_sScreenColorVisual2);
-					case 2: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof(esPlayer::g_sScreenColor), g_esCache[tank].g_sScreenColorVisual3);
-					case 3: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof(esPlayer::g_sScreenColor), g_esCache[tank].g_sScreenColorVisual4);
+					case 0: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof esPlayer::g_sScreenColor, g_esCache[tank].g_sScreenColorVisual);
+					case 1: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof esPlayer::g_sScreenColor, g_esCache[tank].g_sScreenColorVisual2);
+					case 2: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof esPlayer::g_sScreenColor, g_esCache[tank].g_sScreenColorVisual3);
+					case 3: strcopy(g_esPlayer[survivor].g_sScreenColor, sizeof esPlayer::g_sScreenColor, g_esCache[tank].g_sScreenColorVisual4);
 				}
 
 				char sDelimiter[2];
@@ -12056,10 +12055,10 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			{
 				switch (priority)
 				{
-					case 0: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof(esPlayer::g_sLoopingVoiceline), g_esCache[tank].g_sLoopingVoicelineVisual);
-					case 1: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof(esPlayer::g_sLoopingVoiceline), g_esCache[tank].g_sLoopingVoicelineVisual2);
-					case 2: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof(esPlayer::g_sLoopingVoiceline), g_esCache[tank].g_sLoopingVoicelineVisual3);
-					case 3: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof(esPlayer::g_sLoopingVoiceline), g_esCache[tank].g_sLoopingVoicelineVisual4);
+					case 0: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof esPlayer::g_sLoopingVoiceline, g_esCache[tank].g_sLoopingVoicelineVisual);
+					case 1: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof esPlayer::g_sLoopingVoiceline, g_esCache[tank].g_sLoopingVoicelineVisual2);
+					case 2: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof esPlayer::g_sLoopingVoiceline, g_esCache[tank].g_sLoopingVoicelineVisual3);
+					case 3: strcopy(g_esPlayer[survivor].g_sLoopingVoiceline, sizeof esPlayer::g_sLoopingVoiceline, g_esCache[tank].g_sLoopingVoicelineVisual4);
 				}
 
 				if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0)
@@ -12080,10 +12079,10 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			{
 				switch (priority)
 				{
-					case 0: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof(esPlayer::g_sLightColor), g_esCache[tank].g_sLightColorVisual);
-					case 1: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof(esPlayer::g_sLightColor), g_esCache[tank].g_sLightColorVisual2);
-					case 2: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof(esPlayer::g_sLightColor), g_esCache[tank].g_sLightColorVisual3);
-					case 3: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof(esPlayer::g_sLightColor), g_esCache[tank].g_sLightColorVisual4);
+					case 0: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof esPlayer::g_sLightColor, g_esCache[tank].g_sLightColorVisual);
+					case 1: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof esPlayer::g_sLightColor, g_esCache[tank].g_sLightColorVisual2);
+					case 2: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof esPlayer::g_sLightColor, g_esCache[tank].g_sLightColorVisual3);
+					case 3: strcopy(g_esPlayer[survivor].g_sLightColor, sizeof esPlayer::g_sLightColor, g_esCache[tank].g_sLightColorVisual4);
 				}
 
 				if (!bIgnore || g_esDeveloper[survivor].g_sDevFlashlight[0] == '\0')
@@ -12106,10 +12105,10 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			{
 				switch (priority)
 				{
-					case 0: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual);
-					case 1: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual2);
-					case 2: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual3);
-					case 3: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof(esPlayer::g_sBodyColor), g_esCache[tank].g_sBodyColorVisual4);
+					case 0: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof esPlayer::g_sBodyColor, g_esCache[tank].g_sBodyColorVisual);
+					case 1: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof esPlayer::g_sBodyColor, g_esCache[tank].g_sBodyColorVisual2);
+					case 2: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof esPlayer::g_sBodyColor, g_esCache[tank].g_sBodyColorVisual3);
+					case 3: strcopy(g_esPlayer[survivor].g_sBodyColor, sizeof esPlayer::g_sBodyColor, g_esCache[tank].g_sBodyColorVisual4);
 				}
 
 				if (!bIgnore || g_esDeveloper[survivor].g_sDevSkinColor[0] == '\0')
@@ -12132,10 +12131,10 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			{
 				switch (priority)
 				{
-					case 0: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual);
-					case 1: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual2);
-					case 2: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual3);
-					case 3: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof(esPlayer::g_sOutlineColor), g_esCache[tank].g_sOutlineColorVisual4);
+					case 0: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof esPlayer::g_sOutlineColor, g_esCache[tank].g_sOutlineColorVisual);
+					case 1: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof esPlayer::g_sOutlineColor, g_esCache[tank].g_sOutlineColorVisual2);
+					case 2: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof esPlayer::g_sOutlineColor, g_esCache[tank].g_sOutlineColorVisual3);
+					case 3: strcopy(g_esPlayer[survivor].g_sOutlineColor, sizeof esPlayer::g_sOutlineColor, g_esCache[tank].g_sOutlineColorVisual4);
 				}
 
 				if (!bIgnore || g_esDeveloper[survivor].g_sDevGlowOutline[0] == '\0')
@@ -12187,7 +12186,7 @@ void vDefaultCookieSettings(int client)
 {
 	g_esPlayer[client].g_iRewardVisuals = MT_VISUAL_SCREEN|MT_VISUAL_PARTICLE|MT_VISUAL_VOICELINE|MT_VISUAL_LIGHT|MT_VISUAL_BODY|MT_VISUAL_GLOW;
 
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_bApplyVisuals); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_bApplyVisuals; iPos++)
 	{
 		g_esPlayer[client].g_bApplyVisuals[iPos] = true;
 	}
@@ -12242,7 +12241,7 @@ void vCheckClipSizes(int survivor)
 		if (iSlot > MaxClients)
 		{
 			char sWeapon[32];
-			GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
+			GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
 			if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 			{
 				g_esPlayer[survivor].g_iMaxClip[1] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iSlot);
@@ -12389,7 +12388,7 @@ void vGiveWeapons(int survivor)
 		vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sWeaponPills);
 	}
 
-	for (int iPos = 0; iPos < sizeof(esPlayer::g_iWeaponInfo); iPos++)
+	for (int iPos = 0; iPos < sizeof esPlayer::g_iWeaponInfo; iPos++)
 	{
 		g_esPlayer[survivor].g_iWeaponInfo[iPos] = 0;
 	}
@@ -12438,7 +12437,7 @@ void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 		if (iSlot > MaxClients)
 		{
 			char sWeapon[32];
-			GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
+			GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
 			if ((StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1])))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
@@ -12549,8 +12548,8 @@ void vSaveWeapons(int survivor)
 	int iSlot = GetPlayerWeaponSlot(survivor, 0);
 	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-		strcopy(g_esPlayer[survivor].g_sWeaponPrimary, sizeof(esPlayer::g_sWeaponPrimary), sWeapon);
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
+		strcopy(g_esPlayer[survivor].g_sWeaponPrimary, sizeof esPlayer::g_sWeaponPrimary, sWeapon);
 
 		g_esPlayer[survivor].g_iWeaponInfo[0] = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 		g_esPlayer[survivor].g_iWeaponInfo[1] = GetEntProp(survivor, Prop_Send, "m_iAmmo", .element = iGetWeaponOffset(iSlot));
@@ -12587,13 +12586,13 @@ void vSaveWeapons(int survivor)
 
 	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
 		if (StrEqual(sWeapon, "weapon_melee"))
 		{
-			GetEntPropString(iSlot, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+			GetEntPropString(iSlot, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof sWeapon);
 		}
 
-		strcopy(g_esPlayer[survivor].g_sWeaponSecondary, sizeof(esPlayer::g_sWeaponSecondary), sWeapon);
+		strcopy(g_esPlayer[survivor].g_sWeaponSecondary, sizeof esPlayer::g_sWeaponSecondary, sWeapon);
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
 			g_esPlayer[survivor].g_iWeaponInfo2 = GetEntProp(iSlot, Prop_Send, "m_iClip1");
@@ -12605,22 +12604,22 @@ void vSaveWeapons(int survivor)
 	iSlot = GetPlayerWeaponSlot(survivor, 2);
 	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-		strcopy(g_esPlayer[survivor].g_sWeaponThrowable, sizeof(esPlayer::g_sWeaponThrowable), sWeapon);
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
+		strcopy(g_esPlayer[survivor].g_sWeaponThrowable, sizeof esPlayer::g_sWeaponThrowable, sWeapon);
 	}
 
 	iSlot = GetPlayerWeaponSlot(survivor, 3);
 	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-		strcopy(g_esPlayer[survivor].g_sWeaponMedkit, sizeof(esPlayer::g_sWeaponMedkit), sWeapon);
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
+		strcopy(g_esPlayer[survivor].g_sWeaponMedkit, sizeof esPlayer::g_sWeaponMedkit, sWeapon);
 	}
 
 	iSlot = GetPlayerWeaponSlot(survivor, 4);
 	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-		strcopy(g_esPlayer[survivor].g_sWeaponPills, sizeof(esPlayer::g_sWeaponPills), sWeapon);
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
+		strcopy(g_esPlayer[survivor].g_sWeaponPills, sizeof esPlayer::g_sWeaponPills, sWeapon);
 	}
 }
 
@@ -12998,7 +12997,7 @@ void vSetProps(int tank)
 				g_esPlayer[tank].g_bBlur = true;
 
 				char sModel[32];
-				GetEntPropString(tank, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				GetEntPropString(tank, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 
 				switch (sModel[21])
 				{
@@ -13045,7 +13044,7 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
 		float flChance = GetRandomFloat(0.1, 100.0);
-		for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
+		for (int iLight = 0; iLight < sizeof esPlayer::g_iLight; iLight++)
 		{
 			float flValue = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
 			int iFlag = (iLight < 3) ? MT_PROP_LIGHT : MT_PROP_CROWN, iType = (iLight < 3) ? 1 : 8;
@@ -13073,7 +13072,7 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		for (int iOzTank = 0; iOzTank < sizeof(esPlayer::g_iOzTank); iOzTank++)
+		for (int iOzTank = 0; iOzTank < sizeof esPlayer::g_iOzTank; iOzTank++)
 		{
 			if ((g_esPlayer[tank].g_iOzTank[iOzTank] == 0 || g_esPlayer[tank].g_iOzTank[iOzTank] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[2] && (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK))
 			{
@@ -13185,7 +13184,7 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		for (int iRock = 0; iRock < sizeof(esPlayer::g_iRock); iRock++)
+		for (int iRock = 0; iRock < sizeof esPlayer::g_iRock; iRock++)
 		{
 			if ((g_esPlayer[tank].g_iRock[iRock] == 0 || g_esPlayer[tank].g_iRock[iRock] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[4] && (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK))
 			{
@@ -13256,7 +13255,7 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 
-		for (int iTire = 0; iTire < sizeof(esPlayer::g_iTire); iTire++)
+		for (int iTire = 0; iTire < sizeof esPlayer::g_iTire; iTire++)
 		{
 			if ((g_esPlayer[tank].g_iTire[iTire] == 0 || g_esPlayer[tank].g_iTire[iTire] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[5] && (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE))
 			{
@@ -13442,7 +13441,7 @@ void vSetSurvivorColor(int survivor, const char[] colors, bool apply = true, con
 	}
 
 	char sColor[64];
-	strcopy(sColor, sizeof(sColor), colors);
+	strcopy(sColor, sizeof sColor, colors);
 	if (StrEqual(sColor, "rainbow", false))
 	{
 		if (!g_esPlayer[survivor].g_bRainbowColor)
@@ -13454,11 +13453,11 @@ void vSetSurvivorColor(int survivor, const char[] colors, bool apply = true, con
 	}
 
 	char sValue[4][4];
-	vGetConfigColors(sColor, sizeof(sColor), colors);
-	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
+	vGetConfigColors(sColor, sizeof sColor, colors);
+	ExplodeString(sColor, delimiter, sValue, sizeof sValue, sizeof sValue[]);
 
 	int iColor[4];
-	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	for (int iPos = 0; iPos < sizeof sValue; iPos++)
 	{
 		if (sValue[iPos][0] != '\0')
 		{
@@ -13552,7 +13551,7 @@ void vSetSurvivorFlashlight(int survivor, int colors[4])
 		if (bIsValidEntity(iProp))
 		{
 			char sColor[16];
-			FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
+			FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
 			DispatchKeyValue(g_esPlayer[survivor].g_iFlashlight, "_light", sColor);
 		}
 	}
@@ -13566,7 +13565,7 @@ void vSetSurvivorLight(int survivor, const char[] colors, bool apply = true, con
 	}
 
 	char sColor[64];
-	strcopy(sColor, sizeof(sColor), colors);
+	strcopy(sColor, sizeof sColor, colors);
 	if (StrEqual(sColor, "rainbow", false))
 	{
 		if (!g_esPlayer[survivor].g_bRainbowColor)
@@ -13578,11 +13577,11 @@ void vSetSurvivorLight(int survivor, const char[] colors, bool apply = true, con
 	}
 
 	char sValue[4][4];
-	vGetConfigColors(sColor, sizeof(sColor), colors);
-	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
+	vGetConfigColors(sColor, sizeof sColor, colors);
+	ExplodeString(sColor, delimiter, sValue, sizeof sValue, sizeof sValue[]);
 
 	int iColor[4];
-	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	for (int iPos = 0; iPos < sizeof sValue; iPos++)
 	{
 		if (sValue[iPos][0] != '\0')
 		{
@@ -13605,7 +13604,7 @@ void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = true, c
 	}
 
 	char sColor[64];
-	strcopy(sColor, sizeof(sColor), colors);
+	strcopy(sColor, sizeof sColor, colors);
 	if (StrEqual(sColor, "rainbow", false))
 	{
 		if (!g_esPlayer[survivor].g_bRainbowColor)
@@ -13617,11 +13616,11 @@ void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = true, c
 	}
 
 	char sValue[3][4];
-	vGetConfigColors(sColor, sizeof(sColor), colors);
-	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
+	vGetConfigColors(sColor, sizeof sColor, colors);
+	ExplodeString(sColor, delimiter, sValue, sizeof sValue, sizeof sValue[]);
 
 	int iColor[3];
-	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	for (int iPos = 0; iPos < sizeof sValue; iPos++)
 	{
 		if (sValue[iPos][0] != '\0')
 		{
@@ -13649,7 +13648,7 @@ void vSetSurvivorParticle(int survivor)
 void vSetSurvivorScreen(int survivor, const char[] colors, const char[] delimiter = ";")
 {
 	char sColor[64];
-	strcopy(sColor, sizeof(sColor), colors);
+	strcopy(sColor, sizeof sColor, colors);
 	if (StrEqual(sColor, "rainbow", false))
 	{
 		if (!g_esPlayer[survivor].g_bRainbowColor)
@@ -13661,8 +13660,8 @@ void vSetSurvivorScreen(int survivor, const char[] colors, const char[] delimite
 	}
 
 	char sValue[4][4];
-	ExplodeString(colors, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
-	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	ExplodeString(colors, delimiter, sValue, sizeof sValue, sizeof sValue[]);
+	for (int iPos = 0; iPos < sizeof sValue; iPos++)
 	{
 		if (sValue[iPos][0] != '\0')
 		{
@@ -13728,7 +13727,7 @@ void vSetTankModel(int tank)
 	if (g_esCache[tank].g_iTankModel > 0)
 	{
 		int iModelCount = 0, iModels[3], iFlag = 0;
-		for (int iBit = 0; iBit < sizeof(iModels); iBit++)
+		for (int iBit = 0; iBit < sizeof iModels; iBit++)
 		{
 			iFlag = (1 << iBit);
 			if (!(g_esCache[tank].g_iTankModel & iFlag))
@@ -13749,7 +13748,7 @@ void vSetTankModel(int tank)
 				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
 				default:
 				{
-					switch (GetRandomInt(1, sizeof(iModels)))
+					switch (GetRandomInt(1, sizeof iModels))
 					{
 						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
@@ -13821,9 +13820,9 @@ void vAnnounce(int tank, const char[] oldname, const char[] name, int mode)
 			if (mode >= 0 && g_esCache[tank].g_iTankNote == 1 && bIsCustomTankSupported(tank))
 			{
 				char sPhrase[32], sSteamIDFinal[32], sTankNote[32];
-				FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
-				FormatEx(sPhrase, sizeof(sPhrase), "Tank #%i", g_esPlayer[tank].g_iTankType);
-				FormatEx(sTankNote, sizeof(sTankNote), "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
+				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
+				FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", g_esPlayer[tank].g_iTankType);
+				FormatEx(sTankNote, sizeof sTankNote, "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 				bool bExists = TranslationPhraseExists(sTankNote);
 				MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
@@ -13855,7 +13854,7 @@ void vAnnounceArrival(int tank, const char[] name)
 			if (iOption > 0)
 			{
 				char sPhrase[32];
-				FormatEx(sPhrase, sizeof(sPhrase), "Arrival%i", iOption);
+				FormatEx(sPhrase, sizeof sPhrase, "Arrival%i", iOption);
 				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
 				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
 			}
@@ -13897,25 +13896,25 @@ void vAnnounceDeath(int tank, int killer, float percentage, int assistant, float
 			if (iOption > 0)
 			{
 				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[5][768];
-				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+				vGetTranslatedName(sTankName, sizeof sTankName, tank);
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
 					char sKiller[128];
-					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof(sKiller));
-					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof sKiller);
+					FormatEx(sPhrase, sizeof sPhrase, "Killer%i", iOption);
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
-					vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
+					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else if (assistPercentage >= 1.0)
 				{
-					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates), sizeof(sTeammates[]));
+					FormatEx(sPhrase, sizeof sPhrase, "Assist%i", iOption);
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
 					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
 					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
-					vShowDamageList(tank, sTankName, sTeammates, sizeof(sTeammates));
+					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else
@@ -13934,8 +13933,8 @@ void vAnnounceDeath(int tank, int killer, float percentage, int assistant, float
 			if (iOption > 0)
 			{
 				char sPhrase[32], sTankName[33];
-				FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
-				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+				FormatEx(sPhrase, sizeof sPhrase, "Death%i", iOption);
+				vGetTranslatedName(sTankName, sizeof sTankName, tank);
 				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
 				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
 			}
@@ -13987,20 +13986,20 @@ void vListTeammates(int tank, int killer, int assistant, int setting, char[][] l
 				{
 					switch (setting)
 					{
-						case 3: iSize = FormatEx(sTemp, sizeof(sTemp), "{mint}%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
-						case 4: iSize = FormatEx(sTemp, sizeof(sTemp), "{mint}%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
-						case 5: iSize = FormatEx(sTemp, sizeof(sTemp), "{mint}%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
+						case 3: iSize = FormatEx(sTemp, sizeof sTemp, "{mint}%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
+						case 4: iSize = FormatEx(sTemp, sizeof sTemp, "{mint}%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
+						case 5: iSize = FormatEx(sTemp, sizeof sTemp, "{mint}%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
 					}
 
-					switch (iIndex < sizeof(sList) - 1 && sList[iIndex][0] != '\0' && (strlen(sList[iIndex]) + iSize + 150) >= sizeof(sList[]))
+					switch (iIndex < sizeof sList - 1 && sList[iIndex][0] != '\0' && (strlen(sList[iIndex]) + iSize + 150) >= sizeof sList[])
 					{
 						case true:
 						{
 							iIndex++;
 
-							strcopy(sList[iIndex], sizeof(sList[]), sTemp);
+							strcopy(sList[iIndex], sizeof sList[], sTemp);
 						}
-						case false: Format(sList[iIndex], sizeof(sList[]), "%s{default}, %s", sList[iIndex], sTemp);
+						case false: Format(sList[iIndex], sizeof sList[], "%s{default}, %s", sList[iIndex], sTemp);
 					}
 
 					sTemp[0] = '\0';
@@ -14011,9 +14010,9 @@ void vListTeammates(int tank, int killer, int assistant, int setting, char[][] l
 
 					switch (setting)
 					{
-						case 3: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
-						case 4: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
-						case 5: FormatEx(sList[iIndex], sizeof(sList[]), "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
+						case 3: FormatEx(sList[iIndex], sizeof sList[], "%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
+						case 4: FormatEx(sList[iIndex], sizeof sList[], "%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
+						case 5: FormatEx(sList[iIndex], sizeof sList[], "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
 					}
 				}
 			}
@@ -14039,17 +14038,17 @@ void vRecordDamage(int tank, int killer, int assistant, float percentage, char[]
 		case 0, 3:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%i HP{default})", assistant, g_esPlayer[assistant].g_iTankDamage[tank]);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof sList, sizeof sList[]);
 		}
 		case 1, 4:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({olive}%.0f{percent}{default})", assistant, percentage);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof sList, sizeof sList[]);
 		}
 		case 2, 5:
 		{
 			FormatEx(solo, soloSize, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", assistant, g_esPlayer[assistant].g_iTankDamage[tank], percentage);
-			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof(sList), sizeof(sList[]));
+			vListTeammates(tank, killer, assistant, iSetting, sList, sizeof sList, sizeof sList[]);
 		}
 	}
 
@@ -14105,10 +14104,10 @@ void vShowDamageList(int tank, const char[] namePhrase, const char[][] lists, in
 void vColorLight(int light, int red, int green, int blue, int alpha)
 {
 	char sColor[12];
-	IntToString(alpha, sColor, sizeof(sColor));
+	IntToString(alpha, sColor, sizeof sColor);
 	DispatchKeyValue(light, "renderamt", sColor);
 
-	FormatEx(sColor, sizeof(sColor), "%i %i %i", red, green, blue);
+	FormatEx(sColor, sizeof sColor, "%i %i %i", red, green, blue);
 	DispatchKeyValue(light, "rendercolor", sColor);
 }
 
@@ -14118,7 +14117,7 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 	if (bIsValidEntity(g_esPlayer[player].g_iFlashlight))
 	{
 		char sColor[16];
-		FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
+		FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
 		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "_light", sColor);
 
 		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "inner_cone", "0");
@@ -14166,7 +14165,7 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 		if (light < 3)
 		{
 			char sTargetName[64];
-			FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_light_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+			FormatEx(sTargetName, sizeof sTargetName, "mutant_tank_light_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "targetname", sTargetName);
 
 			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
@@ -14192,9 +14191,9 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 		if (light < 3)
 		{
 			char sParentName[64], sTargetName[64];
-			FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+			FormatEx(sTargetName, sizeof sTargetName, "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
 			DispatchKeyValue(tank, "targetname", sTargetName);
-			GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof(sParentName));
+			GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof sParentName);
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "parentname", sParentName);
 
 			SetVariantString(sParentName);
@@ -14440,7 +14439,7 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pFavorite = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTFavoriteMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MTFavoriteMenu", param1);
 			pFavorite.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -14451,8 +14450,8 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "OptionYes", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "OptionNo", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "OptionYes", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "OptionNo", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -14665,8 +14664,8 @@ public void vTankSpawnFrame(DataPack pack)
 			g_esPlayer[iTank].g_bKeepCurrentType = false;
 
 			char sOldName[33], sNewName[33];
-			vGetTranslatedName(sOldName, sizeof(sOldName), .type = g_esPlayer[iTank].g_iOldTankType);
-			vGetTranslatedName(sNewName, sizeof(sNewName), .type = g_esPlayer[iTank].g_iTankType);
+			vGetTranslatedName(sOldName, sizeof sOldName, .type = g_esPlayer[iTank].g_iOldTankType);
+			vGetTranslatedName(sNewName, sizeof sNewName, .type = g_esPlayer[iTank].g_iTankType);
 			vSetName(iTank, sOldName, sNewName, iMode);
 
 			vParticleEffects(iTank);
@@ -14769,8 +14768,8 @@ void vRegisterDetours()
 	g_iDetourCount = 0;
 
 	char sFilePath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "%smutant_tanks_detours.cfg", MT_CONFIG_PATH);
-	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_detours.cfg", sFilePath, sFilePath, sizeof(sFilePath)))
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%smutant_tanks_detours.cfg", MT_CONFIG_PATH);
+	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_detours.cfg", sFilePath, sFilePath, sizeof sFilePath))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
 
@@ -14815,9 +14814,9 @@ void vRegisterDetours()
 	char sOS[8], sName[128], sLog[4], sCvar[320], sCvarSet[10][32], sType[14];
 	do
 	{
-		kvDetours.GetSectionName(sName, sizeof(sName));
-		kvDetours.GetString("log", sLog, sizeof(sLog));
-		kvDetours.GetString("cvarcheck", sCvar, sizeof(sCvar));
+		kvDetours.GetSectionName(sName, sizeof sName);
+		kvDetours.GetString("log", sLog, sizeof sLog);
+		kvDetours.GetString("cvarcheck", sCvar, sizeof sCvar);
 
 		switch (g_esGeneral.g_bLinux)
 		{
@@ -14829,7 +14828,7 @@ void vRegisterDetours()
 		{
 			bPlatform = true;
 
-			kvDetours.GetString("type", sType, sizeof(sType));
+			kvDetours.GetString("type", sType, sizeof sType);
 			kvDetours.GoBack();
 		}
 
@@ -14855,8 +14854,8 @@ void vRegisterDetours()
 		bool bBypass = (StrContains(sType, "_bypass") != -1);
 		if (sCvar[0] != '\0' && !bBypass)
 		{
-			ExplodeString(sCvar, ",", sCvarSet, sizeof(sCvarSet), sizeof(sCvarSet[]));
-			for (int iPos = 0; iPos < sizeof(sCvarSet); iPos++)
+			ExplodeString(sCvar, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
+			for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
 			{
 				if (sCvarSet[iPos][0] != '\0')
 				{
@@ -14902,8 +14901,8 @@ void vRegisterPatches(GameData dataHandle)
 	g_iPatchCount = 0;
 
 	char sFilePath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "%smutant_tanks_patches.cfg", MT_CONFIG_PATH);
-	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_patches.cfg", sFilePath, sFilePath, sizeof(sFilePath)))
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%smutant_tanks_patches.cfg", MT_CONFIG_PATH);
+	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_patches.cfg", sFilePath, sFilePath, sizeof sFilePath))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
 
@@ -14949,12 +14948,12 @@ void vRegisterPatches(GameData dataHandle)
 	int iVerify[MT_PATCH_MAXLEN], iVLength = 0, iPatch[MT_PATCH_MAXLEN], iPLength = 0;
 	do
 	{
-		kvPatches.GetSectionName(sName, sizeof(sName));
-		kvPatches.GetString("log", sLog, sizeof(sLog));
-		kvPatches.GetString("cvarcheck", sCvar, sizeof(sCvar));
-		kvPatches.GetString("type", sType, sizeof(sType));
-		kvPatches.GetString("signature", sSignature, sizeof(sSignature));
-		kvPatches.GetString("offset", sOffset, sizeof(sOffset));
+		kvPatches.GetSectionName(sName, sizeof sName);
+		kvPatches.GetString("log", sLog, sizeof sLog);
+		kvPatches.GetString("cvarcheck", sCvar, sizeof sCvar);
+		kvPatches.GetString("type", sType, sizeof sType);
+		kvPatches.GetString("signature", sSignature, sizeof sSignature);
+		kvPatches.GetString("offset", sOffset, sizeof sOffset);
 
 		switch (g_esGeneral.g_bLinux)
 		{
@@ -14966,8 +14965,8 @@ void vRegisterPatches(GameData dataHandle)
 		{
 			bPlatform = true;
 
-			kvPatches.GetString("verify", sVerify, sizeof(sVerify));
-			kvPatches.GetString("patch", sPatch, sizeof(sPatch));
+			kvPatches.GetString("verify", sVerify, sizeof sVerify);
+			kvPatches.GetString("patch", sPatch, sizeof sPatch);
 			kvPatches.GoBack();
 		}
 
@@ -14992,8 +14991,8 @@ void vRegisterPatches(GameData dataHandle)
 
 		if (sCvar[0] != '\0')
 		{
-			ExplodeString(sCvar, ",", sCvarSet, sizeof(sCvarSet), sizeof(sCvarSet[]));
-			for (int iPos = 0; iPos < sizeof(sCvarSet); iPos++)
+			ExplodeString(sCvar, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
+			for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
 			{
 				if (sCvarSet[iPos][0] != '\0')
 				{
@@ -15023,13 +15022,13 @@ void vRegisterPatches(GameData dataHandle)
 			vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, sName, sVerify, sPatch);
 		}
 
-		ReplaceString(sVerify, sizeof(sVerify), "\\x", " ", false);
+		ReplaceString(sVerify, sizeof sVerify, "\\x", " ", false);
 		TrimString(sVerify);
-		iVLength = ExplodeString(sVerify, " ", sSet, sizeof(sSet), sizeof(sSet[]));
+		iVLength = ExplodeString(sVerify, " ", sSet, sizeof sSet, sizeof sSet[]);
 
-		ReplaceString(sPatch, sizeof(sPatch), "\\x", " ", false);
+		ReplaceString(sPatch, sizeof sPatch, "\\x", " ", false);
 		TrimString(sPatch);
-		iPLength = ExplodeString(sPatch, " ", sSet2, sizeof(sSet2), sizeof(sSet2[]));
+		iPLength = ExplodeString(sPatch, " ", sSet2, sizeof sSet2, sizeof sSet2[]);
 
 		if (sLog[0] == 'y')
 		{
@@ -15129,12 +15128,13 @@ bool bCanTypeSpawn(int type = 0)
 
 bool bFoundSection(const char[] subsection, int index)
 {
-	if (g_esGeneral.g_alAbilitySections[index] != null && g_esGeneral.g_alAbilitySections[index].Length > 0)
+	int iListSize = g_esGeneral.g_alAbilitySections[index].Length;
+	if (g_esGeneral.g_alAbilitySections[index] != null && iListSize > 0)
 	{
 		char sSection[32];
-		for (int iPos = 0; iPos < g_esGeneral.g_alAbilitySections[index].Length; iPos++)
+		for (int iPos = 0; iPos < iListSize; iPos++)
 		{
-			g_esGeneral.g_alAbilitySections[index].GetString(iPos, sSection, sizeof(sSection));
+			g_esGeneral.g_alAbilitySections[index].GetString(iPos, sSection, sizeof sSection);
 			if (StrEqual(subsection, sSection, false))
 			{
 				return true;
@@ -15153,14 +15153,14 @@ bool bGetMissionName()
 		if (adMissionInfo != Address_Null && g_esGeneral.g_hSDKKeyValuesGetString != null)
 		{
 			char sTemp[64], sTemp2[64];
-			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp, sizeof(sTemp), "Name", "");
-			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp2, sizeof(sTemp2), "DisplayTitle", "");
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp, sizeof sTemp, "Name", "");
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, adMissionInfo, sTemp2, sizeof sTemp2, "DisplayTitle", "");
 
 			bool bSame = StrEqual(g_esGeneral.g_sCurrentMissionName, sTemp) || StrEqual(g_esGeneral.g_sCurrentMissionDisplayTitle, sTemp2);
 			if (!bSame)
 			{
-				strcopy(g_esGeneral.g_sCurrentMissionName, sizeof(esGeneral::g_sCurrentMissionName), sTemp);
-				strcopy(g_esGeneral.g_sCurrentMissionDisplayTitle, sizeof(esGeneral::g_sCurrentMissionDisplayTitle), sTemp2);
+				strcopy(g_esGeneral.g_sCurrentMissionName, sizeof esGeneral::g_sCurrentMissionName, sTemp);
+				strcopy(g_esGeneral.g_sCurrentMissionDisplayTitle, sizeof esGeneral::g_sCurrentMissionDisplayTitle, sTemp2);
 			}
 
 			return bSame;
@@ -15271,17 +15271,17 @@ bool bIsCustomTankSupported(int tank)
 bool bIsDayConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
-	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
+	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sDayNumber[2], sDay[10], sFilename[14];
-	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-	vGetDayName(StringToInt(sDayNumber), sDay, sizeof(sDay));
-	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sDay);
+	FormatTime(sDayNumber, sizeof sDayNumber, "%w", GetTime());
+	vGetDayName(StringToInt(sDayNumber), sDay, sizeof sDay);
+	FormatEx(sFilename, sizeof sFilename, "%s.cfg", sDay);
 
 	char sDayConfig[PLATFORM_MAX_PATH];
-	FormatEx(sDayConfig, sizeof(sDayConfig), "%s%s", sPath, sFilename);
-	if (MT_FileExists(sFolder, sFilename, sDayConfig, sDayConfig, sizeof(sDayConfig)))
+	FormatEx(sDayConfig, sizeof sDayConfig, "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sDayConfig, sDayConfig, sizeof sDayConfig))
 	{
 		strcopy(buffer, size, sDayConfig);
 
@@ -15326,16 +15326,16 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 bool bIsDifficultyConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
-	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
+	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sDifficulty[11], sFilename[15];
-	g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sDifficulty);
+	g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof sDifficulty);
+	FormatEx(sFilename, sizeof sFilename, "%s.cfg", sDifficulty);
 
 	char sDifficultyConfig[PLATFORM_MAX_PATH];
-	FormatEx(sDifficultyConfig, sizeof(sDifficultyConfig), "%s%s", sPath, sFilename);
-	if (MT_FileExists(sFolder, sFilename, sDifficultyConfig, sDifficultyConfig, sizeof(sDifficultyConfig)))
+	FormatEx(sDifficultyConfig, sizeof sDifficultyConfig, "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sDifficultyConfig, sDifficultyConfig, sizeof sDifficultyConfig))
 	{
 		strcopy(buffer, size, sDifficultyConfig);
 
@@ -15348,16 +15348,16 @@ bool bIsDifficultyConfigFound(char[] buffer, int size)
 bool bIsFinaleConfigFound(const char[] filename, char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
-	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
+	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sFinale[32], sFilename[36];
-	strcopy(sFinale, sizeof(sFinale), filename);
-	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sFinale);
+	strcopy(sFinale, sizeof sFinale, filename);
+	FormatEx(sFilename, sizeof sFilename, "%s.cfg", sFinale);
 
 	char sFinaleConfig[PLATFORM_MAX_PATH];
-	FormatEx(sFinaleConfig, sizeof(sFinaleConfig), "%s%s", sPath, sFilename);
-	if (MT_FileExists(sFolder, sFilename, sFinaleConfig, sFinaleConfig, sizeof(sFinaleConfig)))
+	FormatEx(sFinaleConfig, sizeof sFinaleConfig, "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sFinaleConfig, sFinaleConfig, sizeof sFinaleConfig))
 	{
 		strcopy(buffer, size, sFinaleConfig);
 
@@ -15385,8 +15385,8 @@ bool bIsFirstMap()
 		if (iKeyvalue > 0)
 		{
 			char sMap[128], sCheck[128];
-			GetCurrentMap(sMap, sizeof(sMap));
-			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, iKeyvalue, sCheck, sizeof(sCheck), "map", "N/A");
+			GetCurrentMap(sMap, sizeof sMap);
+			SDKCall(g_esGeneral.g_hSDKKeyValuesGetString, iKeyvalue, sCheck, sizeof sCheck, "map", "N/A");
 			return StrEqual(sMap, sCheck);
 		}
 	}
@@ -15402,16 +15402,16 @@ bool bIsFirstMap()
 bool bIsGameModeConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
-	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
+	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sMode[64], sFilename[68];
-	g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sMode);
+	g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof sMode);
+	FormatEx(sFilename, sizeof sFilename, "%s.cfg", sMode);
 
 	char sModeConfig[PLATFORM_MAX_PATH];
-	FormatEx(sModeConfig, sizeof(sModeConfig), "%s%s", sPath, sFilename);
-	if (MT_FileExists(sFolder, sFilename, sModeConfig, sModeConfig, sizeof(sModeConfig)))
+	FormatEx(sModeConfig, sizeof sModeConfig, "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sModeConfig, sModeConfig, sizeof sModeConfig))
 	{
 		strcopy(buffer, size, sModeConfig);
 
@@ -15424,16 +15424,16 @@ bool bIsGameModeConfigFound(char[] buffer, int size)
 bool bIsMapConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof(sFolder), "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
-	BuildPath(Path_SM, sPath, sizeof(sPath), sFolder);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
+	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sMap[128], sFilename[132];
-	GetCurrentMap(sMap, sizeof(sMap));
-	FormatEx(sFilename, sizeof(sFilename), "%s.cfg", sMap);
+	GetCurrentMap(sMap, sizeof sMap);
+	FormatEx(sFilename, sizeof sFilename, "%s.cfg", sMap);
 
 	char sMapConfig[PLATFORM_MAX_PATH];
-	FormatEx(sMapConfig, sizeof(sMapConfig), "%s%s", sPath, sFilename);
-	if (MT_FileExists(sFolder, sFilename, sMapConfig, sMapConfig, sizeof(sMapConfig)))
+	FormatEx(sMapConfig, sizeof sMapConfig, "%s%s", sPath, sFilename);
+	if (MT_FileExists(sFolder, sFilename, sMapConfig, sMapConfig, sizeof sMapConfig))
 	{
 		strcopy(buffer, size, sMapConfig);
 
@@ -15487,21 +15487,21 @@ bool bIsPluginEnabled()
 	}
 
 	char sFixed[32], sGameMode[32], sGameModes[513], sGameModesCvar[513], sList[513], sListCvar[513];
-	g_esGeneral.g_cvMTGameMode.GetString(sGameMode, sizeof(sGameMode));
-	FormatEx(sFixed, sizeof(sFixed), ",%s,", sGameMode);
+	g_esGeneral.g_cvMTGameMode.GetString(sGameMode, sizeof sGameMode);
+	FormatEx(sFixed, sizeof sFixed, ",%s,", sGameMode);
 
-	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
-	g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModesCvar, sizeof(sGameModesCvar));
+	strcopy(sGameModes, sizeof sGameModes, g_esGeneral.g_sEnabledGameModes);
+	g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModesCvar, sizeof sGameModesCvar);
 	if (sGameModes[0] != '\0' || sGameModesCvar[0] != '\0')
 	{
 		if (sGameModes[0] != '\0')
 		{
-			FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+			FormatEx(sList, sizeof sList, ",%s,", sGameModes);
 		}
 
 		if (sGameModesCvar[0] != '\0')
 		{
-			FormatEx(sListCvar, sizeof(sListCvar), ",%s,", sGameModesCvar);
+			FormatEx(sListCvar, sizeof sListCvar, ",%s,", sGameModesCvar);
 		}
 
 		if ((sList[0] != '\0' && StrContains(sList, sFixed, false) == -1) && (sListCvar[0] != '\0' && StrContains(sListCvar, sFixed, false) == -1))
@@ -15510,18 +15510,18 @@ bool bIsPluginEnabled()
 		}
 	}
 
-	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
-	g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModesCvar, sizeof(sGameModesCvar));
+	strcopy(sGameModes, sizeof sGameModes, g_esGeneral.g_sDisabledGameModes);
+	g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModesCvar, sizeof sGameModesCvar);
 	if (sGameModes[0] != '\0' || sGameModesCvar[0] != '\0')
 	{
 		if (sGameModes[0] != '\0')
 		{
-			FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+			FormatEx(sList, sizeof sList, ",%s,", sGameModes);
 		}
 
 		if (sGameModesCvar[0] != '\0')
 		{
-			FormatEx(sListCvar, sizeof(sListCvar), ",%s,", sGameModesCvar);
+			FormatEx(sListCvar, sizeof sListCvar, ",%s,", sGameModesCvar);
 		}
 
 		if ((sList[0] != '\0' && StrContains(sList, sFixed, false) != -1) || (sListCvar[0] != '\0' && StrContains(sListCvar, sFixed, false) != -1))
@@ -15638,7 +15638,7 @@ bool bIsTankIdle(int tank, int type = 0)
 	}
 
 	char sAction[64];
-	SDKCall(g_esGeneral.g_hSDKGetName, adAction, sAction, sizeof(sAction));
+	SDKCall(g_esGeneral.g_hSDKGetName, adAction, sAction, sizeof sAction);
 	return (type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior));
 }
 
@@ -15694,7 +15694,7 @@ bool bRegisterDetour(const char[] name, bool log = false, int type = 2, bool byp
 		return false;
 	}
 
-	strcopy(g_sDetourName[g_iDetourCount], sizeof(g_sDetourName), name);
+	strcopy(g_sDetourName[g_iDetourCount], sizeof g_sDetourName, name);
 
 	g_bDetourBypass[g_iDetourCount] = bypass;
 	g_bDetourInstalled[g_iDetourCount] = false;
@@ -15761,7 +15761,7 @@ bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName
 		}
 	}
 
-	strcopy(g_sPatchName[g_iPatchCount], sizeof(g_sPatchName), name);
+	strcopy(g_sPatchName[g_iPatchCount], sizeof g_sPatchName, name);
 
 	g_adPatchAddress[g_iPatchCount] = adPatch;
 	g_bPatchInstalled[g_iPatchCount] = false;
@@ -15902,7 +15902,7 @@ float flGetScaledDamage(float damage)
 	if (g_esGeneral.g_cvMTDifficulty != null && g_esGeneral.g_iScaleDamage == 1)
 	{
 		char sDifficulty[11];
-		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
+		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof sDifficulty);
 
 		switch (sDifficulty[0])
 		{
@@ -15985,18 +15985,19 @@ int iFindSectionType(const char[] section, int type)
 	if (FindCharInString(section, ',') != -1 || FindCharInString(section, '-') != -1)
 	{
 		char sSection[PLATFORM_MAX_PATH], sSet[16][10];
-		int iType = 0;
-		strcopy(sSection, sizeof(sSection), section);
+		int iType = 0, iSize = 0;
+		strcopy(sSection, sizeof sSection, section);
 		if (FindCharInString(section, ',') != -1)
 		{
 			char sRange[2][5];
-			ExplodeString(sSection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-			for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+			ExplodeString(sSection, ",", sSet, sizeof sSet, sizeof sSet[]);
+			for (int iPos = 0; iPos < sizeof sSet; iPos++)
 			{
 				if (FindCharInString(sSet[iPos], '-') != -1)
 				{
-					ExplodeString(sSet[iPos], "-", sRange, sizeof(sRange), sizeof(sRange[]));
-					for (iType = StringToInt(sRange[0]); iType <= StringToInt(sRange[1]); iType++)
+					ExplodeString(sSet[iPos], "-", sRange, sizeof sRange, sizeof sRange[]);
+					iSize = StringToInt(sRange[1]);
+					for (iType = StringToInt(sRange[0]); iType <= iSize; iType++)
 					{
 						if (type == iType)
 						{
@@ -16016,8 +16017,9 @@ int iFindSectionType(const char[] section, int type)
 		}
 		else if (FindCharInString(section, '-') != -1)
 		{
-			ExplodeString(sSection, "-", sSet, sizeof(sSet), sizeof(sSet[]));
-			for (iType = StringToInt(sSet[0]); iType <= StringToInt(sSet[1]); iType++)
+			ExplodeString(sSection, "-", sSet, sizeof sSet, sizeof sSet[]);
+			iSize = StringToInt(sSet[1]);
+			for (iType = StringToInt(sSet[0]); iType <= iSize; iType++)
 			{
 				if (type == iType)
 				{
@@ -16157,7 +16159,7 @@ int iGetMaxWeaponSkins(int developer)
 	if (bIsValidEntity(iActiveWeapon))
 	{
 		char sClassname[32];
-		GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
+		GetEntityClassname(iActiveWeapon, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "weapon_pistol_magnum") || StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
 		{
 			return 2;
@@ -16171,7 +16173,7 @@ int iGetMaxWeaponSkins(int developer)
 		else if (StrEqual(sClassname, "weapon_melee"))
 		{
 			char sWeapon[32];
-			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof sWeapon);
 			if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
 			{
 				return 1;
@@ -16185,7 +16187,7 @@ int iGetMaxWeaponSkins(int developer)
 int iGetMessageType(int setting)
 {
 	int iMessageCount = 0, iMessages[10], iFlag = 0;
-	for (int iBit = 0; iBit < sizeof(iMessages); iBit++)
+	for (int iBit = 0; iBit < sizeof iMessages; iBit++)
 	{
 		iFlag = (1 << iBit);
 		if (!(setting & iFlag))
@@ -16209,7 +16211,7 @@ int iGetMessageType(int setting)
 		case 128: return 8;
 		case 256: return 9;
 		case 512: return 10;
-		default: return GetRandomInt(1, sizeof(iMessages));
+		default: return GetRandomInt(1, sizeof iMessages);
 	}
 }
 
@@ -16408,7 +16410,7 @@ public MRESReturn mreActionCompletePost(int pThis, DHookParam hParams)
 public MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParams)
 {
 	char sClassname[32];
-	hParams.GetString(1, sClassname, sizeof(sClassname));
+	hParams.GetString(1, sClassname, sizeof sClassname);
 	if (StrEqual(sClassname, "tank_rock") && hParams.IsNull(4))
 	{
 		vSetRockColor(hReturn.Value);
@@ -16643,11 +16645,11 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 			char sName[32];
 			static int iIndex[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 			int iLimit = g_bSecondGame ? 6 : 3;
-			for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+			for (int iPos = 0; iPos < sizeof iIndex; iPos++)
 			{
 				if (bBoomer && iPos < iLimit) // X < 6 or 3
 				{
-					FormatEx(sName, sizeof(sName), "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+					FormatEx(sName, sizeof sName, "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -16660,7 +16662,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 				}
 				else if (bSmoker && iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
 				{
-					FormatEx(sName, sizeof(sName), "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+					FormatEx(sName, sizeof sName, "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -16701,11 +16703,11 @@ public MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 	char sName[32];
 	static int iIndex[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 	int iLimit = g_bSecondGame ? 6 : 3;
-	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+	for (int iPos = 0; iPos < sizeof iIndex; iPos++)
 	{
 		if (iPos < iLimit) // X < 6 or 3
 		{
-			FormatEx(sName, sizeof(sName), "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+			FormatEx(sName, sizeof sName, "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -16718,7 +16720,7 @@ public MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 		}
 		else if (iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
 		{
-			FormatEx(sName, sizeof(sName), "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+			FormatEx(sName, sizeof sName, "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -17185,7 +17187,7 @@ public MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
 	Call_PushCell(pThis);
 	Call_PushCell(iSurvivor);
-	Call_PushArray(flDirection, sizeof(flDirection));
+	Call_PushArray(flDirection, sizeof flDirection);
 	Call_Finish(aResult);
 
 	if (aResult == Plugin_Handled)
@@ -17398,11 +17400,11 @@ public MRESReturn mreTankClawDoSwingPre(int pThis)
 	{
 		char sName[32];
 		static int iIndex[2] = {-1, -1};
-		for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+		for (int iPos = 0; iPos < sizeof iIndex; iPos++)
 		{
 			if (iIndex[iPos] == -1)
 			{
-				FormatEx(sName, sizeof(sName), "TankSweepFist%i", (iPos + 1));
+				FormatEx(sName, sizeof sName, "TankSweepFist%i", (iPos + 1));
 				iIndex[iPos] = iGetPatchIndex(sName);
 			}
 
@@ -17420,11 +17422,11 @@ public MRESReturn mreTankClawDoSwingPost(int pThis)
 {
 	char sName[32];
 	static int iIndex[2] = {-1, -1};
-	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+	for (int iPos = 0; iPos < sizeof iIndex; iPos++)
 	{
 		if (iIndex[iPos] == -1)
 		{
-			FormatEx(sName, sizeof(sName), "TankSweepFist%i", (iPos + 1));
+			FormatEx(sName, sizeof sName, "TankSweepFist%i", (iPos + 1));
 			iIndex[iPos] = iGetPatchIndex(sName);
 		}
 
@@ -17743,7 +17745,7 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		char sDifficultyConfig[PLATFORM_MAX_PATH];
-		if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof(sDifficultyConfig)))
+		if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
 		{
 			vCustomConfig(sDifficultyConfig);
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
@@ -17774,8 +17776,8 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 	if (bIsTankSupported(iTank) && !bIsTankIdle(iTank))
 	{
 		char sOldName[33], sNewName[33];
-		pack.ReadString(sOldName, sizeof(sOldName));
-		pack.ReadString(sNewName, sizeof(sNewName));
+		pack.ReadString(sOldName, sizeof sOldName);
+		pack.ReadString(sNewName, sizeof sNewName);
 		int iMode = pack.ReadCell();
 		vAnnounce(iTank, sOldName, sNewName, iMode);
 
@@ -17962,7 +17964,7 @@ public Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 	pack.Reset();
 
 	char sSavePath[PLATFORM_MAX_PATH];
-	pack.ReadString(sSavePath, sizeof(sSavePath));
+	pack.ReadString(sSavePath, sizeof sSavePath);
 	if (sSavePath[0] != '\0')
 	{
 		vLoadConfigs(sSavePath, 2);
@@ -18251,7 +18253,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 			continue;
 		}
 
-		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
 			iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
@@ -18379,7 +18381,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	}
 
 	char sClassname[32];
-	GetEntityClassname(iRock, sClassname, sizeof(sClassname));
+	GetEntityClassname(iRock, sClassname, sizeof sClassname);
 	if (!StrEqual(sClassname, "tank_rock"))
 	{
 		return Plugin_Stop;
@@ -18515,7 +18517,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 				dpBoss.WriteCell(GetClientUserId(iTank));
 				dpBoss.WriteCell(g_esCache[iTank].g_iBossStages);
 
-				for (int iPos = 0; iPos < sizeof(esCache::g_iBossHealth); iPos++)
+				for (int iPos = 0; iPos < sizeof esCache::g_iBossHealth; iPos++)
 				{
 					dpBoss.WriteCell(g_esCache[iTank].g_iBossHealth[iPos]);
 					dpBoss.WriteCell(g_esCache[iTank].g_iBossType[iPos]);
@@ -18589,7 +18591,7 @@ public Action tTimerTransform(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 
-	int iPos = GetRandomInt(0, (sizeof(esCache::g_iTransformType) - 1));
+	int iPos = GetRandomInt(0, (sizeof esCache::g_iTransformType - 1));
 	vSetColor(iTank, g_esCache[iTank].g_iTransformType[iPos]);
 	vTankSpawn(iTank, 3);
 

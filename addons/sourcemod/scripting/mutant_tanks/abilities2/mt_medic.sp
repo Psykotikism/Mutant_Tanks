@@ -273,7 +273,7 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pMedic = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MedicMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MedicMenu", param1);
 			pMedic.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -284,14 +284,14 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -368,18 +368,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MEDIC_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MEDIC_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MEDIC_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MEDIC_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMedicCache[tank].g_iMedicAbility == 1 && g_esMedicCache[tank].g_iComboAbility == 1 && !g_esMedicPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MEDIC_SECTION, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION4, false))
 				{
@@ -417,7 +417,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esMedicAbility[iIndex].g_iAccessFlags = 0;
 				g_esMedicAbility[iIndex].g_iComboAbility = 0;
@@ -446,7 +447,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMedicAbility[iIndex].g_iMedicMaxHealth[6] = 8000;
 				g_esMedicAbility[iIndex].g_flMedicRange = 500.0;
 
-				for (int iPos = 0; iPos < sizeof(esMedicAbility::g_iMedicHealth); iPos++)
+				for (int iPos = 0; iPos < sizeof esMedicAbility::g_iMedicHealth; iPos++)
 				{
 					g_esMedicAbility[iIndex].g_iMedicHealth[iPos] = 25;
 				}
@@ -475,12 +476,12 @@ public void MT_OnConfigsLoad(int mode)
 					g_esMedicPlayer[iPlayer].g_flMedicInterval = 0.0;
 					g_esMedicPlayer[iPlayer].g_flMedicRange = 0.0;
 
-					for (int iPos = 0; iPos < sizeof(esMedicPlayer::g_iMedicHealth); iPos++)
+					for (int iPos = 0; iPos < sizeof esMedicPlayer::g_iMedicHealth; iPos++)
 					{
 						g_esMedicPlayer[iPlayer].g_iMedicHealth[iPos] = 0;
 						g_esMedicPlayer[iPlayer].g_iMedicMaxHealth[iPos] = 0;
 
-						if (iPos < (sizeof(esMedicPlayer::g_iMedicFieldColor) - 1))
+						if (iPos < (sizeof esMedicPlayer::g_iMedicFieldColor - 1))
 						{
 							g_esMedicPlayer[iPlayer].g_iMedicFieldColor[iPos] = -1;
 						}
@@ -520,10 +521,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "MedicFieldColor", false) || StrEqual(key, "Medic Field Color", false) || StrEqual(key, "Medic_Field_Color", false) || StrEqual(key, "fieldcolor", false))
 			{
 				char sSet[3][4], sValue[12];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < (sizeof sSet - 1); iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -533,10 +534,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			else
 			{
 				char sSet[7][11], sValue[77];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicPlayer[admin].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -568,10 +569,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "MedicFieldColor", false) || StrEqual(key, "Medic Field Color", false) || StrEqual(key, "Medic_Field_Color", false) || StrEqual(key, "fieldcolor", false))
 			{
 				char sSet[3][4], sValue[12];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < (sizeof sSet - 1); iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -581,10 +582,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			else
 			{
 				char sSet[7][11], sValue[77];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicAbility[type].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicAbility[type].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicAbility[type].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -617,12 +618,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMedicCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iRequiresHumans, g_esMedicAbility[type].g_iRequiresHumans);
 	g_esMedicPlayer[tank].g_iTankType = apply ? type : 0;
 
-	for (int iPos = 0; iPos < sizeof(esMedicCache::g_iMedicHealth); iPos++)
+	for (int iPos = 0; iPos < sizeof esMedicCache::g_iMedicHealth; iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicHealth[iPos], g_esMedicAbility[type].g_iMedicHealth[iPos]);
 		g_esMedicCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicMaxHealth[iPos], g_esMedicAbility[type].g_iMedicMaxHealth[iPos]);
 
-		if (iPos < sizeof(esMedicCache::g_iMedicFieldColor))
+		if (iPos < sizeof esMedicCache::g_iMedicFieldColor)
 		{
 			g_esMedicCache[tank].g_iMedicFieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicFieldColor[iPos], g_esMedicAbility[type].g_iMedicFieldColor[iPos]);
 		}
@@ -945,7 +946,7 @@ int iGetMaxHealth(int tank, int infected)
 
 int[] iGetRandomColors(int tank)
 {
-	for (int iPos = 0; iPos < (sizeof(esMedicCache::g_iMedicFieldColor) - 1); iPos++)
+	for (int iPos = 0; iPos < (sizeof esMedicCache::g_iMedicFieldColor - 1); iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicFieldColor[iPos] = iGetRandomColor(g_esMedicCache[tank].g_iMedicFieldColor[iPos]);
 	}

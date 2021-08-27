@@ -203,7 +203,7 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pHit = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "HitMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "HitMenu", param1);
 			pHit.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -214,9 +214,9 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -311,7 +311,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esHitAbility[iIndex].g_iAccessFlags = 0;
 				g_esHitAbility[iIndex].g_iImmunityFlags = 0;

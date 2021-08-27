@@ -246,7 +246,7 @@ public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pItem = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ItemMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "ItemMenu", param1);
 			pItem.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -257,10 +257,10 @@ public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -385,18 +385,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ITEM_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ITEM_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ITEM_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ITEM_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 1 && !g_esItemPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ITEM_SECTION, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION2, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION3, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION4, false))
 				{
@@ -428,7 +428,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esItemAbility[iIndex].g_iAccessFlags = 0;
 				g_esItemAbility[iIndex].g_iImmunityFlags = 0;
@@ -493,8 +494,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof(esItemPlayer::g_sItemLoadout), value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof(esItemPlayer::g_sItemPinata), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof esItemPlayer::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof esItemPlayer::g_sItemPinata, value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -512,8 +513,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof(esItemAbility::g_sItemLoadout), value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof(esItemAbility::g_sItemPinata), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof esItemAbility::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof esItemAbility::g_sItemPinata, value);
 	}
 }
 
@@ -536,8 +537,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans);
 	g_esItemPlayer[tank].g_iTankType = apply ? type : 0;
 
-	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
-	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -600,9 +601,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		flPos[2] += 50.0;
 
 		char sItems[5][64];
-		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), " ", "");
-		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof esItemCache::g_sItemPinata, " ", "");
+		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof sItems, sizeof sItems[]);
+		for (int iItem = 0; iItem < sizeof sItems; iItem++)
 		{
 			if (sItems[iItem][0] != '\0')
 			{
@@ -698,18 +699,18 @@ void vItemAbility(int tank)
 	}
 
 	char sItems[5][64];
-	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), " ", "");
-	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, " ", "");
+	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			switch (g_esItemCache[tank].g_iItemMode)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof(sItems)) - 1]);
+				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof sItems) - 1]);
 				case 1:
 				{
-					for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+					for (int iItem = 0; iItem < sizeof sItems; iItem++)
 					{
 						if (StrContains(g_esItemCache[tank].g_sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
 						{
@@ -768,7 +769,7 @@ void vSpawnItem(const char[] name, float pos[3])
 	{
 		case 1:
 		{
-			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
 
 			switch (StrEqual(sClassname, "weapon_gascan"))
 			{
@@ -803,7 +804,7 @@ void vSpawnItem(const char[] name, float pos[3])
 		}
 		case 2, 3:
 		{
-			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
 			iItem = CreateEntityByName(sClassname);
 		}
 		case 4:

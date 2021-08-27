@@ -170,7 +170,7 @@ public void OnMapStart()
 {
 	if (g_bSecondGame)
 	{
-		for (int iPos = 0; iPos < sizeof(g_sParticles); iPos++)
+		for (int iPos = 0; iPos < sizeof g_sParticles; iPos++)
 		{
 			iPrecacheParticle(g_sParticles[iPos]);
 		}
@@ -283,7 +283,7 @@ public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSplatter = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SplatterMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SplatterMenu", param1);
 			pSplatter.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -294,14 +294,14 @@ public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -378,18 +378,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iComboAbility == 1 && !g_esSplatterPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLATTER_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION4, false))
 				{
@@ -427,7 +427,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSplatterAbility[iIndex].g_iAccessFlags = 0;
 				g_esSplatterAbility[iIndex].g_iComboAbility = 0;
@@ -491,7 +492,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterPlayer[admin].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
 		g_esSplatterPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterPlayer[admin].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esSplatterPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterPlayer[admin].g_iSplatterType, value, 0, sizeof(g_sParticles));
+		g_esSplatterPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterPlayer[admin].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
@@ -509,7 +510,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterAbility[type].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterAbility[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterAbility[type].g_flSplatterChance, value, 0.0, 100.0);
 		g_esSplatterAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterAbility[type].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esSplatterAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterAbility[type].g_iSplatterType, value, 0, sizeof(g_sParticles));
+		g_esSplatterAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterAbility[type].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
@@ -822,7 +823,7 @@ void vSplatterRange(int tank, bool idle)
 		}
 
 		char sParticle[40];
-		FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
+		FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof g_sParticles - 1))]);
 		vAttachParticle(tank, sParticle, 10.0, .teleport = false);
 	}
 }
@@ -864,7 +865,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 	}
 
 	char sParticle[40];
-	FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
+	FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof g_sParticles - 1))]);
 	vAttachParticle(iTank, sParticle, 10.0, .teleport = false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)

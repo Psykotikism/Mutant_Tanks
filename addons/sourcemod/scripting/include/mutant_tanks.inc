@@ -1296,10 +1296,10 @@ stock void vCopyVector(float source[3], float target[3])
 stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...)
 {
 	char sConfig[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	VFormat(sFilename, sizeof(sFilename), filename, 3);
-	FormatEx(sConfig, sizeof(sConfig), "%s.cfg", sFilename);
-	BuildPath(Path_SM, sPath, sizeof(sPath), "%s%s", folder, sConfig);
-	if (MT_FileExists(folder, sConfig, sPath, sOutput, sizeof(sOutput)))
+	VFormat(sFilename, sizeof sFilename, filename, 3);
+	FormatEx(sConfig, sizeof sConfig, "%s.cfg", sFilename);
+	BuildPath(Path_SM, sPath, sizeof sPath, "%s%s", folder, sConfig);
+	if (MT_FileExists(folder, sConfig, sPath, sOutput, sizeof sOutput))
 	{
 		RenameFile(sOutput, sPath);
 
@@ -1339,11 +1339,11 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		}
 
 		char sVariant[64];
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Stop::%f:-1", pause);
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Stop::%f:-1", pause);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser1");
@@ -1353,7 +1353,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		SetVariantString("OnUser2 !self:FireUser1::0:-1");
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof(sVariant), "OnUser3 !self:Kill::%f:-1", duration);
+		FormatEx(sVariant, sizeof sVariant, "OnUser3 !self:Kill::%f:-1", duration);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser3");
@@ -1370,7 +1370,7 @@ stock void vDamagePlayer(int victim, int attacker, float damage, const char[] da
 	if (bIsValidEntity(iPointHurt))
 	{
 		char sTargetName[32];
-		FormatEx(sTargetName, sizeof(sTargetName), "mt_target_%i", GetClientUserId(victim));
+		FormatEx(sTargetName, sizeof sTargetName, "mt_target_%i", GetClientUserId(victim));
 		DispatchKeyValue(victim, "targetname", sTargetName);
 
 		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
@@ -1391,12 +1391,12 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 		if (bIsValidEntity(iObject))
 		{
 			char sVariant[64];
-			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:-1", duration);
+			FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:ClearParent::%f:-1", duration);
 			SetVariantString(sVariant);
 			AcceptEntityInput(iObject, "AddOutput");
 			AcceptEntityInput(iObject, "FireUser1");
 
-			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:-1", duration + 0.1);
+			FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Kill::%f:-1", duration + 0.1);
 			SetVariantString(sVariant);
 			AcceptEntityInput(iObject, "AddOutput");
 			AcceptEntityInput(iObject, "FireUser1");
@@ -1422,7 +1422,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 		bfWrite.WriteShort(300);
 		bfWrite.WriteShort((0x0010|0x0001));
 
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		for (int iPos = 0; iPos < sizeof iColor; iPos++)
 		{
 			bfWrite.WriteByte(iColor[iPos]);
 		}
@@ -1494,7 +1494,7 @@ stock void vGetMatchingFilename(const char[] directory, const char[] filename, c
 	if (dlList != null)
 	{
 		char sFilename[PLATFORM_MAX_PATH];
-		while (dlList.GetNext(sFilename, sizeof(sFilename)))
+		while (dlList.GetNext(sFilename, sizeof sFilename))
 		{
 			if (StrEqual(sFilename, filename, false))
 			{
@@ -1718,12 +1718,12 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 	if (FileExists(path, use_valve_fs, valve_path_id))
 	{
 		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
 		if (!StrEqual(filename, sOutput))
 		{
 			char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
 			strcopy(output, size, sTemp);
 		}
 
@@ -1747,9 +1747,9 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 	char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
-	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
-	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	FormatEx(sMessage, sizeof sMessage, "\x01%s", message);
+	VFormat(sBuffer, sizeof sBuffer, sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, false);
 	PrintToChat(client, sBuffer);
 }
 
@@ -1761,7 +1761,7 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			SetGlobalTransTarget(iPlayer);
-			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+			VFormat(sBuffer, sizeof sBuffer, message, 2);
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1771,8 +1771,8 @@ stock void MT_PrintToServer(const char[] message, any ...)
 {
 	char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	VFormat(sBuffer, sizeof(sBuffer), message, 2);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	VFormat(sBuffer, sizeof sBuffer, message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 	PrintToServer(sBuffer);
 }
 
@@ -1797,11 +1797,11 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	char sBuffer[1024];
 	SetGlobalTransTarget(client);
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 
 		switch (client == 0)
 		{
@@ -1840,7 +1840,7 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[32];
-	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
+	GetEntityNetClass(survivor, sClassname, sizeof sClassname);
 	if (StrEqual(sClassname, "SurvivorBot"))
 	{
 		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
@@ -1931,7 +1931,7 @@ stock bool bIsCommonInfected(int common)
 	if (bIsValidEntity(common))
 	{
 		char sClassname[32];
-		GetEntityClassname(common, sClassname, sizeof(sClassname));
+		GetEntityClassname(common, sClassname, sizeof sClassname);
 		return StrEqual(sClassname, "infected");
 	}
 
@@ -1957,7 +1957,7 @@ stock bool bIsGunWeapon(int survivor)
 		else if (iSlot2 > MaxClients && iSlot2 == iWeapon)
 		{
 			char sWeapon[32];
-			GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
+			GetEntityClassname(iWeapon, sWeapon, sizeof sWeapon);
 			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
 			{
 				return true;
@@ -2018,7 +2018,7 @@ stock bool bIsPlayerIdle(int survivor)
 		}
 
 		char sClassname[32];
-		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
+		GetEntityNetClass(iPlayer, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
@@ -2049,7 +2049,7 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 	else if (bIsSurvivor(player, flags))
 	{
 		char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 		int iSequence = GetEntProp(player, Prop_Send, "m_nSequence");
 		if (bIsSecondGame())
 		{
@@ -2213,7 +2213,7 @@ stock bool bIsWitch(int witch)
 	if (bIsValidEntity(witch))
 	{
 		char sClassname[32];
-		GetEntityClassname(witch, sClassname, sizeof(sClassname));
+		GetEntityClassname(witch, sClassname, sizeof sClassname);
 		return StrEqual(sClassname, "witch");
 	}
 
@@ -2494,8 +2494,8 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
-		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
+		for (int iPos = 0; iPos < sizeof sSet; iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -2679,7 +2679,7 @@ stock int iGetAnimation(int player, const char[] sequence)
 	if (bIsValidEntity(iProp))
 	{
 		char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 		SetEntityModel(iProp, sModel);
 		SetVariantString(sequence);
 		AcceptEntityInput(iProp, "SetAnimation");
@@ -2763,7 +2763,7 @@ stock int iGetIdlePlayer(int bot)
 	if (bIsBotSurvivor(bot))
 	{
 		char sClassname[32];
-		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
+		GetEntityNetClass(bot, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
@@ -2798,8 +2798,8 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	if (FindCharInString(subsection, ',') != -1)
 	{
 		char sSet[16][16];
-		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
+		for (int iPos = 0; iPos < sizeof sSet; iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -2980,7 +2980,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 			{
 				bool bHost[MAXPLAYERS + 1];
 				GetEntDataArray(iManager, iHostOffset, bHost, MAXPLAYERS + 1, 1);
-				for (int iPlayer = 1; iPlayer < sizeof(bHost); iPlayer++)
+				for (int iPlayer = 1; iPlayer < sizeof bHost; iPlayer++)
 				{
 					if (bHost[iPlayer])
 					{
@@ -3119,7 +3119,7 @@ stock int iGetSurvivorCount(bool human = false)
 stock int iGetWeaponOffset(int weapon)
 {
 	char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
 	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 	{
 		return 3;

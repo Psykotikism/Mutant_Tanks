@@ -253,7 +253,7 @@ public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSpam = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SpamMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SpamMenu", param1);
 			pSpam.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -264,14 +264,14 @@ public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -320,7 +320,7 @@ public Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float 
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
 			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
@@ -384,18 +384,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPAM_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPAM_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPAM_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPAM_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iComboAbility == 1 && !g_esSpamPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPAM_SECTION, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION4, false))
 				{
@@ -434,7 +434,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSpamAbility[iIndex].g_iAccessFlags = 0;
 				g_esSpamAbility[iIndex].g_iImmunityFlags = 0;
@@ -814,7 +815,7 @@ void vSpam2(int tank, int pos = -1)
 
 	char sDamage[11];
 	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esSpamCache[tank].g_iSpamDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof(sDamage));
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
 
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(tank, flPos);

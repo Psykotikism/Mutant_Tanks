@@ -305,7 +305,7 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pClone = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "CloneMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "CloneMenu", param1);
 			pClone.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -316,12 +316,12 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -398,18 +398,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_CLONE_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_CLONE_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_CLONE_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_CLONE_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iComboAbility == 1 && !g_esClonePlayer[tank].g_bCloned)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_CLONE_SECTION, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION2, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION3, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION4, false))
 				{
@@ -441,7 +441,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esCloneAbility[iIndex].g_iAccessFlags = 0;
 				g_esCloneAbility[iIndex].g_iComboAbility = 0;
@@ -523,9 +524,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
 				char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esClonePlayer[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMinType;
 				g_esClonePlayer[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMaxType;
@@ -557,9 +558,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
 				char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esCloneAbility[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMinType;
 				g_esCloneAbility[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMaxType;

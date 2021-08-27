@@ -256,7 +256,7 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pRock = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RockMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "RockMenu", param1);
 			pRock.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -267,14 +267,14 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -323,7 +323,7 @@ public Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float 
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
 			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
@@ -387,18 +387,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCK_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCK_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCK_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCK_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iComboAbility == 1 && !g_esRockPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ROCK_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION4, false))
 				{
@@ -437,7 +437,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esRockAbility[iIndex].g_iAccessFlags = 0;
 				g_esRockAbility[iIndex].g_iImmunityFlags = 0;
@@ -517,9 +518,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][6], sValue[12];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esRockPlayer[admin].g_flRockRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_esRockPlayer[admin].g_flRockRadius[0];
 				g_esRockPlayer[admin].g_flRockRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_esRockPlayer[admin].g_flRockRadius[1];
@@ -550,9 +551,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][6], sValue[12];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esRockAbility[type].g_flRockRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_esRockAbility[type].g_flRockRadius[0];
 				g_esRockAbility[type].g_flRockRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_esRockAbility[type].g_flRockRadius[1];
@@ -851,7 +852,7 @@ void vRock2(int tank, int pos = -1)
 
 	char sDamage[11];
 	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esRockCache[tank].g_iRockDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof(sDamage));
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
 
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(tank, flPos);

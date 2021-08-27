@@ -348,7 +348,7 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pShield = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ShieldMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "ShieldMenu", param1);
 			pShield.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -359,14 +359,14 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -436,7 +436,7 @@ public void OnGameFrame()
 				iTarget = GetClientAimTarget(iPlayer);
 				if (bIsTank(iTarget))
 				{
-					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
+					GetEntityClassname(iTarget, sClassname, sizeof sClassname);
 					if (StrEqual(sClassname, "player") && g_esShieldPlayer[iTarget].g_bActivated && g_esShieldPlayer[iTarget].g_flHealth > 0.0 && g_esShieldCache[iTarget].g_flShieldHealth > 0.0)
 					{
 						MT_GetTankName(iTarget, sTankName);
@@ -444,17 +444,17 @@ public void OnGameFrame()
 						sHealthBar[0] = '\0';
 						flPercentage = ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * 100.0);
 
-						ReplaceString(g_esShieldCache[iTarget].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), " ", "");
-						ExplodeString(g_esShieldCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+						ReplaceString(g_esShieldCache[iTarget].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, " ", "");
+						ExplodeString(g_esShieldCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof sSet, sizeof sSet[]);
 
-						for (int iCount = 0; iCount < ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * (sizeof(sHealthBar) - 1)) && iCount < (sizeof(sHealthBar) - 1); iCount++)
+						for (int iCount = 0; iCount < ((g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * (sizeof sHealthBar - 1)) && iCount < (sizeof sHealthBar - 1); iCount++)
 						{
-							StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
+							StrCat(sHealthBar, sizeof sHealthBar, sSet[0]);
 						}
 
-						for (int iCount = 0; iCount < (sizeof(sHealthBar) - 1); iCount++)
+						for (int iCount = 0; iCount < (sizeof sHealthBar - 1); iCount++)
 						{
-							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
+							StrCat(sHealthBar, sizeof sHealthBar, sSet[1]);
 						}
 
 						switch (g_esShieldCache[iTarget].g_iShieldDisplayHPType)
@@ -632,18 +632,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SHIELD_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SHIELD_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SHIELD_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SHIELD_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iComboAbility == 1 && !g_esShieldPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SHIELD_SECTION, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION2, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION3, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION4, false))
 				{
@@ -675,7 +675,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esShieldAbility[iIndex].g_sShieldColor = "255,255,255,255";
 				g_esShieldAbility[iIndex].g_iAccessFlags = 0;
@@ -700,7 +701,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esShieldAbility[iIndex].g_flShieldThrowChance = 100.0;
 				g_esShieldAbility[iIndex].g_iShieldType = 2;
 
-				for (int iPos = 0; iPos < sizeof(esShieldAbility::g_iShieldColor); iPos++)
+				for (int iPos = 0; iPos < sizeof esShieldAbility::g_iShieldColor; iPos++)
 				{
 					g_esShieldAbility[iIndex].g_iShieldColor[iPos] = 255;
 				}
@@ -735,7 +736,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShieldPlayer[iPlayer].g_flShieldThrowChance = 0.0;
 					g_esShieldPlayer[iPlayer].g_iShieldType = 0;
 
-					for (int iPos = 0; iPos < sizeof(esShieldPlayer::g_iShieldColor); iPos++)
+					for (int iPos = 0; iPos < sizeof esShieldPlayer::g_iShieldColor; iPos++)
 					{
 						g_esShieldPlayer[iPlayer].g_iShieldColor[iPos] = -1;
 					}
@@ -774,18 +775,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esShieldPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldPlayer[admin].g_sShieldHealthChars, sizeof(esShieldPlayer::g_sShieldHealthChars), value);
+		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldPlayer[admin].g_sShieldHealthChars, sizeof esShieldPlayer::g_sShieldHealthChars, value);
 
 		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
 		{
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				char sSet[4][4], sValue[16];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				strcopy(g_esShieldPlayer[admin].g_sShieldColor, sizeof(esShieldPlayer::g_sShieldColor), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				strcopy(g_esShieldPlayer[admin].g_sShieldColor, sizeof esShieldPlayer::g_sShieldColor, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esShieldPlayer[admin].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -816,18 +817,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esShieldAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldAbility[type].g_sShieldHealthChars, sizeof(esShieldAbility::g_sShieldHealthChars), value);
+		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldAbility[type].g_sShieldHealthChars, sizeof esShieldAbility::g_sShieldHealthChars, value);
 
 		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
 		{
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				char sSet[4][4], sValue[16];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				strcopy(g_esShieldAbility[type].g_sShieldColor, sizeof(esShieldAbility::g_sShieldColor), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				strcopy(g_esShieldAbility[type].g_sShieldColor, sizeof esShieldAbility::g_sShieldColor, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esShieldAbility[type].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -863,10 +864,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[type].g_iShieldType);
 	g_esShieldPlayer[tank].g_iTankType = apply ? type : 0;
 
-	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof(esShieldCache::g_sShieldColor), g_esShieldPlayer[tank].g_sShieldColor, g_esShieldAbility[type].g_sShieldColor);
-	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
+	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldAbility[type].g_sShieldColor);
+	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
 
-	for (int iPos = 0; iPos < sizeof(esShieldCache::g_iShieldColor); iPos++)
+	for (int iPos = 0; iPos < sizeof esShieldCache::g_iShieldColor; iPos++)
 	{
 		g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldAbility[type].g_iShieldColor[iPos], 1);
 	}
@@ -1431,7 +1432,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	if (flVector > 500.0)
 	{
 		int iTypeCount = 0, iTypes[4], iFlag = 0;
-		for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+		for (int iBit = 0; iBit < sizeof iTypes; iBit++)
 		{
 			iFlag = (1 << iBit);
 			if (!(g_esShieldCache[iTank].g_iShieldType & iFlag))

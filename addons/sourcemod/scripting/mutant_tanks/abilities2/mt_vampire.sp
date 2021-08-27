@@ -205,7 +205,7 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pVampire = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "VampireMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "VampireMenu", param1);
 			pVampire.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -216,9 +216,9 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -267,7 +267,7 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
 			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
@@ -336,7 +336,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esVampireAbility[iIndex].g_iAccessFlags = 0;
 				g_esVampireAbility[iIndex].g_iImmunityFlags = 0;

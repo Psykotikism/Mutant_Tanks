@@ -265,7 +265,7 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pCar = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "CarMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "CarMenu", param1);
 			pCar.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -276,14 +276,14 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -366,18 +366,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CAR_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CAR_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CAR_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CAR_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_CAR_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_CAR_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_CAR_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_CAR_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iComboAbility == 1 && !g_esCarPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_CAR_SECTION, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION2, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION3, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION4, false))
 				{
@@ -415,7 +415,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esCarAbility[iIndex].g_iAccessFlags = 0;
 				g_esCarAbility[iIndex].g_iComboAbility = 0;
@@ -497,9 +498,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "CarRadius", false) || StrEqual(key, "Car Radius", false) || StrEqual(key, "Car_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][7], sValue[14];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esCarPlayer[admin].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esCarPlayer[admin].g_flCarRadius[0];
 				g_esCarPlayer[admin].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esCarPlayer[admin].g_flCarRadius[1];
@@ -531,9 +532,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "CarRadius", false) || StrEqual(key, "Car Radius", false) || StrEqual(key, "Car_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][7], sValue[14];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esCarAbility[type].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esCarAbility[type].g_flCarRadius[0];
 				g_esCarAbility[type].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esCarAbility[type].g_flCarRadius[1];
@@ -903,7 +904,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		if (bIsValidEntity(iCar))
 		{
 			int iOptionCount = 0, iOptions[3], iFlag = 0;
-			for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
+			for (int iBit = 0; iBit < sizeof iOptions; iBit++)
 			{
 				iFlag = (1 << iBit);
 				if (!(g_esCarCache[iTank].g_iCarOptions & iFlag))
@@ -922,7 +923,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				case 4: SetEntityModel(iCar, MODEL_CAR3);
 				default:
 				{
-					switch (GetRandomInt(1, sizeof(iOptions)))
+					switch (GetRandomInt(1, sizeof iOptions))
 					{
 						case 1: SetEntityModel(iCar, MODEL_CAR);
 						case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -933,7 +934,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 
 			float flAngles2[3];
 			int iCarColor[3];
-			for (int iIndex = 0; iIndex < sizeof(iCarColor); iIndex++)
+			for (int iIndex = 0; iIndex < sizeof iCarColor; iIndex++)
 			{
 				iCarColor[iIndex] = GetRandomInt(0, 255);
 				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);

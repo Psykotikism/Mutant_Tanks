@@ -156,10 +156,9 @@ public void OnMapStart()
 	if (g_bSecondGame)
 	{
 		PrecacheModel(SPRITE_EXPLODE, true);
-
 		iPrecacheParticle(PARTICLE_LIGHTNING);
 
-		for (int iPos = 0; iPos < sizeof(g_sLightningSounds); iPos++)
+		for (int iPos = 0; iPos < sizeof g_sLightningSounds; iPos++)
 		{
 			PrecacheSound(g_sLightningSounds[iPos], true);
 		}
@@ -272,7 +271,7 @@ public int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int p
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pLightning = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "LightningMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "LightningMenu", param1);
 			pLightning.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -283,14 +282,14 @@ public int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int p
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -367,18 +366,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iComboAbility == 1 && !g_esLightningPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION2, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION3, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION4, false))
 				{
@@ -416,7 +415,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esLightningAbility[iIndex].g_iAccessFlags = 0;
 				g_esLightningAbility[iIndex].g_iImmunityFlags = 0;
@@ -862,7 +862,7 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 	int iTarget = CreateEntityByName("info_particle_target");
 	if (bIsValidEntity(iTarget))
 	{
-		Format(sTargetName, sizeof(sTargetName), "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
+		Format(sTargetName, sizeof sTargetName, "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
 		DispatchKeyValue(iTarget, "targetname", sTargetName);
 		TeleportEntity(iTarget, flOrigin, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iTarget);
@@ -882,7 +882,7 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
 				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
-				EmitSoundToAll(g_sLightningSounds[GetRandomInt(0, sizeof(g_sLightningSounds) - 1)], iSurvivor);
+				EmitSoundToAll(g_sLightningSounds[GetRandomInt(0, sizeof g_sLightningSounds - 1)], iSurvivor);
 			}
 		}
 	}

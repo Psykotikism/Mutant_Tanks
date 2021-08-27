@@ -275,7 +275,7 @@ public int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pLeech = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "LeechMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "LeechMenu", param1);
 			pLeech.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -286,13 +286,13 @@ public int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -341,7 +341,7 @@ public Action OnLeechTakeDamage(int victim, int &attacker, int &inflictor, float
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esLeechCache[attacker].g_iLeechHitMode == 0 || g_esLeechCache[attacker].g_iLeechHitMode == 1) && bIsSurvivor(victim) && g_esLeechCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esLeechAbility[g_esLeechPlayer[attacker].g_iTankType].g_iAccessFlags, g_esLeechPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esLeechPlayer[attacker].g_iTankType, g_esLeechAbility[g_esLeechPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[victim].g_iImmunityFlags))
@@ -404,16 +404,16 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_LEECH_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_LEECH_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_LEECH_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_LEECH_SECTION4);
 	if (g_esLeechCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
 		char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_LEECH_SECTION, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION2, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION3, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION4, false))
 			{
@@ -487,7 +487,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esLeechAbility[iIndex].g_iAccessFlags = 0;
 				g_esLeechAbility[iIndex].g_iImmunityFlags = 0;
@@ -932,7 +933,7 @@ public Action tTimerLeechCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esLeechCache[iTank].g_iLeechHitMode == 0 || g_esLeechCache[iTank].g_iLeechHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vLeechHit(iSurvivor, iTank, flRandom, flChance, g_esLeechCache[iTank].g_iLeechHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);

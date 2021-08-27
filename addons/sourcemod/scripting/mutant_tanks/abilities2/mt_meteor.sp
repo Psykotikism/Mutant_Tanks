@@ -279,7 +279,7 @@ public int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pMeteor = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MeteorMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MeteorMenu", param1);
 			pMeteor.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -290,14 +290,14 @@ public int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -372,7 +372,7 @@ public Action OnMeteorTakeDamage(int victim, int &attacker, int &inflictor, floa
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		int iTank = GetClientOfUserId(g_iUserID[inflictor]);
 		if (MT_IsTankSupported(iTank) && g_esMeteorCache[iTank].g_iMeteorAbility == 1 && g_esMeteorCache[iTank].g_iMeteorMode == 1 && StrEqual(sClassname, "pipe_bomb_projectile") && damagetype == 134217792)
 		{
@@ -416,18 +416,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_METEOR_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_METEOR_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_METEOR_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_METEOR_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMeteorCache[tank].g_iMeteorAbility == 1 && g_esMeteorCache[tank].g_iComboAbility == 1 && !g_esMeteorPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_METEOR_SECTION, false) || StrEqual(sSubset[iPos], MT_METEOR_SECTION2, false) || StrEqual(sSubset[iPos], MT_METEOR_SECTION3, false) || StrEqual(sSubset[iPos], MT_METEOR_SECTION4, false))
 				{
@@ -465,7 +465,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esMeteorAbility[iIndex].g_iAccessFlags = 0;
 				g_esMeteorAbility[iIndex].g_iImmunityFlags = 0;
@@ -550,9 +551,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][7], sValue[14];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esMeteorPlayer[admin].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esMeteorPlayer[admin].g_flMeteorRadius[0];
 				g_esMeteorPlayer[admin].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esMeteorPlayer[admin].g_flMeteorRadius[1];
@@ -585,9 +586,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
 				char sSet[2][7], sValue[14];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esMeteorAbility[type].g_flMeteorRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esMeteorAbility[type].g_flMeteorRadius[0];
 				g_esMeteorAbility[type].g_flMeteorRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esMeteorAbility[type].g_flMeteorRadius[1];
@@ -1032,7 +1033,7 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		if (bIsValidEntity(iMeteor))
 		{
 			float flAngles2[3];
-			for (int iIndex = 0; iIndex < sizeof(flAngles2); iIndex++)
+			for (int iIndex = 0; iIndex < sizeof flAngles2; iIndex++)
 			{
 				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
 			}

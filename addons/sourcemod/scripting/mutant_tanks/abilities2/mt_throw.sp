@@ -309,7 +309,7 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pThrow = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ThrowMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "ThrowMenu", param1);
 			pThrow.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -320,12 +320,12 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -448,18 +448,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_THROW_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_THROW_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_THROW_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_THROW_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_THROW_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_THROW_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_THROW_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_THROW_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_ROCKTHROW && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 1 && bIsValidEntity(weapon))
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_THROW_SECTION, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION2, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION3, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION4, false))
 				{
@@ -487,7 +487,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esThrowAbility[iIndex].g_iAccessFlags = 0;
 				g_esThrowAbility[iIndex].g_iImmunityFlags = 0;
@@ -946,7 +947,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	if (flVector > 500.0)
 	{
 		int iAbilityCount = 0, iAbilities[4], iAbilityFlag = 0;
-		for (int iBit = 0; iBit < sizeof(iAbilities); iBit++)
+		for (int iBit = 0; iBit < sizeof iAbilities; iBit++)
 		{
 			iAbilityFlag = (1 << iBit);
 			if (!(g_esThrowCache[iTank].g_iThrowAbility & iAbilityFlag))
@@ -968,7 +969,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					if (bIsValidEntity(iCar))
 					{
 						int iOptionCount = 0, iOptions[3], iFlag = 0;
-						for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
+						for (int iBit = 0; iBit < sizeof iOptions; iBit++)
 						{
 							iFlag = (1 << iBit);
 							if (!(g_esThrowCache[iTank].g_iThrowCarOptions & iFlag))
@@ -987,7 +988,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							case 4: SetEntityModel(iCar, MODEL_CAR3);
 							default:
 							{
-								switch (GetRandomInt(1, sizeof(iOptions)))
+								switch (GetRandomInt(1, sizeof iOptions))
 								{
 									case 1: SetEntityModel(iCar, MODEL_CAR);
 									case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -997,7 +998,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						}
 
 						int iCarColor[3];
-						for (int iPos = 0; iPos < sizeof(iCarColor); iPos++)
+						for (int iPos = 0; iPos < sizeof iCarColor; iPos++)
 						{
 							iCarColor[iPos] = GetRandomInt(0, 255);
 						}
@@ -1049,7 +1050,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						}
 
 						int iOptionCount = 0, iOptions[7], iFlag = 0;
-						for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
+						for (int iBit = 0; iBit < sizeof iOptions; iBit++)
 						{
 							iFlag = (1 << iBit);
 							if (!(g_esThrowCache[iTank].g_iThrowInfectedOptions & iFlag))
@@ -1072,7 +1073,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							case 64: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank");
 							default:
 							{
-								switch (GetRandomInt(1, sizeof(iOptions)))
+								switch (GetRandomInt(1, sizeof iOptions))
 								{
 									case 1: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 									case 2: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");

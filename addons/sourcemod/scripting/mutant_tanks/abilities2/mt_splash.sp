@@ -253,7 +253,7 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSplash = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SplashMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SplashMenu", param1);
 			pSplash.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -264,14 +264,14 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -348,18 +348,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLASH_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPLASH_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPLASH_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPLASH_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iComboAbility == 1 && !g_esSplashPlayer[tank].g_bActivated)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLASH_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION4, false))
 				{
@@ -397,7 +397,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSplashAbility[iIndex].g_iAccessFlags = 0;
 				g_esSplashAbility[iIndex].g_iImmunityFlags = 0;

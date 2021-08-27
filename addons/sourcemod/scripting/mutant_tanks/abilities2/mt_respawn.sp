@@ -237,7 +237,7 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pRespawn = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RespawnMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "RespawnMenu", param1);
 			pRespawn.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -248,11 +248,11 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -329,18 +329,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	}
 
 	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION4);
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_UPONDEATH && g_esRespawnCache[tank].g_iRespawnAbility == 1 && g_esRespawnCache[tank].g_iComboAbility == 1)
 		{
 			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_RESPAWN_SECTION, false) || StrEqual(sSubset[iPos], MT_RESPAWN_SECTION2, false) || StrEqual(sSubset[iPos], MT_RESPAWN_SECTION3, false) || StrEqual(sSubset[iPos], MT_RESPAWN_SECTION4, false))
 				{
@@ -372,7 +372,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esRespawnAbility[iIndex].g_iAccessFlags = 0;
 				g_esRespawnAbility[iIndex].g_iComboAbility = 0;
@@ -436,9 +437,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "RespawnType", false) || StrEqual(key, "Respawn Type", false) || StrEqual(key, "Respawn_Type", false) || StrEqual(key, "type", false))
 			{
 				char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esRespawnPlayer[admin].g_iRespawnMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esRespawnPlayer[admin].g_iRespawnMinType;
 				g_esRespawnPlayer[admin].g_iRespawnMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esRespawnPlayer[admin].g_iRespawnMaxType;
@@ -464,9 +465,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "RespawnType", false) || StrEqual(key, "Respawn Type", false) || StrEqual(key, "Respawn_Type", false) || StrEqual(key, "type", false))
 			{
 				char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esRespawnAbility[type].g_iRespawnMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esRespawnAbility[type].g_iRespawnMinType;
 				g_esRespawnAbility[type].g_iRespawnMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esRespawnAbility[type].g_iRespawnMaxType;
