@@ -8,7 +8,7 @@
 - Fixed error regarding functions that are not detoured. (Thanks to `KasperH`/`Ladis` for testing and reporting!)
 
 #### Abilities
-- Omni: Fixed settings not being cached properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
+- Omni: Fixed settings not caching properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
 
@@ -182,7 +182,7 @@
 #### Core Plugin
 - Fixed some developer tools not toggling properly.
 - Fixed the lady killer reward reminding players of their remaining uses even when the reward is disabled.
-- Fixed the heal percent reward being stacked incorrectly.
+- Fixed the heal percent reward stacking incorrectly.
 
 #### Abilities
 - Bury: Fixed message displaying the wrong distance of burials.
@@ -396,17 +396,17 @@
 - Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
 - Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
 - Fixed game modes not being detected properly.
-- Fixed some models, sounds, and particles being precached in the wrong game.
+- Fixed some models, sounds, and particles precaching in the wrong game.
 - Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 - Fixed each Tank death raising the wave count. (Thanks to `3aljiyavslgazana` for testing and reporting!)
-- Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to `yuzumi` for reporting!)
+- Fixed AI Tanks in ghost mode not forcefully spawning. (Thanks to `yuzumi` for reporting!)
 - Fixed Tank rocks breaking before leaving the Tank's hands. (Thanks to `weffer` for reporting!)
 - Fixed the errors regarding Tank props. (Thanks to `ur5efj` for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to `yuzumi` for reporting!)
 - Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to `yuzumi` for reporting!)
-- Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to `yuzumi` for reporting!)
+- Fixed Tanks not setting up properly when exiting ghost mode. (Thanks to `yuzumi` for reporting!)
 - Fixed Tank arrivals being announced when they are in ghost mode.
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
@@ -416,7 +416,7 @@
 - Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 - Fixed the `Reward` system not detecting recipients' incapacitation/black and white counter after using `give health`. (Thanks to `Silvers` for the code!)
 - Fixed damage toward Common infected and Witches not being hooked on late loads.
-- Fixed props not being attached to Tanks properly.
+- Fixed props not attaching to Tanks properly.
 
 #### Game Data
 - Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to `3aljiyavslgazana` for testing and reporting!)
@@ -433,16 +433,16 @@
 	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 
 - Choke
-	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to `3aljiyavslgazana` and `Mi.Cura` for testing and reporting!)
+	- Fixed choked survivors not always lifting off the ground while being choked. (Thanks to `3aljiyavslgazana` and `Mi.Cura` for testing and reporting!)
 	- Fixed choked survivors being stuck under the floor when the ability ends.
 
 - Clone: Fixed clone deaths raising the wave count. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 
-- Drop: Fixed weapons not being attached properly.
+- Drop: Fixed weapons not attaching properly.
 
 - Fragile: Fixed all types of fire damage not being detected. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 
-- God: Fixed Tanks not being extinguished from fires while the ability is activated. (Thanks to `3aljiyavslgazana` for testing and reporting!)
+- God: Fixed Tanks not extinguishing from fires while the ability is activated. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 
 - Heal
 	- Fixed players with the godmode reward being affected.
@@ -1017,7 +1017,7 @@
 - Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
 - Fixed all abilities not resetting when the Tank is passed between two players.
 - Fixed some settings of multiple abilities having the wrong limits.
-- Fixed abilities activating when the Tank is dying, which caused the Tank being stuck in a looped dying animation.
+- Fixed abilities activating when the Tank is dying, which caused the Tank to be stuck in a looped dying animation.
 
 - Absorb: Fixed the ability bypassing damage immunity settings. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 
@@ -1116,7 +1116,7 @@
 
 - Warp
 	- Fixed the range ability checking for the wrong ammo count.
-	- Fixed players keeping their original velocity after being teleported.
+	- Fixed players keeping their original velocity after teleporting.
 
 - Witch
 	- Fixed messages being spammed.
@@ -2647,7 +2647,7 @@ Bug fixes:
 Changes:
 
 1. Moved some lines of code around, optimized some code, etc.
-2. The `Puke` ability now gives the Super Tank a chance to puke on survivors when being hit with a melee weapon.
+2. The `Puke` ability now gives the Super Tank a chance to puke on survivors when hit with a melee weapon.
 3. The following settings can now be set for each Tank instead of affecting all Tanks at once:
 
 - `Boss Health Stages`
@@ -2805,7 +2805,7 @@ Changes:
 2. Added a new native for developers to use: native int `ST_MaxTypes()` - Returns the value of the `Maximum Types` setting.
 3. Added a new forward for developers to use: forward void `ST_Death2(int enemy, int client)` - Called when a Tank dies and returns the attacker's index.
 4. Added checks to various timers in case abilities are disabled before the timers are triggered.
-5. Added a check to prevent clone Tanks from being counted as actual Tanks.
+5. Added a check to prevent clone Tanks from counting as actual Tanks.
 6. The `Clone` ability no longer spawns more clones when all of the current clones die. (This is to prevent glitches with the Tank spawner.)
 
 Files:

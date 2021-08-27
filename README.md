@@ -66,7 +66,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 1. Delete files from old versions of the plugin.
 2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
-4. If prompted to replace or merge anything, click yes.
+4. If prompted to replace or merge anything, click `Yes`.
 5. Load up Mutant Tanks by restarting the server.
 6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
@@ -624,7 +624,7 @@ Example:
 	}
 }
 
-Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of Psyk0tik Tank as long as custom configs is being used.
+Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of "Psyk0tik Tank" as long as custom configs is being used.
 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
@@ -1921,20 +1921,20 @@ If a player's SM flags have one of the immunity flags required globally or vice-
 Note: If all 4 of these return false, the player will not have access to nor immunity from anything.
 ```
 
-6. What is the `Allow Developer` setting for?
+6. What is the `sm_mt_dev` command for?
 
-The setting allows the developer (Psyk0tik/Crasher_3637) to access certain features of the project on your server. These features include:
+The command allows the developer (`Psyk0tik`/`Crasher_3637`) to access certain features of the project on your server. These features include:
 - Access to all Mutant Tanks. (Allows the developer to see what Mutant Tanks your config has.)
 - Immunity from all Mutant Tanks. (Allows the developer to test each Mutant Tank without having to deal with each ability's effects.)
 - Ability to spawn Mutant Tanks. (Allows the developer to spawn each Mutant Tank for testing.)
 - Check which abilities are installed. (Allows the developer to check which abilities to test for.)
 
-In short, this setting does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the setting if you are not confident with trusting the developer. This setting was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
+In short, this command does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the command if you are not confident with trusting the developer. This command was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
 
 ### Human Support
 1. How do I enable human support?
 
-Set `Human Support` to 1 or 2.
+Set `Human Support` to `1` or `2`.
 
 2. Can players use the abilities automatically/manually?
 
@@ -2052,7 +2052,7 @@ Overrides
 ### Configuration
 1. How do I enable the custom configurations features?
 
-Set `Enable Custom Configs` to 1.
+Set `Enable Custom Configs` to `1`.
 
 2. How do I tell the plugin to only create certain custom config files?
 
