@@ -47,9 +47,7 @@
 18. Полностью настраиваемая система наград.
 
 ## Требования
-1. `SourceMod 1.10` или `SourceMod 1.11`:
-- `SourceMod 1.10` (Только при использовании файлов `.smx`, включенных в пакет.)
-- `SourceMod 1.11.0.6711` или выше (только при самостоятельной компиляции файлов `.sp`.)
+1. `SourceMod 1.11.0.6724` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется:
 - [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)

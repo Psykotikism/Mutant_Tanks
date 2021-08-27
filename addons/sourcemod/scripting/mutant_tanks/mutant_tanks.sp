@@ -36,6 +36,8 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
+Handle g_hPluginHandle;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -96,6 +98,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
+	g_hPluginHandle = myself;
 
 	return APLRes_Success;
 }
@@ -8449,16 +8452,17 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 				else if ((StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CONVARS, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CONVARS2, false)) && key[0] != '\0')
 				{
-					char sKey[128];
+					char sKey[128], sValue[PLATFORM_MAX_PATH];
 					strcopy(sKey, sizeof sKey, key);
 					ReplaceString(sKey, sizeof sKey, " ", "");
-					if (StrContains(sKey, "mt_disabledgamemodes", false) == -1 && StrContains(sKey, "mt_enabledgamemodes", false) == -1 && StrContains(sKey, "mt_gamemodetypes", false) == -1 && StrContains(sKey, "mt_pluginenabled", false) == -1 && StrContains(sKey, "mt_pluginversion", false) == -1)
+
+					strcopy(sValue, sizeof sValue, value);
+					ReplaceString(sValue, sizeof sValue, " ", "");
+
+					g_esGeneral.g_cvMTTempSetting = FindConVar(sKey);
+					if (g_esGeneral.g_cvMTTempSetting != null)
 					{
-						char sValue[PLATFORM_MAX_PATH];
-						strcopy(sValue, sizeof sValue, value);
-						ReplaceString(sValue, sizeof sValue, " ", "");
-						g_esGeneral.g_cvMTTempSetting = FindConVar(sKey);
-						if (g_esGeneral.g_cvMTTempSetting != null)
+						if (g_esGeneral.g_cvMTTempSetting.Plugin != g_hPluginHandle)
 						{
 							int iFlags = g_esGeneral.g_cvMTTempSetting.Flags;
 							g_esGeneral.g_cvMTTempSetting.Flags &= ~FCVAR_NOTIFY;
@@ -8470,12 +8474,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						}
 						else
 						{
-							vLogMessage(MT_LOG_SERVER, _, "%s Unable to find cvar: %s", MT_TAG, sKey);
+							vLogMessage(MT_LOG_SERVER, _, "%s Unable to change cvar: %s", MT_TAG, sKey);
 						}
 					}
 					else
 					{
-						vLogMessage(MT_LOG_SERVER, _, "%s Unable to change cvar: %s", MT_TAG, sKey);
+						vLogMessage(MT_LOG_SERVER, _, "%s Unable to find cvar: %s", MT_TAG, sKey);
 					}
 				}
 

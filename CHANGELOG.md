@@ -17,6 +17,8 @@
 
 #### General
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
+- Removed parentheses of `sizeof` calls.
+- `SourceMod 1.11.0.6724` or higher is now required.
 
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
@@ -1997,7 +1999,7 @@ Bug fixes:
 Changes:
 
 1. Added a check for AFK Tanks. (May not be entirely accurate.)
-2. Switched to the GlobalForward methodmap added in `SourceMod 1.10.0.6421`.
+2. Switched to the `GlobalForward` methodmap added in `SourceMod 1.10.0.6421`.
 
 Files:
 

@@ -1282,7 +1282,7 @@ stock void vCheatCommand(int player, const char[] command, const char[] argument
 		SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 		FakeClientCommand(player, "%s %s", command, arguments);
 		SetUserFlagBits(player, iFlagBits);
-		SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+		SetCommandFlags(command, iCmdFlags);
 	}
 }
 
@@ -1309,8 +1309,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	File fFilename = OpenFile(sPath, "w+");
 	if (fFilename != null)
 	{
-		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)", MT_NAME, MT_VERSION);
-		fFilename.WriteLine("\n");
+		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)\n", MT_NAME, MT_VERSION);
 		fFilename.WriteLine("\"Mutant Tanks\"");
 		fFilename.WriteLine("{");
 		fFilename.WriteLine("\t// Override settings in here.");
@@ -1589,7 +1588,7 @@ stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, 
 
 stock void vRemoveWeapons(int survivor)
 {
-	int iWeapon = 0;
+	int iWeapon = -1;
 	for (int iSlot = 0; iSlot < 5; iSlot++)
 	{
 		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
@@ -1866,7 +1865,6 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		iAdminFlags = GetUserFlagBits(admin),
 		iTypeFlags = MT_GetImmunityFlags(2, type),
 		iGlobalFlags = MT_GetImmunityFlags(1);
-
 	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
 		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));

@@ -47,9 +47,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 18. Fully customizable reward system.
 
 ## Requirements
-1. `SourceMod 1.10` or `SourceMod 1.11`:
-- `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
-- `SourceMod 1.11.0.6711` or higher (Only if compiling the `.sp` files yourself.)
+1. `SourceMod 1.11.0.6724` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended:
 - [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
