@@ -354,8 +354,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esAbsorbPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbsorbAbility[g_esAbsorbPlayer[client].g_iTankType].g_iAccessFlags, g_esAbsorbPlayer[client].g_iAccessFlags)) && g_esAbsorbCache[client].g_iHumanAbility == 1 && (g_esAbsorbPlayer[client].g_iCooldown == -1 || g_esAbsorbPlayer[client].g_iCooldown < iTime))
@@ -376,9 +375,7 @@ public Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, floa
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esAbsorbPlayer[victim].g_bActivated)
 		{
-			static bool bChanged, bSurvivor;
-			bChanged = false;
-			bSurvivor = bIsSurvivor(attacker);
+			bool bChanged = false, bSurvivor = bIsSurvivor(attacker);
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbsorbAbility[g_esAbsorbPlayer[victim].g_iTankType].g_iAccessFlags, g_esAbsorbPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esAbsorbPlayer[victim].g_iTankType, g_esAbsorbAbility[g_esAbsorbPlayer[victim].g_iTankType].g_iImmunityFlags, g_esAbsorbPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
@@ -457,7 +454,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION2);
@@ -467,7 +464,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esAbsorbCache[tank].g_iAbsorbAbility == 1 && g_esAbsorbCache[tank].g_iComboAbility == 1 && !g_esAbsorbPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -475,8 +472,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -725,10 +721,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esAbsorbCache[tank].g_iAbsorbAbility == 1 && g_esAbsorbCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esAbsorbPlayer[tank].g_iCooldown != -1 && g_esAbsorbPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esAbsorbPlayer[tank].g_iCooldown != -1 && g_esAbsorbPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esAbsorbCache[tank].g_iHumanMode)
 				{
@@ -808,8 +802,7 @@ public void MT_OnChangeType(int tank)
 
 void vAbsorb(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esAbsorbCache[tank].g_iAbsorbDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esAbsorbCache[tank].g_iAbsorbDuration;
 	g_esAbsorbPlayer[tank].g_bActivated = true;
 	g_esAbsorbPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -822,7 +815,7 @@ void vAbsorb(int tank, int pos = -1)
 
 	if (g_esAbsorbCache[tank].g_iAbsorbMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb", LANG_SERVER, sTankName);

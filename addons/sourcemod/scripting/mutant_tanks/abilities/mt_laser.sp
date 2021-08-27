@@ -367,7 +367,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LASER_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LASER_SECTION2);
@@ -377,7 +377,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esLaserCache[tank].g_iLaserAbility == 1 && g_esLaserCache[tank].g_iComboAbility == 1 && !g_esLaserPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -385,8 +385,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -625,10 +624,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esLaserCache[tank].g_iLaserAbility == 1 && g_esLaserCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esLaserCache[tank].g_iHumanMode)
 				{
@@ -725,8 +722,7 @@ void vLaser(int tank, int pos = -1)
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman", g_esLaserPlayer[tank].g_iAmmoCount, g_esLaserCache[tank].g_iHumanAmmo);
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLaserCache[tank].g_flLaserInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLaserCache[tank].g_flLaserInterval;
 	DataPack dpLaser;
 	CreateDataTimer(flInterval, tTimerLaser, dpLaser, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpLaser.WriteCell(GetClientUserId(tank));
@@ -737,16 +733,15 @@ void vLaser(int tank, int pos = -1)
 
 void vLaser2(int tank, int pos = -1)
 {
-	static float flTankAngles[3], flTankPos[3];
+	float flTankAngles[3], flTankPos[3];
 	GetEntPropVector(tank, Prop_Send, "m_angRotation", flTankAngles);
 	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flTankPos);
 	flTankPos[2] += 65.0;
 
-	static int iSurvivor;
-	iSurvivor = iGetNearestSurvivor(tank, flTankPos);
+	int iSurvivor = iGetNearestSurvivor(tank, flTankPos);
 	if (bIsSurvivor(iSurvivor))
 	{
-		static float flSurvivorPos[3];
+		float flSurvivorPos[3];
 		GetClientEyePosition(iSurvivor, flSurvivorPos);
 		flSurvivorPos[2] -= 15.0;
 		vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_LASER, 3.0);
@@ -754,18 +749,17 @@ void vLaser2(int tank, int pos = -1)
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
 
-		static int iColor[4];
+		int iColor[4];
 		GetEntityRenderColor(tank, iColor[0], iColor[1], iColor[2], iColor[3]);
 		TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
 		TE_SendToAll();
 
-		static float flDamage;
-		flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esLaserCache[tank].g_flLaserDamage;
+		float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esLaserCache[tank].g_flLaserDamage;
 		vDamagePlayer(iSurvivor, tank, MT_GetScaledDamage(flDamage), "1024");
 
 		if (g_esLaserCache[tank].g_iLaserMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Laser", sTankName, iSurvivor);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Laser", LANG_SERVER, sTankName, iSurvivor);
@@ -840,9 +834,8 @@ void vLaserReset3(int tank)
 
 int iGetNearestSurvivor(int tank, float pos[3])
 {
-	static float flSurvivorPos[3];
-	static int iSurvivorCount;
-	iSurvivorCount = 0;
+	float flSurvivorPos[3];
+	int iSurvivorCount = 0;
 	int[] iSurvivors = new int[MaxClients + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -880,9 +873,7 @@ public Action tTimerLaser(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLaserCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[iTank].g_iTankType) || (g_esLaserCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esLaserAbility[g_esLaserPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esLaserPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLaserPlayer[iTank].g_iTankType || !g_esLaserPlayer[iTank].g_bActivated)
 	{
 		vLaserReset2(iTank);
@@ -890,10 +881,8 @@ public Action tTimerLaser(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLaserCache[iTank].g_iLaserDuration;
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLaserCache[iTank].g_iLaserDuration;
 	if ((iTime + iDuration) < GetTime())
 	{
 		vLaserReset2(iTank);

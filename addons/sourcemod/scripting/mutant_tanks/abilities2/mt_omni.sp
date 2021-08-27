@@ -347,8 +347,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esOmniPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esOmni[client].g_iAccessFlags, g_esOmniPlayer[client].g_iAccessFlags)) && g_esOmni[client].g_iHumanAbility == 1 && (g_esOmniPlayer[client].g_iCooldown == -1 || g_esOmniPlayer[client].g_iCooldown < iTime))
@@ -395,7 +394,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_OMNI_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_OMNI_SECTION2);
@@ -405,7 +404,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esOmniCache[tank].g_iOmniAbility == 1 && g_esOmniCache[tank].g_iComboAbility == 1 && !g_esOmniPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -413,8 +412,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -681,10 +679,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esOmni[tank].g_iOmniAbility == 1 && g_esOmni[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esOmni[tank].g_iHumanMode)
 				{
@@ -766,8 +762,7 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vOmni(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esOmniCache[tank].g_iOmniDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esOmniCache[tank].g_iOmniDuration;
 	g_esOmniPlayer[tank].g_bActivated = true;
 	g_esOmniPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -782,7 +777,7 @@ void vOmni(int tank, int pos = -1)
 
 	if (g_esOmni[tank].g_iOmniMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Omni", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Omni", LANG_SERVER, sTankName);
@@ -799,11 +794,10 @@ void vOmni2(int tank, int pos = -1)
 	g_esOmniPlayer[tank].g_iOmniType = g_esOmniPlayer[tank].g_iTankType;
 	vCacheOriginalSettings(tank);
 
-	static float flTankPos[3], flTankPos2[3], flRange;
+	float flTankPos[3], flTankPos2[3];
 	GetClientAbsOrigin(tank, flTankPos);
-	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esOmni[tank].g_flOmniRange;
-	static int iTypeCount, iTypes[MT_MAXTYPES + 1];
-	iTypeCount = 0;
+	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esOmni[tank].g_flOmniRange;
+	int iTypeCount = 0, iTypes[MT_MAXTYPES + 1];
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && iTank != tank)

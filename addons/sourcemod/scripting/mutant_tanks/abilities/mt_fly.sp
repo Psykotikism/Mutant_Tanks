@@ -351,8 +351,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esFlyPlayer[client].g_iDuration < iTime)
 	{
 		vStopFly(client);
@@ -373,7 +372,7 @@ public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &
 				return Plugin_Continue;
 			}
 
-			static char sClassname[32];
+			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
@@ -410,11 +409,8 @@ public Action OnFlyPreThink(int tank)
 	{
 		case true:
 		{
-			static float flDuration;
-			static int iButtons;
-			flDuration = (GetEngineTime() - g_esFlyPlayer[tank].g_flLastTime);
-			iButtons = GetClientButtons(tank);
-
+			float flDuration = (GetEngineTime() - g_esFlyPlayer[tank].g_flLastTime);
+			int iButtons = GetClientButtons(tank);
 			vFlyThink(tank, iButtons, flDuration);
 		}
 		case false: SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
@@ -462,7 +458,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FLY_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FLY_SECTION2);
@@ -472,7 +468,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iComboAbility == 1 && !g_esFlyPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -480,8 +476,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -727,10 +722,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esFlyCache[tank].g_iHumanMode)
 				{
@@ -839,14 +832,13 @@ void vFly(int tank, bool announce, int pos = -1)
 		return;
 	}
 
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFlyCache[tank].g_iFlyDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFlyCache[tank].g_iFlyDuration;
 	g_esFlyPlayer[tank].g_bActivated = true;
 	g_esFlyPlayer[tank].g_iAmmoCount++;
 	g_esFlyPlayer[tank].g_iDuration = (GetTime() + iDuration);
 	g_esFlyPlayer[tank].g_flLastTime = (GetEngineTime() - 0.01);
 
-	static float flOrigin[3], flEyeAngles[3];
+	float flOrigin[3], flEyeAngles[3];
 	GetEntPropVector(tank, Prop_Data, "m_vecAbsOrigin", flOrigin);
 	GetClientEyeAngles(tank, flEyeAngles);
 	flOrigin[2] += 5.0;
@@ -870,7 +862,7 @@ void vFly(int tank, bool announce, int pos = -1)
 
 	if (announce && g_esFlyCache[tank].g_iFlyMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fly", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fly", LANG_SERVER, sTankName);
@@ -912,13 +904,12 @@ void vFlyThink(int tank, int buttons, float duration)
 			return;
 		}
 
-		static float flSpeed;
-		flSpeed = (g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 13, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition) : g_esFlyCache[tank].g_flFlySpeed;
+		float flSpeed = (g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 13, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition) : g_esFlyCache[tank].g_flFlySpeed;
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
 			if (buttons & IN_USE)
 			{
-				static float flFall;
+				float flFall;
 				if (buttons & IN_SPEED)
 				{
 					flFall = 0.75;
@@ -939,18 +930,12 @@ void vFlyThink(int tank, int buttons, float duration)
 
 			SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY);
 
-			static float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2, flGravity, flGravity2;
-			flForce2 = 50.0;
-			flGravity = 0.001;
-			flGravity2 = 0.01;
-
+			float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2 = 50.0, flGravity = 0.001, flGravity2 = 0.01;
 			GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flSpeed2);
 			GetClientEyeAngles(tank, flEyeAngles);
 			GetClientAbsOrigin(tank, flOrigin);
 
-			static bool bJumping;
-			bJumping = false;
-
+			bool bJumping = false;
 			if (buttons & IN_JUMP)
 			{
 				bJumping = true;
@@ -1030,9 +1015,6 @@ void vFlyThink(int tank, int buttons, float duration)
 				case false: flGravity = flGravity2;
 			}
 
-			static float flSpeed4;
-			flSpeed4 = GetVectorLength(flSpeed2);
-
 			if (flGravity > 0.5)
 			{
 				flGravity = 0.5;
@@ -1042,6 +1024,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				flGravity = -0.5;
 			}
 
+			float flSpeed4 = GetVectorLength(flSpeed2);
 			if (flSpeed4 > flSpeed)
 			{
 				NormalizeVector(flSpeed2, flSpeed2);
@@ -1055,7 +1038,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			return;
 		}
 
-		static float flPos[3], flVelocity[3];
+		float flPos[3], flVelocity[3];
 		GetClientAbsOrigin(tank, flPos);
 		GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flVelocity);
 		flPos[2] += 30.0;
@@ -1069,7 +1052,7 @@ void vFlyThink(int tank, int buttons, float duration)
 
 		NormalizeVector(flVelocity, flVelocity);
 
-		static int iTarget;
+		int iTarget;
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
 			iTarget = iGetFlyTarget(flPos, flVelocity, tank);
@@ -1083,14 +1066,12 @@ void vFlyThink(int tank, int buttons, float duration)
 			iTarget = iGetFlyTarget(flPos, flDirection, tank);
 		}
 
-		static bool bVisible;
-		bVisible = false;
-		static float flVector[3], flVelocity2[3], flAngles[3], flDistance;
-		flDistance = 1000.0;
+		bool bVisible = false;
+		float flVector[3], flVelocity2[3], flAngles[3], flDistance = 1000.0;
 
 		if (bIsSurvivor(iTarget))
 		{
-			static float flPos2[3];
+			float flPos2[3];
 			GetClientEyePosition(iTarget, flPos2);
 			flDistance = GetVectorDistance(flPos, flPos2);
 			bVisible = bVisiblePosition(flPos, flPos2, tank, 1);
@@ -1101,29 +1082,23 @@ void vFlyThink(int tank, int buttons, float duration)
 			MakeVectorFromPoints(flPos, flPos2, flVector);
 		}
 
-		static float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
-			flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1, flFactor2, flBase, flBase2;
-		flFactor1 = 0.2;
-		flFactor2 = 0.5;
-		flBase = 1500.0;
-		flBase2 = 10.0;
-
+		float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+			flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0, flBase2 = 10.0;
 		GetVectorAngles(flVelocity, flAngles);
 
-		static float flFront2, flDown2, flUp2, flLeft2, flRight2, flDistance2, flDistance3, flDistance4, flDistance5, flDistance6, flDistance7, flDistance8, flDistance9;
-		flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, tank, 3);
-		flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, tank, 3);
-		flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, tank, 3);
-		flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, tank, 3);
-		flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, tank, 3);
-		flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, tank, 3);
-		flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, tank, 3);
-		flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, tank, 3);
-		flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, tank, 3);
-		flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, tank, 3);
-		flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, tank, 3);
-		flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, tank, 3);
-		flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, tank, 3);
+		float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, tank, 3),
+			flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, tank, 3),
+			flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, tank, 3),
+			flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, tank, 3),
+			flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, tank, 3),
+			flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, tank, 3),
+			flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, tank, 3),
+			flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, tank, 3),
+			flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, tank, 3),
+			flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, tank, 3),
+			flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, tank, 3),
+			flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, tank, 3),
+			flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, tank, 3);
 
 		NormalizeVector(flFront, flFront);
 		NormalizeVector(flUp, flUp);
@@ -1339,7 +1314,7 @@ void vFlyThink(int tank, int buttons, float duration)
 		NormalizeVector(flFront, flFront);
 		ScaleVector(flFront, (FLOAT_PI * duration * 2.0));
 
-		static float flVelocity3[3];
+		float flVelocity3[3];
 		AddVectors(flVelocity, flFront, flVelocity3);
 		NormalizeVector(flVelocity3, flVelocity3);
 		ScaleVector(flVelocity3, flSpeed);
@@ -1406,8 +1381,7 @@ void vStopFly(int tank)
 {
 	vFlyReset2(tank);
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (bIsTank(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)) && g_esFlyCache[tank].g_iHumanAbility == 1 && (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown < iTime))
 	{
 		vFlyReset3(tank);
@@ -1425,10 +1399,8 @@ void vStopFly(int tank)
 
 int iGetFlyTarget(float pos[3], float angle[3], int tank)
 {
-	static float flMin, flPos[3], flAngle;
-	flMin = 4.0;
-	static int iTarget;
-	iTarget = 0;
+	float flMin = 4.0, flPos[3], flAngle;
+	int iTarget = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))

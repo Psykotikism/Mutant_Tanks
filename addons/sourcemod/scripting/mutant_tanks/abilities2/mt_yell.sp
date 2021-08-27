@@ -406,8 +406,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esYellPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esYellAbility[g_esYellPlayer[client].g_iTankType].g_iAccessFlags, g_esYellPlayer[client].g_iAccessFlags)) && g_esYellCache[client].g_iHumanAbility == 1 && (g_esYellPlayer[client].g_iCooldown == -1 || g_esYellPlayer[client].g_iCooldown < iTime))
@@ -454,7 +453,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_YELL_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_YELL_SECTION2);
@@ -464,7 +463,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esYellCache[tank].g_iYellAbility == 1 && g_esYellCache[tank].g_iComboAbility == 1 && !g_esYellPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -472,8 +471,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -702,10 +700,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esYellCache[tank].g_iYellAbility == 1 && g_esYellCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esYellCache[tank].g_iHumanMode)
 				{
@@ -855,8 +851,7 @@ void vYellReset4(int tank)
 
 void vYell(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esYellCache[tank].g_iYellDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esYellCache[tank].g_iYellDuration;
 	g_esYellPlayer[tank].g_bActivated = true;
 	g_esYellPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -871,7 +866,7 @@ void vYell(int tank, int pos = -1)
 
 	if (g_esYellCache[tank].g_iYellMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell", LANG_SERVER, sTankName);
@@ -880,9 +875,9 @@ void vYell(int tank, int pos = -1)
 
 void vYell2(int tank, bool repeat, int pos = -1)
 {
-	static float flTankPos[3], flSurvivorPos[3], flRange;
+	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
-	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esYellCache[tank].g_flYellRange;
+	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esYellCache[tank].g_flYellRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esYellPlayer[tank].g_iTankType, g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iImmunityFlags, g_esYellPlayer[iSurvivor].g_iImmunityFlags) && !g_esYellPlayer[iSurvivor].g_bAffected && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
@@ -980,8 +975,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || !g_esYellPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		g_esYellPlayer[iSurvivor].g_bAffected = false;
@@ -990,10 +984,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iPos;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iPos = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iPos = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esYellCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esYellPlayer[iTank].g_iTankType) || (g_esYellCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esYellCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esYellAbility[g_esYellPlayer[iTank].g_iTankType].g_iAccessFlags, g_esYellPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esYellPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esYellPlayer[iTank].g_iTankType || !g_esYellPlayer[iTank].g_bActivated || g_esYellCache[iTank].g_iYellAbility == 0)
 	{
 		g_esYellPlayer[iTank].g_bActivated = false;
@@ -1011,10 +1002,10 @@ public Action tTimerYell(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flSurvivorPos[3], flRange;
+	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esYellCache[iTank].g_flYellRange;
+	float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esYellCache[iTank].g_flYellRange;
 	if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 	{
 		vYell3(iSurvivor);

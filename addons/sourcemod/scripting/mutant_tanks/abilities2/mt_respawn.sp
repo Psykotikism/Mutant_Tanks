@@ -328,7 +328,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_RESPAWN_SECTION2);
@@ -338,7 +338,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_UPONDEATH && g_esRespawnCache[tank].g_iRespawnAbility == 1 && g_esRespawnCache[tank].g_iComboAbility == 1)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -346,8 +346,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -436,7 +435,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "RespawnType", false) || StrEqual(key, "Respawn Type", false) || StrEqual(key, "Respawn_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
+				char sValue[10], sRange[2][5];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -464,7 +463,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "RespawnType", false) || StrEqual(key, "Respawn Type", false) || StrEqual(key, "Respawn_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
+				char sValue[10], sRange[2][5];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -695,8 +694,7 @@ void vRespawn(int tank)
 			case false: vRespawn2(tank, g_esRespawnCache[tank].g_iRespawnMinType, g_esRespawnCache[tank].g_iRespawnMaxType);
 		}
 
-		static int iTank;
-		iTank = 0;
+		int iTank = 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer] && iPlayer != tank)
@@ -714,14 +712,14 @@ void vRespawn(int tank)
 
 		if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			static float flPos[3], flAngles[3];
+			float flPos[3], flAngles[3];
 			GetClientAbsOrigin(tank, flPos);
 			GetClientEyeAngles(tank, flAngles);
 			TeleportEntity(iTank, flPos, flAngles, NULL_VECTOR);
 
 			if (g_esRespawnCache[tank].g_iRespawnMessage == 1)
 			{
-				static char sTankName[33];
+				char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Respawn", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Respawn", LANG_SERVER, sTankName);
@@ -745,10 +743,9 @@ void vRespawn(int tank)
 
 void vRespawn2(int tank, int min = 0, int max = 0)
 {
-	static int iMin, iMax, iTypeCount, iTankTypes[MT_MAXTYPES + 1];
-	iMin = (min > 0) ? min : MT_GetMinType();
-	iMax = (max > 0) ? max : MT_GetMaxType();
-	iTypeCount = 0;
+	int iMin = (min > 0) ? min : MT_GetMinType(),
+	iMax = (max > 0) ? max : MT_GetMaxType(),
+	iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
@@ -760,8 +757,7 @@ void vRespawn2(int tank, int min = 0, int max = 0)
 		iTypeCount++;
 	}
 
-	static int iType;
-	iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
+	int iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 

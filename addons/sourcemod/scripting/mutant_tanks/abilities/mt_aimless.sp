@@ -350,7 +350,7 @@ public Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, flo
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esAimlessCache[attacker].g_iAimlessHitMode == 0 || g_esAimlessCache[attacker].g_iAimlessHitMode == 1) && bIsSurvivor(victim) && g_esAimlessCache[attacker].g_iComboAbility == 0)
 		{
@@ -413,7 +413,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION2);
@@ -421,14 +421,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION4);
 	if (g_esAimlessCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_AIMLESS_SECTION, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION2, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION3, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -452,8 +451,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -711,8 +709,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esAimlessCache[tank].g_iAimlessAbility == 1 && g_esAimlessCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esAimlessPlayer[tank].g_iCooldown == -1 || g_esAimlessPlayer[tank].g_iCooldown < iTime)
 				{
@@ -745,12 +742,11 @@ void vAimlessAbility(int tank, float random, int pos = -1)
 		g_esAimlessPlayer[tank].g_bFailed = false;
 		g_esAimlessPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAimlessCache[tank].g_flAimlessRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAimlessCache[tank].g_flAimlessRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAimlessCache[tank].g_flAimlessRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAimlessCache[tank].g_flAimlessRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esAimlessPlayer[tank].g_iTankType, g_esAimlessAbility[g_esAimlessPlayer[tank].g_iTankType].g_iImmunityFlags, g_esAimlessPlayer[iSurvivor].g_iImmunityFlags))
@@ -790,8 +786,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esAimlessPlayer[tank].g_iAmmoCount < g_esAimlessCache[tank].g_iHumanAmmo && g_esAimlessCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esAimlessPlayer[survivor].g_bAffected)
 			{
 				g_esAimlessPlayer[survivor].g_bAffected = true;
@@ -812,8 +807,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 
 				GetClientEyeAngles(survivor, g_esAimlessPlayer[survivor].g_flAngle);
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esAimlessCache[tank].g_flAimlessDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esAimlessCache[tank].g_flAimlessDuration;
 				DataPack dpStopAimless;
 				CreateDataTimer(flDuration, tTimerStopAimless, dpStopAimless, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopAimless.WriteCell(GetClientUserId(survivor));
@@ -824,7 +818,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esAimlessCache[tank].g_iAimlessMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless", LANG_SERVER, sTankName, survivor);

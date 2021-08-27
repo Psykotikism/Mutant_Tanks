@@ -431,7 +431,7 @@ public Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esWarpCache[attacker].g_iWarpHitMode == 0 || g_esWarpCache[attacker].g_iWarpHitMode == 1) && bIsSurvivor(victim) && g_esWarpCache[attacker].g_iComboAbility == 0)
 		{
@@ -494,7 +494,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_WARP_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_WARP_SECTION2);
@@ -502,14 +502,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_WARP_SECTION4);
 	if (g_esWarpCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -547,8 +546,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -818,14 +816,12 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (button & MT_MAIN_KEY)
 		{
 			if ((g_esWarpCache[tank].g_iWarpAbility == 2 || g_esWarpCache[tank].g_iWarpAbility == 3) && g_esWarpCache[tank].g_iHumanAbility == 1)
 			{
-				static bool bRecharging;
-				bRecharging = g_esWarpPlayer[tank].g_iCooldown != -1 && g_esWarpPlayer[tank].g_iCooldown > iTime;
+				bool bRecharging = g_esWarpPlayer[tank].g_iCooldown != -1 && g_esWarpPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esWarpCache[tank].g_iHumanMode)
 				{
@@ -974,8 +970,7 @@ void vWarp(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esWarpCache[tank].g_flWarpInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esWarpCache[tank].g_flWarpInterval;
 	DataPack dpWarp;
 	CreateDataTimer(flInterval, tTimerWarp, dpWarp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpWarp.WriteCell(GetClientUserId(tank));
@@ -990,11 +985,11 @@ void vWarp2(int tank, int other)
 		return;
 	}
 
-	static float flTankOrigin[3], flTankAngles[3];
+	float flTankOrigin[3], flTankAngles[3];
 	GetClientAbsOrigin(tank, flTankOrigin);
 	GetClientAbsAngles(tank, flTankAngles);
 
-	static float flOtherOrigin[3], flOtherAngles[3];
+	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
 	flOtherOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
@@ -1014,7 +1009,7 @@ void vWarp2(int tank, int other)
 
 	if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName, other);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp3", LANG_SERVER, sTankName, other);
@@ -1039,12 +1034,11 @@ void vWarpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esWarpPlayer[tank].g_bFailed = false;
 					g_esWarpPlayer[tank].g_bNoAmmo = false;
 
-					static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+					float flTankPos[3], flSurvivorPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWarpCache[tank].g_flWarpRange;
-					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWarpCache[tank].g_flWarpRangeChance;
-					static int iSurvivorCount;
-					iSurvivorCount = 0;
+					float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWarpCache[tank].g_flWarpRange,
+						flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWarpCache[tank].g_flWarpRangeChance;
+					int iSurvivorCount = 0;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esWarpPlayer[tank].g_iTankType, g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esWarpPlayer[iSurvivor].g_iImmunityFlags))
@@ -1092,7 +1086,7 @@ void vWarpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Warp2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp2", LANG_SERVER, sTankName);
@@ -1118,12 +1112,11 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWarpPlayer[tank].g_iAmmoCount2 < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
-				static char sTankName[33];
-				static float flCurrentOrigin[3], flCurrentAngles[3];
+				char sTankName[33];
+				float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
 					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
@@ -1283,9 +1276,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esWarpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWarpPlayer[iTank].g_iTankType) || (g_esWarpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWarpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWarpAbility[g_esWarpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWarpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esWarpPlayer[iTank].g_iTankType || (g_esWarpCache[iTank].g_iWarpAbility != 2 && g_esWarpCache[iTank].g_iWarpAbility != 3) || !g_esWarpPlayer[iTank].g_bActivated)
 	{
 		g_esWarpPlayer[iTank].g_bActivated = false;
@@ -1293,9 +1284,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esWarpCache[iTank].g_iHumanAbility == 1 && g_esWarpCache[iTank].g_iHumanMode == 0 && (iTime + g_esWarpCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esWarpPlayer[iTank].g_iCooldown == -1 || g_esWarpPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vWarpReset2(iTank);
@@ -1307,8 +1296,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 	{
 		case 0, 1:
 		{
-			static int iSurvivor;
-			iSurvivor = iGetRandomSurvivor(iTank);
+			int iSurvivor = iGetRandomSurvivor(iTank);
 			if (bIsSurvivor(iSurvivor) && !bIsSurvivorDisabled(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
 			{
 				vWarp2(iTank, iSurvivor);
@@ -1316,8 +1304,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		}
 		case 2, 3:
 		{
-			static int iTank2;
-			iTank2 = iGetRandomTank(iTank);
+			int iTank2 = iGetRandomTank(iTank);
 			if (bIsTank(iTank2))
 			{
 				vWarp2(iTank, iTank2);

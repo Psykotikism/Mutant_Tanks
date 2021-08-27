@@ -384,7 +384,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION2);
@@ -394,7 +394,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 1 && !g_esItemPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -402,8 +402,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -698,7 +697,7 @@ void vItemAbility(int tank)
 		return;
 	}
 
-	static char sItems[5][64];
+	char sItems[5][64];
 	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), " ", "");
 	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -724,7 +723,7 @@ void vItemAbility(int tank)
 
 	if (g_esItemCache[tank].g_iItemMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Item", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Item", LANG_SERVER, sTankName);

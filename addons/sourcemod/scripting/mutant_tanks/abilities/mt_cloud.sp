@@ -345,7 +345,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CLOUD_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CLOUD_SECTION2);
@@ -355,7 +355,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCloudCache[tank].g_iCloudAbility == 1 && g_esCloudCache[tank].g_iComboAbility == 1 && !g_esCloudPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -363,8 +363,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -593,10 +592,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esCloudCache[tank].g_iCloudAbility == 1 && g_esCloudCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esCloudCache[tank].g_iHumanMode)
 				{
@@ -691,7 +688,7 @@ void vCloud(int tank, int pos = -1)
 
 	if (g_esCloudCache[tank].g_iCloudMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Cloud", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Cloud", LANG_SERVER, sTankName);
@@ -788,9 +785,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCloudPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCloudPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esCloudPlayer[iTank].g_iTankType || g_esCloudCache[iTank].g_iCloudAbility == 0 || !g_esCloudPlayer[iTank].g_bActivated)
 	{
 		g_esCloudPlayer[iTank].g_bActivated = false;
@@ -798,10 +793,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime, iPos;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
-	iPos = pack.ReadCell();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esCloudCache[iTank].g_iHumanAbility == 1 && g_esCloudCache[iTank].g_iHumanMode == 0 && (iTime + g_esCloudCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esCloudPlayer[iTank].g_iCooldown == -1 || g_esCloudPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vCloudReset2(iTank);
@@ -812,9 +804,9 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 
 	vAttachParticle(iTank, PARTICLE_SMOKE, 1.5);
 
-	static float flTankPos[3], flSurvivorPos[3], flDamage;
+	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCloudCache[iTank].g_flCloudDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCloudCache[iTank].g_flCloudDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esCloudPlayer[iTank].g_iTankType, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esCloudPlayer[iSurvivor].g_iImmunityFlags))

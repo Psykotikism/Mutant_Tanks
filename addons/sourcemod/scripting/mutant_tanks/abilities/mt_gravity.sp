@@ -377,8 +377,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esGravityPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esGravityAbility[g_esGravityPlayer[client].g_iTankType].g_iAccessFlags, g_esGravityPlayer[client].g_iAccessFlags)) && g_esGravityCache[client].g_iHumanAbility == 1 && (g_esGravityPlayer[client].g_iCooldown == -1 || g_esGravityPlayer[client].g_iCooldown < GetTime()))
@@ -397,7 +396,7 @@ public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, flo
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esGravityCache[attacker].g_iGravityHitMode == 0 || g_esGravityCache[attacker].g_iGravityHitMode == 1) && bIsSurvivor(victim) && g_esGravityCache[attacker].g_iComboAbility == 0)
 		{
@@ -460,7 +459,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_GRAVITY_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_GRAVITY_SECTION2);
@@ -468,14 +467,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_GRAVITY_SECTION4);
 	if (g_esGravityCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_GRAVITY_SECTION, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION2, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION3, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -513,8 +511,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -812,14 +809,12 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (button & MT_MAIN_KEY)
 		{
 			if ((g_esGravityCache[tank].g_iGravityAbility == 2 || g_esGravityCache[tank].g_iGravityAbility == 3) && g_esGravityCache[tank].g_iHumanAbility == 1)
 			{
-				static bool bRecharging;
-				bRecharging = g_esGravityPlayer[tank].g_iCooldown != -1 && g_esGravityPlayer[tank].g_iCooldown > iTime;
+				bool bRecharging = g_esGravityPlayer[tank].g_iCooldown != -1 && g_esGravityPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esGravityCache[tank].g_iHumanMode)
 				{
@@ -935,7 +930,7 @@ void vGravity(int tank)
 		return;
 	}
 
-	static float flOrigin[3], flAngles[3];
+	float flOrigin[3], flAngles[3];
 	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 	GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 	flAngles[0] += -90.0;
@@ -968,12 +963,11 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esGravityPlayer[tank].g_bFailed = false;
 					g_esGravityPlayer[tank].g_bNoAmmo = false;
 
-					static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+					float flTankPos[3], flSurvivorPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esGravityCache[tank].g_flGravityRange;
-					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esGravityCache[tank].g_flGravityRangeChance;
-					static int iSurvivorCount;
-					iSurvivorCount = 0;
+					float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esGravityCache[tank].g_flGravityRange,
+						flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esGravityCache[tank].g_flGravityRangeChance;
+					int iSurvivorCount = 0;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esGravityPlayer[tank].g_iTankType, g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iImmunityFlags, g_esGravityPlayer[iSurvivor].g_iImmunityFlags))
@@ -1011,8 +1005,7 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esGravityPlayer[tank].g_iGravityPointPush = CreateEntityByName("point_push");
 					if (bIsValidEntity(g_esGravityPlayer[tank].g_iGravityPointPush))
 					{
-						static int iDuration;
-						iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGravityCache[tank].g_iGravityDuration;
+						int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGravityCache[tank].g_iGravityDuration;
 						g_esGravityPlayer[tank].g_bActivated = true;
 						g_esGravityPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -1027,7 +1020,7 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 						if (g_esGravityCache[tank].g_iGravityMessage & MT_MESSAGE_SPECIAL)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity3", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity3", LANG_SERVER, sTankName);
@@ -1054,8 +1047,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGravityPlayer[tank].g_iAmmoCount2 < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esGravityPlayer[survivor].g_bAffected)
 			{
 				g_esGravityPlayer[survivor].g_bAffected = true;
@@ -1078,8 +1070,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 				vEffect(survivor, tank, g_esGravityCache[tank].g_iGravityEffect, flags);
 				EmitSoundToAll(SOUND_BELL, survivor);
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
 				DataPack dpStopGravity;
 				CreateDataTimer(flDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopGravity.WriteCell(GetClientUserId(survivor));
@@ -1088,7 +1079,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esGravityCache[tank].g_iGravityMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity", sTankName, survivor, g_esGravityCache[tank].g_flGravityValue);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity", LANG_SERVER, sTankName, survivor, g_esGravityCache[tank].g_flGravityValue);

@@ -414,7 +414,7 @@ public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esAcidCache[attacker].g_iAcidHitMode == 0 || g_esAcidCache[attacker].g_iAcidHitMode == 1) && bIsSurvivor(victim) && g_esAcidCache[attacker].g_iComboAbility == 0)
 		{
@@ -477,7 +477,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ACID_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ACID_SECTION2);
@@ -485,14 +485,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ACID_SECTION4);
 	if (g_esAcidCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ACID_SECTION, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION2, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION3, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -516,8 +515,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -804,8 +802,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esAcidCache[tank].g_iAcidAbility == 1 && g_esAcidCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esAcidPlayer[tank].g_iCooldown != -1 && g_esAcidPlayer[tank].g_iCooldown > iTime)
 				{
@@ -869,7 +866,7 @@ void vAcid(int survivor, int tank)
 		return;
 	}
 
-	static float flOrigin[3], flAngles[3];
+	float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
 	vCreateAcid(survivor, flOrigin, flAngles);
@@ -887,12 +884,11 @@ void vAcidAbility(int tank, float random, int pos = -1)
 		g_esAcidPlayer[tank].g_bFailed = false;
 		g_esAcidPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAcidCache[tank].g_flAcidRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAcidCache[tank].g_flAcidRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAcidCache[tank].g_flAcidRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAcidCache[tank].g_flAcidRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esAcidPlayer[tank].g_iTankType, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iImmunityFlags, g_esAcidPlayer[iSurvivor].g_iImmunityFlags))
@@ -932,8 +928,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esAcidPlayer[tank].g_iAmmoCount < g_esAcidCache[tank].g_iHumanAmmo && g_esAcidCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAcidCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esAcidPlayer[tank].g_iCooldown == -1 || g_esAcidPlayer[tank].g_iCooldown < iTime))
@@ -952,7 +947,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 				vAcid(survivor, tank);
 				vEffect(survivor, tank, g_esAcidCache[tank].g_iAcidEffect, flags);
 
-				static char sTankName[33];
+				char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				if (g_esAcidCache[tank].g_iAcidMessage & messages)
 				{
@@ -981,8 +976,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 
 void vAcidRange(int tank, int value, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esAcidCache[tank].g_flAcidDeathChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esAcidCache[tank].g_flAcidDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidDeath == 1 && random <= flChance)
 	{
 		if (!g_bSecondGame || g_esAcidCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
@@ -996,11 +990,10 @@ void vAcidRange(int tank, int value, float random, int pos = -1)
 
 void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esAcidCache[tank].g_flAcidRockChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esAcidCache[tank].g_flAcidRockChance;
 	if (random <= flChance)
 	{
-		static float flOrigin[3], flAngles[3];
+		float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		GetClientAbsAngles(tank, flAngles);
 		flOrigin[2] += 40.0;
@@ -1008,7 +1001,7 @@ void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 
 		if (g_esAcidCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Acid2", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Acid2", LANG_SERVER, sTankName);

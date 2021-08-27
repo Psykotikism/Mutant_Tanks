@@ -379,8 +379,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esUltimatePlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esUltimateAbility[g_esUltimatePlayer[client].g_iTankType].g_iAccessFlags, g_esUltimatePlayer[client].g_iAccessFlags)) && g_esUltimateCache[client].g_iHumanAbility == 1 && (g_esUltimatePlayer[client].g_iCooldown == -1 || g_esUltimatePlayer[client].g_iCooldown < iTime))
@@ -400,7 +399,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 		if (g_esUltimateCache[client].g_iUltimateMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(client, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate2", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ultimate2", LANG_SERVER, sTankName);
@@ -459,7 +458,7 @@ public Action OnUltimateTakeDamage(int victim, int &attacker, int &inflictor, fl
 
 			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 			{
-				static float flTankPos[3];
+				float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
 
 				switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
@@ -508,7 +507,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ULTIMATE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ULTIMATE_SECTION2);
@@ -518,7 +517,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esUltimateCache[tank].g_iUltimateAbility == 1 && g_esUltimateCache[tank].g_iComboAbility == 1 && !g_esUltimatePlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -526,8 +525,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -793,10 +791,8 @@ public void MT_OnButtonPressed(int tank, int button)
 					return;
 				}
 
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esUltimatePlayer[tank].g_iCooldown != -1 && g_esUltimatePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esUltimatePlayer[tank].g_iCooldown != -1 && g_esUltimatePlayer[tank].g_iCooldown > iTime;
 				if (!g_esUltimatePlayer[tank].g_bActivated && !bRecharging)
 				{
 					vUltimateAbility(tank);
@@ -863,12 +859,10 @@ void vUltimateReset()
 
 void vUltimate(int tank, int pos = -1)
 {
-	static int iTankHealth;
-	iTankHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
+	int iTankHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
 	if (iTankHealth <= g_esUltimateCache[tank].g_iUltimateHealthLimit && !bIsPlayerIncapacitated(tank) && g_esUltimatePlayer[tank].g_bQualified && g_esUltimatePlayer[tank].g_iCount < g_esUltimateCache[tank].g_iUltimateAmount)
 	{
-		static int iDuration;
-		iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esUltimateCache[tank].g_iUltimateDuration;
+		int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esUltimateCache[tank].g_iUltimateDuration;
 		g_esUltimatePlayer[tank].g_bActivated = true;
 		g_esUltimatePlayer[tank].g_iCount++;
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
@@ -893,13 +887,12 @@ void vUltimate(int tank, int pos = -1)
 			}
 		}
 
-		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-		iValue = RoundToNearest(MT_TankMaxHealth(tank, 2) * g_esUltimateCache[tank].g_flUltimateHealthPortion);
-		iMaxHealth = MT_TankMaxHealth(tank, 1);
-		iNewHealth = (iTankHealth + iValue);
-		iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
-		iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iValue;
+		int iValue = RoundToNearest(MT_TankMaxHealth(tank, 2) * g_esUltimateCache[tank].g_flUltimateHealthPortion),
+			iMaxHealth = MT_TankMaxHealth(tank, 1),
+			iNewHealth = (iTankHealth + iValue),
+			iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth,
+			iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth,
+			iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iValue;
 		MT_TankMaxHealth(tank, 3, (iMaxHealth + iTotalHealth));
 		SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
@@ -913,7 +906,7 @@ void vUltimate(int tank, int pos = -1)
 
 		if (g_esUltimateCache[tank].g_iUltimateMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ultimate", LANG_SERVER, sTankName);

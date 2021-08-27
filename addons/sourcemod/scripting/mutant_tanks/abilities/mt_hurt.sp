@@ -359,7 +359,7 @@ public Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHurtCache[attacker].g_iHurtHitMode == 0 || g_esHurtCache[attacker].g_iHurtHitMode == 1) && bIsSurvivor(victim) && g_esHurtCache[attacker].g_iComboAbility == 0)
 		{
@@ -422,7 +422,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_HURT_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_HURT_SECTION2);
@@ -430,14 +430,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_HURT_SECTION4);
 	if (g_esHurtCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HURT_SECTION, false) || StrEqual(sSubset[iPos], MT_HURT_SECTION2, false) || StrEqual(sSubset[iPos], MT_HURT_SECTION3, false) || StrEqual(sSubset[iPos], MT_HURT_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -461,8 +460,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -730,8 +728,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esHurtCache[tank].g_iHurtAbility == 1 && g_esHurtCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esHurtPlayer[tank].g_iCooldown == -1 || g_esHurtPlayer[tank].g_iCooldown < iTime)
 				{
@@ -770,12 +767,11 @@ void vHurtAbility(int tank, float random, int pos = -1)
 		g_esHurtPlayer[tank].g_bFailed = false;
 		g_esHurtPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHurtCache[tank].g_flHurtRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHurtCache[tank].g_flHurtRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHurtCache[tank].g_flHurtRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHurtCache[tank].g_flHurtRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHurtPlayer[tank].g_iTankType, g_esHurtAbility[g_esHurtPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHurtPlayer[iSurvivor].g_iImmunityFlags))
@@ -815,8 +811,7 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHurtPlayer[tank].g_iAmmoCount < g_esHurtCache[tank].g_iHumanAmmo && g_esHurtCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esHurtPlayer[survivor].g_bAffected)
 			{
 				g_esHurtPlayer[survivor].g_bAffected = true;
@@ -835,8 +830,7 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esHurtCache[tank].g_flHurtInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esHurtCache[tank].g_flHurtInterval;
 				DataPack dpHurt;
 				CreateDataTimer(flInterval, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpHurt.WriteCell(GetClientUserId(survivor));
@@ -857,7 +851,7 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esHurtCache[tank].g_iHurtMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt", LANG_SERVER, sTankName, survivor);
@@ -983,8 +977,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esHurtPlayer[iSurvivor].g_bAffected = false;
@@ -993,10 +986,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esHurtCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHurtPlayer[iTank].g_iTankType) || (g_esHurtCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHurtCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHurtPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHurtPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esHurtPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esHurtPlayer[iTank].g_iTankType, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esHurtPlayer[iSurvivor].g_iImmunityFlags) || !g_esHurtPlayer[iSurvivor].g_bAffected)
 	{
 		vHurtReset2(iSurvivor, iTank, iMessage);
@@ -1004,11 +994,9 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iHurtEnabled, iPos, iDuration, iTime;
-	iHurtEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esHurtCache[iTank].g_iHurtDuration;
-	iTime = pack.ReadCell();
+	int iHurtEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esHurtCache[iTank].g_iHurtDuration,
+		iTime = pack.ReadCell();
 	if (iHurtEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vHurtReset2(iSurvivor, iTank, iMessage);
@@ -1016,8 +1004,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esHurtCache[iTank].g_flHurtDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esHurtCache[iTank].g_flHurtDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
 	EmitSoundToAll(SOUND_ATTACK, iSurvivor);
 

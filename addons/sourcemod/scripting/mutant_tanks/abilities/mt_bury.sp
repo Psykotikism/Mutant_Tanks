@@ -418,7 +418,7 @@ public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBuryCache[attacker].g_iBuryHitMode == 0 || g_esBuryCache[attacker].g_iBuryHitMode == 1) && bIsSurvivor(victim) && g_esBuryCache[attacker].g_iComboAbility == 0)
 		{
@@ -481,7 +481,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_BURY_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_BURY_SECTION2);
@@ -489,14 +489,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_BURY_SECTION4);
 	if (g_esBuryCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_BURY_SECTION, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION2, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION3, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -520,8 +519,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -816,8 +814,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esBuryCache[tank].g_iBuryAbility == 1 && g_esBuryCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esBuryPlayer[tank].g_iCooldown == -1 || g_esBuryPlayer[tank].g_iCooldown < iTime)
 				{
@@ -853,12 +850,11 @@ void vBuryAbility(int tank, float random, int pos = -1)
 		g_esBuryPlayer[tank].g_bFailed = false;
 		g_esBuryPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esBuryCache[tank].g_flBuryRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBuryCache[tank].g_flBuryRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esBuryCache[tank].g_flBuryRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBuryCache[tank].g_flBuryRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esBuryPlayer[tank].g_iTankType, g_esBuryAbility[g_esBuryPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[iSurvivor].g_iImmunityFlags))
@@ -898,8 +894,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esBuryPlayer[tank].g_iAmmoCount < g_esBuryCache[tank].g_iHumanAmmo && g_esBuryCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esBuryPlayer[survivor].g_bAffected)
 			{
 				g_esBuryPlayer[survivor].g_bAffected = true;
@@ -920,7 +915,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esBuryPlayer[survivor].g_flLastPosition);
 
-				static float flOrigin[3];
+				float flOrigin[3];
 				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 				flOrigin[2] -= g_esBuryCache[tank].g_flBuryHeight;
 				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
@@ -933,8 +928,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 					SetEntityMoveType(survivor, MOVETYPE_NONE);
 				}
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esBuryCache[tank].g_flBuryDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esBuryCache[tank].g_flBuryDuration;
 				DataPack dpStopBury;
 				CreateDataTimer(flDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopBury.WriteCell(GetClientUserId(survivor));
@@ -945,9 +939,8 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esBuryCache[tank].g_iBuryMessage & messages)
 				{
-					static char sTankName[33];
-					static float flDepth;
-					flDepth = ((g_esBuryCache[tank].g_flBuryHeight * 0.75) / 12.0);
+					char sTankName[33];
+					float flDepth = ((g_esBuryCache[tank].g_flBuryHeight * 0.75) / 12.0);
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Bury", sTankName, survivor, flDepth);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury", LANG_SERVER, sTankName, survivor, flDepth);

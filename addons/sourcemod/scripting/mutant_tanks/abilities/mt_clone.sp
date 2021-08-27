@@ -397,7 +397,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION2);
@@ -407,7 +407,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iComboAbility == 1 && !g_esClonePlayer[tank].g_bCloned)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -415,8 +415,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -523,7 +522,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
+				char sValue[10], sRange[2][5];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -557,7 +556,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
+				char sValue[10], sRange[2][5];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -675,8 +674,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 									{
 										g_esClonePlayer[iOwner].g_iCount = (g_esCloneCache[iOwner].g_iCloneReplace == 1) ? 0 : g_esClonePlayer[iOwner].g_iCount;
 
-										static int iTime;
-										iTime = GetTime();
+										int iTime = GetTime();
 										if (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iOwner) || bHasAdminAccess(iOwner, g_esCloneAbility[g_esClonePlayer[iOwner].g_iTankType].g_iAccessFlags, g_esClonePlayer[iOwner].g_iAccessFlags)) && g_esCloneCache[iOwner].g_iHumanAbility == 1 && (g_esClonePlayer[iOwner].g_iCooldown == -1 || g_esClonePlayer[iOwner].g_iCooldown < iTime))
 										{
 											g_esClonePlayer[iOwner].g_iCooldown = (g_esClonePlayer[iOwner].g_iCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? (iTime + g_esCloneCache[iOwner].g_iHumanCooldown) : -1;
@@ -751,10 +749,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > iTime;
 				if (!g_esClonePlayer[tank].g_bCloned && !bRecharging)
 				{
 					vCloneAbility(tank);
@@ -786,7 +782,7 @@ void vClone(int tank)
 {
 	if (!g_esClonePlayer[tank].g_bCloned && g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount)
 	{
-		static float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
+		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 		GetClientEyePosition(tank, flPosition);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
@@ -797,8 +793,7 @@ void vClone(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -825,8 +820,7 @@ void vClone(int tank)
 						case false: vClone2(tank, g_esCloneCache[tank].g_iCloneMinType, g_esCloneCache[tank].g_iCloneMaxType);
 					}
 
-					static int iTank;
-					iTank = 0;
+					int iTank = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
@@ -855,8 +849,7 @@ void vClone(int tank)
 							CreateTimer(g_esCloneCache[tank].g_flCloneLifetime, tTimerKillClone, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						static int iNewHealth;
-						iNewHealth = (g_esCloneCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCloneCache[tank].g_iCloneHealth;
+						int iNewHealth = (g_esCloneCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCloneCache[tank].g_iCloneHealth;
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 
@@ -869,7 +862,7 @@ void vClone(int tank)
 
 						if (g_esCloneCache[tank].g_iCloneMessage == 1)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Clone", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Clone", LANG_SERVER, sTankName);
@@ -890,10 +883,9 @@ void vClone2(int tank, int min = 0, int max = 0)
 		return;
 	}
 
-	static int iMin, iMax, iTypeCount, iTankTypes[MT_MAXTYPES + 1];
-	iMin = (min > 0) ? min : MT_GetMinType();
-	iMax = (max > 0) ? max : MT_GetMaxType();
-	iTypeCount = 0;
+	int iMin = (min > 0) ? min : MT_GetMinType(),
+		iMax = (max > 0) ? max : MT_GetMaxType(),
+		iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
@@ -905,8 +897,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 		iTypeCount++;
 	}
 
-	static int iType;
-	iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
+	int iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 

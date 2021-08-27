@@ -356,8 +356,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			case 0: vRemovePyro2(client);
 			case 1:
 			{
-				static float flDuration;
-				flDuration = (g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(client, 4, g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition) : float(g_esPyroCache[client].g_iPyroDuration);
+				float flDuration = (g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(client, 4, g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition) : float(g_esPyroCache[client].g_iPyroDuration);
 				IgniteEntity(client, flDuration);
 			}
 		}
@@ -387,8 +386,7 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 			{
 				if (!g_esPyroPlayer[victim].g_bActivated)
 				{
-					static int iDuration;
-					iDuration = (g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition)) : g_esPyroCache[victim].g_iPyroDuration;
+					int iDuration = (g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition)) : g_esPyroCache[victim].g_iPyroDuration;
 					g_esPyroPlayer[victim].g_bActivated = true;
 					g_esPyroPlayer[victim].g_iDuration = (GetTime() + iDuration);
 				}
@@ -403,7 +401,7 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 				{
 					g_esPyroPlayer[victim].g_bActivated2 = true;
 
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(victim, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro2", LANG_SERVER, sTankName);
@@ -419,7 +417,7 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 
 			if (g_esPyroCache[attacker].g_iPyroAbility == 1 && g_esPyroPlayer[attacker].g_bActivated)
 			{
-				static char sClassname[32];
+				char sClassname[32];
 				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
@@ -478,7 +476,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION2);
@@ -488,7 +486,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esPyroCache[tank].g_iPyroAbility == 1 && g_esPyroCache[tank].g_iComboAbility == 1 && !g_esPyroPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -496,8 +494,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -754,10 +751,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esPyroCache[tank].g_iPyroAbility == 1 && g_esPyroCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esPyroCache[tank].g_iHumanMode)
 				{
@@ -785,8 +780,7 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_esPyroPlayer[tank].g_bActivated = true;
 								g_esPyroPlayer[tank].g_iAmmoCount++;
 
-								static float flDuration;
-								flDuration = (g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 4, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition) : float(g_esPyroCache[tank].g_iPyroDuration);
+								float flDuration = (g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 4, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition) : float(g_esPyroCache[tank].g_iPyroDuration);
 								IgniteEntity(tank, flDuration);
 							}
 							else if (g_esPyroPlayer[tank].g_bActivated)
@@ -845,8 +839,7 @@ void vPyroCopyStats2(int oldTank, int newTank)
 
 void vPyro(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esPyroCache[tank].g_iPyroDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esPyroCache[tank].g_iPyroDuration;
 	g_esPyroPlayer[tank].g_bActivated = true;
 	g_esPyroPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -861,7 +854,7 @@ void vPyro(int tank, int pos = -1)
 
 	if (g_esPyroCache[tank].g_iPyroMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro", LANG_SERVER, sTankName);

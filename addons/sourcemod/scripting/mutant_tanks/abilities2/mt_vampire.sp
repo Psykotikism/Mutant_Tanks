@@ -266,7 +266,7 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
@@ -279,21 +279,20 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 
 				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esVampireCache[attacker].g_iHumanAbility == 1)
 				{
-					static int iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-					iDamage = RoundToNearest(damage);
-					iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
-					iMaxHealth = MT_TankMaxHealth(attacker, 1);
-					iNewHealth = (iHealth + iDamage);
-					iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iDamage - MT_MAXHEALTH) : iNewHealth;
-					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
+					int iDamage = RoundToNearest(damage),
+						iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth"),
+						iMaxHealth = MT_TankMaxHealth(attacker, 1),
+						iNewHealth = (iHealth + iDamage),
+						iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iDamage - MT_MAXHEALTH) : iNewHealth,
+						iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth,
+						iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
 					MT_TankMaxHealth(attacker, 3, (iMaxHealth + iTotalHealth));
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 					vEffect(victim, attacker, g_esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
 
 					if (g_esVampireCache[attacker].g_iVampireMessage == 1)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(attacker, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Vampire", sTankName, victim);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vampire", LANG_SERVER, sTankName, victim);

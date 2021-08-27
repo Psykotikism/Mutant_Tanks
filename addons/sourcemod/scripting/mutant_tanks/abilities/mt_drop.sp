@@ -448,7 +448,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_DROP_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_DROP_SECTION2);
@@ -458,14 +458,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_UPONDEATH && g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iComboAbility == 1 && g_esDropPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_DROP_SECTION, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION2, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION3, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION4, false))
 				{
-					static float flDelay;
-					flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+					float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 					switch (flDelay)
 					{
@@ -731,8 +730,7 @@ void vDropCopyStats2(int oldTank, int newTank)
 
 void vDropWeapon(int tank, int value, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 1, pos) : g_esDropCache[tank].g_flDropChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 1, pos) : g_esDropCache[tank].g_flDropChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esDropCache[tank].g_iDropAbility == 1 && random <= flChance && bIsValidEntRef(g_esDropPlayer[tank].g_iWeapon))
 	{
 		if (g_esDropCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankType].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
@@ -740,26 +738,22 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		static char sWeapon[32];
+		char sWeapon[32];
 		strcopy(sWeapon, sizeof(sWeapon), (g_bSecondGame ? g_sWeaponClasses2[g_esDropPlayer[tank].g_iWeaponIndex] : g_sWeaponClasses[g_esDropPlayer[tank].g_iWeaponIndex]));
 
-		static float flPos[3], flAngles[3];
+		float flPos[3], flAngles[3];
 		GetClientEyePosition(tank, flPos);
 		GetClientAbsAngles(tank, flAngles);
 
 		if (g_esDropCache[tank].g_iDropMode != 2 && strncmp(sWeapon, "weapon", 6) != -1)
 		{
-			static int iDrop;
-			iDrop = CreateEntityByName(sWeapon);
+			int iDrop = CreateEntityByName(sWeapon);
 			if (bIsValidEntity(iDrop))
 			{
 				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 				DispatchSpawn(iDrop);
 
-				static int iAmmo, iClip, iType;
-				iAmmo = 0;
-				iClip = 0;
-				iType = GetEntProp(iDrop, Prop_Send, "m_iPrimaryAmmoType");
+				int iAmmo = 0, iClip = 0, iType = GetEntProp(iDrop, Prop_Send, "m_iPrimaryAmmoType");
 
 				if (g_bSecondGame)
 				{
@@ -802,7 +796,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 
 				if (g_esDropCache[tank].g_iDropMessage == 1)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Drop", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drop", LANG_SERVER, sTankName);
@@ -811,8 +805,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 		}
 		else if (g_esDropCache[tank].g_iDropMode != 1 && g_bSecondGame)
 		{
-			static int iDrop;
-			iDrop = CreateEntityByName("weapon_melee");
+			int iDrop = CreateEntityByName("weapon_melee");
 			if (bIsValidEntity(iDrop))
 			{
 				DispatchKeyValue(iDrop, "melee_script_name", sWeapon);
@@ -821,7 +814,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 
 				if (g_esDropCache[tank].g_iDropMessage == 1)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Drop2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drop2", LANG_SERVER, sTankName);
@@ -874,9 +867,8 @@ int iGetNamedWeapon(int tank)
 		return -1;
 	}
 
-	static char sName[32], sSet[2][20];
-	static int iSize;
-	iSize = g_bSecondGame ? sizeof(g_sWeaponClasses2) : sizeof(g_sWeaponClasses);
+	char sName[32], sSet[2][20];
+	int iSize = g_bSecondGame ? sizeof(g_sWeaponClasses2) : sizeof(g_sWeaponClasses);
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof(sName), (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
@@ -899,8 +891,7 @@ int iGetNamedWeapon(int tank)
 
 int iGetRandomWeapon(int tank)
 {
-	static int iDropValue;
-	iDropValue = 0;
+	int iDropValue = 0;
 
 	switch (g_esDropCache[tank].g_iDropMode)
 	{
@@ -914,8 +905,7 @@ int iGetRandomWeapon(int tank)
 
 public void vDropFrame(int userid)
 {
-	static int iTank;
-	iTank = GetClientOfUserId(userid);
+	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDropCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[iTank].g_iTankType) || (g_esDropCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
 	{
 		g_esDropPlayer[iTank].g_bActivated = false;
@@ -925,10 +915,8 @@ public void vDropFrame(int userid)
 
 	vRemoveDrop(iTank);
 
-	static int iPosition, iWeapon;
-	iPosition = 0 < g_esDropCache[iTank].g_iDropHandPosition < 3 ? g_esDropCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2);
-
-	iWeapon = iGetNamedWeapon(iTank);
+	int iPosition = 0 < g_esDropCache[iTank].g_iDropHandPosition < 3 ? g_esDropCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2),
+		iWeapon = iGetNamedWeapon(iTank);
 	if (iWeapon == -1)
 	{
 		iWeapon = iGetRandomWeapon(iTank);
@@ -940,7 +928,7 @@ public void vDropFrame(int userid)
 		SetEntityModel(g_esDropPlayer[iTank].g_iWeapon, (g_bSecondGame ? g_sWeaponModelsWorld2[iWeapon] : g_sWeaponModelsWorld[iWeapon]));
 		vSetEntityParent(g_esDropPlayer[iTank].g_iWeapon, iTank, true);
 
-		static char sPosition[32];
+		char sPosition[32];
 
 		switch (iPosition)
 		{
@@ -951,7 +939,7 @@ public void vDropFrame(int userid)
 		SetVariantString(sPosition);
 		AcceptEntityInput(g_esDropPlayer[iTank].g_iWeapon, "SetParentAttachment");
 
-		static float flPos[3], flAngles[3], flScale;
+		float flPos[3], flAngles[3], flScale;
 
 		switch (g_bSecondGame)
 		{

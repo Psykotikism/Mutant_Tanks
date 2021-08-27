@@ -408,7 +408,7 @@ public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, flo
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esRestartCache[attacker].g_iRestartHitMode == 0 || g_esRestartCache[attacker].g_iRestartHitMode == 1) && bIsSurvivor(victim) && g_esRestartCache[attacker].g_iComboAbility == 0)
 		{
@@ -471,7 +471,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION2);
@@ -479,14 +479,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION4);
 	if (g_esRestartCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_RESTART_SECTION, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION2, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION3, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -510,8 +509,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -724,7 +722,7 @@ public void MT_OnHookEvent(bool hooked)
 		}
 		case false:
 		{
-			static char sEvent[32];
+			char sEvent[32];
 			for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
 			{
 				switch (iPos)
@@ -857,8 +855,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esRestartCache[tank].g_iRestartAbility == 1 && g_esRestartCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esRestartPlayer[tank].g_iCooldown != -1 && g_esRestartPlayer[tank].g_iCooldown > iTime)
 				{
@@ -917,12 +914,11 @@ void vRestartAbility(int tank, float random, int pos = -1)
 		g_esRestartPlayer[tank].g_bFailed = false;
 		g_esRestartPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRestartCache[tank].g_flRestartRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRestartCache[tank].g_flRestartRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRestartCache[tank].g_flRestartRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRestartCache[tank].g_flRestartRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esRestartPlayer[tank].g_iTankType, g_esRestartAbility[g_esRestartPlayer[tank].g_iTankType].g_iImmunityFlags, g_esRestartPlayer[iSurvivor].g_iImmunityFlags))
@@ -962,8 +958,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRestartPlayer[tank].g_iAmmoCount < g_esRestartCache[tank].g_iHumanAmmo && g_esRestartCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRestartCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esRestartPlayer[tank].g_iCooldown == -1 || g_esRestartPlayer[tank].g_iCooldown < iTime))
@@ -979,7 +974,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				static char sItems[5][64];
+				char sItems[5][64];
 				ReplaceString(g_esRestartCache[tank].g_sRestartLoadout, sizeof(esRestartAbility::g_sRestartLoadout), " ", "");
 				ExplodeString(g_esRestartCache[tank].g_sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 				MT_RespawnSurvivor(survivor);
@@ -993,8 +988,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				static bool bTeleport;
-				bTeleport = true;
+				bool bTeleport = true;
 				if (g_esRestartPlayer[survivor].g_bRecorded && g_esRestartCache[tank].g_iRestartMode == 0)
 				{
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1016,7 +1010,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 				}
 				else
 				{
-					static float flOrigin[3], flAngles[3];
+					float flOrigin[3], flAngles[3];
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
@@ -1041,7 +1035,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esRestartCache[tank].g_iRestartMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Restart", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Restart", LANG_SERVER, sTankName, survivor);

@@ -375,7 +375,7 @@ public Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float
 		}
 		else if (bIsValidEntity(inflictor))
 		{
-			static char sClassname[32];
+			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esChokeCache[attacker].g_iChokeHitMode == 0 || g_esChokeCache[attacker].g_iChokeHitMode == 1) && bIsSurvivor(victim) && g_esChokeCache[attacker].g_iComboAbility == 0)
 			{
@@ -439,7 +439,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CHOKE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CHOKE_SECTION2);
@@ -447,14 +447,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CHOKE_SECTION4);
 	if (g_esChokeCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_CHOKE_SECTION, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION2, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION3, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -478,8 +477,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -775,8 +773,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esChokeCache[tank].g_iChokeAbility == 1 && g_esChokeCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime)
 				{
@@ -809,12 +806,11 @@ void vChokeAbility(int tank, float random, int pos = -1)
 		g_esChokePlayer[tank].g_bFailed = false;
 		g_esChokePlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esChokeCache[tank].g_flChokeRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esChokeCache[tank].g_flChokeRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esChokeCache[tank].g_flChokeRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esChokeCache[tank].g_flChokeRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esChokePlayer[tank].g_iTankType, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[iSurvivor].g_iImmunityFlags))
@@ -854,8 +850,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esChokePlayer[survivor].g_bAffected)
 			{
 				g_esChokePlayer[survivor].g_bAffected = true;
@@ -874,8 +869,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static float flDelay;
-				flDelay = (pos != -1) ? 0.1 : g_esChokeCache[tank].g_flChokeDelay;
+				float flDelay = (pos != -1) ? 0.1 : g_esChokeCache[tank].g_flChokeDelay;
 				DataPack dpChokeLaunch;
 				CreateDataTimer(flDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 				dpChokeLaunch.WriteCell(GetClientUserId(survivor));
@@ -889,7 +883,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esChokeCache[tank].g_iChokeMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Choke", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Choke", LANG_SERVER, sTankName, survivor);
@@ -1020,8 +1014,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
@@ -1030,10 +1023,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esChokePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esChokePlayer[iTank].g_iTankType, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[iSurvivor].g_iImmunityFlags) || bIsSurvivorDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vChokeReset2(iSurvivor, iTank, iMessage);
@@ -1041,11 +1031,9 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iChokeEnabled, iPos, iDuration, iTime;
-	iChokeEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esChokeCache[iTank].g_iChokeDuration;
-	iTime = pack.ReadCell();
+	int iChokeEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esChokeCache[iTank].g_iChokeDuration,
+		iTime = pack.ReadCell();
 	if (iChokeEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vChokeReset2(iSurvivor, iTank, iMessage);
@@ -1057,8 +1045,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	static float flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esChokeCache[iTank].g_flChokeDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esChokeCache[iTank].g_flChokeDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
 
 	return Plugin_Continue;

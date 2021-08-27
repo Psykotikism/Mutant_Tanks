@@ -1900,7 +1900,7 @@ public void MT_OnRockBreak(int tank, int rock)
 #endif
 }
 
-static void vAbilityMenu(int client, const char[] name)
+void vAbilityMenu(int client, const char[] name)
 {
 #if defined MT_MENU_MEDIC
 	vMedicMenu(client, name, 0);
@@ -2013,7 +2013,7 @@ static void vAbilityMenu(int client, const char[] name)
 	MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
 }
 
-static void vAbilityPlayer(int type, int client)
+void vAbilityPlayer(int type, int client)
 {
 #if defined MT_MENU_MEDIC
 	switch (type)
@@ -2325,7 +2325,7 @@ static void vAbilityPlayer(int type, int client)
 	MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
 }
 
-static void vAbilitySetup(int type)
+void vAbilitySetup(int type)
 {
 #if defined MT_MENU_MEDIC
 	switch (type)

@@ -347,7 +347,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION2);
@@ -357,7 +357,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iComboAbility == 1 && !g_esSplashPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -365,8 +365,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -605,10 +604,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esSplashCache[tank].g_iHumanMode)
 				{
@@ -718,7 +715,7 @@ void vSplashReset2(int tank)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash2", LANG_SERVER, sTankName);
@@ -750,7 +747,7 @@ void vSplash(int tank, int pos = -1)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash", LANG_SERVER, sTankName);
@@ -764,8 +761,7 @@ void vSplash2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplashCache[tank].g_flSplashInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplashCache[tank].g_flSplashInterval;
 	DataPack dpSplash;
 	CreateDataTimer(flInterval, tTimerSplash, dpSplash, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSplash.WriteCell(GetClientUserId(tank));
@@ -818,9 +814,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplashCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[iTank].g_iTankType) || (g_esSplashCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplashPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplashPlayer[iTank].g_iTankType || g_esSplashCache[iTank].g_iSplashAbility == 0 || !g_esSplashPlayer[iTank].g_bActivated)
 	{
 		vSplashReset2(iTank);
@@ -828,10 +822,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0 && (iTime + g_esSplashCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplashReset2(iTank);
@@ -840,10 +831,10 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flSurvivorPos[3], flDamage, flRange;
+	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esSplashCache[iTank].g_flSplashDamage;
-	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esSplashCache[iTank].g_flSplashRange;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esSplashCache[iTank].g_flSplashDamage,
+		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esSplashCache[iTank].g_flSplashRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esSplashPlayer[iTank].g_iTankType, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSplashPlayer[iSurvivor].g_iImmunityFlags))

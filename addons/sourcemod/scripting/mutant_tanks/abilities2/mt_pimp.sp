@@ -343,7 +343,7 @@ public Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esPimpCache[attacker].g_iPimpHitMode == 0 || g_esPimpCache[attacker].g_iPimpHitMode == 1) && bIsSurvivor(victim) && g_esPimpCache[attacker].g_iComboAbility == 0)
 		{
@@ -406,7 +406,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION2);
@@ -414,14 +414,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION4);
 	if (g_esPimpCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_PIMP_SECTION, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION2, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION3, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -445,8 +444,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -714,8 +712,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esPimpCache[tank].g_iPimpAbility == 1 && g_esPimpCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esPimpPlayer[tank].g_iCooldown == -1 || g_esPimpPlayer[tank].g_iCooldown < iTime)
 				{
@@ -754,12 +751,11 @@ void vPimpAbility(int tank, float random, int pos = -1)
 		g_esPimpPlayer[tank].g_bFailed = false;
 		g_esPimpPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esPimpCache[tank].g_flPimpRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esPimpCache[tank].g_flPimpRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esPimpCache[tank].g_flPimpRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esPimpCache[tank].g_flPimpRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPimpPlayer[tank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags))
@@ -799,8 +795,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esPimpPlayer[survivor].g_bAffected)
 			{
 				g_esPimpPlayer[survivor].g_bAffected = true;
@@ -819,8 +814,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esPimpCache[tank].g_flPimpInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esPimpCache[tank].g_flPimpInterval;
 				DataPack dpPimp;
 				CreateDataTimer(flInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpPimp.WriteCell(GetClientUserId(survivor));
@@ -835,7 +829,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esPimpCache[tank].g_iPimpMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Pimp", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pimp", LANG_SERVER, sTankName, survivor);
@@ -961,8 +955,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esPimpPlayer[iSurvivor].g_bAffected = false;
@@ -971,10 +964,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esPimpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[iTank].g_iTankType) || (g_esPimpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPimpPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPimpPlayer[iTank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags) || !g_esPimpPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
@@ -982,11 +972,9 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iPimpEnabled, iPos, iDuration, iTime;
-	iPimpEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esPimpCache[iTank].g_iPimpDuration;
-	iTime = pack.ReadCell();
+	int iPimpEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esPimpCache[iTank].g_iPimpDuration,
+		iTime = pack.ReadCell();
 	if (iPimpEnabled == 0 || (iTime + iDuration) < GetTime() || !g_esPimpPlayer[iSurvivor].g_bAffected)
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
@@ -994,8 +982,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : float(g_esPimpCache[iTank].g_iPimpDamage);
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : float(g_esPimpCache[iTank].g_iPimpDamage);
 	SlapPlayer(iSurvivor, RoundToNearest(MT_GetScaledDamage(flDamage)), true);
 
 	return Plugin_Continue;

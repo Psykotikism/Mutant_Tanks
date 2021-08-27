@@ -365,7 +365,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CAR_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CAR_SECTION2);
@@ -375,7 +375,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iComboAbility == 1 && !g_esCarPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -383,8 +383,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -497,7 +496,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CarRadius", false) || StrEqual(key, "Car Radius", false) || StrEqual(key, "Car_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][7], sValue[14];
+				char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -531,7 +530,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CarRadius", false) || StrEqual(key, "Car Radius", false) || StrEqual(key, "Car_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][7], sValue[14];
+				char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -658,10 +657,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esCarCache[tank].g_iHumanMode)
 				{
@@ -756,7 +753,7 @@ void vCar(int tank, int pos = -1)
 
 	if (g_esCarCache[tank].g_iCarMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Car", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Car", LANG_SERVER, sTankName);
@@ -770,8 +767,7 @@ void vCar2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esCarCache[tank].g_flCarInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esCarCache[tank].g_flCarInterval;
 	DataPack dpCar;
 	CreateDataTimer(flInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCar.WriteCell(GetClientUserId(tank));
@@ -834,7 +830,7 @@ void vCarReset2(int tank)
 
 	if (g_esCarCache[tank].g_iCarMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Car2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Car2", LANG_SERVER, sTankName);
@@ -855,9 +851,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esCarPlayer[iTank].g_iTankType || !g_esCarPlayer[iTank].g_bActivated)
 	{
 		g_esCarPlayer[iTank].g_bActivated = false;
@@ -865,11 +859,9 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCarCache[iTank].g_iCarDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCarCache[iTank].g_iCarDuration,
+		iCurrentTime = GetTime();
 	if (g_esCarCache[iTank].g_iCarAbility == 0 || bIsAreaNarrow(iTank, g_esCarCache[iTank].g_flOpenAreasOnly) || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esCarCache[iTank].g_iHumanAbility == 1 && g_esCarCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vCarReset2(iTank);
@@ -882,37 +874,35 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3], flAngles[3], flMinRadius, flMaxRadius;
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
 	GetVectorAngles(flAngles, flAngles);
 
-	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCarCache[iTank].g_flCarRadius[0];
-	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCarCache[iTank].g_flCarRadius[1];
+	float flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCarCache[iTank].g_flCarRadius[0],
+		flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCarCache[iTank].g_flCarRadius[1];
 
-	static float flHitpos[3], flDistance;
+	float flHitpos[3];
 	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-	flDistance = GetVectorDistance(flPos, flHitpos);
+	float flDistance = GetVectorDistance(flPos, flHitpos);
 	if (flDistance > 1600.0)
 	{
 		flDistance = 1600.0;
 	}
 
-	static float flVector[3];
+	float flVector[3];
 	MakeVectorFromPoints(flPos, flHitpos, flVector);
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, (flDistance - 40.0));
 	AddVectors(flPos, flVector, flHitpos);
 	if (flDistance > 100.0)
 	{
-		static int iCar;
-		iCar = CreateEntityByName("prop_physics");
+		int iCar = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iCar))
 		{
-			static int iOptionCount, iOptions[3], iFlag;
-			iOptionCount = 0;
+			int iOptionCount = 0, iOptions[3], iFlag = 0;
 			for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
 			{
 				iFlag = (1 << iBit);
@@ -941,8 +931,8 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				}
 			}
 
-			static int iCarColor[3];
-			static float flAngles2[3];
+			float flAngles2[3];
+			int iCarColor[3];
 			for (int iIndex = 0; iIndex < sizeof(iCarColor); iIndex++)
 			{
 				iCarColor[iIndex] = GetRandomInt(0, 255);
@@ -956,7 +946,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
 			}
 
-			static float flVelocity[3];
+			float flVelocity[3];
 			flVelocity[0] = GetRandomFloat(0.0, 350.0);
 			flVelocity[1] = GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = GetRandomFloat(0.0, 30.0);

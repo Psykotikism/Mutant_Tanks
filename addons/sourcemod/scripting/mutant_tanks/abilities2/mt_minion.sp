@@ -360,7 +360,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_MINION_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_MINION_SECTION2);
@@ -370,7 +370,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iComboAbility == 1)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -378,8 +378,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -654,8 +653,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
 				{
@@ -688,7 +686,7 @@ void vMinion(int tank)
 {
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount)
 	{
-		static float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
+		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 		GetClientEyePosition(tank, flPosition);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
@@ -699,8 +697,7 @@ void vMinion(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -721,8 +718,7 @@ void vMinion(int tank)
 						}
 					}
 
-					static int iTypeCount, iTypes[6];
-					iTypeCount = 0;
+					int iTypeCount = 0, iTypes[6];
 					for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 					{
 						int iFlag = (1 << iBit);
@@ -757,8 +753,7 @@ void vMinion(int tank)
 						}
 					}
 
-					static int iSpecial;
-					iSpecial = 0;
+					int iSpecial = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
@@ -782,8 +777,7 @@ void vMinion(int tank)
 							CreateTimer(g_esMinionCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						static int iTime;
-						iTime = GetTime();
+						int iTime = GetTime();
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime))
 						{
 							g_esMinionPlayer[tank].g_iAmmoCount++;
@@ -799,7 +793,7 @@ void vMinion(int tank)
 
 						if (g_esMinionCache[tank].g_iMinionMessage == 1)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Minion", LANG_SERVER, sTankName);

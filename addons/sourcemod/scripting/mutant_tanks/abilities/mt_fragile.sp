@@ -361,8 +361,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esFragilePlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esFragileAbility[g_esFragilePlayer[client].g_iTankType].g_iAccessFlags, g_esFragilePlayer[client].g_iAccessFlags)) && g_esFragileCache[client].g_iHumanAbility == 1 && (g_esFragilePlayer[client].g_iCooldown == -1 || g_esFragilePlayer[client].g_iCooldown < iTime))
@@ -383,15 +382,13 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esFragilePlayer[victim].g_bActivated)
 		{
-			static bool bSurvivor;
-			bSurvivor = bIsSurvivor(attacker);
+			bool bSurvivor = bIsSurvivor(attacker);
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iAccessFlags, g_esFragilePlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFragilePlayer[victim].g_iTankType, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iImmunityFlags, g_esFragilePlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
 
-			static bool bChanged;
-			bChanged = false;
+			bool bChanged = false;
 			if (g_esFragileCache[victim].g_flFragileBulletMultiplier > 1.0 && (damagetype & DMG_BULLET))
 			{
 				bChanged = true;
@@ -419,7 +416,7 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 
 				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0)
 				{
-					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+					float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
 					GetClientAbsOrigin(attacker, flSurvivorOrigin);
 					GetClientAbsOrigin(victim, flTankOrigin);
 					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
@@ -442,7 +439,7 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 		}
 		else if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && g_esFragilePlayer[attacker].g_bActivated && bIsSurvivor(victim))
 		{
-			static char sClassname[32];
+			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
@@ -496,7 +493,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION2);
@@ -506,7 +503,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iComboAbility == 1 && !g_esFragilePlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -514,8 +511,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -792,10 +788,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esFragileCache[tank].g_iHumanMode)
 				{
@@ -881,8 +875,7 @@ void vFragileCopyStats2(int oldTank, int newTank)
 
 void vFragile(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFragileCache[tank].g_iFragileDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFragileCache[tank].g_iFragileDuration;
 	g_esFragilePlayer[tank].g_bActivated = true;
 	g_esFragilePlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -895,7 +888,7 @@ void vFragile(int tank, int pos = -1)
 
 	if (g_esFragileCache[tank].g_iFragileMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fragile", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fragile", LANG_SERVER, sTankName);

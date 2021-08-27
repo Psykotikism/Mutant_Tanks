@@ -426,9 +426,9 @@ public void OnGameFrame()
 {
 	if (MT_IsCorePluginEnabled())
 	{
-		static char sClassname[32], sHealthBar[51], sSet[2][2], sTankName[33];
-		static float flPercentage;
-		static int iTarget;
+		char sClassname[32], sHealthBar[51], sSet[2][2], sTankName[33];
+		float flPercentage = 0.0;
+		int iTarget = 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
@@ -516,8 +516,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esShieldPlayer[client].g_bActivated && g_esShieldPlayer[client].g_iDuration != -1 && g_esShieldPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esShieldAbility[g_esShieldPlayer[client].g_iTankType].g_iAccessFlags, g_esShieldPlayer[client].g_iAccessFlags)) && g_esShieldCache[client].g_iHumanAbility == 1 && g_esShieldCache[client].g_iHumanMode == 0 && (g_esShieldPlayer[client].g_iCooldown == -1 || g_esShieldPlayer[client].g_iCooldown < iTime))
@@ -545,11 +544,8 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 {
 	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esShieldPlayer[victim].g_bActivated && damage > 0.0)
 	{
-		static bool bCommon, bSpecial, bSurvivor, bRewarded;
-		bCommon = bIsCommonInfected(attacker);
-		bSpecial = bIsSpecialInfected(attacker);
-		bSurvivor = bIsSurvivor(attacker);
-		bRewarded = bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST);
+		bool bCommon = bIsCommonInfected(attacker), bSpecial = bIsSpecialInfected(attacker), bSurvivor = bIsSurvivor(attacker),
+			bRewarded = bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST);
 		if ((damagetype & DMG_FALL) || ((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esShieldAbility[g_esShieldPlayer[victim].g_iTankType].g_iAccessFlags, g_esShieldPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esShieldPlayer[victim].g_iTankType, g_esShieldAbility[g_esShieldPlayer[victim].g_iTankType].g_iImmunityFlags, g_esShieldPlayer[attacker].g_iImmunityFlags))))
 		{
 			vShieldAbility(victim, false);
@@ -559,11 +555,10 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 
 		if (bSurvivor || bSpecial || bCommon)
 		{
-			static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
-			bBulletDamage = (damagetype & DMG_BULLET) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_BULLET);
-			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
-			bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_FIRE);
-			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE);
+			bool bBulletDamage = (damagetype & DMG_BULLET) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_BULLET),
+				bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE),
+				bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_FIRE),
+				bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE);
 			if (bRewarded || bSpecial || bCommon || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
 				g_esShieldPlayer[victim].g_flHealth -= damage;
@@ -588,7 +583,7 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Handled;
 			}
 
-			static float flTankPos[3];
+			float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);
 
 			switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
@@ -636,7 +631,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION2);
@@ -646,7 +641,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iComboAbility == 1 && !g_esShieldPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -654,8 +649,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -786,7 +780,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
-				static char sSet[4][4], sValue[16];
+				char sSet[4][4], sValue[16];
 				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				strcopy(g_esShieldPlayer[admin].g_sShieldColor, sizeof(esShieldPlayer::g_sShieldColor), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
@@ -828,7 +822,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
-				static char sSet[4][4], sValue[16];
+				char sSet[4][4], sValue[16];
 				MT_GetConfigColors(sValue, sizeof(sValue), value);
 				strcopy(g_esShieldAbility[type].g_sShieldColor, sizeof(esShieldAbility::g_sShieldColor), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
@@ -1010,10 +1004,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esShieldCache[tank].g_iHumanMode)
 				{
@@ -1211,7 +1203,7 @@ void vShield(int tank)
 		return;
 	}
 
-	static float flOrigin[3];
+	float flOrigin[3];
 	GetClientAbsOrigin(tank, flOrigin);
 	flOrigin[2] -= 120.0;
 
@@ -1262,8 +1254,7 @@ void vShield(int tank)
 
 void vShieldAbility(int tank, bool shield)
 {
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 
 	switch (shield)
 	{
@@ -1299,7 +1290,7 @@ void vShieldAbility(int tank, bool shield)
 
 						if (g_esShieldCache[tank].g_iShieldMessage == 1)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Shield", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield", LANG_SERVER, sTankName);
@@ -1336,7 +1327,7 @@ void vShieldAbility(int tank, bool shield)
 
 			if (g_esShieldCache[tank].g_iShieldMessage == 1)
 			{
-				static char sTankName[33];
+				char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Shield2", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield2", LANG_SERVER, sTankName);
@@ -1356,8 +1347,7 @@ public void OnShieldPreThinkPost(int tank)
 		return;
 	}
 
-	static int iShield;
-	iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
+	int iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
 	if (iShield == INVALID_ENT_REFERENCE || !bIsValidEntity(iShield))
 	{
 		g_esShieldPlayer[tank].g_bRainbowColor = false;
@@ -1367,9 +1357,8 @@ public void OnShieldPreThinkPost(int tank)
 		return;
 	}
 
-	static bool bHook;
-	bHook = false;
-	static int iColor[4];
+	bool bHook = false;
+	int iColor[4];
 	iColor[0] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank) * 127.5) + 127.5);
 	iColor[1] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5) + 127.5);
 	iColor[2] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5) + 127.5);
@@ -1383,7 +1372,7 @@ public void OnShieldPreThinkPost(int tank)
 		SetEntityRenderColor(iShield, iColor[0], iColor[1], iColor[2], iColor[3]);
 	}
 
-	static int iTempColor[4];
+	int iTempColor[4];
 	MT_GetTankColors(tank, 2, iTempColor[0], iTempColor[1], iTempColor[2], iTempColor[3]);
 	if (iTempColor[0] == -2 && iTempColor[1] == -2 && iTempColor[2] == -2 && g_esShieldCache[tank].g_iShieldGlow == 1)
 	{
@@ -1418,16 +1407,13 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iRock;
-	iRock = EntRefToEntIndex(pack.ReadCell());
+	int iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esShieldCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[iTank].g_iTankType) || (g_esShieldCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esShieldPlayer[iTank].g_iTankType || g_esShieldCache[iTank].g_iShieldAbility == 0 || !g_esShieldPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;
@@ -1438,15 +1424,13 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flVelocity[3];
+	float flVelocity[3];
 	GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 
-	static float flVector;
-	flVector = GetVectorLength(flVelocity);
+	float flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		static int iTypeCount, iTypes[4], iFlag;
-		iTypeCount = 0;
+		int iTypeCount = 0, iTypes[4], iFlag = 0;
 		for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 		{
 			iFlag = (1 << iBit);
@@ -1459,12 +1443,10 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			iTypeCount++;
 		}
 
-		static int iChosen;
-		iChosen = iTypes[GetRandomInt(0, (iTypeCount - 1))];
+		int iChosen = iTypes[GetRandomInt(0, (iTypeCount - 1))];
 		if (iChosen == 2 || iChosen == 4)
 		{
-			static int iThrowable;
-			iThrowable = CreateEntityByName("prop_physics");
+			int iThrowable = CreateEntityByName("prop_physics");
 			if (bIsValidEntity(iThrowable))
 			{
 				switch (iChosen)
@@ -1473,7 +1455,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 					case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
 				}
 
-				static float flPos[3];
+				float flPos[3];
 				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 				RemoveEntity(iRock);
 

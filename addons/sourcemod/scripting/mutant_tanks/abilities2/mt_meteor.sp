@@ -371,10 +371,9 @@ public Action OnMeteorTakeDamage(int victim, int &attacker, int &inflictor, floa
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		static int iTank;
-		iTank = GetClientOfUserId(g_iUserID[inflictor]);
+		int iTank = GetClientOfUserId(g_iUserID[inflictor]);
 		if (MT_IsTankSupported(iTank) && g_esMeteorCache[iTank].g_iMeteorAbility == 1 && g_esMeteorCache[iTank].g_iMeteorMode == 1 && StrEqual(sClassname, "pipe_bomb_projectile") && damagetype == 134217792)
 		{
 			return Plugin_Handled;
@@ -416,7 +415,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_METEOR_SECTION2);
@@ -426,7 +425,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMeteorCache[tank].g_iMeteorAbility == 1 && g_esMeteorCache[tank].g_iComboAbility == 1 && !g_esMeteorPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -434,8 +433,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -551,7 +549,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][7], sValue[14];
+				char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -586,7 +584,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][7], sValue[14];
+				char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -713,10 +711,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esMeteorCache[tank].g_iMeteorAbility == 1 && g_esMeteorCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esMeteorPlayer[tank].g_iCooldown != -1 && g_esMeteorPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esMeteorPlayer[tank].g_iCooldown != -1 && g_esMeteorPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esMeteorCache[tank].g_iHumanMode)
 				{
@@ -817,7 +813,7 @@ void vMeteor(int tank, int pos = -1)
 
 	if (g_esMeteorCache[tank].g_iMeteorMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Meteor", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Meteor", LANG_SERVER, sTankName);
@@ -831,8 +827,7 @@ void vMeteor2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esMeteorCache[tank].g_flMeteorInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esMeteorCache[tank].g_flMeteorInterval;
 	DataPack dpMeteor;
 	CreateDataTimer(flInterval, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMeteor.WriteCell(GetClientUserId(tank));
@@ -854,20 +849,20 @@ void vMeteor3(int tank, int rock, int pos = -1)
 	{
 		case 0:
 		{
-			static float flRockPos[3];
+			float flRockPos[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_GASCAN);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 		}
 		case 1:
 		{
-			static float flRockPos[3];
+			float flRockPos[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 
-			static float flTankPos[3], flSurvivorPos[3], flDamage;
+			float flTankPos[3], flSurvivorPos[3];
 			GetClientAbsOrigin(tank, flTankPos);
-			flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esMeteorCache[tank].g_flMeteorDamage;
+			float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esMeteorCache[tank].g_flMeteorDamage;
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
 				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esMeteorPlayer[tank].g_iTankType, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iImmunityFlags, g_esMeteorPlayer[iSurvivor].g_iImmunityFlags))
@@ -970,16 +965,13 @@ public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iMeteor, iTank;
-	iMeteor = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
+	int iMeteor = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
 	{
 		return Plugin_Stop;
 	}
 
-	static int iPos;
-	iPos = pack.ReadCell();
+	int iPos = pack.ReadCell();
 	vMeteor3(iTank, iMeteor, iPos);
 
 	return Plugin_Continue;
@@ -989,9 +981,7 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esMeteorCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[iTank].g_iTankType) || (g_esMeteorCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esMeteorPlayer[iTank].g_iTankType || !g_esMeteorPlayer[iTank].g_bActivated)
 	{
 		g_esMeteorPlayer[iTank].g_bActivated = false;
@@ -999,11 +989,9 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esMeteorCache[iTank].g_iMeteorDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esMeteorCache[iTank].g_iMeteorDuration,
+		iCurrentTime = GetTime();
 	if (g_esMeteorCache[iTank].g_iMeteorAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esMeteorCache[iTank].g_iHumanAbility == 1 && g_esMeteorCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vMeteorReset2(iTank);
@@ -1016,42 +1004,40 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3], flAngles[3], flMinRadius, flMaxRadius;
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
 	GetVectorAngles(flAngles, flAngles);
 
-	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esMeteorCache[iTank].g_flMeteorRadius[0];
-	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esMeteorCache[iTank].g_flMeteorRadius[1];
-
-	static float flHitpos[3], flDistance;
+	float flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esMeteorCache[iTank].g_flMeteorRadius[0],
+		flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esMeteorCache[iTank].g_flMeteorRadius[1],
+		flHitpos[3];
 	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-	flDistance = GetVectorDistance(flPos, flHitpos);
+	float flDistance = GetVectorDistance(flPos, flHitpos);
 	if (flDistance > 1600.0)
 	{
 		flDistance = 1600.0;
 	}
 
-	static float flVector[3];
+	float flVector[3];
 	MakeVectorFromPoints(flPos, flHitpos, flVector);
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, (flDistance - 40.0));
 	AddVectors(flPos, flVector, flHitpos);
 	if (flDistance > 100.0)
 	{
-		static int iMeteor;
-		iMeteor = CreateEntityByName("tank_rock");
+		int iMeteor = CreateEntityByName("tank_rock");
 		if (bIsValidEntity(iMeteor))
 		{
-			static float flAngles2[3];
+			float flAngles2[3];
 			for (int iIndex = 0; iIndex < sizeof(flAngles2); iIndex++)
 			{
 				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
-			static float flVelocity[3];
+			float flVelocity[3];
 			flVelocity[0] = GetRandomFloat(0.0, 350.0);
 			flVelocity[1] = GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = GetRandomFloat(0.0, 30.0);
@@ -1074,12 +1060,10 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		}
 	}
 
-	static int iMeteor;
-	iMeteor = -1;
+	int iMeteor = -1;
 	while ((iMeteor = FindEntityByClassname(iMeteor, "tank_rock")) != INVALID_ENT_REFERENCE)
 	{
-		static int iTank2;
-		iTank2 = GetEntPropEnt(iMeteor, Prop_Data, "m_hThrower");
+		int iTank2 = GetEntPropEnt(iMeteor, Prop_Data, "m_hThrower");
 		if (iTank == iTank2 && flGetGroundUnits(iMeteor) < 200.0)
 		{
 			vMeteor3(iTank2, iMeteor, iPos);

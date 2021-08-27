@@ -366,7 +366,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LIGHTNING_SECTION2);
@@ -376,7 +376,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iComboAbility == 1 && !g_esLightningPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -384,8 +384,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -619,10 +618,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esLightningCache[tank].g_iHumanMode)
 				{
@@ -723,7 +720,7 @@ void vLightning(int tank, int pos = -1)
 
 	if (g_esLightningCache[tank].g_iLightningMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Lightning", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Lightning", LANG_SERVER, sTankName);
@@ -737,8 +734,7 @@ void vLightning2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLightningCache[tank].g_flLightningInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLightningCache[tank].g_flLightningInterval;
 	DataPack dpLightning;
 	CreateDataTimer(flInterval, tTimerLightning, dpLightning, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpLightning.WriteCell(GetClientUserId(tank));
@@ -795,7 +791,7 @@ void vLightningReset2(int tank)
 
 	if (g_esLightningCache[tank].g_iLightningMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Lightning2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Lightning2", LANG_SERVER, sTankName);
@@ -832,9 +828,7 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLightningPlayer[iTank].g_iTankType || !g_esLightningPlayer[iTank].g_bActivated)
 	{
 		g_esLightningPlayer[iTank].g_bActivated = false;
@@ -842,11 +836,9 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLightningCache[iTank].g_iLightningDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLightningCache[iTank].g_iLightningDuration,
+		iCurrentTime = GetTime();
 	if (g_esLightningCache[iTank].g_iLightningAbility == 0 || bIsAreaNarrow(iTank, g_esLightningCache[iTank].g_flOpenAreasOnly) || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esLightningCache[iTank].g_iHumanAbility == 1 && g_esLightningCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vLightningReset2(iTank);
@@ -859,16 +851,15 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static char sTargetName[64];
-	static float flOrigin[3], flRadius, flRadius2;
+	char sTargetName[64];
+	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	flRadius = GetRandomFloat(100.0, 360.0);
-	flRadius2 = GetRandomFloat(0.0, 360.0);
+	float flRadius = GetRandomFloat(100.0, 360.0),
+		flRadius2 = GetRandomFloat(0.0, 360.0);
 	flOrigin[0] += (flRadius * Cosine(DegToRad(flRadius2)));
 	flOrigin[1] += (flRadius * Sine(DegToRad(flRadius2)));
 
-	static int iTarget;
-	iTarget = CreateEntityByName("info_particle_target");
+	int iTarget = CreateEntityByName("info_particle_target");
 	if (bIsValidEntity(iTarget))
 	{
 		Format(sTargetName, sizeof(sTargetName), "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
@@ -881,8 +872,8 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 		AcceptEntityInput(iTarget, "FireUser2");
 	}
 
-	static float flSurvivorPos[3], flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
+	float flSurvivorPos[3],
+		flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esLightningPlayer[iTank].g_iTankType, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLightningPlayer[iSurvivor].g_iImmunityFlags))
@@ -898,8 +889,7 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 
 	flOrigin[2] += 1800.0;
 
-	static int iLightning;
-	iLightning = CreateEntityByName("info_particle_system");
+	int iLightning = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iLightning))
 	{
 		DispatchKeyValue(iLightning, "effect_name", PARTICLE_LIGHTNING);

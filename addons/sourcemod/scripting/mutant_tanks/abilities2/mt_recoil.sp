@@ -337,7 +337,7 @@ public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, floa
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esRecoilCache[attacker].g_iRecoilHitMode == 0 || g_esRecoilCache[attacker].g_iRecoilHitMode == 1) && bIsSurvivor(victim) && g_esRecoilCache[attacker].g_iComboAbility == 0)
 		{
@@ -400,7 +400,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_RECOIL_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_RECOIL_SECTION2);
@@ -408,14 +408,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_RECOIL_SECTION4);
 	if (g_esRecoilCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_RECOIL_SECTION, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION2, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION3, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -439,8 +438,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -664,12 +662,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "weapon_fire"))
 	{
-		static int iSurvivorId, iSurvivor;
-		iSurvivorId = event.GetInt("userid");
-		iSurvivor = GetClientOfUserId(iSurvivorId);
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
 		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_INFAMMO) && g_esRecoilPlayer[iSurvivor].g_bAffected)
 		{
-			static float flRecoil[3];
+			float flRecoil[3];
 			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
 			flRecoil[1] = GetRandomFloat(-25.0, 25.0);
 			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
@@ -712,8 +708,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esRecoilCache[tank].g_iRecoilAbility == 1 && g_esRecoilCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esRecoilPlayer[tank].g_iCooldown == -1 || g_esRecoilPlayer[tank].g_iCooldown < iTime)
 				{
@@ -752,12 +747,11 @@ void vRecoilAbility(int tank, float random, int pos = -1)
 		g_esRecoilPlayer[tank].g_bFailed = false;
 		g_esRecoilPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRecoilCache[tank].g_flRecoilRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRecoilCache[tank].g_flRecoilRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRecoilCache[tank].g_flRecoilRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRecoilCache[tank].g_flRecoilRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esRecoilPlayer[tank].g_iTankType, g_esRecoilAbility[g_esRecoilPlayer[tank].g_iTankType].g_iImmunityFlags, g_esRecoilPlayer[iSurvivor].g_iImmunityFlags))
@@ -797,8 +791,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRecoilPlayer[tank].g_iAmmoCount < g_esRecoilCache[tank].g_iHumanAmmo && g_esRecoilCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esRecoilPlayer[survivor].g_bAffected)
 			{
 				g_esRecoilPlayer[survivor].g_bAffected = true;
@@ -817,8 +810,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 					}
 				}
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esRecoilCache[tank].g_flRecoilDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esRecoilCache[tank].g_flRecoilDuration;
 				DataPack dpStopRecoil;
 				CreateDataTimer(flDuration, tTimerStopRecoil, dpStopRecoil, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopRecoil.WriteCell(GetClientUserId(survivor));
@@ -829,7 +821,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 
 				if (g_esRecoilCache[tank].g_iRecoilMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Recoil", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Recoil", LANG_SERVER, sTankName, survivor);

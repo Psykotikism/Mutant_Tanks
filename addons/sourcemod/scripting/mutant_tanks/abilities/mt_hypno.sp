@@ -357,7 +357,7 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 
 		switch (bIsValidEntity(inflictor))
 		{
@@ -389,8 +389,7 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 
 			if (!bIsPlayerIncapacitated(victim) && g_esHypnoPlayer[attacker].g_bAffected)
 			{
-				static bool bChanged;
-				bChanged = false;
+				bool bChanged = false;
 				if (g_esHypnoCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 				{
 					bChanged = true;
@@ -416,7 +415,7 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 					bChanged = true;
 					damage /= g_esHypnoCache[victim].g_flHypnoMeleeDivisor;
 
-					static float flTankPos[3];
+					float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
 
 					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
@@ -433,11 +432,10 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 						damage = 1.0;
 					}
 
-					static int iTarget;
-					iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
+					int iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
 					if (iTarget > 0)
 					{
-						static char sDamageType[32];
+						char sDamageType[32];
 						IntToString(damagetype, sDamageType, sizeof(sDamageType));
 						vDamagePlayer(iTarget, victim, damage, sDamageType);
 						EmitSoundToAll(SOUND_METAL, victim);
@@ -484,7 +482,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION2);
@@ -492,14 +490,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION4);
 	if (g_esHypnoCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HYPNO_SECTION, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION2, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION3, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -523,8 +520,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -812,8 +808,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime)
 				{
@@ -852,12 +847,11 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 		g_esHypnoPlayer[tank].g_bFailed = false;
 		g_esHypnoPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[iSurvivor].g_iImmunityFlags))
@@ -897,8 +891,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esHypnoPlayer[survivor].g_bAffected)
 			{
 				g_esHypnoPlayer[survivor].g_bAffected = true;
@@ -917,8 +910,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
 				DataPack dpStopHypno;
 				CreateDataTimer(flDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopHypno.WriteCell(GetClientUserId(survivor));
@@ -929,7 +921,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esHypnoCache[tank].g_iHypnoMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);

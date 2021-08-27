@@ -327,8 +327,7 @@ public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float
 {
 	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
-		static int iTank;
-		iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+		int iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
 		if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esWitchCache[iTank].g_iWitchAbility == 1)
 		{
 			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esWitchPlayer[iTank].g_iTankType, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esWitchPlayer[victim].g_iImmunityFlags))
@@ -336,8 +335,7 @@ public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float
 				return Plugin_Handled;
 			}
 
-			static float flDamage;
-			flDamage = (g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition) : g_esWitchCache[iTank].g_flWitchDamage;
+			float flDamage = (g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition) : g_esWitchCache[iTank].g_flWitchDamage;
 			damage = MT_GetScaledDamage(flDamage);
 
 			return Plugin_Changed;
@@ -383,7 +381,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION2);
@@ -393,7 +391,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iComboAbility == 1)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -401,8 +399,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -649,8 +646,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 				{
@@ -720,12 +716,10 @@ void vWitchReset()
 
 void vWitch(int tank, int pos = -1)
 {
-	static bool bConverted;
-	bConverted = false;
-	static float flTankPos[3], flInfectedPos[3], flInfectedAngles[3], flRange;
-	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWitchCache[tank].g_flWitchRange;
-	static int iInfected;
-	iInfected = -1;
+	bool bConverted = false;
+	float flTankPos[3], flInfectedPos[3], flInfectedAngles[3],
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWitchCache[tank].g_flWitchRange;
+	int iInfected = -1;
 	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		if (iGetWitchCount() < g_esWitchCache[tank].g_iWitchAmount)
@@ -745,8 +739,7 @@ void vWitch(int tank, int pos = -1)
 
 	if (bConverted)
 	{
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime))
 		{
 			g_esWitchPlayer[tank].g_iAmmoCount++;
@@ -762,7 +755,7 @@ void vWitch(int tank, int pos = -1)
 
 		if (g_esWitchCache[tank].g_iWitchMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Witch", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Witch", LANG_SERVER, sTankName);
@@ -777,8 +770,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 		return;
 	}
 
-	static int iWitch;
-	iWitch = CreateEntityByName("witch");
+	int iWitch = CreateEntityByName("witch");
 	if (bIsValidEntity(iWitch))
 	{
 		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
@@ -826,7 +818,7 @@ void vWitchRange(int tank)
 			return;
 		}
 
-		static float flTankPos[3], flTankAngles[3];
+		float flTankPos[3], flTankAngles[3];
 		GetClientAbsOrigin(tank, flTankPos);
 		GetClientAbsAngles(tank, flTankAngles);
 		vWitch2(tank, flTankPos, flTankAngles);

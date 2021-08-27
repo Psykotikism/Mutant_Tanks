@@ -339,8 +339,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esGodPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esGodAbility[g_esGodPlayer[client].g_iTankType].g_iAccessFlags, g_esGodPlayer[client].g_iAccessFlags)) && g_esGodCache[client].g_iHumanAbility == 1 && (g_esGodPlayer[client].g_iCooldown == -1 || g_esGodPlayer[client].g_iCooldown < GetTime()))
@@ -361,8 +360,7 @@ public Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esGodPlayer[victim].g_bActivated)
 		{
-			static bool bSurvivor;
-			bSurvivor = bIsSurvivor(attacker);
+			bool bSurvivor = bIsSurvivor(attacker);
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esGodAbility[g_esGodPlayer[victim].g_iTankType].g_iAccessFlags, g_esGodPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esGodPlayer[victim].g_iTankType, g_esGodAbility[g_esGodPlayer[victim].g_iTankType].g_iImmunityFlags, g_esGodPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
@@ -377,7 +375,7 @@ public Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &
 
 			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 			{
-				static float flTankPos[3];
+				float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
 
 				switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
@@ -426,7 +424,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_GOD_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_GOD_SECTION2);
@@ -436,7 +434,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esGodCache[tank].g_iGodAbility == 1 && g_esGodCache[tank].g_iComboAbility == 1 && !g_esGodPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -444,8 +442,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -697,10 +694,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esGodCache[tank].g_iGodAbility == 1 && g_esGodCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esGodCache[tank].g_iHumanMode)
 				{
@@ -786,8 +781,7 @@ void vGodCopyStats2(int oldTank, int newTank)
 
 void vGod(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGodCache[tank].g_iGodDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGodCache[tank].g_iGodDuration;
 	g_esGodPlayer[tank].g_bActivated = true;
 	g_esGodPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -802,7 +796,7 @@ void vGod(int tank, int pos = -1)
 
 	if (g_esGodCache[tank].g_iGodMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "God", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "God", LANG_SERVER, sTankName);

@@ -356,7 +356,7 @@ public Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esFireCache[attacker].g_iFireHitMode == 0 || g_esFireCache[attacker].g_iFireHitMode == 1) && bIsSurvivor(victim) && g_esFireCache[attacker].g_iComboAbility == 0)
 		{
@@ -419,7 +419,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FIRE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FIRE_SECTION2);
@@ -427,14 +427,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_FIRE_SECTION4);
 	if (g_esFireCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_FIRE_SECTION, false) || StrEqual(sSubset[iPos], MT_FIRE_SECTION2, false) || StrEqual(sSubset[iPos], MT_FIRE_SECTION3, false) || StrEqual(sSubset[iPos], MT_FIRE_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -458,8 +457,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -741,8 +739,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFireCache[tank].g_iFireAbility == 1 && g_esFireCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esFirePlayer[tank].g_iCooldown != -1 && g_esFirePlayer[tank].g_iCooldown > iTime)
 				{
@@ -769,7 +766,7 @@ public void MT_OnChangeType(int tank)
 			return;
 		}
 
-		static float flPos[3];
+		float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
 	}
@@ -819,12 +816,11 @@ void vFireAbility(int tank, float random, int pos = -1)
 		g_esFirePlayer[tank].g_bFailed = false;
 		g_esFirePlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esFireCache[tank].g_flFireRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esFireCache[tank].g_flFireRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esFireCache[tank].g_flFireRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esFireCache[tank].g_flFireRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFirePlayer[tank].g_iTankType, g_esFireAbility[g_esFirePlayer[tank].g_iTankType].g_iImmunityFlags, g_esFirePlayer[iSurvivor].g_iImmunityFlags))
@@ -864,8 +860,7 @@ void vFireHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFirePlayer[tank].g_iAmmoCount < g_esFireCache[tank].g_iHumanAmmo && g_esFireCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFireCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esFirePlayer[tank].g_iCooldown == -1 || g_esFirePlayer[tank].g_iCooldown < iTime))
@@ -881,7 +876,7 @@ void vFireHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				static float flPos[3];
+				float flPos[3];
 				GetClientAbsOrigin(survivor, flPos);
 				vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
 				vEffect(survivor, tank, g_esFireCache[tank].g_iFireEffect, flags);
@@ -894,7 +889,7 @@ void vFireHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esFireCache[tank].g_iFireMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Fire", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire", LANG_SERVER, sTankName, survivor);
@@ -921,8 +916,7 @@ void vFireHit(int survivor, int tank, float random, float chance, int enabled, i
 
 void vFireRange(int tank, int value, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esFireCache[tank].g_flFireDeathChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esFireCache[tank].g_flFireDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esFireCache[tank].g_iFireDeath == 1 && random <= flChance)
 	{
 		if (g_esFireCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esFireCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFirePlayer[tank].g_iTankType) || (g_esFireCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFireCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFireAbility[g_esFirePlayer[tank].g_iTankType].g_iAccessFlags, g_esFirePlayer[tank].g_iAccessFlags)) || g_esFireCache[tank].g_iHumanAbility == 0)))
@@ -930,7 +924,7 @@ void vFireRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		static float flPos[3];
+		float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
 	}
@@ -938,17 +932,16 @@ void vFireRange(int tank, int value, float random, int pos = -1)
 
 void vFireRockBreak2(int tank, int rock, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esFireCache[tank].g_flFireRockChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esFireCache[tank].g_flFireRockChance;
 	if (random <= flChance)
 	{
-		static float flPos[3];
+		float flPos[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
 
 		if (g_esFireCache[tank].g_iFireMessage & MT_MESSAGE_SPECIAL)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Fire2", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire2", LANG_SERVER, sTankName);

@@ -345,7 +345,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_REGEN_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_REGEN_SECTION2);
@@ -355,7 +355,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iComboAbility == 1 && !g_esRegenPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -363,8 +363,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -599,10 +598,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esRegenCache[tank].g_iHumanMode)
 				{
@@ -703,7 +700,7 @@ void vRegen(int tank, int pos = -1)
 
 	if (g_esRegenCache[tank].g_iRegenMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Regen", sTankName, g_esRegenCache[tank].g_flRegenInterval);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Regen", LANG_SERVER, sTankName, g_esRegenCache[tank].g_flRegenInterval);
@@ -717,8 +714,7 @@ void vRegen2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esRegenCache[tank].g_flRegenInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esRegenCache[tank].g_flRegenInterval;
 	DataPack dpRegen;
 	CreateDataTimer(flInterval, tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRegen.WriteCell(GetClientUserId(tank));
@@ -774,7 +770,7 @@ void vRegenReset2(int tank)
 
 	if (g_esRegenCache[tank].g_iRegenMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Regen2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Regen2", LANG_SERVER, sTankName);
@@ -811,9 +807,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esRegenCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[iTank].g_iTankType) || (g_esRegenCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRegenPlayer[iTank].g_iTankType || g_esRegenCache[iTank].g_iRegenAbility == 0 || !g_esRegenPlayer[iTank].g_bActivated)
 	{
 		vRegenReset2(iTank);
@@ -821,9 +815,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esRegenCache[iTank].g_iHumanAbility == 1 && g_esRegenCache[iTank].g_iHumanMode == 0 && (iTime + g_esRegenCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esRegenPlayer[iTank].g_iCooldown == -1 || g_esRegenPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vRegenReset2(iTank);
@@ -832,16 +824,15 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iHealth, iExtraHealth, iMaxHealth, iLeftover, iNewHealth, iNewHealth2, iRealHealth, iFinalHealth, iTotalHealth;
-	iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-	iExtraHealth = (iHealth + g_esRegenCache[iTank].g_iRegenHealth);
-	iMaxHealth = MT_TankMaxHealth(iTank, 1);
-	iLeftover = (iExtraHealth > MT_MAXHEALTH) ? (iExtraHealth - MT_MAXHEALTH) : iExtraHealth;
-	iNewHealth = (iExtraHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealth;
-	iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth;
-	iRealHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2;
-	iFinalHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1 && iRealHealth >= g_esRegenCache[iTank].g_iRegenLimit) ? g_esRegenCache[iTank].g_iRegenLimit : iRealHealth;
-	iTotalHealth = (iExtraHealth > MT_MAXHEALTH) ? iLeftover : g_esRegenCache[iTank].g_iRegenHealth;
+	int iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth"),
+		iExtraHealth = (iHealth + g_esRegenCache[iTank].g_iRegenHealth),
+		iMaxHealth = MT_TankMaxHealth(iTank, 1),
+		iLeftover = (iExtraHealth > MT_MAXHEALTH) ? (iExtraHealth - MT_MAXHEALTH) : iExtraHealth,
+		iNewHealth = (iExtraHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealth,
+		iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth,
+		iRealHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2,
+		iFinalHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1 && iRealHealth >= g_esRegenCache[iTank].g_iRegenLimit) ? g_esRegenCache[iTank].g_iRegenLimit : iRealHealth,
+		iTotalHealth = (iExtraHealth > MT_MAXHEALTH) ? iLeftover : g_esRegenCache[iTank].g_iRegenHealth;
 	MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 

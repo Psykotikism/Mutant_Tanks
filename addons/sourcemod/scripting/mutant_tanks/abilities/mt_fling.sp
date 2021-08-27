@@ -408,7 +408,7 @@ public Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float
 {
 	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esFlingCache[attacker].g_iFlingHitMode == 0 || g_esFlingCache[attacker].g_iFlingHitMode == 1) && bIsSurvivor(victim) && g_esFlingCache[attacker].g_iComboAbility == 0)
 		{
@@ -471,7 +471,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FLING_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FLING_SECTION2);
@@ -479,14 +479,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_FLING_SECTION4);
 	if (g_esFlingCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_FLING_SECTION, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION2, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION3, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -510,8 +509,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -786,8 +784,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFlingCache[tank].g_iFlingAbility == 1 && g_esFlingCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esFlingPlayer[tank].g_iCooldown != -1 && g_esFlingPlayer[tank].g_iCooldown > iTime)
 				{
@@ -825,7 +822,7 @@ void vFlingCopyStats2(int oldTank, int newTank)
 
 void vFling(int survivor, int tank)
 {
-	static float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
+	float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
 	GetClientAbsOrigin(survivor, flSurvivorPos);
 	GetClientAbsOrigin(tank, flTankPos);
 
@@ -865,12 +862,11 @@ void vFlingAbility(int tank, float random, int pos = -1)
 		g_esFlingPlayer[tank].g_bFailed = false;
 		g_esFlingPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esFlingCache[tank].g_flFlingRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esFlingCache[tank].g_flFlingRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esFlingCache[tank].g_flFlingRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esFlingCache[tank].g_flFlingRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))
@@ -910,8 +906,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlingPlayer[tank].g_iAmmoCount < g_esFlingCache[tank].g_iHumanAmmo && g_esFlingCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlingCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esFlingPlayer[tank].g_iCooldown == -1 || g_esFlingPlayer[tank].g_iCooldown < iTime))
@@ -930,7 +925,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 				vFling(survivor, tank);
 				vEffect(survivor, tank, g_esFlingCache[tank].g_iFlingEffect, flags);
 
-				static char sTankName[33];
+				char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				if (g_esFlingCache[tank].g_iFlingMessage & messages)
 				{
@@ -959,8 +954,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 
 void vFlingRange(int tank, int value, float random, int pos = -1)
 {
-	static float flChance;
-	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esFlingCache[tank].g_flFlingDeathChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esFlingCache[tank].g_flFlingDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esFlingCache[tank].g_iFlingDeath == 1 && random <= flChance)
 	{
 		if (!g_bSecondGame || g_esFlingCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
@@ -968,11 +962,10 @@ void vFlingRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		static float flTankPos[3];
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance, flRange;
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esFlingCache[tank].g_flFlingDeathRange;
+		float flSurvivorPos[3], flDistance, flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esFlingCache[tank].g_flFlingDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))

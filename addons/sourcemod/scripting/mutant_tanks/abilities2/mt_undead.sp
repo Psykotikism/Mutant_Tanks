@@ -326,14 +326,12 @@ public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, floa
 			{
 				g_esUndeadPlayer[victim].g_bActivated = false;
 
-				static int iMaxHealth, iNewHealth;
-				iMaxHealth = MT_TankMaxHealth(victim, 1);
-				iNewHealth = MT_TankMaxHealth(victim, 2);
+				int iMaxHealth = MT_TankMaxHealth(victim, 1),
+					iNewHealth = MT_TankMaxHealth(victim, 2);
 				MT_TankMaxHealth(victim, 3, (iMaxHealth + iNewHealth));
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 				if (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1 && (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown < iTime))
 				{
 					g_esUndeadPlayer[victim].g_iCooldown = (g_esUndeadPlayer[victim].g_iCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? (iTime + g_esUndeadCache[victim].g_iHumanCooldown) : -1;
@@ -345,7 +343,7 @@ public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, floa
 
 				if (g_esUndeadCache[victim].g_iUndeadMessage == 1)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(victim, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Undead2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Undead2", LANG_SERVER, sTankName);
@@ -391,7 +389,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_UNDEAD_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_UNDEAD_SECTION2);
@@ -401,7 +399,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esUndeadCache[tank].g_iUndeadAbility == 1 && g_esUndeadCache[tank].g_iComboAbility == 1 && !g_esUndeadPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -409,8 +407,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -619,10 +616,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esUndeadCache[tank].g_iUndeadAbility == 1 && g_esUndeadCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > iTime;
 				if (!g_esUndeadPlayer[tank].g_bActivated && !bRecharging)
 				{
 					vUndeadAbility(tank);
@@ -692,7 +687,7 @@ void vUndead(int tank)
 
 		if (g_esUndeadCache[tank].g_iUndeadMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Undead", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Undead", LANG_SERVER, sTankName);

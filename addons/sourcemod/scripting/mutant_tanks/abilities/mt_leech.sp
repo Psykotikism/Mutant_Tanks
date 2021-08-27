@@ -340,7 +340,7 @@ public Action OnLeechTakeDamage(int victim, int &attacker, int &inflictor, float
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esLeechCache[attacker].g_iLeechHitMode == 0 || g_esLeechCache[attacker].g_iLeechHitMode == 1) && bIsSurvivor(victim) && g_esLeechCache[attacker].g_iComboAbility == 0)
 		{
@@ -403,7 +403,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION2);
@@ -411,14 +411,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_LEECH_SECTION4);
 	if (g_esLeechCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_LEECH_SECTION, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION2, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION3, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -442,8 +441,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -706,8 +704,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esLeechCache[tank].g_iLeechAbility == 1 && g_esLeechCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime)
 				{
@@ -746,12 +743,11 @@ void vLeechAbility(int tank, float random, int pos = -1)
 		g_esLeechPlayer[tank].g_bFailed = false;
 		g_esLeechPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLeechCache[tank].g_flLeechRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLeechCache[tank].g_flLeechRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLeechCache[tank].g_flLeechRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLeechCache[tank].g_flLeechRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esLeechPlayer[tank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[iSurvivor].g_iImmunityFlags))
@@ -791,8 +787,7 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLeechPlayer[tank].g_iAmmoCount < g_esLeechCache[tank].g_iHumanAmmo && g_esLeechCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esLeechPlayer[survivor].g_bAffected)
 			{
 				g_esLeechPlayer[survivor].g_bAffected = true;
@@ -811,8 +806,7 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLeechCache[tank].g_flLeechInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLeechCache[tank].g_flLeechInterval;
 				DataPack dpLeech;
 				CreateDataTimer(flInterval, tTimerLeech, dpLeech, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLeech.WriteCell(GetClientUserId(survivor));
@@ -827,7 +821,7 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esLeechCache[tank].g_iLeechMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Leech", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Leech", LANG_SERVER, sTankName, survivor);
@@ -955,8 +949,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esLeechPlayer[iSurvivor].g_bAffected = false;
@@ -965,10 +958,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esLeechCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[iTank].g_iTankType) || (g_esLeechCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLeechPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLeechPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLeechPlayer[iTank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[iSurvivor].g_iImmunityFlags) || !g_esLeechPlayer[iSurvivor].g_bAffected)
 	{
 		vLeechReset2(iSurvivor, iTank, iMessage);
@@ -976,11 +966,9 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iLeechEnabled, iPos, iDuration, iTime;
-	iLeechEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLeechCache[iTank].g_iLeechDuration;
-	iTime = pack.ReadCell();
+	int iLeechEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLeechCache[iTank].g_iLeechDuration,
+		iTime = pack.ReadCell();
 	if (iLeechEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vLeechReset2(iSurvivor, iTank, iMessage);
@@ -988,13 +976,12 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTankHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-	iTankHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-	iMaxHealth = MT_TankMaxHealth(iTank, 1);
-	iNewHealth = (iTankHealth + 1);
-	iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
-	iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-	iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : 1;
+	int iTankHealth = GetEntProp(iTank, Prop_Data, "m_iHealth"),
+		iMaxHealth = MT_TankMaxHealth(iTank, 1),
+		iNewHealth = (iTankHealth + 1),
+		iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth,
+		iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth,
+		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : 1;
 	MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 	vDamagePlayer(iSurvivor, iTank, 1.0);

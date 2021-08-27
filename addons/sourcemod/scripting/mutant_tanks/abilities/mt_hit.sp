@@ -271,12 +271,8 @@ public Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &d
 				return Plugin_Continue;
 			}
 
+			int iBit = (hitgroup - 1), iFlag = (1 << iBit);
 			damage *= g_esHitCache[victim].g_flHitDamageMultiplier;
-
-			static int iBit, iFlag;
-			iBit = (hitgroup - 1);
-			iFlag = (1 << iBit);
-
 			return !!(g_esHitCache[victim].g_iHitGroup & iFlag) ? Plugin_Changed : Plugin_Handled;
 		}
 	}

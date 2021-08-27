@@ -377,7 +377,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPLATTER_SECTION2);
@@ -387,7 +387,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iComboAbility == 1 && !g_esSplatterPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -395,8 +395,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -627,10 +626,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esSplatterCache[tank].g_iHumanMode)
 				{
@@ -769,7 +766,7 @@ void vSplatter(int tank, int pos = -1)
 
 	if (g_esSplatterCache[tank].g_iSplatterMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splatter", LANG_SERVER, sTankName);
@@ -783,8 +780,7 @@ void vSplatter2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplatterCache[tank].g_flSplatterInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplatterCache[tank].g_flSplatterInterval;
 	DataPack dpSplatter;
 	CreateDataTimer(flInterval, tTimerSplatter, dpSplatter, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSplatter.WriteCell(GetClientUserId(tank));
@@ -825,7 +821,7 @@ void vSplatterRange(int tank, bool idle)
 			return;
 		}
 
-		static char sParticle[40];
+		char sParticle[40];
 		FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
 		vAttachParticle(tank, sParticle, 10.0, .teleport = false);
 	}
@@ -851,9 +847,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplatterCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[iTank].g_iTankType) || (g_esSplatterCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplatterAbility[g_esSplatterPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplatterPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplatterPlayer[iTank].g_iTankType || g_esSplatterCache[iTank].g_iSplatterAbility == 0 || !g_esSplatterPlayer[iTank].g_bActivated)
 	{
 		g_esSplatterPlayer[iTank].g_bActivated = false;
@@ -861,9 +855,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[iTank].g_iHumanAbility == 1 && g_esSplatterCache[iTank].g_iHumanMode == 0 && (iTime + g_esSplatterCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplatterPlayer[iTank].g_iCooldown == -1 || g_esSplatterPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplatterReset2(iTank);
@@ -871,13 +863,13 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static char sParticle[40];
+	char sParticle[40];
 	FormatEx(sParticle, sizeof(sParticle), "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof(g_sParticles) - 1))]);
 	vAttachParticle(iTank, sParticle, 10.0, .teleport = false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splatter2", LANG_SERVER, sTankName);

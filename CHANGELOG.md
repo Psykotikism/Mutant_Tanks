@@ -4,6 +4,9 @@
 
 ### Bug Fixes
 
+#### General
+- Fixed Tanks taking damage from their own rocks.
+
 #### Core Plugin
 - Fixed error regarding functions that are not detoured. (Thanks to `KasperH`/`Ladis` for testing and reporting!)
 
@@ -11,6 +14,9 @@
 - Omni: Fixed settings not caching properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
+
+#### General
+- Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
 
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
@@ -978,7 +984,7 @@
 - Fixed Tanks in ghost or stasis mode having props and particle effects.
 - Fixed the log messages causing errors for some server messages.
 - Fixed the Tank's primary attack being blocked by the friendly-fire check.
-- Fixed some cases where Tanks don't have props in thirdperson.
+- Fixed some cases where Tanks do not have props in thirdperson.
 - Fixed some cases where props appear even when Tanks are in firstperson.
 - Fixed the blur effect prop not deleting itself. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 - Fixed the blur effect prop not using the Tank's model.

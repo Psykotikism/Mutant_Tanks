@@ -360,7 +360,7 @@ public Action OnElectricTakeDamage(int victim, int &attacker, int &inflictor, fl
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esElectricCache[attacker].g_iElectricHitMode == 0 || g_esElectricCache[attacker].g_iElectricHitMode == 1) && bIsSurvivor(victim) && g_esElectricCache[attacker].g_iComboAbility == 0)
 		{
@@ -423,7 +423,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ELECTRIC_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ELECTRIC_SECTION2);
@@ -431,14 +431,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ELECTRIC_SECTION4);
 	if (g_esElectricCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -462,8 +461,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -732,8 +730,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esElectricCache[tank].g_iElectricAbility == 1 && g_esElectricCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime)
 				{
@@ -781,12 +778,11 @@ void vElectricAbility(int tank, float random, int pos = -1)
 		g_esElectricPlayer[tank].g_bFailed = false;
 		g_esElectricPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esElectricCache[tank].g_flElectricRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esElectricCache[tank].g_flElectricRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esElectricCache[tank].g_flElectricRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esElectricCache[tank].g_flElectricRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esElectricPlayer[tank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags))
@@ -826,8 +822,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esElectricPlayer[tank].g_iAmmoCount < g_esElectricCache[tank].g_iHumanAmmo && g_esElectricCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esElectricPlayer[survivor].g_bAffected)
 			{
 				g_esElectricPlayer[survivor].g_bAffected = true;
@@ -846,8 +841,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esElectricCache[tank].g_flElectricInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esElectricCache[tank].g_flElectricInterval;
 				DataPack dpElectric;
 				CreateDataTimer(flInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpElectric.WriteCell(GetClientUserId(survivor));
@@ -863,7 +857,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 
 				if (g_esElectricCache[tank].g_iElectricMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Electric", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Electric", LANG_SERVER, sTankName, survivor);
@@ -1002,8 +996,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esElectricPlayer[iSurvivor].g_bAffected = false;
@@ -1012,10 +1005,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esElectricCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[iTank].g_iTankType) || (g_esElectricCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esElectricPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esElectricPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esElectricPlayer[iTank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags) || !g_esElectricPlayer[iSurvivor].g_bAffected)
 	{
 		vElectricReset2(iSurvivor, iTank, iMessage);
@@ -1023,11 +1013,9 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iElectricEnabled, iPos, iDuration, iTime;
-	iElectricEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esElectricCache[iTank].g_iElectricDuration;
-	iTime = pack.ReadCell();
+	int iElectricEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esElectricCache[iTank].g_iElectricDuration,
+		iTime = pack.ReadCell();
 	if (iElectricEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vElectricReset2(iSurvivor, iTank, iMessage);
@@ -1035,8 +1023,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(g_sElectricSounds[GetRandomInt(0, (sizeof(g_sElectricSounds) - 1))], iSurvivor);

@@ -279,7 +279,7 @@ public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			static char sClassname[32];
+			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
@@ -447,13 +447,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 void vXiphos(int attacker, int victim, float damage, bool tank)
 {
-	static int iTank, iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-	iTank = tank ? attacker : victim;
-	iDamage = (damage < 1.0) ? 1 : RoundToNearest(damage);
-	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
-	iMaxHealth = tank ? MT_MAXHEALTH : g_esXiphosCache[iTank].g_iXiphosMaxHealth;
+	int iTank = tank ? attacker : victim,
+		iDamage = (damage < 1.0) ? 1 : RoundToNearest(damage),
+		iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth"),
+		iMaxHealth = tank ? MT_MAXHEALTH : g_esXiphosCache[iTank].g_iXiphosMaxHealth,
+		iNewHealth = (iHealth + iDamage), iLeftover = 0, iFinalHealth = 0, iTotalHealth = 0;
 	iMaxHealth = (!tank && g_esXiphosCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
-	iNewHealth = (iHealth + iDamage);
 	iLeftover = (iNewHealth > iMaxHealth) ? (iNewHealth - iMaxHealth) : iNewHealth;
 	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
 	iTotalHealth = (iNewHealth > iMaxHealth) ? iLeftover : iDamage;
@@ -464,11 +463,10 @@ void vXiphos(int attacker, int victim, float damage, bool tank)
 		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iTotalHealth));
 	}
 
-	static int iFlag;
-	iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
+	int iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
 	if (g_esXiphosCache[iTank].g_iXiphosMessage & iFlag)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 
 		switch (tank)

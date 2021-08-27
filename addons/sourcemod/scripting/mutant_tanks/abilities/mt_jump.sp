@@ -369,7 +369,7 @@ public Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float 
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
+		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esJumpCache[attacker].g_iJumpHitMode == 0 || g_esJumpCache[attacker].g_iJumpHitMode == 1) && bIsSurvivor(victim) && g_esJumpCache[attacker].g_iComboAbility == 0)
 		{
@@ -432,7 +432,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_JUMP_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_JUMP_SECTION2);
@@ -440,14 +440,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_JUMP_SECTION4);
 	if (g_esJumpCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
+		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_JUMP_SECTION, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION2, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION3, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -485,8 +484,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -771,14 +769,12 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (button & MT_MAIN_KEY)
 		{
 			if ((g_esJumpCache[tank].g_iJumpAbility == 2 || g_esJumpCache[tank].g_iJumpAbility == 3) && g_esJumpCache[tank].g_iHumanAbility == 1)
 			{
-				static bool bRecharging;
-				bRecharging = g_esJumpPlayer[tank].g_iCooldown != -1 && g_esJumpPlayer[tank].g_iCooldown > iTime;
+				bool bRecharging = g_esJumpPlayer[tank].g_iCooldown != -1 && g_esJumpPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esJumpCache[tank].g_iHumanMode)
 				{
@@ -884,7 +880,7 @@ void vJump(int survivor, int tank)
 		return;
 	}
 
-	static float flVelocity[3];
+	float flVelocity[3];
 	GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += g_esJumpCache[tank].g_flJumpHeight;
 
@@ -898,16 +894,13 @@ void vJump2(int tank, int pos = -1)
 		return;
 	}
 
-	static int iTankId, iTime;
-	iTankId = GetClientUserId(tank);
-	iTime = GetTime();
+	int iTankId = GetClientUserId(tank), iTime = GetTime();
 
 	switch (g_esJumpCache[tank].g_iJumpMode)
 	{
 		case 0:
 		{
-			static float flInterval;
-			flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esJumpCache[tank].g_flJumpInterval;
+			float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esJumpCache[tank].g_flJumpInterval;
 			DataPack dpJump;
 			CreateDataTimer(flInterval, tTimerJump, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpJump.WriteCell(iTankId);
@@ -945,14 +938,13 @@ void vJumpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esJumpPlayer[tank].g_bFailed = false;
 					g_esJumpPlayer[tank].g_bNoAmmo = false;
 
-					static float flTankPos[3];
+					float flTankPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
 
-					static float flSurvivorPos[3], flRange, flChance;
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esJumpCache[tank].g_flJumpRange;
-					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esJumpCache[tank].g_flJumpRangeChance;
-					static int iSurvivorCount;
-					iSurvivorCount = 0;
+					float flSurvivorPos[3],
+						flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esJumpCache[tank].g_flJumpRange,
+						flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esJumpCache[tank].g_flJumpRangeChance;
+					int iSurvivorCount = 0;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esJumpPlayer[tank].g_iTankType, g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esJumpPlayer[iSurvivor].g_iImmunityFlags))
@@ -1000,7 +992,7 @@ void vJumpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esJumpCache[tank].g_iJumpMessage & MT_MESSAGE_SPECIAL)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Jump3", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Jump3", LANG_SERVER, sTankName);
@@ -1026,8 +1018,7 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esJumpPlayer[tank].g_iAmmoCount2 < g_esJumpCache[tank].g_iHumanAmmo && g_esJumpCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esJumpPlayer[survivor].g_bAffected)
 			{
 				g_esJumpPlayer[survivor].g_bAffected = true;
@@ -1060,7 +1051,7 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esJumpCache[tank].g_iJumpMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Jump", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Jump", LANG_SERVER, sTankName, survivor);
@@ -1146,10 +1137,10 @@ void vJumpReset4(int tank)
 
 float flGetNearestSurvivor(int tank)
 {
-	static float flDistance;
+	float flDistance;
 	if (bIsTank(tank))
 	{
-		static float flTankPos[3], flSurvivorPos[3];
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -1235,9 +1226,7 @@ public Action tTimerJump(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esJumpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esJumpPlayer[iTank].g_iTankType) || (g_esJumpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esJumpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esJumpPlayer[iTank].g_iTankType || (g_esJumpCache[iTank].g_iJumpAbility != 2 && g_esJumpCache[iTank].g_iJumpAbility != 3) || !g_esJumpPlayer[iTank].g_bActivated)
 	{
 		g_esJumpPlayer[iTank].g_bActivated = false;
@@ -1245,11 +1234,9 @@ public Action tTimerJump(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration,
+		iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esJumpCache[iTank].g_iHumanAbility == 1 && g_esJumpCache[iTank].g_iHumanMode == 0 && (iTime + iDuration) < iCurrentTime && (g_esJumpPlayer[iTank].g_iCooldown == -1 || g_esJumpPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vJumpReset3(iTank);
@@ -1271,9 +1258,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esJumpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esJumpPlayer[iTank].g_iTankType) || (g_esJumpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esJumpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esJumpPlayer[iTank].g_iTankType || (g_esJumpCache[iTank].g_iJumpAbility != 2 && g_esJumpCache[iTank].g_iJumpAbility != 3) || !g_esJumpPlayer[iTank].g_bActivated)
 	{
 		g_esJumpPlayer[iTank].g_bActivated = false;
@@ -1281,11 +1266,9 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration,
+		iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esJumpCache[iTank].g_iHumanAbility == 1 && g_esJumpCache[iTank].g_iHumanMode == 0 && (iTime + iDuration) < iCurrentTime && (g_esJumpPlayer[iTank].g_iCooldown == -1 || g_esJumpPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vJumpReset3(iTank);
@@ -1298,11 +1281,10 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Continue;
 	}
 
-	static float flNearestSurvivor;
-	flNearestSurvivor = flGetNearestSurvivor(iTank);
+	float flNearestSurvivor = flGetNearestSurvivor(iTank);
 	if (flNearestSurvivor > 100.0 && flNearestSurvivor < 1000.0)
 	{
-		static float flVelocity[3];
+		float flVelocity[3];
 		GetEntPropVector(iTank, Prop_Data, "m_vecVelocity", flVelocity);
 
 		if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
@@ -1333,8 +1315,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esJumpPlayer[iSurvivor].g_bAffected = false;
@@ -1343,10 +1324,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esJumpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esJumpPlayer[iTank].g_iTankType) || (g_esJumpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esJumpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esJumpPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esJumpPlayer[iTank].g_iTankType, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esJumpPlayer[iSurvivor].g_iImmunityFlags) || !g_esJumpPlayer[iSurvivor].g_bAffected)
 	{
 		vJumpReset2(iSurvivor, iTank, iMessage);
@@ -1354,11 +1332,9 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iJumpEnabled, iPos, iDuration, iTime;
-	iJumpEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration;
-	iTime = pack.ReadCell();
+	int iJumpEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esJumpCache[iTank].g_iJumpDuration,
+		iTime = pack.ReadCell();
 	if ((iJumpEnabled != 1 && iJumpEnabled != 3) || (iTime + iDuration) < GetTime())
 	{
 		vJumpReset2(iSurvivor, iTank, iMessage);

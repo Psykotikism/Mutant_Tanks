@@ -368,7 +368,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
+	char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
 	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ZOMBIE_SECTION);
 	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ZOMBIE_SECTION2);
@@ -378,7 +378,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iComboAbility == 1 && !g_esZombiePlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
+			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
 			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
 			{
@@ -386,8 +386,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -628,10 +627,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esZombieCache[tank].g_iHumanMode)
 				{
@@ -757,8 +754,7 @@ void vZombieReset2(int tank)
 
 void vSpawnUncommon(int tank, const char[] model)
 {
-	static int iInfected;
-	iInfected = CreateEntityByName("infected");
+	int iInfected = CreateEntityByName("infected");
 	if (bIsValidEntity(iInfected))
 	{
 		SetEntityModel(iInfected, model);
@@ -766,7 +762,7 @@ void vSpawnUncommon(int tank, const char[] model)
 		DispatchSpawn(iInfected);
 		ActivateEntity(iInfected);
 
-		static float flOrigin[3], flAngles[3];
+		float flOrigin[3], flAngles[3];
 		GetClientAbsOrigin(tank, flOrigin);
 		GetClientEyeAngles(tank, flAngles);
 
@@ -786,8 +782,7 @@ void vSpawnZombie(int tank, bool uncommon)
 		{
 			if (g_bSecondGame)
 			{
-				static int iTypeCount, iTypes[7], iFlag;
-				iTypeCount = 0;
+				int iTypeCount = 0, iTypes[7], iFlag = 0;
 				for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 				{
 					iFlag = (1 << iBit);
@@ -854,7 +849,7 @@ void vZombie(int tank, int pos = -1)
 
 	if (g_esZombieCache[tank].g_iZombieMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Zombie", LANG_SERVER, sTankName);
@@ -868,8 +863,7 @@ void vZombie2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esZombieCache[tank].g_flZombieInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esZombieCache[tank].g_flZombieInterval;
 	DataPack dpZombie;
 	CreateDataTimer(flInterval, tTimerZombie, dpZombie, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpZombie.WriteCell(GetClientUserId(tank));
@@ -952,9 +946,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esZombieCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[iTank].g_iTankType) || (g_esZombieCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esZombieAbility[g_esZombiePlayer[iTank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esZombiePlayer[iTank].g_iTankType) || !MT_IsCorePluginEnabled() || !MT_IsCustomTankSupported(iTank) || iType != g_esZombiePlayer[iTank].g_iTankType || g_esZombieCache[iTank].g_iZombieAbility == 0 || !g_esZombiePlayer[iTank].g_bActivated)
 	{
 		g_esZombiePlayer[iTank].g_bActivated = false;
@@ -962,9 +954,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esZombieCache[iTank].g_iHumanAbility == 1 && g_esZombieCache[iTank].g_iHumanMode == 0 && (iTime + g_esZombieCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esZombiePlayer[iTank].g_iCooldown == -1 || g_esZombiePlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vZombieReset2(iTank);
@@ -976,7 +966,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 
 	if (g_esZombieCache[iTank].g_iZombieMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Zombie2", LANG_SERVER, sTankName);
