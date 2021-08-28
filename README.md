@@ -15,7 +15,7 @@
 ## License
 > The following license is placed inside the source code of each plugin and include file.
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2021  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -1921,7 +1921,7 @@ Note: If all 4 of these return false, the player will not have access to nor imm
 
 6. What is the `sm_mt_dev` command for?
 
-The command allows the developer (`Psyk0tik`/`Crasher_3637`) to access certain features of the project on your server. These features include:
+The command allows the developer (`Psyk0tik`) to access certain features of the project on your server. These features include:
 - Access to all Mutant Tanks. (Allows the developer to see what Mutant Tanks your config has.)
 - Immunity from all Mutant Tanks. (Allows the developer to test each Mutant Tank without having to deal with each ability's effects.)
 - Ability to spawn Mutant Tanks. (Allows the developer to spawn each Mutant Tank for testing.)

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -19,7 +19,7 @@
 
 // Core plugin information
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
-#define MT_AUTHOR "Psyk0tik (Crasher_3637)"
+#define MT_AUTHOR "Psyk0tik"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
 #define MT_VERSION "8.89"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"

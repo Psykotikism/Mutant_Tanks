@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,6 +10,8 @@
  **/
 
 #define MT_ABILITIES_MAIN
+#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-19),
+				// 2: Only include second half (20-38), 3: ALL
 
 #include <sourcemod>
 #include <mutant_tanks>
@@ -33,46 +35,52 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
-#undef REQUIRE_PLUGIN
-#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
-#tryinclude "mutant_tanks/abilities/mt_acid.sp"
-#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
-#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
-#tryinclude "mutant_tanks/abilities/mt_blind.sp"
-#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
-#tryinclude "mutant_tanks/abilities/mt_bury.sp"
-#tryinclude "mutant_tanks/abilities/mt_car.sp"
-#tryinclude "mutant_tanks/abilities/mt_choke.sp"
-#tryinclude "mutant_tanks/abilities/mt_clone.sp"
-#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
-#tryinclude "mutant_tanks/abilities/mt_drop.sp"
-#tryinclude "mutant_tanks/abilities/mt_drug.sp"
-#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
-#tryinclude "mutant_tanks/abilities/mt_electric.sp"
-#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
-#tryinclude "mutant_tanks/abilities/mt_fast.sp"
-#tryinclude "mutant_tanks/abilities/mt_fire.sp"
-#tryinclude "mutant_tanks/abilities/mt_fling.sp"
-#tryinclude "mutant_tanks/abilities/mt_fly.sp"
-#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
-#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
-#tryinclude "mutant_tanks/abilities/mt_god.sp"
-#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
-#tryinclude "mutant_tanks/abilities/mt_heal.sp"
-#tryinclude "mutant_tanks/abilities/mt_hit.sp"
-#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
-#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
-#tryinclude "mutant_tanks/abilities/mt_ice.sp"
-#tryinclude "mutant_tanks/abilities/mt_idle.sp"
-#tryinclude "mutant_tanks/abilities/mt_invert.sp"
-#tryinclude "mutant_tanks/abilities/mt_item.sp"
-#tryinclude "mutant_tanks/abilities/mt_jump.sp"
-#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
-#tryinclude "mutant_tanks/abilities/mt_lag.sp"
-#tryinclude "mutant_tanks/abilities/mt_laser.sp"
-#tryinclude "mutant_tanks/abilities/mt_leech.sp"
-#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
-#define REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP > 0
+	#undef REQUIRE_PLUGIN
+	#if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
+		#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
+		#tryinclude "mutant_tanks/abilities/mt_acid.sp"
+		#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
+		#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
+		#tryinclude "mutant_tanks/abilities/mt_blind.sp"
+		#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
+		#tryinclude "mutant_tanks/abilities/mt_bury.sp"
+		#tryinclude "mutant_tanks/abilities/mt_car.sp"
+		#tryinclude "mutant_tanks/abilities/mt_choke.sp"
+		#tryinclude "mutant_tanks/abilities/mt_clone.sp"
+		#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
+		#tryinclude "mutant_tanks/abilities/mt_drop.sp"
+		#tryinclude "mutant_tanks/abilities/mt_drug.sp"
+		#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
+		#tryinclude "mutant_tanks/abilities/mt_electric.sp"
+		#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
+		#tryinclude "mutant_tanks/abilities/mt_fast.sp"
+		#tryinclude "mutant_tanks/abilities/mt_fire.sp"
+		#tryinclude "mutant_tanks/abilities/mt_fling.sp"
+	#endif
+	#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
+		#tryinclude "mutant_tanks/abilities/mt_fly.sp"
+		#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
+		#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
+		#tryinclude "mutant_tanks/abilities/mt_god.sp"
+		#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
+		#tryinclude "mutant_tanks/abilities/mt_heal.sp"
+		#tryinclude "mutant_tanks/abilities/mt_hit.sp"
+		#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
+		#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
+		#tryinclude "mutant_tanks/abilities/mt_ice.sp"
+		#tryinclude "mutant_tanks/abilities/mt_idle.sp"
+		#tryinclude "mutant_tanks/abilities/mt_invert.sp"
+		#tryinclude "mutant_tanks/abilities/mt_item.sp"
+		#tryinclude "mutant_tanks/abilities/mt_jump.sp"
+		#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
+		#tryinclude "mutant_tanks/abilities/mt_lag.sp"
+		#tryinclude "mutant_tanks/abilities/mt_laser.sp"
+		#tryinclude "mutant_tanks/abilities/mt_leech.sp"
+		#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
+	#endif
+	#define REQUIRE_PLUGIN
+#endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -87,7 +95,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 			return APLRes_SilentFailure;
 		}
 	}
-
 #if defined MT_MENU_CLONE
 	vCloneRegisterNatives();
 #endif

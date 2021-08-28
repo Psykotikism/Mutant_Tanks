@@ -2532,7 +2532,7 @@ Bug fixes:
 Changes:
 
 1. Changed all `OnClientPostAdminCheck()` forwards to `OnClientPutInServer()` instead.
-2. Moved late loading code from `OnMapStart()` to `OnPluginStart()`.
+2. Moved late-loading code from `OnMapStart()` to `OnPluginStart()`.
 
 ## Version 8.39 (September 10, 2018)
 

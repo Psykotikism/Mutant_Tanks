@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,6 +10,8 @@
  **/
 
 #define MT_ABILITIES_MAIN2
+#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19),
+				// 2: Only include second half (20-38), 3: ALL
 
 #include <sourcemod>
 #include <mutant_tanks>
@@ -32,46 +34,52 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
-#undef REQUIRE_PLUGIN
-#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
-#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
-#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
-#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
-#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
-#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
-#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
-#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
-#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
-#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
-#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
-#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
-#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
-#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
-#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
-#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
-#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
-#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
-#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
-#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
-#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
-#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
-#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
-#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
-#tryinclude "mutant_tanks/abilities2/mt_track.sp"
-#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
-#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
-#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
-#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
-#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
-#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
-#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
-#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
-#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
-#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
-#define REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP2 > 0
+	#undef REQUIRE_PLUGIN
+	#if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
+		#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
+	#endif
+	#if MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
+		#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_track.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
+	#endif
+	#define REQUIRE_PLUGIN
+#endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -120,7 +128,7 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
 
-	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo, "View information about each ability (M-Z).");
+	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo2, "View information about each ability (M-Z).");
 
 	vAbilitySetup(0);
 
@@ -133,7 +141,6 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
-
 #if defined MT_MENU_SHIELD
 		vShieldLateLoad();
 #endif
@@ -190,7 +197,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 #endif
 }
 
-public Action cmdAbilityInfo(int client, int args)
+public Action cmdAbilityInfo2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
