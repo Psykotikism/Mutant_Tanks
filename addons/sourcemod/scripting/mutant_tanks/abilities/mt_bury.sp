@@ -13,13 +13,13 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_BURY_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
+		#undef REQUIRE_PLUGIN
+		#tryinclude <left4dhooks>
+		#define REQUIRE_PLUGIN
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -70,7 +70,7 @@ public void OnAllPluginsLoaded()
 }
 #else
 	#if MT_BURY_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 

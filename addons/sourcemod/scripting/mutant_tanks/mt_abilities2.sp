@@ -10,8 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN2
-#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19),
-				// 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
 
 #include <sourcemod>
 #include <mutant_tanks>

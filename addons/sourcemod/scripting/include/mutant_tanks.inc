@@ -1838,9 +1838,7 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 
 stock bool bHasIdlePlayer(int survivor)
 {
-	char sClassname[32];
-	GetEntityNetClass(survivor, sClassname, sizeof sClassname);
-	if (StrEqual(sClassname, "SurvivorBot"))
+	if (bIsBotSurvivor(survivor))
 	{
 		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
@@ -1916,7 +1914,9 @@ stock bool bIsBotIdleSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
+	char sClassname[32];
+	GetEntityNetClass(bot, sClassname, sizeof sClassname);
+	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT) && StrEqual(sClassname, "SurvivorBot");
 }
 
 stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -2010,20 +2010,15 @@ stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (!bIsValidClient(iPlayer, MT_CHECK_INGAME) || bIsValidClient(iPlayer, MT_CHECK_FAKECLIENT) || !bHasIdlePlayer(iPlayer) || GetClientTeam(iPlayer) != 2)
+		if (!bIsSurvivor(iPlayer) || !bIsBotSurvivor(iPlayer))
 		{
 			continue;
 		}
 
-		char sClassname[32];
-		GetEntityNetClass(iPlayer, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
+		if (iSpectatorUserId > 0)
 		{
-			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
-			if (iSpectatorUserId > 0)
-			{
-				return GetClientOfUserId(iSpectatorUserId) == survivor;
-			}
+			return GetClientOfUserId(iSpectatorUserId) == survivor;
 		}
 	}
 
@@ -2760,15 +2755,10 @@ stock int iGetIdlePlayer(int bot)
 {
 	if (bIsBotSurvivor(bot))
 	{
-		char sClassname[32];
-		GetEntityNetClass(bot, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
+		if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
 		{
-			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
+			return iIdler;
 		}
 	}
 

@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_HYPNO_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_HYPNO_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -358,11 +358,9 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		char sClassname[32];
-
-		switch (bIsValidEntity(inflictor))
+		if (bIsValidEntity(inflictor))
 		{
-			case true: GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-			case false: sClassname[0] = '\0';
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		}
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHypnoCache[attacker].g_iHypnoHitMode == 0 || g_esHypnoCache[attacker].g_iHypnoHitMode == 1) && bIsSurvivor(victim) && g_esHypnoCache[attacker].g_iComboAbility == 0)

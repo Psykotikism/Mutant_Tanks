@@ -23,6 +23,9 @@
 - Removed parentheses of `sizeof` calls.
 - `SourceMod 1.11.0.6724` or higher is now required.
 
+#### Core Plugin
+- Separated the code into several files that must all be compiled through `mutant_tanks.sp`.
+
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
 - Updated signatures for `CTerrorWeapon::CanDeploy` and `CTerrorWeapon::CanDeployFor` to be compatible with the [Incapped Weapons Patch](https://forums.alliedmods.net/showthread.php?t=322859) plugin.
@@ -35,6 +38,31 @@
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 
 ### Files
+
+#### Additions
+- Added the following plugin files which must be compiled through the core plugin (`mutant_tanks.sp`):
+	- `mt_callbacks.sp`
+	- `mt_commands.sp`
+	- `mt_configs.sp`
+	- `mt_convars.sp`
+	- `mt_defines.sp`
+	- `mt_dependencies.sp`
+	- `mt_detours.sp`
+	- `mt_enumstructs.sp`
+	- `mt_events.sp`
+	- `mt_gamedata.sp`
+	- `mt_helpers.sp`
+	- `mt_library.sp`
+	- `mt_menus.sp`
+	- `mt_parsers.sp`
+	- `mt_patches.sp`
+	- `mt_rewards.sp`
+	- `mt_survivors.sp`
+	- `mt_tanks.sp`
+	- `mt_timers.sp`
+
+#### Locations
+- Each main plugin's subplugin/module must now be placed in the `scripting/mutant_tanks/main` folder.
 
 #### Updates
 - Updated config files.
@@ -388,7 +416,7 @@
 - Added the `mt_abilities2` plugin file which combines the second `38` abilities (M-Z).
 
 #### Locations
-- Each ability's plugin must now be placed in the `scripting/abilities` (A-L) and `scripting/abilities2` (M-Z) folders.
+- Each ability's plugin must now be placed in the `scripting/mutant_tanks/abilities` (A-L) and `scripting/mutant_tanks/abilities2` (M-Z) folders.
 
 #### Requirements
 - The `mt_clone.inc` file is now only used by the core plugin and registered by either the new `mt_abilities` source file or the pre-existing `mt_clone` source file.
