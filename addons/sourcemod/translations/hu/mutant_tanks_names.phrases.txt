@@ -499,7 +499,7 @@
 
 	"Tank #49"
 	{
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, sok hordányi zombival."
+		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, nagyon sok zombival."
 	}
 
 	"Tank #50 Name"
