@@ -4554,12 +4554,12 @@
 
 	"Vision"
 	{
-		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint} -ra!"
+		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint}-ra/re!"
 	}
 
 	"Vision2"
 	{
-		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint} -ra!"
+		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint}-ra/re!"
 	}
 
 	"VisionAmmo"
