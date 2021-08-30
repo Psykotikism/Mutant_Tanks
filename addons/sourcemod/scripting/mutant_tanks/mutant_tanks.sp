@@ -89,6 +89,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	vRegisterForwards();
+	vRegisterCommands();
+	vRegisterConVars();
 
 	for (int iDeveloper = 1; iDeveloper <= MaxClients; iDeveloper++)
 	{
@@ -96,8 +98,6 @@ public void OnPluginStart()
 	}
 
 	vMultiTargetFilters(true);
-	vRegisterCommands();
-	vRegisterConVars();
 
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
@@ -265,17 +265,6 @@ public void OnClientPutInServer(int client)
 	vResetCore(client);
 }
 
-public void OnClientPostAdminCheck(int client)
-{
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
-	{
-		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
-	}
-
-	GetClientAuthId(client, AuthId_Steam2, g_esPlayer[client].g_sSteamID32, sizeof esPlayer::g_sSteamID32);
-	GetClientAuthId(client, AuthId_Steam3, g_esPlayer[client].g_sSteam3ID, sizeof esPlayer::g_sSteam3ID);
-}
-
 public void OnClientDisconnect(int client)
 {
 	if (bIsTank(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT))
@@ -303,259 +292,20 @@ public void OnConfigsExecuted()
 {
 	g_esGeneral.g_bConfigsExecuted = true;
 
+	vDefaultConVarSettings();
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+	vSetupConfigs();
 	vPluginStatus();
 	vResetTimers();
+
 	CreateTimer(0.1, tTimerRefreshRewards, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(10.0, tTimerReloadConfigs, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateAmmo, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateHealth, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
-	g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
-	g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
-	g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
-	g_esGeneral.g_flDefaultFirstAidHealPercent = -1.0;
-	g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
-	g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
-	g_esGeneral.g_flDefaultGunSwingInterval = -1.0;
-	g_esGeneral.g_flDefaultPhysicsPushScale = -1.0;
-	g_esGeneral.g_flDefaultSurvivorReviveDuration = -1.0;
-	g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
 	g_esGeneral.g_iChosenType = 0;
-	g_esGeneral.g_iDefaultMeleeRange = -1;
-	g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
-	g_esGeneral.g_iDefaultTankIncapHealth = -1;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
-
-	if (g_esGeneral.g_iConfigEnable == 1)
-	{
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
-			CreateDirectory(sSMPath, 511);
-
-			char sDifficulty[11];
-			for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
-			{
-				switch (iDifficulty)
-				{
-					case 0: sDifficulty = "Easy";
-					case 1: sDifficulty = "Normal";
-					case 2: sDifficulty = "Hard";
-					case 3: sDifficulty = "Impossible";
-				}
-
-				vCreateConfigFile(MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
-			CreateDirectory(sSMPath, 511);
-
-			char sMapName[128];
-			ArrayList alMaps = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-			if (alMaps != null)
-			{
-				int iSerial = -1;
-				ReadMapList(alMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
-				ReadMapList(alMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
-
-				int iListSize = alMaps.Length, iMapCount = (iListSize > 0) ? iListSize : 0;
-				if (iMapCount > 0)
-				{
-					for (int iPos = 0; iPos < iMapCount; iPos++)
-					{
-						alMaps.GetString(iPos, sMapName, sizeof sMapName);
-						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMapName);
-					}
-				}
-
-				delete alMaps;
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
-			CreateDirectory(sSMPath, 511);
-
-			char sGameType[2049], sTypes[64][32];
-			g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof sGameType);
-			ReplaceString(sGameType, sizeof sGameType, " ", "");
-			ExplodeString(sGameType, ",", sTypes, sizeof sTypes, sizeof sTypes[]);
-			for (int iMode = 0; iMode < sizeof sTypes; iMode++)
-			{
-				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
-				{
-					vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sTypes[iMode]);
-				}
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
-			CreateDirectory(sSMPath, 511);
-
-			char sWeekday[32];
-			for (int iDay = 0; iDay < 7; iDay++)
-			{
-				vGetDayName(iDay, sWeekday, sizeof sWeekday);
-				vCreateConfigFile(MT_CONFIG_PATH_DAY, sWeekday);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT);
-			CreateDirectory(sSMPath, 511);
-
-			char sPlayerCount[32];
-			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
-			{
-				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT);
-			CreateDirectory(sSMPath, 511);
-
-			char sPlayerCount[32];
-			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
-			{
-				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_SURVIVORCOUNT, sPlayerCount);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT);
-			CreateDirectory(sSMPath, 511);
-
-			char sPlayerCount[32];
-			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
-			{
-				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_INFECTEDCOUNT, sPlayerCount);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
-		{
-			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
-			CreateDirectory(sSMPath, 511);
-
-			char sEvent[32];
-			int iLimit = g_bSecondGame ? 11 : 8;
-			for (int iType = 0; iType < iLimit; iType++)
-			{
-				switch (iType)
-				{
-					case 0: sEvent = "finale_start";
-					case 1: sEvent = "finale_escape_start";
-					case 2: sEvent = "finale_vehicle_ready";
-					case 3: sEvent = "finale_vehicle_leaving";
-					case 4: sEvent = "finale_rush";
-					case 5: sEvent = "finale_radio_start";
-					case 6: sEvent = "finale_radio_damaged";
-					case 7: sEvent = "finale_win";
-					case 8: sEvent = "finale_vehicle_incoming";
-					case 9: sEvent = "finale_bridge_lowering";
-					case 10: sEvent = "gauntlet_finale_start";
-				}
-
-				vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE), sEvent);
-			}
-		}
-
-		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
-		{
-			char sDifficultyConfig[PLATFORM_MAX_PATH];
-			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
-			{
-				vCustomConfig(sDifficultyConfig);
-				g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-			}
-		}
-
-		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP))
-		{
-			char sMapConfig[PLATFORM_MAX_PATH];
-			if (bIsMapConfigFound(sMapConfig, sizeof sMapConfig))
-			{
-				vCustomConfig(sMapConfig);
-				g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
-		{
-			char sModeConfig[PLATFORM_MAX_PATH];
-			if (bIsGameModeConfigFound(sModeConfig, sizeof sModeConfig))
-			{
-				vCustomConfig(sModeConfig);
-				g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
-		{
-			char sDayConfig[PLATFORM_MAX_PATH];
-			if (bIsDayConfigFound(sDayConfig, sizeof sDayConfig))
-			{
-				vCustomConfig(sDayConfig);
-				g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
-		{
-			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
-			if (FileExists(sCountConfig, true))
-			{
-				vCustomConfig(sCountConfig);
-				g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
-		{
-			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
-			if (FileExists(sCountConfig, true))
-			{
-				vCustomConfig(sCountConfig);
-				g_esGeneral.g_iFileTimeOld[6] = GetFileTime(sCountConfig, FileTime_LastChange);
-			}
-		}
-
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
-		{
-			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
-			if (FileExists(sCountConfig, true))
-			{
-				vCustomConfig(sCountConfig);
-				g_esGeneral.g_iFileTimeOld[7] = GetFileTime(sCountConfig, FileTime_LastChange);
-			}
-		}
-	}
 }
 
 public void OnMapEnd()

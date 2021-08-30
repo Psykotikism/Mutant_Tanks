@@ -143,7 +143,6 @@ public void OnMapStart()
 #endif
 {
 	iPrecacheParticle(PARTICLE_SMOKE);
-
 	vCloudReset();
 }
 

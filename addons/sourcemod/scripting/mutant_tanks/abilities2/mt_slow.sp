@@ -179,7 +179,6 @@ public void OnMapStart()
 {
 	PrecacheSound(SOUND_DRIP, true);
 	PrecacheSound(SOUND_RAGE, true);
-
 	vSlowReset();
 }
 

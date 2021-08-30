@@ -186,7 +186,6 @@ public void OnMapStart()
 #endif
 {
 	PrecacheSound((g_bSecondGame ? SOUND_SMASH2 : SOUND_SMASH1), true);
-
 	vShakeReset();
 }
 

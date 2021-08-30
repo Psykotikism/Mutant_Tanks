@@ -173,9 +173,7 @@ public void OnMapStart()
 #endif
 {
 	g_iSmiteSprite = PrecacheModel("sprites/glow.vmt", true);
-
 	PrecacheSound(SOUND_EXPLOSION, true);
-
 	vSmiteReset();
 }
 
