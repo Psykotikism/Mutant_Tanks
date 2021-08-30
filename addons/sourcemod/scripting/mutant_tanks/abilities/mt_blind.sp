@@ -778,32 +778,34 @@ void vBlind(int survivor, int intensity)
 	iColor[3] = intensity;
 
 	Handle hTarget = StartMessageEx(g_umBlindFade, iTargets, 1);
-
-	switch (GetUserMessageType() == UM_Protobuf)
+	if (hTarget != null)
 	{
-		case true:
+		switch (GetUserMessageType() == UM_Protobuf)
 		{
-			Protobuf pbSet = UserMessageToProtobuf(hTarget);
-			pbSet.SetInt("duration", 1536);
-			pbSet.SetInt("hold_time", 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", iColor);
-		}
-		case false:
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(iFlags);
-
-			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			case true:
 			{
-				bfWrite.WriteByte(iColor[iPos]);
+				Protobuf pbSet = UserMessageToProtobuf(hTarget);
+				pbSet.SetInt("duration", 1536);
+				pbSet.SetInt("hold_time", 1536);
+				pbSet.SetInt("flags", iFlags);
+				pbSet.SetColor("clr", iColor);
+			}
+			case false:
+			{
+				BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+				bfWrite.WriteShort(1536);
+				bfWrite.WriteShort(1536);
+				bfWrite.WriteShort(iFlags);
+
+				for (int iPos = 0; iPos < sizeof iColor; iPos++)
+				{
+					bfWrite.WriteByte(iColor[iPos]);
+				}
 			}
 		}
-	}
 
-	EndMessage();
+		EndMessage();
+	}
 }
 
 void vBlindAbility(int tank, float random, int pos = -1)

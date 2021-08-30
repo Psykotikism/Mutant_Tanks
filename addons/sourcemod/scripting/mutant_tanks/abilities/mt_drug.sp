@@ -787,32 +787,34 @@ void vDrug(int survivor, bool toggle, float angles[20])
 	}
 
 	Handle hTarget = StartMessageEx(g_umDrugFade, iClients, 1);
-
-	switch (GetUserMessageType() == UM_Protobuf)
+	if (hTarget != null)
 	{
-		case true:
+		switch (GetUserMessageType() == UM_Protobuf)
 		{
-			Protobuf pbSet = UserMessageToProtobuf(hTarget);
-			pbSet.SetInt("duration", toggle ? 255: 1536);
-			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", toggle ? iColor : iColor2);
-		}
-		case false:
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(iFlags);
-
-			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			case true:
 			{
-				bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				Protobuf pbSet = UserMessageToProtobuf(hTarget);
+				pbSet.SetInt("duration", toggle ? 255: 1536);
+				pbSet.SetInt("hold_time", toggle ? 255 : 1536);
+				pbSet.SetInt("flags", iFlags);
+				pbSet.SetColor("clr", toggle ? iColor : iColor2);
+			}
+			case false:
+			{
+				BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(iFlags);
+
+				for (int iPos = 0; iPos < sizeof iColor; iPos++)
+				{
+					bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				}
 			}
 		}
-	}
 
-	EndMessage();
+		EndMessage();
+	}
 }
 
 void vDrugAbility(int tank, float random, int pos = -1)

@@ -1415,18 +1415,20 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
-
-		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(800);
-		bfWrite.WriteShort(300);
-		bfWrite.WriteShort((0x0010|0x0001));
-
-		for (int iPos = 0; iPos < sizeof iColor; iPos++)
+		if (hFadeTarget != null)
 		{
-			bfWrite.WriteByte(iColor[iPos]);
-		}
+			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+			bfWrite.WriteShort(800);
+			bfWrite.WriteShort(300);
+			bfWrite.WriteShort((0x0010|0x0001));
 
-		EndMessage();
+			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			{
+				bfWrite.WriteByte(iColor[iPos]);
+			}
+
+			EndMessage();
+		}
 	}
 }
 
@@ -1687,14 +1689,16 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 stock void vShakePlayerScreen(int player, float duration = 1.0)
 {
 	Handle hTarget = StartMessageOne("Shake", player);
+	if (hTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+		bfWrite.WriteByte(0);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(duration);
 
-	BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-	bfWrite.WriteByte(0);
-	bfWrite.WriteFloat(16.0);
-	bfWrite.WriteFloat(0.5);
-	bfWrite.WriteFloat(duration);
-
-	EndMessage();
+		EndMessage();
+	}
 }
 
 stock void vStopSound(int client, const char[] sound)
