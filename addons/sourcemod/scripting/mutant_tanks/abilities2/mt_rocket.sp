@@ -58,6 +58,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
 
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+
 #define MT_ROCKET_SECTION "rocketability"
 #define MT_ROCKET_SECTION2 "rocket ability"
 #define MT_ROCKET_SECTION3 "rocket_ability"
@@ -179,7 +181,7 @@ void vRocketMapStart()
 public void OnMapStart()
 #endif
 {
-	g_iRocketSprite = PrecacheModel("sprites/sprite_fire01.vmt", true);
+	g_iRocketSprite = PrecacheModel(SPRITE_FIRE, true);
 
 	PrecacheSound(SOUND_EXPLOSION, true);
 	PrecacheSound(SOUND_FIRE, true);

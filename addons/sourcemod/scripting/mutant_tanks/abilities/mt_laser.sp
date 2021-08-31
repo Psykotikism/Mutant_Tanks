@@ -58,6 +58,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
 
+#define SPRITE_LASER "sprites/laser.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+
 #define MT_LASER_SECTION "laserability"
 #define MT_LASER_SECTION2 "laser ability"
 #define MT_LASER_SECTION3 "laser_ability"
@@ -159,8 +162,8 @@ public void OnMapStart()
 {
 	switch (g_bSecondGame)
 	{
-		case true: g_iLaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt", true);
-		case false: g_iLaserSprite = PrecacheModel("materials/sprites/laser.vmt", true);
+		case true: g_iLaserSprite = PrecacheModel(SPRITE_LASERBEAM, true);
+		case false: g_iLaserSprite = PrecacheModel(SPRITE_LASER, true);
 	}
 
 	PrecacheSound(SOUND_ELECTRICITY, true);

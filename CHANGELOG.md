@@ -1275,8 +1275,8 @@
 - Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
 - Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
 - Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
-- Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to `Ernecio` for the code!)
-- Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to `Ernecio` for the code!)
+- Added the `Flashlight Color` setting under the `Tank #/Props` and `STEAM_ID/Props` sections. (Thanks to `Ernecio` for the code!)
+- Added the `Crown Color` setting under the `Tank #/Props` and `STEAM_ID/Props` sections. (Thanks to `Ernecio` for the code!)
 - The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
 - Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
 - Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.

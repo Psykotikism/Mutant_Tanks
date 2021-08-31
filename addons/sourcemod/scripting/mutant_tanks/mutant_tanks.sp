@@ -190,8 +190,8 @@ public void OnMapStart()
 	g_esGeneral.g_bMapStarted = true;
 	g_esGeneral.g_bNormalMap = bIsNormalMap();
 	g_esGeneral.g_bSameMission = bGetMissionName();
-	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
-	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
+	g_iBossBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
+	g_iBossHaloSprite = PrecacheModel(SPRITE_GLOW, true);
 
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_GASCAN, true);

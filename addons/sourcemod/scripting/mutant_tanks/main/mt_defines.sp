@@ -52,6 +52,9 @@
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav" // Only available in L4D2
 
 #define SPRITE_EXPLODE "sprites/zerogxplode.spr"
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASER "sprites/laser.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_ARRIVAL_SPAWN (1 << 0) // announce spawn
 #define MT_ARRIVAL_BOSS (1 << 1) // announce evolution
@@ -141,14 +144,14 @@
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
 #define MT_EFFECT_THIRDPERSON (1 << 3) // thirdperson view
 
-#define MT_JUMP_FALLPASSES 3 // safe fall passes
-#define MT_JUMP_FORWARDBOOST 50.0 // forward boost for each jump
-
 #define MT_INFAMMO_PRIMARY (1 << 0) // primary weapon
 #define MT_INFAMMO_SECONDARY (1 << 1) // secondary weapon
 #define MT_INFAMMO_THROWABLE (1 << 2) // throwable
 #define MT_INFAMMO_MEDKIT (1 << 3) // medkit
 #define MT_INFAMMO_PILLS (1 << 4) // pills
+
+#define MT_JUMP_FALLPASSES 3 // safe fall passes
+#define MT_JUMP_FORWARDBOOST 50.0 // forward boost for each jump
 
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle

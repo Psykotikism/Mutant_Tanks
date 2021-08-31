@@ -881,7 +881,238 @@ void vResetTankSpeed(int tank, bool mode = true)
 	}
 }
 
-void vSetProps(int tank)
+void vSetRockColor(int rock)
+{
+	if (bIsValidEntity(rock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
+	{
+		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
+		if (bIsValidEntity(g_esGeneral.g_iLauncher))
+		{
+			int iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+			if (bIsTankSupported(iTank))
+			{
+				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
+				SetEntPropEnt(rock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
+				vSetRockModel(iTank, rock);
+
+				switch (StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false))
+				{
+					case true:
+					{
+						g_esPlayer[iTank].g_iThrownRock[rock] = EntIndexToEntRef(rock);
+
+						if (!g_esPlayer[iTank].g_bRainbowColor)
+						{
+							g_esPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
+						}
+					}
+					case false: SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
+				}
+			}
+		}
+	}
+}
+
+void vSetRockModel(int tank, int rock)
+{
+	switch (g_esCache[tank].g_iRockModel)
+	{
+		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
+		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
+		case 2: SetEntityModel(rock, ((GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
+	}
+}
+
+void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = false, bool store = false)
+{
+	if (type == -1)
+	{
+		return;
+	}
+
+	if (g_esPlayer[tank].g_iTankType > 0)
+	{
+		if (change)
+		{
+			vResetTank3(tank);
+		}
+
+		if (type == 0)
+		{
+			vRemoveTankProps(tank);
+			vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
+
+			g_esPlayer[tank].g_iTankType = 0;
+
+			return;
+		}
+		else if (g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
+		{
+			g_esPlayer[tank].g_iTankType = 0;
+
+			vRemoveTankProps(tank);
+			vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
+
+			return;
+		}
+		else if (type > 0)
+		{
+			g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
+		}
+	}
+
+	if (store && bIsVersusModeRound(1))
+	{
+		g_esGeneral.g_alCompTypes.Push(type);
+	}
+
+	g_esPlayer[tank].g_iTankType = type;
+	g_esPlayer[tank].g_bReplaceSelf = false;
+
+	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
+	vCacheSettings(tank);
+	vSetTankModel(tank);
+	vRemoveGlow(tank);
+	vSetTankRainbowColor(tank);
+}
+
+void vSetTankGlow(int tank)
+{
+	if (!g_bSecondGame || g_esCache[tank].g_iGlowEnabled == 0)
+	{
+		return;
+	}
+
+	SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[tank].g_iGlowColor[0]), iGetRandomColor(g_esCache[tank].g_iGlowColor[1]), iGetRandomColor(g_esCache[tank].g_iGlowColor[2])));
+	SetEntProp(tank, Prop_Send, "m_bFlashing", g_esCache[tank].g_iGlowFlashing);
+	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", g_esCache[tank].g_iGlowMinRange);
+	SetEntProp(tank, Prop_Send, "m_nGlowRange", g_esCache[tank].g_iGlowMaxRange);
+	SetEntProp(tank, Prop_Send, "m_iGlowType", ((bIsTankIdle(tank) || g_esCache[tank].g_iGlowType == 0) ? 2 : 3));
+}
+
+void vSetTankHealth(int tank)
+{
+	int iHumanCount = iGetHumanCount(),
+		iSpawnHealth = (g_esCache[tank].g_iBaseHealth > 0) ? g_esCache[tank].g_iBaseHealth : GetEntProp(tank, Prop_Data, "m_iHealth"),
+		iExtraHealthNormal = (iSpawnHealth + g_esCache[tank].g_iExtraHealth),
+		iExtraHealthBoost = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? ((iSpawnHealth * iHumanCount) + g_esCache[tank].g_iExtraHealth) : iExtraHealthNormal,
+		iExtraHealthBoost2 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iSpawnHealth + (iHumanCount * g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
+		iExtraHealthBoost3 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iHumanCount * (iSpawnHealth + g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
+		iNoBoost = (iExtraHealthNormal > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthNormal,
+		iBoost = (iExtraHealthBoost > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost,
+		iBoost2 = (iExtraHealthBoost2 > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost2,
+		iBoost3 = (iExtraHealthBoost3 > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost3,
+		iNegaNoBoost = (iExtraHealthNormal < iSpawnHealth) ? 1 : iExtraHealthNormal,
+		iNegaBoost = (iExtraHealthBoost < iSpawnHealth) ? 1 : iExtraHealthBoost,
+		iNegaBoost2 = (iExtraHealthBoost2 < iSpawnHealth) ? 1 : iExtraHealthBoost2,
+		iNegaBoost3 = (iExtraHealthBoost3 < iSpawnHealth) ? 1 : iExtraHealthBoost3,
+		iFinalNoHealth = (iExtraHealthNormal >= 0) ? iNoBoost : iNegaNoBoost,
+		iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost,
+		iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
+		iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
+	SetEntProp(tank, Prop_Data, "m_iHealth", iFinalNoHealth);
+	SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalNoHealth);
+
+	switch (g_esCache[tank].g_iMultiplyHealth)
+	{
+		case 1:
+		{
+			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
+			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
+		}
+		case 2:
+		{
+			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth2);
+			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth2);
+		}
+		case 3:
+		{
+			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth3);
+			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth3);
+		}
+	}
+}
+
+void vSetTankModel(int tank)
+{
+	if (g_esCache[tank].g_iTankModel > 0)
+	{
+		int iModelCount = 0, iModels[3], iFlag = 0;
+		for (int iBit = 0; iBit < sizeof iModels; iBit++)
+		{
+			iFlag = (1 << iBit);
+			if (!(g_esCache[tank].g_iTankModel & iFlag))
+			{
+				continue;
+			}
+
+			iModels[iModelCount] = iFlag;
+			iModelCount++;
+		}
+
+		if (iModelCount > 0)
+		{
+			switch (iModels[GetRandomInt(0, (iModelCount - 1))])
+			{
+				case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+				case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+				default:
+				{
+					switch (GetRandomInt(1, sizeof iModels))
+					{
+						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+						case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+					}
+				}
+			}
+		}
+	}
+
+	if (g_esCache[tank].g_flBurntSkin >= 0.01)
+	{
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", g_esCache[tank].g_flBurntSkin);
+	}
+	else if (g_esCache[tank].g_flBurntSkin == 0.0)
+	{
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", GetRandomFloat(0.01, 1.0));
+	}
+}
+
+void vSetTankName(int tank, const char[] oldname, const char[] name, int mode)
+{
+	if (bIsTankSupported(tank))
+	{
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
+		{
+			if (g_esCache[tank].g_sTankName[0] == '\0')
+			{
+				g_esCache[tank].g_sTankName = "Tank";
+			}
+
+			g_esGeneral.g_bHideNameChange = true;
+			SetClientName(tank, g_esCache[tank].g_sTankName);
+			g_esGeneral.g_bHideNameChange = false;
+		}
+
+		switch (bIsTankIdle(tank) && (mode == 0 || mode == 5))
+		{
+			case true:
+			{
+				DataPack dpAnnounce;
+				CreateDataTimer(0.1, tTimerAnnounce, dpAnnounce, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpAnnounce.WriteCell(GetClientUserId(tank));
+				dpAnnounce.WriteString(oldname);
+				dpAnnounce.WriteString(name);
+				dpAnnounce.WriteCell(mode);
+			}
+			case false: vAnnounce(tank, oldname, name, mode);
+		}
+	}
+}
+
+void vSetTankProps(int tank)
 {
 	if (bIsTankSupported(tank))
 	{
@@ -943,11 +1174,13 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		float flChance = GetRandomFloat(0.1, 100.0);
+		float flChance = GetRandomFloat(0.1, 100.0), flValue = 0.0;
+		int iFlag = 0, iType = 0;
 		for (int iLight = 0; iLight < sizeof esPlayer::g_iLight; iLight++)
 		{
-			float flValue = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
-			int iFlag = (iLight < 3) ? MT_PROP_LIGHT : MT_PROP_CROWN, iType = (iLight < 3) ? 1 : 8;
+			flValue = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
+			iFlag = (iLight < 3) ? MT_PROP_LIGHT : MT_PROP_CROWN;
+			iType = (iLight < 3) ? 1 : 8;
 			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && flValue <= g_esCache[tank].g_flPropsChance[iType] && (g_esCache[tank].g_iPropsAttached & iFlag))
 			{
 				vLightProp(tank, iLight, flOrigin, flAngles);
@@ -972,6 +1205,7 @@ void vSetProps(int tank)
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
+		float flOrigin2[3], flAngles2[3] = {0.0, 0.0, 90.0};
 		for (int iOzTank = 0; iOzTank < sizeof esPlayer::g_iOzTank; iOzTank++)
 		{
 			if ((g_esPlayer[tank].g_iOzTank[iOzTank] == 0 || g_esPlayer[tank].g_iOzTank[iOzTank] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[2] && (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK))
@@ -985,8 +1219,6 @@ void vSetProps(int tank)
 					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "origin", flOrigin);
 					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "angles", flAngles);
 					vSetEntityParent(g_esPlayer[tank].g_iOzTank[iOzTank], tank, true);
-
-					float flOrigin2[3], flAngles2[3] = {0.0, 0.0, 90.0};
 
 					switch (iOzTank)
 					{
@@ -1287,237 +1519,6 @@ void vSetProps(int tank)
 		if (!g_esPlayer[tank].g_bRainbowColor)
 		{
 			g_esPlayer[tank].g_bRainbowColor = SDKHookEx(tank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
-		}
-	}
-}
-
-void vSetRockColor(int rock)
-{
-	if (bIsValidEntity(rock) && bIsValidEntRef(g_esGeneral.g_iLauncher))
-	{
-		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
-		if (bIsValidEntity(g_esGeneral.g_iLauncher))
-		{
-			int iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
-			if (bIsTankSupported(iTank))
-			{
-				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
-				SetEntPropEnt(rock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
-				vSetRockModel(iTank, rock);
-
-				switch (StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false))
-				{
-					case true:
-					{
-						g_esPlayer[iTank].g_iThrownRock[rock] = EntIndexToEntRef(rock);
-
-						if (!g_esPlayer[iTank].g_bRainbowColor)
-						{
-							g_esPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnRainbowPreThinkPost);
-						}
-					}
-					case false: SetEntityRenderColor(rock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
-				}
-			}
-		}
-	}
-}
-
-void vSetRockModel(int tank, int rock)
-{
-	switch (g_esCache[tank].g_iRockModel)
-	{
-		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
-		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
-		case 2: SetEntityModel(rock, ((GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
-	}
-}
-
-void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = false, bool store = false)
-{
-	if (type == -1)
-	{
-		return;
-	}
-
-	if (g_esPlayer[tank].g_iTankType > 0)
-	{
-		if (change)
-		{
-			vResetTank3(tank);
-		}
-
-		if (type == 0)
-		{
-			vRemoveTankProps(tank);
-			vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
-
-			g_esPlayer[tank].g_iTankType = 0;
-
-			return;
-		}
-		else if (g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
-		{
-			g_esPlayer[tank].g_iTankType = 0;
-
-			vRemoveTankProps(tank);
-			vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
-
-			return;
-		}
-		else if (type > 0)
-		{
-			g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
-		}
-	}
-
-	if (store && bIsVersusModeRound(1))
-	{
-		g_esGeneral.g_alCompTypes.Push(type);
-	}
-
-	g_esPlayer[tank].g_iTankType = type;
-	g_esPlayer[tank].g_bReplaceSelf = false;
-
-	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
-	vCacheSettings(tank);
-	vSetTankModel(tank);
-	vRemoveGlow(tank);
-	vSetTankRainbowColor(tank);
-}
-
-void vSetTankGlow(int tank)
-{
-	if (!g_bSecondGame || g_esCache[tank].g_iGlowEnabled == 0)
-	{
-		return;
-	}
-
-	SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[tank].g_iGlowColor[0]), iGetRandomColor(g_esCache[tank].g_iGlowColor[1]), iGetRandomColor(g_esCache[tank].g_iGlowColor[2])));
-	SetEntProp(tank, Prop_Send, "m_bFlashing", g_esCache[tank].g_iGlowFlashing);
-	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", g_esCache[tank].g_iGlowMinRange);
-	SetEntProp(tank, Prop_Send, "m_nGlowRange", g_esCache[tank].g_iGlowMaxRange);
-	SetEntProp(tank, Prop_Send, "m_iGlowType", ((bIsTankIdle(tank) || g_esCache[tank].g_iGlowType == 0) ? 2 : 3));
-}
-
-void vSetTankHealth(int tank)
-{
-	int iHumanCount = iGetHumanCount(),
-		iSpawnHealth = (g_esCache[tank].g_iBaseHealth > 0) ? g_esCache[tank].g_iBaseHealth : GetEntProp(tank, Prop_Data, "m_iHealth"),
-		iExtraHealthNormal = (iSpawnHealth + g_esCache[tank].g_iExtraHealth),
-		iExtraHealthBoost = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? ((iSpawnHealth * iHumanCount) + g_esCache[tank].g_iExtraHealth) : iExtraHealthNormal,
-		iExtraHealthBoost2 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iSpawnHealth + (iHumanCount * g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
-		iExtraHealthBoost3 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iHumanCount * (iSpawnHealth + g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
-		iNoBoost = (iExtraHealthNormal > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthNormal,
-		iBoost = (iExtraHealthBoost > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost,
-		iBoost2 = (iExtraHealthBoost2 > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost2,
-		iBoost3 = (iExtraHealthBoost3 > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost3,
-		iNegaNoBoost = (iExtraHealthNormal < iSpawnHealth) ? 1 : iExtraHealthNormal,
-		iNegaBoost = (iExtraHealthBoost < iSpawnHealth) ? 1 : iExtraHealthBoost,
-		iNegaBoost2 = (iExtraHealthBoost2 < iSpawnHealth) ? 1 : iExtraHealthBoost2,
-		iNegaBoost3 = (iExtraHealthBoost3 < iSpawnHealth) ? 1 : iExtraHealthBoost3,
-		iFinalNoHealth = (iExtraHealthNormal >= 0) ? iNoBoost : iNegaNoBoost,
-		iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost,
-		iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
-		iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
-	SetEntProp(tank, Prop_Data, "m_iHealth", iFinalNoHealth);
-	SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalNoHealth);
-
-	switch (g_esCache[tank].g_iMultiplyHealth)
-	{
-		case 1:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
-		}
-		case 2:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth2);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth2);
-		}
-		case 3:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth3);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth3);
-		}
-	}
-}
-
-void vSetTankModel(int tank)
-{
-	if (g_esCache[tank].g_iTankModel > 0)
-	{
-		int iModelCount = 0, iModels[3], iFlag = 0;
-		for (int iBit = 0; iBit < sizeof iModels; iBit++)
-		{
-			iFlag = (1 << iBit);
-			if (!(g_esCache[tank].g_iTankModel & iFlag))
-			{
-				continue;
-			}
-
-			iModels[iModelCount] = iFlag;
-			iModelCount++;
-		}
-
-		if (iModelCount > 0)
-		{
-			switch (iModels[GetRandomInt(0, (iModelCount - 1))])
-			{
-				case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-				case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
-				default:
-				{
-					switch (GetRandomInt(1, sizeof iModels))
-					{
-						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-						case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
-					}
-				}
-			}
-		}
-	}
-
-	if (g_esCache[tank].g_flBurntSkin >= 0.01)
-	{
-		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", g_esCache[tank].g_flBurntSkin);
-	}
-	else if (g_esCache[tank].g_flBurntSkin == 0.0)
-	{
-		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", GetRandomFloat(0.01, 1.0));
-	}
-}
-
-void vSetTankName(int tank, const char[] oldname, const char[] name, int mode)
-{
-	if (bIsTankSupported(tank))
-	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
-		{
-			if (g_esCache[tank].g_sTankName[0] == '\0')
-			{
-				g_esCache[tank].g_sTankName = "Tank";
-			}
-
-			g_esGeneral.g_bHideNameChange = true;
-			SetClientName(tank, g_esCache[tank].g_sTankName);
-			g_esGeneral.g_bHideNameChange = false;
-		}
-
-		switch (bIsTankIdle(tank) && (mode == 0 || mode == 5))
-		{
-			case true:
-			{
-				DataPack dpAnnounce;
-				CreateDataTimer(0.1, tTimerAnnounce, dpAnnounce, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpAnnounce.WriteCell(GetClientUserId(tank));
-				dpAnnounce.WriteString(oldname);
-				dpAnnounce.WriteString(name);
-				dpAnnounce.WriteCell(mode);
-			}
-			case false: vAnnounce(tank, oldname, name, mode);
 		}
 	}
 }

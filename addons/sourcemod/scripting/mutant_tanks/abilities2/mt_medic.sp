@@ -53,6 +53,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+
 #define MT_MEDIC_SECTION "medicability"
 #define MT_MEDIC_SECTION2 "medic ability"
 #define MT_MEDIC_SECTION3 "medic_ability"
@@ -159,8 +162,8 @@ void vMedicMapStart()
 public void OnMapStart()
 #endif
 {
-	g_iMedicBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
-	g_iMedicHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
+	g_iMedicBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
+	g_iMedicHaloSprite = PrecacheModel(SPRITE_GLOW, true);
 	vMedicReset();
 }
 

@@ -1089,7 +1089,7 @@ public void vTankSpawnFrame(DataPack pack)
 
 			vParticleEffects(iTank);
 			vResetTankSpeed(iTank, false);
-			vSetProps(iTank);
+			vSetTankProps(iTank);
 			vThrowInterval(iTank);
 
 			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
