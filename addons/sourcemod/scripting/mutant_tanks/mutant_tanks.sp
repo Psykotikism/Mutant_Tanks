@@ -9892,7 +9892,7 @@ void vSetTankName(int tank, const char[] oldname, const char[] name, int mode)
 			g_esGeneral.g_bHideNameChange = false;
 		}
 
-		switch (bIsTankIdle(tank) && (mode == 0 || mode == 5))
+		switch (mode == 0 || mode == 5)
 		{
 			case true:
 			{

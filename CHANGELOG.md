@@ -9,6 +9,7 @@
 
 #### Core Plugin
 - Fixed error regarding functions that are not detoured. (Thanks to `KasperH`/`Ladis` for testing and reporting!)
+- Fixed error regarding invalid address pointing to reserved memory. (Thanks to `yuzumi` and `Mi.Cura` for reporting!)
 
 #### Game Data
 - Fixed the `CTerrorGameRules::GetMissionFirstMap` function using the wrong signature.
@@ -20,7 +21,8 @@
 
 #### General
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
-- Removed parentheses of `sizeof` calls and unnecessary usage of the `public` keyword.
+- Removed parentheses of `sizeof` calls.
+- Removed unnecessary usage of the `public` keyword.
 - `SourceMod 1.11.0.6724` or higher is now required.
 
 #### Game Data
