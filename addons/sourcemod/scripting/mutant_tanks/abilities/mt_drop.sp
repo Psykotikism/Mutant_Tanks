@@ -290,7 +290,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdDropInfo(int client, int args)
+Action cmdDropInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -334,7 +334,7 @@ void vDropMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -904,7 +904,7 @@ int iGetRandomWeapon(int tank)
 	return g_bSecondGame ? iDropValue : GetRandomInt(0, 5);
 }
 
-public void vDropFrame(int userid)
+void vDropFrame(int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDropCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[iTank].g_iTankType) || (g_esDropCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
@@ -1055,7 +1055,7 @@ public void vDropFrame(int userid)
 	}
 }
 
-public Action tTimerDropCombo(Handle timer, DataPack pack)
+Action tTimerDropCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1072,7 +1072,7 @@ public Action tTimerDropCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
+Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -201,7 +201,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdVisionInfo(int client, int args)
+Action cmdVisionInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -248,7 +248,7 @@ void vVisionMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -336,7 +336,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -913,7 +913,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-public Action tTimerVisionCombo(Handle timer, DataPack pack)
+Action tTimerVisionCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -930,7 +930,7 @@ public Action tTimerVisionCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerVisionCombo2(Handle timer, DataPack pack)
+Action tTimerVisionCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -962,7 +962,7 @@ public Action tTimerVisionCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerVision(Handle timer, DataPack pack)
+Action tTimerVision(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -210,7 +210,8 @@ public void OnMapEnd()
 	vSlowReset();
 }
 
-public Action cmdSlowInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdSlowInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -236,6 +237,7 @@ public Action cmdSlowInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vSlowMenu(int client, const char[] name, int item)
 {
@@ -256,7 +258,7 @@ void vSlowMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -344,7 +346,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -936,7 +938,7 @@ void vStopSlow(int survivor)
 	EmitSoundToAll(SOUND_DRIP, survivor);
 }
 
-public Action tTimerSlowCombo(Handle timer, DataPack pack)
+Action tTimerSlowCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -953,7 +955,7 @@ public Action tTimerSlowCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSlowCombo2(Handle timer, DataPack pack)
+Action tTimerSlowCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -985,7 +987,7 @@ public Action tTimerSlowCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopSlow(Handle timer, DataPack pack)
+Action tTimerStopSlow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

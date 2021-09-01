@@ -196,7 +196,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdMinionInfo(int client, int args)
+Action cmdMinionInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -242,7 +242,7 @@ void vMinionMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -871,7 +871,7 @@ void vMinionReset()
 	}
 }
 
-public Action tTimerMinionCombo(Handle timer, int userid)
+Action tTimerMinionCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMinionAbility[g_esMinionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMinionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMinionCache[iTank].g_iMinionAbility == 0)
@@ -884,7 +884,7 @@ public Action tTimerMinionCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerKillMinion(Handle timer, int userid)
+Action tTimerKillMinion(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsSpecialInfected(iSpecial) || !g_esMinionPlayer[iSpecial].g_bMinion)

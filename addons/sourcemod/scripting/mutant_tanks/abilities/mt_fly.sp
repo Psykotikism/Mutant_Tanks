@@ -198,7 +198,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdFlyInfo(int client, int args)
+Action cmdFlyInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,7 +246,7 @@ void vFlyMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -361,7 +361,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -403,7 +403,7 @@ public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &
 	return Plugin_Continue;
 }
 
-public Action OnFlyPreThink(int tank)
+Action OnFlyPreThink(int tank)
 {
 	switch (MT_IsTankSupported(tank) && g_esFlyPlayer[tank].g_bActivated)
 	{
@@ -415,11 +415,18 @@ public Action OnFlyPreThink(int tank)
 		}
 		case false: SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	}
+
+	return Plugin_Continue;
 }
 
-public Action OnFlyStartTouch(int tank, int other)
+Action OnFlyStartTouch(int tank, int other)
 {
-	vStopFly(tank);
+	if (bIsTank(tank) && bIsValidEntity(other))
+	{
+		vStopFly(tank);
+	}
+
+	return Plugin_Continue;
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -1425,7 +1432,7 @@ int iGetFlyTarget(float pos[3], float angle[3], int tank)
 	return iTarget;
 }
 
-public Action tTimerFlyCombo(Handle timer, DataPack pack)
+Action tTimerFlyCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -207,7 +207,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSplatterInfo(int client, int args)
+Action cmdSplatterInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -255,7 +255,7 @@ void vSplatterMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -828,7 +828,7 @@ void vSplatterRange(int tank, bool idle)
 	}
 }
 
-public Action tTimerSplatterCombo(Handle timer, DataPack pack)
+Action tTimerSplatterCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -844,7 +844,7 @@ public Action tTimerSplatterCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSplatter(Handle timer, DataPack pack)
+Action tTimerSplatter(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

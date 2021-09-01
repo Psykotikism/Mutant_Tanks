@@ -20,11 +20,8 @@
 
 #### General
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
-- Removed parentheses of `sizeof` calls.
+- Removed parentheses of `sizeof` calls and unnecessary usage of the `public` keyword.
 - `SourceMod 1.11.0.6724` or higher is now required.
-
-#### Core Plugin
-- Separated the code into several files that must all be compiled through `mutant_tanks.sp`.
 
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
@@ -38,31 +35,6 @@
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 
 ### Files
-
-#### Additions
-- Added the following plugin files which must be compiled through the core plugin (`mutant_tanks.sp`):
-	- `mt_callbacks.sp`
-	- `mt_commands.sp`
-	- `mt_configs.sp`
-	- `mt_convars.sp`
-	- `mt_defines.sp`
-	- `mt_dependencies.sp`
-	- `mt_detours.sp`
-	- `mt_enumstructs.sp`
-	- `mt_events.sp`
-	- `mt_gamedata.sp`
-	- `mt_helpers.sp`
-	- `mt_library.sp`
-	- `mt_menus.sp`
-	- `mt_parsers.sp`
-	- `mt_patches.sp`
-	- `mt_rewards.sp`
-	- `mt_survivors.sp`
-	- `mt_tanks.sp`
-	- `mt_timers.sp`
-
-#### Locations
-- Each main plugin's subplugin/module must now be placed in the `scripting/mutant_tanks/main` folder.
 
 #### Updates
 - Updated config files.
@@ -128,7 +100,7 @@
 
 #### Core Plugin
 - Reformatted the output of the `Death Details` setting's teammate list again.
-- Re-combined the list of rewards shown in chat when receiving rewards.
+- Recombined the list of rewards shown in chat when receiving rewards.
 - Removed thirdperson check for survivors.
 - Rewards are now transferred over properly between bots and idle players (and vice-versa).
 - Tank spawn and death announcements will no longer appear once the rescue vehicle leaves.

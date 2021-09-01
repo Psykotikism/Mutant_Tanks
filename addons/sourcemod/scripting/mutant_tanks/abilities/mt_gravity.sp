@@ -216,7 +216,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdGravityInfo(int client, int args)
+Action cmdGravityInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -264,7 +264,7 @@ void vGravityMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -392,7 +392,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1194,7 +1194,7 @@ void vStopGravity(int survivor)
 	SetEntityGravity(survivor, 1.0);
 }
 
-public Action tTimerGravityCombo(Handle timer, DataPack pack)
+Action tTimerGravityCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1211,7 +1211,7 @@ public Action tTimerGravityCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGravityCombo2(Handle timer, DataPack pack)
+Action tTimerGravityCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1227,7 +1227,7 @@ public Action tTimerGravityCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGravityCombo3(Handle timer, DataPack pack)
+Action tTimerGravityCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1259,7 +1259,7 @@ public Action tTimerGravityCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopGravity(Handle timer, DataPack pack)
+Action tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

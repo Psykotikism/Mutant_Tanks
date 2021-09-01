@@ -208,7 +208,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSmiteInfo(int client, int args)
+Action cmdSmiteInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -254,7 +254,7 @@ void vSmiteMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -358,7 +358,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnSmiteModelSpawnPost(int model)
+void OnSmiteModelSpawnPost(int model)
 {
 	g_iSmiteDeathModelOwner = 0;
 
@@ -372,7 +372,7 @@ public void OnSmiteModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -912,7 +912,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-public Action tTimerSmiteCombo(Handle timer, DataPack pack)
+Action tTimerSmiteCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -929,7 +929,7 @@ public Action tTimerSmiteCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSmiteCombo2(Handle timer, DataPack pack)
+Action tTimerSmiteCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -201,7 +201,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdQuietInfo(int client, int args)
+Action cmdQuietInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -248,7 +248,7 @@ void vQuietMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iQuietMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iQuietMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -336,7 +336,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -371,7 +371,7 @@ public Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
-public Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	if (MT_IsCorePluginEnabled() && StrContains(sample, "player/tank", false) != -1)
 	{
@@ -898,7 +898,7 @@ void vQuietReset2(int tank)
 	g_esQuietPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerQuietCombo(Handle timer, DataPack pack)
+Action tTimerQuietCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -915,7 +915,7 @@ public Action tTimerQuietCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerQuietCombo2(Handle timer, DataPack pack)
+Action tTimerQuietCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -947,7 +947,7 @@ public Action tTimerQuietCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopQuiet(Handle timer, DataPack pack)
+Action tTimerStopQuiet(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

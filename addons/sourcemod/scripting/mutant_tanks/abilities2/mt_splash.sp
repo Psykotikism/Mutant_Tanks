@@ -177,7 +177,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSplashInfo(int client, int args)
+Action cmdSplashInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -225,7 +225,7 @@ void vSplashMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -795,7 +795,7 @@ void vSplashAbility(int tank)
 	}
 }
 
-public Action tTimerSplashCombo(Handle timer, DataPack pack)
+Action tTimerSplashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -811,7 +811,7 @@ public Action tTimerSplashCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSplash(Handle timer, DataPack pack)
+Action tTimerSplash(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

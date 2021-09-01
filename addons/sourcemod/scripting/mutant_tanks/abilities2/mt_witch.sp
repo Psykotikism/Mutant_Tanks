@@ -191,7 +191,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdWitchInfo(int client, int args)
+Action cmdWitchInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -237,7 +237,7 @@ void vWitchMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -323,7 +323,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
@@ -826,7 +826,7 @@ void vWitchRange(int tank)
 	}
 }
 
-public Action tTimerWitchCombo(Handle timer, DataPack pack)
+Action tTimerWitchCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -842,7 +842,7 @@ public Action tTimerWitchCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWitchKillWitch(Handle timer, int ref)
+Action tTimerWitchKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))

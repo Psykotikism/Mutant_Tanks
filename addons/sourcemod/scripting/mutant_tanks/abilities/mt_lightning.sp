@@ -195,7 +195,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdLightningInfo(int client, int args)
+Action cmdLightningInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -243,7 +243,7 @@ void vLightningMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -808,7 +808,7 @@ void vLightningReset3(int tank)
 	}
 }
 
-public Action tTimerLightningCombo(Handle timer, DataPack pack)
+Action tTimerLightningCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -824,7 +824,7 @@ public Action tTimerLightningCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerLightning(Handle timer, DataPack pack)
+Action tTimerLightning(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

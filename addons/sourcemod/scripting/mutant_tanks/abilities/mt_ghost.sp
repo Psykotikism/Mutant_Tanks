@@ -245,7 +245,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdGhostInfo(int client, int args)
+Action cmdGhostInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -293,7 +293,7 @@ void vGhostMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -428,7 +428,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1292,7 +1292,7 @@ void vGhostResetRender(int tank)
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
 }
 
-public Action tTimerGhostCombo(Handle timer, DataPack pack)
+Action tTimerGhostCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1309,7 +1309,7 @@ public Action tTimerGhostCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhostCombo2(Handle timer, DataPack pack)
+Action tTimerGhostCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1325,7 +1325,7 @@ public Action tTimerGhostCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhostCombo3(Handle timer, DataPack pack)
+Action tTimerGhostCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1356,7 +1356,7 @@ public Action tTimerGhostCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhost(Handle timer, DataPack pack)
+Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1405,7 +1405,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRenderRock(Handle timer, DataPack pack)
+Action tTimerRenderRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

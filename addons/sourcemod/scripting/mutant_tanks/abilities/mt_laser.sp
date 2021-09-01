@@ -200,7 +200,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdLaserInfo(int client, int args)
+Action cmdLaserInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -248,7 +248,7 @@ void vLaserMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iLaserMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iLaserMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -857,7 +857,7 @@ int iGetNearestSurvivor(int tank, float pos[3])
 	return iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))];
 }
 
-public Action tTimerLaserCombo(Handle timer, DataPack pack)
+Action tTimerLaserCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -873,7 +873,7 @@ public Action tTimerLaserCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerLaser(Handle timer, DataPack pack)
+Action tTimerLaser(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

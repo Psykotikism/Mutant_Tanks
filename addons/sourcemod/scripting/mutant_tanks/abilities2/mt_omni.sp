@@ -194,7 +194,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdOmniInfo(int client, int args)
+Action cmdOmniInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -242,7 +242,7 @@ void vOmniMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iOmniMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iOmniMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -909,7 +909,7 @@ void vOmniReset3(int tank)
 	}
 }
 
-public Action tTimerOmniCombo(Handle timer, DataPack pack)
+Action tTimerOmniCombo(Handle timer, DataPack pack)
 {
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esOmniAbility[g_esOmniPlayer[iTank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esOmniPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esOmniCache[iTank].g_iOmniAbility == 0 || g_esOmniPlayer[iTank].g_bActivated)

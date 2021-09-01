@@ -219,7 +219,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdJumpInfo(int client, int args)
+Action cmdJumpInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -267,7 +267,7 @@ void vJumpMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iJumpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iJumpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -365,7 +365,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1158,7 +1158,7 @@ float flGetNearestSurvivor(int tank)
 	return flDistance;
 }
 
-public Action tTimerJumpCombo(Handle timer, DataPack pack)
+Action tTimerJumpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1175,7 +1175,7 @@ public Action tTimerJumpCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJumpCombo2(Handle timer, DataPack pack)
+Action tTimerJumpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1191,7 +1191,7 @@ public Action tTimerJumpCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJumpCombo3(Handle timer, DataPack pack)
+Action tTimerJumpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1223,7 +1223,7 @@ public Action tTimerJumpCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump(Handle timer, DataPack pack)
+Action tTimerJump(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1255,7 +1255,7 @@ public Action tTimerJump(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump2(Handle timer, DataPack pack)
+Action tTimerJump2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1312,7 +1312,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump3(Handle timer, DataPack pack)
+Action tTimerJump3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

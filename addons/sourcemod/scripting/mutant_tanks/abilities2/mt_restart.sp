@@ -273,7 +273,8 @@ public void OnMapEnd()
 	vRestartReset();
 }
 
-public Action cmdRestartInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdRestartInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -299,6 +300,7 @@ public Action cmdRestartInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vRestartMenu(int client, const char[] name, int item)
 {
@@ -318,7 +320,7 @@ void vRestartMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -404,7 +406,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1084,7 +1086,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 	return bReturn || bReturn2;
 }
 
-public Action tTimerRestartCombo(Handle timer, DataPack pack)
+Action tTimerRestartCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1101,7 +1103,7 @@ public Action tTimerRestartCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRestartCombo2(Handle timer, DataPack pack)
+Action tTimerRestartCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -177,7 +177,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdTrackInfo(int client, int args)
+Action cmdTrackInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -223,7 +223,7 @@ void vTrackMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -306,15 +306,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	if (StrEqual(info, MT_MENU_TRACK, false))
 	{
 		FormatEx(buffer, size, "%T", "TrackMenu2", client);
-	}
-}
-
-public void Think(int rock)
-{
-	switch (bIsValidEntity(rock))
-	{
-		case true: vTrackThink(rock);
-		case false: SDKUnhook(rock, SDKHook_Think, Think);
 	}
 }
 
@@ -1006,7 +997,7 @@ int iGetRockTarget(float pos[3], float angle[3], int tank)
 	return iTarget;
 }
 
-public void OnTrackPreThinkPost(int tank)
+void OnTrackPreThinkPost(int tank)
 {
 	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esTrackPlayer[tank].g_bRainbowColor)
 	{
@@ -1051,7 +1042,16 @@ public void OnTrackPreThinkPost(int tank)
 	}
 }
 
-public Action tTimerTrack(Handle timer, DataPack pack)
+void OnTrackThink(int rock)
+{
+	switch (bIsValidEntity(rock))
+	{
+		case true: vTrackThink(rock);
+		case false: SDKUnhook(rock, SDKHook_Think, OnTrackThink);
+	}
+}
+
+Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1069,8 +1069,8 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SDKUnhook(iRock, SDKHook_Think, Think);
-	SDKHook(iRock, SDKHook_Think, Think);
+	SDKUnhook(iRock, SDKHook_Think, OnTrackThink);
+	SDKHook(iRock, SDKHook_Think, OnTrackThink);
 
 	int iTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1 && (g_esTrackPlayer[iTank].g_iCooldown == -1 || g_esTrackPlayer[iTank].g_iCooldown < iTime))

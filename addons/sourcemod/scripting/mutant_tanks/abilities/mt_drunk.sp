@@ -204,7 +204,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdDrunkInfo(int client, int args)
+Action cmdDrunkInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -251,7 +251,7 @@ void vDrunkMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iDrunkMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iDrunkMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -339,7 +339,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -930,7 +930,7 @@ void vDrunkReset3(int tank)
 	g_esDrunkPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerDrunkCombo(Handle timer, DataPack pack)
+Action tTimerDrunkCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -947,7 +947,7 @@ public Action tTimerDrunkCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrunkCombo2(Handle timer, DataPack pack)
+Action tTimerDrunkCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -979,7 +979,7 @@ public Action tTimerDrunkCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
+Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1009,7 +1009,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrunkTurn(Handle timer, DataPack pack)
+Action tTimerDrunkTurn(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1055,7 +1055,7 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopDrunkSpeed(Handle timer, int userid)
+Action tTimerStopDrunkSpeed(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor))

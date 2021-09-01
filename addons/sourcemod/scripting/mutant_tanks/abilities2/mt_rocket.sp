@@ -218,7 +218,8 @@ public void OnMapEnd()
 	vRocketReset();
 }
 
-public Action cmdRocketInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdRocketInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -244,6 +245,7 @@ public Action cmdRocketInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vRocketMenu(int client, const char[] name, int item)
 {
@@ -263,7 +265,7 @@ void vRocketMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -367,7 +369,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnRocketModelSpawnPost(int model)
+void OnRocketModelSpawnPost(int model)
 {
 	g_iRocketDeathModelOwner = 0;
 
@@ -381,7 +383,7 @@ public void OnRocketModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -977,7 +979,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-public Action tTimerRocketCombo(Handle timer, DataPack pack)
+Action tTimerRocketCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -994,7 +996,7 @@ public Action tTimerRocketCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketCombo2(Handle timer, DataPack pack)
+Action tTimerRocketCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1026,7 +1028,7 @@ public Action tTimerRocketCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketLaunch(Handle timer, DataPack pack)
+Action tTimerRocketLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1061,7 +1063,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketDetonate(Handle timer, DataPack pack)
+Action tTimerRocketDetonate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -175,7 +175,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdNecroInfo(int client, int args)
+Action cmdNecroInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -223,7 +223,7 @@ void vNecroMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -867,7 +867,7 @@ void vNecroReset2(int tank)
 	}
 }
 
-public Action tTimerNecroCombo(Handle timer, int userid)
+Action tTimerNecroCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNecroPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esNecroCache[iTank].g_iNecroAbility == 0 || g_esNecroPlayer[iTank].g_bActivated)

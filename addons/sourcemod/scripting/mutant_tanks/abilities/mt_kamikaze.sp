@@ -214,7 +214,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdKamikazeInfo(int client, int args)
+Action cmdKamikazeInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -258,7 +258,7 @@ void vKamikazeMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iKamikazeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iKamikazeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -358,7 +358,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnKamikazeModelSpawnPost(int model)
+void OnKamikazeModelSpawnPost(int model)
 {
 	g_iKamikazeDeathModelOwner = 0;
 
@@ -372,7 +372,7 @@ public void OnKamikazeModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -833,7 +833,7 @@ void vKamikazeReset()
 	}
 }
 
-public Action tTimerKamikazeCombo(Handle timer, DataPack pack)
+Action tTimerKamikazeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -850,7 +850,7 @@ public Action tTimerKamikazeCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerKamikazeCombo2(Handle timer, DataPack pack)
+Action tTimerKamikazeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

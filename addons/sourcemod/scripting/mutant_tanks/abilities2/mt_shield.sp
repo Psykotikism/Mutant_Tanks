@@ -271,7 +271,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdShieldInfo(int client, int args)
+Action cmdShieldInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -319,7 +319,7 @@ void vShieldMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -534,12 +534,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public void OnInfectedSpawnPost(int entity)
+void OnInfectedSpawnPost(int entity)
 {
 	SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
 }
 
-public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esShieldPlayer[victim].g_bActivated && damage > 0.0)
 	{
@@ -1336,7 +1336,7 @@ void vShieldAbility(int tank, bool shield)
 	}
 }
 
-public void OnShieldPreThinkPost(int tank)
+void OnShieldPreThinkPost(int tank)
 {
 	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esShieldPlayer[tank].g_bRainbowColor)
 	{
@@ -1390,7 +1390,7 @@ public void OnShieldPreThinkPost(int tank)
 	}
 }
 
-public Action tTimerShieldCombo(Handle timer, int userid)
+Action tTimerShieldCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShieldCache[iTank].g_iShieldAbility == 0 || g_esShieldPlayer[iTank].g_bActivated)
@@ -1403,7 +1403,7 @@ public Action tTimerShieldCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerShieldThrow(Handle timer, DataPack pack)
+Action tTimerShieldThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

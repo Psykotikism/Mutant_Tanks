@@ -205,7 +205,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdChokeInfo(int client, int args)
+Action cmdChokeInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -252,7 +252,7 @@ void vChokeMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iChokeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iChokeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -363,7 +363,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -969,7 +969,7 @@ void vChokeReset3(int tank)
 	g_esChokePlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerChokeLaunch(Handle timer, DataPack pack)
+Action tTimerChokeLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1011,7 +1011,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerChokeDamage(Handle timer, DataPack pack)
+Action tTimerChokeDamage(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1052,7 +1052,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerChokeCombo(Handle timer, DataPack pack)
+Action tTimerChokeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1069,7 +1069,7 @@ public Action tTimerChokeCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerChokeCombo2(Handle timer, DataPack pack)
+Action tTimerChokeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

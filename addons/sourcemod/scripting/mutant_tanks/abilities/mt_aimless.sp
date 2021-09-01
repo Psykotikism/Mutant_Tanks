@@ -199,7 +199,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAimlessInfo(int client, int args)
+Action cmdAimlessInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,7 +246,7 @@ void vAimlessMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -346,7 +346,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 }
 
-public Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -886,7 +886,7 @@ void vAimlessReset2(int tank)
 	g_esAimlessPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerAimlessCombo(Handle timer, DataPack pack)
+Action tTimerAimlessCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -903,7 +903,7 @@ public Action tTimerAimlessCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerAimlessCombo2(Handle timer, DataPack pack)
+Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -935,7 +935,7 @@ public Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopAimless(Handle timer, DataPack pack)
+Action tTimerStopAimless(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -278,7 +278,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAcidInfo(int client, int args)
+Action cmdAcidInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -324,7 +324,7 @@ void vAcidMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -410,7 +410,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1051,7 +1051,7 @@ void vAcidReset()
 	}
 }
 
-public Action tTimerAcidCombo(Handle timer, DataPack pack)
+Action tTimerAcidCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1068,7 +1068,7 @@ public Action tTimerAcidCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerAcidCombo2(Handle timer, DataPack pack)
+Action tTimerAcidCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

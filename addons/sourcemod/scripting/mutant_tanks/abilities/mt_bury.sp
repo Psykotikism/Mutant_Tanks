@@ -256,7 +256,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdBuryInfo(int client, int args)
+Action cmdBuryInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -303,7 +303,7 @@ void vBuryMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iBuryMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iBuryMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -414,7 +414,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1070,7 +1070,7 @@ void vStopBury(int survivor, int tank)
 	}
 }
 
-public Action tTimerBuryCombo(Handle timer, DataPack pack)
+Action tTimerBuryCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1087,7 +1087,7 @@ public Action tTimerBuryCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBuryCombo2(Handle timer, DataPack pack)
+Action tTimerBuryCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1119,7 +1119,7 @@ public Action tTimerBuryCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBury(Handle timer, DataPack pack)
+Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

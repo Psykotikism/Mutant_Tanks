@@ -198,7 +198,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRecoilInfo(int client, int args)
+Action cmdRecoilInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -245,7 +245,7 @@ void vRecoilMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -333,7 +333,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -883,7 +883,7 @@ void vRecoilReset2(int tank)
 	g_esRecoilPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerRecoilCombo(Handle timer, DataPack pack)
+Action tTimerRecoilCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -900,7 +900,7 @@ public Action tTimerRecoilCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRecoilCombo2(Handle timer, DataPack pack)
+Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -932,7 +932,7 @@ public Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopRecoil(Handle timer, DataPack pack)
+Action tTimerStopRecoil(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

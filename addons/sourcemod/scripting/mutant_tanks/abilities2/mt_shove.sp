@@ -263,7 +263,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdShoveInfo(int client, int args)
+Action cmdShoveInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -310,7 +310,7 @@ void vShoveMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iShoveMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iShoveMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -398,7 +398,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1027,7 +1027,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 	}
 }
 
-public Action tTimerShoveCombo(Handle timer, DataPack pack)
+Action tTimerShoveCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1044,7 +1044,7 @@ public Action tTimerShoveCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerShoveCombo2(Handle timer, DataPack pack)
+Action tTimerShoveCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1076,7 +1076,7 @@ public Action tTimerShoveCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerShove(Handle timer, DataPack pack)
+Action tTimerShove(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

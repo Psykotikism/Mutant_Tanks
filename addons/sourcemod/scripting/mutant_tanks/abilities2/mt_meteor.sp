@@ -203,7 +203,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdMeteorInfo(int client, int args)
+Action cmdMeteorInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -251,7 +251,7 @@ void vMeteorMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -367,7 +367,7 @@ void OnPropSpawn(int prop)
 	}
 }
 
-public Action OnMeteorTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnMeteorTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -946,7 +946,8 @@ void vMeteorReset3(int tank)
 	}
 }
 
-public Action tTimerMeteorCombo(Handle timer, DataPack pack)
+#if !defined MT_ABILITIES_MAIN2
+Action tTimerMeteorCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -962,7 +963,7 @@ public Action tTimerMeteorCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
+Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -977,8 +978,9 @@ public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
+#endif
 
-public Action tTimerMeteor(Handle timer, DataPack pack)
+Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

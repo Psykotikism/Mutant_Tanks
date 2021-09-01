@@ -186,7 +186,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdGodInfo(int client, int args)
+Action cmdGodInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -234,7 +234,7 @@ void vGodMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -354,7 +354,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -871,7 +871,7 @@ void vGodReset3(int tank)
 	}
 }
 
-public Action tTimerGodCombo(Handle timer, DataPack pack)
+Action tTimerGodCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -237,7 +237,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdThrowInfo(int client, int args)
+Action cmdThrowInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -283,7 +283,7 @@ void vThrowMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -369,7 +369,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
@@ -405,10 +405,15 @@ public Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
-public Action OnThrowStartTouch(int thrown, int other)
+Action OnThrowStartTouch(int thrown, int other)
 {
-	TeleportEntity(thrown, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SDKUnhook(thrown, SDKHook_StartTouch, OnThrowStartTouch);
+	if (bIsValidEntity(thrown) && bIsValidEntity(other))
+	{
+		TeleportEntity(thrown, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		SDKUnhook(thrown, SDKHook_StartTouch, OnThrowStartTouch);
+	}
+
+	return Plugin_Continue;
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -896,7 +901,8 @@ int iGetThrownWitchCount(int tank)
 	return iWitchCount;
 }
 
-public Action tTimeThrowKillInfected(Handle timer, int userid)
+#if !defined MT_ABILITIES_MAIN2
+Action tTimerThrowKillInfected(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
@@ -909,7 +915,7 @@ public Action tTimeThrowKillInfected(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimeThrowKillWitch(Handle timer, int ref)
+Action tTimerThrowKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
@@ -921,8 +927,9 @@ public Action tTimeThrowKillWitch(Handle timer, int ref)
 
 	return Plugin_Continue;
 }
+#endif
 
-public Action tTimerThrow(Handle timer, DataPack pack)
+Action tTimerThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1108,7 +1115,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 							if (g_esThrowCache[iTank].g_flThrowInfectedLifetime > 0.0)
 							{
-								CreateTimer(g_esThrowCache[iTank].g_flThrowInfectedLifetime, tTimeThrowKillInfected, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+								CreateTimer(g_esThrowCache[iTank].g_flThrowInfectedLifetime, tTimerThrowKillInfected, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
 							}
 
 							NormalizeVector(flVelocity, flVelocity);
@@ -1167,7 +1174,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 							if (g_esThrowCache[iTank].g_flThrowWitchLifetime > 0.0)
 							{
-								CreateTimer(g_esThrowCache[iTank].g_flThrowWitchLifetime, tTimeThrowKillWitch, EntIndexToEntRef(iWitch), TIMER_FLAG_NO_MAPCHANGE);
+								CreateTimer(g_esThrowCache[iTank].g_flThrowWitchLifetime, tTimerThrowKillWitch, EntIndexToEntRef(iWitch), TIMER_FLAG_NO_MAPCHANGE);
 							}
 
 							if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)

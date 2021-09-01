@@ -167,7 +167,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRespawnInfo(int client, int args)
+Action cmdRespawnInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -212,7 +212,7 @@ void vRespawnMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -762,7 +762,7 @@ void vRespawn2(int tank, int min = 0, int max = 0)
 	MT_SpawnTank(tank, iType);
 }
 
-public Action tTimerRespawnCombo(Handle timer, int userid)
+Action tTimerRespawnCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRespawnAbility[g_esRespawnPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRespawnPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRespawnPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRespawnCache[iTank].g_iRespawnAbility == 0)

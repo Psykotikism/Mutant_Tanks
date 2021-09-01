@@ -178,7 +178,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdItemInfo(int client, int args)
+Action cmdItemInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -222,7 +222,7 @@ void vItemMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -322,7 +322,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnItemModelSpawnPost(int model)
+void OnItemModelSpawnPost(int model)
 {
 	g_iItemDeathModelOwner = 0;
 
@@ -336,12 +336,13 @@ public void OnItemModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+#if !defined MT_ABILITIES_MAIN
+Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	return Plugin_Handled;
 }
 
-public void OnItemUse(int entity, int activator, int caller, UseType type, float value)
+void OnItemUse(int entity, int activator, int caller, UseType type, float value)
 {
 	if (!bIsValidEntity(entity))
 	{
@@ -351,6 +352,7 @@ public void OnItemUse(int entity, int activator, int caller, UseType type, float
 	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN
 void vItemPluginCheck(ArrayList list)
@@ -849,7 +851,7 @@ void vSpawnItem(const char[] name, float pos[3])
 	}
 }
 
-public Action tTimerItemCombo(Handle timer, int userid)
+Action tTimerItemCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esItemAbility[g_esItemPlayer[iTank].g_iTankType].g_iAccessFlags, g_esItemPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esItemPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esItemCache[iTank].g_iItemAbility == 0 || g_esItemPlayer[iTank].g_bActivated)
@@ -862,7 +864,7 @@ public Action tTimerItemCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRemoveItemHooks(Handle timer, int ref)
+Action tTimerRemoveItemHooks(Handle timer, int ref)
 {
 	int iItem = EntRefToEntIndex(ref);
 	if (!bIsValidEntity(iItem))

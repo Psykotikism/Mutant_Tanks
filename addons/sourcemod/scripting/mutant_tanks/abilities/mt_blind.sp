@@ -220,7 +220,8 @@ public void OnMapEnd()
 	vBlindReset();
 }
 
-public Action cmdBlindInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN
+Action cmdBlindInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,6 +247,7 @@ public Action cmdBlindInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vBlindMenu(int client, const char[] name, int item)
 {
@@ -266,7 +268,7 @@ void vBlindMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -354,7 +356,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -978,7 +980,7 @@ void vBlindReset2(int tank)
 	g_esBlindPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerBlind(Handle timer, DataPack pack)
+Action tTimerBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1007,7 +1009,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlindCombo(Handle timer, DataPack pack)
+Action tTimerBlindCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1024,7 +1026,7 @@ public Action tTimerBlindCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlindCombo2(Handle timer, DataPack pack)
+Action tTimerBlindCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1056,7 +1058,7 @@ public Action tTimerBlindCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBlind(Handle timer, DataPack pack)
+Action tTimerStopBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

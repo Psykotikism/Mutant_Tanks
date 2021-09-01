@@ -196,7 +196,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdPyroInfo(int client, int args)
+Action cmdPyroInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -244,7 +244,7 @@ void vPyroMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -371,7 +371,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -944,7 +944,7 @@ void vPyroReset3(int tank)
 	}
 }
 
-public Action tTimerPyroCombo(Handle timer, DataPack pack)
+Action tTimerPyroCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

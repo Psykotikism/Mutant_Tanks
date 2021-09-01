@@ -174,7 +174,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdCloudInfo(int client, int args)
+Action cmdCloudInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -222,7 +222,7 @@ void vCloudMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iCloudMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iCloudMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -781,7 +781,7 @@ void vCloudReset3(int tank)
 	}
 }
 
-public Action tTimerCloud(Handle timer, DataPack pack)
+Action tTimerCloud(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -822,7 +822,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerCloudCombo(Handle timer, DataPack pack)
+Action tTimerCloudCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

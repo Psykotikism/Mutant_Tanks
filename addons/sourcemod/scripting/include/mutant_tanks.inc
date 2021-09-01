@@ -2217,130 +2217,130 @@ stock bool bIsWitch(int witch)
 	return false;
 }
 
-public bool bBoomerFilter(const char[] pattern, Handle clients)
+bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bChargerFilter(const char[] pattern, Handle clients)
+bool bChargerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bHunterFilter(const char[] pattern, Handle clients)
+bool bHunterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bInfectedFilter(const char[] pattern, Handle clients)
+bool bInfectedFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bJockeyFilter(const char[] pattern, Handle clients)
+bool bJockeyFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bMutantFilter(const char[] pattern, Handle clients)
+bool bMutantFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSmokerFilter(const char[] pattern, Handle clients)
+bool bSmokerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpecialFilter(const char[] pattern, Handle clients)
+bool bSpecialFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpitterFilter(const char[] pattern, Handle clients)
+bool bSpitterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bTankFilter(const char[] pattern, Handle clients)
+bool bTankFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 

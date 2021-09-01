@@ -222,7 +222,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSmashInfo(int client, int args)
+Action cmdSmashInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -268,7 +268,7 @@ void vSmashMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSmashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSmashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -372,7 +372,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnSmashModelSpawnPost(int model)
+void OnSmashModelSpawnPost(int model)
 {
 	g_iSmashDeathModelOwner = 0;
 
@@ -386,7 +386,7 @@ public void OnSmashModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -927,7 +927,7 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-public Action tTimerSmashCombo(Handle timer, DataPack pack)
+Action tTimerSmashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -944,7 +944,7 @@ public Action tTimerSmashCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSmashCombo2(Handle timer, DataPack pack)
+Action tTimerSmashCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

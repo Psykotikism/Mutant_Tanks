@@ -180,7 +180,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRockInfo(int client, int args)
+Action cmdRockInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -228,7 +228,7 @@ void vRockMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -318,7 +318,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -903,7 +903,7 @@ void vRockAbility(int tank)
 	}
 }
 
-public Action tTimerRockCombo(Handle timer, DataPack pack)
+Action tTimerRockCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -919,7 +919,7 @@ public Action tTimerRockCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRock(Handle timer, DataPack pack)
+Action tTimerRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

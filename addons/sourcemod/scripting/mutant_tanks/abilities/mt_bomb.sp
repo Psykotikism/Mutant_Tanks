@@ -223,7 +223,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdBombInfo(int client, int args)
+Action cmdBombInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -269,7 +269,7 @@ void vBombMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -355,7 +355,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -985,7 +985,7 @@ void vBombReset()
 	}
 }
 
-public Action tTimerBombCombo(Handle timer, DataPack pack)
+Action tTimerBombCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1002,7 +1002,7 @@ public Action tTimerBombCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBombCombo2(Handle timer, DataPack pack)
+Action tTimerBombCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

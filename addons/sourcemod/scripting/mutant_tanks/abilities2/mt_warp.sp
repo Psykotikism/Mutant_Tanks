@@ -281,7 +281,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdWarpInfo(int client, int args)
+Action cmdWarpInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -329,7 +329,7 @@ void vWarpMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -427,7 +427,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -1209,7 +1209,7 @@ bool bIsInsideSaferoom(int survivor)
 	return false;
 }
 
-public Action tTimerWarpCombo(Handle timer, DataPack pack)
+Action tTimerWarpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1226,7 +1226,7 @@ public Action tTimerWarpCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarpCombo2(Handle timer, DataPack pack)
+Action tTimerWarpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1242,7 +1242,7 @@ public Action tTimerWarpCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarpCombo3(Handle timer, DataPack pack)
+Action tTimerWarpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1273,7 +1273,7 @@ public Action tTimerWarpCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarp(Handle timer, DataPack pack)
+Action tTimerWarp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

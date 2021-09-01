@@ -189,7 +189,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdCarInfo(int client, int args)
+Action cmdCarInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -237,7 +237,7 @@ void vCarMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -327,10 +327,15 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnCarStartTouch(int car, int other)
+Action OnCarStartTouch(int car, int other)
 {
-	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SDKUnhook(car, SDKHook_StartTouch, OnCarStartTouch);
+	if (bIsValidEntity(car) && bIsValidEntity(other))
+	{
+		TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		SDKUnhook(car, SDKHook_StartTouch, OnCarStartTouch);
+	}
+
+	return Plugin_Continue;
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -848,7 +853,7 @@ void vCarReset3(int tank)
 	}
 }
 
-public Action tTimerCar(Handle timer, DataPack pack)
+Action tTimerCar(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -966,7 +971,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerCarCombo(Handle timer, DataPack pack)
+Action tTimerCarCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

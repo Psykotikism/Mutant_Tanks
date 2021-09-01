@@ -95,13 +95,35 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 #if defined MT_MENU_CLONE
-	vCloneRegisterNatives();
+	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
+	CreateNative("MT_IsTankClone", aNative_IsTankClone);
+
+	RegPluginLibrary("mt_clone");
 #endif
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
+
+#if defined MT_MENU_CLONE
+any aNative_IsCloneSupported(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned && g_esClonePlayer[iTank].g_bFiltered)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+any aNative_IsTankClone(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
+}
+#endif
 
 public void OnLibraryAdded(const char[] name)
 {
@@ -188,7 +210,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 #endif
 }
 
-public Action cmdAbilityInfo(int client, int args)
+Action cmdAbilityInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -2596,4 +2618,20 @@ void vAbilitySetup(int type)
 	}
 #endif
 	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+}
+
+Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	return Plugin_Handled;
+}
+
+void OnItemUse(int entity, int activator, int caller, UseType type, float value)
+{
+	if (!bIsValidEntity(entity))
+	{
+		return;
+	}
+
+	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
+	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }

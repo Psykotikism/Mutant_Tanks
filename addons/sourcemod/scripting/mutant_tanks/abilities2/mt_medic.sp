@@ -195,7 +195,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdMedicInfo(int client, int args)
+Action cmdMedicInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -243,7 +243,7 @@ void vMedicMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -958,7 +958,7 @@ int[] iGetRandomColors(int tank)
 	return g_esMedicCache[tank].g_iMedicFieldColor;
 }
 
-public Action tTimerMedicCombo(Handle timer, DataPack pack)
+Action tTimerMedicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -974,7 +974,7 @@ public Action tTimerMedicCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerMedic(Handle timer, DataPack pack)
+Action tTimerMedic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

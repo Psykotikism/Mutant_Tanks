@@ -210,7 +210,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdDrugInfo(int client, int args)
+Action cmdDrugInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -257,7 +257,7 @@ void vDrugMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -345,7 +345,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -984,7 +984,7 @@ void vDrugReset3(int tank)
 	g_esDrugPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerDrugCombo(Handle timer, DataPack pack)
+Action tTimerDrugCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1001,7 +1001,7 @@ public Action tTimerDrugCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrugCombo2(Handle timer, DataPack pack)
+Action tTimerDrugCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1033,7 +1033,7 @@ public Action tTimerDrugCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrug(Handle timer, DataPack pack)
+Action tTimerDrug(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -196,7 +196,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 #endif
 }
 
-public Action cmdAbilityInfo2(int client, int args)
+Action cmdAbilityInfo2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -2601,4 +2601,62 @@ void vAbilitySetup(int type)
 	}
 #endif
 	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+}
+
+Action tTimerMeteorCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vMeteor(iTank, iPos);
+
+	return Plugin_Continue;
+}
+
+Action tTimerDestroyMeteor(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iMeteor = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vMeteor3(iTank, iMeteor, iPos);
+
+	return Plugin_Continue;
+}
+
+Action tTimerThrowKillInfected(Handle timer, int userid)
+{
+	int iSpecial = GetClientOfUserId(userid);
+	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iSpecial);
+
+	return Plugin_Continue;
+}
+
+Action tTimerThrowKillWitch(Handle timer, int ref)
+{
+	int iWitch = EntRefToEntIndex(ref);
+	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
+	{
+		return Plugin_Stop;
+	}
+
+	RemoveEntity(iWitch);
+
+	return Plugin_Continue;
 }

@@ -228,7 +228,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdUltimateInfo(int client, int args)
+Action cmdUltimateInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -275,7 +275,7 @@ void vUltimateMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -409,7 +409,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnUltimateTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnUltimateTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -934,7 +934,7 @@ void vUltimateAbility(int tank)
 	}
 }
 
-public Action tTimerUltimateCombo(Handle timer, DataPack pack)
+Action tTimerUltimateCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

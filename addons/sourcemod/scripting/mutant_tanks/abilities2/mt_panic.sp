@@ -173,7 +173,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdPanicInfo(int client, int args)
+Action cmdPanicInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -221,7 +221,7 @@ void vPanicMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iPanicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iPanicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -805,7 +805,7 @@ void vPanicReset2(int tank)
 	}
 }
 
-public Action tTimerPanicCombo(Handle timer, DataPack pack)
+Action tTimerPanicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -821,7 +821,7 @@ public Action tTimerPanicCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerPanic(Handle timer, DataPack pack)
+Action tTimerPanic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

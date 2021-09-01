@@ -170,7 +170,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdFastInfo(int client, int args)
+Action cmdFastInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -218,7 +218,7 @@ void vFastMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -810,7 +810,7 @@ void vFastReset3(int tank)
 	}
 }
 
-public Action tTimerFastCombo(Handle timer, DataPack pack)
+Action tTimerFastCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

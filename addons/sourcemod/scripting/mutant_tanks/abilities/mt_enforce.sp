@@ -202,7 +202,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdEnforceInfo(int client, int args)
+Action cmdEnforceInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -249,7 +249,7 @@ void vEnforceMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -367,7 +367,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -949,7 +949,7 @@ void vEnforceReset3(int survivor)
 	g_esEnforcePlayer[survivor].g_iSlot = -1;
 }
 
-public Action tTimerEnforceCombo(Handle timer, DataPack pack)
+Action tTimerEnforceCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -966,7 +966,7 @@ public Action tTimerEnforceCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerEnforceCombo2(Handle timer, DataPack pack)
+Action tTimerEnforceCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -998,7 +998,7 @@ public Action tTimerEnforceCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopEnforce(Handle timer, DataPack pack)
+Action tTimerStopEnforce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

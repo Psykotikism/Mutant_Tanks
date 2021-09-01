@@ -145,7 +145,8 @@ enum struct esCloneCache
 
 esCloneCache g_esCloneCache[MAXPLAYERS + 1];
 
-public any aNative_IsCloneSupported(Handle plugin, int numParams)
+#if !defined MT_ABILITIES_MAIN
+any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned && g_esClonePlayer[iTank].g_bFiltered)
@@ -156,21 +157,12 @@ public any aNative_IsCloneSupported(Handle plugin, int numParams)
 	return true;
 }
 
-public any aNative_IsTankClone(Handle plugin, int numParams)
+any aNative_IsTankClone(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 
-#if defined MT_ABILITIES_MAIN
-void vCloneRegisterNatives()
-{
-	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
-	CreateNative("MT_IsTankClone", aNative_IsTankClone);
-
-	RegPluginLibrary("mt_clone");
-}
-#else
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -233,7 +225,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdCloneInfo(int client, int args)
+Action cmdCloneInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -279,7 +271,7 @@ void vCloneMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -984,7 +976,7 @@ void vCloneReset()
 	}
 }
 
-public Action tTimerCloneCombo(Handle timer, int userid)
+Action tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
@@ -997,7 +989,7 @@ public Action tTimerCloneCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerKillClone(Handle timer, int userid)
+Action tTimerKillClone(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsTankSupported(iTank) || !g_esClonePlayer[iTank].g_bCloned)

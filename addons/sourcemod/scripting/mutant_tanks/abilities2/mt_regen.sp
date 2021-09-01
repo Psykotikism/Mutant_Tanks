@@ -175,7 +175,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRegenInfo(int client, int args)
+Action cmdRegenInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -223,7 +223,7 @@ void vRegenMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRegenMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRegenMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -788,7 +788,7 @@ void vRegenReset3(int tank)
 	}
 }
 
-public Action tTimerRegenCombo(Handle timer, DataPack pack)
+Action tTimerRegenCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -804,7 +804,7 @@ public Action tTimerRegenCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRegen(Handle timer, DataPack pack)
+Action tTimerRegen(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

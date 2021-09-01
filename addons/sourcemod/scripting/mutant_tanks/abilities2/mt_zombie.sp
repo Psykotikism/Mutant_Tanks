@@ -198,7 +198,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdZombieInfo(int client, int args)
+Action cmdZombieInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,7 +246,7 @@ void vZombieMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -927,7 +927,7 @@ void vZombieRange(int tank)
 	}
 }
 
-public Action tTimerZombieCombo(Handle timer, DataPack pack)
+Action tTimerZombieCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -943,7 +943,7 @@ public Action tTimerZombieCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerZombie(Handle timer, DataPack pack)
+Action tTimerZombie(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

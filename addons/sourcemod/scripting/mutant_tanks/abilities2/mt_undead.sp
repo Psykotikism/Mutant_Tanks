@@ -179,7 +179,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdUndeadInfo(int client, int args)
+Action cmdUndeadInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -225,7 +225,7 @@ void vUndeadMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -311,7 +311,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -720,7 +720,7 @@ void vUndeadAbility(int tank)
 	}
 }
 
-public Action tTimerUndeadCombo(Handle timer, int userid)
+Action tTimerUndeadCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUndeadAbility[g_esUndeadPlayer[iTank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUndeadPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esUndeadCache[iTank].g_iUndeadAbility == 0 || g_esUndeadPlayer[iTank].g_bActivated)
