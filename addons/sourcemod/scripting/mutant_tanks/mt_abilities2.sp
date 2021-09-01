@@ -116,11 +116,6 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");

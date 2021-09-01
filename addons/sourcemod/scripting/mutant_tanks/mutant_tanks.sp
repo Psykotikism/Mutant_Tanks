@@ -1372,10 +1372,6 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnAllPluginsLoaded()
 {
-	g_esGeneral.g_bClientPrefsInstalled = LibraryExists("clientprefs");
-	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
-	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 	if (gdMutantTanks != null)
 	{

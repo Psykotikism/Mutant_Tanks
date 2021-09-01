@@ -63,11 +63,6 @@ public void OnLibraryRemoved(const char[] name)
 		g_bLeft4DHooksInstalled = false;
 	}
 }
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_BURY_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.

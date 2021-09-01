@@ -11,6 +11,13 @@
 - Fixed error regarding functions that are not detoured. (Thanks to `KasperH`/`Ladis` for testing and reporting!)
 - Fixed error regarding invalid address pointing to reserved memory. (Thanks to `yuzumi` and `Mi.Cura` for reporting!)
 
+#### Commands
+- Fixed missing compiler checks for the following commands' callback functions:
+	- `sm_mt_blind`
+	- `sm_mt_restart`
+	- `sm_mt_rocket`
+	- `sm_mt_slow`
+
 #### Game Data
 - Fixed the `CTerrorGameRules::GetMissionFirstMap` function using the wrong signature.
 
@@ -23,6 +30,7 @@
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
 - Removed parentheses of `sizeof` calls.
 - Removed unnecessary usage of the `public` keyword.
+- Removed unnecessary usage of the `OnAllPluginsLoaded` forward. (Thanks to `Silvers` for the information!)
 - `SourceMod 1.11.0.6724` or higher is now required.
 
 #### Game Data
