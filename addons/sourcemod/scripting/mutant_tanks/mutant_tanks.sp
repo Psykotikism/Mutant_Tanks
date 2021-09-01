@@ -1544,7 +1544,7 @@ public void OnClientDisconnect(int client)
 
 	if (bIsValidClient(client))
 	{
-		vResetPlayer(client);
+		vResetPlayerStatus(client);
 	}
 }
 
@@ -1797,7 +1797,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 			if (bIsDeveloper(client, 7) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_INFAMMO))
 			{
-				vRefillAmmo(client, true);
+				vRefillGunAmmo(client, true);
 			}
 
 			if (!bIsEntityGrounded(client))
@@ -1974,7 +1974,7 @@ void vResetCore(int client)
 	g_esPlayer[client].g_iMaxClip[1] = 0;
 	g_esPlayer[client].g_iReviveCount = 0;
 
-	vResetDamage(client);
+	vResetTankDamage(client);
 }
 
 void vResetPlugin()
@@ -2005,7 +2005,7 @@ void vResetRound()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vResetPlayer(iPlayer);
+			vResetPlayerStatus(iPlayer);
 		}
 	}
 
@@ -3448,7 +3448,7 @@ Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, .amount = iAmount, .mode = iMode);
+	vSetupTankSpawn(client, sType, .amount = iAmount, .mode = iMode);
 
 	return Plugin_Handled;
 }
@@ -3504,7 +3504,7 @@ Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, .log = false, .amount = iAmount, .mode = iMode);
+	vSetupTankSpawn(client, sType, .log = false, .amount = iAmount, .mode = iMode);
 
 	return Plugin_Handled;
 }
@@ -3567,7 +3567,7 @@ Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, .amount = iAmount, .mode = iMode);
+	vSetupTankSpawn(client, sType, .amount = iAmount, .mode = iMode);
 
 	return Plugin_Handled;
 }
@@ -4736,7 +4736,7 @@ int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				switch (iIndex)
 				{
 					case -1: vQueueTank(param1, iIndex, false);
-					case 0: vTank(param1, "random", false);
+					case 0: vSetupTankSpawn(param1, "random", false);
 				}
 			}
 			else
@@ -4777,7 +4777,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTank(iTank))
 			{
-				vThrowInterval(iTank);
+				vSetTankThrowInterval(iTank);
 			}
 		}
 		else if (StrEqual(name, "bot_player_replace"))
@@ -5005,7 +5005,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 			if (bIsTank(iPlayer) || bIsSurvivor(iPlayer))
 			{
-				vRemoveGlow(iPlayer);
+				vRemovePlayerGlow(iPlayer);
 			}
 
 			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[iPlayer].g_bVomited)
@@ -5101,12 +5101,12 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						g_esPlayer[iTank].g_bAttacked = true;
 
-						vAttackInterval(iTank);
+						vSetTankAttackInterval(iTank);
 					}
 					else if (g_esPlayer[iTank].g_flAttackDelay == -1.0 && g_esPlayer[iTank].g_bAttackedAgain)
 					{
 						CreateTimer(g_esCache[iTank].g_flAttackInterval, tTimerResetAttackDelay, iTankId, TIMER_FLAG_NO_MAPCHANGE);
-						vAttackInterval(iTank);
+						vSetTankAttackInterval(iTank);
 					}
 					else if (g_esPlayer[iTank].g_flAttackDelay < GetGameTime())
 					{
@@ -5679,8 +5679,8 @@ void vCalculateDeath(int tank, int survivor)
 
 			switch (flAssistPercentage < 90.0)
 			{
-				case true: vAnnounceDeath(tank, survivor, flPercentage, iAssistant, flAssistPercentage);
-				case false: vAnnounceDeath(tank, 0, 0.0, 0, 0.0, false);
+				case true: vAnnounceTankDeath(tank, survivor, flPercentage, iAssistant, flAssistPercentage);
+				case false: vAnnounceTankDeath(tank, 0, 0.0, 0, 0.0, false);
 			}
 
 			switch (survivor == iAssistant)
@@ -5694,13 +5694,13 @@ void vCalculateDeath(int tank, int survivor)
 			}
 
 			vRewardPriority(tank, 3, survivor, iAssistant);
-			vResetDamage(tank);
+			vResetTankDamage(tank);
 			vResetSurvivorStats2(survivor);
 			vResetSurvivorStats2(iAssistant);
 		}
 		else if (g_esCache[tank].g_iAnnounceDeath > 0)
 		{
-			vAnnounceDeath(tank, 0, 0.0, 0, 0.0);
+			vAnnounceTankDeath(tank, 0, 0.0, 0, 0.0);
 		}
 	}
 }
@@ -5787,7 +5787,7 @@ void vEndRewards(int survivor, bool force)
 
 				if (!bIsDeveloper(survivor, 0))
 				{
-					vRemoveGlow(survivor);
+					vRemovePlayerGlow(survivor);
 				}
 			}
 		}
@@ -6535,7 +6535,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 				{
-					vRefillAmmo(survivor, .reset = true);
+					vRefillGunAmmo(survivor, .reset = true);
 				}
 			}
 
@@ -6692,9 +6692,9 @@ void vShowDamageList(int tank, const char[] namePhrase, const char[][] lists, in
 
 void vSetupAmmoReward(int survivor)
 {
-	vCheckClipSizes(survivor);
-	vRefillAmmo(survivor);
-	vGiveSpecialAmmo(survivor);
+	vCheckGunClipSizes(survivor);
+	vRefillGunAmmo(survivor);
+	vGiveGunSpecialAmmo(survivor);
 }
 
 void vSetupGodmodeReward(int survivor)
@@ -6711,7 +6711,7 @@ void vSetupHealthReward(int survivor, int tank, int priority)
 {
 	vSetupRewardCounts(survivor, tank, priority, MT_REWARD_HEALTH);
 	vSaveCaughtSurvivor(survivor);
-	vRefillHealth(survivor);
+	vRefillSurvivorHealth(survivor);
 }
 
 void vSetupItemReward(int survivor, int tank, int priority, char[] buffer, int size)
@@ -6783,9 +6783,9 @@ void vSetupRefillReward(int survivor, char[] buffer, int size)
 
 	FormatEx(buffer, size, "%T", "RewardRefill", survivor);
 	vSaveCaughtSurvivor(survivor);
-	vCheckClipSizes(survivor);
-	vRefillAmmo(survivor, .reset = !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO));
-	vRefillHealth(survivor);
+	vCheckGunClipSizes(survivor);
+	vRefillGunAmmo(survivor, .reset = !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO));
+	vRefillSurvivorHealth(survivor);
 }
 
 void vSetupRewardCounts(int survivor, int tank, int priority, int type)
@@ -7181,7 +7181,7 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
  * Player functions
  **/
 
-void vRemoveDamage(int victim, int damagetype)
+void vRemovePlayerDamage(int victim, int damagetype)
 {
 	if (damagetype & DMG_BURN)
 	{
@@ -7191,7 +7191,7 @@ void vRemoveDamage(int victim, int damagetype)
 	vSetWounds(victim);
 }
 
-void vRemoveGlow(int player)
+void vRemovePlayerGlow(int player)
 {
 	if (!g_bSecondGame || !bIsValidClient(player))
 	{
@@ -7203,15 +7203,7 @@ void vRemoveGlow(int player)
 	SetEntProp(player, Prop_Send, "m_iGlowType", 0);
 }
 
-void vResetDamage(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		g_esPlayer[iSurvivor].g_iTankDamage[tank] = 0;
-	}
-}
-
-void vResetPlayer(int player)
+void vResetPlayerStatus(int player)
 {
 	vResetTank(player);
 	vResetTank2(player);
@@ -7220,11 +7212,19 @@ void vResetPlayer(int player)
 	vCacheSettings(player);
 }
 
+void vResetTankDamage(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		g_esPlayer[iSurvivor].g_iTankDamage[tank] = 0;
+	}
+}
+
 /**
  * Survivor functions
  **/
 
-void vCheckClipSizes(int survivor)
+void vCheckGunClipSizes(int survivor)
 {
 	if (g_esGeneral.g_hSDKGetMaxClip1 != null)
 	{
@@ -7318,7 +7318,47 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	}
 }
 
-void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
+void vForceVocalize(int survivor, const char[] voiceline)
+{
+	switch (g_bSecondGame)
+	{
+		case true: FakeClientCommand(survivor, "vocalize %s #%i", voiceline, RoundToNearest(GetGameTime() * 10.0));
+		case false: FakeClientCommand(survivor, "vocalize %s", voiceline);
+	}
+}
+
+void vGiveGunSpecialAmmo(int survivor)
+{
+	int iType = ((bIsDeveloper(survivor, 7) || bIsDeveloper(survivor, 11)) && g_esDeveloper[survivor].g_iDevSpecialAmmo > g_esPlayer[survivor].g_iSpecialAmmo) ? g_esDeveloper[survivor].g_iDevSpecialAmmo : g_esPlayer[survivor].g_iSpecialAmmo;
+	if (g_bSecondGame && iType > 0)
+	{
+		int iSlot = GetPlayerWeaponSlot(survivor, 0);
+		if (iSlot > MaxClients)
+		{
+			int iAmmoType = GetEntProp(iSlot, Prop_Send, "m_iPrimaryAmmoType");
+			if (iAmmoType != 6 && iAmmoType != 17) // rifle_m60 and grenade_launcher
+			{
+				int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
+
+				switch (iType)
+				{
+					case 1: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_INCENDIARY : MT_UPGRADE_INCENDIARY;
+					case 2: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_EXPLOSIVE : MT_UPGRADE_EXPLOSIVE;
+					case 3:
+					{
+						int iSpecialAmmo = (GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE;
+						iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|iSpecialAmmo : iSpecialAmmo;
+					}
+				}
+
+				SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", iUpgrades);
+				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", GetEntProp(iSlot, Prop_Send, "m_iClip1"));
+			}
+		}
+	}
+}
+
+void vGiveSurvivorRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
 {
 	if (specific)
 	{
@@ -7329,7 +7369,7 @@ void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
 			return;
 		}
 
-		vGiveRandomMeleeWeapon(survivor, false);
+		vGiveSurvivorRandomMeleeWeapon(survivor, false);
 	}
 	else
 	{
@@ -7363,38 +7403,7 @@ void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
 	}
 }
 
-void vGiveSpecialAmmo(int survivor)
-{
-	int iType = ((bIsDeveloper(survivor, 7) || bIsDeveloper(survivor, 11)) && g_esDeveloper[survivor].g_iDevSpecialAmmo > g_esPlayer[survivor].g_iSpecialAmmo) ? g_esDeveloper[survivor].g_iDevSpecialAmmo : g_esPlayer[survivor].g_iSpecialAmmo;
-	if (g_bSecondGame && iType > 0)
-	{
-		int iSlot = GetPlayerWeaponSlot(survivor, 0);
-		if (iSlot > MaxClients)
-		{
-			int iAmmoType = GetEntProp(iSlot, Prop_Send, "m_iPrimaryAmmoType");
-			if (iAmmoType != 6 && iAmmoType != 17) // rifle_m60 and grenade_launcher
-			{
-				int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
-
-				switch (iType)
-				{
-					case 1: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_INCENDIARY : MT_UPGRADE_INCENDIARY;
-					case 2: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_EXPLOSIVE : MT_UPGRADE_EXPLOSIVE;
-					case 3:
-					{
-						int iSpecialAmmo = (GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE;
-						iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|iSpecialAmmo : iSpecialAmmo;
-					}
-				}
-
-				SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", iUpgrades);
-				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", GetEntProp(iSlot, Prop_Send, "m_iClip1"));
-			}
-		}
-	}
-}
-
-void vGiveWeapons(int survivor)
+void vGiveSurvivorWeapons(int survivor)
 {
 	int iSlot = 0;
 	if (g_esPlayer[survivor].g_sWeaponPrimary[0] != '\0')
@@ -7469,7 +7478,7 @@ void vGiveWeapons(int survivor)
 	g_esPlayer[survivor].g_sWeaponPills[0] = '\0';
 }
 
-void vRefillAmmo(int survivor, bool all = false, bool reset = false)
+void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 {
 	int iSetting = (bIsDeveloper(survivor, 7) && g_esDeveloper[survivor].g_iDevInfiniteAmmo > g_esPlayer[survivor].g_iInfiniteAmmo) ? g_esDeveloper[survivor].g_iDevInfiniteAmmo : g_esPlayer[survivor].g_iInfiniteAmmo;
 	iSetting = all ? iSetting : 0;
@@ -7495,7 +7504,7 @@ void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 				}
 			}
 
-			vRefillMagazine(survivor, iSlot, reset);
+			vRefillGunMagazine(survivor, iSlot, reset);
 		}
 	}
 
@@ -7535,28 +7544,7 @@ void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 	}
 }
 
-void vRefillHealth(int survivor)
-{
-	if (bIsSurvivorDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
-	{
-		int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
-		if (iMode != 2)
-		{
-			SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-			vCheatCommand(survivor, "give", "health");
-			SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
-		}
-		else
-		{
-			vCheatCommand(survivor, "give", "health");
-		}
-
-		g_esPlayer[survivor].g_bLastLife = false;
-		g_esPlayer[survivor].g_iReviveCount = 0;
-	}
-}
-
-void vRefillMagazine(int survivor, int weapon, bool reset)
+void vRefillGunMagazine(int survivor, int weapon, bool reset)
 {
 	int iAmmoOffset = iGetWeaponOffset(weapon), iNewAmmo = 0;
 
@@ -7579,6 +7567,27 @@ void vRefillMagazine(int survivor, int weapon, bool reset)
 	}
 }
 
+void vRefillSurvivorHealth(int survivor)
+{
+	if (bIsSurvivorDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
+	{
+		int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
+		if (iMode != 2)
+		{
+			SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+			vCheatCommand(survivor, "give", "health");
+			SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+		}
+		else
+		{
+			vCheatCommand(survivor, "give", "health");
+		}
+
+		g_esPlayer[survivor].g_bLastLife = false;
+		g_esPlayer[survivor].g_iReviveCount = 0;
+	}
+}
+
 void vRemoveSurvivorEffects(int survivor, bool body = false)
 {
 	int iEffect = -1;
@@ -7595,7 +7604,7 @@ void vRemoveSurvivorEffects(int survivor, bool body = false)
 
 	if (body || bIsValidClient(survivor))
 	{
-		vRemoveGlow(survivor);
+		vRemovePlayerGlow(survivor);
 		vRemoveSurvivorLight(survivor);
 		SetEntityRenderMode(survivor, RENDER_NORMAL);
 		SetEntityRenderColor(survivor, 255, 255, 255, 255);
@@ -7766,7 +7775,7 @@ void vSaveCaughtSurvivor(int survivor, int special = 0)
 	}
 }
 
-void vSaveWeapons(int survivor)
+void vSaveSurvivorWeapons(int survivor)
 {
 	char sWeapon[32];
 	g_esPlayer[survivor].g_iWeaponInfo2 = -1;
@@ -8046,7 +8055,7 @@ void vSetSurvivorOutline(int survivor, const char[] colors, bool apply = true, c
 	switch (apply)
 	{
 		case true: vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
-		case false: vRemoveGlow(survivor);
+		case false: vRemovePlayerGlow(survivor);
 	}
 }
 
@@ -8190,8 +8199,8 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 		if (bIsSurvivor(developer))
 		{
 			vSetupLoadout(developer, usual);
-			vGiveSpecialAmmo(developer);
-			vCheckClipSizes(developer);
+			vGiveGunSpecialAmmo(developer);
+			vCheckGunClipSizes(developer);
 
 			if (bIsDeveloper(developer, 0))
 			{
@@ -8262,11 +8271,11 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 				SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 			}
 
-			vCheckClipSizes(developer);
+			vCheckGunClipSizes(developer);
 
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_AMMO))
 			{
-				vRefillAmmo(developer, .reset = true);
+				vRefillGunAmmo(developer, .reset = true);
 			}
 
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_GODMODE))
@@ -8418,7 +8427,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevSpecialAmmo = iClamp(StringToInt(value), 0, 3);
 
-		vGiveSpecialAmmo(guest);
+		vGiveGunSpecialAmmo(guest);
 	}
 	else if (StrContains(keyword, "speed", false) != -1)
 	{
@@ -8483,7 +8492,7 @@ void vSetupLoadout(int developer, bool usual = true)
 				{
 					if (sSet[1][0] != '\0')
 					{
-						vGiveRandomMeleeWeapon(developer, usual, sSet[1]);
+						vGiveSurvivorRandomMeleeWeapon(developer, usual, sSet[1]);
 					}
 				}
 				case false:
@@ -8512,7 +8521,7 @@ void vSetupLoadout(int developer, bool usual = true)
 		{
 			if (g_bSecondGame)
 			{
-				vGiveRandomMeleeWeapon(developer, usual);
+				vGiveSurvivorRandomMeleeWeapon(developer, usual);
 
 				switch (GetRandomInt(1, 5))
 				{
@@ -8564,7 +8573,7 @@ void vSetupLoadout(int developer, bool usual = true)
 			}
 		}
 
-		vCheckClipSizes(developer);
+		vCheckGunClipSizes(developer);
 	}
 }
 
@@ -8638,14 +8647,14 @@ void vSurvivorReactions(int tank)
 
 					switch (sModel[29])
 					{
-						case 'b', 'd', 'c', 'h': vVocalize(iSurvivor, "C2M1Falling");
-						case 'v', 'n', 'e', 'a': vVocalize(iSurvivor, "PlaneCrashResponse");
+						case 'b', 'd', 'c', 'h': vForceVocalize(iSurvivor, "C2M1Falling");
+						case 'v', 'n', 'e', 'a': vForceVocalize(iSurvivor, "PlaneCrashResponse");
 					}
 				}
-				case 2: vVocalize(iSurvivor, "PlayerYellRun");
-				case 3: vVocalize(iSurvivor, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
-				case 4: vVocalize(iSurvivor, "PlayerBackUp");
-				case 5: vVocalize(iSurvivor, "PlayerEmphaticGo");
+				case 2: vForceVocalize(iSurvivor, "PlayerYellRun");
+				case 3: vForceVocalize(iSurvivor, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
+				case 4: vForceVocalize(iSurvivor, "PlayerBackUp");
+				case 5: vForceVocalize(iSurvivor, "PlayerEmphaticGo");
 			}
 		}
 	}
@@ -8738,7 +8747,7 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		switch (toggle && g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] > GetGameTime())
 		{
 			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
-			case false: vRemoveGlow(survivor);
+			case false: vRemovePlayerGlow(survivor);
 		}
 	}
 }
@@ -8759,34 +8768,25 @@ void vUnvomitPlayer(int player)
 #endif
 }
 
-void vVocalize(int survivor, const char[] voiceline)
-{
-	switch (g_bSecondGame)
-	{
-		case true: FakeClientCommand(survivor, "vocalize %s #%i", voiceline, RoundToNearest(GetGameTime() * 10.0));
-		case false: FakeClientCommand(survivor, "vocalize %s", voiceline);
-	}
-}
-
-void vVocalizeDeath(int killer, int assistant, int tank)
+void vVocalizeTankDeath(int killer, int assistant, int tank)
 {
 	if (g_esCache[tank].g_iVocalizeDeath == 1)
 	{
 		if (bIsSurvivor(killer))
 		{
-			vVocalize(killer, "PlayerHurrah");
+			vForceVocalize(killer, "PlayerHurrah");
 		}
 
 		if (bIsSurvivor(assistant) && assistant != killer)
 		{
-			vVocalize(assistant, "PlayerTaunt");
+			vForceVocalize(assistant, "PlayerTaunt");
 		}
 
 		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
 			if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
 			{
-				vVocalize(iTeammate, "PlayerNiceJob");
+				vForceVocalize(iTeammate, "PlayerNiceJob");
 			}
 		}
 	}
@@ -8796,7 +8796,144 @@ void vVocalizeDeath(int killer, int assistant, int tank)
  * Tank functions
  **/
 
-void vAnnounce(int tank, const char[] oldname, const char[] name, int mode)
+void vAnnounceTankArrival(int tank, const char[] name)
+{
+	if (!bIsCustomTank(tank) && !g_esGeneral.g_bFinaleEnded)
+	{
+		if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
+		{
+			int iOption = iGetMessageType(g_esCache[tank].g_iArrivalMessage);
+			if (iOption > 0)
+			{
+				char sPhrase[32];
+				FormatEx(sPhrase, sizeof sPhrase, "Arrival%i", iOption);
+				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
+				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
+			}
+		}
+
+		if (g_esCache[tank].g_iVocalizeArrival == 1 || g_esCache[tank].g_iArrivalSound == 1)
+		{
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (g_esCache[tank].g_iVocalizeArrival == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					switch (GetRandomInt(1, 3))
+					{
+						case 1: vForceVocalize(iPlayer, "PlayerYellRun");
+						case 2: vForceVocalize(iPlayer, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
+						case 3: vForceVocalize(iPlayer, "PlayerBackUp");
+					}
+				}
+
+				if (g_esCache[tank].g_iArrivalSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+				{
+					EmitSoundToClient(iPlayer, SOUND_SPAWN, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
+				}
+			}
+		}
+	}
+}
+
+void vAnnounceTankDeath(int tank, int killer, float percentage, int assistant, float assistPercentage, bool override = true)
+{
+	bool bAnnounce = false;
+
+	switch (g_esCache[tank].g_iAnnounceDeath)
+	{
+		case 1: bAnnounce = override;
+		case 2:
+		{
+			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
+			if (iOption > 0)
+			{
+				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[5][768];
+				vGetTranslatedName(sTankName, sizeof sTankName, tank);
+				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+				{
+					char sKiller[128];
+					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof sKiller);
+					FormatEx(sPhrase, sizeof sPhrase, "Killer%i", iOption);
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
+					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
+					vVocalizeTankDeath(killer, assistant, tank);
+				}
+				else if (assistPercentage >= 1.0)
+				{
+					FormatEx(sPhrase, sizeof sPhrase, "Assist%i", iOption);
+					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
+					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
+					vVocalizeTankDeath(killer, assistant, tank);
+				}
+				else
+				{
+					bAnnounce = override;
+				}
+			}
+		}
+	}
+
+	if (!bIsCustomTank(tank))
+	{
+		if (bAnnounce)
+		{
+			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
+			if (iOption > 0)
+			{
+				char sPhrase[32], sTankName[33];
+				FormatEx(sPhrase, sizeof sPhrase, "Death%i", iOption);
+				vGetTranslatedName(sTankName, sizeof sTankName, tank);
+				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
+				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
+			}
+		}
+
+		if (g_esCache[tank].g_iVocalizeDeath == 1 || g_esCache[tank].g_iDeathSound == 1)
+		{
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bAnnounce && g_esCache[tank].g_iVocalizeDeath == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					switch (GetRandomInt(1, 3))
+					{
+						case 1: vForceVocalize(iPlayer, "PlayerHurrah");
+						case 2: vForceVocalize(iPlayer, "PlayerTaunt");
+						case 3: vForceVocalize(iPlayer, "PlayerNiceJob");
+					}
+				}
+
+				if (g_esCache[tank].g_iDeathSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+				{
+					EmitSoundToClient(iPlayer, SOUND_DEATH, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
+				}
+			}
+		}
+	}
+}
+
+void vChangeTank(int admin, int amount, int mode)
+{
+	int iTarget = GetClientAimTarget(admin);
+
+	switch (bIsTank(iTarget))
+	{
+		case true:
+		{
+			vSetTankColor(iTarget, g_esGeneral.g_iChosenType);
+			vTankSpawn(iTarget, 5);
+			vExternalView(iTarget, 1.5);
+
+			g_esGeneral.g_iChosenType = 0;
+		}
+		case false: vSpawnTank(admin, .amount = amount, .mode = mode);
+	}
+}
+
+void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int mode)
 {
 	if (bIsTankSupported(tank))
 	{
@@ -8804,7 +8941,7 @@ void vAnnounce(int tank, const char[] oldname, const char[] name, int mode)
 		{
 			switch (mode)
 			{
-				case 0: vAnnounceArrival(tank, name);
+				case 0: vAnnounceTankArrival(tank, name);
 				case 1:
 				{
 					if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_BOSS)
@@ -8839,7 +8976,7 @@ void vAnnounce(int tank, const char[] oldname, const char[] name, int mode)
 				}
 				case 5:
 				{
-					vAnnounceArrival(tank, name);
+					vAnnounceTankArrival(tank, name);
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChangeType");
 				}
 			}
@@ -8868,182 +9005,6 @@ void vAnnounce(int tank, const char[] oldname, const char[] name, int mode)
 			}
 			case false: vSetTankGlow(tank);
 		}
-	}
-}
-
-void vAnnounceArrival(int tank, const char[] name)
-{
-	if (!bIsCustomTank(tank) && !g_esGeneral.g_bFinaleEnded)
-	{
-		if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
-		{
-			int iOption = iGetMessageType(g_esCache[tank].g_iArrivalMessage);
-			if (iOption > 0)
-			{
-				char sPhrase[32];
-				FormatEx(sPhrase, sizeof sPhrase, "Arrival%i", iOption);
-				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
-				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
-			}
-		}
-
-		if (g_esCache[tank].g_iVocalizeArrival == 1 || g_esCache[tank].g_iArrivalSound == 1)
-		{
-			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-			{
-				if (g_esCache[tank].g_iVocalizeArrival == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-				{
-					switch (GetRandomInt(1, 3))
-					{
-						case 1: vVocalize(iPlayer, "PlayerYellRun");
-						case 2: vVocalize(iPlayer, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
-						case 3: vVocalize(iPlayer, "PlayerBackUp");
-					}
-				}
-
-				if (g_esCache[tank].g_iArrivalSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
-				{
-					EmitSoundToClient(iPlayer, SOUND_SPAWN, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
-				}
-			}
-		}
-	}
-}
-
-void vAnnounceDeath(int tank, int killer, float percentage, int assistant, float assistPercentage, bool override = true)
-{
-	bool bAnnounce = false;
-
-	switch (g_esCache[tank].g_iAnnounceDeath)
-	{
-		case 1: bAnnounce = override;
-		case 2:
-		{
-			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
-			if (iOption > 0)
-			{
-				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[5][768];
-				vGetTranslatedName(sTankName, sizeof sTankName, tank);
-				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
-				{
-					char sKiller[128];
-					vRecordKiller(tank, killer, percentage, assistant, sKiller, sizeof sKiller);
-					FormatEx(sPhrase, sizeof sPhrase, "Killer%i", iOption);
-					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
-					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sKiller, sTankName, sDetails);
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sKiller, sTankName, sDetails);
-					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
-					vVocalizeDeath(killer, assistant, tank);
-				}
-				else if (assistPercentage >= 1.0)
-				{
-					FormatEx(sPhrase, sizeof sPhrase, "Assist%i", iOption);
-					vRecordDamage(tank, killer, assistant, assistPercentage, sDetails, sizeof sDetails, sTeammates, sizeof sTeammates, sizeof sTeammates[]);
-					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
-					vShowDamageList(tank, sTankName, sTeammates, sizeof sTeammates);
-					vVocalizeDeath(killer, assistant, tank);
-				}
-				else
-				{
-					bAnnounce = override;
-				}
-			}
-		}
-	}
-
-	if (!bIsCustomTank(tank))
-	{
-		if (bAnnounce)
-		{
-			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
-			if (iOption > 0)
-			{
-				char sPhrase[32], sTankName[33];
-				FormatEx(sPhrase, sizeof sPhrase, "Death%i", iOption);
-				vGetTranslatedName(sTankName, sizeof sTankName, tank);
-				MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
-				vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
-			}
-		}
-
-		if (g_esCache[tank].g_iVocalizeDeath == 1 || g_esCache[tank].g_iDeathSound == 1)
-		{
-			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-			{
-				if (bAnnounce && g_esCache[tank].g_iVocalizeDeath == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-				{
-					switch (GetRandomInt(1, 3))
-					{
-						case 1: vVocalize(iPlayer, "PlayerHurrah");
-						case 2: vVocalize(iPlayer, "PlayerTaunt");
-						case 3: vVocalize(iPlayer, "PlayerNiceJob");
-					}
-				}
-
-				if (g_esCache[tank].g_iDeathSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
-				{
-					EmitSoundToClient(iPlayer, SOUND_DEATH, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
-				}
-			}
-		}
-	}
-}
-
-void vAttackInterval(int tank)
-{
-	if (bIsTank(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
-	{
-		int iWeapon = GetPlayerWeaponSlot(tank, 0);
-		if (iWeapon > MaxClients)
-		{
-			g_esPlayer[tank].g_flAttackDelay = (GetGameTime() + g_esCache[tank].g_flAttackInterval);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esCache[tank].g_flAttackInterval, 0);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
-		}
-	}
-}
-
-void vBoss(int tank, int limit, int stages, int type, int stage)
-{
-	if (stages >= stage)
-	{
-		int iHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
-		if (iHealth <= limit)
-		{
-			g_esPlayer[tank].g_iBossStageCount = stage;
-
-			vResetTankSpeed(tank);
-			vSurvivorReactions(tank);
-			vSetTankColor(tank, type, false);
-			vTankSpawn(tank, 1);
-
-			int iNewHealth = (GetEntProp(tank, Prop_Data, "m_iMaxHealth") + limit),
-				iLeftover = (iNewHealth - iHealth),
-				iLeftover2 = (iLeftover > MT_MAXHEALTH) ? (iLeftover - MT_MAXHEALTH) : iLeftover,
-				iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-			g_esPlayer[tank].g_iTankHealth += (iLeftover > MT_MAXHEALTH) ? iLeftover2 : iLeftover;
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
-		}
-	}
-}
-
-void vChangeTank(int admin, int amount, int mode)
-{
-	int iTarget = GetClientAimTarget(admin);
-
-	switch (bIsTank(iTarget))
-	{
-		case true:
-		{
-			vSetTankColor(iTarget, g_esGeneral.g_iChosenType);
-			vTankSpawn(iTarget, 5);
-			vExternalView(iTarget, 1.5);
-
-			g_esGeneral.g_iChosenType = 0;
-		}
-		case false: vSpawnTank(admin, .amount = amount, .mode = mode);
 	}
 }
 
@@ -9098,6 +9059,31 @@ void vCopyTankStats(int tank, int newtank)
 	Call_PushCell(tank);
 	Call_PushCell(newtank);
 	Call_Finish();
+}
+
+void vEvolveBoss(int tank, int limit, int stages, int type, int stage)
+{
+	if (stages >= stage)
+	{
+		int iHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
+		if (iHealth <= limit)
+		{
+			g_esPlayer[tank].g_iBossStageCount = stage;
+
+			vResetTankSpeed(tank);
+			vSurvivorReactions(tank);
+			vSetTankColor(tank, type, false);
+			vTankSpawn(tank, 1);
+
+			int iNewHealth = (GetEntProp(tank, Prop_Data, "m_iMaxHealth") + limit),
+				iLeftover = (iNewHealth - iHealth),
+				iLeftover2 = (iLeftover > MT_MAXHEALTH) ? (iLeftover - MT_MAXHEALTH) : iLeftover,
+				iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+			g_esPlayer[tank].g_iTankHealth += (iLeftover > MT_MAXHEALTH) ? iLeftover2 : iLeftover;
+			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
+			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
+		}
+	}
 }
 
 void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4])
@@ -9387,14 +9373,14 @@ void vMutateTank(int tank, int type)
 			vSetTankModel(tank);
 			vSetTankHealth(tank);
 			vResetTankSpeed(tank, false);
-			vThrowInterval(tank);
+			vSetTankThrowInterval(tank);
 
 			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
 			switch (bIsTankIdle(tank))
 			{
 				case true: CreateTimer(0.1, tTimerAnnounce2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				case false: vAnnounceArrival(tank, "NoName");
+				case false: vAnnounceTankArrival(tank, "NoName");
 			}
 
 			g_esPlayer[tank].g_iTankHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
@@ -9480,7 +9466,7 @@ void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 {
 	char sType[5];
 	IntToString(type, sType, sizeof sType);
-	vTank(admin, sType, mode, log);
+	vSetupTankSpawn(admin, sType, mode, log);
 }
 
 void vRegularSpawn()
@@ -9606,7 +9592,7 @@ void vRemoveTankProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
 
-	vRemoveGlow(tank);
+	vRemovePlayerGlow(tank);
 
 	if (mode == 1)
 	{
@@ -9662,7 +9648,7 @@ void vResetTank3(int tank)
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	vResetTankSpeed(tank);
-	vRemoveGlow(tank);
+	vRemovePlayerGlow(tank);
 }
 
 void vResetTankSpeed(int tank, bool mode = true)
@@ -9719,6 +9705,20 @@ void vSetRockModel(int tank, int rock)
 	}
 }
 
+void vSetTankAttackInterval(int tank)
+{
+	if (bIsTank(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
+	{
+		int iWeapon = GetPlayerWeaponSlot(tank, 0);
+		if (iWeapon > MaxClients)
+		{
+			g_esPlayer[tank].g_flAttackDelay = (GetGameTime() + g_esCache[tank].g_flAttackInterval);
+			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esCache[tank].g_flAttackInterval, 0);
+			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
+		}
+	}
+}
+
 void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = false, bool store = false)
 {
 	if (type == -1)
@@ -9768,7 +9768,7 @@ void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = fal
 	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
 	vCacheSettings(tank);
 	vSetTankModel(tank);
-	vRemoveGlow(tank);
+	vRemovePlayerGlow(tank);
 	vSetTankRainbowColor(tank);
 }
 
@@ -9903,7 +9903,7 @@ void vSetTankName(int tank, const char[] oldname, const char[] name, int mode)
 				dpAnnounce.WriteString(name);
 				dpAnnounce.WriteCell(mode);
 			}
-			case false: vAnnounce(tank, oldname, name, mode);
+			case false: vChooseArrivalType(tank, oldname, name, mode);
 		}
 	}
 }
@@ -10338,75 +10338,20 @@ void vSetTankRainbowColor(int tank)
 	}
 }
 
-void vSpawnMessages(int tank)
+void vSetTankThrowInterval(int tank)
 {
-	if (bIsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(tank))
+	if (bIsTank(tank) && g_esCache[tank].g_flThrowInterval > 0.0)
 	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpawnMessage");
-		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons");
-		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons2");
-		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons3");
-		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons4");
-	}
-}
-
-void vSpawnModes(int tank, bool status)
-{
-	g_esPlayer[tank].g_bBoss = status;
-	g_esPlayer[tank].g_bCombo = status;
-	g_esPlayer[tank].g_bRandomized = status;
-	g_esPlayer[tank].g_bTransformed = status;
-}
-
-void vSpawnTank(int admin, bool log = true, int amount, int mode)
-{
-	char sCommand[32], sParameter[32];
-	sCommand = g_bSecondGame ? "z_spawn_old" : "z_spawn";
-	sParameter = (mode == 0) ? "tank" : "tank auto";
-	int iType = g_esGeneral.g_iChosenType;
-	g_esGeneral.g_bForceSpawned = true;
-
-	switch (amount)
-	{
-		case 1: vCheatCommand(admin, sCommand, sParameter);
-		default:
+		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
+		if (iAbility > 0)
 		{
-			for (int iAmount = 0; iAmount <= amount; iAmount++)
-			{
-				if (iAmount < amount)
-				{
-					if (bIsValidClient(admin))
-					{
-						vCheatCommand(admin, sCommand, sParameter);
-
-						g_esGeneral.g_bForceSpawned = true;
-						g_esGeneral.g_iChosenType = iType;
-					}
-				}
-				else if (iAmount == amount)
-				{
-					g_esGeneral.g_iChosenType = 0;
-				}
-			}
+			SetEntPropFloat(iAbility, Prop_Send, "m_duration", g_esCache[tank].g_flThrowInterval);
+			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + g_esCache[tank].g_flThrowInterval));
 		}
 	}
-
-	if (log)
-	{
-		char sTankName[33];
-
-		switch (iType)
-		{
-			case -1: FormatEx(sTankName, sizeof sTankName, "Tank");
-			default: strcopy(sTankName, sizeof sTankName, g_esTank[iType].g_sTankName);
-		}
-
-		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
-		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
-	}
 }
 
-void vTank(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
+void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
 
@@ -10538,25 +10483,80 @@ void vTank(int admin, char[] type, bool spawn = false, bool log = true, int amou
 	}
 }
 
+void vSpawnMessages(int tank)
+{
+	if (bIsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(tank))
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpawnMessage");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons2");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons3");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons4");
+	}
+}
+
+void vSpawnModes(int tank, bool status)
+{
+	g_esPlayer[tank].g_bBoss = status;
+	g_esPlayer[tank].g_bCombo = status;
+	g_esPlayer[tank].g_bRandomized = status;
+	g_esPlayer[tank].g_bTransformed = status;
+}
+
+void vSpawnTank(int admin, bool log = true, int amount, int mode)
+{
+	char sCommand[32], sParameter[32];
+	sCommand = g_bSecondGame ? "z_spawn_old" : "z_spawn";
+	sParameter = (mode == 0) ? "tank" : "tank auto";
+	int iType = g_esGeneral.g_iChosenType;
+	g_esGeneral.g_bForceSpawned = true;
+
+	switch (amount)
+	{
+		case 1: vCheatCommand(admin, sCommand, sParameter);
+		default:
+		{
+			for (int iAmount = 0; iAmount <= amount; iAmount++)
+			{
+				if (iAmount < amount)
+				{
+					if (bIsValidClient(admin))
+					{
+						vCheatCommand(admin, sCommand, sParameter);
+
+						g_esGeneral.g_bForceSpawned = true;
+						g_esGeneral.g_iChosenType = iType;
+					}
+				}
+				else if (iAmount == amount)
+				{
+					g_esGeneral.g_iChosenType = 0;
+				}
+			}
+		}
+	}
+
+	if (log)
+	{
+		char sTankName[33];
+
+		switch (iType)
+		{
+			case -1: FormatEx(sTankName, sizeof sTankName, "Tank");
+			default: strcopy(sTankName, sizeof sTankName, g_esTank[iType].g_sTankName);
+		}
+
+		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
+	}
+}
+
 void vTankSpawn(int tank, int mode = 0)
 {
 	DataPack dpTankSpawn = new DataPack();
 	RequestFrame(vTankSpawnFrame, dpTankSpawn);
 	dpTankSpawn.WriteCell(GetClientUserId(tank));
 	dpTankSpawn.WriteCell(mode);
-}
-
-void vThrowInterval(int tank)
-{
-	if (bIsTank(tank) && g_esCache[tank].g_flThrowInterval > 0.0)
-	{
-		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
-		if (iAbility > 0)
-		{
-			SetEntPropFloat(iAbility, Prop_Send, "m_duration", g_esCache[tank].g_flThrowInterval);
-			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + g_esCache[tank].g_flThrowInterval));
-		}
-	}
 }
 
 void vTriggerTank(int tank)
@@ -13680,7 +13680,7 @@ void vPlayerSpawnFrame(DataPack pack)
 			vSetupPerks(iPlayer);
 		}
 
-		vRefillAmmo(iPlayer, .reset = true);
+		vRefillGunAmmo(iPlayer, .reset = true);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
 	{
@@ -13813,7 +13813,7 @@ void vTankSpawnFrame(DataPack pack)
 			vParticleEffects(iTank);
 			vResetTankSpeed(iTank, false);
 			vSetTankProps(iTank);
-			vThrowInterval(iTank);
+			vSetTankThrowInterval(iTank);
 
 			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
@@ -14236,7 +14236,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 
 				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
 				{
-					vRemoveDamage(victim, damagetype);
+					vRemovePlayerDamage(victim, damagetype);
 
 					if (StrEqual(sClassname, "tank_rock"))
 					{
@@ -14261,7 +14261,7 @@ Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float &damage
 			attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
 			if (attacker == -1 || (0 < attacker <= MaxClients && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
 			{
-				vRemoveDamage(victim, damagetype);
+				vRemovePlayerDamage(victim, damagetype);
 
 				return Plugin_Handled;
 			}
@@ -14270,7 +14270,7 @@ Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float &damage
 		{
 			if (g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
 			{
-				vRemoveDamage(victim, damagetype);
+				vRemovePlayerDamage(victim, damagetype);
 
 				return Plugin_Handled;
 			}
@@ -14674,7 +14674,7 @@ void OnWeaponEquipPost(int client, int weapon)
 {
 	if (bIsSurvivor(client) && weapon > MaxClients)
 	{
-		vCheckClipSizes(client);
+		vCheckGunClipSizes(client);
 
 		char sWeapon[32];
 		GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
@@ -15364,7 +15364,7 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		g_esPlayer[pThis].g_iReviveCount = 0;
 
 		vResetSurvivorStats(pThis, true);
-		vSaveWeapons(pThis);
+		vSaveSurvivorWeapons(pThis);
 	}
 	else if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -15528,7 +15528,7 @@ MRESReturn mreFallingPre(int pThis)
 			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevFallVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevFallVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
 			if (sVoiceLine[0] != '\0')
 			{
-				vVocalize(pThis, sVoiceLine);
+				vForceVocalize(pThis, sVoiceLine);
 			}
 		}
 	}
@@ -17397,9 +17397,9 @@ bool bRespawnSurvivor(int survivor, bool restore)
 			if (restore)
 			{
 				vRemoveWeapons(survivor);
-				vGiveWeapons(survivor);
+				vGiveSurvivorWeapons(survivor);
 				vSetupLoadout(survivor);
-				vGiveSpecialAmmo(survivor);
+				vGiveGunSpecialAmmo(survivor);
 			}
 
 			return true;
@@ -17979,7 +17979,7 @@ Action tTimerAnnounce(Handle timer, DataPack pack)
 		pack.ReadString(sOldName, sizeof sOldName);
 		pack.ReadString(sNewName, sizeof sNewName);
 		int iMode = pack.ReadCell();
-		vAnnounce(iTank, sOldName, sNewName, iMode);
+		vChooseArrivalType(iTank, sOldName, sNewName, iMode);
 
 		return Plugin_Stop;
 	}
@@ -18001,7 +18001,7 @@ Action tTimerAnnounce2(Handle timer, int userid)
 
 	if (!bIsTankIdle(iTank))
 	{
-		vAnnounceArrival(iTank, "NoName");
+		vAnnounceTankArrival(iTank, "NoName");
 
 		return Plugin_Stop;
 	}
@@ -18258,7 +18258,7 @@ Action tTimerLoopVoiceline(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 
-	vVocalize(iSurvivor, g_esPlayer[iSurvivor].g_sLoopingVoiceline);
+	vForceVocalize(iSurvivor, g_esPlayer[iSurvivor].g_sLoopingVoiceline);
 
 	return Plugin_Continue;
 }
@@ -18787,10 +18787,10 @@ Action tTimerUpdateBoss(Handle timer, DataPack pack)
 
 	switch (g_esPlayer[iTank].g_iBossStageCount)
 	{
-		case 0: vBoss(iTank, iBossHealth, iBossStages, iType, 1);
-		case 1: vBoss(iTank, iBossHealth2, iBossStages, iType2, 2);
-		case 2: vBoss(iTank, iBossHealth3, iBossStages, iType3, 3);
-		case 3: vBoss(iTank, iBossHealth4, iBossStages, iType4, 4);
+		case 0: vEvolveBoss(iTank, iBossHealth, iBossStages, iType, 1);
+		case 1: vEvolveBoss(iTank, iBossHealth2, iBossStages, iType2, 2);
+		case 2: vEvolveBoss(iTank, iBossHealth3, iBossStages, iType3, 3);
+		case 3: vEvolveBoss(iTank, iBossHealth4, iBossStages, iType4, 4);
 	}
 
 	return Plugin_Continue;
