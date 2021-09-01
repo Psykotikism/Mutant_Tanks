@@ -484,7 +484,7 @@
 
 	"Kill9"
 	{
-		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen!"
+		"hu"			"{olive}{1}{default} rávette{mint} {2}{default}-t hogy mérgében kilépjen!"
 	}
 
 	"Kill10"
@@ -534,7 +534,7 @@
 
 	"Killer9"
 	{
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default}-t hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
