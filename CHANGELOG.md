@@ -27,6 +27,7 @@
 ### Changes
 
 #### General
+- Changed the method for checking idle Tanks.
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
 - Removed parentheses of `sizeof` calls.
 - Removed unnecessary usage of the `public` keyword.
@@ -36,6 +37,7 @@
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
 - Updated signatures for `CTerrorWeapon::CanDeploy` and `CTerrorWeapon::CanDeployFor` to be compatible with the [Incapped Weapons Patch](https://forums.alliedmods.net/showthread.php?t=322859) plugin.
+- Removed some unused offsets.
 
 #### Settings
 - Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC` for the idea!)

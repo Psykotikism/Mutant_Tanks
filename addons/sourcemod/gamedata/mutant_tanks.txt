@@ -690,36 +690,12 @@
 			 * Action<Tank>::FirstContainedResponder()
 			 *
 			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "Action<Tank>" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Linux binary.
-			 * 5. Use the member variable offset.
+			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Action<Tank>::FirstContainedResponder"
 			{
-				"windows"	"16"
-				"linux"		"16"
-			}
-
-			/**
-			 * Behavior<Tank>::FirstContainedResponder()
-			 *
-			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Linux binary.
-			 * 5. Use the member variable offset.
-			 **/
-			"Behavior<Tank>::FirstContainedResponder"
-			{
-				"windows"	"8"
-				"linux"		"8"
+				"windows"	"1"
+				"linux"		"2"
 			}
 
 			/**
@@ -732,24 +708,6 @@
 			{
 				"windows"	"2"
 				"linux"		"3"
-			}
-
-			/**
-			 * TankIntention::FirstContainedResponder()
-			 *
-			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "TankIntention" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Windows binary.
-			 * 5. Multiply the member variable offset by 4.
-			 **/
-			"TankIntention::FirstContainedResponder"
-			{
-				"windows"	"28"
-				"linux"		"28"
 			}
 		}
 

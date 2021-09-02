@@ -476,6 +476,7 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
+	Handle g_hSDKFirstContainedResponder;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetMissionFirstMap;
 	Handle g_hSDKGetMissionInfo;
@@ -499,7 +500,6 @@ enum struct esGeneral
 	Handle g_hTankWaveTimer;
 
 	int g_iAccessFlags;
-	int g_iActionOffset;
 	int g_iAggressiveTanks;
 	int g_iAmmoBoostReward[4];
 	int g_iAmmoRegenReward[4];
@@ -509,10 +509,8 @@ enum struct esGeneral
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
 	int g_iBaseHealth;
-	int g_iBehaviorOffset;
 	int g_iBulletImmunity;
 	int g_iCheckAbilities;
-	int g_iChildActionOffset;
 	int g_iChosenType;
 	int g_iCleanKillsReward[4];
 	int g_iConfigCreate;
@@ -5280,7 +5278,7 @@ void vReadGameData()
 		case true: SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			g_esGeneral.g_bLinux = gdMutantTanks.GetOffset("OS") == 1;
+			g_esGeneral.g_bLinux = iGetGameDataOffset(gdMutantTanks, "OS") == 1;
 
 			if (g_bSecondGame)
 			{
@@ -5524,11 +5522,18 @@ void vReadGameData()
 
 			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::Event_Killed::Attacker");
 			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset(gdMutantTanks, "Tank::GetIntentionInterface");
-			g_esGeneral.g_iBehaviorOffset = iGetGameDataOffset(gdMutantTanks, "TankIntention::FirstContainedResponder");
-			g_esGeneral.g_iActionOffset = iGetGameDataOffset(gdMutantTanks, "Behavior<Tank>::FirstContainedResponder");
-			g_esGeneral.g_iChildActionOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
 
-			int iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
+			int iOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
+			StartPrepSDKCall(SDKCall_Raw);
+			PrepSDKCall_SetVirtual(iOffset);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
+			{
+				LogError("%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
+			}
+
+			iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
 			StartPrepSDKCall(SDKCall_Entity);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_ByValue);
@@ -5574,9 +5579,9 @@ Address adGetGameDataAddress(GameData dataHandle, const char[] name, const char[
 			adValue[0] = dataHandle.GetAddress(start);
 
 			int iOffset[3] = {-1, -1, -1};
-			iOffset[0] = dataHandle.GetOffset(offset1);
-			iOffset[1] = dataHandle.GetOffset(offset2);
-			iOffset[2] = dataHandle.GetOffset(offset3);
+			iOffset[0] = iGetGameDataOffset(dataHandle, offset1);
+			iOffset[1] = iGetGameDataOffset(dataHandle, offset2);
+			iOffset[2] = iGetGameDataOffset(dataHandle, offset3);
 
 			if (adValue[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
 			{
@@ -16550,11 +16555,9 @@ bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName
 	int iOffset = 0;
 	if (offsetName[0] != '\0')
 	{
-		iOffset = dataHandle.GetOffset(offsetName);
+		iOffset = iGetGameDataOffset(dataHandle, offsetName);
 		if (iOffset == -1)
 		{
-			LogError("%s Failed to load offset: %s", MT_TAG, offsetName);
-
 			return false;
 		}
 	}
@@ -17277,44 +17280,39 @@ bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CH
 
 bool bIsTankIdle(int tank, int type = 0)
 {
-	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT) || bIsInfectedGhost(tank) || g_esPlayer[tank].g_bStasis)
+	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT) || bIsInfectedGhost(tank) || g_esGeneral.g_iIntentionOffset == -1 || g_esPlayer[tank].g_bStasis || g_esGeneral.g_hSDKFirstContainedResponder == null || g_esGeneral.g_hSDKGetName == null)
 	{
 		return false;
 	}
 
 	Address adTank = GetEntityAddress(tank);
-	if (adTank == Address_Null || g_esGeneral.g_iIntentionOffset == -1)
+	if (adTank == Address_Null)
 	{
 		return false;
 	}
 
 	Address adIntention = view_as<Address>(LoadFromAddress((adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset)), NumberType_Int32));
-	if (adIntention == Address_Null || g_esGeneral.g_iBehaviorOffset == -1)
+	if (adIntention == Address_Null)
 	{
 		return false;
 	}
 
-	Address adBehavior = view_as<Address>(LoadFromAddress((adIntention + view_as<Address>(g_esGeneral.g_iBehaviorOffset)), NumberType_Int32));
-	if (adBehavior == Address_Null || g_esGeneral.g_iActionOffset == -1)
+	Address adBehavior = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adIntention));
+	if (adBehavior == Address_Null)
 	{
 		return false;
 	}
 
-	Address adAction = view_as<Address>(LoadFromAddress((adBehavior + view_as<Address>(g_esGeneral.g_iActionOffset)), NumberType_Int32));
-	if (adAction == Address_Null || g_esGeneral.g_iChildActionOffset == -1)
+	Address adAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adBehavior));
+	if (adAction == Address_Null)
 	{
 		return false;
 	}
 
 	Address adChildAction = Address_Null;
-	while ((adChildAction = view_as<Address>(LoadFromAddress((adAction + view_as<Address>(g_esGeneral.g_iChildActionOffset)), NumberType_Int32))) != Address_Null)
+	while ((adChildAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adAction))) != Address_Null)
 	{
 		adAction = adChildAction;
-	}
-
-	if (g_esGeneral.g_hSDKGetName == null)
-	{
-		return false;
 	}
 
 	char sAction[64];
