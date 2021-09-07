@@ -774,13 +774,18 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vThrowChangeType(int tank)
+void vThrowChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveThrows(tank);
-	vRemoveThrow(tank);
+	vRemoveThrow(tank, false);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -806,13 +811,17 @@ void vThrowCopyStats2(int oldTank, int newTank)
 	g_esThrowPlayer[newTank].g_iCooldown = g_esThrowPlayer[oldTank].g_iCooldown;
 }
 
-void vRemoveThrow(int tank)
+void vRemoveThrow(int tank, bool full = true)
 {
 	g_esThrowPlayer[tank].g_bActivated = false;
-	g_esThrowPlayer[tank].g_bThrown = false;
 	g_esThrowPlayer[tank].g_iAmmoCount = 0;
 	g_esThrowPlayer[tank].g_iCooldown = -1;
 	g_esThrowPlayer[tank].g_iOwner = 0;
+
+	if (full)
+	{
+		g_esThrowPlayer[tank].g_bThrown = false;
+	}
 }
 
 void vRemoveThrows(int tank)
@@ -1071,24 +1080,24 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 						switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
 						{
-							case 1: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-							case 2: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-							case 4: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-							case 8: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-							case 16: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-							case 32: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-							case 64: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank");
+							case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+							case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+							case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+							case 8: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+							case 16: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+							case 32: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
+							case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
 							default:
 							{
 								switch (GetRandomInt(1, sizeof iOptions))
 								{
-									case 1: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-									case 2: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-									case 3: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-									case 4: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-									case 5: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-									case 6: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-									case 7: vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank");
+									case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+									case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+									case 3: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+									case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+									case 5: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+									case 6: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
+									case 7: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
 								}
 							}
 						}

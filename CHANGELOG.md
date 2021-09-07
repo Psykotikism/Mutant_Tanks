@@ -22,6 +22,8 @@
 - Fixed the `CTerrorGameRules::GetMissionFirstMap` function using the wrong signature.
 
 #### Abilities
+- Fixed abilities resetting exclusive variables when Tanks spawn. (Thanks to `ddd123` for testing and reporting!)
+
 - Omni: Fixed settings not caching properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes

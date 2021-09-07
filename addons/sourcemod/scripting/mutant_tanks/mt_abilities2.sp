@@ -1718,109 +1718,109 @@ public void MT_OnButtonReleased(int tank, int button)
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 #if defined MT_MENU_MEDIC
-	vMedicChangeType(tank);
+	vMedicChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_METEOR
-	vMeteorChangeType(tank);
+	vMeteorChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_MINION
-	vMinionChangeType(tank);
+	vMinionChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_NECRO
-	vNecroChangeType(tank);
+	vNecroChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_NULLIFY
-	vNullifyChangeType(tank);
+	vNullifyChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PANIC
-	vPanicChangeType(tank);
+	vPanicChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PIMP
-	vPimpChangeType(tank);
+	vPimpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PUKE
-	vPukeChangeType(tank);
+	vPukeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PYRO
-	vPyroChangeType(tank);
+	vPyroChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_QUIET
-	vQuietChangeType(tank);
+	vQuietChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_RECOIL
-	vRecoilChangeType(tank);
+	vRecoilChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_REGEN
-	vRegenChangeType(tank);
+	vRegenChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_RESPAWN
-	vRespawnChangeType(tank, revert);
+	vRespawnChangeType(tank, oldType, revert);
 #endif
 #if defined MT_MENU_RESTART
-	vRestartChangeType(tank);
+	vRestartChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ROCK
-	vRockChangeType(tank);
+	vRockChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ROCKET
-	vRocketChangeType(tank);
+	vRocketChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHAKE
-	vShakeChangeType(tank);
+	vShakeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHIELD
-	vShieldChangeType(tank);
+	vShieldChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHOVE
-	vShoveChangeType(tank);
+	vShoveChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SLOW
-	vSlowChangeType(tank);
+	vSlowChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SMASH
-	vSmashChangeType(tank);
+	vSmashChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SMITE
-	vSmiteChangeType(tank);
+	vSmiteChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPAM
-	vSpamChangeType(tank);
+	vSpamChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPLASH
-	vSplashChangeType(tank);
+	vSplashChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPLATTER
-	vSplatterChangeType(tank);
+	vSplatterChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_THROW
-	vThrowChangeType(tank);
+	vThrowChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_TRACK
-	vTrackChangeType(tank);
+	vTrackChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ULTIMATE
-	vUltimateChangeType(tank);
+	vUltimateChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_UNDEAD
-	vUndeadChangeType(tank);
+	vUndeadChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_VISION
-	vVisionChangeType(tank);
+	vVisionChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WARP
-	vWarpChangeType(tank);
+	vWarpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WHIRL
-	vWhirlChangeType(tank);
+	vWhirlChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WITCH
-	vWitchChangeType(tank);
+	vWitchChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_YELL
-	vYellChangeType(tank);
+	vYellChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ZOMBIE
-	vZombieChangeType(tank);
+	vZombieChangeType(tank, oldType);
 #endif
 }
 

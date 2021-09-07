@@ -823,15 +823,17 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryChangeType(int tank)
+void vBuryChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
-	if (MT_IsTankSupported(tank))
+	if (oldType <= 0 || !MT_IsTankSupported(tank))
 	{
-		vRemoveBury(tank);
+		return;
 	}
+
+	vRemoveBury(tank);
 }
 
 void vBuryAbility(int tank, float random, int pos = -1)

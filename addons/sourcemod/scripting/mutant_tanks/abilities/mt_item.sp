@@ -670,12 +670,12 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vItemChangeType(int tank)
+void vItemChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0))
+	if (oldType <= 0 || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}

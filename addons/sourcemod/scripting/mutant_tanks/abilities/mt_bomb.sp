@@ -756,11 +756,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBombChangeType(int tank)
+void vBombChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveBomb(tank);
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esBombCache[tank].g_iBombAbility == 1)

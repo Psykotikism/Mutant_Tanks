@@ -811,11 +811,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAcidChangeType(int tank)
+void vAcidChangeType(int tank, int oldType)
 #else
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveAcid(tank);
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidAbility == 1)
