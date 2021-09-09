@@ -329,7 +329,7 @@
 
 	"Tank #32"
 	{
-		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat bántsák."
+		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
 	}
 
 	"Tank #33 Name"
