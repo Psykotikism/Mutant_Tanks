@@ -3769,7 +3769,7 @@
 
 	"Rocket"
 	{
-		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint} -t az űrbe!"
+		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint}-t az űrbe!"
 	}
 
 	"RocketAmmo"
