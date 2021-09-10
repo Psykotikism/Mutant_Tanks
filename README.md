@@ -2034,7 +2034,7 @@ The information displayed in chat will be more detailed and accurate when the pl
 
 Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
 
-12. Is there any way to exempt admins from the cooldown mentioned in question #11?
+12. Is there any way to exempt admins from the cooldown mentioned in question `#11`?
 
 Yes, assign admins the `mt_adminversus` override.
 
