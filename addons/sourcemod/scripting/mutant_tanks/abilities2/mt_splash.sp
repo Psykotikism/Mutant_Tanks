@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SPLASH_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SPLASH_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -177,7 +177,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSplashInfo(int client, int args)
+Action cmdSplashInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -225,7 +225,7 @@ void vSplashMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -253,7 +253,7 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSplash = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SplashMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SplashMenu", param1);
 			pSplash.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -264,14 +264,14 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -347,26 +347,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SPLASH_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLASH_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPLASH_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPLASH_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPLASH_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iComboAbility == 1 && !g_esSplashPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLASH_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -398,7 +397,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSplashAbility[iIndex].g_iAccessFlags = 0;
 				g_esSplashAbility[iIndex].g_iImmunityFlags = 0;
@@ -605,10 +605,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esSplashCache[tank].g_iHumanMode)
 				{
@@ -680,11 +678,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSplashChangeType(int tank)
+void vSplashChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSplash(tank);
 }
 
@@ -718,7 +721,7 @@ void vSplashReset2(int tank)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash2", LANG_SERVER, sTankName);
@@ -750,7 +753,7 @@ void vSplash(int tank, int pos = -1)
 
 	if (g_esSplashCache[tank].g_iSplashMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash", LANG_SERVER, sTankName);
@@ -764,8 +767,7 @@ void vSplash2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplashCache[tank].g_flSplashInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplashCache[tank].g_flSplashInterval;
 	DataPack dpSplash;
 	CreateDataTimer(flInterval, tTimerSplash, dpSplash, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSplash.WriteCell(GetClientUserId(tank));
@@ -798,7 +800,7 @@ void vSplashAbility(int tank)
 	}
 }
 
-public Action tTimerSplashCombo(Handle timer, DataPack pack)
+Action tTimerSplashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -814,13 +816,11 @@ public Action tTimerSplashCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSplash(Handle timer, DataPack pack)
+Action tTimerSplash(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplashCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[iTank].g_iTankType) || (g_esSplashCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplashPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplashPlayer[iTank].g_iTankType || g_esSplashCache[iTank].g_iSplashAbility == 0 || !g_esSplashPlayer[iTank].g_bActivated)
 	{
 		vSplashReset2(iTank);
@@ -828,10 +828,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0 && (iTime + g_esSplashCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplashReset2(iTank);
@@ -840,10 +837,10 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flSurvivorPos[3], flDamage, flRange;
+	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esSplashCache[iTank].g_flSplashDamage;
-	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esSplashCache[iTank].g_flSplashRange;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esSplashCache[iTank].g_flSplashDamage,
+		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esSplashCache[iTank].g_flSplashRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esSplashPlayer[iTank].g_iTankType, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSplashPlayer[iSurvivor].g_iImmunityFlags))

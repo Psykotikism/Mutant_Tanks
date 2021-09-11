@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_VAMPIRE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_VAMPIRE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -139,7 +139,7 @@ public void OnClientPutInServer(int client)
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdVampireInfo(int client, int args)
+Action cmdVampireInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -182,7 +182,7 @@ void vVampireMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -205,7 +205,7 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pVampire = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "VampireMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "VampireMenu", param1);
 			pVampire.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -216,9 +216,9 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -262,12 +262,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
 			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
@@ -279,21 +279,20 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 
 				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esVampireCache[attacker].g_iHumanAbility == 1)
 				{
-					static int iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-					iDamage = RoundToNearest(damage);
-					iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
-					iMaxHealth = MT_TankMaxHealth(attacker, 1);
-					iNewHealth = (iHealth + iDamage);
-					iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iDamage - MT_MAXHEALTH) : iNewHealth;
-					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
+					int iDamage = RoundToNearest(damage),
+						iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth"),
+						iMaxHealth = MT_TankMaxHealth(attacker, 1),
+						iNewHealth = (iHealth + iDamage),
+						iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iDamage - MT_MAXHEALTH) : iNewHealth,
+						iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth,
+						iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
 					MT_TankMaxHealth(attacker, 3, (iMaxHealth + iTotalHealth));
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 					vEffect(victim, attacker, g_esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
 
 					if (g_esVampireCache[attacker].g_iVampireMessage == 1)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(attacker, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Vampire", sTankName, victim);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vampire", LANG_SERVER, sTankName, victim);
@@ -337,7 +336,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esVampireAbility[iIndex].g_iAccessFlags = 0;
 				g_esVampireAbility[iIndex].g_iImmunityFlags = 0;

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_ITEM_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_ITEM_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -178,7 +178,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdItemInfo(int client, int args)
+Action cmdItemInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -222,7 +222,7 @@ void vItemMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -246,7 +246,7 @@ public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pItem = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ItemMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "ItemMenu", param1);
 			pItem.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -257,10 +257,10 @@ public int iItemMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -322,7 +322,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnItemModelSpawnPost(int model)
+void OnItemModelSpawnPost(int model)
 {
 	g_iItemDeathModelOwner = 0;
 
@@ -336,12 +336,13 @@ public void OnItemModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+#if !defined MT_ABILITIES_MAIN
+Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	return Plugin_Handled;
 }
 
-public void OnItemUse(int entity, int activator, int caller, UseType type, float value)
+void OnItemUse(int entity, int activator, int caller, UseType type, float value)
 {
 	if (!bIsValidEntity(entity))
 	{
@@ -351,6 +352,7 @@ public void OnItemUse(int entity, int activator, int caller, UseType type, float
 	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN
 void vItemPluginCheck(ArrayList list)
@@ -384,26 +386,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ITEM_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ITEM_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ITEM_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ITEM_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ITEM_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 1 && !g_esItemPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ITEM_SECTION, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION2, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION3, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -429,7 +430,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esItemAbility[iIndex].g_iAccessFlags = 0;
 				g_esItemAbility[iIndex].g_iImmunityFlags = 0;
@@ -494,8 +496,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof(esItemPlayer::g_sItemLoadout), value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof(esItemPlayer::g_sItemPinata), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof esItemPlayer::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof esItemPlayer::g_sItemPinata, value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -513,8 +515,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof(esItemAbility::g_sItemLoadout), value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof(esItemAbility::g_sItemPinata), value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof esItemAbility::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof esItemAbility::g_sItemPinata, value);
 	}
 }
 
@@ -537,8 +539,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans);
 	g_esItemPlayer[tank].g_iTankType = apply ? type : 0;
 
-	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
-	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemPinata, sizeof esItemCache::g_sItemPinata, g_esItemPlayer[tank].g_sItemPinata, g_esItemAbility[type].g_sItemPinata);
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -601,9 +603,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		flPos[2] += 50.0;
 
 		char sItems[5][64];
-		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof(esItemCache::g_sItemPinata), " ", "");
-		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof esItemCache::g_sItemPinata, " ", "");
+		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof sItems, sizeof sItems[]);
+		for (int iItem = 0; iItem < sizeof sItems; iItem++)
 		{
 			if (sItems[iItem][0] != '\0')
 			{
@@ -668,12 +670,12 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vItemChangeType(int tank)
+void vItemChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0))
+	if (oldType <= 0 || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)) || g_esItemCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -698,19 +700,19 @@ void vItemAbility(int tank)
 		return;
 	}
 
-	static char sItems[5][64];
-	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), " ", "");
-	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+	char sItems[5][64];
+	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, " ", "");
+	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			switch (g_esItemCache[tank].g_iItemMode)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof(sItems)) - 1]);
+				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof sItems) - 1]);
 				case 1:
 				{
-					for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+					for (int iItem = 0; iItem < sizeof sItems; iItem++)
 					{
 						if (StrContains(g_esItemCache[tank].g_sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
 						{
@@ -724,7 +726,7 @@ void vItemAbility(int tank)
 
 	if (g_esItemCache[tank].g_iItemMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Item", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Item", LANG_SERVER, sTankName);
@@ -769,7 +771,7 @@ void vSpawnItem(const char[] name, float pos[3])
 	{
 		case 1:
 		{
-			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
 
 			switch (StrEqual(sClassname, "weapon_gascan"))
 			{
@@ -804,7 +806,7 @@ void vSpawnItem(const char[] name, float pos[3])
 		}
 		case 2, 3:
 		{
-			FormatEx(sClassname, sizeof(sClassname), "weapon_%s", name);
+			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
 			iItem = CreateEntityByName(sClassname);
 		}
 		case 4:
@@ -849,7 +851,7 @@ void vSpawnItem(const char[] name, float pos[3])
 	}
 }
 
-public Action tTimerItemCombo(Handle timer, int userid)
+Action tTimerItemCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esItemAbility[g_esItemPlayer[iTank].g_iTankType].g_iAccessFlags, g_esItemPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esItemPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esItemCache[iTank].g_iItemAbility == 0 || g_esItemPlayer[iTank].g_bActivated)
@@ -862,7 +864,7 @@ public Action tTimerItemCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRemoveItemHooks(Handle timer, int ref)
+Action tTimerRemoveItemHooks(Handle timer, int ref)
 {
 	int iItem = EntRefToEntIndex(ref);
 	if (!bIsValidEntity(iItem))

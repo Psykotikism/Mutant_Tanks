@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_PIMP_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_PIMP_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -204,7 +204,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdPimpInfo(int client, int args)
+Action cmdPimpInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -251,7 +251,7 @@ void vPimpMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iPimpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iPimpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -278,7 +278,7 @@ public int iPimpMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pPimp = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "PimpMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "PimpMenu", param1);
 			pPimp.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -289,13 +289,13 @@ public int iPimpMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -339,12 +339,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esPimpCache[attacker].g_iPimpHitMode == 0 || g_esPimpCache[attacker].g_iPimpHitMode == 1) && bIsSurvivor(victim) && g_esPimpCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esPimpAbility[g_esPimpPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPimpPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPimpPlayer[attacker].g_iTankType, g_esPimpAbility[g_esPimpPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[victim].g_iImmunityFlags))
@@ -406,22 +406,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_PIMP_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_PIMP_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_PIMP_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_PIMP_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_PIMP_SECTION4);
 	if (g_esPimpCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_PIMP_SECTION, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION2, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION3, false) || StrEqual(sSubset[iPos], MT_PIMP_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -445,8 +444,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -492,7 +490,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esPimpAbility[iIndex].g_iAccessFlags = 0;
 				g_esPimpAbility[iIndex].g_iImmunityFlags = 0;
@@ -714,8 +713,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esPimpCache[tank].g_iPimpAbility == 1 && g_esPimpCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esPimpPlayer[tank].g_iCooldown == -1 || g_esPimpPlayer[tank].g_iCooldown < iTime)
 				{
@@ -728,11 +726,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPimpChangeType(int tank)
+void vPimpChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemovePimp(tank);
 }
 
@@ -754,12 +757,11 @@ void vPimpAbility(int tank, float random, int pos = -1)
 		g_esPimpPlayer[tank].g_bFailed = false;
 		g_esPimpPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esPimpCache[tank].g_flPimpRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esPimpCache[tank].g_flPimpRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esPimpCache[tank].g_flPimpRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esPimpCache[tank].g_flPimpRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPimpPlayer[tank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags))
@@ -799,8 +801,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esPimpPlayer[survivor].g_bAffected)
 			{
 				g_esPimpPlayer[survivor].g_bAffected = true;
@@ -819,8 +820,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esPimpCache[tank].g_flPimpInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esPimpCache[tank].g_flPimpInterval;
 				DataPack dpPimp;
 				CreateDataTimer(flInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpPimp.WriteCell(GetClientUserId(survivor));
@@ -835,7 +835,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esPimpCache[tank].g_iPimpMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Pimp", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pimp", LANG_SERVER, sTankName, survivor);
@@ -908,7 +908,7 @@ void vPimpReset3(int tank)
 	g_esPimpPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerPimpCombo(Handle timer, DataPack pack)
+Action tTimerPimpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -925,7 +925,7 @@ public Action tTimerPimpCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerPimpCombo2(Handle timer, DataPack pack)
+Action tTimerPimpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -944,7 +944,7 @@ public Action tTimerPimpCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esPimpCache[iTank].g_iPimpHitMode == 0 || g_esPimpCache[iTank].g_iPimpHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vPimpHit(iSurvivor, iTank, flRandom, flChance, g_esPimpCache[iTank].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -957,12 +957,11 @@ public Action tTimerPimpCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerPimp(Handle timer, DataPack pack)
+Action tTimerPimp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esPimpPlayer[iSurvivor].g_bAffected = false;
@@ -971,10 +970,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esPimpCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[iTank].g_iTankType) || (g_esPimpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPimpPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPimpPlayer[iTank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags) || !g_esPimpPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
@@ -982,11 +978,9 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iPimpEnabled, iPos, iDuration, iTime;
-	iPimpEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esPimpCache[iTank].g_iPimpDuration;
-	iTime = pack.ReadCell();
+	int iPimpEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esPimpCache[iTank].g_iPimpDuration,
+		iTime = pack.ReadCell();
 	if (iPimpEnabled == 0 || (iTime + iDuration) < GetTime() || !g_esPimpPlayer[iSurvivor].g_bAffected)
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
@@ -994,8 +988,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flDamage;
-	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : float(g_esPimpCache[iTank].g_iPimpDamage);
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : float(g_esPimpCache[iTank].g_iPimpDamage);
 	SlapPlayer(iSurvivor, RoundToNearest(MT_GetScaledDamage(flDamage)), true);
 
 	return Plugin_Continue;

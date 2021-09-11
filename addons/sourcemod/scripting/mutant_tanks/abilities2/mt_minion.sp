@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_MINION_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -49,7 +49,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_MINION_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -196,7 +196,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdMinionInfo(int client, int args)
+Action cmdMinionInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -242,7 +242,7 @@ void vMinionMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -268,7 +268,7 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pMinion = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MinionMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MinionMenu", param1);
 			pMinion.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -279,12 +279,12 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -360,26 +360,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_MINION_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_MINION_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_MINION_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_MINION_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MINION_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MINION_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MINION_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MINION_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iComboAbility == 1)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MINION_SECTION, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION2, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION3, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -405,7 +404,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esMinionAbility[iIndex].g_iAccessFlags = 0;
 				g_esMinionAbility[iIndex].g_iComboAbility = 0;
@@ -654,8 +654,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
 				{
@@ -668,11 +667,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vMinionChangeType(int tank)
+void vMinionChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveMinions(tank);
 	vRemoveMinion(tank);
 }
@@ -688,7 +692,7 @@ void vMinion(int tank)
 {
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount)
 	{
-		static float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
+		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 		GetClientEyePosition(tank, flPosition);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
@@ -699,8 +703,7 @@ void vMinion(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -721,9 +724,8 @@ void vMinion(int tank)
 						}
 					}
 
-					static int iTypeCount, iTypes[6];
-					iTypeCount = 0;
-					for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+					int iTypeCount = 0, iTypes[6];
+					for (int iBit = 0; iBit < sizeof iTypes; iBit++)
 					{
 						int iFlag = (1 << iBit);
 						if (!(g_esMinionCache[tank].g_iMinionTypes & iFlag))
@@ -745,7 +747,7 @@ void vMinion(int tank)
 						case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
 						default:
 						{
-							switch (GetRandomInt(1, sizeof(iTypes)))
+							switch (GetRandomInt(1, sizeof iTypes))
 							{
 								case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 								case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
@@ -757,8 +759,7 @@ void vMinion(int tank)
 						}
 					}
 
-					static int iSpecial;
-					iSpecial = 0;
+					int iSpecial = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
@@ -782,8 +783,7 @@ void vMinion(int tank)
 							CreateTimer(g_esMinionCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						static int iTime;
-						iTime = GetTime();
+						int iTime = GetTime();
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime))
 						{
 							g_esMinionPlayer[tank].g_iAmmoCount++;
@@ -799,7 +799,7 @@ void vMinion(int tank)
 
 						if (g_esMinionCache[tank].g_iMinionMessage == 1)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Minion", LANG_SERVER, sTankName);
@@ -876,7 +876,7 @@ void vMinionReset()
 	}
 }
 
-public Action tTimerMinionCombo(Handle timer, int userid)
+Action tTimerMinionCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMinionAbility[g_esMinionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMinionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMinionCache[iTank].g_iMinionAbility == 0)
@@ -889,7 +889,7 @@ public Action tTimerMinionCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerKillMinion(Handle timer, int userid)
+Action tTimerKillMinion(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsSpecialInfected(iSpecial) || !g_esMinionPlayer[iSpecial].g_bMinion)

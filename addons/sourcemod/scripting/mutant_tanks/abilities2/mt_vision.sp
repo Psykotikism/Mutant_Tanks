@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_VISION_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_VISION_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -201,7 +201,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdVisionInfo(int client, int args)
+Action cmdVisionInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -248,7 +248,7 @@ void vVisionMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -275,7 +275,7 @@ public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pVision = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "VisionMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "VisionMenu", param1);
 			pVision.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -286,13 +286,13 @@ public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -336,12 +336,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esVisionCache[attacker].g_iVisionHitMode == 0 || g_esVisionCache[attacker].g_iVisionHitMode == 1) && bIsHumanSurvivor(victim) && g_esVisionCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVisionAbility[g_esVisionPlayer[attacker].g_iTankType].g_iAccessFlags, g_esVisionPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVisionPlayer[attacker].g_iTankType, g_esVisionAbility[g_esVisionPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[victim].g_iImmunityFlags))
@@ -403,22 +403,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_VISION_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_VISION_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_VISION_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_VISION_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_VISION_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_VISION_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_VISION_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_VISION_SECTION4);
 	if (g_esVisionCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_VISION_SECTION, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION2, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION3, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -442,8 +441,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -489,7 +487,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esVisionAbility[iIndex].g_iAccessFlags = 0;
 				g_esVisionAbility[iIndex].g_iImmunityFlags = 0;
@@ -722,8 +721,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esVisionCache[tank].g_iVisionAbility == 1 && g_esVisionCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime)
 				{
@@ -736,11 +734,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vVisionChangeType(int tank)
+void vVisionChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveVision(tank);
 }
 
@@ -813,12 +816,11 @@ void vVisionAbility(int tank, float random, int pos = -1)
 		g_esVisionPlayer[tank].g_bFailed = false;
 		g_esVisionPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esVisionCache[tank].g_flVisionRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esVisionCache[tank].g_flVisionRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esVisionCache[tank].g_flVisionRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esVisionCache[tank].g_flVisionRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esVisionPlayer[tank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[iSurvivor].g_iImmunityFlags))
@@ -858,8 +860,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esVisionPlayer[survivor].g_bAffected)
 			{
 				g_esVisionPlayer[survivor].g_bAffected = true;
@@ -892,7 +893,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 
 				if (g_esVisionCache[tank].g_iVisionMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Vision", sTankName, survivor, g_esVisionCache[tank].g_iVisionFOV);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision", LANG_SERVER, sTankName, survivor, g_esVisionCache[tank].g_iVisionFOV);
@@ -917,7 +918,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-public Action tTimerVisionCombo(Handle timer, DataPack pack)
+Action tTimerVisionCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -934,7 +935,7 @@ public Action tTimerVisionCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerVisionCombo2(Handle timer, DataPack pack)
+Action tTimerVisionCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -953,7 +954,7 @@ public Action tTimerVisionCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esVisionCache[iTank].g_iVisionHitMode == 0 || g_esVisionCache[iTank].g_iVisionHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vVisionHit(iSurvivor, iTank, flRandom, flChance, g_esVisionCache[iTank].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -966,12 +967,11 @@ public Action tTimerVisionCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerVision(Handle timer, DataPack pack)
+Action tTimerVision(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_esVisionPlayer[iSurvivor].g_bAffected = false;
@@ -980,10 +980,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esVisionCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[iTank].g_iTankType) || (g_esVisionCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esVisionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esVisionPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esVisionPlayer[iTank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[iSurvivor].g_iImmunityFlags) || !g_esVisionPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vVisionReset2(iSurvivor, iTank, iMessage);
@@ -991,11 +988,9 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iVisionEnabled, iPos, iDuration, iTime;
-	iVisionEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esVisionCache[iTank].g_iVisionDuration;
-	iTime = pack.ReadCell();
+	int iVisionEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esVisionCache[iTank].g_iVisionDuration,
+		iTime = pack.ReadCell();
 	if (iVisionEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vVisionReset2(iSurvivor, iTank, iMessage);

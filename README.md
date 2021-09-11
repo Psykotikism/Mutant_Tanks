@@ -1,11 +1,13 @@
 # Mutant Tanks
 
+## PayPal
+[Donate to Motivate](https://paypal.me/Psyk0tikism?locale.x=en_US)
+
 ## Languages
 - Click on one of the flags to view in another language.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
-
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
@@ -13,7 +15,7 @@
 ## License
 > The following license is placed inside the source code of each plugin and include file.
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2021  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -45,11 +47,11 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 18. Fully customizable reward system.
 
 ## Requirements
-1. `SourceMod 1.10` or `SourceMod 1.11`:
-- `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
-- `SourceMod 1.11.0.6711` or higher (Only if compiling the `.sp` files yourself.)
+1. `SourceMod 1.11.0.6724` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+3. Recommended:
+- [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
+- [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
 
 ## Notes
@@ -62,7 +64,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 1. Delete files from old versions of the plugin.
 2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
-4. If prompted to replace or merge anything, click yes.
+4. If prompted to replace or merge anything, click `Yes`.
 5. Load up Mutant Tanks by restarting the server.
 6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
@@ -620,7 +622,7 @@ Example:
 	}
 }
 
-Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of Psyk0tik Tank as long as custom configs is being used.
+Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of "Psyk0tik Tank" as long as custom configs is being used.
 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
@@ -1917,20 +1919,20 @@ If a player's SM flags have one of the immunity flags required globally or vice-
 Note: If all 4 of these return false, the player will not have access to nor immunity from anything.
 ```
 
-6. What is the `Allow Developer` setting for?
+6. What is the `sm_mt_dev` command for?
 
-The setting allows the developer (Psyk0tik/Crasher_3637) to access certain features of the project on your server. These features include:
+The command allows the developer (`Psyk0tik`) to access certain features of the project on your server. These features include:
 - Access to all Mutant Tanks. (Allows the developer to see what Mutant Tanks your config has.)
 - Immunity from all Mutant Tanks. (Allows the developer to test each Mutant Tank without having to deal with each ability's effects.)
 - Ability to spawn Mutant Tanks. (Allows the developer to spawn each Mutant Tank for testing.)
 - Check which abilities are installed. (Allows the developer to check which abilities to test for.)
 
-In short, this setting does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the setting if you are not confident with trusting the developer. This setting was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
+In short, this command does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the command if you are not confident with trusting the developer. This command was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
 
 ### Human Support
 1. How do I enable human support?
 
-Set `Human Support` to 1 or 2.
+Set `Human Support` to `1` or `2`.
 
 2. Can players use the abilities automatically/manually?
 
@@ -2032,7 +2034,7 @@ The information displayed in chat will be more detailed and accurate when the pl
 
 Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
 
-12. Is there any way to exempt admins from the cooldown mentioned in question #11?
+12. Is there any way to exempt admins from the cooldown mentioned in question `#11`?
 
 Yes, assign admins the `mt_adminversus` override.
 
@@ -2048,7 +2050,7 @@ Overrides
 ### Configuration
 1. How do I enable the custom configurations features?
 
-Set `Enable Custom Configs` to 1.
+Set `Enable Custom Configs` to `1`.
 
 2. How do I tell the plugin to only create certain custom config files?
 
@@ -2129,11 +2131,13 @@ Examples:
 
 **Pelipoika** - For the [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533) plugin.
 
-**Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
-**epz/epzminion** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**epz/epzminion** - For helping with gamedata signatures, offsets, addresses, and invaluable input.
 
 **Lux/LuxLuma** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
+
+**Forgetest** - For helping with gamedata offsets.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -2157,7 +2161,7 @@ Examples:
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
@@ -2179,8 +2183,6 @@ Examples:
 
 ## 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
-
-
 
 ## Final Words
 Enjoy all my hard work and have fun with it!

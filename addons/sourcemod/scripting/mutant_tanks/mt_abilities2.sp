@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,6 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN2
+#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
 
 #include <sourcemod>
 #include <mutant_tanks>
@@ -32,46 +33,52 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
-#undef REQUIRE_PLUGIN
-#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
-#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
-#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
-#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
-#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
-#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
-#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
-#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
-#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
-#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
-#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
-#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
-#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
-#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
-#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
-#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
-#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
-#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
-#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
-#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
-#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
-#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
-#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
-#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
-#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
-#tryinclude "mutant_tanks/abilities2/mt_track.sp"
-#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
-#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
-#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
-#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
-#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
-#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
-#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
-#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
-#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
-#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
-#define REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP2 > 0
+	#undef REQUIRE_PLUGIN
+	#if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
+		#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
+	#endif
+	#if MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
+		#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_track.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
+		#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
+	#endif
+	#define REQUIRE_PLUGIN
+#endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -109,18 +116,13 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
 
-	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo, "View information about each ability (M-Z).");
+	RegConsoleCmd("sm_mt_ability2", cmdAbilityInfo2, "View information about each ability (M-Z).");
 
 	vAbilitySetup(0);
 
@@ -133,7 +135,6 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
-
 #if defined MT_MENU_SHIELD
 		vShieldLateLoad();
 #endif
@@ -190,7 +191,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 #endif
 }
 
-public Action cmdAbilityInfo(int client, int args)
+Action cmdAbilityInfo2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -218,7 +219,7 @@ public Action cmdAbilityInfo(int client, int args)
 				case false:
 				{
 					char sName[32];
-					GetCmdArg(1, sName, sizeof(sName));
+					GetCmdArg(1, sName, sizeof sName);
 					vAbilityMenu(client, sName);
 				}
 			}
@@ -226,7 +227,7 @@ public Action cmdAbilityInfo(int client, int args)
 		default:
 		{
 			char sCmd[15];
-			GetCmdArg(0, sCmd, sizeof(sCmd));
+			GetCmdArg(0, sCmd, sizeof sCmd);
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage2", sCmd);
 		}
 	}
@@ -1717,109 +1718,109 @@ public void MT_OnButtonReleased(int tank, int button)
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 #if defined MT_MENU_MEDIC
-	vMedicChangeType(tank);
+	vMedicChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_METEOR
-	vMeteorChangeType(tank);
+	vMeteorChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_MINION
-	vMinionChangeType(tank);
+	vMinionChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_NECRO
-	vNecroChangeType(tank);
+	vNecroChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_NULLIFY
-	vNullifyChangeType(tank);
+	vNullifyChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PANIC
-	vPanicChangeType(tank);
+	vPanicChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PIMP
-	vPimpChangeType(tank);
+	vPimpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PUKE
-	vPukeChangeType(tank);
+	vPukeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_PYRO
-	vPyroChangeType(tank);
+	vPyroChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_QUIET
-	vQuietChangeType(tank);
+	vQuietChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_RECOIL
-	vRecoilChangeType(tank);
+	vRecoilChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_REGEN
-	vRegenChangeType(tank);
+	vRegenChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_RESPAWN
-	vRespawnChangeType(tank, revert);
+	vRespawnChangeType(tank, oldType, revert);
 #endif
 #if defined MT_MENU_RESTART
-	vRestartChangeType(tank);
+	vRestartChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ROCK
-	vRockChangeType(tank);
+	vRockChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ROCKET
-	vRocketChangeType(tank);
+	vRocketChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHAKE
-	vShakeChangeType(tank);
+	vShakeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHIELD
-	vShieldChangeType(tank);
+	vShieldChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SHOVE
-	vShoveChangeType(tank);
+	vShoveChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SLOW
-	vSlowChangeType(tank);
+	vSlowChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SMASH
-	vSmashChangeType(tank);
+	vSmashChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SMITE
-	vSmiteChangeType(tank);
+	vSmiteChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPAM
-	vSpamChangeType(tank);
+	vSpamChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPLASH
-	vSplashChangeType(tank);
+	vSplashChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_SPLATTER
-	vSplatterChangeType(tank);
+	vSplatterChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_THROW
-	vThrowChangeType(tank);
+	vThrowChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_TRACK
-	vTrackChangeType(tank);
+	vTrackChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ULTIMATE
-	vUltimateChangeType(tank);
+	vUltimateChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_UNDEAD
-	vUndeadChangeType(tank);
+	vUndeadChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_VISION
-	vVisionChangeType(tank);
+	vVisionChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WARP
-	vWarpChangeType(tank);
+	vWarpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WHIRL
-	vWhirlChangeType(tank);
+	vWhirlChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_WITCH
-	vWitchChangeType(tank);
+	vWitchChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_YELL
-	vYellChangeType(tank);
+	vYellChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ZOMBIE
-	vZombieChangeType(tank);
+	vZombieChangeType(tank, oldType);
 #endif
 }
 
@@ -1900,7 +1901,7 @@ public void MT_OnRockBreak(int tank, int rock)
 #endif
 }
 
-static void vAbilityMenu(int client, const char[] name)
+void vAbilityMenu(int client, const char[] name)
 {
 #if defined MT_MENU_MEDIC
 	vMedicMenu(client, name, 0);
@@ -2013,7 +2014,7 @@ static void vAbilityMenu(int client, const char[] name)
 	MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
 }
 
-static void vAbilityPlayer(int type, int client)
+void vAbilityPlayer(int type, int client)
 {
 #if defined MT_MENU_MEDIC
 	switch (type)
@@ -2062,7 +2063,7 @@ static void vAbilityPlayer(int type, int client)
 		case 0: vOmniClientPutInServer(client);
 		case 2: vOmniClientDisconnect_Post(client);
 		case 3: vOmniAbilityActivated(client);
-		case 5: vOmniPostTankSpawn(client);
+		case 4: vOmniPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_PANIC
@@ -2325,7 +2326,7 @@ static void vAbilityPlayer(int type, int client)
 	MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
 }
 
-static void vAbilitySetup(int type)
+void vAbilitySetup(int type)
 {
 #if defined MT_MENU_MEDIC
 	switch (type)
@@ -2595,4 +2596,62 @@ static void vAbilitySetup(int type)
 	}
 #endif
 	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+}
+
+Action tTimerMeteorCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vMeteor(iTank, iPos);
+
+	return Plugin_Continue;
+}
+
+Action tTimerDestroyMeteor(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iMeteor = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vMeteor3(iTank, iMeteor, iPos);
+
+	return Plugin_Continue;
+}
+
+Action tTimerThrowKillInfected(Handle timer, int userid)
+{
+	int iSpecial = GetClientOfUserId(userid);
+	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iSpecial);
+
+	return Plugin_Continue;
+}
+
+Action tTimerThrowKillWitch(Handle timer, int ref)
+{
+	int iWitch = EntRefToEntIndex(ref);
+	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
+	{
+		return Plugin_Stop;
+	}
+
+	RemoveEntity(iWitch);
+
+	return Plugin_Continue;
 }

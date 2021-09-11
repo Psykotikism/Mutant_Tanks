@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_XIPHOS_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_XIPHOS_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -145,7 +145,7 @@ public void OnClientPutInServer(int client)
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdXiphosInfo(int client, int args)
+Action cmdXiphosInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -188,7 +188,7 @@ void vXiphosMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -211,7 +211,7 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pXiphos = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "XiphosMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "XiphosMenu", param1);
 			pXiphos.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -222,9 +222,9 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -268,7 +268,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -279,8 +279,8 @@ public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			static char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
 				vXiphos(attacker, victim, damage, true);
@@ -356,7 +356,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esXiphosAbility[iIndex].g_iAccessFlags = 0;
 				g_esXiphosAbility[iIndex].g_iImmunityFlags = 0;
@@ -447,13 +448,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 void vXiphos(int attacker, int victim, float damage, bool tank)
 {
-	static int iTank, iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
-	iTank = tank ? attacker : victim;
-	iDamage = (damage < 1.0) ? 1 : RoundToNearest(damage);
-	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
-	iMaxHealth = tank ? MT_MAXHEALTH : g_esXiphosCache[iTank].g_iXiphosMaxHealth;
+	int iTank = tank ? attacker : victim,
+		iDamage = (damage < 1.0) ? 1 : RoundToNearest(damage),
+		iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth"),
+		iMaxHealth = tank ? MT_MAXHEALTH : g_esXiphosCache[iTank].g_iXiphosMaxHealth,
+		iNewHealth = (iHealth + iDamage), iLeftover = 0, iFinalHealth = 0, iTotalHealth = 0;
 	iMaxHealth = (!tank && g_esXiphosCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
-	iNewHealth = (iHealth + iDamage);
 	iLeftover = (iNewHealth > iMaxHealth) ? (iNewHealth - iMaxHealth) : iNewHealth;
 	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
 	iTotalHealth = (iNewHealth > iMaxHealth) ? iLeftover : iDamage;
@@ -464,11 +464,10 @@ void vXiphos(int attacker, int victim, float damage, bool tank)
 		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iTotalHealth));
 	}
 
-	static int iFlag;
-	iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
+	int iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
 	if (g_esXiphosCache[iTank].g_iXiphosMessage & iFlag)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 
 		switch (tank)

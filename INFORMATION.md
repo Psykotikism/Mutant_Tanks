@@ -4,8 +4,8 @@
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `94-95` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`] {I will not provide support if you set this to a higher value.}
-- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `93` and recompile all the plugins, but expect server lag with higher values.) {I will not provide support if you set this to a higher value.}
+- Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `94-95` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
+- Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `93` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
 
 ## Sections
@@ -1807,6 +1807,15 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
+			// Every Mutant Tank's ground pounds hit all survivors within range.
+			// Note: Both games already do this by default in Survival modes.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ground Pound"				"0"
+
 			// Every Mutant Tank's hittables do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -1974,12 +1983,6 @@
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
-
-			// Allow the developer to access the plugin when joining your server.
-			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Allow Developer"			"0"
 
 			// Admins with one or more of these immunity flags are immune to all Mutant Tanks' attacks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Administration" section of their settings.
@@ -2280,6 +2283,20 @@
 			// 64: Infected count (Humans only)
 			// 128: Finale stages
 			"Create Config Types"			"0"
+
+			// The delay for executing a custom config when its filestamp has changed.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting cannot be changed in custom config files.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
+			"Execute Config Delay"			"5.0"
 
 			// The type of custom config that Mutant Tanks executes.
 			// Note: Custom config files that do not exist will not be executed.
@@ -4631,6 +4648,15 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
+
+			// The Mutant Tank's ground pounds hit all survivors within range.
+			// Note: Both games already do this by default in Survival modes.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ground Pound"				"0"
 
 			// The Mutant Tank's hittables do this much damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
@@ -10123,7 +10149,11 @@
 		// The Mutant Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
 		// "Ability Enabled" - Any nearby infected can give the Mutant Tank some health.
 		// - "Heal Absorb Range"
+		// - "Heal Glow"
 		// - "Heal Interval"
+		// - "Health From Commons"
+		// - "Health From Specials"
+		// - "Health From Tanks"
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Range"
 		// - "Heal Range Chance"
@@ -10303,6 +10333,7 @@
 			"Heal Absorb Range"			"500.0"
 
 			// The amount of temporary health given to survivors.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
@@ -10323,6 +10354,15 @@
 			// "often"/"likely"/"frequently" - 66.6% chance
 			// "always" - 100% chance
 			"Heal Chance"				"33.3"
+
+			// The Mutant Tank's healing gives it a glow outline when activated.
+			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Heal Glow"				"1"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
@@ -20650,7 +20690,7 @@
 ```
 "Mutant Tanks"
 {
-	// Use the admin's SteamID32 or Steam3ID when making an entry.
+	// Use the admin's SteamID32 or Steam3ID when creating an entry.
 	"STEAM_0:1:23456789" // [U:1:23456789]
 	{
 		"Administration"

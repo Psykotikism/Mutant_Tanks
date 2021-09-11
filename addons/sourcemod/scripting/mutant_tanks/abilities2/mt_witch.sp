@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_WITCH_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_WITCH_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -191,7 +191,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdWitchInfo(int client, int args)
+Action cmdWitchInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -237,7 +237,7 @@ void vWitchMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -263,7 +263,7 @@ public int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pWitch = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "WitchMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "WitchMenu", param1);
 			pWitch.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -274,12 +274,12 @@ public int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -323,12 +323,11 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
-		static int iTank;
-		iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+		int iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
 		if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esWitchCache[iTank].g_iWitchAbility == 1)
 		{
 			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esWitchPlayer[iTank].g_iTankType, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esWitchPlayer[victim].g_iImmunityFlags))
@@ -336,8 +335,7 @@ public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float
 				return Plugin_Handled;
 			}
 
-			static float flDamage;
-			flDamage = (g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition) : g_esWitchCache[iTank].g_flWitchDamage;
+			float flDamage = (g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition) : g_esWitchCache[iTank].g_flWitchDamage;
 			damage = MT_GetScaledDamage(flDamage);
 
 			return Plugin_Changed;
@@ -383,26 +381,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_WITCH_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WITCH_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_WITCH_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_WITCH_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_WITCH_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iComboAbility == 1)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_WITCH_SECTION, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION2, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION3, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -435,7 +432,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esWitchAbility[iIndex].g_iAccessFlags = 0;
 				g_esWitchAbility[iIndex].g_iImmunityFlags = 0;
@@ -649,8 +647,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 				{
@@ -663,11 +660,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWitchChangeType(int tank)
+void vWitchChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveWitch(tank);
 }
 
@@ -720,12 +722,10 @@ void vWitchReset()
 
 void vWitch(int tank, int pos = -1)
 {
-	static bool bConverted;
-	bConverted = false;
-	static float flTankPos[3], flInfectedPos[3], flInfectedAngles[3], flRange;
-	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWitchCache[tank].g_flWitchRange;
-	static int iInfected;
-	iInfected = -1;
+	bool bConverted = false;
+	float flTankPos[3], flInfectedPos[3], flInfectedAngles[3],
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWitchCache[tank].g_flWitchRange;
+	int iInfected = -1;
 	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		if (iGetWitchCount() < g_esWitchCache[tank].g_iWitchAmount)
@@ -745,8 +745,7 @@ void vWitch(int tank, int pos = -1)
 
 	if (bConverted)
 	{
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime))
 		{
 			g_esWitchPlayer[tank].g_iAmmoCount++;
@@ -762,7 +761,7 @@ void vWitch(int tank, int pos = -1)
 
 		if (g_esWitchCache[tank].g_iWitchMessage == 1)
 		{
-			static char sTankName[33];
+			char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Witch", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Witch", LANG_SERVER, sTankName);
@@ -777,8 +776,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 		return;
 	}
 
-	static int iWitch;
-	iWitch = CreateEntityByName("witch");
+	int iWitch = CreateEntityByName("witch");
 	if (bIsValidEntity(iWitch))
 	{
 		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
@@ -826,14 +824,14 @@ void vWitchRange(int tank)
 			return;
 		}
 
-		static float flTankPos[3], flTankAngles[3];
+		float flTankPos[3], flTankAngles[3];
 		GetClientAbsOrigin(tank, flTankPos);
 		GetClientAbsAngles(tank, flTankAngles);
 		vWitch2(tank, flTankPos, flTankAngles);
 	}
 }
 
-public Action tTimerWitchCombo(Handle timer, DataPack pack)
+Action tTimerWitchCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -849,7 +847,7 @@ public Action tTimerWitchCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWitchKillWitch(Handle timer, int ref)
+Action tTimerWitchKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))

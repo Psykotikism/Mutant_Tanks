@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_HEAL_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_HEAL_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -88,6 +88,7 @@ enum struct esHealPlayer
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -120,6 +121,7 @@ enum struct esHealAbility
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -150,6 +152,7 @@ enum struct esHealCache
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -251,7 +254,7 @@ public void MT_OnPluginEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdHealInfo(int client, int args)
+Action cmdHealInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -299,7 +302,7 @@ void vHealMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -335,7 +338,7 @@ public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pHeal = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "HealMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "HealMenu", param1);
 			pHeal.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -346,14 +349,14 @@ public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -397,12 +400,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHealCache[attacker].g_iHealHitMode == 0 || g_esHealCache[attacker].g_iHealHitMode == 1) && bIsSurvivor(victim) && g_esHealCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esHealAbility[g_esHealPlayer[attacker].g_iTankType].g_iAccessFlags, g_esHealPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esHealPlayer[attacker].g_iTankType, g_esHealAbility[g_esHealPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esHealPlayer[victim].g_iImmunityFlags))
@@ -464,22 +467,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_HEAL_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_HEAL_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_HEAL_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_HEAL_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_HEAL_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_HEAL_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_HEAL_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_HEAL_SECTION4);
 	if (g_esHealCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HEAL_SECTION, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION2, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION3, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -517,8 +519,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -563,7 +564,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esHealAbility[iIndex].g_iAccessFlags = 0;
 				g_esHealAbility[iIndex].g_iImmunityFlags = 0;
@@ -587,6 +589,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHealAbility[iIndex].g_flHealRange = 150.0;
 				g_esHealAbility[iIndex].g_flHealRangeChance = 15.0;
 				g_esHealAbility[iIndex].g_iHealCommon = 50;
+				g_esHealAbility[iIndex].g_iHealGlow = 1;
 				g_esHealAbility[iIndex].g_iHealSpecial = 100;
 				g_esHealAbility[iIndex].g_iHealTank = 500;
 			}
@@ -619,6 +622,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHealPlayer[iPlayer].g_flHealRange = 0.0;
 					g_esHealPlayer[iPlayer].g_flHealRangeChance = 0.0;
 					g_esHealPlayer[iPlayer].g_iHealCommon = 0;
+					g_esHealPlayer[iPlayer].g_iHealGlow = 0;
 					g_esHealPlayer[iPlayer].g_iHealSpecial = 0;
 					g_esHealPlayer[iPlayer].g_iHealTank = 0;
 				}
@@ -655,6 +659,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHealPlayer[admin].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealPlayer[admin].g_flHealRange, value, 1.0, 999999.0);
 		g_esHealPlayer[admin].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealPlayer[admin].g_flHealRangeChance, value, 0.0, 100.0);
 		g_esHealPlayer[admin].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealPlayer[admin].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealPlayer[admin].g_iHealGlow = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealGlow", "Heal Glow", "Heal_Glow", "glow", g_esHealPlayer[admin].g_iHealGlow, value, 0, 1);
 		g_esHealPlayer[admin].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealPlayer[admin].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esHealPlayer[admin].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealPlayer[admin].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esHealPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -683,6 +688,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHealAbility[type].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealAbility[type].g_flHealRange, value, 1.0, 999999.0);
 		g_esHealAbility[type].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealAbility[type].g_flHealRangeChance, value, 0.0, 100.0);
 		g_esHealAbility[type].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealAbility[type].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealAbility[type].g_iHealGlow = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealGlow", "Heal Glow", "Heal_Glow", "glow", g_esHealAbility[type].g_iHealGlow, value, 0, 1);
 		g_esHealAbility[type].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealAbility[type].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esHealAbility[type].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealAbility[type].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esHealAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -706,6 +712,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esHealCache[tank].g_iHealAbility = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealAbility, g_esHealAbility[type].g_iHealAbility);
 	g_esHealCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealCommon, g_esHealAbility[type].g_iHealCommon, 2);
 	g_esHealCache[tank].g_iHealEffect = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealEffect, g_esHealAbility[type].g_iHealEffect);
+	g_esHealCache[tank].g_iHealGlow = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealGlow, g_esHealAbility[type].g_iHealGlow);
 	g_esHealCache[tank].g_iHealHit = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealHit, g_esHealAbility[type].g_iHealHit);
 	g_esHealCache[tank].g_iHealHitMode = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealHitMode, g_esHealAbility[type].g_iHealHitMode);
 	g_esHealCache[tank].g_iHealMessage = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealMessage, g_esHealAbility[type].g_iHealMessage);
@@ -832,14 +839,12 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (button & MT_MAIN_KEY)
 		{
 			if ((g_esHealCache[tank].g_iHealAbility == 2 || g_esHealCache[tank].g_iHealAbility == 3) && g_esHealCache[tank].g_iHumanAbility == 1)
 			{
-				static bool bRecharging;
-				bRecharging = g_esHealPlayer[tank].g_iCooldown != -1 && g_esHealPlayer[tank].g_iCooldown > iTime;
+				bool bRecharging = g_esHealPlayer[tank].g_iCooldown != -1 && g_esHealPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esHealCache[tank].g_iHumanMode)
 				{
@@ -923,11 +928,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHealChangeType(int tank)
+void vHealChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveHeal(tank);
 }
 
@@ -946,8 +956,7 @@ void vHeal(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esHealCache[tank].g_flHealInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esHealCache[tank].g_flHealInterval;
 	DataPack dpHeal;
 	CreateDataTimer(flInterval, tTimerHeal, dpHeal, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpHeal.WriteCell(GetClientUserId(tank));
@@ -973,14 +982,13 @@ void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esHealPlayer[tank].g_bFailed = false;
 					g_esHealPlayer[tank].g_bNoAmmo = false;
 
-					static float flTankPos[3];
+					float flTankPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
 
-					static float flSurvivorPos[3], flRange, flChance;
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHealCache[tank].g_flHealRange;
-					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHealCache[tank].g_flHealRangeChance;
-					static int iSurvivorCount;
-					iSurvivorCount = 0;
+					float flSurvivorPos[3],
+						flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHealCache[tank].g_flHealRange,
+						flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHealCache[tank].g_flHealRangeChance;
+					int iSurvivorCount = 0;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHealPlayer[tank].g_iTankType, g_esHealAbility[g_esHealPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHealPlayer[iSurvivor].g_iImmunityFlags))
@@ -1028,7 +1036,7 @@ void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esHealCache[tank].g_iHealMessage & MT_MESSAGE_SPECIAL)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Heal2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal2", LANG_SERVER, sTankName);
@@ -1054,8 +1062,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHealPlayer[tank].g_iAmmoCount2 < g_esHealCache[tank].g_iHumanAmmo && g_esHealCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && GetEntProp(survivor, Prop_Data, "m_iHealth") > 0 && !g_esHealPlayer[survivor].g_bAffected)
 			{
 				g_esHealPlayer[survivor].g_bAffected = true;
@@ -1088,7 +1095,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esHealCache[tank].g_iHealMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Heal", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal", LANG_SERVER, sTankName, survivor);
@@ -1144,7 +1151,7 @@ void vHealReset2(int tank)
 
 	if (g_esHealCache[tank].g_iHealMessage & MT_MESSAGE_SPECIAL)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Heal3", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal3", LANG_SERVER, sTankName);
@@ -1176,7 +1183,7 @@ void vHealResetGlow(int tank)
 		{
 			int iGlowColor[4];
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
 		}
 		case false: vSetHealGlow(tank, 0, 0, 0, 0, 0);
 	}
@@ -1196,7 +1203,7 @@ void vSetHealGlow(int tank, int color, int flashing, int min, int max, int type)
 	SetEntProp(tank, Prop_Send, "m_iGlowType", type);
 }
 
-public Action tTimerHealCombo(Handle timer, DataPack pack)
+Action tTimerHealCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1213,7 +1220,7 @@ public Action tTimerHealCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHealCombo2(Handle timer, DataPack pack)
+Action tTimerHealCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1229,7 +1236,7 @@ public Action tTimerHealCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHealCombo3(Handle timer, DataPack pack)
+Action tTimerHealCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1247,7 +1254,7 @@ public Action tTimerHealCombo3(Handle timer, DataPack pack)
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vHealHit(iSurvivor, iTank, flRandom, flChance, g_esHealCache[iTank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
@@ -1260,13 +1267,11 @@ public Action tTimerHealCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHeal(Handle timer, DataPack pack)
+Action tTimerHeal(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esHealCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHealPlayer[iTank].g_iTankType) || (g_esHealCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHealCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHealAbility[g_esHealPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHealPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHealPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esHealPlayer[iTank].g_iTankType || (g_esHealCache[iTank].g_iHealAbility != 2 && g_esHealCache[iTank].g_iHealAbility != 3) || !g_esHealPlayer[iTank].g_bActivated)
 	{
 		vHealReset2(iTank);
@@ -1274,9 +1279,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esHealAbility[g_esHealPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHealPlayer[iTank].g_iAccessFlags)) && g_esHealCache[iTank].g_iHumanAbility == 1 && g_esHealCache[iTank].g_iHumanMode == 0 && (iTime + g_esHealCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esHealPlayer[iTank].g_iCooldown == -1 || g_esHealPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vHealReset2(iTank);
@@ -1285,15 +1288,10 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flInfectedPos[3];
+	float flTankPos[3], flInfectedPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	static int iCommon, iCommonHealth, iExtraHealth, iExtraHealth2, iGreen, iHealth, iLeftover, iMaxHealth, iRealHealth, iSpecialHealth, iTankHealth, iTotalHealth;
-	iCommon = -1;
-	iGreen = 0;
-	iLeftover = 0;
-	iMaxHealth = MT_TankMaxHealth(iTank, 1);
-	iTotalHealth = 0;
-
+	int iCommon = -1, iCommonHealth, iExtraHealth, iExtraHealth2, iGreen = 0, iHealth, iLeftover = 0,
+		iMaxHealth = MT_TankMaxHealth(iTank, 1), iRealHealth, iSpecialHealth, iTankHealth, iTotalHealth = 0;
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flInfectedPos);
@@ -1356,17 +1354,17 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		}
 	}
 
-	switch (iGreen)
+	switch (iGreen == 0 || g_esHealCache[iTank].g_iHealGlow == 0)
 	{
-		case 0: vHealResetGlow(iTank);
-		default:
+		case true: vHealResetGlow(iTank);
+		case false:
 		{
-			static int iColor[4];
+			int iColor[4];
 			MT_GetTankColors(iTank, 2, iColor[0], iColor[1], iColor[2], iColor[3]);
 			if (!(iColor[0] == -2 && iColor[1] == -2 && iColor[2] == -2))
 			{
 				MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
-				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), 1, MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), 3);
+				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 			}
 		}
 	}

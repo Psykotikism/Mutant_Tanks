@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_TRACK_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -49,7 +49,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_TRACK_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -177,7 +177,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdTrackInfo(int client, int args)
+Action cmdTrackInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -223,7 +223,7 @@ void vTrackMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -249,7 +249,7 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pTrack = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "TrackMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "TrackMenu", param1);
 			pTrack.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -260,12 +260,12 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -309,15 +309,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public void Think(int rock)
-{
-	switch (bIsValidEntity(rock))
-	{
-		case true: vTrackThink(rock);
-		case false: SDKUnhook(rock, SDKHook_Think, Think);
-	}
-}
-
 #if defined MT_ABILITIES_MAIN2
 void vTrackPluginCheck(ArrayList list)
 #else
@@ -350,19 +341,19 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_TRACK_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_TRACK_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_TRACK_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_TRACK_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_TRACK_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_TRACK_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_TRACK_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_TRACK_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_ROCKTHROW && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 1 && bIsValidEntity(weapon))
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_TRACK_SECTION, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION2, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION3, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION4, false))
 				{
@@ -388,7 +379,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esTrackAbility[iIndex].g_iAccessFlags = 0;
 				g_esTrackAbility[iIndex].g_iImmunityFlags = 0;
@@ -568,10 +560,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esTrackPlayer[tank].g_iCooldown != -1 && g_esTrackPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esTrackPlayer[tank].g_iCooldown != -1 && g_esTrackPlayer[tank].g_iCooldown > iTime;
 				if (!g_esTrackPlayer[tank].g_bActivated && !bRecharging)
 				{
 					switch (g_esTrackPlayer[tank].g_iAmmoCount < g_esTrackCache[tank].g_iHumanAmmo && g_esTrackCache[tank].g_iHumanAmmo > 0)
@@ -600,11 +590,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vTrackChangeType(int tank)
+void vTrackChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveTrack(tank);
 }
 
@@ -689,7 +684,7 @@ void vTrack(int tank, int rock)
 
 	if (g_esTrackCache[tank].g_iTrackMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Track", LANG_SERVER, sTankName);
@@ -698,8 +693,7 @@ void vTrack(int tank, int rock)
 
 void vTrackThink(int rock)
 {
-	static int iTank;
-	iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
+	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
 	if (bIsValidClient(iTank))
 	{
 		if (bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)))
@@ -711,12 +705,11 @@ void vTrackThink(int rock)
 		{
 			case 0:
 			{
-				static float flPos[3], flVelocity[3];
+				float flPos[3], flVelocity[3];
 				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
-				static float flVector;
-				flVector = GetVectorLength(flVelocity);
+				float flVector = GetVectorLength(flVelocity);
 				if (flVector < 100.0)
 				{
 					return;
@@ -724,11 +717,10 @@ void vTrackThink(int rock)
 
 				NormalizeVector(flVelocity, flVelocity);
 
-				static int iTarget;
-				iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+				int iTarget = iGetRockTarget(flPos, flVelocity, iTank);
 				if (bIsSurvivor(iTarget))
 				{
-					static float flPos2[3], flVelocity2[3];
+					float flPos2[3], flVelocity2[3];
 					GetClientEyePosition(iTarget, flPos2);
 					GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 					if (!bVisiblePosition(flPos, flPos2, rock, 2) || GetVectorDistance(flPos, flPos2) > 500.0)
@@ -738,7 +730,7 @@ void vTrackThink(int rock)
 
 					SetEntityGravity(rock, 0.01);
 
-					static float flDirection[3], flVelocity3[3];
+					float flDirection[3], flVelocity3[3];
 					SubtractVectors(flPos2, flPos, flDirection);
 					NormalizeVector(flDirection, flDirection);
 
@@ -753,7 +745,7 @@ void vTrackThink(int rock)
 			}
 			case 1:
 			{
-				static float flPos[3], flVelocity[3];
+				float flPos[3], flVelocity[3];
 				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
@@ -764,17 +756,14 @@ void vTrackThink(int rock)
 
 				NormalizeVector(flVelocity, flVelocity);
 
-				static int iTarget;
-				iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-				static float flVelocity2[3], flVector[3], flAngles[3], flDistance;
-				flDistance = 1000.0;
-				static bool bVisible;
-				bVisible = false;
+				int iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+				float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
+				bool bVisible = false;
 				flVector[0] = flVector[1] = flVector[2] = 0.0;
 
 				if (bIsSurvivor(iTarget))
 				{
-					static float flPos2[3];
+					float flPos2[3];
 					GetClientEyePosition(iTarget, flPos2);
 					flDistance = GetVectorDistance(flPos, flPos2);
 					bVisible = bVisiblePosition(flPos, flPos2, rock, 1);
@@ -786,31 +775,27 @@ void vTrackThink(int rock)
 
 				GetVectorAngles(flVelocity, flAngles);
 
-				static float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
-					flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1, flFactor2, flBase;
-				flFactor1 = 0.2;
-				flFactor2 = 0.5;
-				flBase = 1500.0;
+				float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+					flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 				flFront[0] = flFront[1] = flFront[2] = 0.0;
 
 				if (bVisible)
 				{
 					flBase = 80.0;
 
-					static float flFront2, flDown2, flUp2, flLeft2, flRight2, flDistance2, flDistance3, flDistance4, flDistance5, flDistance6, flDistance7, flDistance8, flDistance9;
-					flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3);
-					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3);
-					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3);
-					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3);
-					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3);
-					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3);
-					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3);
-					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3);
-					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3);
-					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3);
-					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3);
-					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3);
-					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
+					float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3),
+						flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3),
+						flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3),
+						flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3),
+						flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3),
+						flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3),
+						flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3),
+						flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3),
+						flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3),
+						flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3),
+						flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3),
+						flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3),
+						flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
 
 					NormalizeVector(flFront, flFront);
 					NormalizeVector(flUp, flUp);
@@ -956,8 +941,7 @@ void vTrackThink(int rock)
 					NormalizeVector(flFront, flFront);
 				}
 
-				static float flAngles2, flVelocity3[3];
-				flAngles2 = flGetAngle(flFront, flVelocity);
+				float flVelocity3[3], flAngles2 = flGetAngle(flFront, flVelocity);
 				ScaleVector(flFront, flAngles2);
 				AddVectors(flVelocity, flFront, flVelocity3);
 				NormalizeVector(flVelocity3, flVelocity3);
@@ -969,7 +953,7 @@ void vTrackThink(int rock)
 
 				if (g_esTrackCache[iTank].g_iTrackGlow == 1)
 				{
-					static int iGlowColor[4];
+					int iGlowColor[4];
 					MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 
 					switch (iGlowColor[0] == -2 && iGlowColor[1] == -2 && iGlowColor[2] == -2)
@@ -983,7 +967,7 @@ void vTrackThink(int rock)
 								g_esTrackPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
 							}
 						}
-						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(iTank) ? 1 : 0), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
+						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 					}
 				}
 			}
@@ -993,10 +977,8 @@ void vTrackThink(int rock)
 
 int iGetRockTarget(float pos[3], float angle[3], int tank)
 {
-	static float flMin, flPos[3], flAngle;
-	flMin = 4.0;
-	static int iTarget;
-	iTarget = 0;
+	float flMin = 4.0, flPos[3], flAngle;
+	int iTarget = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
@@ -1020,7 +1002,7 @@ int iGetRockTarget(float pos[3], float angle[3], int tank)
 	return iTarget;
 }
 
-public void OnTrackPreThinkPost(int tank)
+void OnTrackPreThinkPost(int tank)
 {
 	if (!g_bSecondGame || !MT_IsTankSupported(tank) || !MT_IsCustomTankSupported(tank) || !g_esTrackPlayer[tank].g_bRainbowColor)
 	{
@@ -1031,8 +1013,7 @@ public void OnTrackPreThinkPost(int tank)
 		return;
 	}
 
-	static int iRock;
-	iRock = EntRefToEntIndex(g_esTrackPlayer[tank].g_iRock);
+	int iRock = EntRefToEntIndex(g_esTrackPlayer[tank].g_iRock);
 	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		g_esTrackPlayer[tank].g_bRainbowColor = false;
@@ -1043,20 +1024,19 @@ public void OnTrackPreThinkPost(int tank)
 		return;
 	}
 
-	static bool bHook;
-	bHook = false;
-	static int iColor[3];
+	bool bHook = false;
+	int iColor[3];
 	iColor[0] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank) * 127.5) + 127.5);
 	iColor[1] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 2) * 127.5) + 127.5);
 	iColor[2] = RoundToNearest((Cosine((GetGameTime() * 1.0) + tank + 4) * 127.5) + 127.5);
 
-	static int iTempColor[4];
+	int iTempColor[4];
 	MT_GetTankColors(tank, 2, iTempColor[0], iTempColor[1], iTempColor[2], iTempColor[3]);
 	if (iTempColor[0] == -2 && iTempColor[1] == -2 && iTempColor[2] == -2 && g_esTrackCache[tank].g_iTrackGlow == 1)
 	{
 		bHook = true;
 
-		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 	}
 
 	if (!bHook)
@@ -1067,20 +1047,26 @@ public void OnTrackPreThinkPost(int tank)
 	}
 }
 
-public Action tTimerTrack(Handle timer, DataPack pack)
+void OnTrackThink(int rock)
+{
+	switch (bIsValidEntity(rock))
+	{
+		case true: vTrackThink(rock);
+		case false: SDKUnhook(rock, SDKHook_Think, OnTrackThink);
+	}
+}
+
+Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iRock;
-	iRock = EntRefToEntIndex(pack.ReadCell());
+	int iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esTrackPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esTrackPlayer[iTank].g_iTankType || g_esTrackCache[iTank].g_iTrackAbility == 0 || !g_esTrackPlayer[iTank].g_bActivated)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
@@ -1088,11 +1074,10 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SDKUnhook(iRock, SDKHook_Think, Think);
-	SDKHook(iRock, SDKHook_Think, Think);
+	SDKUnhook(iRock, SDKHook_Think, OnTrackThink);
+	SDKHook(iRock, SDKHook_Think, OnTrackThink);
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1 && (g_esTrackPlayer[iTank].g_iCooldown == -1 || g_esTrackPlayer[iTank].g_iCooldown < iTime))
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -19,9 +19,9 @@
 
 // Core plugin information
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
-#define MT_AUTHOR "Psyk0tik (Crasher_3637)"
+#define MT_AUTHOR "Psyk0tik"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.88"
+#define MT_VERSION "8.89"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 public SharedPlugin __pl_mutanttanks =
@@ -157,6 +157,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
 #define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+#define STATICPROP_EHANDLE_MASK 0x40000000
 
 // Forwards
 /**
@@ -1233,15 +1234,14 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 {
 	if (bIsValidClient(entity) || bIsValidEntity(entity))
 	{
-		static int iParticle;
-		iParticle = CreateEntityByName("info_particle_system");
+		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 
 			if (teleport)
 			{
-				static float flPos[3];
+				float flPos[3];
 				GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 				flPos[2] += origin;
 				TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
@@ -1260,8 +1260,7 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 
 stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlename, float duration = 0.0)
 {
-	static int iParticle;
-	iParticle = CreateEntityByName("info_particle_system");
+	int iParticle = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
@@ -1279,13 +1278,12 @@ stock void vCheatCommand(int player, const char[] command, const char[] argument
 {
 	if (bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		static int iCmdFlags, iFlagBits;
-		iFlagBits = GetUserFlagBits(player), iCmdFlags = GetCommandFlags(command);
+		int iFlagBits = GetUserFlagBits(player), iCmdFlags = GetCommandFlags(command);
 		SetUserFlagBits(player, ADMFLAG_ROOT);
 		SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 		FakeClientCommand(player, "%s %s", command, arguments);
 		SetUserFlagBits(player, iFlagBits);
-		SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+		SetCommandFlags(command, iCmdFlags);
 	}
 }
 
@@ -1298,11 +1296,11 @@ stock void vCopyVector(float source[3], float target[3])
 
 stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...)
 {
-	static char sConfig[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	VFormat(sFilename, sizeof(sFilename), filename, 3);
-	FormatEx(sConfig, sizeof(sConfig), "%s.cfg", sFilename);
-	BuildPath(Path_SM, sPath, sizeof(sPath), "%s%s", folder, sConfig);
-	if (MT_FileExists(folder, sConfig, sPath, sOutput, sizeof(sOutput)))
+	char sConfig[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
+	VFormat(sFilename, sizeof sFilename, filename, 3);
+	FormatEx(sConfig, sizeof sConfig, "%s.cfg", sFilename);
+	BuildPath(Path_SM, sPath, sizeof sPath, "%s%s", folder, sConfig);
+	if (MT_FileExists(folder, sConfig, sPath, sOutput, sizeof sOutput))
 	{
 		RenameFile(sOutput, sPath);
 
@@ -1312,8 +1310,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	File fFilename = OpenFile(sPath, "w+");
 	if (fFilename != null)
 	{
-		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)", MT_NAME, MT_VERSION);
-		fFilename.WriteLine("\n");
+		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)\n", MT_NAME, MT_VERSION);
 		fFilename.WriteLine("\"Mutant Tanks\"");
 		fFilename.WriteLine("{");
 		fFilename.WriteLine("\t// Override settings in here.");
@@ -1325,8 +1322,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 
 stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angle[3], float pause, float duration, const char[] attachment = "")
 {
-	static int iEffect;
-	iEffect = CreateEntityByName("info_particle_system");
+	int iEffect = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iEffect))
 	{
 		DispatchKeyValue(iEffect, "effect_name", particlename);
@@ -1342,12 +1338,12 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 			AcceptEntityInput(iEffect, "SetParentAttachment");
 		}
 
-		static char sVariant[64];
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Stop::%f:-1", pause);
+		char sVariant[64];
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Stop::%f:-1", pause);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser1");
@@ -1357,7 +1353,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		SetVariantString("OnUser2 !self:FireUser1::0:-1");
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof(sVariant), "OnUser3 !self:Kill::%f:-1", duration);
+		FormatEx(sVariant, sizeof sVariant, "OnUser3 !self:Kill::%f:-1", duration);
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser3");
@@ -1370,12 +1366,11 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 
 stock void vDamagePlayer(int victim, int attacker, float damage, const char[] damagetype = "0")
 {
-	static int iPointHurt;
-	iPointHurt = CreateEntityByName("point_hurt");
+	int iPointHurt = CreateEntityByName("point_hurt");
 	if (bIsValidEntity(iPointHurt))
 	{
-		static char sTargetName[32];
-		FormatEx(sTargetName, sizeof(sTargetName), "mt_target_%i", GetClientUserId(victim));
+		char sTargetName[32];
+		FormatEx(sTargetName, sizeof sTargetName, "mt_target_%i", GetClientUserId(victim));
 		DispatchKeyValue(victim, "targetname", sTargetName);
 
 		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
@@ -1392,17 +1387,16 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 {
 	if (bIsValidEntRef(ref))
 	{
-		static int iObject;
-		iObject = EntRefToEntIndex(ref);
+		int iObject = EntRefToEntIndex(ref);
 		if (bIsValidEntity(iObject))
 		{
-			static char sVariant[64];
-			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:-1", duration);
+			char sVariant[64];
+			FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:ClearParent::%f:-1", duration);
 			SetVariantString(sVariant);
 			AcceptEntityInput(iObject, "AddOutput");
 			AcceptEntityInput(iObject, "FireUser1");
 
-			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:-1", duration + 0.1);
+			FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Kill::%f:-1", duration + 0.1);
 			SetVariantString(sVariant);
 			AcceptEntityInput(iObject, "AddOutput");
 			AcceptEntityInput(iObject, "FireUser1");
@@ -1414,7 +1408,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 {
 	if (mode & flags)
 	{
-		static int iColor[4];
+		int iColor[4];
 		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
 		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
 		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
@@ -1422,24 +1416,26 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
-
-		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(800);
-		bfWrite.WriteShort(300);
-		bfWrite.WriteShort((0x0010|0x0001));
-
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		if (hFadeTarget != null)
 		{
-			bfWrite.WriteByte(iColor[iPos]);
-		}
+			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+			bfWrite.WriteShort(800);
+			bfWrite.WriteShort(300);
+			bfWrite.WriteShort((0x0010|0x0001));
 
-		EndMessage();
+			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			{
+				bfWrite.WriteByte(iColor[iPos]);
+			}
+
+			EndMessage();
+		}
 	}
 }
 
 stock void vExternalView(int player, float time)
 {
-	if (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
+	if (bIsSecondGame() && bIsValidClient(player, MT_CHECK_FAKECLIENT) && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
 	{
 		SetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView", GetGameTime() + time);
 	}
@@ -1500,7 +1496,7 @@ stock void vGetMatchingFilename(const char[] directory, const char[] filename, c
 	if (dlList != null)
 	{
 		char sFilename[PLATFORM_MAX_PATH];
-		while (dlList.GetNext(sFilename, sizeof(sFilename)))
+		while (dlList.GetNext(sFilename, sizeof sFilename))
 		{
 			if (StrEqual(sFilename, filename, false))
 			{
@@ -1576,8 +1572,7 @@ stock void vMultiTargetFilters(bool toggle)
 
 stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, float radius = 200.0)
 {
-	static int iPointPush;
-	iPointPush = CreateEntityByName("point_push");
+	int iPointPush = CreateEntityByName("point_push");
 	if (bIsValidEntity(iPointPush))
 	{
 		SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
@@ -1596,7 +1591,7 @@ stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, 
 
 stock void vRemoveWeapons(int survivor)
 {
-	int iWeapon = 0;
+	int iWeapon = -1;
 	for (int iSlot = 0; iSlot < 5; iSlot++)
 	{
 		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
@@ -1695,14 +1690,16 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 stock void vShakePlayerScreen(int player, float duration = 1.0)
 {
 	Handle hTarget = StartMessageOne("Shake", player);
+	if (hTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+		bfWrite.WriteByte(0);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(duration);
 
-	BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-	bfWrite.WriteByte(0);
-	bfWrite.WriteFloat(16.0);
-	bfWrite.WriteFloat(0.5);
-	bfWrite.WriteFloat(duration);
-
-	EndMessage();
+		EndMessage();
+	}
 }
 
 stock void vStopSound(int client, const char[] sound)
@@ -1724,13 +1721,13 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 {
 	if (FileExists(path, use_valve_fs, valve_path_id))
 	{
-		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
 		if (!StrEqual(filename, sOutput))
 		{
-			static char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
 			strcopy(output, size, sTemp);
 		}
 
@@ -1752,23 +1749,23 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[1024], sMessage[1024];
+	char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
-	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
-	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	FormatEx(sMessage, sizeof sMessage, "\x01%s", message);
+	VFormat(sBuffer, sizeof sBuffer, sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, false);
 	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			SetGlobalTransTarget(iPlayer);
-			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+			VFormat(sBuffer, sizeof sBuffer, message, 2);
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1776,10 +1773,10 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	VFormat(sBuffer, sizeof(sBuffer), message, 2);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	VFormat(sBuffer, sizeof sBuffer, message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 	PrintToServer(sBuffer);
 }
 
@@ -1802,13 +1799,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(client);
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 
 		switch (client == 0)
 		{
@@ -1830,10 +1827,11 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 		return true;
 	}
 
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
-	iTypePlayerFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin), iPlayerFlags = MT_GetAccessFlags(3, 0, admin),
-	iAdminFlags = GetUserFlagBits(admin), iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin)), iGlobalFlags = MT_GetAccessFlags(1);
-
+	int iTypePlayerFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin),
+		iPlayerFlags = MT_GetAccessFlags(3, 0, admin),
+		iAdminFlags = GetUserFlagBits(admin),
+		iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin)),
+		iGlobalFlags = MT_GetAccessFlags(1);
 	if ((flags != 0 && ((!(flags & flags2) && !(flags2 & flags)) || (!(flags & iTypePlayerFlags) && !(iTypePlayerFlags & flags)) || (!(flags & iPlayerFlags) && !(iPlayerFlags & flags)) || (!(flags & iAdminFlags) && !(iAdminFlags & flags))))
 		|| (iTypeFlags != 0 && !(iTypeFlags & flags2) && !(flags2 & iTypeFlags)) || (iGlobalFlags != 0 && !(iGlobalFlags & flags2) && !(flags2 & iGlobalFlags)))
 	{
@@ -1845,16 +1843,12 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 
 stock bool bHasIdlePlayer(int survivor)
 {
-	static char sClassname[32];
-	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
-	if (StrEqual(sClassname, "SurvivorBot"))
+	if (bIsBotSurvivor(survivor))
 	{
-		static int iSpectatorUserId;
-		iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
+		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
 		{
-			static int iIdler;
-			iIdler = GetClientOfUserId(iSpectatorUserId);
+			int iIdler = GetClientOfUserId(iSpectatorUserId);
 			return iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
 		}
 	}
@@ -1869,10 +1863,11 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		return false;
 	}
 
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
-	iTypePlayerFlags = MT_GetImmunityFlags(4, type, admin), iPlayerFlags = MT_GetImmunityFlags(3, 0, admin),
-	iAdminFlags = GetUserFlagBits(admin), iTypeFlags = MT_GetImmunityFlags(2, type), iGlobalFlags = MT_GetImmunityFlags(1);
-
+	int iTypePlayerFlags = MT_GetImmunityFlags(4, type, admin),
+		iPlayerFlags = MT_GetImmunityFlags(3, 0, admin),
+		iAdminFlags = GetUserFlagBits(admin),
+		iTypeFlags = MT_GetImmunityFlags(2, type),
+		iGlobalFlags = MT_GetImmunityFlags(1);
 	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
 		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
@@ -1882,12 +1877,11 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 {
 	if (range > 0.0)
 	{
-		static float flOrigin[3], flPos[3], flAngles[3];
+		float flOrigin[3], flPos[3], flAngles[3];
 		flAngles[0] = -89.0;
 		GetClientEyePosition(tank, flOrigin);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -1925,7 +1919,9 @@ stock bool bIsBotIdleSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
+	char sClassname[32];
+	GetEntityNetClass(bot, sClassname, sizeof sClassname);
+	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT) && StrEqual(sClassname, "SurvivorBot");
 }
 
 stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1937,8 +1933,8 @@ stock bool bIsCommonInfected(int common)
 {
 	if (bIsValidEntity(common))
 	{
-		static char sClassname[32];
-		GetEntityClassname(common, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(common, sClassname, sizeof sClassname);
 		return StrEqual(sClassname, "infected");
 	}
 
@@ -1952,20 +1948,19 @@ stock bool bIsEntityGrounded(int entity)
 
 stock bool bIsGunWeapon(int survivor)
 {
-	static int iWeapon;
-	iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+	int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
 	if (iWeapon > MaxClients)
 	{
-		static int iSlot, iSlot2;
-		iSlot = GetPlayerWeaponSlot(survivor, 0), iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+		int iSlot = GetPlayerWeaponSlot(survivor, 0),
+			iSlot2 = GetPlayerWeaponSlot(survivor, 1);
 		if (iSlot > MaxClients && iSlot == iWeapon)
 		{
 			return true;
 		}
 		else if (iSlot2 > MaxClients && iSlot2 == iWeapon)
 		{
-			static char sWeapon[32];
-			GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
+			char sWeapon[32];
+			GetEntityClassname(iWeapon, sWeapon, sizeof sWeapon);
 			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
 			{
 				return true;
@@ -2020,23 +2015,15 @@ stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (!bIsValidClient(iPlayer, MT_CHECK_INGAME) || bIsValidClient(iPlayer, MT_CHECK_FAKECLIENT) || !bHasIdlePlayer(iPlayer) || GetClientTeam(iPlayer) != 2)
+		if (!bIsSurvivor(iPlayer) || !bIsBotSurvivor(iPlayer))
 		{
 			continue;
 		}
 
-		static char sClassname[32];
-		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
+		if (iSpectatorUserId > 0)
 		{
-			static int iSpectatorUserId;
-			iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
-			if (iSpectatorUserId > 0)
-			{
-				static int iIdler;
-				iIdler = GetClientOfUserId(iSpectatorUserId);
-				return iIdler == survivor;
-			}
+			return GetClientOfUserId(iSpectatorUserId) == survivor;
 		}
 	}
 
@@ -2059,10 +2046,9 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 	}
 	else if (bIsSurvivor(player, flags))
 	{
-		static char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		static int iSequence;
-		iSequence = GetEntProp(player, Prop_Send, "m_nSequence");
+		char sModel[32];
+		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
+		int iSequence = GetEntProp(player, Prop_Send, "m_nSequence");
 		if (bIsSecondGame())
 		{
 			switch (sModel[29])
@@ -2165,8 +2151,7 @@ stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 
 stock bool bIsSurvivorCaught(int survivor)
 {
-	static int iSpecial;
-	iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
+	int iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
 	if (bIsSecondGame())
 	{
@@ -2225,138 +2210,138 @@ stock bool bIsWitch(int witch)
 {
 	if (bIsValidEntity(witch))
 	{
-		static char sClassname[32];
-		GetEntityClassname(witch, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(witch, sClassname, sizeof sClassname);
 		return StrEqual(sClassname, "witch");
 	}
 
 	return false;
 }
 
-public bool bBoomerFilter(const char[] pattern, Handle clients)
+bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bChargerFilter(const char[] pattern, Handle clients)
+bool bChargerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bHunterFilter(const char[] pattern, Handle clients)
+bool bHunterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bInfectedFilter(const char[] pattern, Handle clients)
+bool bInfectedFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bJockeyFilter(const char[] pattern, Handle clients)
+bool bJockeyFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bMutantFilter(const char[] pattern, Handle clients)
+bool bMutantFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSmokerFilter(const char[] pattern, Handle clients)
+bool bSmokerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpecialFilter(const char[] pattern, Handle clients)
+bool bSpecialFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpitterFilter(const char[] pattern, Handle clients)
+bool bSpitterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bTankFilter(const char[] pattern, Handle clients)
+bool bTankFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
@@ -2390,7 +2375,7 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 {
-	static Handle hTrace;
+	Handle hTrace;
 
 	switch (type)
 	{
@@ -2439,8 +2424,7 @@ stock float flGetAdrenalineTime(int survivor)
 		iTimerAddress = FindSendPropInfo("CTerrorPlayer", "m_bAdrenalineActive") - 12;
 	}
 
-	static float flTime, flDuration;
-	flTime = GetGameTime(), flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
+	float flTime = GetGameTime(), flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
 	if (flDuration <= flTime)
 	{
 		return -1.0;
@@ -2458,8 +2442,7 @@ stock float flGetClampedValue(const char[] key, const char[] setting1, const cha
 {
 	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
-		static float flDefault;
-		flDefault = (check == -1.0) ? curVal : -1.0;
+		float flDefault = (check == -1.0) ? curVal : -1.0;
 		return (value[0] != '\0' && (check == -1.0 || StringToFloat(value) >= check)) ? flClamp(StringToFloat(value), min, max) : flDefault;
 	}
 
@@ -2468,12 +2451,12 @@ stock float flGetClampedValue(const char[] key, const char[] setting1, const cha
 
 stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
 {
-	static float flAngle[3], flDistance;
+	float flAngle[3];
 	vCopyVector(angle, flAngle);
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-	flDistance = flGetRayDistance(pos, flAngle, entity, type);
+	float flDistance = flGetRayDistance(pos, flAngle, entity, type);
 
 	return flDistance;
 }
@@ -2482,18 +2465,16 @@ stock float flGetGroundUnits(int entity)
 {
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
 	{
-		static float flOrigin[3], flPosition[3];
+		float flOrigin[3], flPosition[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				static float flUnits;
 				TR_GetEndPosition(flPosition, hTrace);
-				flUnits = flOrigin[2] - flPosition[2];
+				float flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
 				return flUnits;
@@ -2510,9 +2491,9 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 {
 	if (FindCharInString(subsection, ',') != -1)
 	{
-		static char sSet[16][16];
-		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+		char sSet[16][16];
+		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
+		for (int iPos = 0; iPos < sizeof sSet; iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -2569,8 +2550,9 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	}
 	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
 	{
-		static bool bDamageSetting, bForceSetting, bRangeSetting;
-		bDamageSetting = StrContains(key, "damage", false) != -1, bForceSetting = StrContains(key, "force", false) != -1, bRangeSetting = StrContains(key, "range", false) != -1;
+		bool bDamageSetting = StrContains(key, "damage", false) != -1,
+			bForceSetting = StrContains(key, "force", false) != -1,
+			bRangeSetting = StrContains(key, "range", false) != -1;
 		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{
 			return 0.0;
@@ -2635,7 +2617,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 
 stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
 {
-	static float flHitPos[3];
+	float flHitPos[3];
 	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
 	return GetVectorDistance(pos, flHitPos);
 }
@@ -2657,8 +2639,7 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 
 stock float flGetTempHealth(int survivor, float decayRate)
 {
-	static float flTempHealth;
-	flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
+	float flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
 	flTempHealth -= (GetGameTime() - GetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime")) * decayRate;
 	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
 }
@@ -2696,7 +2677,7 @@ stock int iGetAnimation(int player, const char[] sequence)
 	if (bIsValidEntity(iProp))
 	{
 		char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 		SetEntityModel(iProp, sModel);
 		SetVariantString(sequence);
 		AcceptEntityInput(iProp, "SetAnimation");
@@ -2727,32 +2708,28 @@ stock int iGetClampedValue(const char[] key, const char[] setting1, const char[]
 {
 	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 	{
-		static int iDefault;
-		iDefault = (check == -1) ? curVal : -1;
+		int iDefault = (check == -1) ? curVal : -1;
 		return (value[0] != '\0' && (check == -1 || StringToInt(value) >= check)) ? iClamp(StringToInt(value), min, max) : iDefault;
 	}
 
 	return curVal;
 }
 
-stock int iGetEntityIndex(any refHandle)
+stock bool bIsEntityStaticProp(Address refHandle)
 {
-	Address adHandle = view_as<Address>(refHandle);
-	return iGetEntryIndex(adHandle);
+	return (iGetEntityIndex(refHandle) == (STATICPROP_EHANDLE_MASK & ENT_ENTRY_MASK)) != 0;
 }
 
-stock int iGetEntryIndex(Address entityHandle)
+stock int iGetEntityIndex(Address refHandle)
 {
-	int iMaskIndex = LoadFromAddress(entityHandle, NumberType_Int32);
-	return iMaskIndex & ENT_ENTRY_MASK;
+	int iMaskIndex = LoadFromAddress(refHandle, NumberType_Int32);
+	return (iMaskIndex & ENT_ENTRY_MASK);
 }
 
 stock int iGetHumanCount(bool infected = false)
 {
-	static bool bValidPlayer;
-	bValidPlayer = false;
-	static int iHumanCount;
-	iHumanCount = 0;
+	bool bValidPlayer = false;
+	int iHumanCount = 0;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
 		bValidPlayer = infected ? bIsInfected(iHuman, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) : bIsSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
@@ -2782,16 +2759,10 @@ stock int iGetIdlePlayer(int bot)
 {
 	if (bIsBotSurvivor(bot))
 	{
-		static char sClassname[32];
-		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
+		if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
 		{
-			static int iIdler;
-			iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
+			return iIdler;
 		}
 	}
 
@@ -2800,10 +2771,8 @@ stock int iGetIdlePlayer(int bot)
 
 stock int iGetInfectedCount(bool human = false)
 {
-	static bool bValidPlayer;
-	bValidPlayer = false;
-	static int iCount;
-	iCount = 0;
+	bool bValidPlayer = false;
+	int iCount = 0;
 	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
 	{
 		bValidPlayer = human ? bIsHumanInfected(iSpecial) : bIsInfected(iSpecial);
@@ -2820,9 +2789,9 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 {
 	if (FindCharInString(subsection, ',') != -1)
 	{
-		static char sSet[16][16];
-		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+		char sSet[16][16];
+		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
+		for (int iPos = 0; iPos < sizeof sSet; iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -3003,7 +2972,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 			{
 				bool bHost[MAXPLAYERS + 1];
 				GetEntDataArray(iManager, iHostOffset, bHost, MAXPLAYERS + 1, 1);
-				for (int iPlayer = 1; iPlayer < sizeof(bHost); iPlayer++)
+				for (int iPlayer = 1; iPlayer < sizeof bHost; iPlayer++)
 				{
 					if (bHost[iPlayer])
 					{
@@ -3019,8 +2988,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 
 stock int iGetPlayerCount()
 {
-	static int iPlayerCount;
-	iPlayerCount = 0;
+	int iPlayerCount = 0;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -3039,8 +3007,7 @@ stock int iGetRandomColor(int color)
 
 stock int iGetRandomSurvivor(int tank)
 {
-	static int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
-	iSurvivorCount = 0;
+	int iSurvivorCount = 0, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (MT_IsAdminImmune(iSurvivor, tank) || !bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
@@ -3056,8 +3023,7 @@ stock int iGetRandomSurvivor(int tank)
 
 stock int iGetRandomTank(int tank)
 {
-	static int iTankCount, iTanks[MAXPLAYERS + 1];
-	iTankCount = 0;
+	int iTankCount = 0, iTanks[MAXPLAYERS + 1];
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && iTank != tank)
@@ -3071,7 +3037,7 @@ stock int iGetRandomTank(int tank)
 
 stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
-	static Handle hTrace;
+	Handle hTrace;
 
 	switch (type)
 	{
@@ -3082,8 +3048,7 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 		case 5: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
 	}
 
-	static int iHit;
-	iHit = 0;
+	int iHit = 0;
 	if (hTrace != null)
 	{
 		if (TR_DidHit(hTrace))
@@ -3097,7 +3062,7 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 
 	if (offset)
 	{
-		static float flVector[3];
+		float flVector[3];
 		MakeVectorFromPoints(hitpos, pos, flVector);
 		NormalizeVector(flVector, flVector);
 		ScaleVector(flVector, 15.0);
@@ -3129,10 +3094,8 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 
 stock int iGetSurvivorCount(bool human = false)
 {
-	static bool bValidPlayer;
-	bValidPlayer = false;
-	static int iCount;
-	iCount = 0;
+	bool bValidPlayer = false;
+	int iCount = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		bValidPlayer = human ? bIsHumanSurvivor(iSurvivor) : bIsSurvivor(iSurvivor);
@@ -3147,8 +3110,8 @@ stock int iGetSurvivorCount(bool human = false)
 
 stock int iGetWeaponOffset(int weapon)
 {
-	static char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
 	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 	{
 		return 3;
@@ -3191,8 +3154,7 @@ stock int iGetWeaponOffset(int weapon)
 
 stock int iGetWitchCount()
 {
-	static int iWitchCount, iWitch;
-	iWitchCount = 0, iWitch = -1;
+	int iWitchCount = 0, iWitch = -1;
 	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
 		iWitchCount++;

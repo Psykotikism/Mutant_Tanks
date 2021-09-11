@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_ABSORB_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_ABSORB_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -201,7 +201,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAbsorbInfo(int client, int args)
+Action cmdAbsorbInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -249,7 +249,7 @@ void vAbsorbMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -277,7 +277,7 @@ public int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pAbsorb = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "AbsorbMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "AbsorbMenu", param1);
 			pAbsorb.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -288,14 +288,14 @@ public int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -354,8 +354,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esAbsorbPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbsorbAbility[g_esAbsorbPlayer[client].g_iTankType].g_iAccessFlags, g_esAbsorbPlayer[client].g_iAccessFlags)) && g_esAbsorbCache[client].g_iHumanAbility == 1 && (g_esAbsorbPlayer[client].g_iCooldown == -1 || g_esAbsorbPlayer[client].g_iCooldown < iTime))
@@ -370,15 +369,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esAbsorbPlayer[victim].g_bActivated)
 		{
-			static bool bChanged, bSurvivor;
-			bChanged = false;
-			bSurvivor = bIsSurvivor(attacker);
+			bool bChanged = false, bSurvivor = bIsSurvivor(attacker);
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbsorbAbility[g_esAbsorbPlayer[victim].g_iTankType].g_iAccessFlags, g_esAbsorbPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esAbsorbPlayer[victim].g_iTankType, g_esAbsorbAbility[g_esAbsorbPlayer[victim].g_iTankType].g_iImmunityFlags, g_esAbsorbPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
@@ -457,26 +454,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ABSORB_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ABSORB_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ABSORB_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ABSORB_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ABSORB_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esAbsorbCache[tank].g_iAbsorbAbility == 1 && g_esAbsorbCache[tank].g_iComboAbility == 1 && !g_esAbsorbPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ABSORB_SECTION, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION2, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION3, false) || StrEqual(sSubset[iPos], MT_ABSORB_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -508,7 +504,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esAbsorbAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbsorbAbility[iIndex].g_iImmunityFlags = 0;
@@ -725,10 +722,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esAbsorbCache[tank].g_iAbsorbAbility == 1 && g_esAbsorbCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esAbsorbPlayer[tank].g_iCooldown != -1 && g_esAbsorbPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esAbsorbPlayer[tank].g_iCooldown != -1 && g_esAbsorbPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esAbsorbCache[tank].g_iHumanMode)
 				{
@@ -798,18 +793,22 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAbsorbChangeType(int tank)
+void vAbsorbChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveAbsorb(tank);
 }
 
 void vAbsorb(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esAbsorbCache[tank].g_iAbsorbDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esAbsorbCache[tank].g_iAbsorbDuration;
 	g_esAbsorbPlayer[tank].g_bActivated = true;
 	g_esAbsorbPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -822,7 +821,7 @@ void vAbsorb(int tank, int pos = -1)
 
 	if (g_esAbsorbCache[tank].g_iAbsorbMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb", LANG_SERVER, sTankName);
@@ -902,7 +901,7 @@ void vAbsorbReset3(int tank)
 	}
 }
 
-public Action tTimerAbsorbCombo(Handle timer, DataPack pack)
+Action tTimerAbsorbCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_BLIND_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_BLIND_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -220,7 +220,8 @@ public void OnMapEnd()
 	vBlindReset();
 }
 
-public Action cmdBlindInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN
+Action cmdBlindInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,6 +247,7 @@ public Action cmdBlindInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vBlindMenu(int client, const char[] name, int item)
 {
@@ -266,7 +268,7 @@ void vBlindMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -293,7 +295,7 @@ public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pBlind = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "BlindMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "BlindMenu", param1);
 			pBlind.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -304,13 +306,13 @@ public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -354,12 +356,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBlindCache[attacker].g_iBlindHitMode == 0 || g_esBlindCache[attacker].g_iBlindHitMode == 1) && bIsHumanSurvivor(victim) && g_esBlindCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBlindAbility[g_esBlindPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBlindPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBlindPlayer[attacker].g_iTankType, g_esBlindAbility[g_esBlindPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[victim].g_iImmunityFlags))
@@ -421,22 +423,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_BLIND_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_BLIND_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_BLIND_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_BLIND_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_BLIND_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_BLIND_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_BLIND_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_BLIND_SECTION4);
 	if (g_esBlindCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_BLIND_SECTION, false) || StrEqual(sSubset[iPos], MT_BLIND_SECTION2, false) || StrEqual(sSubset[iPos], MT_BLIND_SECTION3, false) || StrEqual(sSubset[iPos], MT_BLIND_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -460,8 +461,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -507,7 +507,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esBlindAbility[iIndex].g_iAccessFlags = 0;
 				g_esBlindAbility[iIndex].g_iImmunityFlags = 0;
@@ -751,8 +752,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esBlindCache[tank].g_iBlindAbility == 1 && g_esBlindCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esBlindPlayer[tank].g_iCooldown == -1 || g_esBlindPlayer[tank].g_iCooldown < iTime)
 				{
@@ -765,48 +765,54 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBlindChangeType(int tank)
+void vBlindChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveBlind(tank);
 }
 
 void vBlind(int survivor, int intensity)
 {
-	static int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
+	int iTargets[2], iFlags = (intensity == 0) ? (0x0001|0x0010) : (0x0002|0x0008), iColor[4] = {0, 0, 0, 0};
 	iTargets[0] = survivor;
-	iFlags = (intensity == 0) ? (0x0001|0x0010) : (0x0002|0x0008);
 	iColor[3] = intensity;
 
 	Handle hTarget = StartMessageEx(g_umBlindFade, iTargets, 1);
-
-	switch (GetUserMessageType() == UM_Protobuf)
+	if (hTarget != null)
 	{
-		case true:
+		switch (GetUserMessageType() == UM_Protobuf)
 		{
-			Protobuf pbSet = UserMessageToProtobuf(hTarget);
-			pbSet.SetInt("duration", 1536);
-			pbSet.SetInt("hold_time", 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", iColor);
-		}
-		case false:
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(iFlags);
-
-			for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+			case true:
 			{
-				bfWrite.WriteByte(iColor[iPos]);
+				Protobuf pbSet = UserMessageToProtobuf(hTarget);
+				pbSet.SetInt("duration", 1536);
+				pbSet.SetInt("hold_time", 1536);
+				pbSet.SetInt("flags", iFlags);
+				pbSet.SetColor("clr", iColor);
+			}
+			case false:
+			{
+				BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+				bfWrite.WriteShort(1536);
+				bfWrite.WriteShort(1536);
+				bfWrite.WriteShort(iFlags);
+
+				for (int iPos = 0; iPos < sizeof iColor; iPos++)
+				{
+					bfWrite.WriteByte(iColor[iPos]);
+				}
 			}
 		}
-	}
 
-	EndMessage();
+		EndMessage();
+	}
 }
 
 void vBlindAbility(int tank, float random, int pos = -1)
@@ -821,12 +827,11 @@ void vBlindAbility(int tank, float random, int pos = -1)
 		g_esBlindPlayer[tank].g_bFailed = false;
 		g_esBlindPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esBlindCache[tank].g_flBlindRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBlindCache[tank].g_flBlindRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esBlindCache[tank].g_flBlindRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBlindCache[tank].g_flBlindRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esBlindPlayer[tank].g_iTankType, g_esBlindAbility[g_esBlindPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[iSurvivor].g_iImmunityFlags))
@@ -866,8 +871,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esBlindPlayer[tank].g_iAmmoCount < g_esBlindCache[tank].g_iHumanAmmo && g_esBlindCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esBlindPlayer[survivor].g_bAffected)
 			{
 				g_esBlindPlayer[survivor].g_bAffected = true;
@@ -886,9 +890,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static int iSurvivorId, iTankId;
-				iSurvivorId = GetClientUserId(survivor);
-				iTankId = GetClientUserId(tank);
+				int iSurvivorId = GetClientUserId(survivor), iTankId = GetClientUserId(tank);
 
 				DataPack dpBlind;
 				CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
@@ -897,8 +899,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpBlind.WriteCell(g_esBlindPlayer[tank].g_iTankType);
 				dpBlind.WriteCell(enabled);
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esBlindCache[tank].g_flBlindDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esBlindCache[tank].g_flBlindDuration;
 				DataPack dpStopBlind;
 				CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopBlind.WriteCell(iSurvivorId);
@@ -915,7 +916,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esBlindCache[tank].g_iBlindMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Blind", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Blind", LANG_SERVER, sTankName, survivor);
@@ -984,12 +985,11 @@ void vBlindReset2(int tank)
 	g_esBlindPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerBlind(Handle timer, DataPack pack)
+Action tTimerBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor) || !g_esBlindPlayer[iSurvivor].g_bAffected)
 	{
 		g_esBlindPlayer[iSurvivor].g_bAffected = false;
@@ -998,10 +998,9 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iBlindEnabled;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iBlindEnabled = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()),
+		iType = pack.ReadCell(),
+		iBlindEnabled = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esBlindCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBlindPlayer[iTank].g_iTankType) || (g_esBlindCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBlindCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esBlindAbility[g_esBlindPlayer[iTank].g_iTankType].g_iAccessFlags, g_esBlindPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esBlindPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esBlindPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esBlindPlayer[iTank].g_iTankType, g_esBlindAbility[g_esBlindPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[iSurvivor].g_iImmunityFlags) || iBlindEnabled == 0)
 	{
 		g_esBlindPlayer[iSurvivor].g_bAffected = false;
@@ -1015,7 +1014,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlindCombo(Handle timer, DataPack pack)
+Action tTimerBlindCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1032,7 +1031,7 @@ public Action tTimerBlindCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlindCombo2(Handle timer, DataPack pack)
+Action tTimerBlindCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1051,7 +1050,7 @@ public Action tTimerBlindCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esBlindCache[iTank].g_iBlindHitMode == 0 || g_esBlindCache[iTank].g_iBlindHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vBlindHit(iSurvivor, iTank, flRandom, flChance, g_esBlindCache[iTank].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -1064,7 +1063,7 @@ public Action tTimerBlindCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBlind(Handle timer, DataPack pack)
+Action tTimerStopBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_ROCK_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_ROCK_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -180,7 +180,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRockInfo(int client, int args)
+Action cmdRockInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -228,7 +228,7 @@ void vRockMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -256,7 +256,7 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pRock = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RockMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "RockMenu", param1);
 			pRock.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -267,14 +267,14 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -318,21 +318,19 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			static int iLauncher, iThrower;
-			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
+				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
 			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				static int iTank;
-				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				int iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
 				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esRockCache[iTank].g_iRockAbility == 1 && g_esRockPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esRockPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esRockPlayer[iTank].g_iTankType, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esRockPlayer[victim].g_iImmunityFlags))))
@@ -340,8 +338,7 @@ public Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float 
 						return Plugin_Handled;
 					}
 
-					static float flDamage;
-					flDamage = (g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition) : float(g_esRockCache[iTank].g_iRockDamage);
+					float flDamage = (g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition) : float(g_esRockCache[iTank].g_iRockDamage);
 					damage = MT_GetScaledDamage(flDamage);
 
 					return Plugin_Changed;
@@ -389,26 +386,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_ROCK_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCK_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCK_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCK_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCK_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iComboAbility == 1 && !g_esRockPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ROCK_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -441,7 +437,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esRockAbility[iIndex].g_iAccessFlags = 0;
 				g_esRockAbility[iIndex].g_iImmunityFlags = 0;
@@ -520,10 +517,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][6], sValue[12];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				char sSet[2][6], sValue[12];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esRockPlayer[admin].g_flRockRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_esRockPlayer[admin].g_flRockRadius[0];
 				g_esRockPlayer[admin].g_flRockRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_esRockPlayer[admin].g_flRockRadius[1];
@@ -553,10 +550,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
-				static char sSet[2][6], sValue[12];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				char sSet[2][6], sValue[12];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
 				g_esRockAbility[type].g_flRockRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_esRockAbility[type].g_flRockRadius[0];
 				g_esRockAbility[type].g_flRockRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_esRockAbility[type].g_flRockRadius[1];
@@ -678,10 +675,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esRockCache[tank].g_iHumanMode)
 				{
@@ -753,11 +748,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRockChangeType(int tank)
+void vRockChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveRock(tank);
 }
 
@@ -809,7 +809,7 @@ void vRockReset2(int tank)
 
 	if (g_esRockCache[tank].g_iRockMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock2", LANG_SERVER, sTankName);
@@ -841,7 +841,7 @@ void vRock(int tank, int pos = -1)
 
 	if (g_esRockCache[tank].g_iRockMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock", LANG_SERVER, sTankName);
@@ -855,17 +855,15 @@ void vRock2(int tank, int pos = -1)
 		return;
 	}
 
-	static char sDamage[11];
-	static float flDamage;
-	flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esRockCache[tank].g_iRockDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof(sDamage));
+	char sDamage[11];
+	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esRockCache[tank].g_iRockDamage);
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
 
-	static float flPos[3], flAngles[3];
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(tank, flPos);
 	GetClientEyeAngles(tank, flAngles);
 
-	static int iLauncher;
-	iLauncher = CreateEntityByName("env_rock_launcher");
+	int iLauncher = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iLauncher))
 	{
 		SetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity", tank);
@@ -876,8 +874,7 @@ void vRock2(int tank, int pos = -1)
 		g_esRockPlayer[tank].g_iLauncher = iLauncher;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esRockCache[tank].g_flRockInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esRockCache[tank].g_flRockInterval;
 	DataPack dpRock;
 	CreateDataTimer(flInterval, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRock.WriteCell(iLauncher);
@@ -911,7 +908,7 @@ void vRockAbility(int tank)
 	}
 }
 
-public Action tTimerRockCombo(Handle timer, DataPack pack)
+Action tTimerRockCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -927,13 +924,11 @@ public Action tTimerRockCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRock(Handle timer, DataPack pack)
+Action tTimerRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iLauncher, iTank;
-	iLauncher = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
+	int iLauncher = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher))
 	{
 		g_esRockPlayer[iTank].g_bActivated = false;
@@ -941,8 +936,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iType;
-	iType = pack.ReadCell();
+	int iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRockCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[iTank].g_iTankType) || (g_esRockCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRockPlayer[iTank].g_iTankType || !g_esRockPlayer[iTank].g_bActivated)
 	{
 		vRockReset2(iTank);
@@ -950,11 +944,9 @@ public Action tTimerRock(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esRockCache[iTank].g_iRockDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esRockCache[iTank].g_iRockDuration,
+		iCurrentTime = GetTime();
 	if (g_esRockCache[iTank].g_iRockAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esRockCache[iTank].g_iHumanAbility == 1 && g_esRockCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vRockReset2(iTank);
@@ -967,7 +959,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3], flAngles[3], flMinRadius, flMaxRadius;
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	flPos[2] += 20.0;
 	flAngles[0] = GetRandomFloat(-1.0, 1.0);
@@ -975,25 +967,24 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);
 
-	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esRockCache[iTank].g_flRockRadius[0];
-	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esRockCache[iTank].g_flRockRadius[1];
-
-	static float flHitPos[3], flDistance;
+	float flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esRockCache[iTank].g_flRockRadius[0],
+		flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esRockCache[iTank].g_flRockRadius[1],
+		flHitPos[3];
 	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
-	flDistance = GetVectorDistance(flPos, flHitPos);
+	float flDistance = GetVectorDistance(flPos, flHitPos);
 	if (flDistance > 800.0)
 	{
 		flDistance = 800.0;
 	}
 
-	static float flVector[3];
+	float flVector[3];
 	MakeVectorFromPoints(flPos, flHitPos, flVector);
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, (flDistance - 40.0));
 	AddVectors(flPos, flVector, flHitPos);
 	if (flDistance > 300.0)
 	{
-		static float flAngles2[3];
+		float flAngles2[3];
 		if (bIsValidEntity(iLauncher))
 		{
 			flAngles2[0] = GetRandomFloat(flMinRadius, flMaxRadius);

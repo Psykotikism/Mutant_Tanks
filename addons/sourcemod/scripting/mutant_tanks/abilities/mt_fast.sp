@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_FAST_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_FAST_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -170,7 +170,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdFastInfo(int client, int args)
+Action cmdFastInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -218,7 +218,7 @@ void vFastMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -246,7 +246,7 @@ public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pFast = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "FastMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "FastMenu", param1);
 			pFast.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -257,14 +257,14 @@ public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -323,8 +323,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esFastPlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esFastAbility[g_esFastPlayer[client].g_iTankType].g_iAccessFlags, g_esFastPlayer[client].g_iAccessFlags)) && g_esFastCache[client].g_iHumanAbility == 1 && (g_esFastPlayer[client].g_iCooldown == -1 || g_esFastPlayer[client].g_iCooldown < iTime))
@@ -371,26 +370,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FAST_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FAST_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_FAST_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_FAST_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_FAST_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_FAST_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_FAST_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_FAST_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esFastCache[tank].g_iFastAbility == 1 && g_esFastCache[tank].g_iComboAbility == 1 && !g_esFastPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_FAST_SECTION, false) || StrEqual(sSubset[iPos], MT_FAST_SECTION2, false) || StrEqual(sSubset[iPos], MT_FAST_SECTION3, false) || StrEqual(sSubset[iPos], MT_FAST_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -422,7 +420,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esFastAbility[iIndex].g_iAccessFlags = 0;
 				g_esFastAbility[iIndex].g_iComboAbility = 0;
@@ -630,10 +629,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFastCache[tank].g_iFastAbility == 1 && g_esFastCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esFastCache[tank].g_iHumanMode)
 				{
@@ -705,11 +702,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFastChangeType(int tank)
+void vFastChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveFast(tank);
 }
 
@@ -721,13 +723,11 @@ void vFastCopyStats2(int oldTank, int newTank)
 
 void vFast(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFastCache[tank].g_iFastDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFastCache[tank].g_iFastDuration;
 	g_esFastPlayer[tank].g_bActivated = true;
 	g_esFastPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
-	static float flSpeed;
-	flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esFastCache[tank].g_flFastSpeed;
+	float flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esFastCache[tank].g_flFastSpeed;
 	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flSpeed);
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1)
@@ -739,7 +739,7 @@ void vFast(int tank, int pos = -1)
 
 	if (g_esFastCache[tank].g_iFastMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fast", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fast", LANG_SERVER, sTankName);
@@ -815,7 +815,7 @@ void vFastReset3(int tank)
 	}
 }
 
-public Action tTimerFastCombo(Handle timer, DataPack pack)
+Action tTimerFastCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

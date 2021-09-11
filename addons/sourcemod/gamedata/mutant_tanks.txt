@@ -97,11 +97,26 @@
 			/**
 			 * CTankClaw::DoSwing()
 			 *
-			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" in "coop" modes.
+			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" to hit all survivors within range in "coop" modes.
+			 * Note: Detouring as a post-hook for removing patch to hit all survivors within range in "coop" modes.
 			 **/
 			"MTDetour_CTankClaw::DoSwing"
 			{
 				"signature"	"CTankClaw::DoSwing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Detouring as a pre-hook for patching "CTankClaw::GroundPound" to hit all survivors within range in "coop" modes.
+			 * Note: Detouring as a post-hook for removing patch to hit all survivors within range in "coop" modes.
+			 **/
+			"MTDetour_CTankClaw::GroundPound"
+			{
+				"signature"	"CTankClaw::GroundPound"
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
@@ -570,6 +585,16 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Uses the signature for "CTankClaw::GroundPound" to find the address.
+			 **/
+			"GroundPoundStart"
+			{
+				"signature"	"CTankClaw::GroundPound"
+			}
+
+			/**
 			 * CTerrorPlayer::OnFalling()
 			 *
 			 * Note: Uses the signature for "CTerrorPlayer::OnFalling" to find the address.
@@ -665,36 +690,12 @@
 			 * Action<Tank>::FirstContainedResponder()
 			 *
 			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "Action<Tank>" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "Action<Tank>" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Linux binary.
-			 * 5. Use the member variable offset.
+			 * 1. Use asherkin's VTable dump.
 			 **/
 			"Action<Tank>::FirstContainedResponder"
 			{
-				"windows"	"16"
-				"linux"		"16"
-			}
-
-			/**
-			 * Behavior<Tank>::FirstContainedResponder()
-			 *
-			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "Behavior<Tank>" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Linux binary.
-			 * 5. Use the member variable offset.
-			 **/
-			"Behavior<Tank>::FirstContainedResponder"
-			{
-				"windows"	"8"
-				"linux"		"8"
+				"windows"	"1"
+				"linux"		"2"
 			}
 
 			/**
@@ -707,24 +708,6 @@
 			{
 				"windows"	"2"
 				"linux"		"3"
-			}
-
-			/**
-			 * TankIntention::FirstContainedResponder()
-			 *
-			 * How to find:
-			 * 1. Find the function's offsets with asherkin's VTable dump.
-			 * 2a. Use IDA to get the VTable dump for the "TankIntention" class on Windows.
-			 * 2b. Use IDA to get the VTable dump for the "TankIntention" class on Linux.
-			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
-			 * 4a. Look for the target function in the Windows binary.
-			 * 4b. Look for the target function in the Windows binary.
-			 * 5. Multiply the member variable offset by 4.
-			 **/
-			"TankIntention::FirstContainedResponder"
-			{
-				"windows"	"28"
-				"linux"		"28"
 			}
 		}
 
@@ -969,6 +952,28 @@
 			{
 				"windows"	"300"
 				"linux"		"301"
+			}
+
+			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Patches the "IsVersusMode" check.
+			 *
+			 * How to find on Windows:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable assigned to another variable right below a funtion call to "CBaseEntity::GetTeamNumber".
+			 * 2. Verify that it starts with "74" and is 2 bytes long.
+			 * 3. Verify that the next line starts with "80" and is 5 bytes long.
+			 * 4. Verify that the next line starts with "74" and is 2 bytes long.
+			 *
+			 * How to find on Linux:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "IsVersusMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3. Verify that the next line starts with "84" and is 2 bytes long.
+			 **/
+			"CTankClaw::GroundPound::Check"
+			{
+				"windows"	"761" // start at 74 and patch 9 bytes with NOPs (0x90)
+				"linux"		"1043" // start at E8 and patch 7 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1594,6 +1599,23 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::SweepFist" function.
+			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
+			 * 3. This function calls "CTerrorWeapon::MarkAsHit" twice.
+			 * 4. To pinpoint the right function, look for the one that sets multiple variables to "0".
+			 **/
+			"CTankClaw::GroundPound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11GroundPoundEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x81\xEC\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85"
+						/* ? ? ? ? ? ? 81 EC ? ? ? ? 53 56 57 8B ? E8 ? ? ? ? 8B ? 85 */
+			}
+
+			/**
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
 			 *
 			 * How to find on Windows:
@@ -1725,6 +1747,36 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "coop" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsCoopMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules10IsCoopModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\xA0\x2A\x2A\x2A\xEB\x2A\xA1\x54\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x7C\x2A\x2A\x2A\x68\x50\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\xF7"
+						/* ? ? ? ? ? ? ? ? ? ? 74 ? B8 A0 ? ? ? EB ? A1 54 ? ? ? 8B ? ? 85 ? 75 ? B8 7C ? ? ? 68 50 ? ? ? 50 E8 ? ? ? ? 83 ? ? F7 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsHoldoutMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "survival" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsHoldoutMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules13IsHoldoutModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\xA0\x2A\x2A\x2A\xEB\x2A\xA1\x54\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x7C\x2A\x2A\x2A\x68\xF4\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\xF7"
+						/* ? ? ? ? ? ? ? ? ? ? 74 ? B8 A0 ? ? ? EB ? A1 54 ? ? ? 8B ? ? 85 ? 75 ? B8 7C ? ? ? 68 F4 ? ? ? 50 E8 ? ? ? ? 83 ? ? F7 */
+			}
+
+			/**
 			 * CTerrorGameRules::IsMissionFinalMap()
 			 *
 			 * How to find on Windows:
@@ -1738,6 +1790,21 @@
 				"linux"		"@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\xB0"
 						/* ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? B0 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "teamversus" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsVersusMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules12IsVersusModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\xA0\x2A\x2A\x2A\xEB\x2A\xA1\x54\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x7C\x2A\x2A\x2A\x68\x04"
+						/* ? ? ? ? ? ? ? ? ? ? 74 ? B8 A0 ? ? ? EB ? A1 54 ? ? ? 8B ? ? 85 ? 75 ? B8 7C ? ? ? 68 04 */
 			}
 
 			/**
@@ -2105,8 +2172,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorWeapon9CanDeployEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74"
-						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
+						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? E8 */
 			}
 
 			/**
@@ -2590,6 +2657,29 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * Note: Patches the "HasPlayerControlledZombies" check.
+			 *
+			 * How to find on Windows:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Look for a condition that validates that variable.
+			 * 3. Verify that it starts with "74" and is 2 bytes long.
+			 * 4. Verify that the next line starts with "80" and is 4 bytes long.
+			 * 5. Verify that the next line starts with "74" and is 2 bytes long.
+			 *
+			 * How to find on Linux:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Look for a condition that validates that variable.
+			 * 3. Verify that it starts with "0F" and is 6 bytes long.
+			 **/
+			"CTankClaw::GroundPound::Check"
+			{
+				"windows"	"923" // start at 74 and patch 8 bytes with NOPs (0x90)
+				"linux"		"988" // start at 0F and patch 2 bytes with NOP (0x90) and an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
 			 * CTankClaw::SweepFist(Vector const&, Vector const&)
 			 *
 			 * Note: Patches the "HasPlayerControlledZombies" check.
@@ -2823,7 +2913,7 @@
 			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
-			 * Note: Patches
+			 * Note: Patches the "CTerrorPlayer::Event_Killed" function to skip a large portion of the Spitter death logic.
 			 *
 			 * How to find:
 			 * 1. Locate the "insect_swarm" string.
@@ -3297,6 +3387,23 @@
 			}
 
 			/**
+			 * CTankClaw::GroundPound()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::SweepFist" function.
+			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
+			 * 3. This function calls "CTerrorWeapon::MarkAsHit" twice.
+			 * 4. To pinpoint the right function, look for the one that sets multiple variables to "0".
+			 **/
+			"CTankClaw::GroundPound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11GroundPoundEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x89"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? E8 ? ? ? ? 8B ? 89 */
+			}
+
+			/**
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
 			 *
 			 * How to find on Windows:
@@ -3422,8 +3529,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules18GetMissionFirstMapEPP9KeyValues"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
-						/* ? ? ? ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 ? 8B ? E8 ? ? ? ? 83 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\xC7\x07\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\x5F\x5E\x5D\xC3\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x57\x56\xFF\x2A\x6A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+						/* ? ? ? ? ? ? ? ? 85 ? 74 ? C7 07 ? ? ? ? 8B 0D ? ? ? ? 8B ? 8B ? ? FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? 5F 5E 5D C3 8B 0D ? ? ? ? 8B ? 8B ? ? 57 56 FF ? 6A ? 68 ? ? ? ? 8B ? 8B */
 			}
 
 			/**
@@ -3442,6 +3549,37 @@
 			}
 
 			/**
+			 * CTerrorGameRules::HasConfigurableDifficultySetting()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "hasdifficulty" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorGameRules::HasConfigurableDifficultySetting"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules32HasConfigurableDifficultySettingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x75\x2A\xE8"
+						/* ? ? ? ? ? ? 85 ? 75 ? E8 ? ? ? ? 84 ? 75 ? E8 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsGenericCooperativeMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "realism" string.
+			 * 2. One of the functions that references that string should be "CTerrorGameRules::IsRealismMode".
+			 * 3. One of the functions that calls "CTerrorGameRules::IsRealismMode" should be this function.
+			 **/
+			"CTerrorGameRules::IsGenericCooperativeMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules24IsGenericCooperativeModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x33\xC0\xC3\xB8\x01\x00\x00\x00\xC3\xCC\xCC\xCC\xCC\xCC\x8B"
+						/* ? ? ? ? ? ? ? 75 ? E8 ? ? ? ? 84 C0 75 ? 33 C0 C3 B8 01 00 00 00 C3 CC CC CC CC CC 8B */
+			}
+
+			/**
 			 * CTerrorGameRules::IsMissionFinalMap()
 			 *
 			 * How to find on Windows:
@@ -3455,6 +3593,51 @@
 				"linux"		"@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\xB0"
 						/* ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? B0 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsScavengeMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "scavenge" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsScavengeMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14IsScavengeModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x10\x2A\x2A\x2A\xEB\x2A\xA1\xC4\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x64\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x68\x30"
+						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 05 ? ? ? ? ? ? ? ? 74 ? B8 10 ? ? ? EB ? A1 C4 ? ? ? 8B ? ? 85 ? 75 ? B8 64 ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? 68 30 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsSurvivalMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "survival" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsSurvivalMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14IsSurvivalModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x10\x2A\x2A\x2A\xEB\x2A\xA1\xC4\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x64\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x68\x50"
+						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 05 ? ? ? ? ? ? ? ? 74 ? B8 10 ? ? ? EB ? A1 C4 ? ? ? 8B ? ? 85 ? 75 ? B8 64 ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? 68 50 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "teamversus" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsVersusMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules12IsVersusModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x10\x2A\x2A\x2A\xEB\x2A\xA1\xC4\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x64\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x68\x48"
+						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 05 ? ? ? ? ? ? ? ? 74 ? B8 10 ? ? ? EB ? A1 C4 ? ? ? 8B ? ? 85 ? 75 ? B8 64 ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? 68 48 */
 			}
 
 			/**
@@ -3934,8 +4117,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorWeapon12CanDeployForEP13CTerrorPlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
-						/* ? ? ? ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 ? 8B ? E8 ? ? ? ? 83 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
+						/* ? ? ? ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? E8 */
 			}
 
 			/**

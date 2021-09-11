@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_HYPNO_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_HYPNO_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -218,7 +218,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdHypnoInfo(int client, int args)
+Action cmdHypnoInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -265,7 +265,7 @@ void vHypnoMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -292,7 +292,7 @@ public int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pHypno = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "HypnoMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "HypnoMenu", param1);
 			pHypno.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -303,13 +303,13 @@ public int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -353,16 +353,14 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		static char sClassname[32];
-
-		switch (bIsValidEntity(inflictor))
+		char sClassname[32];
+		if (bIsValidEntity(inflictor))
 		{
-			case true: GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-			case false: sClassname[0] = '\0';
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		}
 
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHypnoCache[attacker].g_iHypnoHitMode == 0 || g_esHypnoCache[attacker].g_iHypnoHitMode == 1) && bIsSurvivor(victim) && g_esHypnoCache[attacker].g_iComboAbility == 0)
@@ -389,8 +387,7 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 
 			if (!bIsPlayerIncapacitated(victim) && g_esHypnoPlayer[attacker].g_bAffected)
 			{
-				static bool bChanged;
-				bChanged = false;
+				bool bChanged = false;
 				if (g_esHypnoCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 				{
 					bChanged = true;
@@ -416,7 +413,7 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 					bChanged = true;
 					damage /= g_esHypnoCache[victim].g_flHypnoMeleeDivisor;
 
-					static float flTankPos[3];
+					float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
 
 					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
@@ -433,12 +430,11 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 						damage = 1.0;
 					}
 
-					static int iTarget;
-					iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
+					int iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
 					if (iTarget > 0)
 					{
-						static char sDamageType[32];
-						IntToString(damagetype, sDamageType, sizeof(sDamageType));
+						char sDamageType[32];
+						IntToString(damagetype, sDamageType, sizeof sDamageType);
 						vDamagePlayer(iTarget, victim, damage, sDamageType);
 						EmitSoundToAll(SOUND_METAL, victim);
 					}
@@ -484,22 +480,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_HYPNO_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_HYPNO_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_HYPNO_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_HYPNO_SECTION4);
 	if (g_esHypnoCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HYPNO_SECTION, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION2, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION3, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -523,8 +518,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -570,7 +564,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esHypnoAbility[iIndex].g_iAccessFlags = 0;
 				g_esHypnoAbility[iIndex].g_iImmunityFlags = 0;
@@ -812,8 +807,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime)
 				{
@@ -826,11 +820,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHypnoChangeType(int tank)
+void vHypnoChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveHypno(tank);
 }
 
@@ -852,12 +851,11 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 		g_esHypnoPlayer[tank].g_bFailed = false;
 		g_esHypnoPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[iSurvivor].g_iImmunityFlags))
@@ -897,8 +895,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esHypnoPlayer[survivor].g_bAffected)
 			{
 				g_esHypnoPlayer[survivor].g_bAffected = true;
@@ -917,8 +914,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
 				DataPack dpStopHypno;
 				CreateDataTimer(flDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopHypno.WriteCell(GetClientUserId(survivor));
@@ -929,7 +925,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esHypnoCache[tank].g_iHypnoMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);
@@ -990,7 +986,7 @@ void vHypnoReset2(int tank)
 	g_esHypnoPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerHypnoCombo(Handle timer, DataPack pack)
+Action tTimerHypnoCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1007,7 +1003,7 @@ public Action tTimerHypnoCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHypnoCombo2(Handle timer, DataPack pack)
+Action tTimerHypnoCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1026,7 +1022,7 @@ public Action tTimerHypnoCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -1039,7 +1035,7 @@ public Action tTimerHypnoCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopHypno(Handle timer, DataPack pack)
+Action tTimerStopHypno(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

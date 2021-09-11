@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_DRUG_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_DRUG_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -210,7 +210,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdDrugInfo(int client, int args)
+Action cmdDrugInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -257,7 +257,7 @@ void vDrugMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -284,7 +284,7 @@ public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pDrug = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "DrugMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "DrugMenu", param1);
 			pDrug.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -295,13 +295,13 @@ public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -345,12 +345,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esDrugCache[attacker].g_iDrugHitMode == 0 || g_esDrugCache[attacker].g_iDrugHitMode == 1) && bIsHumanSurvivor(victim) && g_esDrugCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankType].g_iAccessFlags, g_esDrugPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esDrugPlayer[attacker].g_iTankType, g_esDrugAbility[g_esDrugPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[victim].g_iImmunityFlags))
@@ -412,22 +412,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_DRUG_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_DRUG_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_DRUG_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_DRUG_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_DRUG_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_DRUG_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_DRUG_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_DRUG_SECTION4);
 	if (g_esDrugCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_DRUG_SECTION, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION2, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION3, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -451,8 +450,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -498,7 +496,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esDrugAbility[iIndex].g_iAccessFlags = 0;
 				g_esDrugAbility[iIndex].g_iImmunityFlags = 0;
@@ -742,8 +741,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esDrugCache[tank].g_iDrugAbility == 1 && g_esDrugCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esDrugPlayer[tank].g_iCooldown == -1 || g_esDrugPlayer[tank].g_iCooldown < iTime)
 				{
@@ -756,11 +754,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vDrugChangeType(int tank)
+void vDrugChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveDrug(tank);
 }
 
@@ -772,50 +775,51 @@ void vDrugCopyStats2(int oldTank, int newTank)
 
 void vDrug(int survivor, bool toggle, float angles[20])
 {
-	static float flAngles[3];
+	float flAngles[3];
 	GetClientEyeAngles(survivor, flAngles);
 	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
 	TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 
-	static int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags;
+	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
 	iClients[0] = survivor;
-	iFlags = toggle ? 0x0002 : (0x0001|0x0010);
 
 	if (toggle)
 	{
-		for (int iPos = 0; iPos < (sizeof(iColor) - 1); iPos++)
+		for (int iPos = 0; iPos < (sizeof iColor - 1); iPos++)
 		{
 			iColor[iPos] = GetRandomInt(0, 255);
 		}
 	}
 
 	Handle hTarget = StartMessageEx(g_umDrugFade, iClients, 1);
-
-	switch (GetUserMessageType() == UM_Protobuf)
+	if (hTarget != null)
 	{
-		case true:
+		switch (GetUserMessageType() == UM_Protobuf)
 		{
-			Protobuf pbSet = UserMessageToProtobuf(hTarget);
-			pbSet.SetInt("duration", toggle ? 255: 1536);
-			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", toggle ? iColor : iColor2);
-		}
-		case false:
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(iFlags);
-
-			for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+			case true:
 			{
-				bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				Protobuf pbSet = UserMessageToProtobuf(hTarget);
+				pbSet.SetInt("duration", toggle ? 255: 1536);
+				pbSet.SetInt("hold_time", toggle ? 255 : 1536);
+				pbSet.SetInt("flags", iFlags);
+				pbSet.SetColor("clr", toggle ? iColor : iColor2);
+			}
+			case false:
+			{
+				BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(iFlags);
+
+				for (int iPos = 0; iPos < sizeof iColor; iPos++)
+				{
+					bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				}
 			}
 		}
-	}
 
-	EndMessage();
+		EndMessage();
+	}
 }
 
 void vDrugAbility(int tank, float random, int pos = -1)
@@ -830,12 +834,11 @@ void vDrugAbility(int tank, float random, int pos = -1)
 		g_esDrugPlayer[tank].g_bFailed = false;
 		g_esDrugPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esDrugCache[tank].g_flDrugRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esDrugCache[tank].g_flDrugRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esDrugCache[tank].g_flDrugRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esDrugCache[tank].g_flDrugRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esDrugPlayer[tank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[tank].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags))
@@ -875,8 +878,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esDrugPlayer[tank].g_iAmmoCount < g_esDrugCache[tank].g_iHumanAmmo && g_esDrugCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esDrugPlayer[survivor].g_bAffected)
 			{
 				g_esDrugPlayer[survivor].g_bAffected = true;
@@ -895,8 +897,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				static float flInterval;
-				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esDrugCache[tank].g_flDrugInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esDrugCache[tank].g_flDrugInterval;
 				DataPack dpDrug;
 				CreateDataTimer(flInterval, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpDrug.WriteCell(GetClientUserId(survivor));
@@ -911,7 +912,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				if (g_esDrugCache[tank].g_iDrugMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Drug", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Drug", LANG_SERVER, sTankName, survivor);
@@ -988,7 +989,7 @@ void vDrugReset3(int tank)
 	g_esDrugPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerDrugCombo(Handle timer, DataPack pack)
+Action tTimerDrugCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1005,7 +1006,7 @@ public Action tTimerDrugCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrugCombo2(Handle timer, DataPack pack)
+Action tTimerDrugCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1024,7 +1025,7 @@ public Action tTimerDrugCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esDrugCache[iTank].g_iDrugHitMode == 0 || g_esDrugCache[iTank].g_iDrugHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vDrugHit(iSurvivor, iTank, flRandom, flChance, g_esDrugCache[iTank].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -1037,12 +1038,11 @@ public Action tTimerDrugCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerDrug(Handle timer, DataPack pack)
+Action tTimerDrug(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_esDrugPlayer[iSurvivor].g_bAffected = false;
@@ -1051,10 +1051,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDrugCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDrugPlayer[iTank].g_iTankType) || (g_esDrugCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDrugCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esDrugPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esDrugPlayer[iTank].g_iTankType, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esDrugPlayer[iSurvivor].g_iImmunityFlags) || !g_esDrugPlayer[iSurvivor].g_bAffected)
 	{
 		vDrugReset2(iSurvivor, iTank, iMessage);
@@ -1062,11 +1059,9 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iDrugEnabled, iPos, iDuration, iTime;
-	iDrugEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esDrugCache[iTank].g_iDrugDuration;
-	iTime = pack.ReadCell();
+	int iDrugEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esDrugCache[iTank].g_iDrugDuration,
+		iTime = pack.ReadCell();
 	if (iDrugEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vDrugReset2(iSurvivor, iTank, iMessage);

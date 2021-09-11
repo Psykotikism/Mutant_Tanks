@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SPAM_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SPAM_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -177,7 +177,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSpamInfo(int client, int args)
+Action cmdSpamInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -225,7 +225,7 @@ void vSpamMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -253,7 +253,7 @@ public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSpam = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SpamMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SpamMenu", param1);
 			pSpam.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -264,14 +264,14 @@ public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -315,21 +315,19 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			static int iLauncher, iThrower;
-			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
+				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
 			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				static int iTank;
-				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				int iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
 				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esSpamCache[iTank].g_iSpamAbility == 1 && g_esSpamPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esSpamPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esSpamPlayer[iTank].g_iTankType, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSpamPlayer[victim].g_iImmunityFlags))))
@@ -337,8 +335,7 @@ public Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float 
 						return Plugin_Handled;
 					}
 
-					static float flDamage;
-					flDamage = (g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iComboPosition) : float(g_esSpamCache[iTank].g_iSpamDamage);
+					float flDamage = (g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iComboPosition) : float(g_esSpamCache[iTank].g_iSpamDamage);
 					damage = MT_GetScaledDamage(flDamage);
 
 					return Plugin_Changed;
@@ -386,26 +383,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SPAM_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPAM_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPAM_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPAM_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPAM_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iComboAbility == 1 && !g_esSpamPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPAM_SECTION, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -438,7 +434,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSpamAbility[iIndex].g_iAccessFlags = 0;
 				g_esSpamAbility[iIndex].g_iImmunityFlags = 0;
@@ -641,10 +638,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esSpamCache[tank].g_iHumanMode)
 				{
@@ -716,11 +711,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSpamChangeType(int tank)
+void vSpamChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSpam(tank);
 }
 
@@ -772,7 +772,7 @@ void vSpamReset2(int tank)
 
 	if (g_esSpamCache[tank].g_iSpamMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Spam2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Spam2", LANG_SERVER, sTankName);
@@ -804,7 +804,7 @@ void vSpam(int tank, int pos = -1)
 
 	if (g_esSpamCache[tank].g_iSpamMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Spam", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Spam", LANG_SERVER, sTankName);
@@ -818,17 +818,15 @@ void vSpam2(int tank, int pos = -1)
 		return;
 	}
 
-	static char sDamage[11];
-	static float flDamage;
-	flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esSpamCache[tank].g_iSpamDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof(sDamage));
+	char sDamage[11];
+	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esSpamCache[tank].g_iSpamDamage);
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
 
-	static float flPos[3], flAngles[3];
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(tank, flPos);
 	GetClientEyeAngles(tank, flAngles);
 
-	static int iLauncher;
-	iLauncher = CreateEntityByName("env_rock_launcher");
+	int iLauncher = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iLauncher))
 	{
 		SetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity", tank);
@@ -839,8 +837,7 @@ void vSpam2(int tank, int pos = -1)
 		g_esSpamPlayer[tank].g_iLauncher = iLauncher;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSpamCache[tank].g_flSpamInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSpamCache[tank].g_flSpamInterval;
 	DataPack dpSpam;
 	CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSpam.WriteCell(iLauncher);
@@ -874,7 +871,7 @@ void vSpamAbility(int tank)
 	}
 }
 
-public Action tTimerSpamCombo(Handle timer, DataPack pack)
+Action tTimerSpamCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -890,13 +887,11 @@ public Action tTimerSpamCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSpam(Handle timer, DataPack pack)
+Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iLauncher, iTank;
-	iLauncher = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
+	int iLauncher = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher))
 	{
 		g_esSpamPlayer[iTank].g_bActivated = false;
@@ -904,8 +899,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iType;
-	iType = pack.ReadCell();
+	int iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSpamCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[iTank].g_iTankType) || (g_esSpamCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSpamPlayer[iTank].g_iTankType || !g_esSpamPlayer[iTank].g_bActivated)
 	{
 		vSpamReset2(iTank);
@@ -913,11 +907,9 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iDuration, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esSpamCache[iTank].g_iSpamDuration;
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esSpamCache[iTank].g_iSpamDuration,
+		iCurrentTime = GetTime();
 	if (g_esSpamCache[iTank].g_iSpamAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esSpamCache[iTank].g_iHumanAbility == 1 && g_esSpamCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vSpamReset2(iTank);
@@ -930,7 +922,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3], flAngles[3];
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	GetClientEyeAngles(iTank, flAngles);
 	flPos[2] += 70.0;

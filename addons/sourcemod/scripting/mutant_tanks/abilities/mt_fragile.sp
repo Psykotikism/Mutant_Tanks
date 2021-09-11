@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_FRAGILE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_FRAGILE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -208,7 +208,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdFragileInfo(int client, int args)
+Action cmdFragileInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -256,7 +256,7 @@ void vFragileMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iFragileMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iFragileMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -284,7 +284,7 @@ public int iFragileMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pFragile = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "FragileMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "FragileMenu", param1);
 			pFragile.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -295,14 +295,14 @@ public int iFragileMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -361,8 +361,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esFragilePlayer[client].g_iDuration < iTime)
 	{
 		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esFragileAbility[g_esFragilePlayer[client].g_iTankType].g_iAccessFlags, g_esFragilePlayer[client].g_iAccessFlags)) && g_esFragileCache[client].g_iHumanAbility == 1 && (g_esFragilePlayer[client].g_iCooldown == -1 || g_esFragilePlayer[client].g_iCooldown < iTime))
@@ -377,21 +376,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esFragilePlayer[victim].g_bActivated)
 		{
-			static bool bSurvivor;
-			bSurvivor = bIsSurvivor(attacker);
+			bool bSurvivor = bIsSurvivor(attacker);
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iAccessFlags, g_esFragilePlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFragilePlayer[victim].g_iTankType, g_esFragileAbility[g_esFragilePlayer[victim].g_iTankType].g_iImmunityFlags, g_esFragilePlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
 
-			static bool bChanged;
-			bChanged = false;
+			bool bChanged = false;
 			if (g_esFragileCache[victim].g_flFragileBulletMultiplier > 1.0 && (damagetype & DMG_BULLET))
 			{
 				bChanged = true;
@@ -419,7 +416,7 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 
 				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0)
 				{
-					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+					float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
 					GetClientAbsOrigin(attacker, flSurvivorOrigin);
 					GetClientAbsOrigin(victim, flTankOrigin);
 					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
@@ -442,8 +439,8 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 		}
 		else if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && g_esFragilePlayer[attacker].g_bActivated && bIsSurvivor(victim))
 		{
-			static char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				switch (g_esFragileCache[attacker].g_iFragileMode)
@@ -496,26 +493,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_FRAGILE_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_FRAGILE_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_FRAGILE_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_FRAGILE_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_FRAGILE_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iComboAbility == 1 && !g_esFragilePlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_FRAGILE_SECTION, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION2, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION3, false) || StrEqual(sSubset[iPos], MT_FRAGILE_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -547,7 +543,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esFragileAbility[iIndex].g_iAccessFlags = 0;
 				g_esFragileAbility[iIndex].g_iImmunityFlags = 0;
@@ -792,10 +789,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esFragileCache[tank].g_iHumanMode)
 				{
@@ -865,11 +860,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFragileChangeType(int tank)
+void vFragileChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveFragile(tank);
 }
 
@@ -881,8 +881,7 @@ void vFragileCopyStats2(int oldTank, int newTank)
 
 void vFragile(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFragileCache[tank].g_iFragileDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esFragileCache[tank].g_iFragileDuration;
 	g_esFragilePlayer[tank].g_bActivated = true;
 	g_esFragilePlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -895,7 +894,7 @@ void vFragile(int tank, int pos = -1)
 
 	if (g_esFragileCache[tank].g_iFragileMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Fragile", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fragile", LANG_SERVER, sTankName);
@@ -971,7 +970,7 @@ void vFragileReset3(int tank)
 	}
 }
 
-public Action tTimerFragileCombo(Handle timer, DataPack pack)
+Action tTimerFragileCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

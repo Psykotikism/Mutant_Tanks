@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_LAG_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_LAG_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -199,7 +199,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdLagInfo(int client, int args)
+Action cmdLagInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,7 +246,7 @@ void vLagMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -273,7 +273,7 @@ public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pLag = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "LagMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "LagMenu", param1);
 			pLag.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -284,13 +284,13 @@ public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -334,12 +334,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnLagTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnLagTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esLagCache[attacker].g_iLagHitMode == 0 || g_esLagCache[attacker].g_iLagHitMode == 1) && bIsSurvivor(victim) && g_esLagCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esLagAbility[g_esLagPlayer[attacker].g_iTankType].g_iAccessFlags, g_esLagPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esLagPlayer[attacker].g_iTankType, g_esLagAbility[g_esLagPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esLagPlayer[victim].g_iImmunityFlags))
@@ -401,22 +401,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_LAG_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_LAG_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_LAG_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_LAG_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_LAG_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_LAG_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_LAG_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_LAG_SECTION4);
 	if (g_esLagCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_LAG_SECTION, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION2, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION3, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -440,8 +439,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -487,7 +485,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esLagAbility[iIndex].g_iAccessFlags = 0;
 				g_esLagAbility[iIndex].g_iImmunityFlags = 0;
@@ -699,8 +698,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esLagCache[tank].g_iLagAbility == 1 && g_esLagCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime)
 				{
@@ -713,11 +711,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vLagChangeType(int tank)
+void vLagChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveLag(tank);
 }
 
@@ -739,12 +742,11 @@ void vLagAbility(int tank, float random, int pos = -1)
 		g_esLagPlayer[tank].g_bFailed = false;
 		g_esLagPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLagCache[tank].g_flLagRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLagCache[tank].g_flLagRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLagCache[tank].g_flLagRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLagCache[tank].g_flLagRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esLagPlayer[tank].g_iTankType, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags))
@@ -784,8 +786,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esLagPlayer[survivor].g_bAffected)
 			{
 				g_esLagPlayer[survivor].g_bAffected = true;
@@ -806,10 +807,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 
 				GetClientAbsOrigin(survivor, g_esLagPlayer[survivor].g_flPosition);
 
-				static int iSurvivorId, iTankId;
-				iSurvivorId = GetClientUserId(survivor);
-				iTankId = GetClientUserId(tank);
-
+				int iSurvivorId = GetClientUserId(survivor), iTankId = GetClientUserId(tank);
 				DataPack dpLagTeleport;
 				CreateDataTimer(1.0, tTimerLagTeleport, dpLagTeleport, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLagTeleport.WriteCell(iSurvivorId);
@@ -833,7 +831,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 
 				if (g_esLagCache[tank].g_iLagMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Lag", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Lag", LANG_SERVER, sTankName, survivor);
@@ -906,7 +904,7 @@ void vLagReset3(int tank)
 	g_esLagPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerLagCombo(Handle timer, DataPack pack)
+Action tTimerLagCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -923,7 +921,7 @@ public Action tTimerLagCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerLagCombo2(Handle timer, DataPack pack)
+Action tTimerLagCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -942,7 +940,7 @@ public Action tTimerLagCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esLagCache[iTank].g_iLagHitMode == 0 || g_esLagCache[iTank].g_iLagHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vLagHit(iSurvivor, iTank, flRandom, flChance, g_esLagCache[iTank].g_iLagHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -955,12 +953,11 @@ public Action tTimerLagCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerLagTeleport(Handle timer, DataPack pack)
+Action tTimerLagTeleport(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esLagPlayer[iSurvivor].g_bAffected = false;
@@ -969,10 +966,7 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags) || !g_esLagPlayer[iSurvivor].g_bAffected)
 	{
 		vLagReset2(iSurvivor, iTank, iMessage);
@@ -980,11 +974,9 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iLagEnabled, iPos, iDuration, iTime;
-	iLagEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration;
-	iTime = pack.ReadCell();
+	int iLagEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration,
+		iTime = pack.ReadCell();
 	if (iLagEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vLagReset2(iSurvivor, iTank, iMessage);
@@ -997,30 +989,25 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerLagPosition(Handle timer, DataPack pack)
+Action tTimerLagPosition(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iSurvivor;
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || !g_esLagPlayer[iSurvivor].g_bAffected)
 	{
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags))
 	{
 		return Plugin_Stop;
 	}
 
-	static int iLagEnabled, iPos, iDuration, iTime;
-	iLagEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration;
-	iTime = pack.ReadCell();
+	int iLagEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration,
+		iTime = pack.ReadCell();
 	if (iLagEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		return Plugin_Stop;

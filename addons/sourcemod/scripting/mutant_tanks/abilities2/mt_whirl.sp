@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_WHIRL_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_WHIRL_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -175,7 +175,6 @@ public void OnMapStart()
 #endif
 {
 	PrecacheModel(SPRITE_DOT, true);
-
 	vWhirlReset();
 }
 
@@ -208,7 +207,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdWhirlInfo(int client, int args)
+Action cmdWhirlInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -255,7 +254,7 @@ void vWhirlMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iWhirlMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iWhirlMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -282,7 +281,7 @@ public int iWhirlMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pWhirl = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "WhirlMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "WhirlMenu", param1);
 			pWhirl.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -293,13 +292,13 @@ public int iWhirlMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -343,12 +342,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esWhirlCache[attacker].g_iWhirlHitMode == 0 || g_esWhirlCache[attacker].g_iWhirlHitMode == 1) && bIsHumanSurvivor(victim) && g_esWhirlCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esWhirlAbility[g_esWhirlPlayer[attacker].g_iTankType].g_iAccessFlags, g_esWhirlPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esWhirlPlayer[attacker].g_iTankType, g_esWhirlAbility[g_esWhirlPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esWhirlPlayer[victim].g_iImmunityFlags))
@@ -410,22 +409,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_WHIRL_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_WHIRL_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_WHIRL_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_WHIRL_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WHIRL_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_WHIRL_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_WHIRL_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_WHIRL_SECTION4);
 	if (g_esWhirlCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WHIRL_SECTION, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION2, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION3, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -449,8 +447,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -496,7 +493,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esWhirlAbility[iIndex].g_iAccessFlags = 0;
 				g_esWhirlAbility[iIndex].g_iImmunityFlags = 0;
@@ -733,8 +731,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esWhirlCache[tank].g_iWhirlAbility == 1 && g_esWhirlCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esWhirlPlayer[tank].g_iCooldown == -1 || g_esWhirlPlayer[tank].g_iCooldown < iTime)
 				{
@@ -747,11 +744,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWhirlChangeType(int tank)
+void vWhirlChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveWhirl(tank);
 }
 
@@ -827,12 +829,11 @@ void vWhirlAbility(int tank, float random, int pos = -1)
 		g_esWhirlPlayer[tank].g_bFailed = false;
 		g_esWhirlPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWhirlCache[tank].g_flWhirlRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWhirlCache[tank].g_flWhirlRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWhirlCache[tank].g_flWhirlRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWhirlCache[tank].g_flWhirlRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esWhirlPlayer[tank].g_iTankType, g_esWhirlAbility[g_esWhirlPlayer[tank].g_iTankType].g_iImmunityFlags, g_esWhirlPlayer[iSurvivor].g_iImmunityFlags))
@@ -872,12 +873,10 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWhirlPlayer[tank].g_iAmmoCount < g_esWhirlCache[tank].g_iHumanAmmo && g_esWhirlCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esWhirlPlayer[survivor].g_bAffected)
 			{
-				static int iCamera;
-				iCamera = CreateEntityByName("env_sprite");
+				int iCamera = CreateEntityByName("env_sprite");
 				if (bIsValidEntity(iCamera))
 				{
 					g_esWhirlPlayer[survivor].g_bAffected = true;
@@ -896,7 +895,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						}
 					}
 
-					static float flEyePos[3], flAngles[3];
+					float flEyePos[3], flAngles[3];
 					GetClientEyePosition(survivor, flEyePos);
 					GetClientEyeAngles(survivor, flAngles);
 
@@ -911,9 +910,8 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 					vSetEntityParent(iCamera, survivor);
 					SetClientViewEntity(survivor, iCamera);
 
-					static int iAxis, iAxisCount, iAxes[3], iFlag;
-					iAxisCount = 0;
-					for (int iBit = 0; iBit < sizeof(iAxes); iBit++)
+					int iAxis = -1, iAxisCount = 0, iAxes[3], iFlag = 0;
+					for (int iBit = 0; iBit < sizeof iAxes; iBit++)
 					{
 						iFlag = (1 << iBit);
 						if (!(g_esWhirlCache[tank].g_iWhirlAxis & iFlag))
@@ -930,7 +928,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						case 1: iAxis = 0;
 						case 2: iAxis = 1;
 						case 4: iAxis = 2;
-						default: iAxis = GetRandomInt(0, (sizeof(iAxes) - 1));
+						default: iAxis = GetRandomInt(0, (sizeof iAxes - 1));
 					}
 
 					DataPack dpWhirl;
@@ -949,7 +947,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 
 					if (g_esWhirlCache[tank].g_iWhirlMessage & messages)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Whirl", sTankName, survivor);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Whirl", LANG_SERVER, sTankName, survivor);
@@ -975,7 +973,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-public Action tTimerWhirlCombo(Handle timer, DataPack pack)
+Action tTimerWhirlCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -992,7 +990,7 @@ public Action tTimerWhirlCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWhirlCombo2(Handle timer, DataPack pack)
+Action tTimerWhirlCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1011,7 +1009,7 @@ public Action tTimerWhirlCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esWhirlCache[iTank].g_iWhirlHitMode == 0 || g_esWhirlCache[iTank].g_iWhirlHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vWhirlHit(iSurvivor, iTank, flRandom, flChance, g_esWhirlCache[iTank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -1024,13 +1022,11 @@ public Action tTimerWhirlCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWhirl(Handle timer, DataPack pack)
+Action tTimerWhirl(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iCamera, iSurvivor;
-	iCamera = EntRefToEntIndex(pack.ReadCell());
-	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iCamera = EntRefToEntIndex(pack.ReadCell()), iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
 	{
 		g_esWhirlPlayer[iSurvivor].g_bAffected = false;
@@ -1051,10 +1047,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType, iMessage;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
-	iMessage = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esWhirlCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWhirlPlayer[iTank].g_iTankType) || (g_esWhirlCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWhirlCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWhirlAbility[g_esWhirlPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWhirlPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWhirlPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esWhirlPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esWhirlPlayer[iTank].g_iTankType, g_esWhirlAbility[g_esWhirlPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esWhirlPlayer[iSurvivor].g_iImmunityFlags) || !g_esWhirlPlayer[iSurvivor].g_bAffected)
 	{
 		vWhirlReset2(iSurvivor, iTank, iCamera, iMessage);
@@ -1062,12 +1055,9 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iWhirlEnabled, iPos, iDuration, iWhirlAxis, iTime;
-	iWhirlEnabled = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esWhirlCache[iTank].g_iWhirlDuration;
-	iWhirlAxis = pack.ReadCell();
-	iTime = pack.ReadCell();
+	int iWhirlEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esWhirlCache[iTank].g_iWhirlDuration,
+		iWhirlAxis = pack.ReadCell(), iTime = pack.ReadCell();
 	if (iWhirlEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vWhirlReset2(iSurvivor, iTank, iCamera, iMessage);
@@ -1075,9 +1065,9 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flAngles[3], flSpeed;
+	float flAngles[3];
 	GetEntPropVector(iCamera, Prop_Send, "m_angRotation", flAngles);
-	flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 13, iPos) : g_esWhirlCache[iTank].g_flWhirlSpeed;
+	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 13, iPos) : g_esWhirlCache[iTank].g_flWhirlSpeed;
 	flAngles[iWhirlAxis] += flSpeed;
 	TeleportEntity(iCamera, NULL_VECTOR, flAngles, NULL_VECTOR);
 

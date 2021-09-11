@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_AIMLESS_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_AIMLESS_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -199,7 +199,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAimlessInfo(int client, int args)
+Action cmdAimlessInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -246,7 +246,7 @@ void vAimlessMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -273,7 +273,7 @@ public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pAimless = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "AimlessMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "AimlessMenu", param1);
 			pAimless.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -284,13 +284,13 @@ public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -346,12 +346,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 }
 
-public Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esAimlessCache[attacker].g_iAimlessHitMode == 0 || g_esAimlessCache[attacker].g_iAimlessHitMode == 1) && bIsSurvivor(victim) && g_esAimlessCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAimlessAbility[g_esAimlessPlayer[attacker].g_iTankType].g_iAccessFlags, g_esAimlessPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esAimlessPlayer[attacker].g_iTankType, g_esAimlessAbility[g_esAimlessPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esAimlessPlayer[victim].g_iImmunityFlags))
@@ -413,22 +413,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_AIMLESS_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_AIMLESS_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_AIMLESS_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_AIMLESS_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_AIMLESS_SECTION4);
 	if (g_esAimlessCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_AIMLESS_SECTION, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION2, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION3, false) || StrEqual(sSubset[iPos], MT_AIMLESS_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -452,8 +451,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -499,7 +497,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esAimlessAbility[iIndex].g_iAccessFlags = 0;
 				g_esAimlessAbility[iIndex].g_iImmunityFlags = 0;
@@ -711,8 +710,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esAimlessCache[tank].g_iAimlessAbility == 1 && g_esAimlessCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esAimlessPlayer[tank].g_iCooldown == -1 || g_esAimlessPlayer[tank].g_iCooldown < iTime)
 				{
@@ -725,11 +723,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAimlessChangeType(int tank)
+void vAimlessChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveAimless(tank);
 }
 
@@ -745,12 +748,11 @@ void vAimlessAbility(int tank, float random, int pos = -1)
 		g_esAimlessPlayer[tank].g_bFailed = false;
 		g_esAimlessPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAimlessCache[tank].g_flAimlessRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAimlessCache[tank].g_flAimlessRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esAimlessCache[tank].g_flAimlessRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esAimlessCache[tank].g_flAimlessRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esAimlessPlayer[tank].g_iTankType, g_esAimlessAbility[g_esAimlessPlayer[tank].g_iTankType].g_iImmunityFlags, g_esAimlessPlayer[iSurvivor].g_iImmunityFlags))
@@ -790,8 +792,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esAimlessPlayer[tank].g_iAmmoCount < g_esAimlessCache[tank].g_iHumanAmmo && g_esAimlessCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance && !g_esAimlessPlayer[survivor].g_bAffected)
 			{
 				g_esAimlessPlayer[survivor].g_bAffected = true;
@@ -812,8 +813,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 
 				GetClientEyeAngles(survivor, g_esAimlessPlayer[survivor].g_flAngle);
 
-				static float flDuration;
-				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esAimlessCache[tank].g_flAimlessDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esAimlessCache[tank].g_flAimlessDuration;
 				DataPack dpStopAimless;
 				CreateDataTimer(flDuration, tTimerStopAimless, dpStopAimless, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopAimless.WriteCell(GetClientUserId(survivor));
@@ -824,7 +824,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esAimlessCache[tank].g_iAimlessMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless", LANG_SERVER, sTankName, survivor);
@@ -891,7 +891,7 @@ void vAimlessReset2(int tank)
 	g_esAimlessPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerAimlessCombo(Handle timer, DataPack pack)
+Action tTimerAimlessCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -908,7 +908,7 @@ public Action tTimerAimlessCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerAimlessCombo2(Handle timer, DataPack pack)
+Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -927,7 +927,7 @@ public Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esAimlessCache[iTank].g_iAimlessHitMode == 0 || g_esAimlessCache[iTank].g_iAimlessHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vAimlessHit(iSurvivor, iTank, flRandom, flChance, g_esAimlessCache[iTank].g_iAimlessHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
@@ -940,7 +940,7 @@ public Action tTimerAimlessCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopAimless(Handle timer, DataPack pack)
+Action tTimerStopAimless(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

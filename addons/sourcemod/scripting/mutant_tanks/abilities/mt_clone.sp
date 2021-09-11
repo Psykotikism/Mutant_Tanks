@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,11 +13,11 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_CLONE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#include <mt_clone>
+		#include <sourcemod>
+		#include <mutant_tanks>
+		#include <mt_clone>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -51,7 +51,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_CLONE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -145,7 +145,8 @@ enum struct esCloneCache
 
 esCloneCache g_esCloneCache[MAXPLAYERS + 1];
 
-public any aNative_IsCloneSupported(Handle plugin, int numParams)
+#if !defined MT_ABILITIES_MAIN
+any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned && g_esClonePlayer[iTank].g_bFiltered)
@@ -156,21 +157,12 @@ public any aNative_IsCloneSupported(Handle plugin, int numParams)
 	return true;
 }
 
-public any aNative_IsTankClone(Handle plugin, int numParams)
+any aNative_IsTankClone(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 
-#if defined MT_ABILITIES_MAIN
-void vCloneRegisterNatives()
-{
-	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
-	CreateNative("MT_IsTankClone", aNative_IsTankClone);
-
-	RegPluginLibrary("mt_clone");
-}
-#else
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -233,7 +225,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdCloneInfo(int client, int args)
+Action cmdCloneInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -279,7 +271,7 @@ void vCloneMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -305,7 +297,7 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pClone = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "CloneMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "CloneMenu", param1);
 			pClone.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -316,12 +308,12 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -397,26 +389,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CLONE_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_CLONE_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_CLONE_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_CLONE_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_CLONE_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iComboAbility == 1 && !g_esClonePlayer[tank].g_bCloned)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_CLONE_SECTION, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION2, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION3, false) || StrEqual(sSubset[iPos], MT_CLONE_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -442,7 +433,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esCloneAbility[iIndex].g_iAccessFlags = 0;
 				g_esCloneAbility[iIndex].g_iComboAbility = 0;
@@ -523,10 +515,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				char sValue[10], sRange[2][5];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esClonePlayer[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMinType;
 				g_esClonePlayer[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMaxType;
@@ -557,10 +549,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
 			{
-				static char sValue[10], sRange[2][5];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				char sValue[10], sRange[2][5];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
 				g_esCloneAbility[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMinType;
 				g_esCloneAbility[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMaxType;
@@ -675,8 +667,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 									{
 										g_esClonePlayer[iOwner].g_iCount = (g_esCloneCache[iOwner].g_iCloneReplace == 1) ? 0 : g_esClonePlayer[iOwner].g_iCount;
 
-										static int iTime;
-										iTime = GetTime();
+										int iTime = GetTime();
 										if (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iOwner) || bHasAdminAccess(iOwner, g_esCloneAbility[g_esClonePlayer[iOwner].g_iTankType].g_iAccessFlags, g_esClonePlayer[iOwner].g_iAccessFlags)) && g_esCloneCache[iOwner].g_iHumanAbility == 1 && (g_esClonePlayer[iOwner].g_iCooldown == -1 || g_esClonePlayer[iOwner].g_iCooldown < iTime))
 										{
 											g_esClonePlayer[iOwner].g_iCooldown = (g_esClonePlayer[iOwner].g_iCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? (iTime + g_esCloneCache[iOwner].g_iHumanCooldown) : -1;
@@ -751,10 +742,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > iTime;
 				if (!g_esClonePlayer[tank].g_bCloned && !bRecharging)
 				{
 					vCloneAbility(tank);
@@ -773,11 +762,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vCloneChangeType(int tank, bool revert)
+void vCloneChangeType(int tank, int oldType, bool revert)
 #else
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveClones(tank);
 	vRemoveClone(tank, revert);
 }
@@ -786,7 +780,7 @@ void vClone(int tank)
 {
 	if (!g_esClonePlayer[tank].g_bCloned && g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount)
 	{
-		static float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
+		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 		GetClientEyePosition(tank, flPosition);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
@@ -797,8 +791,7 @@ void vClone(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		static Handle hTrace;
-		hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -825,8 +818,7 @@ void vClone(int tank)
 						case false: vClone2(tank, g_esCloneCache[tank].g_iCloneMinType, g_esCloneCache[tank].g_iCloneMaxType);
 					}
 
-					static int iTank;
-					iTank = 0;
+					int iTank = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
@@ -855,8 +847,7 @@ void vClone(int tank)
 							CreateTimer(g_esCloneCache[tank].g_flCloneLifetime, tTimerKillClone, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						static int iNewHealth;
-						iNewHealth = (g_esCloneCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCloneCache[tank].g_iCloneHealth;
+						int iNewHealth = (g_esCloneCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCloneCache[tank].g_iCloneHealth;
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 
@@ -869,7 +860,7 @@ void vClone(int tank)
 
 						if (g_esCloneCache[tank].g_iCloneMessage == 1)
 						{
-							static char sTankName[33];
+							char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Clone", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Clone", LANG_SERVER, sTankName);
@@ -890,10 +881,9 @@ void vClone2(int tank, int min = 0, int max = 0)
 		return;
 	}
 
-	static int iMin, iMax, iTypeCount, iTankTypes[MT_MAXTYPES + 1];
-	iMin = (min > 0) ? min : MT_GetMinType();
-	iMax = (max > 0) ? max : MT_GetMaxType();
-	iTypeCount = 0;
+	int iMin = (min > 0) ? min : MT_GetMinType(),
+		iMax = (max > 0) ? max : MT_GetMaxType(),
+		iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
@@ -905,8 +895,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 		iTypeCount++;
 	}
 
-	static int iType;
-	iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
+	int iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 
@@ -992,7 +981,7 @@ void vCloneReset()
 	}
 }
 
-public Action tTimerCloneCombo(Handle timer, int userid)
+Action tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
@@ -1005,7 +994,7 @@ public Action tTimerCloneCombo(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerKillClone(Handle timer, int userid)
+Action tTimerKillClone(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsTankSupported(iTank) || !g_esClonePlayer[iTank].g_bCloned)

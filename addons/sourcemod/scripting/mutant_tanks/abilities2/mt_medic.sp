@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_MEDIC_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -49,9 +49,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_MEDIC_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
+
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_MEDIC_SECTION "medicability"
 #define MT_MEDIC_SECTION2 "medic ability"
@@ -159,9 +162,8 @@ void vMedicMapStart()
 public void OnMapStart()
 #endif
 {
-	g_iMedicBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
-	g_iMedicHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
-
+	g_iMedicBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
+	g_iMedicHaloSprite = PrecacheModel(SPRITE_GLOW, true);
 	vMedicReset();
 }
 
@@ -193,7 +195,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdMedicInfo(int client, int args)
+Action cmdMedicInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -241,7 +243,7 @@ void vMedicMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -273,7 +275,7 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pMedic = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MedicMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "MedicMenu", param1);
 			pMedic.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -284,14 +286,14 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -367,26 +369,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_MEDIC_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MEDIC_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MEDIC_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MEDIC_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MEDIC_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMedicCache[tank].g_iMedicAbility == 1 && g_esMedicCache[tank].g_iComboAbility == 1 && !g_esMedicPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MEDIC_SECTION, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 						switch (flDelay)
 						{
@@ -418,7 +419,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esMedicAbility[iIndex].g_iAccessFlags = 0;
 				g_esMedicAbility[iIndex].g_iComboAbility = 0;
@@ -447,7 +449,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMedicAbility[iIndex].g_iMedicMaxHealth[6] = 8000;
 				g_esMedicAbility[iIndex].g_flMedicRange = 500.0;
 
-				for (int iPos = 0; iPos < sizeof(esMedicAbility::g_iMedicHealth); iPos++)
+				for (int iPos = 0; iPos < sizeof esMedicAbility::g_iMedicHealth; iPos++)
 				{
 					g_esMedicAbility[iIndex].g_iMedicHealth[iPos] = 25;
 				}
@@ -476,12 +478,12 @@ public void MT_OnConfigsLoad(int mode)
 					g_esMedicPlayer[iPlayer].g_flMedicInterval = 0.0;
 					g_esMedicPlayer[iPlayer].g_flMedicRange = 0.0;
 
-					for (int iPos = 0; iPos < sizeof(esMedicPlayer::g_iMedicHealth); iPos++)
+					for (int iPos = 0; iPos < sizeof esMedicPlayer::g_iMedicHealth; iPos++)
 					{
 						g_esMedicPlayer[iPlayer].g_iMedicHealth[iPos] = 0;
 						g_esMedicPlayer[iPlayer].g_iMedicMaxHealth[iPos] = 0;
 
-						if (iPos < (sizeof(esMedicPlayer::g_iMedicFieldColor) - 1))
+						if (iPos < (sizeof esMedicPlayer::g_iMedicFieldColor - 1))
 						{
 							g_esMedicPlayer[iPlayer].g_iMedicFieldColor[iPos] = -1;
 						}
@@ -520,11 +522,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "MedicFieldColor", false) || StrEqual(key, "Medic Field Color", false) || StrEqual(key, "Medic_Field_Color", false) || StrEqual(key, "fieldcolor", false))
 			{
-				static char sSet[3][4], sValue[12];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
+				char sSet[3][4], sValue[12];
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < (sizeof sSet - 1); iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -533,11 +535,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][11], sValue[77];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				char sSet[7][11], sValue[77];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicPlayer[admin].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -568,11 +570,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "MedicFieldColor", false) || StrEqual(key, "Medic Field Color", false) || StrEqual(key, "Medic_Field_Color", false) || StrEqual(key, "fieldcolor", false))
 			{
-				static char sSet[3][4], sValue[12];
-				MT_GetConfigColors(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < (sizeof(sSet) - 1); iPos++)
+				char sSet[3][4], sValue[12];
+				MT_GetConfigColors(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < (sizeof sSet - 1); iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -581,11 +583,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][11], sValue[77];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				char sSet[7][11], sValue[77];
+				strcopy(sValue, sizeof sValue, value);
+				ReplaceString(sValue, sizeof sValue, " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
+				for (int iPos = 0; iPos < sizeof sSet; iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicAbility[type].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicAbility[type].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicAbility[type].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -618,12 +620,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMedicCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iRequiresHumans, g_esMedicAbility[type].g_iRequiresHumans);
 	g_esMedicPlayer[tank].g_iTankType = apply ? type : 0;
 
-	for (int iPos = 0; iPos < sizeof(esMedicCache::g_iMedicHealth); iPos++)
+	for (int iPos = 0; iPos < sizeof esMedicCache::g_iMedicHealth; iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicHealth[iPos], g_esMedicAbility[type].g_iMedicHealth[iPos]);
 		g_esMedicCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicMaxHealth[iPos], g_esMedicAbility[type].g_iMedicMaxHealth[iPos]);
 
-		if (iPos < sizeof(esMedicCache::g_iMedicFieldColor))
+		if (iPos < sizeof esMedicCache::g_iMedicFieldColor)
 		{
 			g_esMedicCache[tank].g_iMedicFieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicFieldColor[iPos], g_esMedicAbility[type].g_iMedicFieldColor[iPos]);
 		}
@@ -718,10 +720,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esMedicCache[tank].g_iMedicAbility == 1 && g_esMedicCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esMedicCache[tank].g_iHumanMode)
 				{
@@ -793,11 +793,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vMedicChangeType(int tank)
+void vMedicChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveMedic(tank);
 }
 
@@ -822,7 +827,7 @@ void vMedic(int tank, int pos = -1)
 
 	if (g_esMedicCache[tank].g_iMedicMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Medic", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Medic", LANG_SERVER, sTankName);
@@ -836,8 +841,7 @@ void vMedic2(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esMedicCache[tank].g_flMedicInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esMedicCache[tank].g_flMedicInterval;
 	DataPack dpMedic;
 	CreateDataTimer(flInterval, tTimerMedic, dpMedic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMedic.WriteCell(GetClientUserId(tank));
@@ -913,8 +917,7 @@ void vMedicReset3(int tank)
 
 int iGetHealth(int tank, int infected)
 {
-	static int iClass;
-	iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
+	int iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
 
 	switch (iClass)
 	{
@@ -932,8 +935,7 @@ int iGetHealth(int tank, int infected)
 
 int iGetMaxHealth(int tank, int infected)
 {
-	static int iClass;
-	iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
+	int iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
 
 	switch (iClass)
 	{
@@ -951,7 +953,7 @@ int iGetMaxHealth(int tank, int infected)
 
 int[] iGetRandomColors(int tank)
 {
-	for (int iPos = 0; iPos < (sizeof(esMedicCache::g_iMedicFieldColor) - 1); iPos++)
+	for (int iPos = 0; iPos < (sizeof esMedicCache::g_iMedicFieldColor - 1); iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicFieldColor[iPos] = iGetRandomColor(g_esMedicCache[tank].g_iMedicFieldColor[iPos]);
 	}
@@ -961,7 +963,7 @@ int[] iGetRandomColors(int tank)
 	return g_esMedicCache[tank].g_iMedicFieldColor;
 }
 
-public Action tTimerMedicCombo(Handle timer, DataPack pack)
+Action tTimerMedicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -977,13 +979,11 @@ public Action tTimerMedicCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerMedic(Handle timer, DataPack pack)
+Action tTimerMedic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esMedicCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esMedicPlayer[iTank].g_iTankType) || (g_esMedicCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMedicCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esMedicPlayer[iTank].g_iTankType || g_esMedicCache[iTank].g_iMedicAbility == 0 || !g_esMedicPlayer[iTank].g_bActivated)
 	{
 		vMedicReset2(iTank);
@@ -991,10 +991,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iPos, iCurrentTime;
-	iTime = pack.ReadCell();
-	iPos = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esMedicCache[iTank].g_iHumanAbility == 1 && g_esMedicCache[iTank].g_iHumanMode == 0 && (iTime + g_esMedicCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esMedicPlayer[iTank].g_iCooldown == -1 || g_esMedicPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vMedicReset2(iTank);
@@ -1003,9 +1000,9 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flInfectedPos[3], flRange;
+	float flTankPos[3], flInfectedPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esMedicCache[iTank].g_flMedicRange;
+	float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esMedicCache[iTank].g_flMedicRange;
 
 	if (g_esMedicCache[iTank].g_iMedicField == 1)
 	{
@@ -1014,7 +1011,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		TE_SendToAll();
 	}
 
-	static int iHealth, iValue, iLimit, iMaxHealth, iNewHealth, iLeftover, iExtraHealth, iExtraHealth2, iRealHealth, iTotalHealth;
+	int iHealth, iValue, iLimit, iMaxHealth, iNewHealth, iLeftover, iExtraHealth, iExtraHealth2, iRealHealth, iTotalHealth;
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if (((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iInfected)) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && iTank != iInfected)
@@ -1037,7 +1034,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 
 				if (g_esMedicCache[iTank].g_iMedicMessage == 1)
 				{
-					static char sTankName[33], sInfectedName[33];
+					char sTankName[33], sInfectedName[33];
 					MT_GetTankName(iTank, sTankName);
 					if (bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 					{

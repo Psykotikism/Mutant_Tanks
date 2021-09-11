@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,13 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_RESTART_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
+		#undef REQUIRE_PLUGIN
+		#tryinclude <left4dhooks>
+		#define REQUIRE_PLUGIN
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -67,14 +67,9 @@ public void OnLibraryRemoved(const char[] name)
 		g_bLeft4DHooksInstalled = false;
 	}
 }
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_RESTART_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -273,7 +268,8 @@ public void OnMapEnd()
 	vRestartReset();
 }
 
-public Action cmdRestartInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdRestartInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -299,6 +295,7 @@ public Action cmdRestartInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vRestartMenu(int client, const char[] name, int item)
 {
@@ -318,7 +315,7 @@ void vRestartMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -344,7 +341,7 @@ public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pRestart = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RestartMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "RestartMenu", param1);
 			pRestart.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -355,12 +352,12 @@ public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -404,12 +401,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esRestartCache[attacker].g_iRestartHitMode == 0 || g_esRestartCache[attacker].g_iRestartHitMode == 1) && bIsSurvivor(victim) && g_esRestartCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esRestartAbility[g_esRestartPlayer[attacker].g_iTankType].g_iAccessFlags, g_esRestartPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esRestartPlayer[attacker].g_iTankType, g_esRestartAbility[g_esRestartPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esRestartPlayer[victim].g_iImmunityFlags))
@@ -471,22 +468,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_RESTART_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_RESTART_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_RESTART_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_RESTART_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_RESTART_SECTION4);
 	if (g_esRestartCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_RESTART_SECTION, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION2, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION3, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -510,8 +506,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -556,7 +551,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esRestartAbility[iIndex].g_iAccessFlags = 0;
 				g_esRestartAbility[iIndex].g_iImmunityFlags = 0;
@@ -634,7 +630,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRestartPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esRestartPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof(esRestartPlayer::g_sRestartLoadout), value);
+		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof esRestartPlayer::g_sRestartLoadout, value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -657,7 +653,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRestartAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esRestartAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof(esRestartAbility::g_sRestartLoadout), value);
+		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, value);
 	}
 }
 
@@ -685,7 +681,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRestartCache[tank].g_iRestartMode = iGetSettingValue(apply, bHuman, g_esRestartPlayer[tank].g_iRestartMode, g_esRestartAbility[type].g_iRestartMode);
 	g_esRestartPlayer[tank].g_iTankType = apply ? type : 0;
 
-	vGetSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof(esRestartCache::g_sRestartLoadout), g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartAbility[type].g_sRestartLoadout);
+	vGetSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartCache::g_sRestartLoadout, g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartAbility[type].g_sRestartLoadout);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -724,8 +720,8 @@ public void MT_OnHookEvent(bool hooked)
 		}
 		case false:
 		{
-			static char sEvent[32];
-			for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
+			char sEvent[32];
+			for (int iPos = 0; iPos < sizeof bCheck; iPos++)
 			{
 				switch (iPos)
 				{
@@ -857,8 +853,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esRestartCache[tank].g_iRestartAbility == 1 && g_esRestartCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esRestartPlayer[tank].g_iCooldown != -1 && g_esRestartPlayer[tank].g_iCooldown > iTime)
 				{
@@ -871,11 +866,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRestartChangeType(int tank)
+void vRestartChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveRestart(tank);
 }
 
@@ -917,12 +917,11 @@ void vRestartAbility(int tank, float random, int pos = -1)
 		g_esRestartPlayer[tank].g_bFailed = false;
 		g_esRestartPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRestartCache[tank].g_flRestartRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRestartCache[tank].g_flRestartRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esRestartCache[tank].g_flRestartRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esRestartCache[tank].g_flRestartRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esRestartPlayer[tank].g_iTankType, g_esRestartAbility[g_esRestartPlayer[tank].g_iTankType].g_iImmunityFlags, g_esRestartPlayer[iSurvivor].g_iImmunityFlags))
@@ -962,8 +961,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRestartPlayer[tank].g_iAmmoCount < g_esRestartCache[tank].g_iHumanAmmo && g_esRestartCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRestartCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esRestartPlayer[tank].g_iCooldown == -1 || g_esRestartPlayer[tank].g_iCooldown < iTime))
@@ -979,13 +977,13 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				static char sItems[5][64];
-				ReplaceString(g_esRestartCache[tank].g_sRestartLoadout, sizeof(esRestartAbility::g_sRestartLoadout), " ", "");
-				ExplodeString(g_esRestartCache[tank].g_sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+				char sItems[5][64];
+				ReplaceString(g_esRestartCache[tank].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, " ", "");
+				ExplodeString(g_esRestartCache[tank].g_sRestartLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
 				MT_RespawnSurvivor(survivor);
 				vRemoveWeapons(survivor);
 
-				for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+				for (int iItem = 0; iItem < sizeof sItems; iItem++)
 				{
 					if (sItems[iItem][0] != '\0')
 					{
@@ -993,8 +991,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				static bool bTeleport;
-				bTeleport = true;
+				bool bTeleport = true;
 				if (g_esRestartPlayer[survivor].g_bRecorded && g_esRestartCache[tank].g_iRestartMode == 0)
 				{
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1016,7 +1013,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 				}
 				else
 				{
-					static float flOrigin[3], flAngles[3];
+					float flOrigin[3], flAngles[3];
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
@@ -1041,7 +1038,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 				if (g_esRestartCache[tank].g_iRestartMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Restart", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Restart", LANG_SERVER, sTankName, survivor);
@@ -1089,7 +1086,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 	return bReturn || bReturn2;
 }
 
-public Action tTimerRestartCombo(Handle timer, DataPack pack)
+Action tTimerRestartCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1106,7 +1103,7 @@ public Action tTimerRestartCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRestartCombo2(Handle timer, DataPack pack)
+Action tTimerRestartCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1124,7 +1121,7 @@ public Action tTimerRestartCombo2(Handle timer, DataPack pack)
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esRestartCache[iTank].g_iRestartHitMode == 0 || g_esRestartCache[iTank].g_iRestartHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vRestartHit(iSurvivor, iTank, flRandom, flChance, g_esRestartCache[iTank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);

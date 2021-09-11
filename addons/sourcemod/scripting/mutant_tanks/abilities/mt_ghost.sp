@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_GHOST_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_GHOST_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -245,7 +245,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdGhostInfo(int client, int args)
+Action cmdGhostInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -293,7 +293,7 @@ void vGhostMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -329,7 +329,7 @@ public int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pGhost = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "GhostMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "GhostMenu", param1);
 			pGhost.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -340,14 +340,14 @@ public int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -406,8 +406,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	static int iTime;
-	iTime = GetTime();
+	int iTime = GetTime();
 	if (g_esGhostPlayer[client].g_iDuration < iTime)
 	{
 		if (g_esGhostCache[client].g_iGhostMessage & MT_MESSAGE_SPECIAL)
@@ -429,12 +428,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esGhostCache[attacker].g_iGhostHitMode == 0 || g_esGhostCache[attacker].g_iGhostHitMode == 1) && bIsSurvivor(victim) && g_esGhostCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esGhostAbility[g_esGhostPlayer[attacker].g_iTankType].g_iAccessFlags, g_esGhostPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esGhostPlayer[attacker].g_iTankType, g_esGhostAbility[g_esGhostPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esGhostPlayer[victim].g_iImmunityFlags))
@@ -496,22 +495,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_GHOST_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_GHOST_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_GHOST_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_GHOST_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_GHOST_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_GHOST_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_GHOST_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_GHOST_SECTION4);
 	if (g_esGhostCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_GHOST_SECTION, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION2, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION3, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -549,8 +547,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -595,7 +592,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esGhostAbility[iIndex].g_iAccessFlags = 0;
 				g_esGhostAbility[iIndex].g_iImmunityFlags = 0;
@@ -849,14 +847,12 @@ public void MT_OnButtonPressed(int tank, int button)
 			return;
 		}
 
-		static int iTime;
-		iTime = GetTime();
+		int iTime = GetTime();
 		if (button & MT_MAIN_KEY)
 		{
 			if ((g_esGhostCache[tank].g_iGhostAbility == 2 || g_esGhostCache[tank].g_iGhostAbility == 3) && g_esGhostCache[tank].g_iHumanAbility == 1)
 			{
-				static bool bRecharging;
-				bRecharging = g_esGhostPlayer[tank].g_iCooldown != -1 && g_esGhostPlayer[tank].g_iCooldown > iTime;
+				bool bRecharging = g_esGhostPlayer[tank].g_iCooldown != -1 && g_esGhostPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esGhostCache[tank].g_iHumanMode)
 				{
@@ -939,11 +935,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGhostChangeType(int tank)
+void vGhostChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRenderProps(tank, RENDER_NORMAL);
 	vRemoveGhost(tank);
 }
@@ -990,8 +991,7 @@ void vGhost(int tank, int pos = -1)
 		return;
 	}
 
-	static float flInterval;
-	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esGhostCache[tank].g_flGhostFadeRate;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esGhostCache[tank].g_flGhostFadeRate;
 	DataPack dpGhost;
 	CreateDataTimer(flInterval, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
@@ -1020,12 +1020,11 @@ void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					g_esGhostPlayer[tank].g_bFailed = false;
 					g_esGhostPlayer[tank].g_bNoAmmo = false;
 
-					static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+					float flTankPos[3], flSurvivorPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esGhostCache[tank].g_flGhostRange;
-					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esGhostCache[tank].g_flGhostRangeChance;
-					static int iSurvivorCount;
-					iSurvivorCount = 0;
+					float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esGhostCache[tank].g_flGhostRange,
+						flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esGhostCache[tank].g_flGhostRangeChance;
+					int iSurvivorCount = 0;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esGhostPlayer[tank].g_iTankType, g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iImmunityFlags, g_esGhostPlayer[iSurvivor].g_iImmunityFlags))
@@ -1074,7 +1073,7 @@ void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (g_esGhostCache[tank].g_iGhostMessage & MT_MESSAGE_SPECIAL)
 					{
-						static char sTankName[33];
+						char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ghost2", LANG_SERVER, sTankName);
@@ -1100,8 +1099,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGhostPlayer[tank].g_iAmmoCount2 < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esGhostPlayer[tank].g_iCooldown2 == -1 || g_esGhostPlayer[tank].g_iCooldown2 < iTime))
@@ -1117,9 +1115,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				static int iSlot, iStart;
-				iSlot = 0;
-				iStart = MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO) ? 1 : 0;
+				int iSlot = 0, iStart = MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO) ? 1 : 0;
 				for (int iBit = iStart; iBit < 5; iBit++)
 				{
 					iSlot = GetPlayerWeaponSlot(survivor, iBit);
@@ -1139,7 +1135,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esGhostCache[tank].g_iGhostMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ghost", LANG_SERVER, sTankName, survivor);
@@ -1185,12 +1181,11 @@ void vRemoveGhost(int tank)
 
 void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 {
-	static int iProp, iTank;
-	iProp = -1;
+	int iProp = -1, iTank;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 	{
-		static char sModel[128];
-		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		char sModel[128];
+		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 		if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
 		{
 			iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
@@ -1216,8 +1211,8 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		}
 	}
 
-	static char sColor[12];
-	static int iColor[4];
+	char sColor[12];
+	int iColor[4];
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "light_dynamic")) != INVALID_ENT_REFERENCE)
 	{
@@ -1226,7 +1221,7 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		{
 			SetEntityRenderMode(iProp, mode);
 			MT_GetPropColors(tank, 7, iColor[0], iColor[1], iColor[2], iColor[3]);
-			FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), alpha);
+			FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(iColor[0]), iGetRandomColor(iColor[1]), iGetRandomColor(iColor[2]), alpha);
 			DispatchKeyValue(iProp, "_light", sColor);
 		}
 	}
@@ -1234,7 +1229,7 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 
 void vRenderSpecials(int tank, bool mode, int red = 255, int green = 255, int blue = 255)
 {
-	static float flTankPos[3], flInfectedPos[3];
+	float flTankPos[3], flInfectedPos[3];
 	if (mode)
 	{
 		GetClientAbsOrigin(tank, flTankPos);
@@ -1295,14 +1290,14 @@ void vGhostReset2(int tank)
 
 void vGhostResetRender(int tank)
 {
-	static int iSkinColor[4];
+	int iSkinColor[4];
 	GetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 	vRenderProps(tank, RENDER_TRANSCOLOR, g_esGhostPlayer[tank].g_iGhostAlpha);
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
 }
 
-public Action tTimerGhostCombo(Handle timer, DataPack pack)
+Action tTimerGhostCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1319,7 +1314,7 @@ public Action tTimerGhostCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhostCombo2(Handle timer, DataPack pack)
+Action tTimerGhostCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1335,7 +1330,7 @@ public Action tTimerGhostCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhostCombo3(Handle timer, DataPack pack)
+Action tTimerGhostCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1353,7 +1348,7 @@ public Action tTimerGhostCombo3(Handle timer, DataPack pack)
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esGhostCache[iTank].g_iGhostHitMode == 0 || g_esGhostCache[iTank].g_iGhostHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vGhostHit(iSurvivor, iTank, flRandom, flChance, g_esGhostCache[iTank].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
@@ -1366,13 +1361,11 @@ public Action tTimerGhostCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGhost(Handle timer, DataPack pack)
+Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank, iType;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	iType = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esGhostCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esGhostPlayer[iTank].g_iTankType) || (g_esGhostCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGhostCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esGhostPlayer[iTank].g_iTankType || (g_esGhostCache[iTank].g_iGhostAbility != 2 && g_esGhostCache[iTank].g_iGhostAbility != 3) || !g_esGhostPlayer[iTank].g_bActivated)
 	{
 		g_esGhostPlayer[iTank].g_bActivated = false;
@@ -1383,9 +1376,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
-	iTime = pack.ReadCell();
-	iCurrentTime = GetTime();
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
 	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esGhostCache[iTank].g_iHumanAbility == 1 && g_esGhostCache[iTank].g_iHumanMode == 0 && (iTime + g_esGhostCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esGhostPlayer[iTank].g_iCooldown == -1 || g_esGhostPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vRenderSpecials(iTank, false);
@@ -1408,11 +1399,10 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 
 	vGhostResetRender(iTank);
 
-	static float flRandom;
-	flRandom = pack.ReadFloat();
+	float flRandom = pack.ReadFloat();
 	if (g_esGhostCache[iTank].g_iGhostSpecials == 1 && flRandom <= g_esGhostCache[iTank].g_flGhostSpecialsChance)
 	{
-		static int iSkinColor[4];
+		int iSkinColor[4];
 		GetEntityRenderColor(iTank, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 		vRenderSpecials(iTank, true, iSkinColor[0], iSkinColor[1], iSkinColor[2]);
 	}
@@ -1420,13 +1410,11 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRenderRock(Handle timer, DataPack pack)
+Action tTimerRenderRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iRock, iTank;
-	iRock = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
+	int iRock = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock) || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || (g_esGhostCache[iTank].g_iGhostAbility != 2 && g_esGhostCache[iTank].g_iGhostAbility != 3) || !g_esGhostPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;

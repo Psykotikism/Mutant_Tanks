@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_PYRO_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_PYRO_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -196,7 +196,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdPyroInfo(int client, int args)
+Action cmdPyroInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -244,7 +244,7 @@ void vPyroMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -272,7 +272,7 @@ public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pPyro = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "PyroMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "PyroMenu", param1);
 			pPyro.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -283,14 +283,14 @@ public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -356,8 +356,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			case 0: vRemovePyro2(client);
 			case 1:
 			{
-				static float flDuration;
-				flDuration = (g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(client, 4, g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition) : float(g_esPyroCache[client].g_iPyroDuration);
+				float flDuration = (g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(client, 4, g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition) : float(g_esPyroCache[client].g_iPyroDuration);
 				IgniteEntity(client, flDuration);
 			}
 		}
@@ -372,7 +371,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -387,8 +386,7 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 			{
 				if (!g_esPyroPlayer[victim].g_bActivated)
 				{
-					static int iDuration;
-					iDuration = (g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition)) : g_esPyroCache[victim].g_iPyroDuration;
+					int iDuration = (g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition)) : g_esPyroCache[victim].g_iPyroDuration;
 					g_esPyroPlayer[victim].g_bActivated = true;
 					g_esPyroPlayer[victim].g_iDuration = (GetTime() + iDuration);
 				}
@@ -403,7 +401,7 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 				{
 					g_esPyroPlayer[victim].g_bActivated2 = true;
 
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(victim, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro2", LANG_SERVER, sTankName);
@@ -419,8 +417,8 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 
 			if (g_esPyroCache[attacker].g_iPyroAbility == 1 && g_esPyroPlayer[attacker].g_bActivated)
 			{
-				static char sClassname[32];
-				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+				char sClassname[32];
+				GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
 					switch (g_esPyroCache[attacker].g_iPyroMode)
@@ -478,26 +476,25 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_PYRO_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_PYRO_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_PYRO_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_PYRO_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_PYRO_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esPyroCache[tank].g_iPyroAbility == 1 && g_esPyroCache[tank].g_iComboAbility == 1 && !g_esPyroPlayer[tank].g_bActivated)
 		{
-			static char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_PYRO_SECTION, false) || StrEqual(sSubset[iPos], MT_PYRO_SECTION2, false) || StrEqual(sSubset[iPos], MT_PYRO_SECTION3, false) || StrEqual(sSubset[iPos], MT_PYRO_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						static float flDelay;
-						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 						g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 
 						switch (flDelay)
@@ -530,7 +527,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esPyroAbility[iIndex].g_iAccessFlags = 0;
 				g_esPyroAbility[iIndex].g_iComboAbility = 0;
@@ -754,10 +752,8 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esPyroCache[tank].g_iPyroAbility == 1 && g_esPyroCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
-				static bool bRecharging;
-				bRecharging = g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime;
+				int iTime = GetTime();
+				bool bRecharging = g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime;
 
 				switch (g_esPyroCache[tank].g_iHumanMode)
 				{
@@ -785,8 +781,7 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_esPyroPlayer[tank].g_bActivated = true;
 								g_esPyroPlayer[tank].g_iAmmoCount++;
 
-								static float flDuration;
-								flDuration = (g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 4, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition) : float(g_esPyroCache[tank].g_iPyroDuration);
+								float flDuration = (g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 4, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition) : float(g_esPyroCache[tank].g_iPyroDuration);
 								IgniteEntity(tank, flDuration);
 							}
 							else if (g_esPyroPlayer[tank].g_bActivated)
@@ -829,11 +824,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPyroChangeType(int tank)
+void vPyroChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemovePyro(tank);
 }
 
@@ -845,8 +845,7 @@ void vPyroCopyStats2(int oldTank, int newTank)
 
 void vPyro(int tank, int pos = -1)
 {
-	static int iDuration;
-	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esPyroCache[tank].g_iPyroDuration;
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esPyroCache[tank].g_iPyroDuration;
 	g_esPyroPlayer[tank].g_bActivated = true;
 	g_esPyroPlayer[tank].g_iDuration = (GetTime() + iDuration);
 
@@ -861,7 +860,7 @@ void vPyro(int tank, int pos = -1)
 
 	if (g_esPyroCache[tank].g_iPyroMessage == 1)
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro", LANG_SERVER, sTankName);
@@ -950,7 +949,7 @@ void vPyroReset3(int tank)
 	}
 }
 
-public Action tTimerPyroCombo(Handle timer, DataPack pack)
+Action tTimerPyroCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

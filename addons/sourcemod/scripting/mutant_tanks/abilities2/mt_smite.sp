@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SMITE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -50,11 +50,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SMITE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+
+#define SPRITE_GLOW "sprites/glow01.vmt"
 
 #define MT_SMITE_SECTION "smiteability"
 #define MT_SMITE_SECTION2 "smite ability"
@@ -172,10 +174,8 @@ void vSmiteMapStart()
 public void OnMapStart()
 #endif
 {
-	g_iSmiteSprite = PrecacheModel("sprites/glow.vmt", true);
-
+	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
-
 	vSmiteReset();
 }
 
@@ -208,7 +208,7 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSmiteInfo(int client, int args)
+Action cmdSmiteInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
@@ -254,7 +254,7 @@ void vSmiteMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -280,7 +280,7 @@ public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pSmite = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SmiteMenu", param1);
+			FormatEx(sMenuTitle, sizeof sMenuTitle, "%T", "SmiteMenu", param1);
 			pSmite.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -291,12 +291,12 @@ public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param
 
 				switch (param2)
 				{
-					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -358,7 +358,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnSmiteModelSpawnPost(int model)
+void OnSmiteModelSpawnPost(int model)
 {
 	g_iSmiteDeathModelOwner = 0;
 
@@ -372,12 +372,12 @@ public void OnSmiteModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esSmiteCache[attacker].g_iSmiteHitMode == 0 || g_esSmiteCache[attacker].g_iSmiteHitMode == 1) && bIsSurvivor(victim) && g_esSmiteCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankType].g_iAccessFlags, g_esSmitePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSmitePlayer[attacker].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[victim].g_iImmunityFlags))
@@ -439,22 +439,21 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	static char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
-	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SMITE_SECTION);
-	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SMITE_SECTION2);
-	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SMITE_SECTION3);
-	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SMITE_SECTION4);
+	char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SMITE_SECTION);
+	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SMITE_SECTION2);
+	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SMITE_SECTION3);
+	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SMITE_SECTION4);
 	if (g_esSmiteCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
 	{
-		static char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
-		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_SMITE_SECTION, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION2, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION3, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION4, false))
 			{
-				static float flDelay;
-				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
 
 				switch (type)
 				{
@@ -478,8 +477,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						static float flChance;
-						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -524,7 +522,8 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			int iMaxType = MT_GetMaxType();
+			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSmiteAbility[iIndex].g_iAccessFlags = 0;
 				g_esSmiteAbility[iIndex].g_iImmunityFlags = 0;
@@ -736,8 +735,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esSmiteCache[tank].g_iSmiteAbility == 1 && g_esSmiteCache[tank].g_iHumanAbility == 1)
 			{
-				static int iTime;
-				iTime = GetTime();
+				int iTime = GetTime();
 
 				switch (g_esSmitePlayer[tank].g_iCooldown != -1 && g_esSmitePlayer[tank].g_iCooldown > iTime)
 				{
@@ -750,11 +748,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSmiteChangeType(int tank)
+void vSmiteChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSmite(tank);
 }
 
@@ -785,8 +788,8 @@ void vSmiteReset()
 
 void vSmite(int survivor)
 {
-	static float flPosition[3], flStartPosition[3];
-	static int iColor[4] = {255, 255, 255, 255};
+	float flPosition[3], flStartPosition[3];
+	int iColor[4] = {255, 255, 255, 255};
 
 	GetClientAbsOrigin(survivor, flPosition);
 	flPosition[2] -= 26.0;
@@ -818,12 +821,11 @@ void vSmiteAbility(int tank, float random, int pos = -1)
 		g_esSmitePlayer[tank].g_bFailed = false;
 		g_esSmitePlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esSmiteCache[tank].g_flSmiteRange;
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esSmiteCache[tank].g_flSmiteRangeChance;
-		static int iSurvivorCount;
-		iSurvivorCount = 0;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esSmiteCache[tank].g_flSmiteRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esSmiteCache[tank].g_flSmiteRangeChance;
+		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esSmitePlayer[tank].g_iTankType, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iImmunityFlags, g_esSmitePlayer[iSurvivor].g_iImmunityFlags))
@@ -863,8 +865,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSmitePlayer[tank].g_iAmmoCount < g_esSmiteCache[tank].g_iHumanAmmo && g_esSmiteCache[tank].g_iHumanAmmo > 0))
 		{
-			static int iTime;
-			iTime = GetTime();
+			int iTime = GetTime();
 			if (random <= chance)
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSmiteCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esSmitePlayer[tank].g_iCooldown == -1 || g_esSmitePlayer[tank].g_iCooldown < iTime))
@@ -891,7 +892,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esSmiteCache[tank].g_iSmiteMessage & messages)
 				{
-					static char sTankName[33];
+					char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Smite", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Smite", LANG_SERVER, sTankName, survivor);
@@ -916,7 +917,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-public Action tTimerSmiteCombo(Handle timer, DataPack pack)
+Action tTimerSmiteCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -933,7 +934,7 @@ public Action tTimerSmiteCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSmiteCombo2(Handle timer, DataPack pack)
+Action tTimerSmiteCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -951,7 +952,7 @@ public Action tTimerSmiteCombo2(Handle timer, DataPack pack)
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
-	pack.ReadString(sClassname, sizeof(sClassname));
+	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esSmiteCache[iTank].g_iSmiteHitMode == 0 || g_esSmiteCache[iTank].g_iSmiteHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vSmiteHit(iSurvivor, iTank, flRandom, flChance, g_esSmiteCache[iTank].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
