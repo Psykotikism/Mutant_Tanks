@@ -1432,13 +1432,13 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 {
 	if (FileExists(path, use_valve_fs, valve_path_id))
 	{
-		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
 		if (!StrEqual(filename, sOutput))
 		{
-			static char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
 			strcopy(output, size, sTemp);
 		}
 
@@ -1460,23 +1460,23 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[1024], sMessage[1024];
+	char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
-	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
-	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	FormatEx(sMessage, sizeof sMessage, "\x01%s", message);
+	VFormat(sBuffer, sizeof sBuffer, sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, false);
 	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			SetGlobalTransTarget(iPlayer);
-			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+			VFormat(sBuffer, sizeof sBuffer, message, 2);
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1484,10 +1484,10 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	VFormat(sBuffer, sizeof(sBuffer), message, 2);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	VFormat(sBuffer, sizeof sBuffer, message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 	PrintToServer(sBuffer);
 }
 
@@ -1510,13 +1510,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(client);
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 
 		switch (client == 0)
 		{

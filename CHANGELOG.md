@@ -35,7 +35,7 @@
 - Changed the method for checking idle Tanks.
 - Changed the method for checking game modes. (Thanks to `epzminion` for the idea!)
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
-- Removed parentheses of `sizeof` calls.
+- Removed parentheses of `sizeof` uses.
 - Removed unnecessary usage of the `public` keyword.
 - Removed unnecessary usage of the `OnAllPluginsLoaded` forward. (Thanks to `Silvers` for the information!)
 - `SourceMod 1.11.0.6724` or higher is now required.
