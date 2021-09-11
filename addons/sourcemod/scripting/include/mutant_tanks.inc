@@ -157,6 +157,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
 #define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+#define STATICPROP_EHANDLE_MASK 0x40000000
 
 // Forwards
 /**
@@ -2714,16 +2715,15 @@ stock int iGetClampedValue(const char[] key, const char[] setting1, const char[]
 	return curVal;
 }
 
-stock int iGetEntityIndex(any refHandle)
+stock bool bIsEntityStaticProp(Address refHandle)
 {
-	Address adHandle = view_as<Address>(refHandle);
-	return iGetEntryIndex(adHandle);
+	return (iGetEntityIndex(refHandle) == (STATICPROP_EHANDLE_MASK & ENT_ENTRY_MASK)) != 0;
 }
 
-stock int iGetEntryIndex(Address entityHandle)
+stock int iGetEntityIndex(Address refHandle)
 {
-	int iMaskIndex = LoadFromAddress(entityHandle, NumberType_Int32);
-	return iMaskIndex & ENT_ENTRY_MASK;
+	int iMaskIndex = LoadFromAddress(refHandle, NumberType_Int32);
+	return (iMaskIndex & ENT_ENTRY_MASK);
 }
 
 stock int iGetHumanCount(bool infected = false)

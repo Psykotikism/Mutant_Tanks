@@ -967,7 +967,7 @@ void vTrackThink(int rock)
 								g_esTrackPlayer[iTank].g_bRainbowColor = SDKHookEx(iTank, SDKHook_PreThinkPost, OnTrackPreThinkPost);
 							}
 						}
-						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(iTank) ? 1 : 0), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
+						case false: vSetTrackGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 					}
 				}
 			}
@@ -1036,7 +1036,7 @@ void OnTrackPreThinkPost(int tank)
 	{
 		bHook = true;
 
-		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+		vSetTrackGlow(iRock, iGetRGBColor(iColor[0], iColor[1], iColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 	}
 
 	if (!bHook)

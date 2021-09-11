@@ -23,6 +23,9 @@
 
 #### Abilities
 - Fixed abilities resetting exclusive variables when Tanks spawn. (Thanks to `ddd123` for testing and reporting!)
+- Fixed abilities using the wrong prototype for the `MT_OnChangeType` forward.
+
+- Heal: Fixed the glow outline feature not relying on the settings under the `Tank #/Glow` and `STEAM_ID/Glow` sections. (Thanks to `ddd123` for testing and reporting!)
 
 - Omni: Fixed settings not caching properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
 
@@ -30,6 +33,7 @@
 
 #### General
 - Changed the method for checking idle Tanks.
+- Changed the method for checking game modes. (Thanks to `epzminion` for the idea!)
 - Removed the overabundant and unconditional usage of static variables and functions. This does not have any effect on plugin behavior but resolves any future/potential bugs and unnecessary storage for variables' infinite lifetime and exclusivity of functions.
 - Removed parentheses of `sizeof` calls.
 - Removed unnecessary usage of the `public` keyword.
@@ -38,12 +42,24 @@
 
 #### Game Data
 - Added signatures, patch offsets, and detour setup for `CTankClaw::GroundPound`. (Thanks to `Forgetest` for the patch offsets!)
+- Added signatures for the following functions:
+	- `CTerrorGameRules::HasConfigurableDifficultySetting`
+	- `CTerrorGameRules::IsCoopMode`
+	- `CTerrorGameRules::IsGenericCooperativeMode`
+	- `CTerrorGameRules::IsHoldoutMode`
+	- `CTerrorGameRules::IsScavengeMode`
+	- `CTerrorGameRules::IsSurvivalMode`
+	- `CTerrorGameRules::IsVersusMode`
 - Updated signatures for `CTerrorWeapon::CanDeploy` and `CTerrorWeapon::CanDeployFor` to be compatible with the [Incapped Weapons Patch](https://forums.alliedmods.net/showthread.php?t=322859) plugin.
 - Removed some unused offsets.
 
 #### Settings
 - Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC` for the idea!)
+- Added the `Execute Config Delay` setting under the `Plugin Settings/Custom` section.
 - Removed the `Allow Developer` setting. (No longer used.)
+
+#### Abilities
+- Heal: Added the `Heal Glow` setting. (Requested by `ddd123`)
 
 #### Translations
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
@@ -84,10 +100,10 @@
 - Switched to a simpler method for checking `Versus` and `Scavenge` rounds.
 - Switched to a better method for patching survivor fall screams.
 
-### Game Data
+#### Game Data
 - Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
 
-### Settings
+#### Settings
 1. Added the `Skip Incap` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `epzminion` for the help!)
 
 ### Files

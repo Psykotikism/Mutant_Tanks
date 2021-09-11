@@ -273,7 +273,6 @@ enum struct esGeneral
 	bool g_bHideNameChange;
 	bool g_bLeft4DHooksInstalled;
 	bool g_bLinux;
-	bool g_bMapStarted;
 	bool g_bNextRound;
 	bool g_bNormalMap;
 	bool g_bPatchDoJumpValue;
@@ -410,6 +409,7 @@ enum struct esGeneral
 	float g_flBurnDuration;
 	float g_flBurntSkin;
 	float g_flClawDamage;
+	float g_flConfigDelay;
 	float g_flDamageBoostReward[4];
 	float g_flDamageResistanceReward[4];
 	float g_flDefaultAmmoPackUseDuration;
@@ -484,9 +484,14 @@ enum struct esGeneral
 	Handle g_hSDKGetRefEHandle;
 	Handle g_hSDKGetUseAction;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
+	Handle g_hSDKHasConfigurableDifficultySetting;
+	Handle g_hSDKIsCoopMode;
 	Handle g_hSDKIsFirstMapInScenario;
 	Handle g_hSDKIsInStasis;
 	Handle g_hSDKIsMissionFinalMap;
+	Handle g_hSDKIsScavengeMode;
+	Handle g_hSDKIsSurvivalMode;
+	Handle g_hSDKIsVersusMode;
 	Handle g_hSDKITExpired;
 	Handle g_hSDKKeyValuesGetString;
 	Handle g_hSDKLeaveStasis;
@@ -1435,7 +1440,6 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_esGeneral.g_bFinalMap = bIsFinalMap();
-	g_esGeneral.g_bMapStarted = true;
 	g_esGeneral.g_bNormalMap = bIsNormalMap();
 	g_esGeneral.g_bSameMission = bGetMissionName();
 	g_iBossBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
@@ -1561,14 +1565,13 @@ public void OnConfigsExecuted()
 	vResetTimers();
 
 	CreateTimer(0.1, tTimerRefreshRewards, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	CreateTimer(10.0, tTimerReloadConfigs, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateTimer(g_esGeneral.g_flConfigDelay, tTimerReloadConfigs, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateAmmo, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateHealth, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 }
 
 public void OnMapEnd()
 {
-	g_esGeneral.g_bMapStarted = false;
 	g_esGeneral.g_bConfigsExecuted = false;
 
 	vResetPlugin();
@@ -2023,32 +2026,26 @@ bool bIsPluginEnabled()
 		return false;
 	}
 
-	if (g_esGeneral.g_bMapStarted)
+	g_esGeneral.g_iCurrentMode = 0;
+
+	if ((g_esGeneral.g_hSDKIsCoopMode != null && SDKCall(g_esGeneral.g_hSDKIsCoopMode)) || (g_bSecondGame && g_esGeneral.g_hSDKHasConfigurableDifficultySetting != null && SDKCall(g_esGeneral.g_hSDKHasConfigurableDifficultySetting)))
 	{
-		g_esGeneral.g_iCurrentMode = 0;
-
-		int iGameMode = CreateEntityByName("info_gamemode");
-		if (bIsValidEntity(iGameMode))
-		{
-			DispatchSpawn(iGameMode);
-
-			HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
-
-			ActivateEntity(iGameMode);
-			AcceptEntityInput(iGameMode, "PostSpawnActivate");
-
-			if (bIsValidEntity(iGameMode))
-			{
-				RemoveEdict(iGameMode);
-			}
-		}
+		g_esGeneral.g_iCurrentMode = 1;
+	}
+	else if (g_esGeneral.g_hSDKIsVersusMode != null && SDKCall(g_esGeneral.g_hSDKIsVersusMode))
+	{
+		g_esGeneral.g_iCurrentMode = 2;
+	}
+	else if (g_esGeneral.g_hSDKIsSurvivalMode != null && SDKCall(g_esGeneral.g_hSDKIsSurvivalMode))
+	{
+		g_esGeneral.g_iCurrentMode = 4;
+	}
+	else if (g_bSecondGame && g_esGeneral.g_hSDKIsScavengeMode != null && SDKCall(g_esGeneral.g_hSDKIsScavengeMode))
+	{
+		g_esGeneral.g_iCurrentMode = 8;
 	}
 
-	int iMode = g_esGeneral.g_iGameModeTypes;
-	iMode = (iMode == 0) ? g_esGeneral.g_cvMTGameModeTypes.IntValue : iMode;
+	int iMode = (g_esGeneral.g_iGameModeTypes == 0) ? g_esGeneral.g_cvMTGameModeTypes.IntValue : g_esGeneral.g_iGameModeTypes;
 	if (iMode != 0 && (g_esGeneral.g_iCurrentMode == 0 || !(iMode & g_esGeneral.g_iCurrentMode)))
 	{
 		return false;
@@ -2099,26 +2096,6 @@ bool bIsPluginEnabled()
 	}
 
 	return true;
-}
-
-void vGameMode(const char[] output, int caller, int activator, float delay)
-{
-	if (StrEqual(output, "OnCoop"))
-	{
-		g_esGeneral.g_iCurrentMode = 1;
-	}
-	else if (StrEqual(output, "OnVersus"))
-	{
-		g_esGeneral.g_iCurrentMode = 2;
-	}
-	else if (StrEqual(output, "OnSurvival"))
-	{
-		g_esGeneral.g_iCurrentMode = 4;
-	}
-	else if (StrEqual(output, "OnScavenge"))
-	{
-		g_esGeneral.g_iCurrentMode = 8;
-	}
 }
 
 /**
@@ -3628,6 +3605,7 @@ void vRegisterConVars()
 
 	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vPluginStatusCvar);
+	g_esGeneral.g_cvMTGameMode.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vGameDifficultyCvar);
@@ -5266,7 +5244,7 @@ void vHookGlobalEvents()
 }
 
 /**
- * GameData functions
+ * Game Data functions
  **/
 
 void vReadGameData()
@@ -5282,46 +5260,20 @@ void vReadGameData()
 
 			if (g_bSecondGame)
 			{
-				StartPrepSDKCall(SDKCall_Entity);
-				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseBackpackItem::GetUseAction"))
-				{
-					LogError("%s Failed to load offset: CBaseBackpackItem::GetUseAction", MT_TAG);
-				}
-
-				PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-				g_esGeneral.g_hSDKGetUseAction = EndPrepSDKCall();
-				if (g_esGeneral.g_hSDKGetUseAction == null)
-				{
-					LogError("%s Your \"CBaseBackpackItem::GetUseAction\" offsets are outdated.", MT_TAG);
-				}
-
-				StartPrepSDKCall(SDKCall_Player);
-				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
-				{
-					LogError("%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
-				}
-
-				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-				g_esGeneral.g_hSDKIsInStasis = EndPrepSDKCall();
-				if (g_esGeneral.g_hSDKIsInStasis == null)
-				{
-					LogError("%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
-				}
-
-				StartPrepSDKCall(SDKCall_Raw);
-				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CDirector::IsFirstMapInScenario"))
-				{
-					LogError("%s Failed to find signature: CDirector::IsFirstMapInScenario", MT_TAG);
-				}
-
-				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-				g_esGeneral.g_hSDKIsFirstMapInScenario = EndPrepSDKCall();
-				if (g_esGeneral.g_hSDKIsFirstMapInScenario == null)
-				{
-					LogError("%s Your \"CDirector::IsFirstMapInScenario\" signature is outdated.", MT_TAG);
-				}
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
 
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
+			}
+			else
+			{
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
+				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
 			}
 
 			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
@@ -5332,43 +5284,17 @@ void vReadGameData()
 
 			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress(gdMutantTanks, "DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 
-			StartPrepSDKCall(SDKCall_Raw);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::GetRefEHandle"))
-			{
-				LogError("%s Failed to find signature: CBaseEntity::GetRefEHandle", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKGetRefEHandle = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKGetRefEHandle == null)
-			{
-				LogError("%s Your \"CBaseEntity::GetRefEHandle\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Raw);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CDirector::HasAnySurvivorLeftSafeArea"))
-			{
-				LogError("%s Failed to find signature: CDirector::HasAnySurvivorLeftSafeArea", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-			g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea == null)
-			{
-				LogError("%s Your \"CDirector::HasAnySurvivorLeftSafeArea\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Entity);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTankRock::Detonate"))
-			{
-				LogError("%s Failed to find signature: CTankRock::Detonate", MT_TAG);
-			}
-
-			g_esGeneral.g_hSDKRockDetonate = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKRockDetonate == null)
-			{
-				LogError("%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
-			}
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
+			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
 
 			StartPrepSDKCall(SDKCall_Static);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
@@ -5382,69 +5308,6 @@ void vReadGameData()
 			if (g_esGeneral.g_hSDKGetMissionFirstMap == null)
 			{
 				LogError("%s Your \"CTerrorGameRules::GetMissionFirstMap\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_GameRules);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionInfo"))
-			{
-				LogError("%s Failed to find signature: CTerrorGameRules::GetMissionInfo", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKGetMissionInfo = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKGetMissionInfo == null)
-			{
-				LogError("%s Your \"CTerrorGameRules::GetMissionInfo\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_GameRules);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::IsMissionFinalMap"))
-			{
-				LogError("%s Failed to find signature: CTerrorGameRules::IsMissionFinalMap", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-			g_esGeneral.g_hSDKIsMissionFinalMap = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKIsMissionFinalMap == null)
-			{
-				LogError("%s Your \"CTerrorGameRules::IsMissionFinalMap\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::MaterializeFromGhost"))
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::MaterializeFromGhost", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKMaterializeGhost = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKMaterializeGhost == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::MaterializeFromGhost\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnITExpired"))
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnITExpired", MT_TAG);
-			}
-
-			g_esGeneral.g_hSDKITExpired = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKITExpired == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnITExpired\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnRevived"))
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnRevived", MT_TAG);
-			}
-
-			g_esGeneral.g_hSDKRevive = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKRevive == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -5480,18 +5343,6 @@ void vReadGameData()
 				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
-			}
-
-			g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKRoundRespawn == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
-			}
-
 			StartPrepSDKCall(SDKCall_Raw);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "KeyValues::GetString"))
 			{
@@ -5505,19 +5356,6 @@ void vReadGameData()
 			if (g_esGeneral.g_hSDKKeyValuesGetString == null)
 			{
 				LogError("%s Your \"KeyValues::GetString\" signature is outdated.", MT_TAG);
-			}
-
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
-			{
-				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
-			}
-
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKLeaveStasis == null)
-			{
-				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::Event_Killed::Attacker");
@@ -5555,6 +5393,26 @@ void vReadGameData()
 
 			delete gdMutantTanks;
 		}
+	}
+}
+
+void vSetupSimpleSDKCalls(GameData dataHandle, Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
+{
+	StartPrepSDKCall(callType);
+	if (!PrepSDKCall_SetFromConf(dataHandle, source, name))
+	{
+		LogError("%s Failed to find signature: %s", MT_TAG, name);
+	}
+
+	if (setType)
+	{
+		PrepSDKCall_SetReturnInfo(returnType, method);
+	}
+
+	callHandle = EndPrepSDKCall();
+	if (callHandle == null)
+	{
+		LogError("%s Your \"%s\" signature is outdated.", MT_TAG, name);
 	}
 }
 
@@ -12215,6 +12073,7 @@ void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sDisabledGameModes[0] = '\0';
 		g_esGeneral.g_iConfigEnable = 0;
 		g_esGeneral.g_iConfigCreate = 0;
+		g_esGeneral.g_flConfigDelay = 5.0;
 		g_esGeneral.g_iConfigExecute = 0;
 
 		for (int iPos = 0; iPos < sizeof esGeneral::g_iFinaleWave; iPos++)
@@ -13039,6 +12898,7 @@ SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] value, bool
 					g_esGeneral.g_iGameModeTypes = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_esGeneral.g_iGameModeTypes, value, 0, 15);
 					g_esGeneral.g_iConfigEnable = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "cenabled", g_esGeneral.g_iConfigEnable, value, 0, 1);
 					g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 255);
+					g_esGeneral.g_flConfigDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "ExecuteConfigDelay", "Execute Config Delay", "Execute_Config_Delay", "delay", g_esGeneral.g_flConfigDelay, value, 0.1, 999999.0);
 					g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, MT_CONFIG_SECTION_CUSTOM, key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 255);
 
 					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "EnabledGameModes", "Enabled Game Modes", "Enabled_Game_Modes", "gmenabled", g_esGeneral.g_sEnabledGameModes, sizeof esGeneral::g_sEnabledGameModes, value);

@@ -2284,6 +2284,20 @@
 			// 128: Finale stages
 			"Create Config Types"			"0"
 
+			// The delay for executing a custom config when its filestamp has changed.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting cannot be changed in custom config files.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
+			"Execute Config Delay"			"5.0"
+
 			// The type of custom config that Mutant Tanks executes.
 			// Note: Custom config files that do not exist will not be executed.
 			// Note: This setting cannot be changed in custom config files.
@@ -10135,7 +10149,11 @@
 		// The Mutant Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
 		// "Ability Enabled" - Any nearby infected can give the Mutant Tank some health.
 		// - "Heal Absorb Range"
+		// - "Heal Glow"
 		// - "Heal Interval"
+		// - "Health From Commons"
+		// - "Health From Specials"
+		// - "Health From Tanks"
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Range"
 		// - "Heal Range Chance"
@@ -10315,6 +10333,7 @@
 			"Heal Absorb Range"			"500.0"
 
 			// The amount of temporary health given to survivors.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
@@ -10335,6 +10354,15 @@
 			// "often"/"likely"/"frequently" - 66.6% chance
 			// "always" - 100% chance
 			"Heal Chance"				"33.3"
+
+			// The Mutant Tank's healing gives it a glow outline when activated.
+			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Heal Glow"				"1"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
