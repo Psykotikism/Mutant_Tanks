@@ -1750,8 +1750,9 @@
 			 * CTerrorGameRules::IsCoopMode()
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "coop" string.
-			 * 2. One of the functions that references that string should be this function.
+			 * 1. Search for the "Director::StartScenarioExit\n" string.
+			 * 2. One of the functions that references that string should be "outtro_stats_done".
+			 * 3. The second function call in "outtro_stats_done" should be this function.
 			 **/
 			"CTerrorGameRules::IsCoopMode"
 			{
