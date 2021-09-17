@@ -1888,6 +1888,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
  * Plugin status functions & callbacks
  **/
 
+void vInitialReset(int client)
+{
+	g_esPlayer[client].g_iLadyKiller = 0;
+	g_esPlayer[client].g_iLadyKillerCount = 0;
+	g_esPlayer[client].g_iPersonalType = 0;
+}
+
 void vLateLoad()
 {
 	if (g_bLateLoad)
@@ -1973,7 +1980,6 @@ void vResetCore(int client)
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_iMaxClip[0] = 0;
 	g_esPlayer[client].g_iMaxClip[1] = 0;
-	g_esPlayer[client].g_iPersonalType = 0;
 	g_esPlayer[client].g_iReviveCount = 0;
 
 	vResetTankDamage(client);
@@ -4908,9 +4914,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_connect") || StrEqual(name, "player_disconnect"))
 		{
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			g_esPlayer[iSurvivor].g_iLadyKiller = 0;
-			g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
-
+			vInitialReset(iSurvivor);
 			vDeveloperSettings(iSurvivor);
 			vResetTank2(iSurvivor);
 		}
@@ -9209,6 +9213,8 @@ void vMutateTank(int tank, int type)
 				case true:
 				{
 					iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
+					g_esPlayer[tank].g_iPersonalType = 0;
+
 					vSetTankColor(tank, iType, false, .store = true);
 				}
 				case false:
@@ -13574,7 +13580,7 @@ void vPlayerSpawnFrame(DataPack pack)
 	{
 		if (g_bSecondGame)
 		{
-			g_esPlayer[iPlayer].g_bStasis = bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer));
+			g_esPlayer[iPlayer].g_bStasis = (bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer)));
 		}
 
 		if (g_esPlayer[iPlayer].g_bStasis && g_esGeneral.g_iStasisMode == 1 && g_esGeneral.g_hSDKLeaveStasis != null)
