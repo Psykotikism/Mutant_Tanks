@@ -684,6 +684,12 @@
 		"en"			"Particle Effect Visual: OFF"
 	}
 
+	"PersonalType"
+	{
+		"#format"		"{1:t},{2:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}){default} when you take control of the{mint} Tank{default}."
+	}
+
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
@@ -4834,7 +4840,7 @@
 	"Ultimate3"
 	{
 		"#format"		"{1:.2f},{2:.2f}"
-		"en"			"You have dealt {yellow}{1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
+		"en"			"You have dealt{yellow} {1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
 	}
 
 	"Ultimate4"
@@ -5330,7 +5336,7 @@
 	"Zombie2"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} spawned {yellow} zombies{mint}!"
+		"en"			"{olive}{1}{mint} spawned{yellow} zombies{mint}!"
 	}
 
 	"ZombieAmmo"

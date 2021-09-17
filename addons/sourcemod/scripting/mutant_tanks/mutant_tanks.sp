@@ -382,6 +382,7 @@ enum struct esGeneral
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddMaxCarryDetour;
+	DynamicDetour g_ddPassServerEntityFilterDetour;
 	DynamicDetour g_ddPreThinkDetour;
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddRevivedDetour;
@@ -697,6 +698,7 @@ enum struct esPlayer
 	bool g_bFirstSpawn;
 	bool g_bIce;
 	bool g_bIgnoreCmd;
+	bool g_bInitialRound;
 	bool g_bKeepCurrentType;
 	bool g_bLastLife;
 	bool g_bMeteor;
@@ -907,6 +909,7 @@ enum struct esPlayer
 	int g_iOzTankColor[4];
 	int g_iParticleEffect;
 	int g_iParticleEffectVisual[4];
+	int g_iPersonalType;
 	int g_iPrefsAccess;
 	int g_iPrefsNotify[4];
 	int g_iPropsAttached;
@@ -1943,7 +1946,7 @@ void vPluginStatus()
 	{
 		vTogglePlugin(bPluginAllowed);
 
-		if (bIsVersusModeRound(0))
+		if (bIsCompetitiveModeRound(0))
 		{
 			g_esGeneral.g_alCompTypes = new ArrayList();
 		}
@@ -1960,6 +1963,7 @@ void vResetCore(int client)
 	g_esPlayer[client].g_bAttacked = false;
 	g_esPlayer[client].g_bDied = false;
 	g_esPlayer[client].g_bIgnoreCmd = false;
+	g_esPlayer[client].g_bInitialRound = g_esGeneral.g_bNextRound;
 	g_esPlayer[client].g_bLastLife = false;
 	g_esPlayer[client].g_bStasis = false;
 	g_esPlayer[client].g_bThirdPerson = false;
@@ -1969,6 +1973,7 @@ void vResetCore(int client)
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_iMaxClip[0] = 0;
 	g_esPlayer[client].g_iMaxClip[1] = 0;
+	g_esPlayer[client].g_iPersonalType = 0;
 	g_esPlayer[client].g_iReviveCount = 0;
 
 	vResetTankDamage(client);
@@ -2772,6 +2777,7 @@ void vRegisterCommands()
 	RegAdminCmd("sm_mt_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_tank2", cmdTank2, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_mt_tank2", cmdTank2, "Spawn a Mutant Tank.");
+	RegConsoleCmd("sm_mtank", cmdMutantTank, "Choose a Mutant Tank.");
 	RegConsoleCmd("sm_mutanttank", cmdMutantTank, "Choose a Mutant Tank.");
 }
 
@@ -3498,14 +3504,16 @@ Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_esGeneral.g_iSpawnMode == 1 && !bIsTank(client) && !CheckCommandAccess(client, "sm_mutanttank", ADMFLAG_ROOT, true) && !bIsDeveloper(client, .real = true))
+	if ((!bIsCompetitiveMode() || g_esGeneral.g_iSpawnMode == 2 || !bIsInfected(client) || (!bIsTank(client) && g_esGeneral.g_iSpawnMode < 2)) && !bIsDeveloper(client, .real = true))
 	{
+		g_esPlayer[client].g_iPersonalType = 0;
+
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
 		return Plugin_Handled;
 	}
 
-	if (args < 1)
+	if (args < 1 || !bIsTank(client))
 	{
 		switch (IsVoteInProgress())
 		{
@@ -4711,12 +4719,9 @@ int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 0: vSetupTankSpawn(param1, "random", false);
 				}
 			}
-			else
+			else if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && bIsRightGame(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 			{
-				if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && bIsRightGame(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
-				{
-					vQueueTank(param1, iIndex, false);
-				}
+				vQueueTank(param1, iIndex, false);
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -4787,7 +4792,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "create_panic_event"))
 		{
-			if (g_esGeneral.g_iCurrentMode == 4 && g_esGeneral.g_iSurvivalBlock == 0)
+			if (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock == 0)
 			{
 				delete g_esGeneral.g_hSurvivalTimer;
 
@@ -5030,10 +5035,11 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				SDKUnhook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
+				int iType = (g_esPlayer[iPlayer].g_iPersonalType > 0) ? g_esPlayer[iPlayer].g_iPersonalType : g_esGeneral.g_iChosenType;
 				DataPack dpPlayerSpawn = new DataPack();
 				RequestFrame(vPlayerSpawnFrame, dpPlayerSpawn);
 				dpPlayerSpawn.WriteCell(iPlayerId);
-				dpPlayerSpawn.WriteCell(g_esGeneral.g_iChosenType);
+				dpPlayerSpawn.WriteCell(iType);
 			}
 		}
 		else if (StrEqual(name, "player_team"))
@@ -8909,7 +8915,7 @@ void vCopyTankStats(int tank, int newtank)
 		g_esPlayer[iSurvivor].g_iTankDamage[newtank] = g_esPlayer[iSurvivor].g_iTankDamage[tank];
 	}
 
-	if (bIsValidClient(newtank, MT_CHECK_FAKECLIENT) && g_esGeneral.g_iSpawnMode == 0)
+	if (bIsValidClient(newtank, MT_CHECK_FAKECLIENT) && g_esGeneral.g_iSpawnMode != 2)
 	{
 		vTankMenu(newtank);
 	}
@@ -9149,7 +9155,7 @@ void vMutateTank(int tank, int type)
 {
 	if (bCanTypeSpawn())
 	{
-		bool bVersus = bIsVersusModeRound(2);
+		bool bVersus = bIsCompetitiveModeRound(2);
 		int iType = 0;
 		if (type == 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
@@ -9198,19 +9204,19 @@ void vMutateTank(int tank, int type)
 		}
 		else if (type != -1)
 		{
-			switch (bVersus)
+			switch (!bVersus || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iPersonalType == type))
 			{
 				case true:
+				{
+					iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
+					vSetTankColor(tank, iType, false, .store = true);
+				}
+				case false:
 				{
 					iType = g_esGeneral.g_alCompTypes.Get(0);
 					g_esGeneral.g_alCompTypes.Erase(0);
 
 					vSetTankColor(tank, iType, false);
-				}
-				case false:
-				{
-					iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
-					vSetTankColor(tank, iType, false, .store = true);
 				}
 			}
 		}
@@ -9221,7 +9227,7 @@ void vMutateTank(int tank, int type)
 			CreateTimer(0.1, tTimerCheckTankView, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			CreateTimer(1.0, tTimerTankUpdate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
-			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iFavoriteType > 0 && iType != g_esPlayer[tank].g_iFavoriteType)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iFavoriteType > 0 && iType != g_esPlayer[tank].g_iFavoriteType && g_esGeneral.g_iSpawnMode == 2)
 			{
 				vFavoriteMenu(tank);
 			}
@@ -9564,15 +9570,16 @@ void vSetRockModel(int tank, int rock)
 	}
 }
 
-void vSetTankAttackInterval(int tank)
+void vSetTankAttackInterval(int tank, float defValue = 5.0)
 {
-	if (bIsTank(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
+	if (bIsTank(tank))
 	{
+		float flInterval = (g_esCache[tank].g_flAttackInterval > 0.0) ? g_esCache[tank].g_flAttackInterval : defValue;
 		int iWeapon = GetPlayerWeaponSlot(tank, 0);
 		if (iWeapon > MaxClients)
 		{
-			g_esPlayer[tank].g_flAttackDelay = (GetGameTime() + g_esCache[tank].g_flAttackInterval);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esCache[tank].g_flAttackInterval, 0);
+			g_esPlayer[tank].g_flAttackDelay = (GetGameTime() + flInterval);
+			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", flInterval, 0);
 			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
 		}
 	}
@@ -9616,7 +9623,7 @@ void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = fal
 		}
 	}
 
-	if (store && bIsVersusModeRound(1))
+	if (store && bIsCompetitiveModeRound(1))
 	{
 		g_esGeneral.g_alCompTypes.Push(type);
 	}
@@ -9624,6 +9631,7 @@ void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = fal
 	g_esPlayer[tank].g_iTankType = type;
 	g_esPlayer[tank].g_bReplaceSelf = false;
 
+	vRemoveTankProps(tank);
 	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
 	vCacheSettings(tank);
 	vSetTankModel(tank);
@@ -9645,7 +9653,7 @@ void vSetTankGlow(int tank)
 	SetEntProp(tank, Prop_Send, "m_iGlowType", ((bIsTankIdle(tank) || g_esCache[tank].g_iGlowType == 0) ? 2 : 3));
 }
 
-void vSetTankHealth(int tank)
+void vSetTankHealth(int tank, bool initial = true)
 {
 	int iHumanCount = iGetHumanCount(),
 		iSpawnHealth = (g_esCache[tank].g_iBaseHealth > 0) ? g_esCache[tank].g_iBaseHealth : GetEntProp(tank, Prop_Data, "m_iHealth"),
@@ -9665,27 +9673,23 @@ void vSetTankHealth(int tank)
 		iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost,
 		iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
 		iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
-	SetEntProp(tank, Prop_Data, "m_iHealth", iFinalNoHealth);
-	SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalNoHealth);
+
+	int iTotalHealth = iFinalNoHealth, iHealth = GetEntProp(tank, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
 
 	switch (g_esCache[tank].g_iMultiplyHealth)
 	{
-		case 1:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
-		}
-		case 2:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth2);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth2);
-		}
-		case 3:
-		{
-			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth3);
-			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth3);
-		}
+		case 1: iTotalHealth = iFinalHealth;
+		case 2: iTotalHealth = iFinalHealth2;
+		case 3: iTotalHealth = iFinalHealth3;
 	}
+
+	if (!initial && (iTotalHealth >= iMaxHealth || (iHealth < iMaxHealth && iTotalHealth >= iHealth)))
+	{
+		return;
+	}
+
+	SetEntProp(tank, Prop_Data, "m_iHealth", iTotalHealth);
+	SetEntProp(tank, Prop_Data, "m_iMaxHealth", iTotalHealth);
 }
 
 void vSetTankModel(int tank)
@@ -10197,15 +10201,16 @@ void vSetTankRainbowColor(int tank)
 	}
 }
 
-void vSetTankThrowInterval(int tank)
+void vSetTankThrowInterval(int tank, float defValue = 5.0)
 {
-	if (bIsTank(tank) && g_esCache[tank].g_flThrowInterval > 0.0)
+	if (bIsTank(tank))
 	{
+		float flInterval = (g_esCache[tank].g_flThrowInterval > 0.0) ? g_esCache[tank].g_flThrowInterval : defValue;
 		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
 		{
-			SetEntPropFloat(iAbility, Prop_Send, "m_duration", g_esCache[tank].g_flThrowInterval);
-			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + g_esCache[tank].g_flThrowInterval));
+			SetEntPropFloat(iAbility, Prop_Send, "m_duration", flInterval);
+			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + flInterval));
 		}
 	}
 }
@@ -10286,7 +10291,7 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 						case true: vSpawnTank(admin, log, amount, mode);
 						case false:
 						{
-							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true)))
+							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true)))
 							{
 								vChangeTank(admin, amount, mode);
 							}
@@ -10294,12 +10299,13 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 							{
 								int iTime = GetTime();
 
-								switch (g_esPlayer[admin].g_iCooldown > iTime)
+								switch (g_esPlayer[admin].g_iCooldown > iTime && g_esPlayer[admin].g_bInitialRound == g_esGeneral.g_bNextRound)
 								{
 									case true: MT_PrintToChat(admin, "%s %t", MT_TAG3, "HumanCooldown", (g_esPlayer[admin].g_iCooldown - iTime));
 									case false:
 									{
 										g_esPlayer[admin].g_iCooldown = -1;
+										g_esPlayer[admin].g_bInitialRound = g_esGeneral.g_bNextRound;
 
 										vSetTankColor(admin, g_esGeneral.g_iChosenType);
 
@@ -10333,10 +10339,25 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 		}
 		case false:
 		{
-			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true))
+			if (g_esGeneral.g_iSpawnMode == 2 || !bIsCompetitiveMode())
 			{
-				case true: vChangeTank(admin, amount, mode);
-				case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
+				switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true))
+				{
+					case true: vChangeTank(admin, amount, mode);
+					case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
+				}
+			}
+			else if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, .real = true)))
+			{
+				vChangeTank(admin, amount, mode);
+			}
+			else
+			{
+				g_esPlayer[admin].g_iPersonalType = iClamp(iType, -1, MT_MAXTYPES);
+
+				char sTankName[33];
+				vGetTranslatedName(sTankName, sizeof sTankName, .type = g_esPlayer[admin].g_iPersonalType);
+				MT_PrintToChat(admin, "%s %t", MT_TAG2, "PersonalType", sTankName, g_esPlayer[admin].g_iPersonalType);
 			}
 		}
 	}
@@ -10420,7 +10441,7 @@ void vTankSpawn(int tank, int mode = 0)
 
 void vTriggerTank(int tank)
 {
-	if (bIsTankIdle(tank, 1) && g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[tank].g_bTriggered)
+	if (bIsTankIdle(tank, 1) && bIsCoopMode() && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[tank].g_bTriggered)
 	{
 		g_esPlayer[tank].g_bTriggered = true;
 
@@ -10758,16 +10779,19 @@ void vCacheSettings(int tank)
 
 void vCheckConfig(bool manual)
 {
+	bool bManual = manual;
 	if (FileExists(g_esGeneral.g_sSavePath, true))
 	{
 		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0] || manual)
+		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0] || bManual)
 		{
 			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, g_esGeneral.g_sSavePath);
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			vPluginStatus();
 			vResetTimers();
 			vToggleLogging();
+
+			bManual = true;
 			g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
 		}
 	}
@@ -10780,7 +10804,7 @@ void vCheckConfig(bool manual)
 			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || manual)
+				if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
 					vCustomConfig(sDifficultyConfig);
@@ -10795,7 +10819,7 @@ void vCheckConfig(bool manual)
 			if (bIsMapConfigFound(sMapConfig, sizeof sMapConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
+				if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
 					vCustomConfig(sMapConfig);
@@ -10810,7 +10834,7 @@ void vCheckConfig(bool manual)
 			if (bIsGameModeConfigFound(sModeConfig, sizeof sModeConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || manual)
+				if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
 					vCustomConfig(sModeConfig);
@@ -10825,7 +10849,7 @@ void vCheckConfig(bool manual)
 			if (bIsDayConfigFound(sDayConfig, sizeof sDayConfig))
 			{
 				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || manual)
+				if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
 					vCustomConfig(sDayConfig);
@@ -10842,14 +10866,15 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || manual)
+				if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
+
 					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 					g_esGeneral.g_iPlayerCount[0] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[0] != iCount || manual)
+				else if (g_esGeneral.g_iPlayerCount[0] != iCount || bManual)
 				{
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iPlayerCount[0] = iCount;
@@ -10865,14 +10890,15 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6] || manual)
+				if (g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
+
 					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
 					g_esGeneral.g_iPlayerCount[1] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[1] != iCount || manual)
+				else if (g_esGeneral.g_iPlayerCount[1] != iCount || bManual)
 				{
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iPlayerCount[1] = iCount;
@@ -10888,14 +10914,15 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7] || manual)
+				if (g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7] || bManual)
 				{
 					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
+
 					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
 					g_esGeneral.g_iPlayerCount[2] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[2] != iCount || manual)
+				else if (g_esGeneral.g_iPlayerCount[2] != iCount || bManual)
 				{
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iPlayerCount[2] = iCount;
@@ -12056,7 +12083,7 @@ void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iImmunityFlags = 0;
 		g_esGeneral.g_iHumanCooldown = 600;
 		g_esGeneral.g_iMasterControl = 0;
-		g_esGeneral.g_iSpawnMode = 1;
+		g_esGeneral.g_iSpawnMode = 2;
 		g_esGeneral.g_iLimitExtras = 1;
 		g_esGeneral.g_flExtrasDelay = 0.1;
 		g_esGeneral.g_iRegularAmount = 0;
@@ -12701,7 +12728,7 @@ SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] value, bool
 				g_esGeneral.g_iVomitImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2, key, "VomitImmunity", "Vomit Immunity", "Vomit_Immunity", "vomit", g_esGeneral.g_iVomitImmunity, value, 0, 1);
 				g_esGeneral.g_iHumanCooldown = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_esGeneral.g_iHumanCooldown, value, 0, 999999);
 				g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
-				g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
+				g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 4);
 				g_esGeneral.g_iLimitExtras = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "LimitExtras", "Limit Extras", "Limit_Extras", "limitex", g_esGeneral.g_iLimitExtras, value, 0, 1);
 				g_esGeneral.g_flExtrasDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "ExtrasDelay", "Extras Delay", "Extras_Delay", "exdelay", g_esGeneral.g_flExtrasDelay, value, 0.1, 999999.0);
 				g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, MT_CONFIG_SECTION_WAVES, key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 32);
@@ -13582,15 +13609,16 @@ void vPlayerSpawnFrame(DataPack pack)
 				{
 					case true:
 					{
-						switch (g_esGeneral.g_iSpawnMode)
-						{
-							case 0:
-							{
-								g_esPlayer[iPlayer].g_bNeedHealth = true;
+						g_esPlayer[iPlayer].g_bNeedHealth = true;
 
-								vTankMenu(iPlayer);
-							}
-							case 1: vMutateTank(iPlayer, iType);
+						if (g_esGeneral.g_iSpawnMode != 2)
+						{
+							vTankMenu(iPlayer);
+						}
+
+						if (g_esGeneral.g_iSpawnMode != 0 && g_esGeneral.g_iSpawnMode != 3)
+						{
+							vMutateTank(iPlayer, iType);
 						}
 					}
 					case false: vMutateTank(iPlayer, iType);
@@ -13704,6 +13732,7 @@ void vTankSpawnFrame(DataPack pack)
 
 				g_esPlayer[iTank].g_iTankHealth = GetEntProp(iTank, Prop_Data, "m_iMaxHealth");
 			}
+			case 5: vSetTankHealth(iTank, false);
 		}
 	}
 }
@@ -14809,6 +14838,7 @@ void vSetupDetours(GameData dataHandle)
 	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, dataHandle, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
 	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, dataHandle, "MTDetour_Tank::LeaveStasis");
 	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, dataHandle, "MTDetour_CAmmoDef::MaxCarry");
+	vSetupDetour(g_esGeneral.g_ddPassServerEntityFilterDetour, dataHandle, "MTDetour_PassServerEntityFilter");
 	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, dataHandle, "MTDetour_CTerrorPlayer::PreThink");
 	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, dataHandle, "MTDetour_ZombieManager::ReplaceTank");
 	vSetupDetour(g_esGeneral.g_ddRevivedDetour, dataHandle, "MTDetour_CTerrorPlayer::OnRevived");
@@ -14898,6 +14928,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddPassServerEntityFilterDetour, "MTDetour_PassServerEntityFilter", Hook_Pre, mrePassServerEntityFilterPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, toggle);
@@ -15129,7 +15160,7 @@ MRESReturn mreDoAnimationEventPre(int pThis, DHookParam hParams)
 MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 {
 	Address adSurvivor = view_as<Address>(LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32));
-	int iSurvivor = iGetEntityIndex(SDKCall(g_esGeneral.g_hSDKGetRefEHandle, adSurvivor));
+	int iSurvivor = iGetEntityIndex(iGetRefEHandle(adSurvivor));
 	if (bIsSurvivor(iSurvivor))
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 5);
@@ -15197,7 +15228,7 @@ MRESReturn mreEnterGhostStatePost(int pThis)
 	{
 		g_esPlayer[pThis].g_bKeepCurrentType = true;
 
-		if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_flForceSpawn > 0.0)
+		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
 		{
 			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -15665,6 +15696,38 @@ MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+MRESReturn mrePassServerEntityFilterPre(DHookReturn hReturn, DHookParam hParams)
+{
+	Address adParam1 = view_as<Address>(hParams.Get(1)), adParam2 = view_as<Address>(hParams.Get(2));
+	if (!adParam1 || !adParam2)
+	{
+		return MRES_Ignored;
+	}
+
+	if (adParam1 == adParam2)
+	{
+		return MRES_Ignored;
+	}
+
+	int iEntity1 = iEntHandleToEntSerial(iGetRefEHandle(adParam1)), iEntity2 = iEntHandleToEntSerial(iGetRefEHandle(adParam2));
+	if (!bIsValidEntity(iEntity1) || !bIsValidEntity(iEntity2))
+	{
+		return MRES_Ignored;
+	}
+
+	if (GetEntPropEnt(iEntity1, Prop_Data, "m_hOwnerEntity") == iEntity2)
+	{
+		return MRES_Ignored;
+	}
+
+	if (GetEntPropEnt(iEntity2, Prop_Data, "m_hOwnerEntity") == iEntity1)
+	{
+		return MRES_Ignored;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mrePreThinkPre(int pThis)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || ((g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[pThis].g_iLadderActions == 1)))
@@ -15702,10 +15765,12 @@ MRESReturn mrePreThinkPost(int pThis)
 
 MRESReturn mreReplaceTankPost(DHookParam hParams)
 {
-	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2);
+	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2),
+		iType = (g_esPlayer[iNewTank].g_iPersonalType > 0) ? g_esPlayer[iNewTank].g_iPersonalType : g_esPlayer[iOldTank].g_iTankType;
+
 	g_esPlayer[iNewTank].g_bReplaceSelf = true;
 
-	vSetTankColor(iNewTank, g_esPlayer[iOldTank].g_iTankType);
+	vSetTankColor(iNewTank, iType);
 	vCopyTankStats(iOldTank, iNewTank);
 	vTankSpawn(iNewTank, -1);
 	vResetTank(iOldTank, 0);
@@ -16522,7 +16587,7 @@ public void L4D_OnEnterGhostState(int client)
 	{
 		g_esPlayer[client].g_bKeepCurrentType = true;
 
-		if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_flForceSpawn > 0.0)
+		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
 		{
 			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -16538,9 +16603,10 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 
 public void L4D_OnReplaceTank(int tank, int newtank)
 {
+	int iType = (g_esPlayer[newtank].g_iPersonalType > 0) ? g_esPlayer[newtank].g_iPersonalType : g_esPlayer[tank].g_iTankType;
 	g_esPlayer[newtank].g_bReplaceSelf = true;
 
-	vSetTankColor(newtank, g_esPlayer[tank].g_iTankType);
+	vSetTankColor(newtank, iType);
 	vCopyTankStats(tank, newtank);
 	vTankSpawn(newtank, -1);
 	vResetTank(tank, 0);
@@ -16851,6 +16917,33 @@ bool bHasCoreAdminAccess(int admin, int type = 0)
 	return true;
 }
 
+bool bIsCompetitiveMode()
+{
+	return bIsVersusMode() || bIsScavengeMode();
+}
+
+bool bIsCompetitiveModeRound(int type)
+{
+	if (!bIsCompetitiveMode())
+	{
+		return false;
+	}
+
+	switch (type)
+	{
+		case 0: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes == null;
+		case 1: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null;
+		case 2: return g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null && g_esGeneral.g_alCompTypes.Length > 0;
+	}
+
+	return false;
+}
+
+bool bIsCoopMode()
+{
+	return g_esGeneral.g_iCurrentMode == 1;
+}
+
 bool bIsCoreAdminImmune(int survivor, int tank)
 {
 	if (!bIsHumanSurvivor(survivor))
@@ -17108,6 +17201,11 @@ bool bIsSafeFalling(int survivor)
 	return false;
 }
 
+bool bIsScavengeMode()
+{
+	return g_esGeneral.g_iCurrentMode == 8;
+}
+
 bool bIsSpawnEnabled(int type)
 {
 	if ((g_esGeneral.g_iSpawnEnabled <= 0 && g_esTank[type].g_iSpawnEnabled <= 0) || (g_esGeneral.g_iSpawnEnabled == 1 && g_esTank[type].g_iSpawnEnabled == 0))
@@ -17116,6 +17214,11 @@ bool bIsSpawnEnabled(int type)
 	}
 
 	return (g_esGeneral.g_iSpawnEnabled <= 0 && g_esTank[type].g_iSpawnEnabled == 1) || (g_esGeneral.g_iSpawnEnabled == 1 && g_esTank[type].g_iSpawnEnabled != 0);
+}
+
+bool bIsSurvivalMode()
+{
+	return g_esGeneral.g_iCurrentMode == 4;
 }
 
 bool bIsTankEnabled(int type)
@@ -17206,21 +17309,9 @@ bool bIsTypeAvailable(int type, int tank = 0)
 	return g_esTank[type].g_iAbilityCount == -1 || (g_esTank[type].g_iAbilityCount > 0 && iPluginCount > 0);
 }
 
-bool bIsVersusModeRound(int type)
+bool bIsVersusMode()
 {
-	if (!(g_esGeneral.g_iCurrentMode == 2 || g_esGeneral.g_iCurrentMode == 8))
-	{
-		return false;
-	}
-
-	switch (type)
-	{
-		case 0: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes == null;
-		case 1: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null;
-		case 2: return g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null && g_esGeneral.g_alCompTypes.Length > 0;
-	}
-
-	return false;
+	return g_esGeneral.g_iCurrentMode == 2;
 }
 
 bool bRespawnSurvivor(int survivor, bool restore)
@@ -17325,7 +17416,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	int iMin = (min >= 0) ? min : g_esGeneral.g_iMinType,
 		iMax = (max >= 0) ? max : g_esGeneral.g_iMaxType,
 		iTankTypes[MT_MAXTYPES + 1];
-	if (iMax < iMin || (g_esGeneral.g_iCurrentMode == 4 && g_esGeneral.g_iSurvivalBlock != 2))
+	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;
 	}
@@ -17642,6 +17733,17 @@ int iGetRealType(int type, int exclude = 0, int tank = 0, int min = -1, int max 
 	}
 
 	return type;
+}
+
+int iGetRefEHandle(Address entityHandle)
+{
+	if (!entityHandle)
+	{
+		return INVALID_EHANDLE_INDEX;
+	}
+
+	Address adRefHandle = SDKCall(g_esGeneral.g_hSDKGetRefEHandle, entityHandle);
+	return LoadFromAddress(adRefHandle, NumberType_Int32);
 }
 
 int iGetTankCount(bool manual, bool include = false)

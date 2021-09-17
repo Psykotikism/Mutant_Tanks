@@ -484,7 +484,7 @@
 
 	"Kill9"
 	{
-		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!"
+		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за{olive} {1}!"
 	}
 
 	"Kill10"
@@ -534,7 +534,7 @@
 
 	"Killer9"
 	{
-		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!{yellow} Наибольший урон:{mint} {3}"
+		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за{olive} {1}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer10"
@@ -615,6 +615,11 @@
 	"ParticleVisualOff"
 	{
 		"ru"			"Отображать эффект частиц: ВЫКЛ"
+	}
+
+	"PersonalType"
+	{
+		"ru"			"Вы появитесь в качестве:{olive} {1}{yellow} (Танк #{2}){default} когда вы получите контроль над{mint} Танком{default}."
 	}
 
 	"PluginDisabled"
@@ -714,7 +719,7 @@
 
 	"RewardNone"
 	{
-		"ru"			"Вы{default} не нанесли достаточного урона {olive} '{1}'{default} для какой-либо награды."
+		"ru"			"Вы{default} не нанесли достаточного урона{olive} '{1}'{default} для какой-либо награды."
 	}
 
 	"RewardReceived"
@@ -869,7 +874,7 @@
 
 	"Acid2"
 	{
-		"ru"			"{mint}Камень брошенный {olive}{1}{mint} образовал лужу кислоты."
+		"ru"			"{mint}Камень брошенный{olive} {1}{mint} образовал лужу кислоты."
 	}
 
 	"AcidAmmo"
@@ -974,7 +979,7 @@
 
 	"Ammo"
 	{
-		"ru"			"{olive}{1}{mint} забрал все {mint}боеприпасы выжившего{olive} {2}!"
+		"ru"			"{olive}{1}{mint} забрал все{mint} боеприпасы выжившего{olive} {2}!"
 	}
 
 	"AmmoAmmo"
@@ -1084,7 +1089,7 @@
 
 	"Bomb2"
 	{
-		"ru"			"{mint}Камень брошенный {olive}{1}{mint} произвёл взрыв."
+		"ru"			"{mint}Камень брошенный{olive} {1}{mint} произвёл взрыв."
 	}
 
 	"BombAmmo"
@@ -1194,7 +1199,7 @@
 
 	"Car2"
 	{
-		"ru"			"Автомобильный дождь {olive}{1}{mint} закончился!"
+		"ru"			"Автомобильный дождь{olive} {1}{mint} закончился!"
 	}
 
 	"CarAmmo"
@@ -1409,12 +1414,12 @@
 
 	"Drop"
 	{
-		"ru"			"{mint}Из {olive}{1}{mint} выпало своё огнестрельное оружие!"
+		"ru"			"{mint}Из{olive} {1}{mint} выпало своё огнестрельное оружие!"
 	}
 
 	"Drop2"
 	{
-		"ru"			"{mint}Из {olive}{1}{mint} выпало своё холодное оружие!"
+		"ru"			"{mint}Из{olive} {1}{mint} выпало своё холодное оружие!"
 	}
 
 	"DropDetails"
@@ -1669,7 +1674,7 @@
 
 	"Fast2"
 	{
-		"ru"			"Особая скорость {olive}{1}{mint} отключена!"
+		"ru"			"Особая скорость{olive} {1}{mint} отключена!"
 	}
 
 	"FastAmmo"
@@ -1724,7 +1729,7 @@
 
 	"Fire2"
 	{
-		"ru"			"{mint}Камень брошенный {olive}{1}{mint} создал огонь."
+		"ru"			"{mint}Камень брошенный{olive} {1}{mint} создал огонь."
 	}
 
 	"FireAmmo"
@@ -2084,7 +2089,7 @@
 
 	"Gravity2"
 	{
-		"ru"			"Гравитация {olive}{1}{mint} вернулась в норму!"
+		"ru"			"Гравитация{olive} {1}{mint} вернулась в норму!"
 	}
 
 	"Gravity3"
@@ -2094,7 +2099,7 @@
 
 	"Gravity4"
 	{
-		"ru"			"Гравитационное притяжение {olive}{1}{mint} закончилось!"
+		"ru"			"Гравитационное притяжение{olive} {1}{mint} закончилось!"
 	}
 
 	"GravityAmmo"
@@ -2489,7 +2494,7 @@
 
 	"Invert2"
 	{
-		"ru"			"Клавиши {olive}{1}{mint} больше не инвертированы!"
+		"ru"			"Клавиши{olive} {1}{mint} больше не инвертированы!"
 	}
 
 	"InvertAmmo"
@@ -2859,7 +2864,7 @@
 
 	"Lightning2"
 	{
-		"ru"			"Грозовой шторм {olive}{1}{mint} закончился!"
+		"ru"			"Грозовой шторм{olive} {1}{mint} закончился!"
 	}
 
 	"LightningAmmo"
@@ -2979,7 +2984,7 @@
 
 	"Meteor2"
 	{
-		"ru"			"{mint}Метеоритный дождь {olive}{1}{mint} закончился!"
+		"ru"			"{mint}Метеоритный дождь{olive} {1}{mint} закончился!"
 	}
 
 	"MeteorAmmo"
@@ -3134,7 +3139,7 @@
 
 	"Nullify2"
 	{
-		"ru"			"{mint}Урон {olive}{1}{mint} больше не аннулирован!"
+		"ru"			"{mint}Урон{olive} {1}{mint} больше не аннулирован!"
 	}
 
 	"NullifyAmmo"
@@ -3184,12 +3189,12 @@
 
 	"Omni"
 	{
-		"ru"			"{mint}Омни-способность {olive}{1}{mint} активирована!"
+		"ru"			"{mint}Омни-способность{olive} {1}{mint} активирована!"
 	}
 
 	"Omni2"
 	{
-		"ru"			"{mint}Омни-способность {olive}{1}{mint} отключена!"
+		"ru"			"{mint}Омни-способность{olive} {1}{mint} отключена!"
 	}
 
 	"OmniAmmo"
@@ -3519,7 +3524,7 @@
 
 	"Recoil2"
 	{
-		"ru"			"{mint}Оружие {olive}{1}{mint} больше не имеет сильной отдачи!"
+		"ru"			"{mint}Оружие{olive} {1}{mint} больше не имеет сильной отдачи!"
 	}
 
 	"RecoilAmmo"
@@ -3719,7 +3724,7 @@
 
 	"Rock2"
 	{
-		"ru"			"{mint}Камнепад {olive}{1}{mint} закончился!"
+		"ru"			"{mint}Камнепад{olive} {1}{mint} закончился!"
 	}
 
 	"RockAmmo"
@@ -3819,7 +3824,7 @@
 
 	"Shake"
 	{
-		"ru"			"{olive}{2}{mint} дрожит из-за {olive}{1}{mint}!"
+		"ru"			"{olive}{2}{mint} дрожит из-за{olive} {1}{mint}!"
 	}
 
 	"Shake2"
@@ -3874,12 +3879,12 @@
 
 	"Shield"
 	{
-		"ru"			"{mint}Щит {olive}{1}{yellow} активирован{mint}!"
+		"ru"			"{mint}Щит{olive} {1}{yellow} активирован{mint}!"
 	}
 
 	"Shield2"
 	{
-		"ru"			"{mint}Щит {olive}{1}{yellow} отключен{mint}!"
+		"ru"			"{mint}Щит{olive} {1}{yellow} отключен{mint}!"
 	}
 
 	"ShieldAmmo"
@@ -4369,7 +4374,7 @@
 
 	"Track"
 	{
-		"ru"			"{mint}Камень брошенный {olive}{1}{yellow} наводится{mint} на выживших!"
+		"ru"			"{mint}Камень брошенный{olive} {1}{yellow} наводится{mint} на выживших!"
 	}
 
 	"TrackAmmo"
@@ -4424,7 +4429,7 @@
 
 	"Ultimate3"
 	{
-		"ru"			"Вы должны нанести {yellow}{1}{mint}/{yellow}{2}{mint} урона выжившим, чтобы разблокировать режим «Ультимэйт»."
+		"ru"			"Вы должны нанести{yellow} {1}{mint}/{yellow}{2}{mint} урона выжившим, чтобы разблокировать режим «Ультимэйт»."
 	}
 
 	"Ultimate4"
@@ -4484,7 +4489,7 @@
 
 	"Undead2"
 	{
-		"ru"			"{mint}Здоровье {olive}{1}{mint} вернулось к полному!"
+		"ru"			"{mint}Здоровье{olive} {1}{mint} вернулось к полному!"
 	}
 
 	"UndeadAmmo"
@@ -4559,7 +4564,7 @@
 
 	"Vision2"
 	{
-		"ru"			"{mint}Поле зрения {olive}{1}{mint} изменено обратно на{yellow} {2}{mint}!"
+		"ru"			"{mint}Поле зрения{olive} {1}{mint} изменено обратно на{yellow} {2}{mint}!"
 	}
 
 	"VisionAmmo"
@@ -4879,7 +4884,7 @@
 
 	"Zombie2"
 	{
-		"ru"			"{olive}{1}{mint} создал {yellow} зомби{mint}!"
+		"ru"			"{olive}{1}{mint} создал{yellow} зомби{mint}!"
 	}
 
 	"ZombieAmmo"

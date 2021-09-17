@@ -1994,6 +1994,7 @@
 		"Human Support"
 		{
 			// Human-controlled Mutant Tanks must wait this long before changing their current Mutant Tank type.
+			// Note: Cooldowns are only valid for the current round that they are activated on.
 			// Note: Players with the "mt_adminversus" override will be immune to this cooldown.
 			// --
 			// Minimum: 0
@@ -2006,7 +2007,7 @@
 			// "forever" - 999999 seconds
 			"Human Cooldown"			"600"
 
-			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank" command to switch their current Mutant Tank type.
+			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank"/"sm_mtank" command to switch their current Mutant Tank type.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -2016,9 +2017,12 @@
 			// The mode of how human-controlled Tanks spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: Spawn as a default Tank with access to the "sm_mutanttank" command.
-			// 1: Spawn as a Mutant Tank.
-			"Spawn Mode"				"1"
+			// 0: Spawn as a default Tank with access to the "sm_mutanttank"/"sm_mtank" command.
+			// 1: Spawn as a Mutant Tank with access to the "sm_mutanttank"/"sm_mtank" command.
+			// 2: Spawn as a Mutant Tank without access to the "sm_mutanttank"/"sm_mtank" command.
+			// 3: Same as 0, but the "sm_mutanttank"/"sm_mtank" command is available at anytime.
+			// 4: Same as 1, but the "sm_mutanttank"/"sm_mtank" command is available at anytime.
+			"Spawn Mode"				"2"
 		}
 		"Waves"
 		{
@@ -20696,7 +20700,7 @@
 		"Administration"
 		{
 			// This is the Mutant Tank type that the admin will spawn with.
-			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "1", the admin will be prompted with a menu asking if the admin wants to use this type.
+			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "2", the admin will be prompted with a menu asking if the admin wants to use this type.
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type that will be favorited.
