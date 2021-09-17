@@ -459,6 +459,31 @@
 			}
 
 			/**
+			 * PassServerEntityFilter(IHandleEntity const*, IHandleEntity const*)
+			 *
+			 * Note: Detouring as a pre-hook for checking entity collision.
+			 * Note: Detouring as a post-hook for checking entity collision.
+			 **/
+			"MTDetour_PassServerEntityFilter"
+			{
+				"signature"	"PassServerEntityFilter"
+				"callconv"	"cdecl"
+				"return"	"bool"
+				"this"		"ignore"
+				"arguments"
+				{
+					"entity1"
+					{
+						"type"		"int"
+					}
+					"entity2"
+					{
+						"type"		"int"
+					}
+				}
+			}
+
+			/**
 			 * Tank::EnterStasis()
 			 *
 			 * Note: Detouring as a post-hook for checking when a Tank enters stasis mode.
@@ -1796,6 +1821,8 @@
 			/**
 			 * CTerrorGameRules::IsVersusMode()
 			 *
+			 * Note: (Windows) This function is in-lined with the "CTerrorGameRules::HasPlayerControlledZombies" function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "teamversus" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2225,6 +2252,25 @@
 				"linux"		"@_ZN9KeyValues9GetStringEPKcS1_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x2A\x2A\x2A\x2A\x2A\x56\x57\x6A\x2A\x53\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? 53 8B 9C ? ? ? ? ? 56 57 6A ? 53 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 0F ? ? ? 83 ? ? 83 ? ? 0F */
+			}
+
+			/**
+			 * PassServerEntityFilter(IHandleEntity const*, IHandleEntity const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "RagdollImpact" string.
+			 * 2. One of the functions that references that string should be "CBaseEntity::FireBullets".
+			 * 3. Click on the first function call below the string to go to "Pickup_ForcePlayerToDropThisObject".
+			 * 4. Check the references for "Pickup_ForcePlayerToDropThisObject".
+			 * 5. One of the functions that calls "Pickup_ForcePlayerToDropThisObject" should be "CTraceFilterMelee::ShouldHitEntity".
+			 * 6. The second function call in "CTraceFilterMelee::ShouldHitEntity" should be this function.
+			 **/
+			"PassServerEntityFilter"
+			{
+				"library"	"server"
+				"linux"		"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xB0\x2A\x5F\xC3\x56"
+						/* ? ? ? ? ? ? ? 75 ? B0 ? 5F C3 56 */
 			}
 
 			/**
@@ -4152,6 +4198,25 @@
 				"linux"		"@_ZN9KeyValues9GetStringEPKcS1_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x6A\x2A\x53\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x48\x83\x2A\x2A\x0F\x87\x2A\x2A\x2A\x2A\xFF\x24\x2A\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x68"
 						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 57 6A ? 53 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 0F ? ? ? 48 83 ? ? 0F 87 ? ? ? ? FF 24 ? ? ? ? ? D9 ? ? 83 ? ? DD ? ? 68 */
+			}
+
+			/**
+			 * PassServerEntityFilter(IHandleEntity const*, IHandleEntity const*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "RagdollImpact" string.
+			 * 2. One of the functions that references that string should be "CBaseEntity::FireBullets".
+			 * 3. Click on the first function call below the string to go to "Pickup_ForcePlayerToDropThisObject".
+			 * 4. Check the references for "Pickup_ForcePlayerToDropThisObject".
+			 * 5. One of the functions that calls "Pickup_ForcePlayerToDropThisObject" should be "CTraceFilterMelee::ShouldHitEntity".
+			 * 6. The second function call in "CTraceFilterMelee::ShouldHitEntity" should be this function.
+			 **/
+			"PassServerEntityFilter"
+			{
+				"library"	"server"
+				"linux"		"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\xB0\x2A\x5F\x5D\xC3\x56"
+						/* ? ? ? ? ? ? ? 85 ? 75 ? B0 ? 5F 5D C3 56 */
 			}
 
 			/**

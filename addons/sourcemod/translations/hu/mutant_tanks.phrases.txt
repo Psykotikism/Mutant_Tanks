@@ -474,7 +474,7 @@
 
 	"Kill7"
 	{
-		"hu"			"{mint}{2}{default} elérte a pusztulás {olive} {1}{default} keze által!"
+		"hu"			"{mint}{2}{default} elérte a pusztulás{olive} {1}{default} keze által!"
 	}
 
 	"Kill8"
@@ -524,7 +524,7 @@
 
 	"Killer7"
 	{
-		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
+		"hu"			"{olive}{2}{default} elérte a pusztulás{mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
@@ -615,6 +615,11 @@
 	"ParticleVisualOff"
 	{
 		"hu"			"Vizuális Részecske Effekt: KI"
+	}
+
+	"PersonalType"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}){default} leszel miután átveszed a{mint} Tank{default} irányítását."
 	}
 
 	"PluginDisabled"
@@ -2654,7 +2659,7 @@
 
 	"Kamikaze"
 	{
-		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
+		"hu"			"{olive}{1}{mint} kamikazét adott{olive} {2}{mint}-nak!"
 	}
 
 	"KamikazeDetails"
@@ -4424,7 +4429,7 @@
 
 	"Ultimate3"
 	{
-		"hu"			"Ennyi sebzést {yellow}{1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
+		"hu"			"Ennyi sebzést{yellow} {1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
 	}
 
 	"Ultimate4"
@@ -4879,7 +4884,7 @@
 
 	"Zombie2"
 	{
-		"hu"			"{olive}{1}{mint} zombikat {yellow}hozott létre{mint}!"
+		"hu"			"{olive}{1}{mint} zombikat{yellow} hozott létre{mint}!"
 	}
 
 	"ZombieAmmo"

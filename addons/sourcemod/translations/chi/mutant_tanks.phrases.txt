@@ -239,7 +239,7 @@
 
 	"Arrival6"
 	{
-		"chi"			"都给我准备好！ {olive}{1}{default} 来了！"
+		"chi"			"都给我准备好！{olive} {1}{default} 来了！"
 	}
 
 	"Arrival7"
@@ -249,7 +249,7 @@
 
 	"Arrival8"
 	{
-		"chi"			"糟糕！ {olive}{1}{default} 正在靠近！"
+		"chi"			"糟糕！{olive} {1}{default} 正在靠近！"
 	}
 
 	"Arrival9"
@@ -299,7 +299,7 @@
 
 	"Assist8"
 	{
-		"chi"			"哎呀！ {olive}{1}{default} 死了！{yellow} MVP：{mint} {2}"
+		"chi"			"哎呀！{olive} {1}{default} 死了！{yellow} MVP：{mint} {2}"
 	}
 
 	"Assist9"
@@ -384,7 +384,7 @@
 
 	"Death8"
 	{
-		"chi"			"哎呀！ {olive}{1}{default} 死了！"
+		"chi"			"哎呀！{olive} {1}{default} 死了！"
 	}
 
 	"Death9"
@@ -479,7 +479,7 @@
 
 	"Kill8"
 	{
-		"chi"			"哎呀！{mint} {2} {default}死了， 这要感谢{olive} {1}{default}！"
+		"chi"			"哎呀！{mint} {2}{default} 死了， 这要感谢{olive} {1}{default}！"
 	}
 
 	"Kill9"
@@ -615,6 +615,11 @@
 	"ParticleVisualOff"
 	{
 		"chi"			"粒子特效： 关"
+	}
+
+	"PersonalType"
+	{
+		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (Tank #{2}){default} 的身份出现。"
 	}
 
 	"PluginDisabled"

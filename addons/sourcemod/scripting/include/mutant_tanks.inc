@@ -21,7 +21,7 @@
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.89"
+#define MT_VERSION "8.90"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 public SharedPlugin __pl_mutanttanks =
@@ -157,6 +157,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
 #define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+#define INVALID_EHANDLE_INDEX 0xFFFFFFFF
 #define STATICPROP_EHANDLE_MASK 0x40000000
 
 // Forwards
@@ -1946,6 +1947,11 @@ stock bool bIsEntityGrounded(int entity)
 	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
 }
 
+stock bool bIsEntityStaticProp(int ref)
+{
+	return !ref || (iGetEntitySerial(ref) == iGetEntitySerial(STATICPROP_EHANDLE_MASK));
+}
+
 stock bool bIsGunWeapon(int survivor)
 {
 	int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
@@ -2658,6 +2664,22 @@ stock int iClamp(int value, int min, int max)
 	return value;
 }
 
+stock int iEntHandleToEntSerial(int ref)
+{
+	if (bIsEntityStaticProp(ref))
+	{
+		return -1;
+	}
+
+	int iEntity = iGetEntityIndex(ref);
+	if (!bIsValidEntity(iEntity))
+	{
+		return -1;
+	}
+
+	return iEntity;
+}
+
 stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
 {
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
@@ -2715,15 +2737,14 @@ stock int iGetClampedValue(const char[] key, const char[] setting1, const char[]
 	return curVal;
 }
 
-stock bool bIsEntityStaticProp(Address refHandle)
+stock int iGetEntityIndex(int ref)
 {
-	return (iGetEntityIndex(refHandle) == (STATICPROP_EHANDLE_MASK & ENT_ENTRY_MASK)) != 0;
+	return (ref & ENT_ENTRY_MASK);
 }
 
-stock int iGetEntityIndex(Address refHandle)
+stock int iGetEntitySerial(int ref)
 {
-	int iMaskIndex = LoadFromAddress(refHandle, NumberType_Int32);
-	return (iMaskIndex & ENT_ENTRY_MASK);
+	return (ref >> NUM_ENT_ENTRY_BITS);
 }
 
 stock int iGetHumanCount(bool infected = false)

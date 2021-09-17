@@ -1,5 +1,43 @@
 # Changelog
 
+## Version 8.90 (TBA)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed props not deleting themselves when Tanks change their Mutant Tank types.
+- Fixed the Tank's health not updating in some scenarios. (Thanks to `saberQAQ` for reporting!)
+- Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types.
+- Fixed custom configs not refreshing when the main config file is refreshed.
+
+#### Commands
+- Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
+
+### Changes
+
+#### Commands
+- Added the `sm_mtank` alias for the `sm_mutanttank` command.
+
+#### Game Data
+- Added detour setup and signatures for `PassServerEntityFilter`. (Thanks to `epzminion` for the help!)
+
+#### Settings
+- Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
+### Files
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+
 ## Version 8.89 (September 11, 2021)
 
 ### Bug Fixes
@@ -59,7 +97,7 @@
 - Removed the `Allow Developer` setting. (No longer used.)
 
 #### Abilities
-- Heal: Added the `Heal Glow` setting. (Requested by `ddd123`)
+- Heal: Added the `Heal Glow` setting. (Requested by `ddd123`.)
 
 #### Translations
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
@@ -246,7 +284,7 @@
 	- `Teammate Limit` (Requested by `Mi.Cura`.)
 	- `Light Color Visual` (Thanks to `DonProof` for the idea!)
 - Added support for `8+` players for the `Death Details` setting's messages.
-- Added a fourth parameter to all of the `Reward` system's settings. (Requested by Mi.Cura.)
+- Added a fourth parameter to all of the `Reward` system's settings. (Requested by `Mi.Cura`.)
 - Removed the `Reward Priority` setting. (No longer used.)
 - Added the `Colors` section under the `Plugin Settings` section which allows to create color presets.
 - The following settings can now accept color presets from the new `Colors` section:
