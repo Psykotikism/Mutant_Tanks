@@ -2079,7 +2079,7 @@
 
 	"Gravity"
 	{
-		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
+		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}-re/ra!"
 	}
 
 	"Gravity2"
@@ -4879,7 +4879,7 @@
 
 	"Zombie2"
 	{
-		"hu"			"{olive}{1}{mint} zombikat {yellow} hozott létre{mint}!"
+		"hu"			"{olive}{1}{mint} zombikat {yellow}hozott létre{mint}!"
 	}
 
 	"ZombieAmmo"
