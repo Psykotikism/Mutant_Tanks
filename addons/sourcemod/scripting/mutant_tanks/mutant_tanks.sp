@@ -9244,6 +9244,7 @@ void vMutateTank(int tank, int type)
 			vSetTankModel(tank);
 			vSetTankHealth(tank);
 			vResetTankSpeed(tank, false);
+			vSetTankAttackInterval(tank);
 			vSetTankThrowInterval(tank);
 
 			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
@@ -13708,6 +13709,7 @@ void vTankSpawnFrame(DataPack pack)
 			vParticleEffects(iTank);
 			vResetTankSpeed(iTank, false);
 			vSetTankProps(iTank);
+			vSetTankAttackInterval(iTank);
 			vSetTankThrowInterval(iTank);
 
 			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
