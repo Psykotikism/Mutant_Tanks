@@ -2,6 +2,12 @@
 {
 	"#default"
 	{
+		"#supported"
+		{
+			"game"		"left4dead"
+			"game"		"left4dead2"
+		}
+
 		"Functions"
 		{
 			/**
@@ -164,6 +170,39 @@
 					"velocity"
 					{
 						"type"		"vectorptr"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * Note: Detouring as a pre-hook for patching weapon switches to secondary slots per player.
+			 * Note: Detouring as a post-hook for removing patches for weapon switches to secondary slots.
+			 **/
+			"MTDetour_CTerrorGun::Use"
+			{
+				"signature"	"CTerrorGun::Use"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+					"a2"
+					{
+						"type"		"cbaseentity"
+					}
+					"useType"
+					{
+						"type"		"int"
+					}
+					"a4"
+					{
+						"type"		"float"
 					}
 				}
 			}
@@ -388,7 +427,7 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"a2"
+					"explosion"
 					{
 						"type"		"bool"
 					}
@@ -456,6 +495,39 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+			}
+
+			/**
+			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * Note: Detouring as a pre-hook for patching weapon switches to secondary slots per player.
+			 * Note: Detouring as a post-hook for removing patches for weapon switches to secondary slots.
+			 **/
+			"MTDetour_CWeaponSpawn::Use"
+			{
+				"signature"	"CWeaponSpawn::Use"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+					"a2"
+					{
+						"type"		"cbaseentity"
+					}
+					"useType"
+					{
+						"type"		"int"
+					}
+					"a4"
+					{
+						"type"		"float"
+					}
+				}
 			}
 
 			/**
@@ -590,6 +662,16 @@
 			}
 
 			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Uses the signature for "CTerrorGun::EquipSecondWeapon" to find the address.
+			 **/
+			"EquipSecondWeaponStart"
+			{
+				"signature"	"CTerrorGun::EquipSecondWeapon"
+			}
+
+			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
 			 * Note: Uses the signature for "CTerrorPlayer::Event_Killed" to find the address.
@@ -707,8 +789,8 @@
 			 **/
 			"OS"
 			{
-				"windows"	"0"
 				"linux"		"1"
+				"windows"	"0"
 			}
 
 			/**
@@ -719,8 +801,8 @@
 			 **/
 			"Action<Tank>::FirstContainedResponder"
 			{
-				"windows"	"1"
 				"linux"		"2"
+				"windows"	"1"
 			}
 
 			/**
@@ -731,8 +813,8 @@
 			 **/
 			"CBaseEntity::GetRefEHandle"
 			{
-				"windows"	"2"
 				"linux"		"3"
+				"windows"	"2"
 			}
 		}
 
@@ -914,16 +996,15 @@
 			 **/
 			"CDirector"
 			{
-				"windows"
-				{
-					"signature"	"SurvivorLegsMeetRescueVehicleArrival::Update"
-					"read"		"9"
-				}
 				"linux"
 				{
 					"signature"	"TheDirector"
 				}
-				"read"		"0"
+				"windows"
+				{
+					"signature"	"SurvivorLegsMeetRescueVehicleArrival::Update"
+					"offset"	"9"
+				}
 			}
 
 			/**
@@ -937,7 +1018,7 @@
 				"signature"	"CTerrorGameMovement::DoJump"
 				"windows"
 				{
-					"read"		"174"
+					"offset"	"174"
 				}
 			}
 
@@ -975,8 +1056,8 @@
 			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
-				"windows"	"300"
 				"linux"		"301"
+				"windows"	"300"
 			}
 
 			/**
@@ -997,8 +1078,8 @@
 			 **/
 			"CTankClaw::GroundPound::Check"
 			{
-				"windows"	"761" // start at 74 and patch 9 bytes with NOPs (0x90)
 				"linux"		"1043" // start at E8 and patch 7 bytes with NOPs (0x90)
+				"windows"	"761" // start at 74 and patch 9 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1013,8 +1094,8 @@
 			 **/
 			"CTankClaw::SweepFist::Check1"
 			{
-				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"1051" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1029,8 +1110,8 @@
 			 **/
 			"CTankClaw::SweepFist::Check2"
 			{
-				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1053,8 +1134,65 @@
 			 **/
 			"CTankRock::OnRelease::SoundLoop"
 			{
-				"windows"	"117" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"182" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"117" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CTerrorGun::Deploy" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 * 4. The call instruction below that should be the start of the "CTerrorGun::Deploy" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::Deploy"
+			{
+				"linux"		"332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"425" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CTerrorGun::Holster" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::Holster"
+			{
+				"linux"		"297" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"403" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
+			{
+				"linux"		"316" // start at 89 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"417" // start at 56 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
@@ -1065,8 +1203,8 @@
 			 **/
 			"CTerrorPlayer::Deafen"
 			{
-				"windows"	"491"
 				"linux"		"494"
+				"windows"	"491"
 			}
 
 			/**
@@ -1080,8 +1218,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Attacker"
 			{
-				"windows"	"40"
 				"linux"		"40"
+				"windows"	"40"
 			}
 
 			/**
@@ -1095,8 +1233,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1110,8 +1248,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1126,8 +1264,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1142,8 +1280,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				"windows"	"5502" // start at D9 and patch 2 bytes with EB ??
 				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5502" // start at D9 and patch 2 bytes with EB ??
 			}
 
 			/**
@@ -1157,8 +1295,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"windows"	"5578" // start at 8B and patch 2 bytes with EB ??
 				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5578" // start at 8B and patch 2 bytes with EB ??
 			}
 
 			/**
@@ -1172,8 +1310,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1194,8 +1332,8 @@
 			 **/
 			"CTerrorPlayer::GetFlowDistance::m_flow"
 			{
-				"windows"	"340"
 				"linux"		"348"
+				"windows"	"340"
 			}
 
 			/**
@@ -1206,8 +1344,8 @@
 			 **/
 			"CTerrorPlayer::GetLastKnownArea"
 			{
-				"windows"	"309"
 				"linux"		"310"
+				"windows"	"309"
 			}
 
 			/**
@@ -1230,8 +1368,8 @@
 			 **/
 			"CTerrorPlayer::OnFalling::Scream"
 			{
-				"windows"	"611" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"611" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
@@ -1245,8 +1383,8 @@
 			 **/
 			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
 			{
-				"windows"	"41" // start at FF and patch 2 bytes with NOPs (0x90)
 				"linux"		"61" // start at 8B and patch 11 bytes with NOPs (0x90)
+				"windows"	"41" // start at FF and patch 2 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1260,8 +1398,8 @@
 			 **/
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
 			{
-				"windows"	"39" // start at 75 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 				"linux"		"73" // start at 74 and patch 2 bytes with NOPs (0x90)
+				"windows"	"39" // start at 75 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 			}
 
 			/**
@@ -1279,8 +1417,8 @@
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
-				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
 				"linux"		"2247" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -1294,8 +1432,8 @@
 			 **/
 			"CTerrorPlayer::PreThink::SafeDropLogic"
 			{
-				"windows"	"470" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"161" // start at 09 and patch 1 byte with CALL (0xFF)
+				"windows"	"470" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
 			/**
@@ -1309,8 +1447,8 @@
 			 **/
 			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
-				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 
 			/**
@@ -1330,8 +1468,8 @@
 			 **/
 			"InfectedExecAction::OnInjured::Requirement"
 			{
-				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
+				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 			}
 
 			/**
@@ -1345,8 +1483,8 @@
 			 **/
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
-				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
+				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
 			/**
@@ -1407,8 +1545,8 @@
 			 **/
 			"Tank::GetIntentionInterface"
 			{
-				"windows"	"11924"
 				"linux"		"11940"
+				"windows"	"11924"
 			}
 
 			/**
@@ -1419,8 +1557,8 @@
 			 **/
 			"TankIdle::GetName"
 			{
-				"windows"	"35"
 				"linux"		"36"
+				"windows"	"35"
 			}
 
 			/**
@@ -1438,8 +1576,8 @@
 			 **/
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
-				"windows"	"300"
 				"linux"		"304"
+				"windows"	"300"
 			}
 		}
 
@@ -1836,6 +1974,43 @@
 			}
 
 			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Player.PickupWeapon" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorGun" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::EquipSecondWeapon"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun17EquipSecondWeaponEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x8D\x9E\x2A\x2A\x2A\x2A\x74\x2A\x5E"
+						/* ? ? ? ? ? ? ? 80 BE ? ? ? ? ? 8D 9E ? ? ? ? 74 ? 5E */
+			}
+
+			/**
+			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorGun" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::Use"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun3UseEP11CBaseEntityS1_8USE_TYPEf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x8B\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+						/* ? ? ? ? ? ? ? ? ? 85 ? 8B ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
@@ -2219,6 +2394,27 @@
 				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
+			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "spawner_give_item" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3b. Search for "CWeaponSpawn::`vftable'" to jump to the "CWeaponSpawn" vtable.
+			 * 4b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5b. Look for the target function in the Windows binary.
+			 **/
+			"CWeaponSpawn::Use"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CWeaponSpawn3UseEP11CBaseEntityS1_8USE_TYPEf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x8B\x2A\x89\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? ? ? ? 85 ? 8B ? 89 ? ? ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B */
 			}
 
 			/**
@@ -2635,16 +2831,15 @@
 			 **/
 			"CDirector"
 			{
-				"windows"
-				{
-					"signature"	"CDirectorMusicBanks::OnRoundStart"
-					"read"		"12"
-				}
 				"linux"
 				{
 					"signature"	"TheDirector"
 				}
-				"read"		"0"
+				"windows"
+				{
+					"signature"	"CDirectorMusicBanks::OnRoundStart"
+					"offset"	"12"
+				}
 			}
 
 			/**
@@ -2654,13 +2849,13 @@
 			"DoJumpValueRead"
 			{
 				"signature"	"CTerrorGameMovement::DoJump"
-				"windows"
-				{
-					"read"		"86"
-				}
 				"linux"
 				{
-					"read"		"671"
+					"offset"	"671"
+				}
+				"windows"
+				{
+					"offset"	"86"
 				}
 			}
 		}
@@ -2675,8 +2870,8 @@
 			 **/
 			"CBaseBackpackItem::GetUseAction"
 			{
-				"windows"	"451"
 				"linux"		"453"
+				"windows"	"451"
 			}
 
 			/**
@@ -2687,8 +2882,8 @@
 			 **/
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
-				"windows"	"323"
 				"linux"		"324"
+				"windows"	"323"
 			}
 
 			/**
@@ -2699,8 +2894,8 @@
 			 **/
 			"CBaseEntity::IsInStasis"
 			{
-				"windows"	"39"
 				"linux"		"40"
+				"windows"	"39"
 			}
 
 			/**
@@ -2722,8 +2917,8 @@
 			 **/
 			"CTankClaw::GroundPound::Check"
 			{
-				"windows"	"923" // start at 74 and patch 8 bytes with NOPs (0x90)
 				"linux"		"988" // start at 0F and patch 2 bytes with NOP (0x90) and an unconditional jump (0xE9) to skip instruction
+				"windows"	"923" // start at 74 and patch 8 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2738,8 +2933,8 @@
 			 **/
 			"CTankClaw::SweepFist::Check1"
 			{
-				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"2554" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2754,8 +2949,8 @@
 			 **/
 			"CTankClaw::SweepFist::Check2"
 			{
-				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"3488" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2778,8 +2973,65 @@
 			 **/
 			"CTankRock::OnRelease::SoundLoop"
 			{
-				"windows"	"122" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"122" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CTerrorGun::Deploy" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 * 4. The call instruction below that should be the start of the "CTerrorGun::Deploy" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::Deploy"
+			{
+				"linux"		"325" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"392" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CTerrorGun::Holster" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::Holster"
+			{
+				"linux"		"294" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"370" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+
+			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Patches the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 *
+			 * How to find:
+			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
+			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
+			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
+			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
+			 * Equation: a2 - a1 = JMP instruction length
+			 **/
+			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
+			{
+				"linux"		"313" // start at 89 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"384" // start at 56 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
@@ -2790,8 +3042,8 @@
 			 **/
 			"CTerrorPlayer::Deafen"
 			{
-				"windows"	"517"
 				"linux"		"518"
+				"windows"	"517"
 			}
 
 			/**
@@ -2805,8 +3057,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Attacker"
 			{
-				"windows"	"52"
 				"linux"		"52"
+				"windows"	"52"
 			}
 
 			/**
@@ -2822,8 +3074,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"windows"	"7411" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10925" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7411" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2839,8 +3091,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"windows"	"7434" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10957" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7434" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2857,8 +3109,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"windows"	"7749" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"8228" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7749" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2874,8 +3126,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
 			{
-				"windows"	"7603" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6353" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7603" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2891,8 +3143,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
 			{
-				"windows"	"7626" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6385" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7626" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2907,8 +3159,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
 			{
-				"windows"	"7905" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"6543" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"7905" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2923,8 +3175,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				"windows"	"8174" // start at D9 and patch 2 bytes with EB ??
 				"linux"		"10263" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8174" // start at D9 and patch 2 bytes with EB ??
 			}
 
 			/**
@@ -2938,8 +3190,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"windows"	"8266" // start at 8B and patch 2 bytes with EB ??
 				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8266" // start at 8B and patch 2 bytes with EB ??
 			}
 
 			/**
@@ -2953,8 +3205,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"windows"	"8480" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"linux"		"10611" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"8480" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2974,8 +3226,8 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
 			{
-				"windows"	"9332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"12526" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"9332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
@@ -2996,8 +3248,8 @@
 			 **/
 			"CTerrorPlayer::GetFlowDistance::m_flow"
 			{
-				"windows"	"332"
 				"linux"		"340"
+				"windows"	"332"
 			}
 
 			/**
@@ -3008,8 +3260,8 @@
 			 **/
 			"CTerrorPlayer::GetLastKnownArea"
 			{
-				"windows"	"330"
 				"linux"		"331"
+				"windows"	"330"
 			}
 
 			/**
@@ -3032,8 +3284,8 @@
 			 **/
 			"CTerrorPlayer::OnFalling::Scream"
 			{
-				"windows"	"552" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"linux"		"678" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"552" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
@@ -3055,8 +3307,8 @@
 			 **/
 			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
-				"windows"	"16308"
 				"linux"		"16288"
+				"windows"	"16308"
 			}
 
 			/**
@@ -3070,8 +3322,8 @@
 			 **/
 			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
 			{
-				"windows"	"49" // start at FF and patch 2 bytes with NOPs (0x90)
 				"linux"		"68" // start at 8B and patch 11 bytes with NOPs (0x90)
+				"windows"	"49" // start at FF and patch 2 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -3085,8 +3337,8 @@
 			 **/
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
 			{
-				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
+				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 			}
 
 			/**
@@ -3104,8 +3356,8 @@
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
-				"windows"	"2387" // start at 6A and patch 9 bytes with NOPs (0x90)
 				"linux"		"3217" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"windows"	"2387" // start at 6A and patch 9 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -3119,8 +3371,8 @@
 			 **/
 			"CTerrorPlayer::PreThink::SafeDropLogic"
 			{
-				"windows"	"498" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"181" // start at 09 and patch 1 byte with CALL (0xFF)
+				"windows"	"498" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
 			/**
@@ -3134,8 +3386,8 @@
 			 **/
 			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
-				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 
 			/**
@@ -3149,8 +3401,8 @@
 			 **/
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
-				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
 				"linux"		"76" // start at 09 and patch 1 byte with CALL (0xFF)
+				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
 			/**
@@ -3167,8 +3419,8 @@
 			 **/
 			"Tank::GetIntentionInterface"
 			{
-				"windows"	"17204"
 				"linux"		"17176"
+				"windows"	"17204"
 			}
 
 			/**
@@ -3179,8 +3431,8 @@
 			 **/
 			"TankIdle::GetName"
 			{
-				"windows"	"40"
 				"linux"		"41"
+				"windows"	"40"
 			}
 
 			/**
@@ -3198,8 +3450,8 @@
 			 **/
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
-				"windows"	"296"
 				"linux"		"300"
+				"windows"	"296"
 			}
 		}
 
@@ -3688,6 +3940,26 @@
 			}
 
 			/**
+			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "Player.PickupWeapon" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. Use IDA to get the VTable dump for the "CTerrorGun" class on Windows.
+			 * 3b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4b. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::EquipSecondWeapon"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun17EquipSecondWeaponEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x74\x2A\x32\x2A\x5E\x8B"
+						/* ? ? ? ? ? ? 56 8B ? 80 BE ? ? ? ? ? 74 ? 32 ? 5E 8B */
+			}
+
+			/**
 			 * CTerrorGun::FireBullet()
 			 *
 			 * How to find on Windows:
@@ -3704,6 +3976,23 @@
 				"linux"		"@_ZN10CTerrorGun10FireBulletEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x80"
 						/* ? ? ? ? ? ? 53 56 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 80 */
+			}
+
+			/**
+			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "CTerrorGun" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::Use"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun3UseEP11CBaseEntityS1_8USE_TYPEf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+						/* ? ? ? ? ? ? 56 57 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B */
 			}
 
 			/**
@@ -4183,6 +4472,27 @@
 				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
+			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "spawner_give_item" string.
+			 * 2a. The string can only be found in this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3b. Search for "CWeaponSpawn::`vftable'" to jump to the "CWeaponSpawn" vtable.
+			 * 4b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5b. Look for the target function in the Windows binary.
+			 **/
+			"CWeaponSpawn::Use"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CWeaponSpawn3UseEP11CBaseEntityS1_8USE_TYPEf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x57\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? 53 57 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B */
 			}
 
 			/**
