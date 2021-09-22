@@ -11,6 +11,8 @@
 	// "{yellow}" - Sárgás narancs - \x04
 	// --
 	// "{olive}" - Sárgászöld - \x05
+	// --
+	// "{percent}" - "%"
 
 	"MutantTanks"
 	{
