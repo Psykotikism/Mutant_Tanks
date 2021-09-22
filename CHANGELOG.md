@@ -15,11 +15,19 @@
 
 ### Changes
 
+#### Core plugin
+- The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
+- The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
+
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
 
 #### Game Data
-- Added detour setup and signatures for `PassServerEntityFilter`. (Thanks to `epzminion` for the help!)
+- Added signatures, detour setup, and patch offsets for `CTerrorGun::EquipSecondWeapon`.
+- Added detour setup and signatures for the following functions:
+	- `PassServerEntityFilter` (Thanks to `epzminion` for the help!)
+	- `CTerrorGun::Use`
+	- `CWeaponSpawn::Use`
 
 #### Settings
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
@@ -132,7 +140,7 @@
 - L4D1: Updated several offsets for the `1.0.4.0` update.
 
 #### Core Plugin
-- The attack boost reward now prevents survivors from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
+- The attack boost reward now prevents recipients from being interrupted when reviving teammates who are taking damage. (Thanks to `BHaType` for the idea and `Lux` for the help!)
 - Increased the interval for checking config files for changes from `1` to `10` seconds.
 - Rewards now end properly at the end of each non-finale map. (Thanks to `epzminion` for the help!)
 - Switched to a simpler method for checking `Versus` and `Scavenge` rounds.

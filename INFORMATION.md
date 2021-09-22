@@ -539,6 +539,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent switching to secondary slot when equipping a secondary pistol.
+			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
@@ -631,6 +633,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent switching to secondary slot when equipping a secondary pistol.
+			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
@@ -2669,6 +2673,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent switching to secondary slot when equipping a secondary pistol.
+			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.
@@ -2761,6 +2767,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent switching to secondary slot when equipping a secondary pistol.
+			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
 			// - Shoving Tanks does damage.

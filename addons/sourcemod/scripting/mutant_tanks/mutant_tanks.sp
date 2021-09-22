@@ -402,6 +402,8 @@ enum struct esGeneral
 	DynamicDetour g_ddTankClawPlayerHitDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
+	DynamicDetour g_ddUseDetour;
+	DynamicDetour g_ddUseDetour2;
 	DynamicDetour g_ddVomitedUponDetour;
 
 	float g_flActionDurationReward[4];
@@ -5097,6 +5099,15 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
+		else if (StrEqual(name, "weapon_given"))
+		{
+			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
+				iWeapon = event.GetInt("weapon");
+			if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST)) && (iWeapon == 15 || iWeapon == 23))
+			{
+				SDKHook(iSurvivor, SDKHook_WeaponCanSwitchTo, OnWeaponCanSwitchTo);
+			}
+		}
 		else if (StrEqual(name, "witch_harasser_set"))
 		{
 			int iHarasserId = event.GetInt("userid"), iHarasser = GetClientOfUserId(iHarasserId);
@@ -5124,7 +5135,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 void vHookEvents(bool hook)
 {
-	static bool bHooked, bCheck[41];
+	static bool bHooked, bCheck[42];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
@@ -5162,17 +5173,18 @@ void vHookEvents(bool hook)
 		bCheck[30] = HookEventEx("revive_success", vEventHandler);
 		bCheck[31] = HookEventEx("tongue_grab", vEventHandler);
 		bCheck[32] = HookEventEx("weapon_fire", vEventHandler);
-		bCheck[33] = HookEventEx("witch_harasser_set", vEventHandler);
-		bCheck[34] = HookEventEx("witch_killed", vEventHandler);
+		bCheck[33] = HookEventEx("weapon_given", vEventHandler);
+		bCheck[34] = HookEventEx("witch_harasser_set", vEventHandler);
+		bCheck[35] = HookEventEx("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			bCheck[35] = HookEventEx("charger_carry_start", vEventHandler);
-			bCheck[36] = HookEventEx("charger_pummel_start", vEventHandler);
-			bCheck[37] = HookEventEx("finale_vehicle_incoming", vEventHandler);
-			bCheck[38] = HookEventEx("finale_bridge_lowering", vEventHandler);
-			bCheck[39] = HookEventEx("gauntlet_finale_start", vEventHandler);
-			bCheck[40] = HookEventEx("jockey_ride", vEventHandler);
+			bCheck[36] = HookEventEx("charger_carry_start", vEventHandler);
+			bCheck[37] = HookEventEx("charger_pummel_start", vEventHandler);
+			bCheck[38] = HookEventEx("finale_vehicle_incoming", vEventHandler);
+			bCheck[39] = HookEventEx("finale_bridge_lowering", vEventHandler);
+			bCheck[40] = HookEventEx("gauntlet_finale_start", vEventHandler);
+			bCheck[41] = HookEventEx("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(true);
@@ -5180,7 +5192,7 @@ void vHookEvents(bool hook)
 	else if (!hook && bHooked)
 	{
 		bHooked = false;
-		bool bPreHook[41];
+		bool bPreHook[42];
 		char sEvent[32];
 
 		for (int iPos = 0; iPos < sizeof bCheck; iPos++)
@@ -5220,21 +5232,22 @@ void vHookEvents(bool hook)
 				case 30: sEvent = "revive_success";
 				case 31: sEvent = "tongue_grab";
 				case 32: sEvent = "weapon_fire";
-				case 33: sEvent = "witch_harasser_set";
-				case 34: sEvent = "witch_killed";
-				case 35: sEvent = "charger_carry_start";
-				case 36: sEvent = "charger_pummel_start";
-				case 37: sEvent = "finale_vehicle_incoming";
-				case 38: sEvent = "finale_bridge_lowering";
-				case 39: sEvent = "gauntlet_finale_start";
-				case 40: sEvent = "jockey_ride";
+				case 33: sEvent = "weapon_given";
+				case 34: sEvent = "witch_harasser_set";
+				case 35: sEvent = "witch_killed";
+				case 36: sEvent = "charger_carry_start";
+				case 37: sEvent = "charger_pummel_start";
+				case 38: sEvent = "finale_vehicle_incoming";
+				case 39: sEvent = "finale_bridge_lowering";
+				case 40: sEvent = "gauntlet_finale_start";
+				case 41: sEvent = "jockey_ride";
 			}
 
 			if (bCheck[iPos])
 			{
 				bPreHook[iPos] = (iPos == 6) || (iPos >= 18 && iPos <= 20);
 
-				if (!g_bSecondGame && iPos >= 35 && iPos <= 40)
+				if (!g_bSecondGame && iPos >= 36 && iPos <= 41)
 				{
 					continue;
 				}
@@ -14568,6 +14581,13 @@ Action OnPropSetTransmit(int entity, int client)
  * Weapon hooks
  **/
 
+Action OnWeaponCanSwitchTo(int client)
+{
+	SDKUnhook(client, SDKHook_WeaponCanSwitchTo, OnWeaponCanSwitchTo);
+
+	return Plugin_Handled;
+}
+
 void OnWeaponEquipPost(int client, int weapon)
 {
 	if (bIsSurvivor(client) && weapon > MaxClients)
@@ -14866,6 +14886,8 @@ void vSetupDetours(GameData dataHandle)
 	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, dataHandle, "MTDetour_CTankClaw::OnPlayerHit");
 	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, dataHandle, "MTDetour_CTankRock::Create");
 	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, dataHandle, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
+	vSetupDetour(g_esGeneral.g_ddUseDetour, dataHandle, "MTDetour_CTerrorGun::Use");
+	vSetupDetour(g_esGeneral.g_ddUseDetour2, dataHandle, "MTDetour_CWeaponSpawn::Use");
 	vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, dataHandle, "MTDetour_CTerrorPlayer::OnVomitedUpon");
 }
 
@@ -14951,6 +14973,10 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound", Hook_Post, mreTankClawGroundPoundPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Pre, mreUsePre, toggle);
+	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
+	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
+	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Post, mreUsePost, toggle);
 
 	switch (g_esGeneral.g_bLinux)
 	{
@@ -15495,7 +15521,7 @@ MRESReturn mreFinishHealingPost(int pThis)
 MRESReturn mreFireBulletPre(int pThis)
 {
 	int iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (bIsSurvivor(iSurvivor, 9) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iSledgehammerRounds == 1) && g_esGeneral.g_cvMTPhysicsPushScale != null)
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iSledgehammerRounds == 1)) && g_esGeneral.g_cvMTPhysicsPushScale != null)
 	{
 		g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
 		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = 5.0;
@@ -16230,6 +16256,52 @@ MRESReturn mreTestMeleeSwingCollisionPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_cvMTMeleeRange.IntValue = g_esGeneral.g_iDefaultMeleeRange;
 		g_esGeneral.g_iDefaultMeleeRange = -1;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreUsePre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
+	{
+		char sName[32];
+		static int iIndex[3] = {-1, -1, -1};
+		for (int iPos = 0; iPos < sizeof iIndex; iPos++)
+		{
+			if (iIndex[iPos] == -1)
+			{
+				FormatEx(sName, sizeof sName, "EquipSecondWeapon%i", (iPos + 1));
+				iIndex[iPos] = iGetPatchIndex(sName);
+			}
+
+			if (iIndex[iPos] != -1)
+			{
+				bInstallPatch(iIndex[iPos]);
+			}
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreUsePost(int pThis, DHookParam hParams)
+{
+	char sName[32];
+	static int iIndex[3] = {-1, -1, -1};
+	for (int iPos = 0; iPos < sizeof iIndex; iPos++)
+	{
+		if (iIndex[iPos] == -1)
+		{
+			FormatEx(sName, sizeof sName, "EquipSecondWeapon%i", (iPos + 1));
+			iIndex[iPos] = iGetPatchIndex(sName);
+		}
+
+		if (iIndex[iPos] != -1)
+		{
+			bRemovePatch(iIndex[iPos]);
+		}
 	}
 
 	return MRES_Ignored;

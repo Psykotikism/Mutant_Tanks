@@ -169,7 +169,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -190,7 +190,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -211,7 +211,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -232,7 +232,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -255,7 +255,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
