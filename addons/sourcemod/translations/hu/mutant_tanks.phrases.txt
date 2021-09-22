@@ -444,7 +444,7 @@
 
 	"Kill1"
 	{
-		"hu"			"{olive}{1}{default} kivégezte{mint} {2}{default}!"
+		"hu"			"{olive}{1}{default} kivégezte:{mint} {2}{default}!"
 	}
 
 	"Kill2"
@@ -494,7 +494,7 @@
 
 	"Killer1"
 	{
-		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
+		"hu"			"{mint}{1}{default} kivégezte:{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
