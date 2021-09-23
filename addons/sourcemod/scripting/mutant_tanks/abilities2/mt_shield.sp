@@ -277,7 +277,7 @@ Action cmdShieldInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -1252,7 +1252,7 @@ void vShield(int tank)
 		}
 	}
 
-	SetEntProp(g_esShieldPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
+	SetEntityCollisionGroup(g_esShieldPlayer[tank].g_iShield, 1);
 	MT_HideEntity(g_esShieldPlayer[tank].g_iShield, true);
 	g_esShieldPlayer[tank].g_iShield = EntIndexToEntRef(g_esShieldPlayer[tank].g_iShield);
 }

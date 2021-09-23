@@ -204,7 +204,7 @@ Action cmdFlyInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -374,7 +374,7 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				if ((g_esFlyCache[attacker].g_iFlyType == 0 || (g_esFlyCache[attacker].g_iFlyType & MT_FLY_ATTACK)) && !g_esFlyPlayer[attacker].g_bActivated)
 				{

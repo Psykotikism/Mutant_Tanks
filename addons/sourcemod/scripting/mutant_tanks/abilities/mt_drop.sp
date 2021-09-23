@@ -296,7 +296,7 @@ Action cmdDropInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -873,15 +873,14 @@ int iGetNamedWeapon(int tank)
 		return -1;
 	}
 
-	char sName[32], sSet[2][20];
-	int iSize = g_bSecondGame ? sizeof g_sWeaponClasses2 : sizeof g_sWeaponClasses;
+	char sName[32];
+	int iSize = g_bSecondGame ? (sizeof g_sWeaponClasses2) : (sizeof g_sWeaponClasses);
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof sName, (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
-		if (strncmp(sName, "weapon_", 7) != -1)
+		if (!strncmp(sName, "weapon_", 7))
 		{
-			ExplodeString(sName, "_", sSet, sizeof sSet, sizeof sSet[]);
-			if (StrEqual(sSet[1], g_esDropCache[tank].g_sDropWeaponName, false))
+			if (StrEqual(sName, g_esDropCache[tank].g_sDropWeaponName, false) || StrEqual(sName[7], g_esDropCache[tank].g_sDropWeaponName, false))
 			{
 				return iPos;
 			}
@@ -1039,7 +1038,7 @@ void vDropFrame(int userid)
 			}
 		}
 
-		SetEntProp(g_esDropPlayer[iTank].g_iWeapon, Prop_Send, "m_CollisionGroup", 2);
+		SetEntityCollisionGroup(g_esDropPlayer[iTank].g_iWeapon, 2);
 		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(g_esDropPlayer[iTank].g_iWeapon);
 

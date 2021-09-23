@@ -220,7 +220,7 @@ Action cmdKamikazeInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -385,7 +385,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vKamikazeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -397,7 +397,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vKamikazeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[victim].g_flKamikazeChance, g_esKamikazeCache[victim].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -483,11 +483,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esKamikazeCache[tank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[tank].g_iKamikazeHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esKamikazeCache[tank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[tank].g_iKamikazeHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vKamikazeHit(survivor, tank, random, flChance, g_esKamikazeCache[tank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esKamikazeCache[tank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[tank].g_iKamikazeHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esKamikazeCache[tank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[tank].g_iKamikazeHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vKamikazeHit(survivor, tank, random, flChance, g_esKamikazeCache[tank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -874,11 +874,11 @@ Action tTimerKamikazeCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vKamikazeHit(iSurvivor, iTank, flRandom, flChance, g_esKamikazeCache[iTank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vKamikazeHit(iSurvivor, iTank, flRandom, flChance, g_esKamikazeCache[iTank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

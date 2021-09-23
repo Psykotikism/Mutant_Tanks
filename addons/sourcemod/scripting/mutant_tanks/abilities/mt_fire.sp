@@ -226,7 +226,7 @@ Action cmdFireInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -365,7 +365,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vFireHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esFireCache[attacker].g_flFireChance, g_esFireCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -377,7 +377,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vFireHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esFireCache[victim].g_flFireChance, g_esFireCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -463,11 +463,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esFireCache[tank].g_iFireHitMode == 0 || g_esFireCache[tank].g_iFireHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esFireCache[tank].g_iFireHitMode == 0 || g_esFireCache[tank].g_iFireHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vFireHit(survivor, tank, random, flChance, g_esFireCache[tank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esFireCache[tank].g_iFireHitMode == 0 || g_esFireCache[tank].g_iFireHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esFireCache[tank].g_iFireHitMode == 0 || g_esFireCache[tank].g_iFireHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vFireHit(survivor, tank, random, flChance, g_esFireCache[tank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -1010,11 +1010,11 @@ Action tTimerFireCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esFireCache[iTank].g_iFireHitMode == 0 || g_esFireCache[iTank].g_iFireHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esFireCache[iTank].g_iFireHitMode == 0 || g_esFireCache[iTank].g_iFireHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vFireHit(iSurvivor, iTank, flRandom, flChance, g_esFireCache[iTank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esFireCache[iTank].g_iFireHitMode == 0 || g_esFireCache[iTank].g_iFireHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esFireCache[iTank].g_iFireHitMode == 0 || g_esFireCache[iTank].g_iFireHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vFireHit(iSurvivor, iTank, flRandom, flChance, g_esFireCache[iTank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

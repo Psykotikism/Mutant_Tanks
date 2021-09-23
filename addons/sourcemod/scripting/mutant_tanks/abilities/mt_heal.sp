@@ -260,7 +260,7 @@ Action cmdHealInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -413,7 +413,7 @@ Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vHealHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHealCache[attacker].g_flHealChance, g_esHealCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -425,7 +425,7 @@ Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vHealHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHealCache[victim].g_flHealChance, g_esHealCache[victim].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -525,11 +525,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vHealHit(survivor, tank, random, flChance, g_esHealCache[tank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vHealHit(survivor, tank, random, flChance, g_esHealCache[tank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -1255,11 +1255,11 @@ Action tTimerHealCombo3(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vHealHit(iSurvivor, iTank, flRandom, flChance, g_esHealCache[iTank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vHealHit(iSurvivor, iTank, flRandom, flChance, g_esHealCache[iTank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

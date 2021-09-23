@@ -227,7 +227,7 @@ Action cmdIdleInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -366,7 +366,7 @@ Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vIdleHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIdleCache[attacker].g_flIdleChance, g_esIdleCache[attacker].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -378,7 +378,7 @@ Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vIdleHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIdleCache[victim].g_flIdleChance, g_esIdleCache[victim].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -464,11 +464,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vIdleHit(survivor, tank, random, flChance, g_esIdleCache[tank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vIdleHit(survivor, tank, random, flChance, g_esIdleCache[tank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -911,11 +911,11 @@ Action tTimerIdleCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vIdleHit(iSurvivor, iTank, flRandom, flChance, g_esIdleCache[iTank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vIdleHit(iSurvivor, iTank, flRandom, flChance, g_esIdleCache[iTank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

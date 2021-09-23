@@ -15,6 +15,9 @@
 
 ### Changes
 
+#### General
+- Made some small optimizations regarding string comparisons.
+
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
@@ -23,7 +26,7 @@
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
 
 #### Game Data
-- Added signatures, detour setup, and patch offsets for `CTerrorGun::EquipSecondWeapon`.
+- Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
 - Added detour setup and signatures for the following functions:
 	- `PassServerEntityFilter` (Thanks to `epzminion` for the help!)
 	- `CTerrorGun::Use`
@@ -37,6 +40,11 @@
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
+#### Abilities
+- Drop: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
+
+- Shield: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
 
 ### Files
 
@@ -104,11 +112,11 @@
 - Added the `Execute Config Delay` setting under the `Plugin Settings/Custom` section.
 - Removed the `Allow Developer` setting. (No longer used.)
 
-#### Abilities
-- Heal: Added the `Heal Glow` setting. (Requested by `ddd123`.)
-
 #### Translations
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+
+#### Abilities
+- Heal: Added the `Heal Glow` setting. (Requested by `ddd123`.)
 
 ### Files
 
@@ -2514,7 +2522,7 @@ Changes:
 11. Added the `Base Health` setting to determine the base health of each Super Tank.
 12. Added the `Tank Chance` setting to determine the chances of a Super Tank type spawning.
 13. Added the `ST_TankChance()` native for the new `Tank Chance` setting.
-14. The core plugin and its modules now require `SM 1.10.0.6352` or higher.
+14. The core plugin and its modules now require `SourceMod 1.10.0.6352` or higher.
 15. The core plugin now properly updates all settings when the config file is refreshed.
 16. Removed the `sm_tanklist` command.
 
@@ -2549,7 +2557,7 @@ Bug fixes:
 Changes:
 
 1. Renamed/removed some stocks.
-2. The core plugin and its modules now requires `SM 1.10.0.6317` or higher.
+2. The core plugin and its modules now requires `SourceMod 1.10.0.6317` or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. Changed the directory of the configs from `cfg/sourcemod` to `addons/sourcemod/data`.
 5. Added a new native: `ST_TankColors` - Retrieves a Super Tank's colors.
@@ -2719,7 +2727,7 @@ Changes:
 - `Fragile Melee Damage`
 
 6. The core plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
-7. The core plugin and all of its modules now require `SM 1.9.0.6225` or higher to work.
+7. The core plugin and all of its modules now require `SourceMod 1.9.0.6225` or higher to work.
 8. Removed unnecessary code.
 
 Files:

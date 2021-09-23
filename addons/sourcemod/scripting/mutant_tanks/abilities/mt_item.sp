@@ -184,7 +184,7 @@ Action cmdItemInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -773,7 +773,7 @@ void vSpawnItem(const char[] name, float pos[3])
 		{
 			FormatEx(sClassname, sizeof sClassname, "weapon_%s", name);
 
-			switch (StrEqual(sClassname, "weapon_gascan"))
+			switch (StrEqual(sClassname[7], "gascan"))
 			{
 				case true: iItem = CreateEntityByName(sClassname);
 				case false:

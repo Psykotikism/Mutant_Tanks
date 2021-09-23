@@ -206,7 +206,7 @@ Action cmdNullifyInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -352,14 +352,14 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vNullifyHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esNullifyCache[attacker].g_flNullifyChance, g_esNullifyCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
 		{
-			if ((g_esNullifyCache[victim].g_iNullifyHitMode == 0 || g_esNullifyCache[victim].g_iNullifyHitMode == 2) && StrEqual(sClassname, "weapon_melee") && g_esNullifyCache[victim].g_iComboAbility == 0)
+			if ((g_esNullifyCache[victim].g_iNullifyHitMode == 0 || g_esNullifyCache[victim].g_iNullifyHitMode == 2) && StrEqual(sClassname[7], "melee") && g_esNullifyCache[victim].g_iComboAbility == 0)
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esNullifyPlayer[victim].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[attacker].g_iImmunityFlags))
 				{
@@ -467,11 +467,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esNullifyCache[tank].g_iNullifyHitMode == 0 || g_esNullifyCache[tank].g_iNullifyHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esNullifyCache[tank].g_iNullifyHitMode == 0 || g_esNullifyCache[tank].g_iNullifyHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vNullifyHit(survivor, tank, random, flChance, g_esNullifyCache[tank].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esNullifyCache[tank].g_iNullifyHitMode == 0 || g_esNullifyCache[tank].g_iNullifyHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esNullifyCache[tank].g_iNullifyHitMode == 0 || g_esNullifyCache[tank].g_iNullifyHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vNullifyHit(survivor, tank, random, flChance, g_esNullifyCache[tank].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -936,11 +936,11 @@ Action tTimerNullifyCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esNullifyCache[iTank].g_iNullifyHitMode == 0 || g_esNullifyCache[iTank].g_iNullifyHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esNullifyCache[iTank].g_iNullifyHitMode == 0 || g_esNullifyCache[iTank].g_iNullifyHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vNullifyHit(iSurvivor, iTank, flRandom, flChance, g_esNullifyCache[iTank].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esNullifyCache[iTank].g_iNullifyHitMode == 0 || g_esNullifyCache[iTank].g_iNullifyHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esNullifyCache[iTank].g_iNullifyHitMode == 0 || g_esNullifyCache[iTank].g_iNullifyHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vNullifyHit(iSurvivor, iTank, flRandom, flChance, g_esNullifyCache[iTank].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

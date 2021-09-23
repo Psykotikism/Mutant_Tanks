@@ -207,7 +207,7 @@ Action cmdQuietInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -349,7 +349,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vQuietHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esQuietCache[attacker].g_flQuietChance, g_esQuietCache[attacker].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -361,7 +361,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vQuietHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esQuietCache[victim].g_flQuietChance, g_esQuietCache[victim].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -471,11 +471,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esQuietCache[tank].g_iQuietHitMode == 0 || g_esQuietCache[tank].g_iQuietHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esQuietCache[tank].g_iQuietHitMode == 0 || g_esQuietCache[tank].g_iQuietHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vQuietHit(survivor, tank, random, flChance, g_esQuietCache[tank].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esQuietCache[tank].g_iQuietHitMode == 0 || g_esQuietCache[tank].g_iQuietHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esQuietCache[tank].g_iQuietHitMode == 0 || g_esQuietCache[tank].g_iQuietHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vQuietHit(survivor, tank, random, flChance, g_esQuietCache[tank].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -940,11 +940,11 @@ Action tTimerQuietCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esQuietCache[iTank].g_iQuietHitMode == 0 || g_esQuietCache[iTank].g_iQuietHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esQuietCache[iTank].g_iQuietHitMode == 0 || g_esQuietCache[iTank].g_iQuietHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vQuietHit(iSurvivor, iTank, flRandom, flChance, g_esQuietCache[iTank].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esQuietCache[iTank].g_iQuietHitMode == 0 || g_esQuietCache[iTank].g_iQuietHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esQuietCache[iTank].g_iQuietHitMode == 0 || g_esQuietCache[iTank].g_iQuietHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vQuietHit(iSurvivor, iTank, flRandom, flChance, g_esQuietCache[iTank].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

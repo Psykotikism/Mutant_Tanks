@@ -1968,7 +1968,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `98-101` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `101-104` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
