@@ -224,7 +224,7 @@ Action cmdHypnoInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -370,14 +370,14 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vHypnoHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
 		{
-			if ((g_esHypnoCache[victim].g_iHypnoHitMode == 0 || g_esHypnoCache[victim].g_iHypnoHitMode == 2) && StrEqual(sClassname, "weapon_melee") && g_esHypnoCache[victim].g_iComboAbility == 0)
+			if ((g_esHypnoCache[victim].g_iHypnoHitMode == 0 || g_esHypnoCache[victim].g_iHypnoHitMode == 2) && StrEqual(sClassname[7], "melee") && g_esHypnoCache[victim].g_iComboAbility == 0)
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
 				{
@@ -524,11 +524,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vHypnoHit(survivor, tank, random, flChance, g_esHypnoCache[tank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vHypnoHit(survivor, tank, random, flChance, g_esHypnoCache[tank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -1023,11 +1023,11 @@ Action tTimerHypnoCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

@@ -202,7 +202,7 @@ Action cmdPyroInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -419,7 +419,7 @@ Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 			{
 				char sClassname[32];
 				GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
 					switch (g_esPyroCache[attacker].g_iPyroMode)
 					{

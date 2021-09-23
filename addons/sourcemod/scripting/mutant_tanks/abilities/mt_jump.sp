@@ -225,7 +225,7 @@ Action cmdJumpInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -378,7 +378,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vJumpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -390,7 +390,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vJumpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -490,11 +490,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vJumpHit(survivor, tank, random, flChance, g_esJumpCache[tank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vJumpHit(survivor, tank, random, flChance, g_esJumpCache[tank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -1216,11 +1216,11 @@ Action tTimerJumpCombo3(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vJumpHit(iSurvivor, iTank, flRandom, flChance, g_esJumpCache[iTank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vJumpHit(iSurvivor, iTank, flRandom, flChance, g_esJumpCache[iTank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

@@ -126,8 +126,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_INFECTEDCOUNT (1 << 6) // infectedcount_configs
 #define MT_CONFIG_FINALE (1 << 7) // l4d_finale_configs/l4d2_finale_configs
 
-#define MT_CONFIG_FILE "mutant_tanks.cfg"
-#define MT_CONFIG_PATH "data/mutant_tanks/"
+#define MT_CONFIG_FILE_MAIN "mutant_tanks.cfg"
+#define MT_CONFIG_FILE_DETOURS "mutant_tanks_detours"
+#define MT_CONFIG_FILE_PATCHES "mutant_tanks_patches"
+#define MT_CONFIG_FILEPATH "data/mutant_tanks/"
 #define MT_CONFIG_PATH_DAY "daily_configs/"
 #define MT_CONFIG_PATH_DIFFICULTY "difficulty_configs/"
 #define MT_CONFIG_PATH_FINALE "l4d_finale_configs/"
@@ -1425,11 +1427,11 @@ public void OnPluginStart()
 	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
 
 	char sSMPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_PATH);
+	BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_FILEPATH);
 	CreateDirectory(sSMPath, 511);
-	FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s", sSMPath, MT_CONFIG_FILE);
+	FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s", sSMPath, MT_CONFIG_FILE_MAIN);
 
-	switch (MT_FileExists(MT_CONFIG_PATH, MT_CONFIG_FILE, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
+	switch (MT_FileExists(MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
 	{
 		case true: g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		case false: SetFailState("Unable to load the \"%s\" config file.", g_esGeneral.g_sSavePath);
@@ -2868,7 +2870,7 @@ Action cmdMTCommandListener3(int client, const char[] command, int argc)
 
 				switch (StrContains(sKeyword, "access", false) != -1)
 				{
-					case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+					case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, client, g_esDeveloper[client].g_iDevAccess);
 					case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
 				}
 			}
@@ -2943,7 +2945,7 @@ Action cmdMTAdmin(int client, int args)
 			g_esDeveloper[client].g_iDevAccess = iClamp(StringToInt(sValue), 0, 1);
 
 			vSetupPerks(client, (g_esDeveloper[client].g_iDevAccess == 1));
-			MT_ReplyToCommand(client, "%s %N{mint}, your visual effects are{yellow} %s{mint}.", MT_TAG4, client, ((g_esDeveloper[client].g_iDevAccess == 1) ? "on" : "off"));
+			MT_ReplyToCommand(client, "%s %N{mint}, your visual effects are{yellow} %s{mint}.", MT_TAG5, client, ((g_esDeveloper[client].g_iDevAccess == 1) ? "on" : "off"));
 #if defined _clientprefs_included
 			g_esGeneral.g_ckMTAdmin[0].Set(client, sValue);
 #endif
@@ -2987,7 +2989,7 @@ Action cmdMTConfig(int client, int args)
 				case false: vPathMenu(client);
 			}
 
-			vLogCommand(client, MT_CMD_CONFIG, "%s %N:{default} Opened the config file viewer.", MT_TAG4, client);
+			vLogCommand(client, MT_CMD_CONFIG, "%s %N:{default} Opened the config file viewer.", MT_TAG5, client);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, client);
 		}
 		else
@@ -3008,21 +3010,21 @@ Action cmdMTConfig(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof sFilename);
 
-			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_PATH, sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_FILEPATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 					}
 				}
 			}
@@ -3038,7 +3040,7 @@ Action cmdMTConfig(int client, int args)
 	char sFilePath[PLATFORM_MAX_PATH];
 	int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
 	FormatEx(sFilePath, sizeof sFilePath, "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
-	vLogCommand(client, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG4, client, sSection, sFilePath);
+	vLogCommand(client, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG5, client, sSection, sFilePath);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, client, sSection, sFilePath);
 
 	return Plugin_Handled;
@@ -3065,7 +3067,7 @@ Action cmdMTConfig2(int client, int args)
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
 		}
@@ -3090,21 +3092,21 @@ Action cmdMTConfig2(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof sFilename);
 
-			switch (StrContains(sFilename, "mutant_tanks_detours", false) != -1 || StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_PATH, sFilename);
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_FILEPATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_FILE);
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 					}
 				}
 			}
@@ -3138,7 +3140,7 @@ Action cmdMTDev(int client, int args)
 			char sValue[2];
 			GetCmdArg(1, sValue, sizeof sValue);
 			vSetupGuest(client, "access", sValue);
-			MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+			MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, client, g_esDeveloper[client].g_iDevAccess);
 		}
 		case 2:
 		{
@@ -3149,7 +3151,7 @@ Action cmdMTDev(int client, int args)
 
 			switch (StrContains(sKeyword, "access", false) != -1)
 			{
-				case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+				case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, client, g_esDeveloper[client].g_iDevAccess);
 				case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
 			}
 		}
@@ -3185,7 +3187,7 @@ Action cmdMTDev(int client, int args)
 					{
 						case true:
 						{
-							MT_PrintToChat(target_list[iPlayer], "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, target_list[iPlayer], g_esDeveloper[target_list[iPlayer]].g_iDevAccess);
+							MT_PrintToChat(target_list[iPlayer], "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, target_list[iPlayer], g_esDeveloper[target_list[iPlayer]].g_iDevAccess);
 							MT_ReplyToCommand(client, "%s You gave{olive} %N{default} developer access level{yellow} %i{default}.", MT_TAG2, target_list[iPlayer], g_esDeveloper[target_list[iPlayer]].g_iDevAccess);
 						}
 						case false:
@@ -3240,13 +3242,13 @@ Action cmdMTList(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
 
 	vListAbilities(client);
-	vLogCommand(client, MT_CMD_LIST, "%s %N:{default} Checked the list of abilities installed.", MT_TAG4, client);
+	vLogCommand(client, MT_CMD_LIST, "%s %N:{default} Checked the list of abilities installed.", MT_TAG5, client);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, client);
 
 	return Plugin_Handled;
@@ -3265,7 +3267,7 @@ Action cmdMTList2(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3280,7 +3282,7 @@ Action cmdMTList2(int client, int args)
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
 		}
@@ -3297,7 +3299,7 @@ Action cmdMTPrefs(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3330,7 +3332,7 @@ Action cmdMTReload(int client, int args)
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	vReloadConfig(client);
-	vLogCommand(client, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG4, client);
+	vLogCommand(client, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG5, client);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, client);
 
 	return Plugin_Handled;
@@ -3341,7 +3343,7 @@ Action cmdMTVersion(int client, int args)
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
-	vLogCommand(client, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG4, client, MT_CONFIG_SECTION_MAIN);
+	vLogCommand(client, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG5, client, MT_CONFIG_SECTION_MAIN);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
 
 	return Plugin_Handled;
@@ -3368,7 +3370,7 @@ Action cmdMTVersion2(int client, int args)
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
 		}
@@ -3392,7 +3394,7 @@ Action cmdTank(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3405,7 +3407,7 @@ Action cmdTank(int client, int args)
 			case false: vTankMenu(client);
 		}
 
-		vLogCommand(client, MT_CMD_SPAWN, "%s %N:{default} Opened the{mint} %s{default} menu.", MT_TAG4, client, MT_CONFIG_SECTION_MAIN);
+		vLogCommand(client, MT_CMD_SPAWN, "%s %N:{default} Opened the{mint} %s{default} menu.", MT_TAG5, client, MT_CONFIG_SECTION_MAIN);
 		vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
 
 		return Plugin_Handled;
@@ -3428,7 +3430,7 @@ Action cmdTank(int client, int args)
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -3451,7 +3453,7 @@ Action cmdTank2(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3484,7 +3486,7 @@ Action cmdTank2(int client, int args)
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -3507,7 +3509,7 @@ Action cmdMutantTank(int client, int args)
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3549,7 +3551,7 @@ Action cmdMutantTank(int client, int args)
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -3877,7 +3879,7 @@ void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject objec
 		case TopMenuAction_SelectOption:
 		{
 			vTankMenu(param, true);
-			vLogCommand(param, MT_CMD_SPAWN, "%s %N:{default} Opened the{mint} %s{default} menu.", MT_TAG4, param, MT_CONFIG_SECTION_MAIN);
+			vLogCommand(param, MT_CMD_SPAWN, "%s %N:{default} Opened the{mint} %s{default} menu.", MT_TAG5, param, MT_CONFIG_SECTION_MAIN);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, param, MT_CONFIG_SECTION_MAIN);
 		}
 	}
@@ -3891,7 +3893,7 @@ void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_i
 		case TopMenuAction_SelectOption:
 		{
 			vPathMenu(param, true);
-			vLogCommand(param, MT_CMD_CONFIG, "%s %N:{default} Opened the config file viewer.", MT_TAG4, param);
+			vLogCommand(param, MT_CMD_CONFIG, "%s %N:{default} Opened the config file viewer.", MT_TAG5, param);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, param);
 		}
 	}
@@ -3914,7 +3916,7 @@ void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id,
 		case TopMenuAction_SelectOption:
 		{
 			vListAbilities(param);
-			vLogCommand(param, MT_CMD_LIST, "%s %N:{default} Checked the list of abilities installed.", MT_TAG4, param);
+			vLogCommand(param, MT_CMD_LIST, "%s %N:{default} Checked the list of abilities installed.", MT_TAG5, param);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -3933,7 +3935,7 @@ void vMTReloadMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_i
 		case TopMenuAction_SelectOption:
 		{
 			vReloadConfig(param);
-			vLogCommand(param, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG4, param);
+			vLogCommand(param, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG5, param);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -3952,7 +3954,7 @@ void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_
 		case TopMenuAction_SelectOption:
 		{
 			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
-			vLogCommand(param, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG4, param, MT_CONFIG_SECTION_MAIN);
+			vLogCommand(param, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG5, param, MT_CONFIG_SECTION_MAIN);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, param, MT_CONFIG_SECTION_MAIN);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -4130,7 +4132,7 @@ int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 			char sFilePath[PLATFORM_MAX_PATH];
 			int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
 			FormatEx(sFilePath, sizeof sFilePath, "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
-			vLogCommand(param1, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG4, param1, sInfo, sFilePath);
+			vLogCommand(param1, MT_CMD_CONFIG, "%s %N:{default} Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", MT_TAG5, param1, sInfo, sFilePath);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, param1, sInfo, sFilePath);
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -7121,7 +7123,7 @@ void vCheckGunClipSizes(int survivor)
 		{
 			char sWeapon[32];
 			GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
-			if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
+			if (!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw"))
 			{
 				g_esPlayer[survivor].g_iMaxClip[1] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iSlot);
 			}
@@ -7397,7 +7399,7 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 		{
 			char sWeapon[32];
 			GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
-			if ((StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1])))
+			if ((!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1])))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
 			}
@@ -7703,18 +7705,18 @@ void vSaveSurvivorWeapons(int survivor)
 	if (iSlot > MaxClients)
 	{
 		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
-		if (StrEqual(sWeapon, "weapon_melee"))
+		if (StrEqual(sWeapon[7], "melee"))
 		{
 			GetEntPropString(iSlot, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof sWeapon);
 		}
 
 		strcopy(g_esPlayer[survivor].g_sWeaponSecondary, sizeof esPlayer::g_sWeaponSecondary, sWeapon);
-		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
+		if (!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw"))
 		{
 			g_esPlayer[survivor].g_iWeaponInfo2 = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 		}
 
-		g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
+		g_esPlayer[survivor].g_bDualWielding = !strncmp(sWeapon[7], "pistol", 6) && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 	}
 
 	iSlot = GetPlayerWeaponSlot(survivor, 2);
@@ -10249,7 +10251,7 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 				g_esDeveloper[admin].g_iDevAccess = amount;
 
 				vSetupDeveloper(admin);
-				MT_PrintToChat(admin, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, amount);
+				MT_PrintToChat(admin, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, amount);
 
 				return;
 			}
@@ -10446,7 +10448,7 @@ void vSpawnTank(int admin, bool log = true, int amount, int mode)
 			default: strcopy(sTankName, sizeof sTankName, g_esTank[iType].g_sTankName);
 		}
 
-		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
+		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG5, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
 		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
 	}
 }
@@ -10882,7 +10884,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetPlayerCount();
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_PLAYERCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -10906,7 +10908,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount();
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_SURVIVORCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -10930,7 +10932,7 @@ void vCheckConfig(bool manual)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
 			int iCount = iGetHumanCount(true);
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iCount);
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_INFECTEDCOUNT, iCount);
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
@@ -11353,7 +11355,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_DIFFICULTY);
 			CreateDirectory(sSMPath, 511);
 
 			char sDifficulty[11];
@@ -11374,7 +11376,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
 			CreateDirectory(sSMPath, 511);
 
 			char sMapName[128];
@@ -11402,7 +11404,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
 			CreateDirectory(sSMPath, 511);
 
 			char sGameType[2049], sTypes[64][32];
@@ -11421,7 +11423,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_DAY);
 			CreateDirectory(sSMPath, 511);
 
 			char sWeekday[32];
@@ -11435,7 +11437,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_PLAYERCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
@@ -11449,7 +11451,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_SURVIVORCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
@@ -11463,7 +11465,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT);
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_INFECTEDCOUNT);
 			CreateDirectory(sSMPath, 511);
 
 			char sPlayerCount[32];
@@ -11477,7 +11479,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
+			BuildPath(Path_SM, sSMPath, sizeof sSMPath, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
@@ -11546,7 +11548,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_PLAYERCOUNT, iGetPlayerCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -11557,7 +11559,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_SURVIVORCOUNT, iGetHumanCount());
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -11568,7 +11570,7 @@ void vSetupConfigs()
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
 		{
 			char sCountConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_PATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
+			BuildPath(Path_SM, sCountConfig, sizeof sCountConfig, "%s%s%i.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_INFECTEDCOUNT, iGetHumanCount(true));
 			if (FileExists(sCountConfig, true))
 			{
 				vCustomConfig(sCountConfig);
@@ -13825,7 +13827,7 @@ Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vCombineAbilitiesForward(attacker, MT_COMBO_MELEEHIT, victim, .classname = sClassname);
 			}
@@ -13837,7 +13839,7 @@ Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vCombineAbilitiesForward(victim, MT_COMBO_MELEEHIT, attacker, .classname = sClassname);
 			}
@@ -13905,7 +13907,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 				flResistance = (bDeveloper && g_esDeveloper[victim].g_flDevDamageResistance > g_esPlayer[victim].g_flDamageResistance) ? g_esDeveloper[victim].g_flDevDamageResistance : g_esPlayer[victim].g_flDamageResistance;
 				if (!bIsCoreAdminImmune(victim, attacker))
 				{
-					if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
+					if (StrEqual(sClassname[7], "tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
@@ -14140,7 +14142,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 			}
 			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iLauncherOwner) && victim != iLauncherOwner) || (bIsTankSupported(iRockOwner) && victim != iRockOwner))
 			{
-				if (StrEqual(sClassname, "weapon_tank_claw"))
+				if (StrEqual(sClassname[7], "tank_claw"))
 				{
 					return Plugin_Continue;
 				}
@@ -14691,8 +14693,8 @@ void vRegisterDetours()
 	g_iDetourCount = 0;
 
 	char sFilePath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%smutant_tanks_detours.cfg", MT_CONFIG_PATH);
-	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_detours.cfg", sFilePath, sFilePath, sizeof sFilePath))
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%s%s.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_DETOURS);
+	if (!MT_FileExists(MT_CONFIG_FILEPATH, (MT_CONFIG_FILE_DETOURS ... ".cfg"), sFilePath, sFilePath, sizeof sFilePath))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
 
@@ -16348,8 +16350,8 @@ void vRegisterPatches(GameData dataHandle)
 	g_iPatchCount = 0;
 
 	char sFilePath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%smutant_tanks_patches.cfg", MT_CONFIG_PATH);
-	if (!MT_FileExists(MT_CONFIG_PATH, "mutant_tanks_patches.cfg", sFilePath, sFilePath, sizeof sFilePath))
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%s%s.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_PATCHES);
+	if (!MT_FileExists(MT_CONFIG_FILEPATH, (MT_CONFIG_FILE_PATCHES ... ".cfg"), sFilePath, sFilePath, sizeof sFilePath))
 	{
 		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
 
@@ -17072,7 +17074,7 @@ bool bIsCustomTankSupported(int tank)
 bool bIsDayConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DAY);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_DAY);
 	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sDayNumber[2], sDay[10], sFilename[14];
@@ -17127,7 +17129,7 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 bool bIsDifficultyConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, MT_CONFIG_PATH_DIFFICULTY);
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_PATH_DIFFICULTY);
 	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sDifficulty[11], sFilename[15];
@@ -17149,7 +17151,7 @@ bool bIsDifficultyConfigFound(char[] buffer, int size)
 bool bIsFinaleConfigFound(const char[] filename, char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE));
 	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sFinale[32], sFilename[36];
@@ -17203,7 +17205,7 @@ bool bIsFirstMap()
 bool bIsGameModeConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE));
 	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sMode[64], sFilename[68];
@@ -17225,7 +17227,7 @@ bool bIsGameModeConfigFound(char[] buffer, int size)
 bool bIsMapConfigFound(char[] buffer, int size)
 {
 	char sFolder[PLATFORM_MAX_PATH], sPath[PLATFORM_MAX_PATH];
-	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_PATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
+	FormatEx(sFolder, sizeof sFolder, "%s%s", MT_CONFIG_FILEPATH, (g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP));
 	BuildPath(Path_SM, sPath, sizeof sPath, sFolder);
 
 	char sMap[128], sFilename[132];
@@ -17688,17 +17690,17 @@ int iGetMaxWeaponSkins(int developer)
 	{
 		char sClassname[32];
 		GetEntityClassname(iActiveWeapon, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "weapon_pistol_magnum") || StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
+		if (StrEqual(sClassname[7], "pistol_magnum") || StrEqual(sClassname[7], "rifle") || StrEqual(sClassname[7], "rifle_ak47"))
 		{
 			return 2;
 		}
-		else if (StrEqual(sClassname, "weapon_smg") || StrEqual(sClassname, "weapon_smg_silenced")
-			|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
-			|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
+		else if (StrEqual(sClassname[7], "smg") || StrEqual(sClassname[7], "smg_silenced")
+			|| StrEqual(sClassname[7], "pumpshotgun") || StrEqual(sClassname[7], "shotgun_chrome")
+			|| StrEqual(sClassname[7], "autoshotgun") || StrEqual(sClassname[7], "hunting_rifle"))
 		{
 			return 1;
 		}
-		else if (StrEqual(sClassname, "weapon_melee"))
+		else if (StrEqual(sClassname[7], "melee"))
 		{
 			char sWeapon[32];
 			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof sWeapon);
@@ -18429,7 +18431,7 @@ Action tTimerRegenerateAmmo(Handle timer)
 		}
 
 		GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
-		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
+		if (!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw"))
 		{
 			iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 			if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[1])

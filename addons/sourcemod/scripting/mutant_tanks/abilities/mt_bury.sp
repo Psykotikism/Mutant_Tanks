@@ -257,7 +257,7 @@ Action cmdBuryInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -422,7 +422,7 @@ Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vBuryHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -434,7 +434,7 @@ Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vBuryHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -520,11 +520,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vBuryHit(survivor, tank, random, flChance, g_esBuryCache[tank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vBuryHit(survivor, tank, random, flChance, g_esBuryCache[tank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -1104,11 +1104,11 @@ Action tTimerBuryCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vBuryHit(iSurvivor, iTank, flRandom, flChance, g_esBuryCache[iTank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vBuryHit(iSurvivor, iTank, flRandom, flChance, g_esBuryCache[iTank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

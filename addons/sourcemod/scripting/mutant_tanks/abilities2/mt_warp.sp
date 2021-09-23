@@ -282,7 +282,7 @@ Action cmdWarpInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -435,7 +435,7 @@ Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vWarpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esWarpCache[attacker].g_flWarpChance, g_esWarpCache[attacker].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -447,7 +447,7 @@ Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
 				vWarpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esWarpCache[victim].g_flWarpChance, g_esWarpCache[victim].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
@@ -547,11 +547,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vWarpHit(survivor, tank, random, flChance, g_esWarpCache[tank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vWarpHit(survivor, tank, random, flChance, g_esWarpCache[tank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -1261,11 +1261,11 @@ Action tTimerWarpCombo3(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vWarpHit(iSurvivor, iTank, flRandom, flChance, g_esWarpCache[iTank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vWarpHit(iSurvivor, iTank, flRandom, flChance, g_esWarpCache[iTank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

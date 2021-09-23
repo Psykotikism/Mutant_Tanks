@@ -211,7 +211,7 @@ Action cmdChokeInfo(int client, int args)
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -384,7 +384,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 					return Plugin_Continue;
 				}
 
-				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
 					vChokeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esChokeCache[attacker].g_flChokeChance, g_esChokeCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 				}
@@ -396,7 +396,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 					return Plugin_Continue;
 				}
 
-				if (StrEqual(sClassname, "weapon_melee"))
+				if (StrEqual(sClassname[7], "melee"))
 				{
 					vChokeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esChokeCache[victim].g_flChokeChance, g_esChokeCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
@@ -483,11 +483,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esChokeCache[tank].g_iChokeHitMode == 0 || g_esChokeCache[tank].g_iChokeHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esChokeCache[tank].g_iChokeHitMode == 0 || g_esChokeCache[tank].g_iChokeHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vChokeHit(survivor, tank, random, flChance, g_esChokeCache[tank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esChokeCache[tank].g_iChokeHitMode == 0 || g_esChokeCache[tank].g_iChokeHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esChokeCache[tank].g_iChokeHitMode == 0 || g_esChokeCache[tank].g_iChokeHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vChokeHit(survivor, tank, random, flChance, g_esChokeCache[tank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -1094,11 +1094,11 @@ Action tTimerChokeCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}

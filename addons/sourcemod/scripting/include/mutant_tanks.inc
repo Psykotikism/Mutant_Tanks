@@ -20,6 +20,7 @@
 // Core plugin information
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik"
+#define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
 #define MT_VERSION "8.90"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
@@ -87,7 +88,8 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_TAG "[MT]"
 #define MT_TAG2 "\x04[MT]\x01"
 #define MT_TAG3 "\x04[MT]\x03"
-#define MT_TAG4 "\x04[MT]\x05"
+#define MT_TAG4 "\x04[MT]\x04"
+#define MT_TAG5 "\x04[MT]\x05"
 
 // Constants
 #define MT_MAXABILITIES 100
@@ -1968,7 +1970,7 @@ stock bool bIsGunWeapon(int survivor)
 		{
 			char sWeapon[32];
 			GetEntityClassname(iWeapon, sWeapon, sizeof sWeapon);
-			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
+			if (!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw"))
 			{
 				return true;
 			}
@@ -2573,7 +2575,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (StrContains(key, "open", false) == 0 && min == 0.0 && max == 999999.0)
+	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 999999.0)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
@@ -3134,39 +3136,39 @@ stock int iGetWeaponOffset(int weapon)
 {
 	char sWeapon[32];
 	GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
-	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
+	if (StrEqual(sWeapon[7], "rifle") || StrEqual(sWeapon[7], "rifle_ak47") || StrEqual(sWeapon[7], "rifle_desert") || StrEqual(sWeapon[7], "rifle_sg552"))
 	{
 		return 3;
 	}
-	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
+	else if (StrEqual(sWeapon[7], "smg") || StrEqual(sWeapon[7], "smg_silenced") || StrEqual(sWeapon[7], "smg_mp5"))
 	{
 		return 5;
 	}
-	else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
+	else if (StrEqual(sWeapon[7], "shotgun_chrome"))
 	{
 		return 7;
 	}
-	else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
+	else if (StrEqual(sWeapon[7], "pumpshotgun"))
 	{
 		return bIsSecondGame() ? 7 : 6;
 	}
-	else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
+	else if (StrEqual(sWeapon[7], "shotgun_spas"))
 	{
 		return 8;
 	}
-	else if (StrEqual(sWeapon, "weapon_autoshotgun"))
+	else if (StrEqual(sWeapon[7], "autoshotgun"))
 	{
 		return bIsSecondGame() ? 8 : 6;
 	}
-	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
+	else if (StrEqual(sWeapon[7], "hunting_rifle"))
 	{
 		return bIsSecondGame() ? 9 : 2;
 	}
-	else if (StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_awp"))
+	else if (StrEqual(sWeapon[7], "sniper_military") || StrEqual(sWeapon[7], "sniper_scout") || StrEqual(sWeapon[7], "sniper_awp"))
 	{
 		return 10;
 	}
-	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
+	else if (StrEqual(sWeapon[7], "grenade_launcher"))
 	{
 		return 17;
 	}
