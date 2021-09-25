@@ -15,9 +15,6 @@
 
 ### Changes
 
-#### General
-- Made some small optimizations regarding string comparisons.
-
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
@@ -28,7 +25,6 @@
 #### Game Data
 - Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
 - Added detour setup and signatures for the following functions:
-	- `PassServerEntityFilter` (Thanks to `epzminion` for the help!)
 	- `CTerrorGun::Use`
 	- `CWeaponSpawn::Use`
 
@@ -2690,7 +2686,7 @@ Changes:
 
 1. Added support for dynamic loading to the modules. (Thanks `Lux`!)
 2. Switched `RemoveEntity(entity)` back to `AcceptEntityInput(entity, "Kill")` just to be courteous to those who prefer to still use `SM 1.8`.
-3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please do not report bugs if you're playing on a local/listen server. :/)
+3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please do not report bugs if you're playing on a local/listen server.)
 
 ## Version 8.36 (August 20, 2018)
 

@@ -384,7 +384,6 @@ enum struct esGeneral
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddMaxCarryDetour;
-	DynamicDetour g_ddPassServerEntityFilterDetour;
 	DynamicDetour g_ddPreThinkDetour;
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddRevivedDetour;
@@ -1387,6 +1386,7 @@ public void OnAllPluginsLoaded()
 	{
 		vRegisterDetours();
 		vSetupDetours(gdMutantTanks);
+
 		vRegisterPatches(gdMutantTanks);
 		vInstallPermanentPatches();
 
@@ -14868,7 +14868,6 @@ void vSetupDetours(GameData dataHandle)
 	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, dataHandle, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
 	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, dataHandle, "MTDetour_Tank::LeaveStasis");
 	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, dataHandle, "MTDetour_CAmmoDef::MaxCarry");
-	vSetupDetour(g_esGeneral.g_ddPassServerEntityFilterDetour, dataHandle, "MTDetour_PassServerEntityFilter");
 	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, dataHandle, "MTDetour_CTerrorPlayer::PreThink");
 	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, dataHandle, "MTDetour_ZombieManager::ReplaceTank");
 	vSetupDetour(g_esGeneral.g_ddRevivedDetour, dataHandle, "MTDetour_CTerrorPlayer::OnRevived");
@@ -14960,7 +14959,6 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
-	vToggleDetour(g_esGeneral.g_ddPassServerEntityFilterDetour, "MTDetour_PassServerEntityFilter", Hook_Pre, mrePassServerEntityFilterPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, toggle);
@@ -15727,38 +15725,6 @@ MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hParams)
 
 			return MRES_Override;
 		}
-	}
-
-	return MRES_Ignored;
-}
-
-MRESReturn mrePassServerEntityFilterPre(DHookReturn hReturn, DHookParam hParams)
-{
-	Address adParam1 = view_as<Address>(hParams.Get(1)), adParam2 = view_as<Address>(hParams.Get(2));
-	if (!adParam1 || !adParam2)
-	{
-		return MRES_Ignored;
-	}
-
-	if (adParam1 == adParam2)
-	{
-		return MRES_Ignored;
-	}
-
-	int iEntity1 = iEntHandleToEntSerial(iGetRefEHandle(adParam1)), iEntity2 = iEntHandleToEntSerial(iGetRefEHandle(adParam2));
-	if (!bIsValidEntity(iEntity1) || !bIsValidEntity(iEntity2))
-	{
-		return MRES_Ignored;
-	}
-
-	if (GetEntPropEnt(iEntity1, Prop_Data, "m_hOwnerEntity") == iEntity2)
-	{
-		return MRES_Ignored;
-	}
-
-	if (GetEntPropEnt(iEntity2, Prop_Data, "m_hOwnerEntity") == iEntity1)
-	{
-		return MRES_Ignored;
 	}
 
 	return MRES_Ignored;

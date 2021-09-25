@@ -35,7 +35,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 6. Store up to 500 Mutant Tank types.
 7. Administration system designed for access and immunity to Mutant Tanks.
 8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
-9. Over 1,400 optional settings to configure.
+9. Over 1,500 optional settings to configure.
 10. Over 70 unique abilities to choose from.
 11. Choose which abilities to install.
 12. Add custom abilities and features through the use of forwards and natives.
@@ -136,7 +136,7 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 customization options!)
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,500 customization options!)
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
