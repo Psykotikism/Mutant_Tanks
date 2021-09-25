@@ -1950,11 +1950,6 @@ stock bool bIsEntityGrounded(int entity)
 	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
 }
 
-stock bool bIsEntityStaticProp(int ref)
-{
-	return !ref || (iGetEntitySerial(ref) == iGetEntitySerial(STATICPROP_EHANDLE_MASK));
-}
-
 stock bool bIsGunWeapon(int survivor)
 {
 	int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
@@ -2667,22 +2662,6 @@ stock int iClamp(int value, int min, int max)
 	return value;
 }
 
-stock int iEntHandleToEntSerial(int ref)
-{
-	if (bIsEntityStaticProp(ref))
-	{
-		return -1;
-	}
-
-	int iEntity = iGetEntityIndex(ref);
-	if (!bIsValidEntity(iEntity))
-	{
-		return -1;
-	}
-
-	return iEntity;
-}
-
 stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
 {
 	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
@@ -2743,11 +2722,6 @@ stock int iGetClampedValue(const char[] key, const char[] setting1, const char[]
 stock int iGetEntityIndex(int ref)
 {
 	return (ref & ENT_ENTRY_MASK);
-}
-
-stock int iGetEntitySerial(int ref)
-{
-	return (ref >> NUM_ENT_ENTRY_BITS);
 }
 
 stock int iGetHumanCount(bool infected = false)

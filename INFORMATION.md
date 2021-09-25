@@ -20707,7 +20707,7 @@
 "Mutant Tanks"
 {
 	// Use the admin's SteamID32 or Steam3ID when adding an entry.
-	"STEAM_0:1:23456789" // [U:1:23456789]
+	"STEAM_0:1:23456789" // Alternative: "[U:1:23456789]"
 	{
 		"Administration"
 		{
