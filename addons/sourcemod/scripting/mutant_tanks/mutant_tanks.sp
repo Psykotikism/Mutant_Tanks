@@ -1516,6 +1516,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
 	SDKHook(client, SDKHook_OnTakeDamageAlive, OnTakePlayerDamageAlive);
 	SDKHook(client, SDKHook_OnTakeDamageAlivePost, OnTakePlayerDamageAlivePost);
+	SDKHook(client, SDKHook_PreThinkPost, OnVomitPreThinkPost);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 	SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 
@@ -5001,18 +5002,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-			if (bIsTank(iPlayer) && !bIsPlayerIncapacitated(iPlayer))
-			{
-				vSetTankGlow(iPlayer);
-			}
-			else if (bIsSurvivor(iPlayer) && g_bSecondGame)
-			{
-				switch (bIsDeveloper(iPlayer, 0))
-				{
-					case true: vSetSurvivorOutline(iPlayer, g_esDeveloper[iPlayer].g_sDevGlowOutline, .delimiter = ",");
-					case false: vToggleSurvivorEffects(iPlayer, .type = 5);
-				}
-			}
+			vRestorePlayerEffects(iPlayer);
 
 			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iPlayer].g_bVomited)
 			{
@@ -7101,6 +7091,22 @@ void vResetTankDamage(int tank)
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		g_esPlayer[iSurvivor].g_iTankDamage[tank] = 0;
+	}
+}
+
+void vRestorePlayerEffects(int client)
+{
+	if (bIsTank(client) && !bIsPlayerIncapacitated(client))
+	{
+		vSetTankGlow(client);
+	}
+	else if (bIsSurvivor(client) && g_bSecondGame)
+	{
+		switch (bIsDeveloper(client, 0))
+		{
+			case true: vSetSurvivorOutline(client, g_esDeveloper[client].g_sDevGlowOutline, .delimiter = ",");
+			case false: vToggleSurvivorEffects(client, .type = 5);
+		}
 	}
 }
 
@@ -14443,6 +14449,32 @@ void OnSpeedPreThinkPost(int survivor)
 			SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 			SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
+	}
+}
+
+void OnVomitPreThinkPost(int client)
+{
+	switch (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	{
+		case true:
+		{
+			if (g_esPlayer[client].g_bVomited && GetEntProp(client, Prop_Send, "m_itTimer") == -1)
+			{
+				g_esPlayer[client].g_bVomited = false;
+
+				vRestorePlayerEffects(client);
+			}
+			else if (!g_esPlayer[client].g_bVomited && GetEntProp(client, Prop_Send, "m_itTimer") > 0)
+			{
+				g_esPlayer[client].g_bVomited = true;
+
+				if (bIsTank(client) || bIsSurvivor(client))
+				{
+					vRemovePlayerGlow(client);
+				}
+			}
+		}
+		case false: SDKUnhook(client, SDKHook_PreThinkPost, OnVomitPreThinkPost);
 	}
 }
 
