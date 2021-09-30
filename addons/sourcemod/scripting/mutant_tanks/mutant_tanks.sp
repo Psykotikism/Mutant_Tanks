@@ -15,10 +15,12 @@
 
 #undef REQUIRE_PLUGIN
 #tryinclude <adminmenu>
+#tryinclude <autoexecconfig>
 #tryinclude <clientprefs>
 #tryinclude <left4dhooks>
 #tryinclude <mt_clone>
 #tryinclude <ThirdPersonShoulder_Detect>
+#tryinclude <updater>
 #tryinclude <WeaponHandling>
 #define REQUIRE_PLUGIN
 
@@ -230,6 +232,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ROCK_FIRE (1 << 2) // fire particle
 #define MT_ROCK_SPIT (1 << 3) // spit particle
 
+#define MT_UPDATE_URL "https://raw.githubusercontent.com/Psykotikism/Mutant_Tanks/master/mutant_tanks_updater.txt"
+
 #define MT_USEFUL_REFILL (1 << 0) // useful refill reward
 #define MT_USEFUL_HEALTH (1 << 1) // useful health reward
 #define MT_USEFUL_AMMO (1 << 2) // useful ammo reward
@@ -330,6 +334,7 @@ enum struct esGeneral
 	ConVar g_cvMTAmmoPackUseDuration;
 	ConVar g_cvMTAssaultRifleAmmo;
 	ConVar g_cvMTAutoShotgunAmmo;
+	ConVar g_cvMTAutoUpdate;
 	ConVar g_cvMTColaBottlesUseDuration;
 	ConVar g_cvMTDefibrillatorUseDuration;
 	ConVar g_cvMTDifficulty;
@@ -517,6 +522,7 @@ enum struct esGeneral
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
+	int g_iAutoUpdate;
 	int g_iBaseHealth;
 	int g_iBulletImmunity;
 	int g_iCheckAbilities;
@@ -1359,6 +1365,12 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
+#if defined _updater_included
+	else if (StrEqual(name, "updater"))
+	{
+		Updater_AddPlugin(MT_UPDATE_URL);
+	}
+#endif
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -3585,6 +3597,20 @@ void vDefaultConVarSettings()
 
 void vRegisterConVars()
 {
+#if defined _autoexecconfig_included
+	AutoExecConfig_SetFile("mutant_tanks");
+	AutoExecConfig_SetCreateFile(true);
+	g_esGeneral.g_cvMTAutoUpdate = AutoExecConfig_CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires Updater: https://forums.alliedmods.net/showthread.php?t=169095\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_esGeneral.g_cvMTDisabledGameModes = AutoExecConfig_CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
+	g_esGeneral.g_cvMTEnabledGameModes = AutoExecConfig_CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
+	g_esGeneral.g_cvMTGameModeTypes = AutoExecConfig_CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
+	g_esGeneral.g_cvMTListenSupport = AutoExecConfig_CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_esGeneral.g_cvMTPluginEnabled = AutoExecConfig_CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+#else
+	g_esGeneral.g_cvMTAutoUpdate = CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires Updater: https://forums.alliedmods.net/showthread.php?t=169095\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTDisabledGameModes = CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTEnabledGameModes = CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
@@ -3592,6 +3618,7 @@ void vRegisterConVars()
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
 	AutoExecConfig(true, "mutant_tanks");
+#endif
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
 	g_esGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
@@ -12019,6 +12046,7 @@ void SMCParseStart(SMCParser smc)
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
 		g_esGeneral.g_iPluginEnabled = 0;
+		g_esGeneral.g_iAutoUpdate = 0;
 		g_esGeneral.g_iListenSupport = g_bDedicated ? 0 : 1;
 		g_esGeneral.g_iCheckAbilities = 1;
 		g_esGeneral.g_iDeathRevert = 1;
@@ -12697,6 +12725,7 @@ SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] value, bool
 			if (StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS4, false))
 			{
 				g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "penabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
+				g_esGeneral.g_iAutoUpdate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "AutoUpdate", "Auto Update", "Auto_Update", "update", g_esGeneral.g_iAutoUpdate, value, 0, 1);
 				g_esGeneral.g_iListenSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "ListenSupport", "Listen Support", "Listen_Support", "listen", g_esGeneral.g_iListenSupport, value, 0, 1);
 				g_esGeneral.g_iCheckAbilities = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esGeneral.g_iCheckAbilities, value, 0, 1);
 				g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, MT_CONFIG_SECTION_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
@@ -16793,6 +16822,21 @@ public void TP_OnThirdPersonChanged(int iClient, bool bIsThirdPerson)
 	{
 		g_esPlayer[iClient].g_bThirdPerson2 = bIsThirdPerson;
 	}
+}
+#endif
+
+#if defined _updater_included
+public Action Updater_OnPluginDownloading()
+{
+	return (g_esGeneral.g_cvMTAutoUpdate.BoolValue || g_esGeneral.g_iAutoUpdate == 1) ? Plugin_Continue : Plugin_Handled;
+}
+
+public void Updater_OnPluginUpdated()
+{
+	char sFilename[PLATFORM_MAX_PATH];
+	GetPluginFilename(null, sFilename, sizeof(sFilename));
+	ServerCommand("sm plugins unload %s", sFilename);
+	ServerCommand("sm plugins load %s", sFilename);
 }
 #endif
 
