@@ -50,7 +50,9 @@
 1. `SourceMod 1.11.0.6724` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется:
+- [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254)
 - [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
+- [Updater](https://forums.alliedmods.net/showthread.php?t=169095)
 - [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
 
@@ -88,6 +90,16 @@
 
 ## Настройка переменных
 ```
+// Автоматически обновлять Танки-мутанты.
+// Требуется "Updater": https://forums.alliedmods.net/showthread.php?t=169095
+// 0: ВЫКЛЮЧЕНЫ
+// 1: ВКЛЮЧЕНЫ
+// -
+// По умолчанию: "1"
+// Минимум: "0.000000"
+// Максимум: "1.000000"
+mt_autoupdate "0"
+
 // Отключить Танков-мутантов в этих режимах игры.
 // Через запятую.
 // Пусто: Нет
@@ -2103,7 +2115,7 @@ Overrides
 
 **Farbror Godis** - За плагин [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146).
 
-**GoD-Tony** - За плагин [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478).
+**GoD-Tony** - За плагин [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) и [Updater](https://forums.alliedmods.net/showthread.php?t=169095).
 
 **Phil25** - За плагин [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579).
 

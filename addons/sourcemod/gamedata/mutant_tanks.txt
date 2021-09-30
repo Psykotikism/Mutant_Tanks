@@ -1099,7 +1099,7 @@
 			 * 2. The instruction should look like a function call.
 			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
 			 * 4. The length of the JMP instruction patch will be determined by the following equation:
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
 			 * Equation: a2 - a1 = JMP instruction length
 			 *
@@ -1110,7 +1110,7 @@
 			"CTankRock::OnRelease::SoundLoop"
 			{
 				"linux"		"182" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"117" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"117" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1123,14 +1123,14 @@
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
 			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
 			 * 4. The call instruction below that should be the start of the "CTerrorGun::Deploy" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Deploy"
 			{
-				"linux"		"332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"425" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"332" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"425" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1141,14 +1141,14 @@
 			 * How to find:
 			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Holster"
 			{
-				"linux"		"297" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"403" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"297" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"403" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1160,14 +1160,14 @@
 			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
 			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
 			{
-				"linux"		"316" // start at 89 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"417" // start at 56 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"316" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"417" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1256,7 +1256,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"5502" // start at D9 and patch 2 bytes with EB ??
+				"windows"	"5502" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1271,7 +1271,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"5578" // start at 8B and patch 2 bytes with EB ??
+				"windows"	"5578" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -1333,7 +1333,7 @@
 			 * 2. The instruction should look like a function call.
 			 * 3. Look for the 6-byte float (FLD) instruction right before a PUSH instruction above that function call.
 			 * 4. The length of the JMP instruction patch will be determined by the following equation:
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 *
@@ -1344,7 +1344,7 @@
 			"CTerrorPlayer::OnFalling::Scream"
 			{
 				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"611" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"611" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -2919,7 +2919,7 @@
 			 * 2. The instruction should look like a function call.
 			 * 3. Look for the 2-byte float (FLDZ) instruction right before a PUSH instruction above that function call.
 			 * 4. The length of the JMP instruction patch will be determined by the following equation:
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
 			 * Equation: a2 - a1 = JMP instruction length
 			 *
@@ -2930,7 +2930,7 @@
 			"CTankRock::OnRelease::SoundLoop"
 			{
 				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"122" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"122" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -2943,14 +2943,14 @@
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
 			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
 			 * 4. The call instruction below that should be the start of the "CTerrorGun::Deploy" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Deploy"
 			{
-				"linux"		"325" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"392" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"325" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"392" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -2961,14 +2961,14 @@
 			 * How to find:
 			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Holster"
 			{
-				"linux"		"294" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"370" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"294" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"370" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -2980,14 +2980,14 @@
 			 * 1. Look for the fourth "CBaseCombatCharacter::GetActiveWeapon" function call.
 			 * 2. The call instruction below that should be the start of the "CTerrorGun::Holster" function call.
 			 * 3. The call instruction below that should be the start of the "CBaseCombatCharacter::SetActiveWeapon" function call.
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
 			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
 			{
-				"linux"		"313" // start at 89 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				"windows"	"384" // start at 56 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"313" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"windows"	"384" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -3132,7 +3132,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"linux"		"10263" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"8174" // start at D9 and patch 2 bytes with EB ??
+				"windows"	"8174" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -3147,7 +3147,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"8266" // start at 8B and patch 2 bytes with EB ??
+				"windows"	"8266" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -3230,7 +3230,7 @@
 			 * 2. The instruction should look like a function call.
 			 * 3. Look for the 6-byte float (FLD) instruction right before a PUSH instruction above that function call.
 			 * 4. The length of the JMP instruction patch will be determined by the following equation:
-			 * Let a1 = Address of the patch location + five bytes (because the patch itself takes five bytes)
+			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 *
@@ -3241,7 +3241,7 @@
 			"CTerrorPlayer::OnFalling::Scream"
 			{
 				"linux"		"678" // start at E8 and patch 5 bytes with NOPs (0x90)
-				"windows"	"552" // start at D9 and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"windows"	"552" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**

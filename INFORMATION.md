@@ -150,6 +150,16 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Plugin Enabled"			"1"
 
+			// Automatically update Mutant Tanks.
+			// Note: This setting has a convar equivalent (mt_autoupdate).
+			// Note: This setting requires GoD-Tony's "Updater" plugin to work. Disable this setting if you do not use that plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=169095
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Auto Update"				"0"
+
 			// Enable Mutant Tanks on listen servers.
 			// Note: This setting has a convar equivalent (mt_listensupport).
 			// Note: Supporting listen servers only extends to SourceMod's own limits.

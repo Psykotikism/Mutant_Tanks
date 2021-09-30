@@ -50,7 +50,9 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 1. `SourceMod 1.11.0.6724` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended:
+- [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254)
 - [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
+- [Updater](https://forums.alliedmods.net/showthread.php?t=169095)
 - [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
 
@@ -88,6 +90,16 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 
 ## ConVar Settings
 ```
+// Automatically update Mutant Tanks.
+// Requires "Updater": https://forums.alliedmods.net/showthread.php?t=169095
+// 0: OFF
+// 1: ON
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+mt_autoupdate "0"
+
 // Disable Mutant Tanks in these game modes.
 // Separate by commas.
 // Empty: None
@@ -2103,7 +2115,7 @@ Examples:
 
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) plugin.
+**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) and [Updater](https://forums.alliedmods.net/showthread.php?t=169095) plugins.
 
 **Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 

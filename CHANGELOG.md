@@ -15,9 +15,14 @@
 
 ### Changes
 
+#### General
+- Added [Updater](https://forums.alliedmods.net/showthread.php?t=169095) support.
+- Added [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) support.
+
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
+- Added more checks for detecting vomited players. (Thanks to `Marttt` for the information!)
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
@@ -29,6 +34,7 @@
 	- `CWeaponSpawn::Use`
 
 #### Settings
+- Added the `Auto Update` setting under the `Plugin Settings/General` section.
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
 
 #### Translations
@@ -1744,7 +1750,7 @@ Bug fixes:
 Changes:
 
 1. Added a `StopSound` check for the Tank's rocks to get rid of the loud wind sound. (Thanks to `Electr000999` for suggesting!)
-2. More code optimization.
+2. More code optimizations.
 
 Files:
 
@@ -1845,7 +1851,7 @@ Changes:
 
 1. Removed the `Respawn Mode` setting and updated the `Respawn Type` setting for the `Respawn` ability.
 2. Added the `Clone Type` setting for the `Clone` ability. (Requested by `Neptunia`.)
-3. More code optimization.
+3. More code optimizations.
 
 Files:
 
@@ -2809,7 +2815,7 @@ Changes:
 1. Added a 3rd parameter for the `sm_tank` command. (Usage: `sm_tank <1-2500> <0: spawn at crosshair, 1: spawn automatically>`)
 2. Added the `Drop Mode` KeyValue setting to determine what kind of weapons the Super Tank can drop. `(0: Both|1: Guns only|2: Melee weapons only)`
 3. Changed how the `Pyro` ability detects Tanks that are on fire.
-4. Major code optimization. (Thanks `Lux`!)
+4. Major code optimizations. (Thanks `Lux`!)
 
 Files:
 
