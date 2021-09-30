@@ -232,7 +232,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ROCK_FIRE (1 << 2) // fire particle
 #define MT_ROCK_SPIT (1 << 3) // spit particle
 
-#define MT_UPDATE_URL "https://raw.githubusercontent.com/Psykotikism/Mutant_Tanks/master/mutant_tanks_updater.txt"
+#define MT_UPDATE_URL "https://raw.githubusercontent.com/Psykotikism/Mutant_Tanks/master/addons/sourcemod/mutant_tanks_updater.txt"
 
 #define MT_USEFUL_REFILL (1 << 0) // useful refill reward
 #define MT_USEFUL_HEALTH (1 << 1) // useful health reward
