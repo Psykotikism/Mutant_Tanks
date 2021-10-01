@@ -5,7 +5,6 @@
 		"Version"
 		{
 			"Latest"	"8.90"
-			"Previous"	"8.89"
 		}
 
 		"Notes"		"More info @ https://forums.alliedmods.net/showthread.php?t=302140. Changes in 8.90:"
@@ -164,11 +163,5 @@
 		"Plugin"	"Path_SM/translations/chi/mutant_tanks.phrases.txt"
 		"Plugin"	"Path_SM/translations/hu/mutant_tanks.phrases.txt"
 		"Plugin"	"Path_SM/translations/ru/mutant_tanks.phrases.txt"
-
-		// Name translations
-		/*"Source"	"Path_SM/translations/mutant_tanks_names.phrases.txt"
-		"Source"	"Path_SM/translations/chi/mutant_tanks_names.phrases.txt"
-		"Source"	"Path_SM/translations/hu/mutant_tanks_names.phrases.txt"
-		"Source"	"Path_SM/translations/ru/mutant_tanks_names.phrases.txt"*/
 	}
 }
