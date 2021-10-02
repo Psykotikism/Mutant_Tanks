@@ -81,8 +81,10 @@
 - папки `addons/sourcemod/translations/chi`
 - папки `addons/sourcemod/translations/hu`
 - папки `addons/sourcemod/translations/ru`
-5. Создайте копию папки `mutant_tanks` в папке `addons/sourcemod/data`.
-6. Следуйте руководству по установке выше. (Только для обновления до более новых версий.)
+5. Создайте копию `mutant_tanks.cfg` в `addons/sourcemod/data/mutant_tanks`.
+6. Удалите `mutant_tanks_detours.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
+7. Удалите `mutant_tanks_patches.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
+8. Следуйте руководству по установке выше. (Только для обновления до более новых версий.)
 
 ## Отключение
 1. Переместите папку `mutant_tanks` (`mutant_tanks.smx` и все его модули) в папку `plugins/disabled`.
