@@ -16,10 +16,13 @@
 ### Changes
 
 #### General
+- The `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files are now read differently.
 - All settings in `mutant_tanks_detours.cfg` can now be set globally and per platform.
 - The `mutant_tanks_detours.cfg` now accepts different formats like the main config file.
+- Renamed and added several settings for `mutant_tanks_detours.cfg`.
 - All settings in `mutant_tanks_patches.cfg` can now be set globally and per platform.
 - The `mutant_tanks_patches.cfg` now accepts different formats like the main config file.
+- Renamed and added several settings for `mutant_tanks_patches.cfg`.
 - Added [Updater](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Untested)
@@ -27,13 +30,14 @@
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
-- Added more checks for detecting vomited players. (Thanks to `Marttt` for the information!)
+- Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
 
 #### Game Data
 - Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
+- Added detour setup for `CTerrorPlayer::OnITExpired`.
 - Added detour setup and signatures for the following functions:
 	- `CTerrorGun::Use`
 	- `CWeaponSpawn::Use`
