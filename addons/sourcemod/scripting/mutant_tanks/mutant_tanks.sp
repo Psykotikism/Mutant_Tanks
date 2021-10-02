@@ -437,6 +437,7 @@ enum struct esGeneral
 	DynamicDetour g_ddGetMaxClip1Detour;
 	DynamicDetour g_ddHitByVomitJarDetour;
 	DynamicDetour g_ddIncapacitatedAsTankDetour;
+	DynamicDetour g_ddITExpiredDetour;
 	DynamicDetour g_ddLadderDismountDetour;
 	DynamicDetour g_ddLadderMountDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
@@ -1410,6 +1411,8 @@ enum struct esDetour
 	char g_sCvars[320];
 	char g_sName[128];
 
+	int g_iPostHook;
+	int g_iPreHook;
 	int g_iType;
 }
 
@@ -1619,7 +1622,6 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
 	SDKHook(client, SDKHook_OnTakeDamageAlive, OnTakePlayerDamageAlive);
 	SDKHook(client, SDKHook_OnTakeDamageAlivePost, OnTakePlayerDamageAlivePost);
-	SDKHook(client, SDKHook_PreThinkPost, OnVomitPreThinkPost);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 	SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 
@@ -11899,6 +11901,8 @@ public void SMCParseStart_Detours(SMCParser smc)
 		g_esDetour[iPos].g_bBypass = false;
 		g_esDetour[iPos].g_bInstalled = false;
 		g_esDetour[iPos].g_bLog = false;
+		g_esDetour[iPos].g_iPostHook = 0;
+		g_esDetour[iPos].g_iPreHook = 0;
 		g_esDetour[iPos].g_iType = 0;
 		g_esDetour[iPos].g_sCvars[0] = '\0';
 		g_esDetour[iPos].g_sName[0] = '\0';
@@ -14870,32 +14874,6 @@ void OnSpeedPreThinkPost(int survivor)
 	}
 }
 
-void OnVomitPreThinkPost(int client)
-{
-	switch (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
-	{
-		case true:
-		{
-			if (g_esPlayer[client].g_bVomited && GetEntProp(client, Prop_Send, "m_itTimer") == -1)
-			{
-				g_esPlayer[client].g_bVomited = false;
-
-				vRestorePlayerEffects(client);
-			}
-			else if (!g_esPlayer[client].g_bVomited && GetEntProp(client, Prop_Send, "m_itTimer") > 0)
-			{
-				g_esPlayer[client].g_bVomited = true;
-
-				if (bIsTank(client) || bIsSurvivor(client))
-				{
-					vRemovePlayerGlow(client);
-				}
-			}
-		}
-		case false: SDKUnhook(client, SDKHook_PreThinkPost, OnVomitPreThinkPost);
-	}
-}
-
 /**
  * PostThinkPost hooks
  **/
@@ -15143,6 +15121,8 @@ void vReadDetourSettings(const char[] key, const char[] value)
 	int iIndex = g_esGeneral.g_iDetourCount;
 	g_esDetour[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esDetour[iIndex].g_bLog, value, 0, 1);
 	g_esDetour[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esDetour[iIndex].g_iType, value, 0, 4);
+	g_esDetour[iIndex].g_iPreHook = iGetKeyValueEx(key, "PreHook", "Pre-Hook", "Pre_Hook", "pre", g_esDetour[iIndex].g_iPreHook, value, 0, 4);
+	g_esDetour[iIndex].g_iPostHook = iGetKeyValueEx(key, "PostHook", "Post-Hook", "Post_Hook", "post", g_esDetour[iIndex].g_iPostHook, value, 0, 4);
 
 	vGetKeyValueEx(key, "CvarCheck", "Cvar Check", "Cvar_Check", "cvars", g_esDetour[iIndex].g_sCvars, sizeof esDetour::g_sCvars, value);
 }
@@ -15253,6 +15233,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
 	vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
 	vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
+	vSetupDetour(g_esGeneral.g_ddITExpiredDetour, "MTDetour_CTerrorPlayer::OnITExpired");
 	vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount");
 	vSetupDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount");
 	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
@@ -15285,7 +15266,8 @@ void vSetupDetours()
 void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode, DHookCallback callback, bool toggle, int game = 0)
 {
 	int iIndex = iGetDetourIndex(name);
-	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (!toggle && !g_esDetour[iIndex].g_bInstalled) || (g_esDetour[iIndex].g_iType < 3 && !g_esDetour[iIndex].g_bBypass))
+	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (!toggle && !g_esDetour[iIndex].g_bInstalled) || (g_esDetour[iIndex].g_iType < 3 && !g_esDetour[iIndex].g_bBypass)
+		|| (mode == Hook_Pre && g_esDetour[iIndex].g_iPreHook < 3 && !g_esDetour[iIndex].g_bBypass) || (mode == Hook_Post && g_esDetour[iIndex].g_iPostHook < 3 && !g_esDetour[iIndex].g_bBypass))
 	{
 		return;
 	}
@@ -15342,6 +15324,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Pre, mreIncapacitatedAsTankPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Post, mreIncapacitatedAsTankPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddITExpiredDetour, "MTDetour_CTerrorPlayer::OnITExpired", Hook_Post, mreITExpiredPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Pre, mreLadderDismountPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount", Hook_Post, mreLadderDismountPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount", Hook_Pre, mreLadderMountPre, toggle);
@@ -15367,6 +15350,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Post, mreUsePost, toggle);
+	vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon", Hook_Post, mreVomitedUponPost, toggle);
 
 	switch (g_esGeneral.g_iPlatformType > 0)
 	{
@@ -15983,6 +15967,18 @@ MRESReturn mreIncapacitatedAsTankPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_cvMTTankIncapHealth.IntValue = g_esGeneral.g_iDefaultTankIncapHealth;
 		g_esGeneral.g_iDefaultTankIncapHealth = -1;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreITExpiredPost(int pThis)
+{
+	if (bIsValidClient(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[pThis].g_bVomited)
+	{
+		g_esPlayer[pThis].g_bVomited = false;
+
+		vRestorePlayerEffects(pThis);
 	}
 
 	return MRES_Ignored;
@@ -16650,6 +16646,21 @@ MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+MRESReturn mreVomitedUponPost(int pThis, DHookParam hParams)
+{
+	if (bIsValidClient(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[pThis].g_bVomited)
+	{
+		g_esPlayer[pThis].g_bVomited = true;
+
+		if (bIsTank(pThis) || bIsSurvivor(pThis))
+		{
+			vRemovePlayerGlow(pThis);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
 /**
  * Patch functions
  **/
@@ -16833,6 +16844,7 @@ void vRegisterPatch(const char[] name, bool reg)
 	}
 
 	g_esPatch[iIndex].g_adPatch = adPatch;
+	g_esPatch[iIndex].g_iOffset = iOffset;
 	g_esPatch[iIndex].g_iLength = iPLength;
 	g_esGeneral.g_iPatchCount++;
 

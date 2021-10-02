@@ -297,6 +297,19 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnITExpired()
+			 *
+			 * Note: Detouring as a post-hook for tracking vomited/unvomited players.
+			 **/
+			"MTDetour_CTerrorPlayer::OnITExpired"
+			{
+				"signature"	"CTerrorPlayer::OnITExpired"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
 			 * CTerrorPlayer::OnLadderDismount()
 			 *
 			 * Note: Detouring as a pre-hook for patching weapon deploy per player when getting off ladders.
@@ -414,6 +427,7 @@
 			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
 			 *
 			 * Note: Detouring as a pre-hook for blocking Boomer vomits per player.
+			 * Note: Detouring as a post-hook for tracking vomited/unvomited players.
 			 **/
 			"MTDetour_CTerrorPlayer::OnVomitedUpon"
 			{
@@ -948,6 +962,7 @@
 			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool)
 			 *
 			 * Note: Detouring as a pre-hook for blocking Boomer vomits per player.
+			 * Note: Detouring as a post-hook for tracking vomited/unvomited players.
 			 * Note: L4D1 has a third param.
 			 **/
 			"MTDetour_CTerrorPlayer::OnVomitedUpon"
