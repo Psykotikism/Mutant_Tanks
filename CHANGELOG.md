@@ -16,8 +16,13 @@
 ### Changes
 
 #### General
+- All settings in `mutant_tanks_detours.cfg` can now be set globally and per platform.
+- The `mutant_tanks_detours.cfg` now accepts different formats like the main config file.
+- All settings in `mutant_tanks_patches.cfg` can now be set globally and per platform.
+- The `mutant_tanks_patches.cfg` now accepts different formats like the main config file.
 - Added [Updater](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) support.
+- Added MacOS support. (Untested)
 
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
@@ -49,6 +54,9 @@
 - Shield: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
 
 ### Files
+
+#### Additions
+- Added the `mutant_tanks_updater.txt` file which is used by `Updater`.
 
 #### Updates
 - Updated config files.

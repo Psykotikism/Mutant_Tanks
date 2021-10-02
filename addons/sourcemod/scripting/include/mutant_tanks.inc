@@ -1485,12 +1485,20 @@ stock void vGetEntityMidOrigin(int entity, float origin[3])
 
 stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
 {
-	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
 	{
 		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 		{
 			strcopy(buffer, size, value);
 		}
+	}
+}
+
+stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		strcopy(buffer, size, value);
 	}
 }
 
@@ -2515,6 +2523,16 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	return curVal;
 }
 
+stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return flGetKeywordValue(key, curVal, value, min, max);
+	}
+
+	return curVal;
+}
+
 stock float flGetKeywordValue(const char[] key, float curVal, const char[] value, float min, float max)
 {
 	if (StrEqual(value, "default", false))
@@ -2800,6 +2818,16 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
 		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return iGetKeywordValue(key, curVal, value, min, max);
+	}
+
+	return curVal;
+}
+
+stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return iGetKeywordValue(key, curVal, value, min, max);
 	}
