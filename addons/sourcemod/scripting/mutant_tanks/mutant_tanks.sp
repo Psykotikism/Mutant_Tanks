@@ -190,7 +190,35 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_IMMUNE "Immunities"
 #define MT_CONFIG_SECTION_IMMUNE2 "immune"
 
+#define MT_DATA_SECTION_GAME_BOTH "Both"
+#define MT_DATA_SECTION_GAME "Left4Dead"
+#define MT_DATA_SECTION_GAME2 "Left 4 Dead"
+#define MT_DATA_SECTION_GAME3 "Left_4_Dead"
+#define MT_DATA_SECTION_GAME4 "L4D"
+#define MT_DATA_SECTION_GAME_ONE "Left4Dead1"
+#define MT_DATA_SECTION_GAME_ONE2 "Left 4 Dead 1"
+#define MT_DATA_SECTION_GAME_ONE3 "Left_4_Dead_1"
+#define MT_DATA_SECTION_GAME_ONE4 "L4D1"
+#define MT_DATA_SECTION_GAME_TWO "Left4Dead2"
+#define MT_DATA_SECTION_GAME_TWO2 "Left 4 Dead 2"
+#define MT_DATA_SECTION_GAME_TWO3 "Left_4_Dead_2"
+#define MT_DATA_SECTION_GAME_TWO4 "L4D2"
+
+#define MT_DATA_SECTION_OS "Linux"
+#define MT_DATA_SECTION_OS2 "Lin"
+#define MT_DATA_SECTION_OS3 "Macintosh"
+#define MT_DATA_SECTION_OS4 "Mac"
+#define MT_DATA_SECTION_OS5 "Windows"
+#define MT_DATA_SECTION_OS6 "Win"
+
 #define MT_DETOUR_LIMIT 100 // number of detours allowed
+
+#define MT_DETOUR_SECTION_MAIN "Mutant Tanks Detours"
+#define MT_DETOUR_SECTION_MAIN2 "MutantTanksDetours"
+#define MT_DETOUR_SECTION_MAIN3 "Mutant_Tanks_Detours"
+#define MT_DETOUR_SECTION_MAIN4 "MTDetours"
+#define MT_DETOUR_SECTION_MAIN5 "Detours"
+#define MT_DETOUR_SECTION_PREFIX "MTDetour_"
 
 #define MT_EFFECT_TROPHY (1 << 0) // trophy
 #define MT_EFFECT_FIREWORKS (1 << 1) // fireworks particles
@@ -216,6 +244,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_PATCH_LIMIT 50 // number of patches allowed
 #define MT_PATCH_MAXLEN 48 // number of bytes allowed
+
+#define MT_PATCHES_SECTION_MAIN "Mutant Tanks Patches"
+#define MT_PATCHES_SECTION_MAIN2 "MutantTanksPatches"
+#define MT_PATCHES_SECTION_MAIN3 "Mutant_Tanks_Patches"
+#define MT_PATCHES_SECTION_MAIN4 "MTPatches"
+#define MT_PATCHES_SECTION_MAIN5 "Patches"
+#define MT_PATCHES_SECTION_PREFIX "MTPatch_"
 
 #define MT_PROP_BLUR (1 << 0) // blur prop
 #define MT_PROP_LIGHT (1 << 1) // light prop
@@ -252,8 +287,17 @@ enum ConfigState
 	ConfigState_Start, // reached "Mutant Tanks" section
 	ConfigState_Settings, // reached "Plugin Settings" section
 	ConfigState_Type, // reached "Tank #" section
-	ConfigState_Admin, // reached "STEAM_" or "[U:" section
+	ConfigState_Admin, // reached "STEAM_"/"[U:" section
 	ConfigState_Specific // reached specific sections
+};
+
+enum DataState
+{
+	DataState_None, // no section yet
+	DataState_Start, // reached "Detours"/"Patches" section
+	DataState_Game, // reached "left4dead"/"left4dead2"/"both" section
+	DataState_Name, // reached "MTDetour_FunctionName"/"MTPatch_PatchName" section
+	DataState_OS, // reached "linux"/"windows" section
 };
 
 enum struct esGeneral
@@ -278,13 +322,15 @@ enum struct esGeneral
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
 	bool g_bLeft4DHooksInstalled;
-	bool g_bLinux;
 	bool g_bNextRound;
 	bool g_bNormalMap;
+	bool g_bOverrideDetour;
+	bool g_bOverridePatch;
 	bool g_bPatchDoJumpValue;
 	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
 	bool g_bSameMission;
+	bool g_bUpdateDoJumpMemAccess;
 	bool g_bUsedParser;
 	bool g_bWitchKilled[2048];
 
@@ -296,7 +342,11 @@ enum struct esGeneral
 	char g_sCurrentMissionDisplayTitle[64];
 	char g_sCurrentMissionName[64];
 	char g_sCurrentSection[128];
+	char g_sCurrentSection2[128];
+	char g_sCurrentSection3[128];
 	char g_sCurrentSubSection[128];
+	char g_sCurrentSubSection2[128];
+	char g_sCurrentSubSection3[128];
 	char g_sDisabledGameModes[513];
 	char g_sEnabledGameModes[513];
 	char g_sFallVoicelineReward[64];
@@ -366,6 +416,9 @@ enum struct esGeneral
 	Cookie g_ckMTAdmin[5];
 	Cookie g_ckMTPrefs;
 #endif
+	DataState g_dsState;
+	DataState g_dsState2;
+
 	DynamicDetour g_ddActionCompleteDetour;
 	DynamicDetour g_ddBaseEntityCreateDetour;
 	DynamicDetour g_ddBeginChangeLevelDetour;
@@ -455,6 +508,8 @@ enum struct esGeneral
 	float g_flThrowInterval;
 	float g_flTickInterval;
 
+	GameData g_gdMutantTanks;
+
 	GlobalForward g_gfAbilityActivatedForward;
 	GlobalForward g_gfAbilityCheckForward;
 	GlobalForward g_gfButtonPressedForward;
@@ -541,6 +596,7 @@ enum struct esGeneral
 	int g_iDefaultMeleeRange;
 	int g_iDefaultSurvivorReviveHealth;
 	int g_iDefaultTankIncapHealth;
+	int g_iDetourCount;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iEventKilledAttackerOffset;
@@ -563,6 +619,8 @@ enum struct esGeneral
 	int g_iIdleCheckMode;
 	int g_iIgnoreLevel;
 	int g_iIgnoreLevel2;
+	int g_iIgnoreLevel3;
+	int g_iIgnoreLevel4;
 	int g_iImmunityFlags;
 	int g_iInfectedHealth[2048];
 	int g_iInfiniteAmmoReward[4];
@@ -586,6 +644,8 @@ enum struct esGeneral
 	int g_iMultiplyHealth;
 	int g_iParserViewer;
 	int g_iParticleEffectVisual[4];
+	int g_iPatchCount;
+	int g_iPlatformType;
 	int g_iPlayerCount[3];
 	int g_iPluginEnabled;
 	int g_iPrefsNotify[4];
@@ -1341,13 +1401,45 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Address g_adPatchAddress[MT_PATCH_LIMIT];
+enum struct esDetour
+{
+	bool g_bBypass;
+	bool g_bInstalled;
+	bool g_bLog;
 
-bool g_bDetourBypass[MT_DETOUR_LIMIT], g_bDetourInstalled[MT_DETOUR_LIMIT], g_bDetourLog[MT_DETOUR_LIMIT], g_bPatchInstalled[MT_PATCH_LIMIT], g_bPatchLog[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT], g_bUpdateMemAccess[MT_PATCH_LIMIT] = {true, ...}, g_bUpdateMemAccess2 = true;
+	char g_sCvars[320];
+	char g_sName[128];
 
-char g_sDetourName[MT_DETOUR_LIMIT][128], g_sPatchName[MT_PATCH_LIMIT][128];
+	int g_iType;
+}
 
-int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iDetourCount = 0, g_iDetourType[MT_DETOUR_LIMIT], g_iOriginalBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchCount = 0, g_iPatchLength[MT_PATCH_LIMIT], g_iPatchOffset[MT_PATCH_LIMIT];
+esDetour g_esDetour[MT_DETOUR_LIMIT];
+
+enum struct esPatch
+{
+	Address g_adPatch;
+
+	bool g_bInstalled;
+	bool g_bLog;
+	bool g_bUpdateMemAccess;
+
+	char g_sCvars[320];
+	char g_sName[128];
+	char g_sOffset[128];
+	char g_sPatch[192];
+	char g_sSignature[128];
+	char g_sVerify[192];
+
+	int g_iLength;
+	int g_iOffset;
+	int g_iOriginalBytes[MT_PATCH_MAXLEN];
+	int g_iPatchBytes[MT_PATCH_MAXLEN];
+	int g_iType;
+}
+
+esPatch g_esPatch[MT_PATCH_LIMIT];
+
+int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
 
 public void OnLibraryAdded(const char[] name)
 {
@@ -1393,16 +1485,13 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnAllPluginsLoaded()
 {
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks != null)
+	if (g_esGeneral.g_gdMutantTanks != null)
 	{
 		vRegisterDetours();
-		vSetupDetours(gdMutantTanks);
+		vSetupDetours();
 
-		vRegisterPatches(gdMutantTanks);
+		vRegisterPatches();
 		vInstallPermanentPatches();
-
-		delete gdMutantTanks;
 	}
 }
 
@@ -1450,9 +1539,11 @@ public void OnPluginStart()
 	}
 
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+	g_esGeneral.g_bUpdateDoJumpMemAccess = true;
+
+	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	vHookGlobalEvents();
-	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 	vLateLoad();
 }
 
@@ -4043,35 +4134,15 @@ void vConfigMenu(int admin, int item = 0)
 	g_esGeneral.g_alSections = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	if (g_esGeneral.g_alSections != null)
 	{
-		SMCParser smcConfig = new SMCParser();
-		if (smcConfig != null)
+		SMCParser smcConfig = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Config, SMCNewSection_Config, SMCKeyValues_Config, SMCEndSection_Config, SMCParseEnd_Config);
+		switch (smcConfig != null)
 		{
-			smcConfig.OnStart = SMCParseStart3;
-			smcConfig.OnEnterSection = SMCNewSection3;
-			smcConfig.OnKeyValue = SMCKeyValues3;
-			smcConfig.OnLeaveSection = SMCEndSection3;
-			smcConfig.OnEnd = SMCParseEnd3;
-			SMCError smcError = smcConfig.ParseFile(g_esGeneral.g_sChosenPath);
-
-			if (smcError != SMCError_Okay)
+			case true: delete smcConfig;
+			case false:
 			{
-				char sSmcError[64];
-				smcConfig.GetErrorString(smcError, sSmcError, sizeof sSmcError);
-				LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
-
-				delete smcConfig;
 				delete mConfigMenu;
 				return;
 			}
-
-			delete smcConfig;
-		}
-		else
-		{
-			LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
-
-			delete mConfigMenu;
-			return;
 		}
 
 		int iLength = g_esGeneral.g_alSections.Length, iListSize = (iLength > 0) ? iLength : 0;
@@ -5291,55 +5362,55 @@ void vHookGlobalEvents()
 
 void vReadGameData()
 {
-	GameData gdMutantTanks = new GameData("mutant_tanks");
+	g_esGeneral.g_gdMutantTanks = new GameData("mutant_tanks");
 
-	switch (gdMutantTanks == null)
+	switch (g_esGeneral.g_gdMutantTanks == null)
 	{
 		case true: SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			g_esGeneral.g_bLinux = iGetGameDataOffset(gdMutantTanks, "OS") == 1;
+			g_esGeneral.g_iPlatformType = iGetGameDataOffset("OS");
 
 			if (g_bSecondGame)
 			{
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
 
-				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
+				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
 			}
 			else
 			{
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
-				vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
+				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
 			}
 
-			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
+			g_esGeneral.g_adDirector = g_esGeneral.g_gdMutantTanks.GetAddress("CDirector");
 			if (g_esGeneral.g_adDirector == Address_Null)
 			{
 				LogError("%s Failed to find address: CDirector", MT_TAG);
 			}
 
-			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress(gdMutantTanks, "DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
+			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress("DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
-			vSetupSimpleSDKCalls(gdMutantTanks, g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
+			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
 
 			StartPrepSDKCall(SDKCall_Static);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
 			{
 				LogError("%s Failed to find signature: CTerrorGameRules::GetMissionFirstMap", MT_TAG);
 			}
@@ -5353,7 +5424,7 @@ void vReadGameData()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
 			}
@@ -5367,7 +5438,7 @@ void vReadGameData()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::OnVomitedUpon", MT_TAG);
 			}
@@ -5386,7 +5457,7 @@ void vReadGameData()
 			}
 
 			StartPrepSDKCall(SDKCall_Raw);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "KeyValues::GetString"))
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "KeyValues::GetString"))
 			{
 				LogError("%s Failed to find signature: KeyValues::GetString", MT_TAG);
 			}
@@ -5400,10 +5471,10 @@ void vReadGameData()
 				LogError("%s Your \"KeyValues::GetString\" signature is outdated.", MT_TAG);
 			}
 
-			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::Event_Killed::Attacker");
-			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset(gdMutantTanks, "Tank::GetIntentionInterface");
+			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset("CTerrorPlayer::Event_Killed::Attacker");
+			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset("Tank::GetIntentionInterface");
 
-			int iOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
+			int iOffset = iGetGameDataOffset("Action<Tank>::FirstContainedResponder");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
@@ -5413,7 +5484,7 @@ void vReadGameData()
 				LogError("%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
-			iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
+			iOffset = iGetGameDataOffset("CBaseCombatWeapon::GetMaxClip1");
 			StartPrepSDKCall(SDKCall_Entity);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_ByValue);
@@ -5423,7 +5494,7 @@ void vReadGameData()
 				LogError("%s Your \"CBaseCombatWeapon::GetMaxClip1\" offsets are outdated.", MT_TAG);
 			}
 
-			iOffset = iGetGameDataOffset(gdMutantTanks, "TankIdle::GetName");
+			iOffset = iGetGameDataOffset("TankIdle::GetName");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
@@ -5432,16 +5503,14 @@ void vReadGameData()
 			{
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
-
-			delete gdMutantTanks;
 		}
 	}
 }
 
-void vSetupSimpleSDKCalls(GameData dataHandle, Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
+void vSetupSimpleSDKCalls(Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
 {
 	StartPrepSDKCall(callType);
-	if (!PrepSDKCall_SetFromConf(dataHandle, source, name))
+	if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, source, name))
 	{
 		LogError("%s Failed to find signature: %s", MT_TAG, name);
 	}
@@ -5458,16 +5527,16 @@ void vSetupSimpleSDKCalls(GameData dataHandle, Handle &callHandle, SDKCallType c
 	}
 }
 
-Address adGetGameDataAddress(GameData dataHandle, const char[] name, const char[] backup, const char[] start, const char[] offset1, const char[] offset2, const char[] offset3)
+Address adGetGameDataAddress(const char[] name, const char[] backup, const char[] start, const char[] offset1, const char[] offset2, const char[] offset3)
 {
-	Address adResult = dataHandle.GetAddress(name);
+	Address adResult = g_esGeneral.g_gdMutantTanks.GetAddress(name);
 	if (adResult == Address_Null)
 	{
 		LogError("%s Failed to find address from \"%s\". Retrieving from \"%s\" instead.", MT_TAG, name, backup);
 
-		if (g_bSecondGame || !g_esGeneral.g_bLinux)
+		if (g_bSecondGame || g_esGeneral.g_iPlatformType == 0)
 		{
-			adResult = dataHandle.GetAddress(backup);
+			adResult = g_esGeneral.g_gdMutantTanks.GetAddress(backup);
 			if (adResult == Address_Null)
 			{
 				LogError("%s Failed to find address from \"%s\". Failed to retrieve address from both methods.", MT_TAG, backup);
@@ -5476,12 +5545,12 @@ Address adGetGameDataAddress(GameData dataHandle, const char[] name, const char[
 		else
 		{
 			Address adValue[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
-			adValue[0] = dataHandle.GetAddress(start);
+			adValue[0] = g_esGeneral.g_gdMutantTanks.GetAddress(start);
 
 			int iOffset[3] = {-1, -1, -1};
-			iOffset[0] = iGetGameDataOffset(dataHandle, offset1);
-			iOffset[1] = iGetGameDataOffset(dataHandle, offset2);
-			iOffset[2] = iGetGameDataOffset(dataHandle, offset3);
+			iOffset[0] = iGetGameDataOffset(offset1);
+			iOffset[1] = iGetGameDataOffset(offset2);
+			iOffset[2] = iGetGameDataOffset(offset3);
 
 			if (adValue[0] == Address_Null || iOffset[0] == -1 || iOffset[1] == -1 || iOffset[2] == -1)
 			{
@@ -5500,9 +5569,9 @@ Address adGetGameDataAddress(GameData dataHandle, const char[] name, const char[
 	return adResult;
 }
 
-int iGetGameDataOffset(GameData dataHandle, const char[] name)
+int iGetGameDataOffset(const char[] name)
 {
-	int iOffset = dataHandle.GetOffset(name);
+	int iOffset = g_esGeneral.g_gdMutantTanks.GetOffset(name);
 	if (iOffset == -1)
 	{
 		LogError("%s Failed to load offset: %s", MT_TAG, name);
@@ -7633,12 +7702,12 @@ void vRespawnSurvivor(int survivor)
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("RespawnStats");
+		iIndex = iGetPatchIndex("MTPatch_RespawnStats");
 	}
 
 	if (iIndex != -1)
 	{
-		bInstallPatch(iIndex);
+		vInstallPatch(iIndex);
 	}
 #if defined _l4dh_included
 	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRoundRespawn == null)
@@ -7654,7 +7723,7 @@ void vRespawnSurvivor(int survivor)
 #endif
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 }
 
@@ -11617,12 +11686,368 @@ void vSetupConfigs()
  * Parser functions & callbacks
  **/
 
-void SMCParseStart3(SMCParser smc)
+SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_NewSection newSectionFunc, SMC_KeyValue kvFunc, SMC_EndSection leaveSectionFunc, SMC_ParseEnd endFunc)
+{
+	SMCParser smcParser = new SMCParser();
+	if (smcParser != null)
+	{
+		smcParser.OnStart = startFunc;
+		smcParser.OnEnterSection = newSectionFunc;
+		smcParser.OnKeyValue = kvFunc;
+		smcParser.OnLeaveSection = leaveSectionFunc;
+		smcParser.OnEnd = endFunc;
+		SMCError smcError = smcParser.ParseFile(savepath);
+
+		if (smcError != SMCError_Okay)
+		{
+			char sSmcError[64];
+			smcParser.GetErrorString(smcError, sSmcError, sizeof sSmcError);
+			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
+
+			delete smcParser;
+		}
+	}
+	else
+	{
+		LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
+	}
+
+	return smcParser;
+}
+
+public void SMCParseStart_Patches(SMCParser smc)
+{
+	g_esGeneral.g_bOverridePatch = true;
+	g_esGeneral.g_dsState2 = DataState_None;
+	g_esGeneral.g_iIgnoreLevel4 = 0;
+	g_esGeneral.g_sCurrentSection3[0] = '\0';
+	g_esGeneral.g_sCurrentSubSection3[0] = '\0';
+	g_esGeneral.g_iPatchCount = 0;
+
+	for (int iPos = 0; iPos < MT_PATCH_LIMIT; iPos++)
+	{
+		g_esPatch[iPos].g_adPatch = Address_Null;
+		g_esPatch[iPos].g_bInstalled = false;
+		g_esPatch[iPos].g_bLog = false;
+		g_esPatch[iPos].g_bUpdateMemAccess = true;
+		g_esPatch[iPos].g_iLength = 0;
+		g_esPatch[iPos].g_iOffset = 0;
+		g_esPatch[iPos].g_iType = 0;
+		g_esPatch[iPos].g_sCvars[0] = '\0';
+		g_esPatch[iPos].g_sOffset[0] = '\0';
+		g_esPatch[iPos].g_sPatch[0] = '\0';
+		g_esPatch[iPos].g_sName[0] = '\0';
+		g_esPatch[iPos].g_sSignature[0] = '\0';
+		g_esPatch[iPos].g_sVerify[0] = '\0';
+
+		for (int iPos2 = 0; iPos2 < MT_PATCH_MAXLEN; iPos2++)
+		{
+			g_esPatch[iPos].g_iOriginalBytes[iPos2] = 0;
+			g_esPatch[iPos].g_iPatchBytes[iPos2] = 0;
+		}
+	}
+}
+
+public SMCResult SMCNewSection_Patches(SMCParser smc, const char[] name, bool opt_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel4)
+	{
+		g_esGeneral.g_iIgnoreLevel4++;
+
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState2 == DataState_None)
+	{
+		switch (StrEqual(name, MT_PATCHES_SECTION_MAIN, false) || StrEqual(name, MT_PATCHES_SECTION_MAIN2, false) || StrEqual(name, MT_PATCHES_SECTION_MAIN3, false) || StrEqual(name, MT_PATCHES_SECTION_MAIN4, false) || StrEqual(name, MT_PATCHES_SECTION_MAIN5, false))
+		{
+			case true: g_esGeneral.g_dsState2 = DataState_Start;
+			case false: g_esGeneral.g_iIgnoreLevel4++;
+		}
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Start)
+	{
+		if ((!g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE, false) || StrEqual(name, MT_DATA_SECTION_GAME2, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE2, false) || StrEqual(name, MT_DATA_SECTION_GAME3, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE3, false)
+			|| StrEqual(name, MT_DATA_SECTION_GAME4, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE4, false))) || (g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME_TWO, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO2, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO3, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO4, false)))
+			|| StrEqual(name, MT_DATA_SECTION_GAME_BOTH, false))
+		{
+			g_esGeneral.g_dsState2 = DataState_Game;
+
+			strcopy(g_esGeneral.g_sCurrentSection3, sizeof esGeneral::g_sCurrentSection3, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel4++;
+		}
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Game)
+	{
+		if (!strncmp(name, MT_PATCHES_SECTION_PREFIX, 8, false))
+		{
+			g_esGeneral.g_dsState2 = DataState_Name;
+
+			strcopy(g_esGeneral.g_sCurrentSection3, sizeof esGeneral::g_sCurrentSection3, name);
+			strcopy(g_esPatch[g_esGeneral.g_iPatchCount].g_sName, sizeof esPatch::g_sName, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel4++;
+		}
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Name)
+	{
+		if ((g_esGeneral.g_iPlatformType == 2 && (StrEqual(name, MT_DATA_SECTION_OS, false) || StrEqual(name, MT_DATA_SECTION_OS2, false)))
+			|| (g_esGeneral.g_iPlatformType == 1 && (StrEqual(name, MT_DATA_SECTION_OS3, false) || StrEqual(name, MT_DATA_SECTION_OS4, false)))
+			|| (g_esGeneral.g_iPlatformType == 0 && (StrEqual(name, MT_DATA_SECTION_OS5, false) || StrEqual(name, MT_DATA_SECTION_OS6, false))))
+		{
+			g_esGeneral.g_dsState2 = DataState_OS;
+
+			strcopy(g_esGeneral.g_sCurrentSubSection3, sizeof esGeneral::g_sCurrentSubSection3, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel4++;
+		}
+	}
+	else
+	{
+		g_esGeneral.g_iIgnoreLevel4++;
+	}
+
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCKeyValues_Patches(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel4)
+	{
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState2 == DataState_Name && !strncmp(g_esGeneral.g_sCurrentSection3, MT_PATCHES_SECTION_PREFIX, 8, false))
+	{
+		vReadPatchSettings(key, value);
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_OS
+		&& ((g_esGeneral.g_iPlatformType == 2 && (StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS, false) || StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS2, false)))
+			|| (g_esGeneral.g_iPlatformType == 1 && (StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS3, false) || StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS4, false)))
+			|| (g_esGeneral.g_iPlatformType == 0 && (StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS5, false) || StrEqual(g_esGeneral.g_sCurrentSubSection3, MT_DATA_SECTION_OS6, false)))))
+	{
+		vReadPatchSettings(key, value);
+	}
+
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCEndSection_Patches(SMCParser smc)
+{
+	if (g_esGeneral.g_iIgnoreLevel4)
+	{
+		g_esGeneral.g_iIgnoreLevel4--;
+
+		return SMCParse_Continue;
+	}
+
+	int iIndex = g_esGeneral.g_iPatchCount;
+	if (g_esGeneral.g_dsState2 == DataState_OS)
+	{
+		g_esGeneral.g_dsState2 = DataState_Name;
+		g_esGeneral.g_bOverridePatch = false;
+
+		vRegisterPatch(g_esPatch[iIndex].g_sName, true);
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Name)
+	{
+		g_esGeneral.g_dsState2 = DataState_Game;
+		iIndex = g_esGeneral.g_bOverridePatch ? iIndex : (iIndex - 1);
+
+		vRegisterPatch(g_esPatch[iIndex].g_sName, g_esGeneral.g_bOverridePatch);
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Game)
+	{
+		g_esGeneral.g_dsState2 = DataState_Start;
+	}
+	else if (g_esGeneral.g_dsState2 == DataState_Start)
+	{
+		g_esGeneral.g_dsState2 = DataState_None;
+	}
+
+	return SMCParse_Continue;
+}
+
+public void SMCParseEnd_Patches(SMCParser smc, bool halted, bool failed)
+{
+	g_esGeneral.g_dsState2 = DataState_None;
+	g_esGeneral.g_iIgnoreLevel4 = 0;
+	g_esGeneral.g_sCurrentSection3[0] = '\0';
+	g_esGeneral.g_sCurrentSubSection3[0] = '\0';
+
+	vLogMessage(-1, _, "%s Registered %i patches.", MT_TAG, g_esGeneral.g_iPatchCount);
+}
+
+public void SMCParseStart_Detours(SMCParser smc)
+{
+	g_esGeneral.g_bOverrideDetour = true;
+	g_esGeneral.g_dsState = DataState_None;
+	g_esGeneral.g_iIgnoreLevel3 = 0;
+	g_esGeneral.g_sCurrentSection2[0] = '\0';
+	g_esGeneral.g_sCurrentSubSection2[0] = '\0';
+	g_esGeneral.g_iDetourCount = 0;
+
+	for (int iPos = 0; iPos < MT_DETOUR_LIMIT; iPos++)
+	{
+		g_esDetour[iPos].g_bBypass = false;
+		g_esDetour[iPos].g_bInstalled = false;
+		g_esDetour[iPos].g_bLog = false;
+		g_esDetour[iPos].g_iType = 0;
+		g_esDetour[iPos].g_sCvars[0] = '\0';
+		g_esDetour[iPos].g_sName[0] = '\0';
+	}
+}
+
+public SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool opt_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel3)
+	{
+		g_esGeneral.g_iIgnoreLevel3++;
+
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState == DataState_None)
+	{
+		switch (StrEqual(name, MT_DETOUR_SECTION_MAIN, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN2, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN3, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN4, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN5, false))
+		{
+			case true: g_esGeneral.g_dsState = DataState_Start;
+			case false: g_esGeneral.g_iIgnoreLevel3++;
+		}
+	}
+	else if (g_esGeneral.g_dsState == DataState_Start)
+	{
+		if ((!g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE, false) || StrEqual(name, MT_DATA_SECTION_GAME2, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE2, false) || StrEqual(name, MT_DATA_SECTION_GAME3, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE3, false)
+			|| StrEqual(name, MT_DATA_SECTION_GAME4, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE4, false))) || (g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME_TWO, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO2, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO3, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO4, false)))
+			|| StrEqual(name, MT_DATA_SECTION_GAME_BOTH, false))
+		{
+			g_esGeneral.g_dsState = DataState_Game;
+
+			strcopy(g_esGeneral.g_sCurrentSection2, sizeof esGeneral::g_sCurrentSection2, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel3++;
+		}
+	}
+	else if (g_esGeneral.g_dsState == DataState_Game)
+	{
+		if (!strncmp(name, MT_DETOUR_SECTION_PREFIX, 9, false))
+		{
+			g_esGeneral.g_dsState = DataState_Name;
+
+			strcopy(g_esGeneral.g_sCurrentSection2, sizeof esGeneral::g_sCurrentSection2, name);
+			strcopy(g_esDetour[g_esGeneral.g_iDetourCount].g_sName, sizeof esDetour::g_sName, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel3++;
+		}
+	}
+	else if (g_esGeneral.g_dsState == DataState_Name)
+	{
+		if ((g_esGeneral.g_iPlatformType == 2 && (StrEqual(name, MT_DATA_SECTION_OS, false) || StrEqual(name, MT_DATA_SECTION_OS2, false)))
+			|| (g_esGeneral.g_iPlatformType == 1 && (StrEqual(name, MT_DATA_SECTION_OS3, false) || StrEqual(name, MT_DATA_SECTION_OS4, false)))
+			|| (g_esGeneral.g_iPlatformType == 0 && (StrEqual(name, MT_DATA_SECTION_OS5, false) || StrEqual(name, MT_DATA_SECTION_OS6, false))))
+		{
+			g_esGeneral.g_dsState = DataState_OS;
+
+			strcopy(g_esGeneral.g_sCurrentSubSection2, sizeof esGeneral::g_sCurrentSubSection2, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel3++;
+		}
+	}
+	else
+	{
+		g_esGeneral.g_iIgnoreLevel3++;
+	}
+
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCKeyValues_Detours(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel3)
+	{
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState == DataState_Name && !strncmp(g_esGeneral.g_sCurrentSection2, MT_DETOUR_SECTION_PREFIX, 9, false))
+	{
+		vReadDetourSettings(key, value);
+	}
+	else if (g_esGeneral.g_dsState == DataState_OS
+		&& ((g_esGeneral.g_iPlatformType == 2 && (StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS, false) || StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS2, false)))
+			|| (g_esGeneral.g_iPlatformType == 1 && (StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS3, false) || StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS4, false)))
+			|| (g_esGeneral.g_iPlatformType == 0 && (StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS5, false) || StrEqual(g_esGeneral.g_sCurrentSubSection2, MT_DATA_SECTION_OS6, false)))))
+	{
+		vReadDetourSettings(key, value);
+	}
+
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCEndSection_Detours(SMCParser smc)
+{
+	if (g_esGeneral.g_iIgnoreLevel3)
+	{
+		g_esGeneral.g_iIgnoreLevel3--;
+
+		return SMCParse_Continue;
+	}
+
+	int iIndex = g_esGeneral.g_iDetourCount;
+	if (g_esGeneral.g_dsState == DataState_OS)
+	{
+		g_esGeneral.g_dsState = DataState_Name;
+		g_esGeneral.g_bOverrideDetour = false;
+
+		vRegisterDetour(g_esDetour[iIndex].g_sName, true);
+	}
+	else if (g_esGeneral.g_dsState == DataState_Name)
+	{
+		g_esGeneral.g_dsState = DataState_Game;
+		iIndex = g_esGeneral.g_bOverrideDetour ? iIndex : (iIndex - 1);
+
+		vRegisterDetour(g_esDetour[iIndex].g_sName, g_esGeneral.g_bOverrideDetour);
+	}
+	else if (g_esGeneral.g_dsState == DataState_Game)
+	{
+		g_esGeneral.g_dsState = DataState_Start;
+	}
+	else if (g_esGeneral.g_dsState == DataState_Start)
+	{
+		g_esGeneral.g_dsState = DataState_None;
+	}
+
+	return SMCParse_Continue;
+}
+
+public void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
+{
+	g_esGeneral.g_dsState = DataState_None;
+	g_esGeneral.g_iIgnoreLevel3 = 0;
+	g_esGeneral.g_sCurrentSection2[0] = '\0';
+	g_esGeneral.g_sCurrentSubSection2[0] = '\0';
+
+	vLogMessage(-1, _, "%s Registered %i detours.", MT_TAG, g_esGeneral.g_iDetourCount);
+}
+
+public void SMCParseStart_Config(SMCParser smc)
 {
 	return;
 }
 
-SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quotes)
+public SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN5, false))
 	{
@@ -11639,17 +12064,17 @@ SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quotes)
 	return SMCParse_Continue;
 }
 
-SMCResult SMCKeyValues3(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+public SMCResult SMCKeyValues_Config(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	return SMCParse_Continue;
 }
 
-SMCResult SMCEndSection3(SMCParser smc)
+public SMCResult SMCEndSection_Config(SMCParser smc)
 {
 	return SMCParse_Continue;
 }
 
-void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
+public void SMCParseEnd_Config(SMCParser smc, bool halted, bool failed)
 {
 	return;
 }
@@ -11659,32 +12084,14 @@ void vParseConfig(int client)
 	g_esGeneral.g_bUsedParser = true;
 	g_esGeneral.g_iParserViewer = client;
 
-	SMCParser smcParser = new SMCParser();
+	SMCParser smcParser = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Parser, SMCNewSection_Parser, SMCKeyValues_Parser, SMCEndSection_Parser, SMCParseEnd_Parser);
 	if (smcParser != null)
 	{
-		smcParser.OnStart = SMCParseStart2;
-		smcParser.OnEnterSection = SMCNewSection2;
-		smcParser.OnKeyValue = SMCKeyValues2;
-		smcParser.OnLeaveSection = SMCEndSection2;
-		smcParser.OnEnd = SMCParseEnd2;
-		SMCError smcError = smcParser.ParseFile(g_esGeneral.g_sChosenPath);
-
-		if (smcError != SMCError_Okay)
-		{
-			char sSmcError[64];
-			smcParser.GetErrorString(smcError, sSmcError, sizeof sSmcError);
-			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
-		}
-
 		delete smcParser;
-	}
-	else
-	{
-		LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 	}
 }
 
-void SMCParseStart2(SMCParser smc)
+public void SMCParseStart_Parser(SMCParser smc)
 {
 	g_esGeneral.g_csState2 = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel2 = 0;
@@ -11696,7 +12103,7 @@ void SMCParseStart2(SMCParser smc)
 	}
 }
 
-SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
+public SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -11800,7 +12207,7 @@ SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
 	return SMCParse_Continue;
 }
 
-SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+public SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -11823,7 +12230,7 @@ SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, boo
 	return SMCParse_Continue;
 }
 
-SMCResult SMCEndSection2(SMCParser smc)
+public SMCResult SMCEndSection_Parser(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -11900,7 +12307,7 @@ SMCResult SMCEndSection2(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
+public void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 {
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -12011,32 +12418,14 @@ void vLoadConfigs(const char[] savepath, int mode)
 		}
 	}
 
-	SMCParser smcLoader = new SMCParser();
-	if (smcLoader != null)
+	SMCParser smcMain = smcSetupParser(savepath, SMCParseStart_Main, SMCNewSection_Main, SMCKeyValues_Main, SMCEndSection_Main, SMCParseEnd_Main);
+	if (smcMain != null)
 	{
-		smcLoader.OnStart = SMCParseStart;
-		smcLoader.OnEnterSection = SMCNewSection;
-		smcLoader.OnKeyValue = SMCKeyValues;
-		smcLoader.OnLeaveSection = SMCEndSection;
-		smcLoader.OnEnd = SMCParseEnd;
-		SMCError smcError = smcLoader.ParseFile(savepath);
-
-		if (smcError != SMCError_Okay)
-		{
-			char sSmcError[64];
-			smcLoader.GetErrorString(smcError, sSmcError, sizeof sSmcError);
-			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
-		}
-
-		delete smcLoader;
-	}
-	else
-	{
-		LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
+		delete smcMain;
 	}
 }
 
-void SMCParseStart(SMCParser smc)
+public void SMCParseStart_Main(SMCParser smc)
 {
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel = 0;
@@ -12655,7 +13044,7 @@ void SMCParseStart(SMCParser smc)
 	Call_Finish();
 }
 
-SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes)
+public SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -12711,7 +13100,7 @@ SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes)
 	return SMCParse_Continue;
 }
 
-SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -13375,7 +13764,7 @@ SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] value, bool
 	return SMCParse_Continue;
 }
 
-SMCResult SMCEndSection(SMCParser smc)
+public SMCResult SMCEndSection_Main(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -13411,7 +13800,7 @@ SMCResult SMCEndSection(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-void SMCParseEnd(SMCParser smc, bool halted, bool failed)
+public void SMCParseEnd_Main(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel = 0;
@@ -13822,12 +14211,12 @@ Action OnTakePlayerDamageAlive(int victim, int &attacker, int &inflictor, float 
 			static int iIndex = -1;
 			if (iIndex == -1)
 			{
-				iIndex = iGetPatchIndex("ReviveInterrupt");
+				iIndex = iGetPatchIndex("MTPatch_ReviveInterrupt");
 			}
 
 			if (iIndex != -1)
 			{
-				bInstallPatch(iIndex);
+				vInstallPatch(iIndex);
 			}
 		}
 	}
@@ -13840,12 +14229,12 @@ void OnTakePlayerDamageAlivePost(int victim, int attacker, int inflictor, float 
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("ReviveInterrupt");
+		iIndex = iGetPatchIndex("MTPatch_ReviveInterrupt");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 }
 
@@ -13906,7 +14295,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 			static int iIndex = -1;
 			if (iIndex == -1)
 			{
-				iIndex = iGetPatchIndex("DoJumpHeight");
+				iIndex = iGetPatchIndex("MTPatch_DoJumpHeight");
 			}
 
 			if (bIsDeveloper(victim, 11) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_GODMODE))
@@ -13924,7 +14313,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 
 				return Plugin_Handled;
 			}
-			else if ((g_esPlayer[victim].g_iFallPasses > 0 || (iIndex != -1 && g_bPermanentPatch[iIndex]) || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
+			else if ((g_esPlayer[victim].g_iFallPasses > 0 || (iIndex != -1 && g_esPatch[iIndex].g_iType == 2) || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
 			{
 				if (g_esPlayer[victim].g_iFallPasses > 0)
 				{
@@ -14693,10 +15082,10 @@ Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATF
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("DoJumpHeight");
+			iIndex = iGetPatchIndex("MTPatch_DoJumpHeight");
 		}
 
-		if (g_esPlayer[entity].g_iFallPasses > 0 || (iIndex != -1 && g_bPermanentPatch[iIndex]) || bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE))
+		if (g_esPlayer[entity].g_iFallPasses > 0 || (iIndex != -1 && g_esPatch[iIndex].g_iType == 2) || bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE))
 		{
 			float flOrigin[3];
 			GetEntPropVector(entity, Prop_Data, "m_vecOrigin", flOrigin);
@@ -14749,10 +15138,63 @@ Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int players
  * DHooks Detour setup
  **/
 
+void vReadDetourSettings(const char[] key, const char[] value)
+{
+	int iIndex = g_esGeneral.g_iDetourCount;
+	g_esDetour[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esDetour[iIndex].g_bLog, value, 0, 1);
+	g_esDetour[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esDetour[iIndex].g_iType, value, 0, 4);
+
+	vGetKeyValueEx(key, "CvarCheck", "Cvar Check", "Cvar_Check", "cvars", g_esDetour[iIndex].g_sCvars, sizeof esDetour::g_sCvars, value);
+}
+
+void vRegisterDetour(const char[] name, bool reg)
+{
+	if (!reg)
+	{
+		g_esGeneral.g_bOverrideDetour = true;
+
+		return;
+	}
+
+	int iIndex = g_esGeneral.g_iDetourCount;
+	if (g_esDetour[iIndex].g_sCvars[0] != '\0' && (g_esDetour[iIndex].g_iType == 1 || g_esDetour[iIndex].g_iType == 3))
+	{
+		char sCvarSet[10][32];
+		ExplodeString(g_esDetour[iIndex].g_sCvars, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
+		for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
+		{
+			if (sCvarSet[iPos][0] != '\0')
+			{
+				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
+				if (g_esGeneral.g_cvMTTempSetting != null)
+				{
+					if (g_esDetour[iIndex].g_bLog)
+					{
+						vLogMessage(-1, _, "%s The \"%s\" convar was found; disabling \"%s\".", MT_TAG, sCvarSet[iPos], name);
+					}
+
+					break;
+				}
+			}
+		}
+
+		if (g_esGeneral.g_cvMTTempSetting != null)
+		{
+			g_esGeneral.g_cvMTTempSetting = null;
+			g_esDetour[iIndex].g_bBypass = true;
+		}
+	}
+
+	g_esGeneral.g_iDetourCount++;
+
+	if (g_esDetour[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Registered the \"%s\" detour.", MT_TAG, name);
+	}
+}
+
 void vRegisterDetours()
 {
-	g_iDetourCount = 0;
-
 	char sFilePath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%s%s.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_DETOURS);
 	if (!MT_FileExists(MT_CONFIG_FILEPATH, (MT_CONFIG_FILE_DETOURS ... ".cfg"), sFilePath, sFilePath, sizeof sFilePath))
@@ -14762,135 +15204,22 @@ void vRegisterDetours()
 		return;
 	}
 
-	KeyValues kvDetours = new KeyValues("MTDetours");
-	if (!kvDetours.ImportFromFile(sFilePath))
+	SMCParser smcDetours = smcSetupParser(sFilePath, SMCParseStart_Detours, SMCNewSection_Detours, SMCKeyValues_Detours, SMCEndSection_Detours, SMCParseEnd_Detours);
+	if (smcDetours != null)
 	{
-		LogError("%s Unable to read the \"%s\" config file.", MT_TAG, sFilePath);
-
-		delete kvDetours;
-		return;
+		delete smcDetours;
 	}
-
-	if (g_bSecondGame)
-	{
-		if (!kvDetours.JumpToKey("left4dead2"))
-		{
-			delete kvDetours;
-			return;
-		}
-	}
-	else
-	{
-		if (!kvDetours.JumpToKey("left4dead"))
-		{
-			delete kvDetours;
-			return;
-		}
-	}
-
-	if (!kvDetours.GotoFirstSubKey())
-	{
-		LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
-
-		delete kvDetours;
-		return;
-	}
-
-	bool bPlatform = false;
-	char sOS[8], sName[128], sLog[4], sCvar[320], sCvarSet[10][32], sType[14];
-	do
-	{
-		kvDetours.GetSectionName(sName, sizeof sName);
-		kvDetours.GetString("log", sLog, sizeof sLog);
-		kvDetours.GetString("cvarcheck", sCvar, sizeof sCvar);
-
-		switch (g_esGeneral.g_bLinux)
-		{
-			case true: sOS = "Linux";
-			case false: sOS = "Windows";
-		}
-
-		if (kvDetours.JumpToKey(sOS))
-		{
-			bPlatform = true;
-
-			kvDetours.GetString("type", sType, sizeof sType);
-			kvDetours.GoBack();
-		}
-
-		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (strncmp(sType, "full", 4) == -1 && strncmp(sType, "setup", 5) == -1 && strncmp(sType, "ignore", 6) == -1) || (bPlatform && sType[0] == '\0'))
-		{
-			LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
-
-			continue;
-		}
-
-		if ((!bPlatform && sType[0] == '\0') || (bPlatform && StrEqual(sType, "ignore")))
-		{
-			if (sLog[0] == 'y')
-			{
-				vLogMessage(-1, _, "%s No detour for \"%s\" on %s was found.", MT_TAG, sName, sOS);
-			}
-
-			continue;
-		}
-
-		bPlatform = false;
-
-		bool bBypass = (StrContains(sType, "_bypass") != -1);
-		if (sCvar[0] != '\0' && !bBypass)
-		{
-			ExplodeString(sCvar, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
-			for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
-			{
-				if (sCvarSet[iPos][0] != '\0')
-				{
-					g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
-					if (g_esGeneral.g_cvMTTempSetting != null)
-					{
-						if (sLog[0] == 'y')
-						{
-							vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], sName);
-						}
-
-						break;
-					}
-				}
-			}
-
-			if (g_esGeneral.g_cvMTTempSetting != null)
-			{
-				g_esGeneral.g_cvMTTempSetting = null;
-
-				continue;
-			}
-		}
-
-		bBypass = (bBypass && sCvar[0] != '\0');
-
-		switch (sType[0])
-		{
-			case 'i': bRegisterDetour(sName, (sLog[0] == 'y'), 0, bBypass);
-			case 's': bRegisterDetour(sName, (sLog[0] == 'y'), 1, bBypass);
-			case 'f': bRegisterDetour(sName, (sLog[0] == 'y'), 2, bBypass);
-		}
-	}
-	while (kvDetours.GotoNextKey());
-
-	vLogMessage(-1, _, "%s Registered %i detours.", MT_TAG, g_iDetourCount);
-
-	delete kvDetours;
 }
 
-void vSetupDetour(DynamicDetour &detourHandle, GameData dataHandle, const char[] name)
+void vSetupDetour(DynamicDetour &detourHandle, const char[] name)
 {
 	int iIndex = iGetDetourIndex(name);
-	if (iIndex == -1 || g_iDetourType[iIndex] == 0)
+	if (iIndex == -1 || g_esDetour[iIndex].g_iType == 0)
 	{
 		return;
 	}
 
-	detourHandle = DynamicDetour.FromConf(dataHandle, name);
+	detourHandle = DynamicDetour.FromConf(g_esGeneral.g_gdMutantTanks, name);
 	if (detourHandle == null)
 	{
 		LogError("%s Failed to detour: %s", MT_TAG, name);
@@ -14898,65 +15227,65 @@ void vSetupDetour(DynamicDetour &detourHandle, GameData dataHandle, const char[]
 		return;
 	}
 
-	if (g_bDetourLog[iIndex])
+	if (g_esDetour[iIndex].g_bLog)
 	{
 		vLogMessage(-1, _, "%s Setup the \"%s\" detour.", MT_TAG, name);
 	}
 }
 
-void vSetupDetours(GameData dataHandle)
+void vSetupDetours()
 {
-	vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, dataHandle, "MTDetour_CFirstAidKit::OnActionComplete");
-	vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, dataHandle, "MTDetour_CBaseEntity::Create");
-	vSetupDetour(g_esGeneral.g_ddBeginChangeLevelDetour, dataHandle, "MTDetour_CTerrorPlayer::OnBeginChangeLevel");
-	vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, dataHandle, "MTDetour_CTerrorWeapon::CanDeployFor");
-	vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, dataHandle, "MTDetour_CDeathFallCamera::Enable");
-	vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, dataHandle, "MTDetour_CTerrorPlayer::DoAnimationEvent");
-	vSetupDetour(g_esGeneral.g_ddDoJumpDetour, dataHandle, "MTDetour_CTerrorGameMovement::DoJump");
-	vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, dataHandle, "MTDetour_CTerrorPlayer::OnEnterGhostState");
-	vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, dataHandle, "MTDetour_Tank::EnterStasis");
-	vSetupDetour(g_esGeneral.g_ddEventKilledDetour, dataHandle, "MTDetour_CTerrorPlayer::Event_Killed");
-	vSetupDetour(g_esGeneral.g_ddFallingDetour, dataHandle, "MTDetour_CTerrorPlayer::OnFalling");
-	vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, dataHandle, "MTDetour_CFirstAidKit::FinishHealing");
-	vSetupDetour(g_esGeneral.g_ddFireBulletDetour, dataHandle, "MTDetour_CTerrorGun::FireBullet");
-	vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, dataHandle, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
-	vSetupDetour(g_esGeneral.g_ddFlingDetour, dataHandle, "MTDetour_CTerrorPlayer::Fling");
-	vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, dataHandle, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
-	vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, dataHandle, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
-	vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, dataHandle, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
-	vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, dataHandle, "MTDetour_CTerrorPlayer::OnLadderDismount");
-	vSetupDetour(g_esGeneral.g_ddLadderMountDetour, dataHandle, "MTDetour_CTerrorPlayer::OnLadderMount");
-	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, dataHandle, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
-	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, dataHandle, "MTDetour_Tank::LeaveStasis");
-	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, dataHandle, "MTDetour_CAmmoDef::MaxCarry");
-	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, dataHandle, "MTDetour_CTerrorPlayer::PreThink");
-	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, dataHandle, "MTDetour_ZombieManager::ReplaceTank");
-	vSetupDetour(g_esGeneral.g_ddRevivedDetour, dataHandle, "MTDetour_CTerrorPlayer::OnRevived");
-	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, dataHandle, "MTDetour_CTerrorWeapon::SecondaryAttack");
-	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, dataHandle, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack");
-	vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, dataHandle, "MTDetour_CTerrorPlayer::SelectWeightedSequence");
-	vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, dataHandle, "MTDetour_CTerrorPlayer::SetMainActivity");
-	vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, dataHandle, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
-	vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, dataHandle, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
-	vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, dataHandle, "MTDetour_ZombieManager::SpawnTank");
-	vSetupDetour(g_esGeneral.g_ddStaggerDetour, dataHandle, "MTDetour_CTerrorPlayer::OnStaggered");
-	vSetupDetour(g_esGeneral.g_ddStartActionDetour, dataHandle, "MTDetour_CBaseBackpackItem::StartAction");
-	vSetupDetour(g_esGeneral.g_ddStartHealingDetour, dataHandle, "MTDetour_CFirstAidKit::StartHealing");
-	vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, dataHandle, "MTDetour_CTerrorPlayer::StartReviving");
-	vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, dataHandle, "MTDetour_CTankClaw::DoSwing");
-	vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, dataHandle, "MTDetour_CTankClaw::GroundPound");
-	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, dataHandle, "MTDetour_CTankClaw::OnPlayerHit");
-	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, dataHandle, "MTDetour_CTankRock::Create");
-	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, dataHandle, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
-	vSetupDetour(g_esGeneral.g_ddUseDetour, dataHandle, "MTDetour_CTerrorGun::Use");
-	vSetupDetour(g_esGeneral.g_ddUseDetour2, dataHandle, "MTDetour_CWeaponSpawn::Use");
-	vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, dataHandle, "MTDetour_CTerrorPlayer::OnVomitedUpon");
+	vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete");
+	vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "MTDetour_CBaseEntity::Create");
+	vSetupDetour(g_esGeneral.g_ddBeginChangeLevelDetour, "MTDetour_CTerrorPlayer::OnBeginChangeLevel");
+	vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor");
+	vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "MTDetour_CDeathFallCamera::Enable");
+	vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent");
+	vSetupDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump");
+	vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, "MTDetour_CTerrorPlayer::OnEnterGhostState");
+	vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, "MTDetour_Tank::EnterStasis");
+	vSetupDetour(g_esGeneral.g_ddEventKilledDetour, "MTDetour_CTerrorPlayer::Event_Killed");
+	vSetupDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling");
+	vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, "MTDetour_CFirstAidKit::FinishHealing");
+	vSetupDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet");
+	vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
+	vSetupDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling");
+	vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
+	vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
+	vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
+	vSetupDetour(g_esGeneral.g_ddLadderDismountDetour, "MTDetour_CTerrorPlayer::OnLadderDismount");
+	vSetupDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount");
+	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
+	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis");
+	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry");
+	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink");
+	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank");
+	vSetupDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived");
+	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack");
+	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack");
+	vSetupDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence");
+	vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, "MTDetour_CTerrorPlayer::SetMainActivity");
+	vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
+	vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
+	vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank");
+	vSetupDetour(g_esGeneral.g_ddStaggerDetour, "MTDetour_CTerrorPlayer::OnStaggered");
+	vSetupDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction");
+	vSetupDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing");
+	vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving");
+	vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing");
+	vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound");
+	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit");
+	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create");
+	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
+	vSetupDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use");
+	vSetupDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use");
+	vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon");
 }
 
 void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode, DHookCallback callback, bool toggle, int game = 0)
 {
 	int iIndex = iGetDetourIndex(name);
-	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (!toggle && !g_bDetourInstalled[iIndex]) || (g_iDetourType[iIndex] < 2 && !g_bDetourBypass[iIndex]))
+	if (detourHandle == null || (game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame) || iIndex == -1 || (!toggle && !g_esDetour[iIndex].g_bInstalled) || (g_esDetour[iIndex].g_iType < 3 && !g_esDetour[iIndex].g_bBypass))
 	{
 		return;
 	}
@@ -14969,9 +15298,9 @@ void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode
 		return;
 	}
 
-	g_bDetourInstalled[iIndex] = toggle;
+	g_esDetour[iIndex].g_bInstalled = toggle;
 
-	if (g_bDetourLog[iIndex])
+	if (g_esDetour[iIndex].g_bLog)
 	{
 		vLogMessage(-1, _, "%s %sabled the \"%s\" detour.", MT_TAG, (toggle ? "En" : "Dis"), name);
 	}
@@ -15039,7 +15368,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Post, mreUsePost, toggle);
 
-	switch (g_esGeneral.g_bLinux)
+	switch (g_esGeneral.g_iPlatformType > 0)
 	{
 		case true:
 		{
@@ -15075,36 +15404,11 @@ void vToggleLeft4DHooks(bool toggle)
 	}
 }
 
-bool bRegisterDetour(const char[] name, bool log = false, int type = 2, bool bypass)
-{
-	if (iGetDetourIndex(name) >= 0)
-	{
-		LogError("%s The \"%s\" detour has already been registered.", MT_TAG, name);
-
-		return false;
-	}
-
-	strcopy(g_sDetourName[g_iDetourCount], sizeof g_sDetourName, name);
-
-	g_bDetourBypass[g_iDetourCount] = bypass;
-	g_bDetourInstalled[g_iDetourCount] = false;
-	g_bDetourLog[g_iDetourCount] = log;
-	g_iDetourType[g_iDetourCount] = type;
-	g_iDetourCount++;
-
-	if (log)
-	{
-		vLogMessage(-1, _, "%s Registered the \"%s\" detour.", MT_TAG, name);
-	}
-
-	return true;
-}
-
 int iGetDetourIndex(const char[] name)
 {
-	for (int iPos = 0; iPos < g_iDetourCount; iPos++)
+	for (int iPos = 0; iPos < g_esGeneral.g_iDetourCount; iPos++)
 	{
-		if (StrEqual(name, g_sDetourName[iPos]))
+		if (StrEqual(name, g_esDetour[iPos].g_sName))
 		{
 			return iPos;
 		}
@@ -15182,12 +15486,12 @@ MRESReturn mreCanDeployForPre(int pThis, DHookReturn hReturn, DHookParam hParams
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("LadderMount2");
+			iIndex = iGetPatchIndex("MTPatch_LadderMount2");
 		}
 
 		if (iIndex != -1)
 		{
-			bInstallPatch(iIndex);
+			vInstallPatch(iIndex);
 		}
 	}
 
@@ -15199,12 +15503,12 @@ MRESReturn mreCanDeployForPost(int pThis, DHookReturn hReturn, DHookParam hParam
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("LadderMount2");
+		iIndex = iGetPatchIndex("MTPatch_LadderMount2");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;
@@ -15268,13 +15572,13 @@ MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 				{
 					g_esGeneral.g_bPatchDoJumpValue = true;
 
-					switch (!g_bSecondGame && g_esGeneral.g_bLinux)
+					switch (!g_bSecondGame && g_esGeneral.g_iPlatformType > 0)
 					{
 						case true:
 						{
 							g_esGeneral.g_adOriginalJumpHeight[0] = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
-							StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32, g_bUpdateMemAccess2);
-							g_bUpdateMemAccess2 = false;
+							StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
+							g_esGeneral.g_bUpdateDoJumpMemAccess = false;
 						}
 						case false:
 						{
@@ -15283,10 +15587,10 @@ MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 
 							int iDouble[2];
 							vGetDoubleFromFloat(flHeight, iDouble);
-							StoreToAddress(g_esGeneral.g_adDoJumpValue, iDouble[1], NumberType_Int32, g_bUpdateMemAccess2);
-							StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), iDouble[0], NumberType_Int32, g_bUpdateMemAccess2);
+							StoreToAddress(g_esGeneral.g_adDoJumpValue, iDouble[1], NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
+							StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), iDouble[0], NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
 
-							g_bUpdateMemAccess2 = false;
+							g_esGeneral.g_bUpdateDoJumpMemAccess = false;
 						}
 					}
 				}
@@ -15303,13 +15607,13 @@ MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_bPatchDoJumpValue = false;
 
-		switch (!g_bSecondGame && g_esGeneral.g_bLinux)
+		switch (!g_bSecondGame && g_esGeneral.g_iPlatformType > 0)
 		{
-			case true: StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2);
+			case true: StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
 			case false:
 			{
-				StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[1], NumberType_Int32, g_bUpdateMemAccess2);
-				StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_bUpdateMemAccess2);
+				StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_adOriginalJumpHeight[1], NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
+				StoreToAddress((g_esGeneral.g_adDoJumpValue + view_as<Address>(4)), g_esGeneral.g_adOriginalJumpHeight[0], NumberType_Int32, g_esGeneral.g_bUpdateDoJumpMemAccess);
 			}
 		}
 	}
@@ -15387,7 +15691,7 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 			{
 				if (bBoomer && iPos < iLimit) // X < 6 or 3
 				{
-					FormatEx(sName, sizeof sName, "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+					FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -15395,12 +15699,12 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 
 					if (iIndex[iPos] != -1)
 					{
-						bInstallPatch(iIndex[iPos]);
+						vInstallPatch(iIndex[iPos]);
 					}
 				}
 				else if (bSmoker && iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
 				{
-					FormatEx(sName, sizeof sName, "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+					FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -15408,7 +15712,7 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 
 					if (iIndex[iPos] != -1)
 					{
-						bInstallPatch(iIndex[iPos]);
+						vInstallPatch(iIndex[iPos]);
 					}
 				}
 			}
@@ -15417,12 +15721,12 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 			{
 				if (iIndex[10] == -1)
 				{
-					iIndex[10] = iGetPatchIndex("SpitterCleanKill");
+					iIndex[10] = iGetPatchIndex("MTPatch_SpitterCleanKill");
 				}
 
 				if (iIndex[10] != -1)
 				{
-					bInstallPatch(iIndex[10]);
+					vInstallPatch(iIndex[10]);
 				}
 			}
 		}
@@ -15445,7 +15749,7 @@ MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 	{
 		if (iPos < iLimit) // X < 6 or 3
 		{
-			FormatEx(sName, sizeof sName, "Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+			FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -15453,12 +15757,12 @@ MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 
 			if (iIndex[iPos] != -1)
 			{
-				bRemovePatch(iIndex[iPos]);
+				vRemovePatch(iIndex[iPos]);
 			}
 		}
 		else if (iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
 		{
-			FormatEx(sName, sizeof sName, "Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+			FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -15466,19 +15770,19 @@ MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 
 			if (iIndex[iPos] != -1)
 			{
-				bRemovePatch(iIndex[iPos]);
+				vRemovePatch(iIndex[iPos]);
 			}
 		}
 	}
 
 	if (iIndex[10] == -1)
 	{
-		iIndex[10] = iGetPatchIndex("SpitterCleanKill");
+		iIndex[10] = iGetPatchIndex("MTPatch_SpitterCleanKill");
 	}
 
 	if (iIndex[10] != -1)
 	{
-		bRemovePatch(iIndex[10]);
+		vRemovePatch(iIndex[10]);
 	}
 
 	return MRES_Ignored;
@@ -15494,21 +15798,21 @@ MRESReturn mreFallingPre(int pThis)
 		static int iIndex[2] = {-1, -1};
 		if (iIndex[0] == -1)
 		{
-			iIndex[0] = iGetPatchIndex("DoJumpHeight");
+			iIndex[0] = iGetPatchIndex("MTPatch_DoJumpHeight");
 		}
 
-		if (((iIndex[0] != -1 && g_bPermanentPatch[iIndex[0]]) || bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)) && !g_esGeneral.g_bPatchFallingSound)
+		if (((iIndex[0] != -1 && g_esPatch[iIndex[0]].g_iType == 2) || bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)) && !g_esGeneral.g_bPatchFallingSound)
 		{
 			g_esGeneral.g_bPatchFallingSound = true;
 
 			if (iIndex[1] == -1)
 			{
-				iIndex[1] = iGetPatchIndex("FallScreamMute");
+				iIndex[1] = iGetPatchIndex("MTPatch_FallScreamMute");
 			}
 
 			if (iIndex[1] != -1)
 			{
-				bInstallPatch(iIndex[1]);
+				vInstallPatch(iIndex[1]);
 			}
 
 			char sVoiceLine[64];
@@ -15532,12 +15836,12 @@ MRESReturn mreFallingPost(int pThis)
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("FallScreamMute");
+			iIndex = iGetPatchIndex("MTPatch_FallScreamMute");
 		}
 
 		if (iIndex != -1)
 		{
-			bRemovePatch(iIndex);
+			vRemovePatch(iIndex);
 		}
 	}
 
@@ -15691,12 +15995,12 @@ MRESReturn mreLadderDismountPre(int pThis)
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("LadderDismount1");
+			iIndex = iGetPatchIndex("MTPatch_LadderDismount1");
 		}
 
 		if (iIndex != -1)
 		{
-			bInstallPatch(iIndex);
+			vInstallPatch(iIndex);
 		}
 	}
 
@@ -15708,12 +16012,12 @@ MRESReturn mreLadderDismountPost(int pThis)
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("LadderDismount1");
+		iIndex = iGetPatchIndex("MTPatch_LadderDismount1");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;
@@ -15726,12 +16030,12 @@ MRESReturn mreLadderMountPre(int pThis)
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("LadderMount1");
+			iIndex = iGetPatchIndex("MTPatch_LadderMount1");
 		}
 
 		if (iIndex != -1)
 		{
-			bInstallPatch(iIndex);
+			vInstallPatch(iIndex);
 		}
 	}
 
@@ -15743,12 +16047,12 @@ MRESReturn mreLadderMountPost(int pThis)
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("LadderMount1");
+		iIndex = iGetPatchIndex("MTPatch_LadderMount1");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;
@@ -15798,12 +16102,12 @@ MRESReturn mrePreThinkPre(int pThis)
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("LadderDismount2");
+			iIndex = iGetPatchIndex("MTPatch_LadderDismount2");
 		}
 
 		if (iIndex != -1)
 		{
-			bInstallPatch(iIndex);
+			vInstallPatch(iIndex);
 		}
 	}
 
@@ -15815,12 +16119,12 @@ MRESReturn mrePreThinkPost(int pThis)
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("LadderDismount2");
+		iIndex = iGetPatchIndex("MTPatch_LadderDismount2");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;
@@ -16144,13 +16448,13 @@ MRESReturn mreTankClawDoSwingPre(int pThis)
 		{
 			if (iIndex[iPos] == -1)
 			{
-				FormatEx(sName, sizeof sName, "TankSweepFist%i", (iPos + 1));
+				FormatEx(sName, sizeof sName, "MTPatch_TankSweepFist%i", (iPos + 1));
 				iIndex[iPos] = iGetPatchIndex(sName);
 			}
 
 			if (iIndex[iPos] != -1)
 			{
-				bInstallPatch(iIndex[iPos]);
+				vInstallPatch(iIndex[iPos]);
 			}
 		}
 	}
@@ -16166,13 +16470,13 @@ MRESReturn mreTankClawDoSwingPost(int pThis)
 	{
 		if (iIndex[iPos] == -1)
 		{
-			FormatEx(sName, sizeof sName, "TankSweepFist%i", (iPos + 1));
+			FormatEx(sName, sizeof sName, "MTPatch_TankSweepFist%i", (iPos + 1));
 			iIndex[iPos] = iGetPatchIndex(sName);
 		}
 
 		if (iIndex[iPos] != -1)
 		{
-			bRemovePatch(iIndex[iPos]);
+			vRemovePatch(iIndex[iPos]);
 		}
 	}
 
@@ -16187,12 +16491,12 @@ MRESReturn mreTankClawGroundPoundPre(int pThis)
 		static int iIndex = -1;
 		if (iIndex == -1)
 		{
-			iIndex = iGetPatchIndex("TankGroundPound");
+			iIndex = iGetPatchIndex("MTPatch_TankGroundPound");
 		}
 
 		if (iIndex != -1)
 		{
-			bInstallPatch(iIndex);
+			vInstallPatch(iIndex);
 		}
 	}
 
@@ -16204,12 +16508,12 @@ MRESReturn mreTankClawGroundPoundPost(int pThis)
 	static int iIndex = -1;
 	if (iIndex == -1)
 	{
-		iIndex = iGetPatchIndex("TankGroundPound");
+		iIndex = iGetPatchIndex("MTPatch_TankGroundPound");
 	}
 
 	if (iIndex != -1)
 	{
-		bRemovePatch(iIndex);
+		vRemovePatch(iIndex);
 	}
 
 	return MRES_Ignored;
@@ -16301,13 +16605,13 @@ MRESReturn mreUsePre(int pThis, DHookParam hParams)
 		{
 			if (iIndex[iPos] == -1)
 			{
-				FormatEx(sName, sizeof sName, "EquipSecondWeapon%i", (iPos + 1));
+				FormatEx(sName, sizeof sName, "MTPatch_EquipSecondWeapon%i", (iPos + 1));
 				iIndex[iPos] = iGetPatchIndex(sName);
 			}
 
 			if (iIndex[iPos] != -1)
 			{
-				bInstallPatch(iIndex[iPos]);
+				vInstallPatch(iIndex[iPos]);
 			}
 		}
 	}
@@ -16323,13 +16627,13 @@ MRESReturn mreUsePost(int pThis, DHookParam hParams)
 	{
 		if (iIndex[iPos] == -1)
 		{
-			FormatEx(sName, sizeof sName, "EquipSecondWeapon%i", (iPos + 1));
+			FormatEx(sName, sizeof sName, "MTPatch_EquipSecondWeapon%i", (iPos + 1));
 			iIndex[iPos] = iGetPatchIndex(sName);
 		}
 
 		if (iIndex[iPos] != -1)
 		{
-			bRemovePatch(iIndex[iPos]);
+			vRemovePatch(iIndex[iPos]);
 		}
 	}
 
@@ -16350,32 +16654,202 @@ MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
  * Patch functions
  **/
 
+void vInstallPatch(int index, bool override = false)
+{
+	if (index >= g_esGeneral.g_iPatchCount)
+	{
+		LogError("%s Patch #%i out of range when installing patch. (Maximum: %i)", MT_TAG, index, (g_esGeneral.g_iPatchCount - 1));
+
+		return;
+	}
+
+	if ((g_esPatch[index].g_iType == 2 && !override) || g_esPatch[index].g_bInstalled)
+	{
+		return;
+	}
+
+	for (int iPos = 0; iPos < g_esPatch[index].g_iLength; iPos++)
+	{
+		g_esPatch[index].g_iOriginalBytes[iPos] = LoadFromAddress((g_esPatch[index].g_adPatch + view_as<Address>(g_esPatch[index].g_iOffset + iPos)), NumberType_Int8);
+		StoreToAddress((g_esPatch[index].g_adPatch + view_as<Address>(g_esPatch[index].g_iOffset + iPos)), g_esPatch[index].g_iPatchBytes[iPos], NumberType_Int8, g_esPatch[index].g_bUpdateMemAccess);
+	}
+
+	g_esPatch[index].g_bInstalled = true;
+	g_esPatch[index].g_bUpdateMemAccess = false;
+
+	if (g_esPatch[index].g_iType == 2 && g_esPatch[index].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Enabled the \"%s\" patch.", MT_TAG, g_esPatch[index].g_sName);
+	}
+}
+
 void vInstallPermanentPatches()
 {
-	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
+	for (int iPos = 0; iPos < g_esGeneral.g_iPatchCount; iPos++)
 	{
-		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos] && !g_bPatchInstalled[iPos])
+		if (g_esPatch[iPos].g_sName[0] != '\0' && g_esPatch[iPos].g_iType == 2 && !g_esPatch[iPos].g_bInstalled)
 		{
-			bInstallPatch(iPos, true);
+			vInstallPatch(iPos, true);
 		}
 	}
 }
 
-void vRemovePermanentPatches()
+void vReadPatchSettings(const char[] key, const char[] value)
 {
-	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
+	int iIndex = g_esGeneral.g_iPatchCount;
+	g_esPatch[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esPatch[iIndex].g_bLog, value, 0, 1);
+	g_esPatch[iIndex].g_iType = iGetKeyValueEx(key, "Type", "Type", "Type", "Type", g_esPatch[iIndex].g_iType, value, 0, 2);
+
+	vGetKeyValueEx(key, "CvarCheck", "Cvar Check", "Cvar_Check", "cvars", g_esPatch[iIndex].g_sCvars, sizeof esPatch::g_sCvars, value);
+	vGetKeyValueEx(key, "Signature", "Signature", "Signature", "Signature", g_esPatch[iIndex].g_sSignature, sizeof esPatch::g_sSignature, value);
+	vGetKeyValueEx(key, "Offset", "Offset", "Offset", "Offset", g_esPatch[iIndex].g_sOffset, sizeof esPatch::g_sOffset, value);
+	vGetKeyValueEx(key, "Verify", "Verify", "Verify", "Verify", g_esPatch[iIndex].g_sVerify, sizeof esPatch::g_sVerify, value);
+	vGetKeyValueEx(key, "Patch", "Patch", "Patch", "Patch", g_esPatch[iIndex].g_sPatch, sizeof esPatch::g_sPatch, value);
+}
+
+void vRegisterPatch(const char[] name, bool reg)
+{
+	if (!reg)
 	{
-		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos] && g_bPatchInstalled[iPos])
+		g_esGeneral.g_bOverridePatch = true;
+
+		return;
+	}
+
+	int iIndex = g_esGeneral.g_iPatchCount;
+	if (g_esPatch[iIndex].g_sCvars[0] != '\0')
+	{
+		char sCvarSet[10][32];
+		ExplodeString(g_esPatch[iIndex].g_sCvars, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
+		for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
 		{
-			bRemovePatch(iPos, true);
+			if (sCvarSet[iPos][0] != '\0')
+			{
+				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
+				if (g_esGeneral.g_cvMTTempSetting != null)
+				{
+					if (g_esPatch[iIndex].g_bLog)
+					{
+						vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], name);
+					}
+
+					break;
+				}
+			}
 		}
+
+		if (g_esGeneral.g_cvMTTempSetting != null)
+		{
+			g_esGeneral.g_cvMTTempSetting = null;
+
+			vResetPatchInfo(iIndex);
+
+			return;
+		}
+	}
+
+	if (g_esPatch[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+	}
+
+	char sSet[MT_PATCH_MAXLEN][2], sSet2[MT_PATCH_MAXLEN][2];
+	int iVerify[MT_PATCH_MAXLEN], iPatch[MT_PATCH_MAXLEN];
+
+	ReplaceString(g_esPatch[iIndex].g_sVerify, sizeof esPatch::g_sVerify, "\\x", " ", false);
+	TrimString(g_esPatch[iIndex].g_sVerify);
+	int iVLength = ExplodeString(g_esPatch[iIndex].g_sVerify, " ", sSet, sizeof sSet, sizeof sSet[]);
+
+	ReplaceString(g_esPatch[iIndex].g_sPatch, sizeof esPatch::g_sPatch, "\\x", " ", false);
+	TrimString(g_esPatch[iIndex].g_sPatch);
+	int iPLength = ExplodeString(g_esPatch[iIndex].g_sPatch, " ", sSet2, sizeof sSet2, sizeof sSet2[]);
+
+	if (g_esPatch[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+	}
+
+	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
+	{
+		switch (iPos < iVLength)
+		{
+			case true: iVerify[iPos] = (iGetDecimalFromHex(g_esPatch[iIndex].g_sVerify[iPos * 3]) << 4) + iGetDecimalFromHex(g_esPatch[iIndex].g_sVerify[(iPos * 3) + 1]);
+			case false: iVerify[iPos] = 0;
+		}
+	}
+
+	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
+	{
+		switch (iPos < iPLength)
+		{
+			case true: iPatch[iPos] = (iGetDecimalFromHex(g_esPatch[iIndex].g_sPatch[iPos * 3]) << 4) + iGetDecimalFromHex(g_esPatch[iIndex].g_sPatch[(iPos * 3) + 1]);
+			case false: iPatch[iPos] = 0;
+		}
+	}
+
+	Address adPatch = g_esGeneral.g_gdMutantTanks.GetAddress(g_esPatch[iIndex].g_sSignature);
+	if (adPatch == Address_Null)
+	{
+		LogError("%s Failed to find address: %s", MT_TAG, g_esPatch[iIndex].g_sSignature);
+		vResetPatchInfo(iIndex);
+
+		return;
+	}
+
+	int iOffset = 0;
+	if (g_esPatch[iIndex].g_sOffset[0] != '\0')
+	{
+		iOffset = iGetGameDataOffset(g_esPatch[iIndex].g_sOffset);
+		if (iOffset == -1)
+		{
+			vResetPatchInfo(iIndex);
+
+			return;
+		}
+	}
+
+	int iActualByte = 0;
+	for (int iPos = 0; iPos < iVLength; iPos++)
+	{
+		if (iVerify[iPos] < 0 || iVerify[iPos] > 255)
+		{
+			LogError("%s Invalid check byte for %s (%i)", MT_TAG, name, iVerify[iPos]);
+			vResetPatchInfo(iIndex);
+
+			return;
+		}
+
+		if (iVerify[iPos] != 0x2A)
+		{
+			iActualByte = LoadFromAddress((adPatch + view_as<Address>(iOffset + iPos)), NumberType_Int8);
+			if (iActualByte != iVerify[iPos])
+			{
+				LogError("%s Failed to locate patch: %s (%s) [Expected: %02X | Found: %02X]", MT_TAG, name, g_esPatch[iIndex].g_sOffset, iVerify[iPos], iActualByte);
+				vResetPatchInfo(iIndex);
+
+				return;
+			}
+		}
+	}
+
+	g_esPatch[iIndex].g_adPatch = adPatch;
+	g_esPatch[iIndex].g_iLength = iPLength;
+	g_esGeneral.g_iPatchCount++;
+
+	for (int iPos = 0; iPos < iPLength; iPos++)
+	{
+		g_esPatch[iIndex].g_iPatchBytes[iPos] = iPatch[iPos];
+		g_esPatch[iIndex].g_iOriginalBytes[iPos] = 0x00;
+	}
+
+	if (g_esPatch[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Registered the \"%s\" patch.", MT_TAG, name);
 	}
 }
 
-void vRegisterPatches(GameData dataHandle)
+void vRegisterPatches()
 {
-	g_iPatchCount = 0;
-
 	char sFilePath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%s%s.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_PATCHES);
 	if (!MT_FileExists(MT_CONFIG_FILEPATH, (MT_CONFIG_FILE_PATCHES ... ".cfg"), sFilePath, sFilePath, sizeof sFilePath))
@@ -16385,298 +16859,80 @@ void vRegisterPatches(GameData dataHandle)
 		return;
 	}
 
-	KeyValues kvPatches = new KeyValues("MTPatches");
-	if (!kvPatches.ImportFromFile(sFilePath))
+	SMCParser smcPatches = smcSetupParser(sFilePath, SMCParseStart_Patches, SMCNewSection_Patches, SMCKeyValues_Patches, SMCEndSection_Patches, SMCParseEnd_Patches);
+	if (smcPatches != null)
 	{
-		LogError("%s Unable to read the \"%s\" config file.", MT_TAG, sFilePath);
+		delete smcPatches;
+	}
+}
 
-		delete kvPatches;
+void vRemovePatch(int index, bool override = false)
+{
+	if (index >= g_esGeneral.g_iPatchCount)
+	{
+		LogError("%s Patch #%i out of range when removing patch. (Maximum: %i)", MT_TAG, index, (g_esGeneral.g_iPatchCount - 1));
+
 		return;
 	}
 
-	if (g_bSecondGame)
+	if ((g_esPatch[index].g_iType == 2 && !override) || !g_esPatch[index].g_bInstalled)
 	{
-		if (!kvPatches.JumpToKey("left4dead2"))
-		{
-			delete kvPatches;
-			return;
-		}
-	}
-	else
-	{
-		if (!kvPatches.JumpToKey("left4dead"))
-		{
-			delete kvPatches;
-			return;
-		}
-	}
-
-	if (!kvPatches.GotoFirstSubKey())
-	{
-		LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
-
-		delete kvPatches;
 		return;
 	}
 
-	bool bPlatform = false;
-	char sOS[8], sName[128], sSignature[128], sOffset[128], sVerify[192], sSet[MT_PATCH_MAXLEN][2], sPatch[192], sSet2[MT_PATCH_MAXLEN][2], sLog[4], sCvar[320], sCvarSet[10][32], sType[10];
-	int iVerify[MT_PATCH_MAXLEN], iVLength = 0, iPatch[MT_PATCH_MAXLEN], iPLength = 0;
-	do
+	for (int iPos = 0; iPos < g_esPatch[index].g_iLength; iPos++)
 	{
-		kvPatches.GetSectionName(sName, sizeof sName);
-		kvPatches.GetString("log", sLog, sizeof sLog);
-		kvPatches.GetString("cvarcheck", sCvar, sizeof sCvar);
-		kvPatches.GetString("type", sType, sizeof sType);
-		kvPatches.GetString("signature", sSignature, sizeof sSignature);
-		kvPatches.GetString("offset", sOffset, sizeof sOffset);
-
-		switch (g_esGeneral.g_bLinux)
-		{
-			case true: sOS = "Linux";
-			case false: sOS = "Windows";
-		}
-
-		if (kvPatches.JumpToKey(sOS))
-		{
-			bPlatform = true;
-
-			kvPatches.GetString("verify", sVerify, sizeof sVerify);
-			kvPatches.GetString("patch", sPatch, sizeof sPatch);
-			kvPatches.GoBack();
-		}
-
-		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand") && !StrEqual(sType, "unused")) || sSignature[0] == '\0' || (bPlatform && (sVerify[0] == '\0' || sPatch[0] == '\0')))
-		{
-			LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
-
-			continue;
-		}
-
-		if ((!bPlatform && (sOffset[0] != '\0' || sVerify[0] == '\0' || sPatch[0] == '\0')) || StrEqual(sType, "unused"))
-		{
-			if (sLog[0] == 'y')
-			{
-				vLogMessage(-1, _, "%s No patch for \"%s\" on %s was found.", MT_TAG, sName, sOS);
-			}
-
-			continue;
-		}
-
-		bPlatform = false;
-
-		if (sCvar[0] != '\0')
-		{
-			ExplodeString(sCvar, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
-			for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
-			{
-				if (sCvarSet[iPos][0] != '\0')
-				{
-					g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
-					if (g_esGeneral.g_cvMTTempSetting != null)
-					{
-						if (sLog[0] == 'y')
-						{
-							vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], sName);
-						}
-
-						break;
-					}
-				}
-			}
-
-			if (g_esGeneral.g_cvMTTempSetting != null)
-			{
-				g_esGeneral.g_cvMTTempSetting = null;
-
-				continue;
-			}
-		}
-
-		if (sLog[0] == 'y')
-		{
-			vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, sName, sVerify, sPatch);
-		}
-
-		ReplaceString(sVerify, sizeof sVerify, "\\x", " ", false);
-		TrimString(sVerify);
-		iVLength = ExplodeString(sVerify, " ", sSet, sizeof sSet, sizeof sSet[]);
-
-		ReplaceString(sPatch, sizeof sPatch, "\\x", " ", false);
-		TrimString(sPatch);
-		iPLength = ExplodeString(sPatch, " ", sSet2, sizeof sSet2, sizeof sSet2[]);
-
-		if (sLog[0] == 'y')
-		{
-			vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s", MT_TAG, sName, sVerify, sPatch);
-		}
-
-		for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
-		{
-			switch (iPos < iVLength)
-			{
-				case true: iVerify[iPos] = (iGetDecimalFromHex(sVerify[iPos * 3]) << 4) + iGetDecimalFromHex(sVerify[(iPos * 3) + 1]);
-				case false: iVerify[iPos] = 0;
-			}
-		}
-
-		for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
-		{
-			switch (iPos < iPLength)
-			{
-				case true: iPatch[iPos] = (iGetDecimalFromHex(sPatch[iPos * 3]) << 4) + iGetDecimalFromHex(sPatch[(iPos * 3) + 1]);
-				case false: iPatch[iPos] = 0;
-			}
-		}
-
-		bRegisterPatch(dataHandle, sName, sSignature, sOffset, iVerify, iVLength, iPatch, iPLength, (sLog[0] == 'y'), (sType[0] == 'p'));
+		StoreToAddress((g_esPatch[index].g_adPatch + view_as<Address>(g_esPatch[index].g_iOffset + iPos)), g_esPatch[index].g_iOriginalBytes[iPos], NumberType_Int8, g_esPatch[index].g_bUpdateMemAccess);
 	}
-	while (kvPatches.GotoNextKey());
 
-	vLogMessage(-1, _, "%s Registered %i patches.", MT_TAG, g_iPatchCount);
+	g_esPatch[index].g_bInstalled = false;
 
-	delete kvPatches;
+	if (g_esPatch[index].g_iType == 2 && g_esPatch[index].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Disabled the \"%s\" patch.", MT_TAG, g_esPatch[index].g_sName);
+	}
 }
 
-bool bInstallPatch(int index, bool override = false)
+void vRemovePermanentPatches()
 {
-	if (index >= g_iPatchCount)
+	for (int iPos = 0; iPos < g_esGeneral.g_iPatchCount; iPos++)
 	{
-		LogError("%s Patch #%i out of range when installing patch. (Maximum: %i)", MT_TAG, index, (g_iPatchCount - 1));
-
-		return false;
+		if (g_esPatch[iPos].g_sName[0] != '\0' && g_esPatch[iPos].g_iType == 2 && g_esPatch[iPos].g_bInstalled)
+		{
+			vRemovePatch(iPos, true);
+		}
 	}
-
-	if ((g_bPermanentPatch[index] && !override) || g_bPatchInstalled[index])
-	{
-		return false;
-	}
-
-	for (int iPos = 0; iPos < g_iPatchLength[index]; iPos++)
-	{
-		g_iOriginalBytes[index][iPos] = LoadFromAddress((g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos)), NumberType_Int8);
-		StoreToAddress((g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos)), g_iPatchBytes[index][iPos], NumberType_Int8, g_bUpdateMemAccess[index]);
-	}
-
-	g_bPatchInstalled[index] = true;
-	g_bUpdateMemAccess[index] = false;
-
-	if (g_bPermanentPatch[index] && g_bPatchLog[index])
-	{
-		vLogMessage(-1, _, "%s Enabled the \"%s\" patch.", MT_TAG, g_sPatchName[index]);
-	}
-
-	return true;
 }
 
-bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName, const char[] offsetName, int[] verify, int vlength, int[] patch, int plength, bool log = false, bool permanent = false)
+void vResetPatchInfo(int index)
 {
-	if (iGetPatchIndex(name) >= 0)
+	g_esGeneral.g_iPatchCount = index;
+	g_esPatch[index].g_adPatch = Address_Null;
+	g_esPatch[index].g_bInstalled = false;
+	g_esPatch[index].g_bLog = false;
+	g_esPatch[index].g_bUpdateMemAccess = true;
+	g_esPatch[index].g_iLength = 0;
+	g_esPatch[index].g_iOffset = 0;
+	g_esPatch[index].g_iType = 0;
+	g_esPatch[index].g_sCvars[0] = '\0';
+	g_esPatch[index].g_sOffset[0] = '\0';
+	g_esPatch[index].g_sPatch[0] = '\0';
+	g_esPatch[index].g_sName[0] = '\0';
+	g_esPatch[index].g_sSignature[0] = '\0';
+	g_esPatch[index].g_sVerify[0] = '\0';
+
+	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
 	{
-		LogError("%s The \"%s\" patch has already been registered.", MT_TAG, name);
-
-		return false;
+		g_esPatch[index].g_iOriginalBytes[iPos] = 0;
+		g_esPatch[index].g_iPatchBytes[iPos] = 0;
 	}
-
-	Address adPatch = dataHandle.GetAddress(sigName);
-	if (adPatch == Address_Null)
-	{
-		LogError("%s Failed to find address: %s", MT_TAG, sigName);
-
-		return false;
-	}
-
-	int iOffset = 0;
-	if (offsetName[0] != '\0')
-	{
-		iOffset = iGetGameDataOffset(dataHandle, offsetName);
-		if (iOffset == -1)
-		{
-			return false;
-		}
-	}
-
-	int iActualByte = 0;
-	for (int iPos = 0; iPos < vlength; iPos++)
-	{
-		if (verify[iPos] < 0 || verify[iPos] > 255)
-		{
-			LogError("%s Invalid check byte for %s (%i)", MT_TAG, name, verify[iPos]);
-
-			return false;
-		}
-
-		if (verify[iPos] != 0x2A)
-		{
-			iActualByte = LoadFromAddress((adPatch + view_as<Address>(iOffset + iPos)), NumberType_Int8);
-			if (iActualByte != verify[iPos])
-			{
-				LogError("%s Failed to locate patch: %s (%s) [Expected: %02X | Found: %02X]", MT_TAG, name, offsetName, verify[iPos], iActualByte);
-
-				return false;
-			}
-		}
-	}
-
-	strcopy(g_sPatchName[g_iPatchCount], sizeof g_sPatchName, name);
-
-	g_adPatchAddress[g_iPatchCount] = adPatch;
-	g_bPatchInstalled[g_iPatchCount] = false;
-	g_bPatchLog[g_iPatchCount] = log;
-	g_bPermanentPatch[g_iPatchCount] = permanent;
-	g_iPatchOffset[g_iPatchCount] = iOffset;
-	g_iPatchLength[g_iPatchCount] = plength;
-
-	for (int iPos = 0; iPos < plength; iPos++)
-	{
-		g_iPatchBytes[g_iPatchCount][iPos] = patch[iPos];
-		g_iOriginalBytes[g_iPatchCount][iPos] = 0x00;
-	}
-
-	g_iPatchCount++;
-
-	if (log)
-	{
-		vLogMessage(-1, _, "%s Registered the \"%s\" patch.", MT_TAG, name);
-	}
-
-	return true;
-}
-
-bool bRemovePatch(int index, bool override = false)
-{
-	if (index >= g_iPatchCount)
-	{
-		LogError("%s Patch #%i out of range when removing patch. (Maximum: %i)", MT_TAG, index, (g_iPatchCount - 1));
-
-		return false;
-	}
-
-	if ((g_bPermanentPatch[index] && !override) || !g_bPatchInstalled[index])
-	{
-		return false;
-	}
-
-	for (int iPos = 0; iPos < g_iPatchLength[index]; iPos++)
-	{
-		StoreToAddress((g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos)), g_iOriginalBytes[index][iPos], NumberType_Int8, g_bUpdateMemAccess[index]);
-	}
-
-	g_bPatchInstalled[index] = false;
-
-	if (g_bPermanentPatch[index] && g_bPatchLog[index])
-	{
-		vLogMessage(-1, _, "%s Disabled the \"%s\" patch.", MT_TAG, g_sPatchName[index]);
-	}
-
-	return true;
 }
 
 int iGetPatchIndex(const char[] name)
 {
-	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
+	for (int iPos = 0; iPos < g_esGeneral.g_iPatchCount; iPos++)
 	{
-		if (StrEqual(name, g_sPatchName[iPos]))
+		if (StrEqual(name, g_esPatch[iPos].g_sName))
 		{
 			return iPos;
 		}
