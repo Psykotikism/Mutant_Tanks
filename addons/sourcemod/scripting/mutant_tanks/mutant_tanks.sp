@@ -3905,31 +3905,6 @@ void vSetReviveDurationCvar(int survivor)
 	}
 }
 
-void vSetReviveHealthCvar(bool reset, int survivor = 0)
-{
-	if (reset)
-	{
-		if (g_esGeneral.g_iDefaultSurvivorReviveHealth != -1)
-		{
-			g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = g_esGeneral.g_iDefaultSurvivorReviveHealth;
-			g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
-		}
-	}
-	else
-	{
-		bool bDeveloper = bIsDeveloper(survivor, 6);
-		if (bDeveloper || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH))
-		{
-			int iHealth = (bDeveloper && g_esDeveloper[survivor].g_iDevReviveHealth > g_esPlayer[survivor].g_iReviveHealth) ? g_esDeveloper[survivor].g_iDevReviveHealth : g_esPlayer[survivor].g_iReviveHealth;
-			if (iHealth > 0)
-			{
-				g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
-				g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = iHealth;
-			}
-		}
-	}
-}
-
 void vGameDifficultyCvar(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1)
@@ -8072,7 +8047,7 @@ void vSetSurvivorScreen(int survivor, const char[] colors, const char[] delimite
 	}
 
 	char sValue[4][4];
-	ExplodeString(colors, delimiter, sValue, sizeof sValue, sizeof sValue[]);
+	ExplodeString(sColor, delimiter, sValue, sizeof sValue, sizeof sValue[]);
 	for (int iPos = 0; iPos < sizeof sValue; iPos++)
 	{
 		if (sValue[iPos][0] != '\0')
@@ -15137,30 +15112,10 @@ void vRegisterDetour(const char[] name, bool reg)
 	}
 
 	int iIndex = g_esGeneral.g_iDetourCount;
-	if (g_esDetour[iIndex].g_sCvars[0] != '\0' && (g_esDetour[iIndex].g_iType == 1 || g_esDetour[iIndex].g_iType == 3))
+	if (g_esDetour[iIndex].g_iType == 1 || g_esDetour[iIndex].g_iType == 3)
 	{
-		char sCvarSet[10][32];
-		ExplodeString(g_esDetour[iIndex].g_sCvars, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
-		for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
+		if (bIsConVarConflictFound(name, g_esDetour[iIndex].g_sCvars, "disabling", g_esDetour[iIndex].g_bLog))
 		{
-			if (sCvarSet[iPos][0] != '\0')
-			{
-				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
-				if (g_esGeneral.g_cvMTTempSetting != null)
-				{
-					if (g_esDetour[iIndex].g_bLog)
-					{
-						vLogMessage(-1, _, "%s The \"%s\" convar was found; disabling \"%s\".", MT_TAG, sCvarSet[iPos], name);
-					}
-
-					break;
-				}
-			}
-		}
-
-		if (g_esGeneral.g_cvMTTempSetting != null)
-		{
-			g_esGeneral.g_cvMTTempSetting = null;
 			g_esDetour[iIndex].g_bBypass = true;
 		}
 	}
@@ -16145,9 +16100,18 @@ MRESReturn mreReplaceTankPost(DHookParam hParams)
 
 MRESReturn mreRevivedPre(int pThis)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH)) && g_esGeneral.g_cvMTSurvivorReviveHealth != null)
+	if (bIsSurvivor(pThis) && g_esGeneral.g_cvMTSurvivorReviveHealth != null)
 	{
-		vSetReviveHealthCvar(false, pThis);
+		bool bDeveloper = bIsDeveloper(pThis, 6);
+		if (bDeveloper || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH))
+		{
+			int iHealth = (bDeveloper && g_esDeveloper[pThis].g_iDevReviveHealth > g_esPlayer[pThis].g_iReviveHealth) ? g_esDeveloper[pThis].g_iDevReviveHealth : g_esPlayer[pThis].g_iReviveHealth;
+			if (iHealth > 0)
+			{
+				g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
+				g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = iHealth;
+			}
+		}
 	}
 
 	return MRES_Ignored;
@@ -16155,9 +16119,10 @@ MRESReturn mreRevivedPre(int pThis)
 
 MRESReturn mreRevivedPost(int pThis)
 {
-	if (g_esGeneral.g_cvMTSurvivorReviveHealth != null)
+	if (g_esGeneral.g_iDefaultSurvivorReviveHealth != -1)
 	{
-		vSetReviveHealthCvar(true);
+		g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = g_esGeneral.g_iDefaultSurvivorReviveHealth;
+		g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
 	}
 
 	return MRES_Ignored;
@@ -16728,35 +16693,11 @@ void vRegisterPatch(const char[] name, bool reg)
 	}
 
 	int iIndex = g_esGeneral.g_iPatchCount;
-	if (g_esPatch[iIndex].g_sCvars[0] != '\0')
+	if (bIsConVarConflictFound(name, g_esPatch[iIndex].g_sCvars, "skipping", g_esPatch[iIndex].g_bLog))
 	{
-		char sCvarSet[10][32];
-		ExplodeString(g_esPatch[iIndex].g_sCvars, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
-		for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
-		{
-			if (sCvarSet[iPos][0] != '\0')
-			{
-				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
-				if (g_esGeneral.g_cvMTTempSetting != null)
-				{
-					if (g_esPatch[iIndex].g_bLog)
-					{
-						vLogMessage(-1, _, "%s The \"%s\" convar was found; skipping \"%s\".", MT_TAG, sCvarSet[iPos], name);
-					}
+		vResetPatchInfo(iIndex);
 
-					break;
-				}
-			}
-		}
-
-		if (g_esGeneral.g_cvMTTempSetting != null)
-		{
-			g_esGeneral.g_cvMTTempSetting = null;
-
-			vResetPatchInfo(iIndex);
-
-			return;
-		}
+		return;
 	}
 
 	if (g_esPatch[iIndex].g_bLog)
@@ -17326,6 +17267,41 @@ bool bIsCompetitiveModeRound(int type)
 		case 0: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes == null;
 		case 1: return !g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null;
 		case 2: return g_esGeneral.g_bNextRound && g_esGeneral.g_alCompTypes != null && g_esGeneral.g_alCompTypes.Length > 0;
+	}
+
+	return false;
+}
+
+bool bIsConVarConflictFound(const char[] name, const char[] set, const char[] action, bool log)
+{
+	if (set[0] != '\0')
+	{
+		char sCvars[320], sCvarSet[10][32];
+		strcopy(sCvars, sizeof sCvars, set);
+		ExplodeString(sCvars, ",", sCvarSet, sizeof sCvarSet, sizeof sCvarSet[]);
+		for (int iPos = 0; iPos < sizeof sCvarSet; iPos++)
+		{
+			if (sCvarSet[iPos][0] != '\0')
+			{
+				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
+				if (g_esGeneral.g_cvMTTempSetting != null)
+				{
+					if (log)
+					{
+						vLogMessage(-1, _, "%s The \"%s\" convar was found; %s \"%s\".", MT_TAG, sCvarSet[iPos], action, name);
+					}
+
+					break;
+				}
+			}
+		}
+
+		if (g_esGeneral.g_cvMTTempSetting != null)
+		{
+			g_esGeneral.g_cvMTTempSetting = null;
+
+			return true;
+		}
 	}
 
 	return false;
