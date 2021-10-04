@@ -72,8 +72,8 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 
 ## Uninstalling/Upgrading to Newer Versions
 1. Delete `mutant_tanks` folder from:
- - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
- - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
+- `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
+- `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
 3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
 4. Delete `mutant_tanks.phrases.txt` from:

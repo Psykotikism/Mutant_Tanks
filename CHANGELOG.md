@@ -13,6 +13,9 @@
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
 
+#### Abilities
+- Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
+
 ### Changes
 
 #### General
@@ -30,6 +33,7 @@
 #### Core plugin
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
+- The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 
 #### Commands
@@ -44,6 +48,7 @@
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.
+- Added the `Friendly Fire Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
 
 #### Translations

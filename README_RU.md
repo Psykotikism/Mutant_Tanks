@@ -72,8 +72,8 @@
 
 ## Удаление/обновление до более новых версий
 1. Удалите папку `mutant_tanks` из папки:
- - `addons/sourcemod/plugins` (`mutant_tanks.smx` и все его модули)
- - `addons/sourcemod/scripting` (`mutant_tanks.sp` и все его модули)
+- `addons/sourcemod/plugins` (`mutant_tanks.smx` и все его модули)
+- `addons/sourcemod/scripting` (`mutant_tanks.sp` и все его модули)
 2. Удалите `mutant_tanks.txt` из папки `addons/sourcemod/gamedata`.
 3. Удалите `mutant_tanks.inc` и `mt_clone.inc` из папки `addons/sourcemod/scripting/include`.
 4. Удалите `mutant_tanks.phrases.txt` из:
