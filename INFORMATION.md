@@ -1579,6 +1579,24 @@
 			// 4th set = RGBA set for assistant killers.
 			"Light Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 
+			// The interval of the looping voiceline visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate intervals with commas (",").
+			// --
+			// Intervals limit: 4
+			// Character limit for each interval: 9
+			// --
+			// Minimum value for each interval: 0.1 (Shortest)
+			// Maximum value for each interval: 999999.0 (Longest)
+			// --
+			// 1st number = Interval for killers' looping voiceline.
+			// 2nd number = Interval for assistants' looping voiceline.
+			// 3rd number = Interval for teammates' looping voiceline.
+			// 4th number = Interval for assistant killers' looping voiceline.
+			"Looping Voiceline Interval"		"10.0,10.0,10.0,10.0"
+
 			// The voiceline that plays on loop throughout a survivor's reward duration.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -3732,6 +3750,24 @@
 			// 3rd set = RGBA set for teammates.
 			// 4th set = RGBA set for assistant killers.
 			"Light Color Visual"			""
+
+			// The interval of the looping voiceline visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate intervals with commas (",").
+			// --
+			// Intervals limit: 4
+			// Character limit for each interval: 9
+			// --
+			// Minimum value for each interval: 0.1 (Shortest)
+			// Maximum value for each interval: 999999.0 (Longest)
+			// --
+			// 1st number = Interval for killers' looping voiceline.
+			// 2nd number = Interval for assistants' looping voiceline.
+			// 3rd number = Interval for teammates' looping voiceline.
+			// 4th number = Interval for assistant killers' looping voiceline.
+			"Looping Voiceline Interval"		""
 
 			// The voiceline that plays on loop throughout a survivor's reward duration.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

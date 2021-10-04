@@ -1,5 +1,4 @@
 # Mutant Tanks
-
 ## PayPal
 [Donate to Motivate](https://paypal.me/Psyk0tikism?locale.x=en_US)
 
@@ -173,13 +172,11 @@ By default, Mutant Tanks can create and execute the following types of configura
 
 ### Main Features
 1. How do I make my own Mutant Tank?
-
 - Create an entry.
 
 Examples:
 
 This is okay:
-
 ```
 "Mutant Tanks"
 {
@@ -198,9 +195,7 @@ This is okay:
 	}
 }
 ```
-
 This is not okay:
-
 ```
 "Mutant Tanks"
 {
@@ -219,9 +214,7 @@ This is not okay:
 	}
 }
 ```
-
 This is okay:
-
 ```
 "Mutant Tanks"
 {
@@ -240,9 +233,7 @@ This is okay:
 	}
 }
 ```
-
 This is not okay:
-
 ```
 "Mutant Tanks"
 {
@@ -261,11 +252,9 @@ This is not okay:
 	}
 }
 ```
-
 - Adding the entry to the roster.
 
 Here's our final entry:
-
 ```
 "Mutant Tanks"
 {
@@ -288,9 +277,7 @@ Here's our final entry:
 	}
 }
 ```
-
 To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
-
 ```
 "Mutant Tanks"
 {
@@ -303,11 +290,9 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	}
 }
 ```
-
 Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
 - Advanced Entry Examples
-
 ```
 "Mutant Tanks"
 {
@@ -345,7 +330,6 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 	}
 }
 ```
-
 ```
 "Mutant Tanks"
 {
@@ -403,14 +387,12 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 3. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
-
 - Enable/disable in certain game mode types. (You must add numbers up together in `Game Mode Types`.)
 - Enable/disable in specific game modes. (You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.)
 
 Here are some scenarios and their outcomes:
 
 Scenario 1:
-
 ```
 "Game Mode Types" "0" // The plugin is enabled in all game mode types.
 "Enabled Game Modes" "" // The plugin is enabled in all game modes.
@@ -418,9 +400,7 @@ Scenario 1:
 
 Outcome: The plugin works in every game mode except "coop" mode.
 ```
-
 Scenario 2:
-
 ```
 "Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
 "Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
@@ -428,9 +408,7 @@ Scenario 2:
 
 Outcome: The plugin works only in "coop" mode.
 ```
-
 Scenario 3:
-
 ```
 "Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
@@ -442,7 +420,6 @@ Outcome: The plugin works only in "coop" mode.
 4. How come some Mutant Tanks aren't showing up?
 
 It may be due to one or more of the following:
-
 - The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
 - The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
@@ -462,7 +439,6 @@ It may be due to one or more of the following:
 5. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
-
 - Absorb Ability: The Mutant Tank takes way less damage. Conserve your ammo and maintain distance between you and the Mutant Tank.
 - God Ability: The Mutant Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Mutant Tank.
 - Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
@@ -477,7 +453,6 @@ Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more info
 6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
-
 ```
 "Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
 ```
@@ -499,12 +474,10 @@ Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. 
 Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
 11. How do I add more Mutant Tanks?
-
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -530,7 +503,6 @@ Example:
 Enable/disable them with the `Tank Enabled` setting.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -574,7 +546,6 @@ Example:
 Yes, you can do that with custom configs.
 
 Example:
-
 ```
 // Settings for addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
 "Mutant Tanks"
@@ -642,12 +613,10 @@ These are basically temporary Tanks that you can create for certain situations, 
 ```
 
 14. How can I move the Mutant Tanks category around on the admin menu?
-
 - You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
 - This also allows you to sort each item in the category.
 
 Example:
-
 ```
 "Menu"
 {
@@ -702,7 +671,6 @@ You can use the `mt_adminmenu` override to restrict the category to certain admi
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
 Forwards:
-
 ```
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -985,11 +953,9 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
-
 Natives:
 
 - Core plugin
-
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -1414,9 +1380,7 @@ native void MT_UnvomitPlayer(int player);
  **/
 native void MT_VomitPlayer(int player);
 ```
-
 - Clone ability
-
 ```
 /**
  * Returns if the clone can use abilities.
@@ -1438,9 +1402,7 @@ native bool MT_IsCloneSupported(int tank);
  **/
 native bool MT_IsTankClone(int tank);
 ```
-
 Stocks:
-
 ```
 stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
 {
@@ -1544,9 +1506,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 }
 ```
-
 Target filters:
-
 ```
 @smokers
 @boomers
@@ -1562,9 +1522,7 @@ Target filters:
 @mtanks
 @psytanks
 ```
-
 Commands:
-
 ```
 // Requires "z" (Root) flag.
 sm_tank - Spawn a Mutant Tank.
@@ -1587,7 +1545,6 @@ If you are a Tank:
 1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
 2. When not holding down the +speed (default: LSHIFT) button, you will transform into the chosen type.
 ```
-
 ```
 // Accessible by admins with "z" (Root) flag only.
 sm_mt_admin - View the Mutant Tanks admin panel.
@@ -1708,7 +1665,6 @@ No, all plugins still read the original format properly.
 Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other file with config examples will use the original format.
 
 Example:
-
 ```
 // Original format
 "Mutant Tanks"
@@ -1740,7 +1696,6 @@ mutant_tanks // 3rd format
 Yes, you can either apply global settings for all types to use or specify certain types to use them.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1784,7 +1739,6 @@ Example:
 Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1814,7 +1768,6 @@ The administration system is designed for the usage and effectiveness of each Mu
 At first, using SM's own system was the goal, but that system has certain limitations that I wanted to get rid of for this project. For example, in SM's system, assigning multiple flags to an override command requires admins to have all of those flags. In this system, admins only need one of those flags, which makes the system flexible for filtering multiple admin flags.
 
 Example:
-
 ```
 // SM's system
 "sm_tank"			"abc" // Admins need all three flags to use the command.
@@ -1836,7 +1789,6 @@ Currently, the system allows admins to each have a favorite/custom/personalized 
 Each custom admin setting will override its corresponding Mutant Tank type-specific setting or general setting. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the Mutant Tank type settings or general settings.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1862,7 +1814,6 @@ Example:
 It will sound complicated but here is the simplest way to explain it:
 
 Ability Overrides
-
 ```
 If a player's ability flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
 If a player's ability flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
@@ -1884,9 +1835,7 @@ If a player's SM flags have one of the immunity flags required for an ability or
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that ability.
 ```
-
 Type Overrides
-
 ```
 If a player's ability flags have one of the access flags required for a type or vice-versa, the player will have access to the ability of the type.
 If a player's ability flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the ability of the type.
@@ -1908,9 +1857,7 @@ If a player's SM flags have one of the immunity flags required for a type or vic
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that type.
 ```
-
 Global Overrides
-
 ```
 If a player's ability flags have one of the access flags required globally or vice-versa, the player will have access to all abilities that require those flags.
 If a player's ability flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all abilities that require those flags.
@@ -1953,7 +1900,6 @@ Set `Human Support` to `1` or `2`.
 Yes, just set `Human Ability` to 1 or 2 for EACH ability.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1970,7 +1916,6 @@ Example:
 3. How can players use the abilities manually?
 
 There are 4 buttons that players can use when they spawn as Mutant Tanks.
-
 ```
 +use (default: E) - Main ability
 +reload (default: R) - Sub/range ability
@@ -1993,7 +1938,6 @@ All related abilities may or may not activate at the same time, depending on you
 Set the `Human Ammo` setting for each ability to whatever value you want.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -2012,7 +1956,6 @@ Example:
 Yes, just set the `Human Cooldown` setting for each ability to whatever value you want.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -2053,7 +1996,6 @@ Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting und
 Yes, assign admins the `mt_adminversus` override.
 
 Example:
-
 ```
 Overrides
 {
@@ -2071,7 +2013,6 @@ Set `Enable Custom Configs` to `1`.
 Set the values in `Create Config Types`.
 
 Examples:
-
 ```
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
@@ -2084,7 +2025,6 @@ Examples:
 Set the values in `Execute Config Types`.
 
 Examples:
-
 ```
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
