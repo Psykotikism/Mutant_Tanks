@@ -14254,7 +14254,7 @@ Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action OnTakeFriendlyDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnTakeFriendlyDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
