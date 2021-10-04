@@ -492,6 +492,7 @@ enum struct esGeneral
 	float g_flHittableDamage;
 	float g_flIdleCheck;
 	float g_flJumpHeightReward[4];
+	float g_flLoopingVoicelineInterval[4];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[4];
 	float g_flPunchThrow;
@@ -878,6 +879,7 @@ enum struct esPlayer
 	float g_flHittableDamage;
 	float g_flJumpHeight;
 	float g_flJumpHeightReward[4];
+	float g_flLoopingVoicelineInterval[4];
 	float g_flPreFallZ;
 	float g_flPropsChance[9];
 	float g_flPunchForce;
@@ -1113,6 +1115,7 @@ enum struct esTank
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flJumpHeightReward[4];
+	float g_flLoopingVoicelineInterval[4];
 	float g_flOpenAreasOnly;
 	float g_flPropsChance[9];
 	float g_flPunchForce;
@@ -1300,6 +1303,7 @@ enum struct esCache
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flJumpHeightReward[4];
+	float g_flLoopingVoicelineInterval[4];
 	float g_flPropsChance[9];
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[4];
@@ -7036,7 +7040,7 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 
 				if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0)
 				{
-					CreateTimer(3.0, tTimerLoopVoiceline, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(g_esCache[tank].g_flLoopingVoicelineInterval[priority], tTimerLoopVoiceline, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 
 				if (time > (g_esPlayer[survivor].g_flVisualTime[2] - current))
@@ -10802,6 +10806,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos]);
 			g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos]);
 			g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos]);
+			g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flLoopingVoicelineInterval[iPos], g_esGeneral.g_flLoopingVoicelineInterval[iPos]);
+			g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos]);
 			g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iParticleEffectVisual[iPos], g_esGeneral.g_iParticleEffectVisual[iPos]);
@@ -11251,6 +11257,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esTank[type].g_flDamageResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 					g_esTank[type].g_flHealPercentReward[iPos] = flGetClampedValue(key, "HealPercentReward", "Heal Percent Reward", "Heal_Percent_Reward", "healpercent", g_esTank[type].g_flHealPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 					g_esTank[type].g_flJumpHeightReward[iPos] = flGetClampedValue(key, "JumpHeightReward", "Jump Height Reward", "Jump_Height_Reward", "jumpheight", g_esTank[type].g_flJumpHeightReward[iPos], sSet[iPos], 0.0, 999999.0);
+					g_esTank[type].g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esTank[type].g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 999999.0);
 					g_esTank[type].g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esTank[type].g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 					g_esTank[type].g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esTank[type].g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 999999.0);
 					g_esTank[type].g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esTank[type].g_flShoveRateReward[iPos], sSet[iPos], 0.0, 999999.0);
@@ -12595,6 +12602,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iLadderActionsReward[iPos] = 1;
 				g_esGeneral.g_iLadyKillerReward[iPos] = 1;
 				g_esGeneral.g_iLifeLeechReward[iPos] = 1;
+				g_esGeneral.g_flLoopingVoicelineInterval[iPos] = 10.0;
 				g_esGeneral.g_iMeleeRangeReward[iPos] = 150;
 				g_esGeneral.g_iParticleEffectVisual[iPos] = 15;
 				g_esGeneral.g_iPrefsNotify[iPos] = 1;
@@ -12767,6 +12775,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iLadderActionsReward[iPos] = 0;
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = 0;
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = 0;
+					g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos] = 0.0;
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = 0;
 					g_esTank[iIndex].g_iParticleEffectVisual[iPos] = 0;
 					g_esTank[iIndex].g_iPrefsNotify[iPos] = 0;
@@ -12977,6 +12986,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = 0;
+						g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = 0;
 						g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = 0;
@@ -13251,6 +13261,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							g_esGeneral.g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esGeneral.g_flDamageResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 							g_esGeneral.g_flHealPercentReward[iPos] = flGetClampedValue(key, "HealPercentReward", "Heal Percent Reward", "Heal_Percent_Reward", "healpercent", g_esGeneral.g_flHealPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 							g_esGeneral.g_flJumpHeightReward[iPos] = flGetClampedValue(key, "JumpHeightReward", "Jump Height Reward", "Jump_Height_Reward", "jumpheight", g_esGeneral.g_flJumpHeightReward[iPos], sSet[iPos], 0.0, 999999.0);
+							g_esGeneral.g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esGeneral.g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 999999.0);
 							g_esGeneral.g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esGeneral.g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 							g_esGeneral.g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esGeneral.g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 999999.0);
 							g_esGeneral.g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esGeneral.g_flShoveRateReward[iPos], sSet[iPos], 0.0, 999999.0);
@@ -13549,6 +13560,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 									g_esPlayer[iPlayer].g_flDamageResistanceReward[iPos] = flGetClampedValue(key, "DamageResistanceReward", "Damage Resistance Reward", "Damage_Resistance_Reward", "dmgres", g_esPlayer[iPlayer].g_flDamageResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 									g_esPlayer[iPlayer].g_flHealPercentReward[iPos] = flGetClampedValue(key, "HealPercentReward", "Heal Percent Reward", "Heal_Percent_Reward", "healpercent", g_esPlayer[iPlayer].g_flHealPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 									g_esPlayer[iPlayer].g_flJumpHeightReward[iPos] = flGetClampedValue(key, "JumpHeightReward", "Jump Height Reward", "Jump_Height_Reward", "jumpheight", g_esPlayer[iPlayer].g_flJumpHeightReward[iPos], sSet[iPos], 0.0, 999999.0);
+									g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 999999.0);
 									g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
 									g_esPlayer[iPlayer].g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esPlayer[iPlayer].g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 999999.0);
 									g_esPlayer[iPlayer].g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esPlayer[iPlayer].g_flShoveRateReward[iPos], sSet[iPos], 0.0, 999999.0);
@@ -14703,7 +14715,7 @@ Action OnTakePropDamage2(int victim, int &attacker, int &inflictor, float &damag
 			if (attacker == inflictor && g_esGeneral.g_iTeamID2[inflictor] == 2)
 			{
 				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker)) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
+				if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
 				{
 					return Plugin_Handled;
 				}
@@ -14711,7 +14723,7 @@ Action OnTakePropDamage2(int victim, int &attacker, int &inflictor, float &damag
 			else if (bIsValidEntity(victim))
 			{
 				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (bIsValidClient(attacker))
+				if (bIsValidClient(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1)))
 				{
 					g_esGeneral.g_iTeamID2[victim] = GetClientTeam(attacker);
 					SetEntPropEnt(victim, Prop_Send, "m_hOwnerEntity", attacker);
@@ -14720,7 +14732,7 @@ Action OnTakePropDamage2(int victim, int &attacker, int &inflictor, float &damag
 				}
 			}
 		}
-		else if (bIsValidClient(attacker, MT_CHECK_INDEX) && g_esGeneral.g_iTeamID2[inflictor] == 2 && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker)) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2 || GetClientTeam(attacker) != 2))
+		else if (bIsValidClient(attacker, MT_CHECK_INDEX) && g_esGeneral.g_iTeamID2[inflictor] == 2 && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2 || GetClientTeam(attacker) != 2))
 		{
 			return Plugin_Handled;
 		}
