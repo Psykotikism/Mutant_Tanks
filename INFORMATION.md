@@ -540,6 +540,7 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - Damage resistance
@@ -634,6 +635,7 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - Damage resistance
@@ -1019,6 +1021,24 @@
 			// 3rd set = Fall voiceline for teammates.
 			// 4th set = Fall voiceline for assistant killers.
 			"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh"
+
+			// Give friendly-fire immunity as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give immunity to killers.
+			// 2nd number = Give immunity to assistants.
+			// 3rd number = Give immunity to teammates.
+			// 4th number = Give immunity to assistant killers.
+			"Friendly Fire Reward"			"1,1,1,1"
 
 			// The healing percentage from first aid kits to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2674,6 +2694,7 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - Damage resistance
@@ -2768,6 +2789,7 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - Damage resistance
@@ -3153,6 +3175,24 @@
 			// 3rd set = Fall voiceline for teammates.
 			// 4th set = Fall voiceline for assistant killers.
 			"Fall Voiceline Reward"			""
+
+			// Give friendly-fire immunity as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give immunity to killers.
+			// 2nd number = Give immunity to assistants.
+			// 3rd number = Give immunity to teammates.
+			// 4th number = Give immunity to assistant killers.
+			"Friendly Fire Reward"			"0,0,0,0"
 
 			// The healing percentage from first aid kits to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

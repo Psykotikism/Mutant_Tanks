@@ -1006,6 +1006,8 @@ Action tTimerBlind(Handle timer, DataPack pack)
 		g_esBlindPlayer[iSurvivor].g_bAffected = false;
 		g_esBlindPlayer[iSurvivor].g_iOwner = 0;
 
+		vBlind(iSurvivor, 0);
+
 		return Plugin_Stop;
 	}
 
