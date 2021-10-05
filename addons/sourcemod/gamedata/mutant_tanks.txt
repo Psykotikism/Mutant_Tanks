@@ -1020,8 +1020,9 @@
 				"windows"
 				{
 					"signature"	"SurvivorLegsMeetRescueVehicleArrival::Update"
-					"offset"	"9"
+					"read"		"9"
 				}
+				"read"		"0"
 			}
 
 			/**
@@ -1035,8 +1036,9 @@
 				"signature"	"CTerrorGameMovement::DoJump"
 				"windows"
 				{
-					"offset"	"174"
+					"read"		"174"
 				}
+				"read"		"0"
 			}
 
 			/**
@@ -2932,8 +2934,9 @@
 				"windows"
 				{
 					"signature"	"CDirectorMusicBanks::OnRoundStart"
-					"offset"	"12"
+					"read"		"12"
 				}
+				"read"		"0"
 			}
 
 			/**
@@ -2945,16 +2948,17 @@
 				"signature"	"CTerrorGameMovement::DoJump"
 				"linux"
 				{
-					"offset"	"671"
+					"read"		"671"
 				}
 				"mac"
 				{
-					"offset"	"671"
+					"read"		"671"
 				}
 				"windows"
 				{
-					"offset"	"86"
+					"read"		"86"
 				}
+				"read"		"0"
 			}
 		}
 
