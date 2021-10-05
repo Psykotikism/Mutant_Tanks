@@ -399,13 +399,13 @@
 
 #### Abilities
 - Idle: Fixed the ability requiring `DHooks`.
-- Kamikaze: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting!) [Thanks to `Lux` for the help!]
+- Kamikaze: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting and `Lux` for the help!)
 - Medic: Fixed the ability requiring an incapacitation check for special infected. (Thanks to `ddd123` for reporting!)
 - Necro: Fixed the ability attempting to respawn special infected too late. (Thanks to `ddd123` for reporting!)
 - Respawn: Fixed the ability requiring `DHooks`.
-- Rocket: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting!) [Thanks to `Lux` for the help!]
-- Smash: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting!) [Thanks to `Lux` for the help!]
-- Smite: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting!) [Thanks to `Lux` for the help!]
+- Rocket: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting and `Lux` for the help!)
+- Smash: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting and `Lux` for the help!)
+- Smite: Fixed survivor death models being removed on player spawn. (Thanks to `AlexAlcala` for reporting and `Lux` for the help!)
 
 ### Changes
 
@@ -631,7 +631,7 @@
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to `3aljiyavslgazana` for suggesting!)
 	- Fully blocks all damage from registering. (Requested by `3aljiyavslgazana`.)
-	- Blocks Boomer pukes on the recipient. (Thanks to `3aljiyavslgazana` for the idea and `epzminion` for the help!) [Thanks to `Silvers` for the signatures!]
+	- Blocks Boomer pukes on the recipient. (Thanks to `3aljiyavslgazana` for the idea and `epzminion` for the help and `Silvers` for the signatures!]
 	- Automatically removes the Boomer puke screen effect. (Requested by `3aljiyavslgazana`.) [Thanks to `Silvers` for the signatures!]
 	- Reduces the pushback force from Tank punches. (Requested by `3aljiyavslgazana`.) [Thanks to `Silvers` for the code and signatures!]
 	- Prevents the recipient from getting flung away by Chargers.
