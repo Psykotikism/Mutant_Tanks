@@ -323,11 +323,11 @@ Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
+			int iLauncher = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity"),
 				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
 			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				int iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				int iTank = GetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity");
 				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esSpamCache[iTank].g_iSpamAbility == 1 && g_esSpamPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esSpamPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esSpamPlayer[iTank].g_iTankType, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSpamPlayer[victim].g_iImmunityFlags))))
@@ -829,7 +829,7 @@ void vSpam2(int tank, int pos = -1)
 	int iLauncher = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iLauncher))
 	{
-		SetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
 		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(iLauncher);
 		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);

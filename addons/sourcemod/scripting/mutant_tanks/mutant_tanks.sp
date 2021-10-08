@@ -461,6 +461,7 @@ enum struct esGeneral
 	DynamicDetour g_ddTankClawGroundPoundDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
+	DynamicDetour g_ddTankRockDetonateDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
 	DynamicDetour g_ddUseDetour;
 	DynamicDetour g_ddUseDetour2;
@@ -1525,7 +1526,6 @@ public void OnPluginStart()
 	vRegisterCommands();
 	vRegisterConVars();
 	vReadGameData();
-
 #if defined _clientprefs_included
 	char sName[12], sDescription[36];
 	for (int iPos = 0; iPos < sizeof esGeneral::g_ckMTAdmin; iPos++)
@@ -1629,12 +1629,12 @@ public void OnClientPutInServer(int client)
 	g_esPlayer[client].g_iUserID = GetClientUserId(client);
 	g_esPlayer[client].g_iUserID2 = g_esPlayer[client].g_iUserID;
 
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeCombineDamage);
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeFriendlyDamage);
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-	SDKHook(client, SDKHook_OnTakeDamageAlive, OnTakePlayerDamageAlive);
-	SDKHook(client, SDKHook_OnTakeDamageAlivePost, OnTakePlayerDamageAlivePost);
+	SDKHook(client, SDKHook_OnTakeDamage, OnCombineTakeDamage);
+	SDKHook(client, SDKHook_OnTakeDamage, OnFriendlyTakeDamage);
+	SDKHook(client, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+	SDKHook(client, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
+	SDKHook(client, SDKHook_OnTakeDamageAlive, OnPlayerTakeDamageAlive);
+	SDKHook(client, SDKHook_OnTakeDamageAlivePost, OnPlayerTakeDamageAlivePost);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 	SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 
@@ -1759,8 +1759,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 		}
 		else if (StrEqual(classname, "prop_fuel_barrel"))
 		{
-			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
-			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage2);
+			SDKHook(entity, SDKHook_OnTakeDamage, OnPropTakeDamage);
 		}
 	}
 }
@@ -1771,24 +1770,11 @@ public void OnEntityDestroyed(int entity)
 	{
 		char sClassname[32];
 		GetEntityClassname(entity, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "tank_rock"))
+		if (StrEqual(sClassname, "infected") || StrEqual(sClassname, "witch"))
 		{
-			int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esCache[iThrower].g_iTankEnabled == 1)
-			{
-				Call_StartForward(g_esGeneral.g_gfRockBreakForward);
-				Call_PushCell(iThrower);
-				Call_PushCell(entity);
-				Call_Finish();
-
-				vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKBREAK, .weapon = entity);
-			}
-		}
-		else if (StrEqual(sClassname, "infected") || StrEqual(sClassname, "witch"))
-		{
-			SDKUnhook(entity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-			SDKUnhook(entity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-			SDKUnhook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
+			SDKUnhook(entity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
+			SDKUnhook(entity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+			SDKUnhook(entity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
 		}
 	}
 }
@@ -2054,17 +2040,17 @@ void vLateLoad()
 		int iEntity = -1;
 		while ((iEntity = FindEntityByClassname(iEntity, "infected")) != INVALID_ENT_REFERENCE)
 		{
-			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
 		}
 
 		iEntity = -1;
 		while ((iEntity = FindEntityByClassname(iEntity, "witch")) != INVALID_ENT_REFERENCE)
 		{
-			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-			SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+			SDKHook(iEntity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
 		}
 
 		iEntity = -1;
@@ -2076,8 +2062,7 @@ void vLateLoad()
 				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 				if (StrEqual(sModel, MODEL_OXYGENTANK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (g_bSecondGame && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 				{
-					SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage);
-					SDKHook(iEntity, SDKHook_OnTakeDamage, OnTakePropDamage2);
+					SDKHook(iEntity, SDKHook_OnTakeDamage, OnPropTakeDamage);
 				}
 			}
 		}
@@ -5593,6 +5578,81 @@ int iGetGameDataOffset(const char[] name)
  * Forward functions
  **/
 
+Action aDeathFallCameraEnable(int survivor)
+{
+	if (bIsSurvivor(survivor) && (bIsDeveloper(survivor, 5) || bIsDeveloper(survivor, 11) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE)) && g_esPlayer[survivor].g_bFalling)
+	{
+		g_esPlayer[survivor].g_bFatalFalling = true;
+
+		return Plugin_Handled;
+	}
+
+	g_esPlayer[survivor].g_bFatalFalling = true;
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_esGeneral.g_gfFatalFallingForward);
+	Call_PushCell(survivor);
+	Call_Finish(aResult);
+
+	return aResult;
+}
+
+Action aOnHitByVomitJarForward(int player, int thrower)
+{
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_esGeneral.g_gfPlayerHitByVomitJarForward);
+	Call_PushCell(player);
+	Call_PushCell(thrower);
+	Call_Finish(aResult);
+
+	return aResult;
+}
+
+Action aOnShovedBySurvivorForward(int player, int survivor, const float direction[3])
+{
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
+	Call_PushCell(player);
+	Call_PushCell(survivor);
+	Call_PushArray(direction, 3);
+	Call_Finish(aResult);
+
+	return aResult;
+}
+
+Action aSpawnTank()
+{
+	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
+	{
+		return Plugin_Continue;
+	}
+
+	bool bBlock = false;
+	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
+
+	switch (g_esGeneral.g_bFinalMap)
+	{
+		case true:
+		{
+			switch (g_esGeneral.g_iTankWave)
+			{
+				case 0: bBlock = false;
+				default:
+				{
+					switch (g_esGeneral.g_iFinaleAmount)
+					{
+						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
+						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
+					}
+				}
+			}
+		}
+		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
+	}
+
+	return bBlock ? Plugin_Handled : Plugin_Continue;
+}
+
 void vChangeTypeForward(int tank, int oldType, int newType, bool revert)
 {
 	Call_StartForward(g_esGeneral.g_gfChangeTypeForward);
@@ -7965,8 +8025,8 @@ void vSetSurvivorFlashlight(int survivor, int colors[4])
 	if (g_esPlayer[survivor].g_iFlashlight == 0 || g_esPlayer[survivor].g_iFlashlight == INVALID_ENT_REFERENCE)
 	{
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(survivor, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(survivor, Prop_Data, "m_angRotation", flAngles);
 		vFlashlightProp(survivor, flOrigin, flAngles, colors);
 	}
 	else if (bIsValidEntRef(g_esPlayer[survivor].g_iFlashlight))
@@ -8670,7 +8730,7 @@ void vSurvivorReactions(int tank)
 		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iExplosion);
 
-		SetEntPropEnt(iExplosion, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntPropEnt(iExplosion, Prop_Data, "m_hOwnerEntity", tank);
 		SetEntProp(iExplosion, Prop_Send, "m_iTeamNum", 3);
 		AcceptEntityInput(iExplosion, "Explode");
 
@@ -9232,7 +9292,7 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 			SetVariantString(sParentName);
 			AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
-			SetEntPropEnt(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
+			SetEntPropEnt(g_esPlayer[tank].g_iLight[light], Prop_Data, "m_hOwnerEntity", tank);
 
 			switch (light)
 			{
@@ -9673,11 +9733,11 @@ void vSetRockColor(int rock)
 		g_esGeneral.g_iLauncher = EntRefToEntIndex(g_esGeneral.g_iLauncher);
 		if (bIsValidEntity(g_esGeneral.g_iLauncher))
 		{
-			int iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+			int iTank = GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Data, "m_hOwnerEntity");
 			if (bIsTankSupported(iTank))
 			{
 				SetEntPropEnt(rock, Prop_Data, "m_hThrower", iTank);
-				SetEntPropEnt(rock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
+				SetEntPropEnt(rock, Prop_Data, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
 				vSetRockModel(iTank, rock);
 
 				switch (StrEqual(g_esCache[iTank].g_sRockColor, "rainbow", false))
@@ -9915,9 +9975,9 @@ void vSetTankProps(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[0] && (g_esCache[tank].g_iPropsAttached & MT_PROP_BLUR) && !g_esPlayer[tank].g_bBlur)
 		{
-			float flTankPos[3], flTankAng[3];
+			float flTankPos[3], flTankAngles[3];
 			GetClientAbsOrigin(tank, flTankPos);
-			GetClientAbsAngles(tank, flTankAng);
+			GetClientAbsAngles(tank, flTankAngles);
 
 			g_esPlayer[tank].g_iBlur = CreateEntityByName("prop_dynamic");
 			if (bIsValidEntity(g_esPlayer[tank].g_iBlur))
@@ -9951,9 +10011,9 @@ void vSetTankProps(int tank)
 					}
 				}
 
-				SetEntPropEnt(g_esPlayer[tank].g_iBlur, Prop_Send, "m_hOwnerEntity", tank);
+				SetEntPropEnt(g_esPlayer[tank].g_iBlur, Prop_Data, "m_hOwnerEntity", tank);
 
-				TeleportEntity(g_esPlayer[tank].g_iBlur, flTankPos, flTankAng, NULL_VECTOR);
+				TeleportEntity(g_esPlayer[tank].g_iBlur, flTankPos, flTankAngles, NULL_VECTOR);
 				DispatchSpawn(g_esPlayer[tank].g_iBlur);
 
 				AcceptEntityInput(g_esPlayer[tank].g_iBlur, "DisableCollision");
@@ -9968,8 +10028,8 @@ void vSetTankProps(int tank)
 		}
 
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
 		float flChance = GetRandomFloat(0.1, 100.0), flValue = 0.0;
 		int iFlag = 0, iType = 0;
@@ -9999,8 +10059,8 @@ void vSetTankProps(int tank)
 			}
 		}
 
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
 		float flOrigin2[3], flAngles2[3] = {0.0, 0.0, 90.0};
 		for (int iOzTank = 0; iOzTank < sizeof esPlayer::g_iOzTank; iOzTank++)
@@ -10110,8 +10170,8 @@ void vSetTankProps(int tank)
 			}
 		}
 
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
 		for (int iRock = 0; iRock < sizeof esPlayer::g_iRock; iRock++)
 		{
@@ -10180,8 +10240,8 @@ void vSetTankProps(int tank)
 			}
 		}
 
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 
 		for (int iTire = 0; iTire < sizeof esPlayer::g_iTire; iTire++)
@@ -10240,8 +10300,8 @@ void vSetTankProps(int tank)
 			}
 		}
 
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
 		if ((g_esPlayer[tank].g_iPropaneTank == 0 || g_esPlayer[tank].g_iPropaneTank == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[6] && (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK))
 		{
@@ -10351,6 +10411,32 @@ void vSetTankThrowInterval(int tank, float defValue = 5.0)
 			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + flInterval));
 		}
 	}
+}
+
+void vSetupTankForceSpawn(int tank)
+{
+	if (bIsTank(tank))
+	{
+		g_esPlayer[tank].g_bKeepCurrentType = true;
+
+		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
+		{
+			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+}
+
+void vSetupTankReplacement(int oldTank, int newTank)
+{
+	int iType = (g_esPlayer[newTank].g_iPersonalType > 0) ? g_esPlayer[newTank].g_iPersonalType : g_esPlayer[oldTank].g_iTankType;
+	g_esPlayer[newTank].g_bReplaceSelf = true;
+
+	vSetTankColor(newTank, iType);
+	vCopyTankStats(oldTank, newTank);
+	vTankSpawn(newTank, -1);
+	vResetTank(oldTank, 0);
+	vResetTank2(oldTank);
+	vCacheSettings(oldTank);
 }
 
 void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
@@ -13876,7 +13962,6 @@ void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 	if (type == -1 || (g_esGeneral.g_iLogMessages & type))
 	{
 		Action aResult = Plugin_Continue;
-
 		Call_StartForward(g_esGeneral.g_gfLogMessageForward);
 		Call_PushCell(type);
 		Call_PushString(message);
@@ -14231,7 +14316,7 @@ void vWeaponSkinFrame(int userid)
 
 // OnTakeDamage hooks
 
-Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnCombineTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim) && damage > 0.0)
 	{
@@ -14266,7 +14351,7 @@ Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-Action OnTakeFriendlyDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
@@ -14277,35 +14362,40 @@ Action OnTakeFriendlyDamage(int victim, int &attacker, int &inflictor, float &da
 				return Plugin_Handled;
 			}
 		}
-		else if (bIsValidEntity(inflictor))
+		else if (bIsValidClient(attacker, MT_CHECK_INDEX) && bIsValidEntity(inflictor) && (g_esGeneral.g_iTeamID2[inflictor] == 2 || damagetype == 134217792))
 		{
-			if (bIsValidClient(attacker, MT_CHECK_INDEX) && (g_esGeneral.g_iTeamID2[inflictor] == 2 || (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1))) && GetClientTeam(victim) == 2 && GetClientTeam(attacker) != 2)
+			if ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)) && GetClientTeam(victim) == 2 && GetClientTeam(attacker) != 2)
 			{
-				char sClassname[5];
-				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-				if (StrEqual(sClassname, "pipe") && damagetype == 134217792)
+				if (damagetype == 134217792)
 				{
-					return Plugin_Handled;
+					char sClassname[5];
+					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+					if (StrEqual(sClassname, "pipe"))
+					{
+						return Plugin_Handled;
+					}
 				}
 
 				return Plugin_Handled;
 			}
-			else if (attacker == inflictor && (g_esGeneral.g_iTeamID2[inflictor] == 2 || (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1))) && GetClientTeam(victim) == 2)
+		}
+		else if (attacker == inflictor && bIsValidEntity(inflictor) && (g_esGeneral.g_iTeamID2[inflictor] == 2 || damagetype == 134217792) && GetClientTeam(victim) == 2)
+		{
+			if (damagetype == 134217792)
 			{
 				char sClassname[5];
 				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-				switch (StrEqual(sClassname, "pipe") && damagetype == 134217792)
+				if (StrEqual(sClassname, "pipe") && (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)))
 				{
-					case true: return Plugin_Handled;
-					case false:
-					{
-						attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-						if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
-						{
-							return Plugin_Handled;
-						}
-					}
+					return Plugin_Handled;
+				}
+			}
+			else
+			{
+				attacker = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
+				if ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)) && (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2))))
+				{
+					return Plugin_Handled;
 				}
 			}
 		}
@@ -14314,9 +14404,37 @@ Action OnTakeFriendlyDamage(int victim, int &attacker, int &inflictor, float &da
 	return Plugin_Continue;
 }
 
-Action OnTakePlayerDamageAlive(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnInfectedTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && damage > 0.0 && bIsSurvivor(victim) && bIsSurvivorDisabled(victim))
+	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage > 0.0)
+	{
+		if (attacker == inflictor && bIsValidEntity(inflictor) && g_esGeneral.g_iTeamID[inflictor] == 3)
+		{
+			attacker = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
+			if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
+			{
+				vRemovePlayerDamage(victim, damagetype);
+
+				return Plugin_Handled;
+			}
+		}
+		else if (bIsValidClient(attacker, MT_CHECK_INDEX))
+		{
+			if (g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
+			{
+				vRemovePlayerDamage(victim, damagetype);
+
+				return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (g_esGeneral.g_bPluginEnabled && damage > 0.0 && bIsSurvivor(victim))
 	{
 		int iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
 		if ((bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST)) || (bIsSurvivor(iReviver) && (bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST))))
@@ -14337,7 +14455,7 @@ Action OnTakePlayerDamageAlive(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
-void OnTakePlayerDamageAlivePost(int victim, int attacker, int inflictor, float damage, int damagetype)
+void OnPlayerTakeDamageAlivePost(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
 	static int iIndex = -1;
 	if (iIndex == -1)
@@ -14351,17 +14469,20 @@ void OnTakePlayerDamageAlivePost(int victim, int attacker, int inflictor, float 
 	}
 }
 
-Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
 		char sClassname[32];
-		int iLauncherOwner = 0, iRockOwner = 0;
+		int iLauncher = 0, iThrower = 0;
 		if (bIsValidEntity(inflictor))
 		{
-			iLauncherOwner = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			iRockOwner = HasEntProp(inflictor, Prop_Data, "m_hThrower") ? GetEntPropEnt(inflictor, Prop_Data, "m_hThrower") : 0;
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+			if (StrEqual(sClassname, "tank_rock"))
+			{
+				iLauncher = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
+				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+			}
 		}
 
 		bool bDeveloper, bRewarded;
@@ -14423,7 +14544,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 
 						return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
-					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iLauncherOwner) && g_esCache[attacker].g_flRockDamage >= 0.0)
+					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iLauncher) && g_esCache[attacker].g_flRockDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
@@ -14642,7 +14763,7 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 					return Plugin_Changed;
 				}
 			}
-			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iLauncherOwner) && victim != iLauncherOwner) || (bIsTankSupported(iRockOwner) && victim != iRockOwner))
+			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iLauncher) && victim != iLauncher) || (bIsTankSupported(iThrower) && victim != iThrower))
 			{
 				if (StrEqual(sClassname[7], "tank_claw"))
 				{
@@ -14667,81 +14788,31 @@ Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &dama
 	return Plugin_Continue;
 }
 
-Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
-{
-	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage > 0.0)
-	{
-		if (bIsValidEntity(inflictor))
-		{
-			if (attacker == inflictor && g_esGeneral.g_iTeamID[inflictor] == 3)
-			{
-				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
-				{
-					vRemovePlayerDamage(victim, damagetype);
-
-					return Plugin_Handled;
-				}
-			}
-			else if (bIsValidEntity(victim))
-			{
-				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (bIsValidClient(attacker))
-				{
-					g_esGeneral.g_iTeamID[victim] = GetClientTeam(attacker);
-					SetEntPropEnt(victim, Prop_Send, "m_hOwnerEntity", attacker);
-					SetEntPropEnt(victim, Prop_Data, "m_hPhysicsAttacker", attacker);
-					SetEntPropFloat(victim, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-				}
-			}
-		}
-		else if (bIsValidClient(attacker, MT_CHECK_INDEX) && g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
-		{
-			vRemovePlayerDamage(victim, damagetype);
-
-			return Plugin_Handled;
-		}
-	}
-
-	return Plugin_Continue;
-}
-
-Action OnTakePropDamage2(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnPropTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
-		if (bIsValidEntity(inflictor))
+		if (attacker == inflictor && bIsValidEntity(inflictor) && g_esGeneral.g_iTeamID2[inflictor] == 2)
 		{
-			if (attacker == inflictor && g_esGeneral.g_iTeamID2[inflictor] == 2)
+			attacker = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
+			if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
 			{
-				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
-				{
-					return Plugin_Handled;
-				}
-			}
-			else if (bIsValidEntity(victim))
-			{
-				attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (bIsValidClient(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1)))
-				{
-					g_esGeneral.g_iTeamID2[victim] = GetClientTeam(attacker);
-					SetEntPropEnt(victim, Prop_Send, "m_hOwnerEntity", attacker);
-					SetEntPropEnt(victim, Prop_Data, "m_hPhysicsAttacker", attacker);
-					SetEntPropFloat(victim, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-				}
+				return Plugin_Handled;
 			}
 		}
-		else if (bIsValidClient(attacker, MT_CHECK_INDEX) && g_esGeneral.g_iTeamID2[inflictor] == 2 && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2 || GetClientTeam(attacker) != 2))
+		else if (bIsValidClient(attacker, MT_CHECK_INDEX))
 		{
-			return Plugin_Handled;
+			if (g_esGeneral.g_iTeamID2[inflictor] == 2 && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2 || GetClientTeam(attacker) != 2))
+			{
+				return Plugin_Handled;
+			}
 		}
 	}
 
 	return Plugin_Continue;
 }
 
-void OnTakePlayerDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
+void OnPlayerTakeDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(attacker) && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && g_esGeneral.g_iInfectedHealth[victim] > GetEntProp(victim, Prop_Data, "m_iHealth") && damage >= 1.0)
 	{
@@ -15080,7 +15151,7 @@ void OnTankPostThinkPost(int tank)
 
 void OnEffectSpawnPost(int entity)
 {
-	int iAttacker = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	int iAttacker = GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity");
 	if (bIsValidClient(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		g_esGeneral.g_iTeamID[entity] = GetClientTeam(iAttacker);
@@ -15094,9 +15165,9 @@ void OnEffectSpawnPost(int entity)
 
 void OnInfectedSpawnPost(int entity)
 {
-	SDKHook(entity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
-	SDKHook(entity, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
-	SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
+	SDKHook(entity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
+	SDKHook(entity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+	SDKHook(entity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
 }
 
 void OnPropSpawnPost(int entity)
@@ -15105,8 +15176,7 @@ void OnPropSpawnPost(int entity)
 	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 	if (StrEqual(sModel, MODEL_OXYGENTANK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (g_bSecondGame && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 	{
-		SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
-		SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage2);
+		SDKHook(entity, SDKHook_OnTakeDamage, OnPropTakeDamage);
 	}
 }
 
@@ -15119,7 +15189,7 @@ Action OnInfectedSetTransmit(int entity, int client)
 
 Action OnPropSetTransmit(int entity, int client)
 {
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	int iOwner = GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity");
 	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankInThirdPerson(client))
 	{
 		return Plugin_Handled;
@@ -15354,6 +15424,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound");
 	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit");
 	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create");
+	vSetupDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate");
 	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
 	vSetupDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use");
 	vSetupDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use");
@@ -15443,6 +15514,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound", Hook_Post, mreTankClawGroundPoundPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
@@ -15598,21 +15670,7 @@ MRESReturn mreCanDeployForPost(int pThis, DHookReturn hReturn, DHookParam hParam
 MRESReturn mreDeathFallCameraEnablePre(int pThis, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
-	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 5) || bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)) && g_esPlayer[iSurvivor].g_bFalling)
-	{
-		g_esPlayer[iSurvivor].g_bFatalFalling = true;
-
-		return MRES_Supercede;
-	}
-
-	g_esPlayer[iSurvivor].g_bFatalFalling = true;
-
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_esGeneral.g_gfFatalFallingForward);
-	Call_PushCell(iSurvivor);
-	Call_Finish(aResult);
-
-	if (aResult == Plugin_Handled)
+	if (aDeathFallCameraEnable(iSurvivor) == Plugin_Handled)
 	{
 		return MRES_Supercede;
 	}
@@ -15704,15 +15762,7 @@ MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 
 MRESReturn mreEnterGhostStatePost(int pThis)
 {
-	if (bIsTank(pThis))
-	{
-		g_esPlayer[pThis].g_bKeepCurrentType = true;
-
-		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
-		{
-			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
-		}
-	}
+	vSetupTankForceSpawn(pThis);
 
 	return MRES_Ignored;
 }
@@ -16031,13 +16081,7 @@ MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
 		return MRES_Supercede;
 	}
 
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_esGeneral.g_gfPlayerHitByVomitJarForward);
-	Call_PushCell(pThis);
-	Call_PushCell(iSurvivor);
-	Call_Finish(aResult);
-
-	if (aResult == Plugin_Handled)
+	if (aOnHitByVomitJarForward(pThis, iSurvivor) == Plugin_Handled)
 	{
 		return MRES_Supercede;
 	}
@@ -16225,17 +16269,9 @@ MRESReturn mrePreThinkPost(int pThis)
 
 MRESReturn mreReplaceTankPost(DHookParam hParams)
 {
-	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2),
-		iType = (g_esPlayer[iNewTank].g_iPersonalType > 0) ? g_esPlayer[iNewTank].g_iPersonalType : g_esPlayer[iOldTank].g_iTankType;
+	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2);
 
-	g_esPlayer[iNewTank].g_bReplaceSelf = true;
-
-	vSetTankColor(iNewTank, iType);
-	vCopyTankStats(iOldTank, iNewTank);
-	vTankSpawn(iNewTank, -1);
-	vResetTank(iOldTank, 0);
-	vResetTank2(iOldTank);
-	vCacheSettings(iOldTank);
+	vSetupTankReplacement(iOldTank, iNewTank);
 
 	return MRES_Ignored;
 }
@@ -16326,18 +16362,10 @@ MRESReturn mreShovedByPounceLandingPre(int pThis, DHookParam hParams)
 
 MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 {
-	Action aResult = Plugin_Continue;
 	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
 	float flDirection[3];
 	hParams.GetVector(2, flDirection);
-
-	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
-	Call_PushCell(pThis);
-	Call_PushCell(iSurvivor);
-	Call_PushArray(flDirection, sizeof flDirection);
-	Call_Finish(aResult);
-
-	if (aResult == Plugin_Handled)
+	if (aOnShovedBySurvivorForward(pThis, iSurvivor, flDirection) == Plugin_Handled)
 	{
 		return MRES_Supercede;
 	}
@@ -16366,39 +16394,7 @@ MRESReturn mreSetMainActivityPre(int pThis, DHookParam hParams)
 
 MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 {
-	float flPos[3], flAngles[3];
-	hParams.GetVector(1, flPos);
-	hParams.GetVector(2, flAngles);
-
-	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
-	{
-		return MRES_Ignored;
-	}
-
-	bool bBlock = false;
-	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
-
-	switch (g_esGeneral.g_bFinalMap)
-	{
-		case true:
-		{
-			switch (g_esGeneral.g_iTankWave)
-			{
-				case 0: bBlock = false;
-				default:
-				{
-					switch (g_esGeneral.g_iFinaleAmount)
-					{
-						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
-						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
-					}
-				}
-			}
-		}
-		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
-	}
-
-	if (bBlock)
+	if (aSpawnTank() == Plugin_Handled)
 	{
 		hReturn.Value = 0;
 
@@ -16661,6 +16657,25 @@ MRESReturn mreTankRockCreatePost(DHookReturn hReturn, DHookParam hParams)
 	if (hParams.IsNull(4))
 	{
 		vSetRockColor(hReturn.Value);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTankRockDetonatePre(int pThis)
+{
+	if (bIsValidEntity(pThis))
+	{
+		int iThrower = GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
+		if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esCache[iThrower].g_iTankEnabled == 1)
+		{
+			Call_StartForward(g_esGeneral.g_gfRockBreakForward);
+			Call_PushCell(iThrower);
+			Call_PushCell(pThis);
+			Call_Finish();
+
+			vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKBREAK, .weapon = pThis);
+		}
 	}
 
 	return MRES_Ignored;
@@ -17041,17 +17056,22 @@ int iGetPatchIndex(const char[] name)
  **/
 
 #if defined _l4dh_included
+public void L4D_OnEnterStasis(int tank)
+{
+	if (bIsTank(tank))
+	{
+		g_esPlayer[tank].g_bStasis = true;
+	}
+}
+
 public void L4D_OnEnterGhostState(int client)
 {
-	if (bIsTank(client))
-	{
-		g_esPlayer[client].g_bKeepCurrentType = true;
+	vSetupTankForceSpawn(client);
+}
 
-		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
-		{
-			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		}
-	}
+public Action L4D_OnFatalFalling(int client, int camera)
+{
+	return aDeathFallCameraEnable(client);
 }
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
@@ -17061,62 +17081,37 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	return Plugin_Continue;
 }
 
+public void L4D_OnLeaveStasis(int tank)
+{
+	if (bIsTank(tank))
+	{
+		g_esPlayer[tank].g_bStasis = false;
+	}
+}
+
+public Action L4D2_OnPlayerFling(int client, int attacker, float vecDir[3])
+{
+	if (bIsSurvivor(client) && (bIsDeveloper(client, 8) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
 public void L4D_OnReplaceTank(int tank, int newtank)
 {
-	int iType = (g_esPlayer[newtank].g_iPersonalType > 0) ? g_esPlayer[newtank].g_iPersonalType : g_esPlayer[tank].g_iTankType;
-	g_esPlayer[newtank].g_bReplaceSelf = true;
-
-	vSetTankColor(newtank, iType);
-	vCopyTankStats(tank, newtank);
-	vTankSpawn(newtank, -1);
-	vResetTank(tank, 0);
-	vResetTank2(tank);
-	vCacheSettings(tank);
+	vSetupTankReplacement(tank, newtank);
 }
 
 public Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDir[3])
 {
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
-	Call_PushCell(victim);
-	Call_PushCell(client);
-	Call_PushArray(vecDir, 3);
-	Call_Finish(aResult);
-
-	return aResult;
+	return aOnShovedBySurvivorForward(victim, client, vecDir);
 }
 
 public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 {
-	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
-	{
-		return Plugin_Continue;
-	}
-
-	bool bBlock = false;
-	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
-
-	switch (g_esGeneral.g_bFinalMap)
-	{
-		case true:
-		{
-			switch (g_esGeneral.g_iTankWave)
-			{
-				case 0: bBlock = false;
-				default:
-				{
-					switch (g_esGeneral.g_iFinaleAmount)
-					{
-						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
-						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
-					}
-				}
-			}
-		}
-		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
-	}
-
-	return bBlock ? Plugin_Handled : Plugin_Continue;
+	return aSpawnTank();
 }
 
 public Action L4D_OnVomitedUpon(int victim, int &attacker, bool &boomerExplosion)
@@ -17136,13 +17131,7 @@ public Action L4D2_OnHitByVomitJar(int victim, int &attacker)
 		return Plugin_Handled;
 	}
 
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_esGeneral.g_gfPlayerHitByVomitJarForward);
-	Call_PushCell(victim);
-	Call_PushCell(attacker);
-	Call_Finish(aResult);
-
-	return aResult;
+	return aOnHitByVomitJarForward(victim, attacker);
 }
 
 public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
@@ -18406,14 +18395,17 @@ void vResetTimers(bool delay = false)
 		case true: CreateTimer(g_esGeneral.g_flRegularDelay, tTimerDelayRegularWaves, .flags = TIMER_FLAG_NO_MAPCHANGE);
 		case false:
 		{
-			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null)
+			bool bCheck = false;
+#if defined _l4dh_included
+			bCheck = (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea == null || g_esGeneral.g_adDirector == Address_Null) ? L4D_HasAnySurvivorLeftSafeArea() : SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector);
+#else
+			bCheck = (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null) ? SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector) : false;
+#endif
+			if (bCheck)
 			{
-				if (SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector))
-				{
-					delete g_esGeneral.g_hRegularWavesTimer;
+				delete g_esGeneral.g_hRegularWavesTimer;
 
-					g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, .flags = TIMER_REPEAT);
-				}
+				g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, .flags = TIMER_REPEAT);
 			}
 		}
 	}
@@ -18513,12 +18505,12 @@ Action tTimerBlurEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	float flTankPos[3], flTankAng[3];
+	float flTankPos[3], flTankAngles[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	GetClientAbsAngles(iTank, flTankAng);
+	GetClientAbsAngles(iTank, flTankAngles);
 	if (bIsValidEntity(iTankModel))
 	{
-		TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
+		TeleportEntity(iTankModel, flTankPos, flTankAngles, NULL_VECTOR);
 		SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 	}
 

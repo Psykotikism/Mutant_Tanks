@@ -386,7 +386,7 @@ Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 		}
 		else if (bIsWitch(attacker))
 		{
-			int iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+			int iTank = GetEntPropEnt(attacker, Prop_Data, "m_hOwnerEntity");
 			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esThrowCache[iTank].g_iThrowAbility & MT_THROW_WITCH))
 			{
 				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esThrowPlayer[iTank].g_iTankType, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esThrowPlayer[victim].g_iImmunityFlags))
@@ -674,7 +674,7 @@ public void MT_OnPluginEnd()
 	int iWitch = -1;
 	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
-		if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") > 0)
+		if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") > 0)
 		{
 			RemoveEntity(iWitch);
 		}
@@ -849,7 +849,7 @@ void vRemoveThrows(int tank)
 		int iWitch = -1;
 		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 		{
-			if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+			if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") == tank)
 			{
 				RemoveEntity(iWitch);
 			}
@@ -901,7 +901,7 @@ int iGetThrownWitchCount(int tank)
 	int iWitch = -1, iWitchCount = 0;
 	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
-		if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+		if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") == tank)
 		{
 			iWitchCount++;
 		}
@@ -1027,7 +1027,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						}
 
 						float flPos[3];
-						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+						GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
@@ -1116,7 +1116,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						if (bIsInfected(iSpecial))
 						{
 							float flPos[3];
-							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+							GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
 							RemoveEntity(iRock);
 
 							g_esThrowPlayer[iSpecial].g_bThrown = true;
@@ -1144,7 +1144,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 				case 4:
 				{
 					float flPos[3];
-					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+					GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
 					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
@@ -1167,7 +1167,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						if (bIsValidEntity(iWitch))
 						{
 							float flPos[3];
-							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+							GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
 							RemoveEntity(iRock);
 
 							NormalizeVector(flVelocity, flVelocity);

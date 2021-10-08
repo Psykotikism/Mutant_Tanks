@@ -327,7 +327,7 @@ Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 {
 	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
-		int iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+		int iTank = GetEntPropEnt(attacker, Prop_Data, "m_hOwnerEntity");
 		if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esWitchCache[iTank].g_iWitchAbility == 1)
 		{
 			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esWitchPlayer[iTank].g_iTankType, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esWitchPlayer[victim].g_iImmunityFlags))
@@ -701,7 +701,7 @@ void vRemoveWitches(int tank)
 		int iWitch = -1;
 		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 		{
-			if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+			if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") == tank)
 			{
 				RemoveEntity(iWitch);
 			}
@@ -731,8 +731,8 @@ void vWitch(int tank, int pos = -1)
 		if (iGetWitchCount() < g_esWitchCache[tank].g_iWitchAmount)
 		{
 			GetClientAbsOrigin(tank, flTankPos);
-			GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
-			GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAngles);
+			GetEntPropVector(iInfected, Prop_Data, "m_vecOrigin", flInfectedPos);
+			GetEntPropVector(iInfected, Prop_Data, "m_angRotation", flInfectedAngles);
 			if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
 			{
 				bConverted = true;
@@ -779,7 +779,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 	int iWitch = CreateEntityByName("witch");
 	if (bIsValidEntity(iWitch))
 	{
-		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity", tank);
 		TeleportEntity(iWitch, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iWitch);
 		ActivateEntity(iWitch);

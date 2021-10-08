@@ -5057,6 +5057,12 @@
 		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
 	}
 
+	"Warp4"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} switched places with their{yellow} rock{mint}."
+	}
+
 	"WarpAmmo"
 	{
 		"en"			"You've used up all your periodical warping ability's ammo."

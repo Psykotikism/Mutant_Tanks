@@ -1055,7 +1055,7 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	flPunchAngles[1] += flAngle;
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
-	SetEntPropVector(iSurvivor, Prop_Send, "m_vecPunchAngle", flPunchAngles);
+	SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flPunchAngles);
 
 	return Plugin_Continue;
 }

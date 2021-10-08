@@ -4629,6 +4629,11 @@
 		"hu"			"{olive}{1}{mint} odateleportált{olive} {2}{mint}-hoz!"
 	}
 
+	"Warp4"
+	{
+		"hu"			"{olive}{1}{mint} helyet cserélt{yellow} a sziklájával{mint}."
+	}
+
 	"WarpAmmo"
 	{
 		"hu"			"Elhasználtad az időszakos teleportálás képességed összes lőszerét."

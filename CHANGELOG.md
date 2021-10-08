@@ -14,6 +14,7 @@
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
 
 #### Abilities
+- Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
 
 ### Changes
@@ -25,20 +26,24 @@
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
 - Added [Updater](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) support.
-- Added MacOS support. (Untested)
+- Added MacOS support. (Currently only signatures and VTable offsets.) [Untested]
 
 #### Core plugin
+- The attack boost reward now prevents recipients from being interrupted when performing any actions.
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
 - The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
+- Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
 
 #### Game Data
 - Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
-- Added detour setup for `CTerrorPlayer::OnITExpired`.
+- Added detour setup for the following functions:
+	- `CTankRock::Detonate`
+	- `CTerrorPlayer::OnITExpired`
 - Added detour setup and signatures for the following functions:
 	- `CTerrorGun::Use`
 	- `CWeaponSpawn::Use`
@@ -59,6 +64,9 @@
 #### Abilities
 - Drop: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
 - Shield: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
+- Warp
+	- Added the `Warp Rock Break` setting.
+	- Added the `Warp Rock Chance` setting.
 
 ### Files
 

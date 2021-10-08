@@ -911,12 +911,12 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esBuryPlayer[survivor].g_flLastPosition);
+				GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", g_esBuryPlayer[survivor].g_flLastPosition);
 
 				float flOrigin[3];
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 				flOrigin[2] -= g_esBuryCache[tank].g_flBuryHeight;
-				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+				SetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 
 				SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 				SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
@@ -1010,9 +1010,9 @@ void vStopBury(int survivor, int tank)
 	g_esBuryPlayer[survivor].g_iOwner = 0;
 
 	float flOrigin[3];
-	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 	flOrigin[2] += g_esBuryCache[tank].g_flBuryHeight;
-	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	SetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 
 	if (bIsPlayerIncapacitated(survivor))
 	{

@@ -946,7 +946,7 @@ void vBombRockBreak2(int tank, int rock, float random, int pos = -1)
 	if (random <= flChance)
 	{
 		float flPos[3];
-		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
 
 		switch (g_bSecondGame)

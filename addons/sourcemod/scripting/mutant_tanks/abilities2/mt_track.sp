@@ -706,7 +706,7 @@ void vTrackThink(int rock)
 			case 0:
 			{
 				float flPos[3], flVelocity[3];
-				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+				GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flPos);
 				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
 				float flVector = GetVectorLength(flVelocity);
@@ -746,7 +746,7 @@ void vTrackThink(int rock)
 			case 1:
 			{
 				float flPos[3], flVelocity[3];
-				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+				GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flPos);
 				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
 				if (GetVectorLength(flVelocity) < 50.0)

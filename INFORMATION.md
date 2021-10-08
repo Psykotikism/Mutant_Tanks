@@ -550,6 +550,7 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
@@ -645,6 +646,7 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
@@ -2722,6 +2724,7 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
@@ -2817,6 +2820,7 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
@@ -5369,7 +5373,7 @@
 			"Acid Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
-			// Note: This does not need "Ability Enabled" or "Acid Hit" set to "1".
+			// Note: This does not need "Ability Enabled" or "Acid Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
 			// --
@@ -5377,7 +5381,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Acid Rock Break"			"0"
 
-			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// The Mutant Tank's rock has this many chances out of 100.0% to trigger the rock break ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6293,14 +6297,14 @@
 			"Bomb Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an explosion when it breaks.
-			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to "1".
+			// Note: This does not need "Ability Enabled" or "Bomb Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bomb Rock Break"			"0"
 
-			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// The Mutant Tank's rock has this many chances out of 100.0% to trigger the rock break ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8836,14 +8840,14 @@
 			"Fire Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates a fire when it breaks.
-			// Note: This does not need "Ability Enabled" or "Fire Hit" set to "1".
+			// Note: This does not need "Ability Enabled" or "Fire Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Rock Break"			"0"
 
-			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// The Mutant Tank's rock has this many chances out of 100.0% to trigger the rock break ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -19674,6 +19678,8 @@
 		// "Warp Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
+		// "Warp Rock Break" - When the Mutant Tank's rock breaks, it switches places with the Mutant Tank.
+		// - "Warp Rock Chance"
 		// Requires "mt_abilities2.smx" to be compiled with "mt_warp.sp" to work.
 		"Warp Ability"
 		{
@@ -19817,12 +19823,13 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 7
+			// Maximum: 15
 			// --
 			// 0: OFF
 			// 1: Display message only when "Warp Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// 8: Display message only when "Warp Rock Break" is enabled.
 			// --
 			// Keywords:
 			// "none"/"off" - 0
@@ -19832,7 +19839,15 @@
 			// "rock" - 4
 			// "hit,rock" - 5
 			// "ability,rock" - 6
-			// "hit,ability,rock"/"all" - 7
+			// "hit,ability,rock" - 7
+			// "break" - 8
+			// "hit,break" - 9
+			// "ability,break" - 10
+			// "hit,ability,break" - 11
+			// "rock,break" - 12
+			// "hit,rock,break" - 13
+			// "ability,rock,break" - 14
+			// "hit,ability,rock,break"/"all" - 15
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -19920,6 +19935,29 @@
 			// "often"/"likely"/"frequently" - 66.6% chance
 			// "always" - 100% chance
 			"Warp Range Chance"			"15.0"
+
+			// The Mutant Tank's rock switches places with the Mutant Tank when it breaks.
+			// Note: This does not need "Ability Enabled" or "Warp Hit" to be set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Warp Rock Break"			"0"
+
+			// The Mutant Tank's rock has this many chances out of 100.0% to trigger the rock break ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Warp Rock Chance"			"33.3"
 		}
 	}
 }

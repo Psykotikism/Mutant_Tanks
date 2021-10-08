@@ -1066,7 +1066,7 @@ Action tTimerWhirl(Handle timer, DataPack pack)
 	}
 
 	float flAngles[3];
-	GetEntPropVector(iCamera, Prop_Send, "m_angRotation", flAngles);
+	GetEntPropVector(iCamera, Prop_Data, "m_angRotation", flAngles);
 	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 13, iPos) : g_esWhirlCache[iTank].g_flWhirlSpeed;
 	flAngles[iWhirlAxis] += flSpeed;
 	TeleportEntity(iCamera, NULL_VECTOR, flAngles, NULL_VECTOR);

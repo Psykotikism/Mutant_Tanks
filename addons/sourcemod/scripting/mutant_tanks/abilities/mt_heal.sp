@@ -1294,7 +1294,7 @@ Action tTimerHeal(Handle timer, DataPack pack)
 		iMaxHealth = MT_TankMaxHealth(iTank, 1), iRealHealth, iSpecialHealth, iTankHealth, iTotalHealth = 0;
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
-		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flInfectedPos);
+		GetEntPropVector(iCommon, Prop_Data, "m_vecOrigin", flInfectedPos);
 		if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esHealCache[iTank].g_flHealAbsorbRange)
 		{
 			iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
