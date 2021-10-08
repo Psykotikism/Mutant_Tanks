@@ -937,8 +937,8 @@ void vGravity(int tank)
 	}
 
 	float flOrigin[3], flAngles[3];
-	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-	GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+	GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+	GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 	flAngles[0] += -90.0;
 
 	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "origin", flOrigin);

@@ -921,7 +921,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					}
 
 					float flPosition[3], flAngles[3];
-					GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
+					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPosition);
 					flPosition[2] += 30.0;
 					flAngles[0] = 90.0;
 					flAngles[1] = 0.0;

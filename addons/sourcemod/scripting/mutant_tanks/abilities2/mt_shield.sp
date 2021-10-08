@@ -1461,7 +1461,7 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 				}
 
 				float flPos[3];
-				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+				GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
 				RemoveEntity(iRock);
 
 				NormalizeVector(flVelocity, flVelocity);

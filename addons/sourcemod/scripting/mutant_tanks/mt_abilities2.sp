@@ -948,7 +948,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	vVisionCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_WARP
-	vWarpCombineAbilities(tank, type, random, combo, survivor, classname);
+	vWarpCombineAbilities(tank, type, random, combo, survivor, weapon, classname);
 #endif
 #if defined MT_MENU_WHIRL
 	vWhirlCombineAbilities(tank, type, random, combo, survivor, classname);
@@ -1898,6 +1898,9 @@ public void MT_OnRockBreak(int tank, int rock)
 {
 #if defined MT_MENU_TRACK
 	vTrackRockBreak(rock);
+#endif
+#if defined MT_MENU_WARP
+	vWarpRockBreak(tank, rock);
 #endif
 }
 

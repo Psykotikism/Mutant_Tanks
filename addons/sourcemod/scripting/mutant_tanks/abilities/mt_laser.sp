@@ -742,9 +742,9 @@ void vLaser(int tank, int pos = -1)
 
 void vLaser2(int tank, int pos = -1)
 {
-	float flTankAngles[3], flTankPos[3];
-	GetEntPropVector(tank, Prop_Send, "m_angRotation", flTankAngles);
-	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flTankPos);
+	float flTankPos[3], flTankAngles[3];
+	GetClientAbsOrigin(tank, flTankPos);
+	GetClientAbsAngles(tank, flTankAngles);
 	flTankPos[2] += 65.0;
 
 	int iSurvivor = iGetNearestSurvivor(tank, flTankPos);

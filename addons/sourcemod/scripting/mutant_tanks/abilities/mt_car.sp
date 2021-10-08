@@ -954,7 +954,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 
 			if (g_esCarCache[iTank].g_iCarOwner == 1)
 			{
-				SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
+				SetEntPropEnt(iCar, Prop_Data, "m_hOwnerEntity", iTank);
 			}
 
 			float flVelocity[3];

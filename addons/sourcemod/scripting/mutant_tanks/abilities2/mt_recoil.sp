@@ -670,7 +670,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
 			flRecoil[1] = GetRandomFloat(-25.0, 25.0);
 			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
-			SetEntPropVector(iSurvivor, Prop_Send, "m_vecPunchAngle", flRecoil);
+			SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flRecoil);
 		}
 	}
 }

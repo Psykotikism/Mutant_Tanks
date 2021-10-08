@@ -870,7 +870,7 @@ void vAcid(int survivor, int tank)
 	float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-	vCreateAcid(survivor, flOrigin, flAngles);
+	vCreateAcid(tank, flOrigin, flAngles);
 }
 
 void vAcidAbility(int tank, float random, int pos = -1)
@@ -995,8 +995,8 @@ void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 	if (random <= flChance)
 	{
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
-		GetClientAbsAngles(tank, flAngles);
+		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(rock, Prop_Data, "m_angRotation", flAngles);
 		flOrigin[2] += 40.0;
 		vCreateAcid(tank, flOrigin, flAngles);
 

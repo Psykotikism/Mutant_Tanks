@@ -360,7 +360,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 void OnPropSpawn(int prop)
 {
-	int iTank = GetEntPropEnt(prop, Prop_Send, "m_hOwnerEntity");
+	int iTank = GetEntPropEnt(prop, Prop_Data, "m_hOwnerEntity");
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_iUserID[prop] = GetClientUserId(iTank);
@@ -856,14 +856,14 @@ void vMeteor3(int tank, int rock, int pos = -1)
 		case 0:
 		{
 			float flRockPos[3];
-			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
+			GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_GASCAN);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 		}
 		case 1:
 		{
 			float flRockPos[3];
-			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
+			GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
 			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 
 			float flTankPos[3], flSurvivorPos[3];

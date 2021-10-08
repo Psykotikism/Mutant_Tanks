@@ -4629,6 +4629,11 @@
 		"chi"			"{olive}{1}{mint} 传送到{olive} {2}{mint} 身边！"
 	}
 
+	"Warp4"
+	{
+		"chi"			"{olive}{1}{mint} 与它的{yellow} 石头{mint} 交换了位置。"
+	}
+
 	"WarpAmmo"
 	{
 		"chi"			"你已经用光了所有 定期传送 范围能力次数。"

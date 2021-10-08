@@ -1188,7 +1188,7 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 		if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
 		{
-			iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			iTank = GetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity");
 			if (iTank == tank)
 			{
 				if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
@@ -1203,7 +1203,7 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 	{
-		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		iTank = GetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity");
 		if (iTank == tank)
 		{
 			SetEntityRenderMode(iProp, mode);
@@ -1216,7 +1216,7 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "light_dynamic")) != INVALID_ENT_REFERENCE)
 	{
-		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		iTank = GetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity");
 		if (iTank == tank)
 		{
 			SetEntityRenderMode(iProp, mode);

@@ -161,7 +161,6 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX 0xFFFFFFFF
-#define STATICPROP_EHANDLE_MASK 0x40000000
 
 // Forwards
 /**
@@ -2914,7 +2913,7 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 			return max;
 		}
 	}
-	else if (StrContains(key, "message", false) != -1 && min == 0 && (max == 3 || max == 7))
+	else if (StrContains(key, "message", false) != -1 && min == 0 && (max == 3 || max == 7 || max == 15))
 	{
 		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
 		{
@@ -2947,6 +2946,57 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 				return 6;
 			}
 			else if (StrEqual(value, "hit,ability,rock", false) || StrEqual(value, "all", false))
+			{
+				return max;
+			}
+		}
+		else if (max == 15)
+		{
+			if (StrEqual(value, "rock", false))
+			{
+				return 4;
+			}
+			else if (StrEqual(value, "hit,rock", false))
+			{
+				return 5;
+			}
+			else if (StrEqual(value, "ability,rock", false))
+			{
+				return 6;
+			}
+			else if (StrEqual(value, "hit,ability,rock", false))
+			{
+				return 7;
+			}
+			else if (StrEqual(value, "break", false))
+			{
+				return 8;
+			}
+			else if (StrEqual(value, "hit,break", false))
+			{
+				return 9;
+			}
+			else if (StrEqual(value, "ability,break", false))
+			{
+				return 10;
+			}
+			else if (StrEqual(value, "hit,ability,break", false))
+			{
+				return 11;
+			}
+			else if (StrEqual(value, "rock,break", false))
+			{
+				return 12;
+			}
+			else if (StrEqual(value, "hit,rock,break", false))
+			{
+				return 13;
+			}
+			else if (StrEqual(value, "ability,rock,break", false))
+			{
+				return 14;
+			}
+			else if (StrEqual(value, "hit,ability,rock,break", false) || StrEqual(value, "all", false))
 			{
 				return max;
 			}
