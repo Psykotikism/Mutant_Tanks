@@ -13,10 +13,13 @@
 #include <dhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_EXTENSIONS
+#tryinclude <clientprefs>
+#define REQUIRE_EXTENSIONS
+
 #undef REQUIRE_PLUGIN
 #tryinclude <adminmenu>
 #tryinclude <autoexecconfig>
-#tryinclude <clientprefs>
 #tryinclude <left4dhooks>
 #tryinclude <mt_clone>
 #tryinclude <ThirdPersonShoulder_Detect>
@@ -1458,7 +1461,7 @@ int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "clientprefs"))
+	if (StrEqual(name, "Client Preferences"))
 	{
 		g_esGeneral.g_bClientPrefsInstalled = true;
 	}
@@ -1482,7 +1485,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "clientprefs"))
+	if (StrEqual(name, "Client Preferences"))
 	{
 		g_esGeneral.g_bClientPrefsInstalled = false;
 	}
@@ -1876,7 +1879,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (bIsValidClient(client, MT_CHECK_ALIVE))
 		{
-			if ((bIsDeveloper(client, 5) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP))
+			bool bDeveloper = bIsDeveloper(client, 5);
+			if ((bDeveloper || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP))
 			{
 				if (bIsEntityGrounded(client) && !bIsSurvivorDisabled(client) && !bIsSurvivorCaught(client))
 				{
@@ -1895,9 +1899,10 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 					TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 				}
 
-				if (bIsSurvivorDisabled(client))
+				if (bDeveloper)
 				{
 					vReviveSurvivor(client);
+					vSaveCaughtSurvivor(client);
 				}
 			}
 
@@ -4337,11 +4342,14 @@ void vDeveloperPanel(int developer, int level = 0)
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU, Punch Resistance: %.2f", g_esDeveloper[developer].g_iDevMeleeRange, g_esDeveloper[developer].g_flDevPunchResistance);
+				FormatEx(sDisplay, sizeof sDisplay, "Melee Range: %i HMU", g_esDeveloper[developer].g_iDevMeleeRange);
 				pDevPanel.DrawText(sDisplay);
 			}
 
 			FormatEx(sDisplay, sizeof sDisplay, "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Punch Resistance: %.2f", g_esDeveloper[developer].g_flDevPunchResistance);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Revive Health: %i HP", g_esDeveloper[developer].g_iDevReviveHealth);
@@ -7803,6 +7811,10 @@ void vRespawnSurvivor(int survivor)
 
 void vReviveSurvivor(int survivor)
 {
+	if (!bIsSurvivorDisabled(survivor))
+	{
+		return;
+	}
 #if defined _l4dh_included
 	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRevive == null)
 	{
@@ -8280,6 +8292,8 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 			{
 				case true:
 				{
+					vReviveSurvivor(developer);
+					vSaveCaughtSurvivor(developer);
 					vSetAdrenalineTime(developer, 999999.0);
 					SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 				}
@@ -16772,6 +16786,11 @@ MRESReturn mreVomitedUponPost(int pThis, DHookParam hParams)
 {
 	if (bIsValidClient(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[pThis].g_bVomited)
 	{
+		if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || bIsDeveloper(pThis, 10) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)))
+		{
+			return MRES_Ignored;
+		}
+
 		g_esPlayer[pThis].g_bVomited = true;
 
 		if (bIsTank(pThis) || bIsSurvivor(pThis))
@@ -16922,7 +16941,7 @@ void vRegisterPatch(const char[] name, bool reg)
 	{
 		if (iVerify[iPos] < 0 || iVerify[iPos] > 255)
 		{
-			LogError("%s Invalid check byte for %s (%i)", MT_TAG, name, iVerify[iPos]);
+			LogError("%s Invalid byte to verify for %s (%i)", MT_TAG, name, iVerify[iPos]);
 			vResetPatchInfo(iIndex);
 
 			return;
