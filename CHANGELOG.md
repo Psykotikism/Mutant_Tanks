@@ -9,6 +9,7 @@
 - Fixed the Tank's health not updating in some scenarios. (Thanks to `saberQAQ` for reporting!)
 - Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types.
 - Fixed custom configs not refreshing when the main config file is refreshed.
+- Fixed `Client Prefs` not being optional.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -35,6 +36,7 @@
 - The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
+- Improved logging for patching system.
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
