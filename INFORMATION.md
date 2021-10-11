@@ -491,7 +491,21 @@
 		}
 		"Colors"
 		{
-			// You can create color presets here with unique nicknames that you can use in any color setting provided by Mutant Tanks.
+			// You can create color presets here with unique nicknames that you can use in any of the following settings:
+			// - "Body Color Visual"
+			// - "Glow Color Visual"
+			// - "Light Color Visual"
+			// - "Screen Color Visual"
+			// - "Skin Color"
+			// - "Glow Color"
+			// - "Light Color"
+			// - "Oxygen Tank Color"
+			// - "Flame Color"
+			// - "Rock Color"
+			// - "Tire Color"
+			// - "Propane Tank Color"
+			// - "Flashlight Color"
+			// - "Crown Color"
 			// Each time the config file is read, the presets in this section will be stored with their associated values.
 			// A nickname must be unique and cannot be used more than once.
 			// Any duplicates will overwrite the previous one.

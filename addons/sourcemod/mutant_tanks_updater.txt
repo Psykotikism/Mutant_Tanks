@@ -15,7 +15,7 @@
 		"Notes"		"- Fixed the Tank's health not updating in some scenarios. (Thanks to \"saberQAQ\" for reporting!)"
 		"Notes"		"- Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types."
 		"Notes"		"- Fixed custom configs not refreshing when the main config file is refreshed."
-		"Notes"		"- Fixed \"Client Prefs\" not being optional."
+		"Notes"		"- Fixed \"Client Preferences\" not being optional."
 		"Notes"		"Commands:"
 		"Notes"		"- Fixed the \"sm_mutanttank\" command not resetting its cooldown between \"Versus\"/\"Scavenge\" rounds."
 		"Notes"		"Abilities:"

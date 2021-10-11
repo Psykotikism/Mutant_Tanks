@@ -50,11 +50,12 @@
 1. `SourceMod 1.11.0.6724` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется:
-- [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254)
+- [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
+- [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`Left 4 DHooks Direct v1.61` или выше](https://forums.alliedmods.net/showthread.php?t=321696)
-- [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
-- [Updater](https://forums.alliedmods.net/showthread.php?t=169095)
-- [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+- [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
+- [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095)
+- [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
 
 ## Примечание
