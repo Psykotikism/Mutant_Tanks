@@ -16936,28 +16936,59 @@ void vRegisterPatch(const char[] name, bool reg)
 		}
 	}
 
-	int iActualByte = 0;
+	int iActualByte = 0, iSize = (MT_PATCH_MAXLEN * 3) + 1;
+	bool bInvalid = false;
+	char[] sVerify = new char[iSize], sActual = new char[iSize];
 	for (int iPos = 0; iPos < iVLength; iPos++)
 	{
 		if (iVerify[iPos] < 0 || iVerify[iPos] > 255)
 		{
 			LogError("%s Invalid byte to verify for %s (%i)", MT_TAG, name, iVerify[iPos]);
-			vResetPatchInfo(iIndex);
 
-			return;
+			continue;
+		}
+
+		switch (sVerify[0] == '\0')
+		{
+			case true: FormatEx(sVerify, iSize, "%02X", iVerify[iPos]);
+			case false: Format(sVerify, iSize, "%s %02X", sVerify, iVerify[iPos]);
 		}
 
 		if (iVerify[iPos] != 0x2A)
 		{
 			iActualByte = LoadFromAddress((adPatch + view_as<Address>(iOffset + iPos)), NumberType_Int8);
+
+			switch (sActual[0] == '\0')
+			{
+				case true: FormatEx(sActual, iSize, "%02X", iActualByte);
+				case false: Format(sActual, iSize, "%s %02X", sActual, iActualByte);
+			}
+
 			if (iActualByte != iVerify[iPos])
 			{
-				LogError("%s Failed to locate patch: %s (%s) [Expected: %02X | Found: %02X]", MT_TAG, name, g_esPatch[iIndex].g_sOffset, iVerify[iPos], iActualByte);
-				vResetPatchInfo(iIndex);
-
-				return;
+				bInvalid = true;
 			}
 		}
+		else
+		{
+			switch (sActual[0] == '\0')
+			{
+				case true: FormatEx(sActual, iSize, "2A");
+				case false: Format(sActual, iSize, "%s 2A", sActual);
+			}
+		}
+	}
+
+	if (bInvalid)
+	{
+		LogError("%s Failed to locate patch: %s (%s) [Expected: %s | Found: %s]", MT_TAG, name, g_esPatch[iIndex].g_sOffset, sVerify, sActual);
+		vResetPatchInfo(iIndex);
+
+		return;
+	}
+	else if (g_esPatch[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s \"%s\" bytes - Expected bytes: %s | Found bytes: %s", MT_TAG, name, sVerify, sActual);
 	}
 
 	g_esPatch[iIndex].g_adPatch = adPatch;
