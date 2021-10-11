@@ -16872,7 +16872,7 @@ void vRegisterPatch(const char[] name, bool reg)
 
 	if (g_esPatch[iIndex].g_bLog)
 	{
-		vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+		vLogMessage(-1, _, "%s Reading byte(s) for \"%s\": %s - %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sBypass, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
 	}
 
 	char sSet[MT_PATCH_MAXLEN][2], sSet2[MT_PATCH_MAXLEN][2], sSet3[MT_PATCH_MAXLEN][2];
@@ -16892,15 +16892,18 @@ void vRegisterPatch(const char[] name, bool reg)
 
 	if (g_esPatch[iIndex].g_bLog)
 	{
-		vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sBypass, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+		vLogMessage(-1, _, "%s Storing byte(s) for \"%s\": %s - %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sBypass, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
 	}
 
-	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
+	if (g_esPatch[iIndex].g_sBypass[0] != '\0')
 	{
-		switch (iPos < iBLength)
+		for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
 		{
-			case true: iBypass[iPos] = (iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[iPos * 3]) << 4) + iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[(iPos * 3) + 1]);
-			case false: iBypass[iPos] = 0;
+			switch (iPos < iBLength)
+			{
+				case true: iBypass[iPos] = (iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[iPos * 3]) << 4) + iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[(iPos * 3) + 1]);
+				case false: iBypass[iPos] = 0;
+			}
 		}
 	}
 
@@ -17017,7 +17020,7 @@ void vRegisterPatch(const char[] name, bool reg)
 
 	if (g_esPatch[iIndex].g_bLog)
 	{
-		vLogMessage(-1, _, "%s Patch bytes for \"%s\" - Expected bytes: %s | Bypassed bytes: %s | Found bytes: %s", MT_TAG, name, sVerify, sBypass, sActual);
+		vLogMessage(-1, _, "%s Patch byte(s) for \"%s\" - Expected byte(s): %s | Bypassed byte(s): %s | Found byte(s): %s", MT_TAG, name, sVerify, sBypass, sActual);
 		vLogMessage(-1, _, "%s Registered the \"%s\" patch.", MT_TAG, name);
 	}
 }
@@ -17088,6 +17091,7 @@ void vResetPatchInfo(int index)
 	g_esPatch[index].g_iLength = 0;
 	g_esPatch[index].g_iOffset = 0;
 	g_esPatch[index].g_iType = 0;
+	g_esPatch[index].g_sBypass[0] = '\0';
 	g_esPatch[index].g_sCvars[0] = '\0';
 	g_esPatch[index].g_sOffset[0] = '\0';
 	g_esPatch[index].g_sPatch[0] = '\0';
