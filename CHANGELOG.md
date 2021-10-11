@@ -9,7 +9,7 @@
 - Fixed the Tank's health not updating in some scenarios. (Thanks to `saberQAQ` for reporting!)
 - Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types.
 - Fixed custom configs not refreshing when the main config file is refreshed.
-- Fixed `Client Prefs` not being optional.
+- Fixed `Client Preferences` not being optional.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -298,7 +298,7 @@
 
 #### General
 - Fixed crashing on Linux whenever Tank is throwing a rock. (Thanks to `ReCreator` for testing and reporting and to `epzminion` and `Dragokas` for the help!)
-- Fixed the plugins not compiling when `Left 4 DHooks`, `Client Prefs`, `Admin Menu`, or the `Clone` ability is missing. (Thanks to `ReCreator` for pointing this out!)
+- Fixed the plugins not compiling when `Left 4 DHooks`, `Client Preferences`, `Admin Menu`, or the `Clone` ability is missing. (Thanks to `ReCreator` for pointing this out!)
 - Fixed the strong wind sound caused by Tank rock debris. (Thanks to `Lux` for the help!)
 
 #### Core Plugin
