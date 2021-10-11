@@ -317,7 +317,6 @@ enum struct esGeneral
 	ArrayList g_alSections;
 
 	bool g_bAbilityPlugin[MT_MAXABILITIES + 1];
-	bool g_bClientPrefsInstalled;
 	bool g_bCloneInstalled;
 	bool g_bConfigsExecuted;
 	bool g_bFinaleEnded;
@@ -1441,6 +1440,7 @@ enum struct esPatch
 	bool g_bLog;
 	bool g_bUpdateMemAccess;
 
+	char g_sBypass[192];
 	char g_sCvars[320];
 	char g_sName[128];
 	char g_sOffset[128];
@@ -1461,11 +1461,7 @@ int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "Client Preferences"))
-	{
-		g_esGeneral.g_bClientPrefsInstalled = true;
-	}
-	else if (StrEqual(name, "left4dhooks"))
+	if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = true;
 
@@ -1485,11 +1481,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "Client Preferences"))
-	{
-		g_esGeneral.g_bClientPrefsInstalled = false;
-	}
-	else if (StrEqual(name, "left4dhooks"))
+	if (StrEqual(name, "left4dhooks"))
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = false;
 
@@ -3432,7 +3424,7 @@ Action cmdMTPrefs(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!g_esGeneral.g_bClientPrefsInstalled || g_esPlayer[client].g_iPrefsAccess == 0)
+	if (g_esPlayer[client].g_iPrefsAccess == 0)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -11853,6 +11845,7 @@ public void SMCParseStart_Patches(SMCParser smc)
 		g_esPatch[iPos].g_iLength = 0;
 		g_esPatch[iPos].g_iOffset = 0;
 		g_esPatch[iPos].g_iType = 0;
+		g_esPatch[iPos].g_sBypass[0] = '\0';
 		g_esPatch[iPos].g_sCvars[0] = '\0';
 		g_esPatch[iPos].g_sOffset[0] = '\0';
 		g_esPatch[iPos].g_sPatch[0] = '\0';
@@ -16856,6 +16849,7 @@ void vReadPatchSettings(const char[] key, const char[] value)
 	vGetKeyValueEx(key, "Signature", "Signature", "Signature", "Signature", g_esPatch[iIndex].g_sSignature, sizeof esPatch::g_sSignature, value);
 	vGetKeyValueEx(key, "Offset", "Offset", "Offset", "Offset", g_esPatch[iIndex].g_sOffset, sizeof esPatch::g_sOffset, value);
 	vGetKeyValueEx(key, "Verify", "Verify", "Verify", "Verify", g_esPatch[iIndex].g_sVerify, sizeof esPatch::g_sVerify, value);
+	vGetKeyValueEx(key, "Bypass", "Bypass", "Bypass", "Bypass", g_esPatch[iIndex].g_sBypass, sizeof esPatch::g_sBypass, value);
 	vGetKeyValueEx(key, "Patch", "Patch", "Patch", "Patch", g_esPatch[iIndex].g_sPatch, sizeof esPatch::g_sPatch, value);
 }
 
@@ -16881,20 +16875,33 @@ void vRegisterPatch(const char[] name, bool reg)
 		vLogMessage(-1, _, "%s Reading bytes for \"%s\": %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
 	}
 
-	char sSet[MT_PATCH_MAXLEN][2], sSet2[MT_PATCH_MAXLEN][2];
-	int iVerify[MT_PATCH_MAXLEN], iPatch[MT_PATCH_MAXLEN];
+	char sSet[MT_PATCH_MAXLEN][2], sSet2[MT_PATCH_MAXLEN][2], sSet3[MT_PATCH_MAXLEN][2];
+	int iBypass[MT_PATCH_MAXLEN], iVerify[MT_PATCH_MAXLEN], iPatch[MT_PATCH_MAXLEN];
+
+	ReplaceString(g_esPatch[iIndex].g_sBypass, sizeof esPatch::g_sBypass, "\\x", " ", false);
+	TrimString(g_esPatch[iIndex].g_sBypass);
+	int iBLength = ExplodeString(g_esPatch[iIndex].g_sBypass, " ", sSet, sizeof sSet, sizeof sSet[]);
 
 	ReplaceString(g_esPatch[iIndex].g_sVerify, sizeof esPatch::g_sVerify, "\\x", " ", false);
 	TrimString(g_esPatch[iIndex].g_sVerify);
-	int iVLength = ExplodeString(g_esPatch[iIndex].g_sVerify, " ", sSet, sizeof sSet, sizeof sSet[]);
+	int iVLength = ExplodeString(g_esPatch[iIndex].g_sVerify, " ", sSet2, sizeof sSet2, sizeof sSet2[]);
 
 	ReplaceString(g_esPatch[iIndex].g_sPatch, sizeof esPatch::g_sPatch, "\\x", " ", false);
 	TrimString(g_esPatch[iIndex].g_sPatch);
-	int iPLength = ExplodeString(g_esPatch[iIndex].g_sPatch, " ", sSet2, sizeof sSet2, sizeof sSet2[]);
+	int iPLength = ExplodeString(g_esPatch[iIndex].g_sPatch, " ", sSet3, sizeof sSet3, sizeof sSet3[]);
 
 	if (g_esPatch[iIndex].g_bLog)
 	{
-		vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+		vLogMessage(-1, _, "%s Storing bytes for \"%s\": %s - %s - %s", MT_TAG, name, g_esPatch[iIndex].g_sBypass, g_esPatch[iIndex].g_sVerify, g_esPatch[iIndex].g_sPatch);
+	}
+
+	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
+	{
+		switch (iPos < iBLength)
+		{
+			case true: iBypass[iPos] = (iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[iPos * 3]) << 4) + iGetDecimalFromHex(g_esPatch[iIndex].g_sBypass[(iPos * 3) + 1]);
+			case false: iBypass[iPos] = 0;
+		}
 	}
 
 	for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
@@ -16936,22 +16943,28 @@ void vRegisterPatch(const char[] name, bool reg)
 		}
 	}
 
-	int iActualByte = 0, iSize = (MT_PATCH_MAXLEN * 3) + 1;
 	bool bInvalid = false;
-	char[] sVerify = new char[iSize], sActual = new char[iSize];
+	char sBypass[192], sVerify[192], sActual[192];
+	int iActualByte = 0;
 	for (int iPos = 0; iPos < iVLength; iPos++)
 	{
-		if (iVerify[iPos] < 0 || iVerify[iPos] > 255)
+		if (iVerify[iPos] < 0 || iVerify[iPos] > 255 || iBypass[iPos] < 0 || iBypass[iPos] > 255)
 		{
-			LogError("%s Invalid byte to verify for %s (%i)", MT_TAG, name, iVerify[iPos]);
+			LogError("%s Invalid byte to verify for %s (%i) [%i]", MT_TAG, name, iVerify[iPos], iBypass[iPos]);
 
 			continue;
 		}
 
 		switch (sVerify[0] == '\0')
 		{
-			case true: FormatEx(sVerify, iSize, "%02X", iVerify[iPos]);
-			case false: Format(sVerify, iSize, "%s %02X", sVerify, iVerify[iPos]);
+			case true: FormatEx(sVerify, sizeof sVerify, "%02X", iVerify[iPos]);
+			case false: Format(sVerify, sizeof sVerify, "%s %02X", sVerify, iVerify[iPos]);
+		}
+
+		switch (sBypass[0] == '\0')
+		{
+			case true: FormatEx(sBypass, sizeof sBypass, "%02X", iBypass[iPos]);
+			case false: Format(sBypass, sizeof sBypass, "%s %02X", sBypass, iBypass[iPos]);
 		}
 
 		if (iVerify[iPos] != 0x2A)
@@ -16960,35 +16973,35 @@ void vRegisterPatch(const char[] name, bool reg)
 
 			switch (sActual[0] == '\0')
 			{
-				case true: FormatEx(sActual, iSize, "%02X", iActualByte);
-				case false: Format(sActual, iSize, "%s %02X", sActual, iActualByte);
+				case true: FormatEx(sActual, sizeof sActual, "%02X", iActualByte);
+				case false: Format(sActual, sizeof sActual, "%s %02X", sActual, iActualByte);
 			}
 
 			if (iActualByte != iVerify[iPos])
 			{
-				bInvalid = true;
+				switch (iBypass[iPos] == 0)
+				{
+					case true: bInvalid = true;
+					case false: bInvalid = (iBypass[iPos] != 0x2A && iActualByte != iBypass[iPos]);
+				}
 			}
 		}
 		else
 		{
 			switch (sActual[0] == '\0')
 			{
-				case true: FormatEx(sActual, iSize, "2A");
-				case false: Format(sActual, iSize, "%s 2A", sActual);
+				case true: FormatEx(sActual, sizeof sActual, "2A");
+				case false: Format(sActual, sizeof sActual, "%s 2A", sActual);
 			}
 		}
 	}
 
 	if (bInvalid)
 	{
-		LogError("%s Failed to locate patch: %s (%s) [Expected: %s | Found: %s]", MT_TAG, name, g_esPatch[iIndex].g_sOffset, sVerify, sActual);
+		LogError("%s Failed to locate patch: %s (%s) [Expected: %s | Bypassed: %s | Found: %s]", MT_TAG, name, g_esPatch[iIndex].g_sOffset, sVerify, sBypass, sActual);
 		vResetPatchInfo(iIndex);
 
 		return;
-	}
-	else if (g_esPatch[iIndex].g_bLog)
-	{
-		vLogMessage(-1, _, "%s \"%s\" bytes - Expected bytes: %s | Found bytes: %s", MT_TAG, name, sVerify, sActual);
 	}
 
 	g_esPatch[iIndex].g_adPatch = adPatch;
@@ -17004,6 +17017,7 @@ void vRegisterPatch(const char[] name, bool reg)
 
 	if (g_esPatch[iIndex].g_bLog)
 	{
+		vLogMessage(-1, _, "%s Patch bytes for \"%s\" - Expected bytes: %s | Bypassed bytes: %s | Found bytes: %s", MT_TAG, name, sVerify, sBypass, sActual);
 		vLogMessage(-1, _, "%s Registered the \"%s\" patch.", MT_TAG, name);
 	}
 }
