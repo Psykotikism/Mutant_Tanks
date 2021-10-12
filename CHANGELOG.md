@@ -25,8 +25,8 @@
 - All settings in the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files can now be set globally and per platform.
 - The `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files now accept different formats like the main config file.
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
-- Added [Updater](https://forums.alliedmods.net/showthread.php?t=169095) support.
-- Added [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) support.
+- Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
+- Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Currently only signatures and VTable offsets.) [Untested]
 
 #### Core plugin
@@ -669,14 +669,14 @@
 - Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by `Tonblader`.)
 - Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by `Tonblader`.)
 - Added the following new options for the `Reward Enabled` setting:
-	- `Attack boost reward` (Requested by `3aljiyavslgazana`.) [Requires WeaponHandling API.]
+	- `Attack boost reward` (Requested by `3aljiyavslgazana`.) [Requires `WeaponHandling API`.]
 	- `Infinite ammo reward` (Thanks to `epzminion` for helping!)
 - The `Stasis Mode` setting now works in all game mode types. (Requested by `yuzumi`.)
 - Added the `Game Type` setting under the `Tank #/General` sections.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Reward Bots` (Thanks to `Mi.Cura` for the idea!)
 	- `Reward Effect` (Requested by `3aljiyavslgazana`.) [Thanks to `Silvers` for the code!]
-	- `Attack Boost Reward` (Requested by `3aljiyavslgazana`.) [Requires WeaponHandling API.]
+	- `Attack Boost Reward` (Requested by `3aljiyavslgazana`.) [Requires `WeaponHandling API`.]
 	- `Action Duration Reward` (Thanks to `epzminion` for the help!)
 	- `Ammo Boost Reward` (Thanks to `epzminion` for the help!)
 	- `Ammo Regen Reward`
