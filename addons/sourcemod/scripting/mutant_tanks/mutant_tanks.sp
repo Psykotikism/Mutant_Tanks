@@ -14104,7 +14104,7 @@ void vPlayerSpawnFrame(DataPack pack)
 			{
 				if (bIsDeveloper(iPlayer, .real = true) && !CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
 				{
-					g_esDeveloper[iPlayer].g_iDevAccess = 1661;
+					g_esDeveloper[iPlayer].g_iDevAccess = 1660;
 				}
 
 				vSetupDeveloper(iPlayer, .usual = true);
