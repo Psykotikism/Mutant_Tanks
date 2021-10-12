@@ -423,15 +423,15 @@ Outcome: The plugin works only in "coop" mode.
 4. How come some Mutant Tanks aren't showing up?
 
 It may be due to one or more of the following:
-- The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
+- The `Tank Enabled` setting for that Mutant Tank may be set to `0` or doesn't exists at all which defaults to `0`.
+- The `Spawn Enabled` setting for that Mutant Tank may be set to `0`.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since `v8.16`.
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 500 Mutant Tanks in your config file.
+- You have more than `500` Mutant Tanks in your config file.
 - You didn't format your config file properly.
 - The Mutant Tanks requires X human-controlled survivors around and there are none.
 - The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.

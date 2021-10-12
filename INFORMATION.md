@@ -769,7 +769,7 @@
 			// 1: Trophy
 			// 2: Fireworks particles
 			// 4: Sound effect
-			// 8: Thirdperson view
+			// 8: Thirdperson view (Recommended: ThirdPersonShoulder_Detect) [Link: https://forums.alliedmods.net/showthread.php?t=298649]
 			// --
 			// 1st number = Effect for killers.
 			// 2nd number = Effect for assistants.
@@ -2943,7 +2943,7 @@
 			// 1: Trophy
 			// 2: Fireworks particles
 			// 4: Sound effect
-			// 8: Thirdperson view
+			// 8: Thirdperson view (Recommended: ThirdPersonShoulder_Detect) [Link: https://forums.alliedmods.net/showthread.php?t=298649]
 			// --
 			// 1st number = Effect for killers.
 			// 2nd number = Effect for assistants.
