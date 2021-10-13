@@ -695,7 +695,6 @@ enum struct esGeneral
 	int g_iTankCount;
 	int g_iTankEnabled;
 	int g_iTankModel;
-	int g_iTankTarget;
 	int g_iTankWave;
 	int g_iTeamID[2048];
 	int g_iTeamID2[2048];
@@ -16393,7 +16392,6 @@ MRESReturn mrePreThinkPost(int pThis)
 MRESReturn mreReplaceTankPost(DHookParam hParams)
 {
 	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2);
-
 	vSetupTankReplacement(iOldTank, iNewTank);
 
 	return MRES_Ignored;
@@ -16743,8 +16741,8 @@ MRESReturn mreTankClawGroundPoundPost(int pThis)
 
 MRESReturn mreTankClawPlayerHitPre(int pThis, DHookParam hParams)
 {
-	g_esGeneral.g_iTankTarget = hParams.IsNull(1) ? 0 : hParams.Get(1);
-	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 8))
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 8))
 	{
 		return MRES_Supercede;
 	}
@@ -16754,7 +16752,7 @@ MRESReturn mreTankClawPlayerHitPre(int pThis, DHookParam hParams)
 
 MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 {
-	int iTank = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iSurvivor = g_esGeneral.g_iTankTarget;
+	int iTank = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
 	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 4);
@@ -16769,8 +16767,6 @@ MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 			}
 		}
 	}
-
-	g_esGeneral.g_iTankTarget = 0;
 
 	return MRES_Ignored;
 }
