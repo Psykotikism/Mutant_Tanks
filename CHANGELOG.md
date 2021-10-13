@@ -47,14 +47,18 @@
 	- `CTankRock::Detonate`
 	- `CTerrorPlayer::OnITExpired`
 - Added detour setup and signatures for the following functions:
+	- `CPipeBombProjectile::Create`
 	- `CTerrorGun::Use`
+	- `CTerrorPlayer::Extinguish`
 	- `CWeaponSpawn::Use`
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Friendly Fire Reward`
+	- `Inextinguishable Fire Reward`
 	- `Looping Voiceline Interval`
+	- `Pipebomb Duration Reward`
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
 
 #### Translations

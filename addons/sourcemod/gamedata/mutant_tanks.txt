@@ -101,6 +101,46 @@
 			}
 
 			/**
+			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
+			 *
+			 * Note: Detouring as a pre-hook for changing "pipe_bomb_timer_duration" per throw before the pipe bomb projectile is created.
+			 * Note: Detouring as a post-hook for changing "pipe_bomb_timer_duration" back to default value after the pipe bomb projectile is created.
+			 **/
+			"MTDetour_CPipeBombProjectile::Create"
+			{
+				"signature"	"CPipeBombProjectile::Create"
+				"callconv"	"cdecl"
+				"return"	"cbaseentity"
+				"arguments"
+				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+					}
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"impulse"
+					{
+						"type"		"vectorptr"
+					}
+					"owner"
+					{
+						"type"		"cbaseentity"
+					}
+					"duration"
+					{
+						"type"		"float"
+					}
+				}
+			}
+
+			/**
 			 * CTankClaw::DoSwing()
 			 *
 			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" to hit all survivors within range in "coop" modes.
@@ -239,6 +279,19 @@
 						"type"		"objectptr"
 					}
 				}
+			}
+
+			/**
+			 * CTerrorPlayer::Extinguish()
+			 *
+			 * Note: Detouring as a pre-hook for making special infected inextinguishable in water when burned by players.
+			 **/
+			"MTDetour_CTerrorPlayer::Extinguish"
+			{
+				"signature"		"CTerrorPlayer::Extinguish"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
 			}
 
 			/**
@@ -1765,6 +1818,21 @@
 			}
 
 			/**
+			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CPipeBombProjectile::Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? ? ? 53 8B ? ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
 			 *
 			 * How to find on Windows:
@@ -1877,7 +1945,7 @@
 			}
 
 			/**
-			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
@@ -2090,6 +2158,24 @@
 				"mac"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\x2A\x88"
 						/* ? ? ? ? ? ? 53 55 56 8B ? 8B ? 8B 90 ? ? ? ? 57 FF ? 88 */
+			}
+
+			/**
+			 * CTerrorPlayer::Extinguish()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorPlayer::`vftable'" to jump to the "CTerrorPlayer" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::Extinguish"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10ExtinguishEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\xB7\x2A\x2A\x2A\x2A\x68"
+						/* ? ? ? ? ? ? 8B ? 8B B7 ? ? ? ? 68 */
 			}
 
 			/**
@@ -3727,6 +3813,21 @@
 			}
 
 			/**
+			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CPipeBombProjectile::Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
 			 *
 			 * How to find on Windows:
@@ -3873,7 +3974,7 @@
 			}
 
 			/**
-			 * CTankRock::OnRelease(Vector const&,QAngle const&,Vector const&,Vector const&)
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
@@ -4198,6 +4299,24 @@
 				"mac"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x8B\x2A\x89\x85\x2A\x2A\x2A\x2A\x8B\x82\x2A\x2A\x2A\x2A\x57\xFF\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 8B ? 8B ? 89 85 ? ? ? ? 8B 82 ? ? ? ? 57 FF ? 8B ? 8B */
+			}
+
+			/**
+			 * CTerrorPlayer::Extinguish()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorPlayer::`vftable'" to jump to the "CTerrorPlayer" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::Extinguish"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10ExtinguishEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8B\xB7\x2A\x2A\x2A\x2A\x68"
+						/* ? ? ? ? ? ? 53 56 57 8B ? 8B B7 ? ? ? ? 68 */
 			}
 
 			/**

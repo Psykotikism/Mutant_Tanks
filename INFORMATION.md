@@ -554,6 +554,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Inextinguishable fire
+			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -650,6 +652,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Inextinguishable fire
+			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -1110,6 +1114,24 @@
 			// 4th number = Give hollowpoint ammo to assistant killers.
 			"Hollowpoint Ammo Reward"		"1,1,1,1"
 
+			// Give inextinguishable fire as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give inextinguishable fire to killers.
+			// 2nd number = Give inextinguishable fire to assistants.
+			// 3rd number = Give inextinguishable fire to teammates.
+			// 4th number = Give inextinguishable fire to assistant killers.
+			"Inextinguishable Fire Reward"		"1,1,1,1"
+
 			// Give infinite ammo as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -1240,6 +1262,24 @@
 			// 3rd number = Range for teammates.
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"100,100,100,100"
+
+			// The pipebomb duration to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 4
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Longest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			// 4th number = Duration for assistant killers.
+			"Pipebomb Duration Reward"		"10.0,10.0,10.0,10.0"
 
 			// The punch resistance to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2728,6 +2768,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Inextinguishable fire
+			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -2824,6 +2866,8 @@
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
+			// - Inextinguishable fire
+			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -3284,6 +3328,24 @@
 			// 4th number = Give hollowpoint ammo to assistant killers.
 			"Hollowpoint Ammo Reward"		"0,0,0,0"
 
+			// Give inextinguishable fire as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give inextinguishable fire to killers.
+			// 2nd number = Give inextinguishable fire to assistants.
+			// 3rd number = Give inextinguishable fire to teammates.
+			// 4th number = Give inextinguishable fire to assistant killers.
+			"Inextinguishable Fire Reward"		"0,0,0,0"
+
 			// Give infinite ammo as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -3414,6 +3476,24 @@
 			// 3rd number = Range for teammates.
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"0,0,0,0"
+
+			// The pipebomb duration to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 4
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Longest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			// 4th number = Duration for assistant killers.
+			"Pipebomb Duration Reward"		"0.0,0.0,0.0,0.0"
 
 			// The punch resistance to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
