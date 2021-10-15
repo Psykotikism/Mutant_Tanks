@@ -16,10 +16,6 @@
 #include <mutant_tanks>
 #include <mt_clone>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <left4dhooks>
-#define REQUIRE_PLUGIN
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -32,7 +28,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 #if MT_ABILITIES_GROUP > 0
 	#undef REQUIRE_PLUGIN
@@ -124,22 +120,6 @@ any aNative_IsTankClone(Handle plugin, int numParams)
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 #endif
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
 
 public void OnPluginStart()
 {

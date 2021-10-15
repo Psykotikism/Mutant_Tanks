@@ -10,6 +10,7 @@
 - Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types.
 - Fixed custom configs not refreshing when the main config file is refreshed.
 - Fixed `Client Preferences` not being optional.
+- Fixed the logic for the detour and patching systems.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -37,6 +38,7 @@
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
 - Improved logging for patching system.
+- Changed the method for aggravating idle Tanks. (Thanks to `cravenge` for the code and gamedata info!)
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
@@ -51,15 +53,21 @@
 	- `CTerrorGun::Use`
 	- `CTerrorPlayer::Extinguish`
 	- `CWeaponSpawn::Use`
+- Added detour setup, signatures, and patch offsets for `TankBehavior::InitialContainedAction`.
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Bunny Hop Reward`
 	- `Friendly Fire Reward`
 	- `Inextinguishable Fire Reward`
 	- `Looping Voiceline Interval`
 	- `Pipebomb Duration Reward`
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
+- Changed the default value of the `Aggressive Tanks` setting from `0` to `1`.
+- The `Aggressive Tanks` setting under the `Plugin Settings/Competitive` can now be overridden for each Mutant Tank type.
+- Renamed the `Aggressive Tanks` setting to `Auto Aggravate`.
+- Added the `Rock Sound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections.
 
 #### Translations
 - Updated English translations.

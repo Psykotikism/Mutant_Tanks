@@ -184,7 +184,7 @@ public void OnMapStart()
 	iPrecacheParticle(PARTICLE_ELECTRICITY);
 	iPrecacheParticle(PARTICLE_ELECTRICITY2);
 
-	for (int iPos = 0; iPos < sizeof g_sElectricSounds; iPos++)
+	for (int iPos = 0; iPos < (sizeof g_sElectricSounds); iPos++)
 	{
 		PrecacheSound(g_sElectricSounds[iPos], true);
 	}
@@ -433,7 +433,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION4, false))
 			{

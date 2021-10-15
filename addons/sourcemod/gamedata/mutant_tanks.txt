@@ -125,7 +125,7 @@
 					{
 						"type"		"vectorptr"
 					}
-					"impulse"
+					"rotation"
 					{
 						"type"		"vectorptr"
 					}
@@ -204,6 +204,39 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Detouring as a pre-hook for patching the sound loop per Tank.
+			 * Note: Detouring as a post-hook for removing patch for the sound loop.
+			 **/
+			"MTDetour_CTankRock::OnRelease"
+			{
+				"signature"	"CTankRock::OnRelease"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+					}
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"rotation"
+					{
+						"type"		"vectorptr"
+					}
+				}
 			}
 
 			/**
@@ -637,6 +670,27 @@
 			}
 
 			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Detouring as a pre-hook for patching idle state per Tank.
+			 * Note: Detouring as a post-hook for removing patch for idle state.
+			 **/
+			"MTDetour_TankBehavior::InitialContainedAction"
+			{
+				"signature"	"TankBehavior::InitialContainedAction"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"address"
+				"arguments"
+				{
+					"tank"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
 			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
 			 *
 			 * Note: Detouring as a post-hook for catching Tank passes.
@@ -754,6 +808,16 @@
 			"GroundPoundStart"
 			{
 				"signature"	"CTankClaw::GroundPound"
+			}
+
+			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Uses the signature for "TankBehavior::InitialContainedAction" to find the address.
+			 **/
+			"InitialContainedActionStart"
+			{
+				"signature"	"TankBehavior::InitialContainedAction"
 			}
 
 			/**
@@ -1630,6 +1694,25 @@
 			}
 
 			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Patches the condition for choosing between attack mode and idle state.
+			 *
+			 * How to find on Windows:
+			 * 1. Look for the fourth two-byte jump (JNZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the third two-byte jump (JZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 **/
+			"TankBehavior::InitialContainedAction::Condition"
+			{
+				"linux"		"101" // start at 74 and patch 2 bytes with NOPs (0x90)
+				"windows"	"49" // start at 75 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
 			 * TankIdle::GetName()
 			 *
 			 * How to find:
@@ -1828,6 +1911,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
+				"mac"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? 53 8B ? ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
 			}
@@ -2174,6 +2258,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer10ExtinguishEv"
+				"mac"		"@_ZN13CTerrorPlayer10ExtinguishEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\xB7\x2A\x2A\x2A\x2A\x68"
 						/* ? ? ? ? ? ? 8B ? 8B B7 ? ? ? ? 68 */
 			}
@@ -2681,6 +2766,24 @@
 				"mac"		"@_ZN4Tank11LeaveStasisEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x74\x2A\x0F"
 						/* ? ? ? ? ? ? ? ? ? ? 0F 84 ? ? ? ? 83 ? ? ? 74 ? 0F */
+			}
+
+			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "TankBehavior" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"TankBehavior::InitialContainedAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12TankBehavior22InitialContainedActionEP4Tank"
+				"mac"		"@_ZN12TankBehavior22InitialContainedActionEP4Tank"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\x2A\x2A\x2A\x75\x2A\x83\x3D"
+						/* ? ? ? ? ? ? ? ? ? ? ? ? 75 ? 80 ? ? ? 75 ? 83 3D */
 			}
 
 			/**
@@ -3592,6 +3695,25 @@
 			}
 
 			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Patches the condition for choosing between attack mode and idle state.
+			 *
+			 * How to find on Windows:
+			 * 1. Look for the first two-byte jump (JNZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the first two-byte jump (JZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 **/
+			"TankBehavior::InitialContainedAction::Condition"
+			{
+				"linux"		"23" // start at 74 and patch 2 bytes with NOPs (0x90)
+				"windows"	"16" // start at 75 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
 			 * TankIdle::GetName()
 			 *
 			 * How to find:
@@ -3823,6 +3945,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
+				"mac"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDD\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\x2A\xDD\x2A\x2A\x2A\xD9\x2A\xDD\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? D9 ? ? 83 ? ? DD ? ? ? 8B ? D9 ? ? DD ? ? ? D9 ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? ? DD ? ? ? D9 ? DD ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
 			}
@@ -4315,6 +4438,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer10ExtinguishEv"
+				"mac"		"@_ZN13CTerrorPlayer10ExtinguishEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8B\xB7\x2A\x2A\x2A\x2A\x68"
 						/* ? ? ? ? ? ? 53 56 57 8B ? 8B B7 ? ? ? ? 68 */
 			}
@@ -4807,6 +4931,24 @@
 				"mac"		"@_ZN4Tank11LeaveStasisEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 8B */
+			}
+
+			/**
+			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. Use IDA to get the VTable dump for the "TankBehavior" class on Windows.
+			 * 3. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 4. Look for the target function in the Windows binary.
+			 **/
+			"TankBehavior::InitialContainedAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12TankBehavior22InitialContainedActionEP4Tank"
+				"mac"		"@_ZN12TankBehavior22InitialContainedActionEP4Tank"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF"
+						/* ? ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 ? ? ? 8B ? ? 8B ? 8B 90 ? ? ? ? FF */
 			}
 
 			/**

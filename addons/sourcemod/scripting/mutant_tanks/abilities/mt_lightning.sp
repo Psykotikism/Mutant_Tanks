@@ -158,7 +158,7 @@ public void OnMapStart()
 		PrecacheModel(SPRITE_EXPLODE, true);
 		iPrecacheParticle(PARTICLE_LIGHTNING);
 
-		for (int iPos = 0; iPos < sizeof g_sLightningSounds; iPos++)
+		for (int iPos = 0; iPos < (sizeof g_sLightningSounds); iPos++)
 		{
 			PrecacheSound(g_sLightningSounds[iPos], true);
 		}
@@ -377,7 +377,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION2, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION3, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION4, false))
 				{
@@ -887,7 +887,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
 				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
-				EmitSoundToAll(g_sLightningSounds[GetRandomInt(0, sizeof g_sLightningSounds - 1)], iSurvivor);
+				EmitSoundToAll(g_sLightningSounds[GetRandomInt(0, (sizeof g_sLightningSounds - 1))], iSurvivor);
 			}
 		}
 	}

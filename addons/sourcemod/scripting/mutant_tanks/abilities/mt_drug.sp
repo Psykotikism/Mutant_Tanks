@@ -422,7 +422,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_DRUG_SECTION, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION2, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION3, false) || StrEqual(sSubset[iPos], MT_DRUG_SECTION4, false))
 			{
@@ -811,7 +811,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 				bfWrite.WriteShort(toggle ? 255 : 1536);
 				bfWrite.WriteShort(iFlags);
 
-				for (int iPos = 0; iPos < sizeof iColor; iPos++)
+				for (int iPos = 0; iPos < (sizeof iColor); iPos++)
 				{
 					bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
 				}

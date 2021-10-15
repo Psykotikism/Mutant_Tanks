@@ -477,7 +477,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HEAL_SECTION, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION2, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION3, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION4, false))
 			{
@@ -1183,7 +1183,7 @@ void vHealResetGlow(int tank)
 		{
 			int iGlowColor[4];
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 		}
 		case false: vSetHealGlow(tank, 0, 0, 0, 0, 0);
 	}

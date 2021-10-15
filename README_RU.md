@@ -6,8 +6,7 @@
 ## Языки
 - Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32">
-</a>
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32"></a>
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
@@ -49,7 +48,6 @@
 3. Рекомендуется:
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
-- [`Left 4 DHooks Direct v1.61` или выше](https://forums.alliedmods.net/showthread.php?t=321696)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
 - [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
@@ -2084,6 +2082,8 @@ Overrides
 **raoulduke** - За плагин [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175).
 
 **Pelipoika** - За плагин [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533).
+
+**cravenge** - За плагин [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690).
 
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помощь с подписями игровых данных и помощь оптимизировать/исправить различные части кода.
 

@@ -15,9 +15,6 @@
 	#if MT_WARP_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>
-		#undef REQUIRE_PLUGIN
-		#tryinclude <left4dhooks>
-		#define REQUIRE_PLUGIN
 	#else
 		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,22 +43,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
 }
 #else
 	#if MT_WARP_COMPILE_METHOD == 1
@@ -505,7 +486,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
 			{
@@ -1267,12 +1248,6 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 
 bool bIsInsideSaferoom(int survivor)
 {
-#if defined _l4dh_included
-	if (g_bLeft4DHooksInstalled || g_esWarpGeneral.g_hSDKGetLastKnownArea == null)
-	{
-		return L4D_IsInLastCheckpoint(survivor);
-	}
-#endif
 	if (g_esWarpGeneral.g_iAttributeFlagsOffset != -1)
 	{
 		int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);

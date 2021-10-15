@@ -382,7 +382,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_CAR_SECTION, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION2, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION3, false) || StrEqual(sSubset[iPos], MT_CAR_SECTION4, false))
 				{
@@ -914,7 +914,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 		if (bIsValidEntity(iCar))
 		{
 			int iOptionCount = 0, iOptions[3], iFlag = 0;
-			for (int iBit = 0; iBit < sizeof iOptions; iBit++)
+			for (int iBit = 0; iBit < (sizeof iOptions); iBit++)
 			{
 				iFlag = (1 << iBit);
 				if (!(g_esCarCache[iTank].g_iCarOptions & iFlag))
@@ -933,7 +933,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 				case 4: SetEntityModel(iCar, MODEL_CAR3);
 				default:
 				{
-					switch (GetRandomInt(1, sizeof iOptions))
+					switch (GetRandomInt(1, (sizeof iOptions)))
 					{
 						case 1: SetEntityModel(iCar, MODEL_CAR);
 						case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -944,7 +944,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 
 			float flAngles2[3];
 			int iCarColor[3];
-			for (int iIndex = 0; iIndex < sizeof iCarColor; iIndex++)
+			for (int iIndex = 0; iIndex < (sizeof iCarColor); iIndex++)
 			{
 				iCarColor[iIndex] = GetRandomInt(0, 255);
 				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);

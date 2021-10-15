@@ -15,9 +15,6 @@
 	#if MT_ACID_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>
-		#undef REQUIRE_PLUGIN
-		#tryinclude <left4dhooks>
-		#define REQUIRE_PLUGIN
 	#else
 		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -50,22 +47,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
 }
 #else
 	#if MT_ACID_COMPILE_METHOD == 1
@@ -482,7 +463,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ACID_SECTION, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION2, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION3, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION4, false))
 			{
@@ -1018,18 +999,10 @@ void vAcidCopyStats2(int oldTank, int newTank)
 
 void vCreateAcid(int spitter, float pos[3], float angles[3])
 {
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKSpitterProjectileCreate == null)
-	{
-		case true: L4D2_SpitterPrj(spitter, pos, angles);
-		case false: SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
-	}
-#else
 	if (g_hSDKSpitterProjectileCreate != null)
 	{
 		SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
 	}
-#endif
 }
 
 void vRemoveAcid(int tank)

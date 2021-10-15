@@ -464,7 +464,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_THROW_SECTION, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION2, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION3, false) || StrEqual(sSubset[iPos], MT_THROW_SECTION4, false))
 				{
@@ -963,7 +963,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 	if (flVector > 500.0)
 	{
 		int iAbilityCount = 0, iAbilities[4], iAbilityFlag = 0;
-		for (int iBit = 0; iBit < sizeof iAbilities; iBit++)
+		for (int iBit = 0; iBit < (sizeof iAbilities); iBit++)
 		{
 			iAbilityFlag = (1 << iBit);
 			if (!(g_esThrowCache[iTank].g_iThrowAbility & iAbilityFlag))
@@ -985,7 +985,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 					if (bIsValidEntity(iCar))
 					{
 						int iOptionCount = 0, iOptions[3], iFlag = 0;
-						for (int iBit = 0; iBit < sizeof iOptions; iBit++)
+						for (int iBit = 0; iBit < (sizeof iOptions); iBit++)
 						{
 							iFlag = (1 << iBit);
 							if (!(g_esThrowCache[iTank].g_iThrowCarOptions & iFlag))
@@ -1004,7 +1004,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							case 4: SetEntityModel(iCar, MODEL_CAR3);
 							default:
 							{
-								switch (GetRandomInt(1, sizeof iOptions))
+								switch (GetRandomInt(1, (sizeof iOptions)))
 								{
 									case 1: SetEntityModel(iCar, MODEL_CAR);
 									case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -1014,7 +1014,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						}
 
 						int iCarColor[3];
-						for (int iPos = 0; iPos < sizeof iCarColor; iPos++)
+						for (int iPos = 0; iPos < (sizeof iCarColor); iPos++)
 						{
 							iCarColor[iPos] = GetRandomInt(0, 255);
 						}
@@ -1066,7 +1066,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						}
 
 						int iOptionCount = 0, iOptions[7], iFlag = 0;
-						for (int iBit = 0; iBit < sizeof iOptions; iBit++)
+						for (int iBit = 0; iBit < (sizeof iOptions); iBit++)
 						{
 							iFlag = (1 << iBit);
 							if (!(g_esThrowCache[iTank].g_iThrowInfectedOptions & iFlag))
@@ -1089,7 +1089,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
 							default:
 							{
-								switch (GetRandomInt(1, sizeof iOptions))
+								switch (GetRandomInt(1, (sizeof iOptions)))
 								{
 									case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
 									case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");

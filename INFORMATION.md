@@ -3,7 +3,7 @@
 ## Notes
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+- Visit the [`Wiki`](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `97-98` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
@@ -30,6 +30,7 @@
 	- General
 	- Announcements
 	- Rewards
+	- Competitive
 	- Glow
 	- Administration
 	- Human Support
@@ -553,6 +554,7 @@
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
@@ -651,6 +653,7 @@
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
@@ -972,6 +975,24 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Attack Boost Reward"			"1.25,1.25,1.25,1.25"
+
+			// Allow bunnyhopping as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow bunnyhopping to killers.
+			// 2nd number = Allow bunnyhopping to assistants.
+			// 3rd number = Allow bunnyhopping to teammates.
+			// 4th number = Allow bunnyhopping to assistant killers.
+			"Bunny Hopping Reward"			"1,1,1,1"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1723,10 +1744,11 @@
 			// (Co-Op modes only) Mutant Tanks should attack immediately after spawning.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Competitive" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine Mutant Tanks' initial behavior.
 			// 1/"enabled"/"true"/"on"/"yes": ON, force Mutant Tanks to attack immediately.
-			"Aggressive Tanks"			"0"
+			"Auto Aggravate"			"1"
 
 			// Survivors will be credited when damaging Mutant Tanks with fire.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -1980,6 +2002,15 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
+
+			// Every Mutant Tank's rock throws play a sound loop.
+			// Note: Both games already do this by default.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Rock Sound"				"0"
 
 			// Set every Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.
@@ -2436,7 +2467,7 @@
 
 ### Tank Settings
 
-#### General, Announcements, Rewards, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
+#### General, Announcements, Rewards, Competitive, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {
@@ -2767,6 +2798,7 @@
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
@@ -2865,6 +2897,7 @@
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
@@ -3186,6 +3219,24 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Attack Boost Reward"			"0.0,0.0,0.0,0.0"
+
+			// Allow bunnyhopping as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow bunnyhopping to killers.
+			// 2nd number = Allow bunnyhopping to assistants.
+			// 3rd number = Allow bunnyhopping to teammates.
+			// 4th number = Allow bunnyhopping to assistant killers.
+			"Bunny Hopping Reward"			"0,0,0,0"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3931,6 +3982,16 @@
 			// 3rd set = RGBA set for teammates.
 			// 4th set = RGBA set for assistant killers.
 			"Screen Color Visual"			""
+		}
+		"Competitive"
+		{
+			// (Co-Op modes only) The Mutant Tank should attack immediately after spawning.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Competitive" section.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine the Mutant Tank's initial behavior.
+			// 1/"enabled"/"true"/"on"/"yes": ON, force the Mutant Tank to attack immediately.
+			"Auto Aggravate"			"0"
 		}
 		"Glow"
 		{
@@ -4910,6 +4971,15 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
+
+			// The Mutant Tank's rock throws play a sound loop.
+			// Note: Both games already do this by default.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Rock Sound"				"0"
 
 			// Set the Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.

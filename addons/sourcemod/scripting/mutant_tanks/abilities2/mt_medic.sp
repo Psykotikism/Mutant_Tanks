@@ -381,7 +381,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MEDIC_SECTION, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_MEDIC_SECTION4, false))
 				{
@@ -449,7 +449,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMedicAbility[iIndex].g_iMedicMaxHealth[6] = 8000;
 				g_esMedicAbility[iIndex].g_flMedicRange = 500.0;
 
-				for (int iPos = 0; iPos < sizeof esMedicAbility::g_iMedicHealth; iPos++)
+				for (int iPos = 0; iPos < (sizeof esMedicAbility::g_iMedicHealth); iPos++)
 				{
 					g_esMedicAbility[iIndex].g_iMedicHealth[iPos] = 25;
 				}
@@ -478,7 +478,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esMedicPlayer[iPlayer].g_flMedicInterval = 0.0;
 					g_esMedicPlayer[iPlayer].g_flMedicRange = 0.0;
 
-					for (int iPos = 0; iPos < sizeof esMedicPlayer::g_iMedicHealth; iPos++)
+					for (int iPos = 0; iPos < (sizeof esMedicPlayer::g_iMedicHealth); iPos++)
 					{
 						g_esMedicPlayer[iPlayer].g_iMedicHealth[iPos] = 0;
 						g_esMedicPlayer[iPlayer].g_iMedicMaxHealth[iPos] = 0;
@@ -539,7 +539,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
-				for (int iPos = 0; iPos < sizeof sSet; iPos++)
+				for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 				{
 					g_esMedicPlayer[admin].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicPlayer[admin].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicPlayer[admin].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -587,7 +587,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
-				for (int iPos = 0; iPos < sizeof sSet; iPos++)
+				for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 				{
 					g_esMedicAbility[type].g_iMedicHealth[iPos] = iGetClampedValue(key, "MedicHealth", "Medic Health", "Medic_Health", "health", g_esMedicAbility[type].g_iMedicHealth[iPos], sSet[iPos], MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 					g_esMedicAbility[type].g_iMedicMaxHealth[iPos] = iGetClampedValue(key, "MedicMaxHealth", "Medic Max Health", "Medic_Max_Health", "maxhealth", g_esMedicAbility[type].g_iMedicMaxHealth[iPos], sSet[iPos], 1, MT_MAXHEALTH);
@@ -620,7 +620,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMedicCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iRequiresHumans, g_esMedicAbility[type].g_iRequiresHumans);
 	g_esMedicPlayer[tank].g_iTankType = apply ? type : 0;
 
-	for (int iPos = 0; iPos < sizeof esMedicCache::g_iMedicHealth; iPos++)
+	for (int iPos = 0; iPos < (sizeof esMedicCache::g_iMedicHealth); iPos++)
 	{
 		g_esMedicCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicHealth[iPos], g_esMedicAbility[type].g_iMedicHealth[iPos]);
 		g_esMedicCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicMaxHealth[iPos], g_esMedicAbility[type].g_iMedicMaxHealth[iPos]);

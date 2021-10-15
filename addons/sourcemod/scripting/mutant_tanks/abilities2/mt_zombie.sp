@@ -380,7 +380,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION4, false))
 				{
@@ -789,7 +789,7 @@ void vSpawnZombie(int tank, bool uncommon)
 			if (g_bSecondGame)
 			{
 				int iTypeCount = 0, iTypes[7], iFlag = 0;
-				for (int iBit = 0; iBit < sizeof iTypes; iBit++)
+				for (int iBit = 0; iBit < (sizeof iTypes); iBit++)
 				{
 					iFlag = (1 << iBit);
 					if (!(g_esZombieCache[tank].g_iZombieType & iFlag))
@@ -812,7 +812,7 @@ void vSpawnZombie(int tank, bool uncommon)
 					case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
 					default:
 					{
-						switch (GetRandomInt(1, sizeof iTypes))
+						switch (GetRandomInt(1, (sizeof iTypes)))
 						{
 							case 1: vSpawnUncommon(tank, MODEL_CEDA);
 							case 2: vSpawnUncommon(tank, MODEL_JIMMY);

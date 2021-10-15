@@ -15,9 +15,6 @@
 	#if MT_SHOVE_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>
-		#undef REQUIRE_PLUGIN
-		#tryinclude <left4dhooks>
-		#define REQUIRE_PLUGIN
 	#else
 		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,22 +43,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
 }
 #else
 	#if MT_SHOVE_COMPILE_METHOD == 1
@@ -470,7 +451,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_SHOVE_SECTION, false) || StrEqual(sSubset[iPos], MT_SHOVE_SECTION2, false) || StrEqual(sSubset[iPos], MT_SHOVE_SECTION3, false) || StrEqual(sSubset[iPos], MT_SHOVE_SECTION4, false))
 			{
@@ -986,18 +967,10 @@ void vShoveHit(int survivor, int tank, float random, float chance, int enabled, 
 
 void vShovePlayer(int player, int shover, float pos[3])
 {
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKStagger == null)
-	{
-		case true: L4D_StaggerPlayer(player, shover, pos);
-		case false: SDKCall(g_hSDKStagger, player, shover, pos);
-	}
-#else
 	if (g_hSDKStagger != null)
 	{
 		SDKCall(g_hSDKStagger, player, shover, pos);
 	}
-#endif
 }
 
 void vShoveRange(int tank, int value, float random, int pos = -1)
