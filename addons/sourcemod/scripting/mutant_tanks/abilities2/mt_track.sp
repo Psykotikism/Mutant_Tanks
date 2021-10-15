@@ -353,7 +353,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_TRACK_SECTION, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION2, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION3, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION4, false))
 				{
@@ -975,7 +975,7 @@ void vTrackThink(int rock)
 	}
 }
 
-int iGetRockTarget(float pos[3], float angle[3], int tank)
+int iGetRockTarget(float pos[3], float angles[3], int tank)
 {
 	float flMin = 4.0, flPos[3], flAngle;
 	int iTarget = 0;
@@ -990,7 +990,7 @@ int iGetRockTarget(float pos[3], float angle[3], int tank)
 
 			GetClientEyePosition(iSurvivor, flPos);
 			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angle, flPos);
+			flAngle = flGetAngle(angles, flPos);
 			if (flAngle <= flMin)
 			{
 				flMin = flAngle;

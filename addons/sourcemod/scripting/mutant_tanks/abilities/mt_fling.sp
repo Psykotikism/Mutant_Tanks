@@ -15,9 +15,6 @@
 	#if MT_FLING_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>
-		#undef REQUIRE_PLUGIN
-		#tryinclude <left4dhooks>
-		#define REQUIRE_PLUGIN
 	#else
 		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -50,22 +47,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
 }
 #else
 	#if MT_FLING_COMPILE_METHOD == 1
@@ -476,7 +457,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_FLING_SECTION, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION2, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION3, false) || StrEqual(sSubset[iPos], MT_FLING_SECTION4, false))
 			{
@@ -837,18 +818,11 @@ void vFling(int survivor, int tank)
 	flVelocity[0] = ((flRatio[0] * -1) * g_esFlingCache[tank].g_flFlingForce);
 	flVelocity[1] = ((flRatio[1] * -1) * g_esFlingCache[tank].g_flFlingForce);
 	flVelocity[2] = g_esFlingCache[tank].g_flFlingForce;
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKFling == null)
-	{
-		case true: L4D2_CTerrorPlayer_Fling(survivor, tank, flVelocity);
-		case false: SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
-	}
-#else
+
 	if (g_hSDKFling != null)
 	{
 		SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
 	}
-#endif
 }
 
 void vFlingAbility(int tank, float random, int pos = -1)

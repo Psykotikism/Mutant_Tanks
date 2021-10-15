@@ -372,7 +372,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MINION_SECTION, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION2, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION3, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION4, false))
 				{
@@ -725,7 +725,7 @@ void vMinion(int tank)
 					}
 
 					int iTypeCount = 0, iTypes[6];
-					for (int iBit = 0; iBit < sizeof iTypes; iBit++)
+					for (int iBit = 0; iBit < (sizeof iTypes); iBit++)
 					{
 						int iFlag = (1 << iBit);
 						if (!(g_esMinionCache[tank].g_iMinionTypes & iFlag))
@@ -747,7 +747,7 @@ void vMinion(int tank)
 						case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
 						default:
 						{
-							switch (GetRandomInt(1, sizeof iTypes))
+							switch (GetRandomInt(1, (sizeof iTypes)))
 							{
 								case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 								case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");

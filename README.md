@@ -6,8 +6,7 @@
 ## Languages
 - Click on one of the flags to view in another language.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
-</a>
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -49,7 +48,6 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 3. Recommended:
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
-- [`Left 4 DHooks Direct v1.61` or higher](https://forums.alliedmods.net/showthread.php?t=321696)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
 - [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
@@ -2084,6 +2082,8 @@ Examples:
 **raoulduke** - For the [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175) plugin.
 
 **Pelipoika** - For the [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533) plugin.
+
+**cravenge** - For the [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 

@@ -642,7 +642,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SHIELD_SECTION, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION2, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION3, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION4, false))
 				{
@@ -700,7 +700,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esShieldAbility[iIndex].g_flShieldThrowChance = 100.0;
 				g_esShieldAbility[iIndex].g_iShieldType = 2;
 
-				for (int iPos = 0; iPos < sizeof esShieldAbility::g_iShieldColor; iPos++)
+				for (int iPos = 0; iPos < (sizeof esShieldAbility::g_iShieldColor); iPos++)
 				{
 					g_esShieldAbility[iIndex].g_iShieldColor[iPos] = 255;
 				}
@@ -735,7 +735,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShieldPlayer[iPlayer].g_flShieldThrowChance = 0.0;
 					g_esShieldPlayer[iPlayer].g_iShieldType = 0;
 
-					for (int iPos = 0; iPos < sizeof esShieldPlayer::g_iShieldColor; iPos++)
+					for (int iPos = 0; iPos < (sizeof esShieldPlayer::g_iShieldColor); iPos++)
 					{
 						g_esShieldPlayer[iPlayer].g_iShieldColor[iPos] = -1;
 					}
@@ -785,7 +785,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(g_esShieldPlayer[admin].g_sShieldColor, sizeof esShieldPlayer::g_sShieldColor, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
-				for (int iPos = 0; iPos < sizeof sSet; iPos++)
+				for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 				{
 					g_esShieldPlayer[admin].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -827,7 +827,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(g_esShieldAbility[type].g_sShieldColor, sizeof esShieldAbility::g_sShieldColor, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
-				for (int iPos = 0; iPos < sizeof sSet; iPos++)
+				for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 				{
 					g_esShieldAbility[type].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
@@ -866,7 +866,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldColor, sizeof esShieldCache::g_sShieldColor, g_esShieldPlayer[tank].g_sShieldColor, g_esShieldAbility[type].g_sShieldColor);
 	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof esShieldCache::g_sShieldHealthChars, g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
 
-	for (int iPos = 0; iPos < sizeof esShieldCache::g_iShieldColor; iPos++)
+	for (int iPos = 0; iPos < (sizeof esShieldCache::g_iShieldColor); iPos++)
 	{
 		g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldAbility[type].g_iShieldColor[iPos], 1);
 	}
@@ -1436,7 +1436,7 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 	if (flVector > 500.0)
 	{
 		int iTypeCount = 0, iTypes[4], iFlag = 0;
-		for (int iBit = 0; iBit < sizeof iTypes; iBit++)
+		for (int iBit = 0; iBit < (sizeof iTypes); iBit++)
 		{
 			iFlag = (1 << iBit);
 			if (!(g_esShieldCache[iTank].g_iShieldType & iFlag))

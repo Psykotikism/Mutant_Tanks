@@ -234,7 +234,7 @@ void vDropMapStart()
 public void OnMapStart()
 #endif
 {
-	for (int iPos = 0; iPos < sizeof g_sMeleeScripts; iPos++)
+	for (int iPos = 0; iPos < (sizeof g_sMeleeScripts); iPos++)
 	{
 		PrecacheGeneric(g_sMeleeScripts[iPos], true);
 	}
@@ -243,7 +243,7 @@ public void OnMapStart()
 	{
 		case true:
 		{
-			for (int iPos = 0; iPos < sizeof g_sWeaponModelsWorld2; iPos++)
+			for (int iPos = 0; iPos < (sizeof g_sWeaponModelsWorld2); iPos++)
 			{
 				PrecacheModel(g_sWeaponModelsView2[iPos], true);
 				PrecacheModel(g_sWeaponModelsWorld2[iPos], true);
@@ -251,7 +251,7 @@ public void OnMapStart()
 		}
 		case false:
 		{
-			for (int iPos = 0; iPos < sizeof g_sWeaponModelsWorld; iPos++)
+			for (int iPos = 0; iPos < (sizeof g_sWeaponModelsWorld); iPos++)
 			{
 				PrecacheModel(g_sWeaponModelsView[iPos], true);
 				PrecacheModel(g_sWeaponModelsWorld[iPos], true);
@@ -460,7 +460,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_DROP_SECTION, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION2, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION3, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION4, false))
 				{
@@ -920,7 +920,7 @@ void vDropFrame(int userid)
 
 	vRemoveDrop(iTank);
 
-	int iPosition = 0 < g_esDropCache[iTank].g_iDropHandPosition < 3 ? g_esDropCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2),
+	int iPosition = (0 < g_esDropCache[iTank].g_iDropHandPosition < 3) ? g_esDropCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2),
 		iWeapon = iGetNamedWeapon(iTank);
 	if (iWeapon == -1)
 	{

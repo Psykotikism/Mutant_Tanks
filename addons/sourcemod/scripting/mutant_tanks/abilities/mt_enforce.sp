@@ -444,7 +444,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ENFORCE_SECTION, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION4, false))
 			{
@@ -850,7 +850,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 				else
 				{
 					int iSlotCount = 0, iSlots[5], iFlag = 0;
-					for (int iBit = 0; iBit < sizeof iSlots; iBit++)
+					for (int iBit = 0; iBit < (sizeof iSlots); iBit++)
 					{
 						iFlag = (1 << iBit);
 						if (!(g_esEnforceCache[tank].g_iEnforceWeaponSlots & iFlag))

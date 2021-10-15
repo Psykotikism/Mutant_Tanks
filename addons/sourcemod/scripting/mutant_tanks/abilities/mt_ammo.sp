@@ -405,7 +405,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_AMMO_SECTION, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION2, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION3, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION4, false))
 			{

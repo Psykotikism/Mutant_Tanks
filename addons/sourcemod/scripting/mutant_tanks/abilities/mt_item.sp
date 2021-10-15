@@ -398,7 +398,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ITEM_SECTION, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION2, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION3, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION4, false))
 				{
@@ -605,7 +605,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 		char sItems[5][64];
 		ReplaceString(g_esItemCache[attacker].g_sItemPinata, sizeof esItemCache::g_sItemPinata, " ", "");
 		ExplodeString(g_esItemCache[attacker].g_sItemPinata, ",", sItems, sizeof sItems, sizeof sItems[]);
-		for (int iItem = 0; iItem < sizeof sItems; iItem++)
+		for (int iItem = 0; iItem < (sizeof sItems); iItem++)
 		{
 			if (sItems[iItem][0] != '\0')
 			{
@@ -709,10 +709,10 @@ void vItemAbility(int tank)
 		{
 			switch (g_esItemCache[tank].g_iItemMode)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof sItems) - 1]);
+				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, (sizeof sItems)) - 1]);
 				case 1:
 				{
-					for (int iItem = 0; iItem < sizeof sItems; iItem++)
+					for (int iItem = 0; iItem < (sizeof sItems); iItem++)
 					{
 						if (StrContains(g_esItemCache[tank].g_sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
 						{

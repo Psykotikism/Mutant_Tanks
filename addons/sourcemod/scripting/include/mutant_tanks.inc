@@ -1261,13 +1261,13 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 	}
 }
 
-stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlename, float duration = 0.0)
+stock void vAttachParticle2(float pos[3], float angles[3], const char[] particlename, float duration = 0.0)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
-		TeleportEntity(iParticle, pos, angle, NULL_VECTOR);
+		TeleportEntity(iParticle, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "Start");
@@ -1323,14 +1323,14 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angle[3], float pause, float duration, const char[] attachment = "")
+stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angles[3], float pause, float duration, const char[] attachment = "")
 {
 	int iEffect = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iEffect))
 	{
 		DispatchKeyValue(iEffect, "effect_name", particlename);
 		vSetEntityParent(iEffect, player);
-		TeleportEntity(iEffect, pos, angle, NULL_VECTOR);
+		TeleportEntity(iEffect, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");
@@ -2444,9 +2444,9 @@ stock float flGetAdrenalineTime(int survivor)
 	return flDuration - flTime;
 }
 
-stock float flGetAngle(float angle1[3], float angle2[3])
+stock float flGetAngle(float angles1[3], float angles2[3])
 {
-	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
+	return ArcCosine(GetVectorDotProduct(angles1, angles2) / (GetVectorLength(angles1) * GetVectorLength(angles2)));
 }
 
 stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, float check = -1.0)
@@ -2460,10 +2460,10 @@ stock float flGetClampedValue(const char[] key, const char[] setting1, const cha
 	return curVal;
 }
 
-stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
+stock float flGetDistance(float pos[3], float angles[3], float offset1, float offset2, float force[3], int entity, int type)
 {
 	float flAngle[3];
-	vCopyVector(angle, flAngle);
+	vCopyVector(angles, flAngle);
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
@@ -2636,10 +2636,10 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	return flClamp(StringToFloat(value), min, max);
 }
 
-stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
+stock float flGetRayDistance(float pos[3], float angles[3], int entity, int type)
 {
 	float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
+	iGetRayHitPos(pos, angles, flHitPos, entity, false, type);
 	return GetVectorDistance(pos, flHitPos);
 }
 
@@ -3111,17 +3111,17 @@ stock int iGetRandomTank(int tank)
 	return iTanks[GetRandomInt(0, iTankCount - 1)];
 }
 
-stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int type)
+stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
 	Handle hTrace;
 
 	switch (type)
 	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
-		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 4: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, entity);
-		case 5: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
+		case 1: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
+		case 3: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
+		case 4: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, entity);
+		case 5: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
 	}
 
 	int iHit = 0;

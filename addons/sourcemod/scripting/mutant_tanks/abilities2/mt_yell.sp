@@ -15,9 +15,6 @@
 	#if MT_YELL_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>
-		#undef REQUIRE_PLUGIN
-		#tryinclude <left4dhooks>
-		#define REQUIRE_PLUGIN
 	#else
 		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLeft4DHooksInstalled;
+bool g_bDedicated;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -45,22 +42,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
 }
 #else
 	#if MT_YELL_COMPILE_METHOD == 1
@@ -460,7 +441,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_YELL_SECTION, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION2, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION3, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION4, false))
 				{
@@ -918,18 +899,11 @@ void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL9);
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKDeafen == null)
-	{
-		case true: L4D_Deafen(survivor);
-		case false: SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
-	}
-#else
+
 	if (g_hSDKDeafen != null)
 	{
 		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
 	}
-#endif
 }
 
 void vYellAbility(int tank)

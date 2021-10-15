@@ -419,7 +419,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WHIRL_SECTION, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION2, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION3, false) || StrEqual(sSubset[iPos], MT_WHIRL_SECTION4, false))
 			{
@@ -911,7 +911,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 					SetClientViewEntity(survivor, iCamera);
 
 					int iAxis = -1, iAxisCount = 0, iAxes[3], iFlag = 0;
-					for (int iBit = 0; iBit < sizeof iAxes; iBit++)
+					for (int iBit = 0; iBit < (sizeof iAxes); iBit++)
 					{
 						iFlag = (1 << iBit);
 						if (!(g_esWhirlCache[tank].g_iWhirlAxis & iFlag))

@@ -170,7 +170,7 @@ public void OnMapStart()
 {
 	if (g_bSecondGame)
 	{
-		for (int iPos = 0; iPos < sizeof g_sParticles; iPos++)
+		for (int iPos = 0; iPos < (sizeof g_sParticles); iPos++)
 		{
 			iPrecacheParticle(g_sParticles[iPos]);
 		}
@@ -389,7 +389,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLATTER_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION4, false))
 				{
