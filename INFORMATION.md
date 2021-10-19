@@ -565,6 +565,7 @@
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
+			// - Recoil dampener
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
@@ -664,6 +665,7 @@
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
+			// - Recoil dampener
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
@@ -1319,6 +1321,24 @@
 			// 3rd number = Resistance for teammates.
 			// 4th number = Resistance for assistant killers.
 			"Punch Resistance Reward"		"0.25,0.25,0.25,0.25"
+
+			// Give recoil dampener as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give recoil dampener to killers.
+			// 2nd number = Give recoil dampener to assistants.
+			// 3rd number = Give recoil dampener to teammates.
+			// 4th number = Give recoil dampener to assistant killers.
+			"Recoil Dampener Reward"		"1,1,1,1"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -2809,6 +2829,7 @@
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
+			// - Recoil dampener
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
@@ -2908,6 +2929,7 @@
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
+			// - Recoil dampener
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
@@ -3563,6 +3585,24 @@
 			// 3rd number = Resistance for teammates.
 			// 4th number = Resistance for assistant killers.
 			"Punch Resistance Reward"		"0.0,0.0,0.0,0.0"
+
+			// Give recoil dampener as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give recoil dampener to killers.
+			// 2nd number = Give recoil dampener to assistants.
+			// 3rd number = Give recoil dampener to teammates.
+			// 4th number = Give recoil dampener to assistant killers.
+			"Recoil Dampener Reward"		"0,0,0,0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
