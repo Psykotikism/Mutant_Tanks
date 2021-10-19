@@ -44,12 +44,15 @@
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
 
 #### Game Data
+- Added offsets for `CPainPills::GetWeaponID`.
+- Added signatures for `GetWeaponInfo`.
 - Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
 - Added detour setup for the following functions:
 	- `CTankRock::Detonate`
 	- `CTerrorPlayer::OnITExpired`
 - Added detour setup and signatures for the following functions:
 	- `CPipeBombProjectile::Create`
+	- `CTerrorGun::FireBullet` (L4D1)
 	- `CTerrorGun::Use`
 	- `CTerrorPlayer::Extinguish`
 	- `CWeaponSpawn::Use`
@@ -63,6 +66,7 @@
 	- `Inextinguishable Fire Reward`
 	- `Looping Voiceline Interval`
 	- `Pipebomb Duration Reward`
+	- `Recoil Dampener Reward`
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
 - Changed the default value of the `Aggressive Tanks` setting from `0` to `1`.
 - The `Aggressive Tanks` setting under the `Plugin Settings/Competitive` can now be overridden for each Mutant Tank type.

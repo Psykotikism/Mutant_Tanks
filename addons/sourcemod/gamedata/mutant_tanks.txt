@@ -261,6 +261,22 @@
 			}
 
 			/**
+			 * CTerrorGun::FireBullet()
+			 *
+			 * Note: Detouring as a pre-hook for changing client-side vertical punch per player before firing a bullet.
+			 * Note: Detouring as a pre-hook for changing "phys_pushscale" per player before firing a bullet (L4D2 only).
+			 * Note: Detouring as a post-hook for changing client-side vertical punch back to default values after firing a bullet.
+			 * Note: Detouring as a post-hook for changing "phys_pushscale" back to default value after firing a bullet (L4D2 only).
+			 **/
+			"MTDetour_CTerrorGun::FireBullet"
+			{
+				"signature"	"CTerrorGun::FireBullet"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * Note: Detouring as a pre-hook for patching weapon switches to secondary slots per player.
@@ -1196,6 +1212,19 @@
 			}
 
 			/**
+			 * CPainPills::GetWeaponID()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
+			"CPainPills::GetWeaponID"
+			{
+				"linux"		"373"
+				"mac"		"373"
+				"windows"	"372"
+			}
+
+			/**
 			 * CTankClaw::GroundPound()
 			 *
 			 * Note: Patches the "IsVersusMode" check.
@@ -1593,6 +1622,38 @@
 			}
 
 			/**
+			 * CTerrorWeapon::CanDeploy()
+			 *
+			 * Note: Patches the move type logic.
+			 *
+			 * How to find:
+			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
+			 * 2. Get the offset of the last byte.
+			 **/
+			"CTerrorWeapon::CanDeployFor::MoveType"
+			{
+				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
+				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
+			}
+
+			/**
+			 * CTerrorWeaponInfo::Parse(KeyValues *, char const*)
+			 *
+			 * How to find:
+			 * 1. Search for the "VerticalPunch" string.
+			 * 2. The string can only be found in "CTerrorWeaponInfo::Parse".
+			 * 4. The variable next to the string has an offset.
+			 * 5a. (Windows) The offset of the variable is the offset for "VerticalPunch".
+			 * 5b. (Linux/Mac) Multiply the offset by 4 to get the offset for "VerticalPunch".
+			 **/
+			"CTerrorWeaponInfo::Parse::VerticalPunch"
+			{
+				"linux"		"2344"
+				"mac"		"2344"
+				"windows"	"2344"
+			}
+
+			/**
 			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
 			 *
 			 * Note: Patches the damage check to trigger hollow point ammo.
@@ -1611,21 +1672,6 @@
 			{
 				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
 				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
-			}
-
-			/**
-			 * CTerrorWeapon::CanDeploy()
-			 *
-			 * Note: Patches the move type logic.
-			 *
-			 * How to find:
-			 * 1. Look for a compare (CMP) instruction that compares a value to "9".
-			 * 2. Get the offset of the last byte.
-			 **/
-			"CTerrorWeapon::CanDeployFor::MoveType"
-			{
-				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
-				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
 			/**
@@ -1686,7 +1732,7 @@
 			 * 4c. Look for the target function in the Mac binary.
 			 * 5. Multiply the member variable offset by 4.
 			 **/
-			"Tank::GetIntentionInterface"
+			"Tank::GetIntentionInterface::Intention"
 			{
 				"linux"		"11940"
 				"mac"		"11940"
@@ -2198,6 +2244,28 @@
 			}
 
 			/**
+			 * CTerrorGun::FireBullet()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "weapon_fire_at_40"
+			 * - "CTerrorGun::FireBullet HorizSpread"
+			 * - "CTerrorGun::FireBullet VertSpread"
+			 * - "HorizKickDir"
+			 * - "m_iClip1 <= 0"
+			 * - "IsFirePreventedUntilButtonRelease"
+			 * - "IsHoldingFireButton() && !IsFullyAutomatic()"
+			 **/
+			"CTerrorGun::FireBullet"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun10FireBulletEv"
+				"mac"		"@_ZN10CTerrorGun10FireBulletEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x80\xBE"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 80 BE */
+			}
+
+			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * How to find on Windows:
@@ -2665,6 +2733,24 @@
 			}
 
 			/**
+			 * GetWeaponInfo(CSWeaponID)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "weapon_reparse_server" string.
+			 * 2. The string can only be found in one function.
+			 * 3. The second function call in that function should be "weapon_reparse_server".
+			 * 4. The first function call in "weapon_reparse_server" should be this function.
+			 **/
+			"GetWeaponInfo"
+			{
+				"library"	"server"
+				"linux"		"@_Z13GetWeaponInfo10CSWeaponID"
+				"mac"		"@_Z13GetWeaponInfo10CSWeaponID"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x33\x2A\x5B\xC3\x80"
+						/* ? ? ? ? ? ? ? 75 ? 33 ? 5B C3 80 */
+			}
+
+			/**
 			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
 			 *
 			 * How to find on Windows:
@@ -2912,20 +2998,6 @@
 			}
 
 			/**
-			 * CTerrorGun::FireBullet()
-			 *
-			 * Note: Detouring as a pre-hook for changing "phys_pushscale" per player before firing a bullet.
-			 * Note: Detouring as a post-hook for changing "phys_pushscale" back to default value after firing a bullet.
-			 **/
-			"MTDetour_CTerrorGun::FireBullet"
-			{
-				"signature"	"CTerrorGun::FireBullet"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-			}
-
-			/**
 			 * CTerrorMeleeWeapon::SecondaryAttack()
 			 * Note: Detouring as a pre-hook for changing "z_gun_swing_interval" per player before shoving with a melee weapon.
 			 * Note: Detouring as a post-hook for changing "z_gun_swing_interval" back to default value after shoving with a melee weapon.
@@ -3158,6 +3230,19 @@
 				"linux"		"40"
 				"mac"		"40"
 				"windows"	"39"
+			}
+
+			/**
+			 * CPainPills::GetWeaponID()
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
+			"CPainPills::GetWeaponID"
+			{
+				"linux"		"398"
+				"mac"		"398"
+				"windows"	"397"
 			}
 
 			/**
@@ -3674,6 +3759,23 @@
 			}
 
 			/**
+			 * CTerrorWeaponInfo::Parse(KeyValues *, char const*)
+			 *
+			 * How to find:
+			 * 1. Search for the "VerticalPunch" string.
+			 * 2. The string can only be found in "CTerrorWeaponInfo::Parse".
+			 * 4. The variable next to the string has an offset.
+			 * 5a. (Windows) The offset of the variable is the offset for "VerticalPunch".
+			 * 5b. (Linux/Mac) Multiply the offset by 4 to get the offset for "VerticalPunch".
+			 **/
+			"CTerrorWeaponInfo::Parse::VerticalPunch"
+			{
+				"linux"		"3076"
+				"mac"		"3076"
+				"windows"	"3076"
+			}
+
+			/**
 			 * Tank::GetIntentionInterface()
 			 *
 			 * How to find:
@@ -3687,7 +3789,7 @@
 			 * 4c. Look for the target function in the Mac binary.
 			 * 5. Multiply the member variable offset by 4.
 			 **/
-			"Tank::GetIntentionInterface"
+			"Tank::GetIntentionInterface::Intention"
 			{
 				"linux"		"17176"
 				"mac"		"17176"
@@ -4878,6 +4980,24 @@
 				"mac"		"@_ZN12CWeaponSpawn3UseEP11CBaseEntityS1_8USE_TYPEf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x57\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? 53 57 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B */
+			}
+
+			/**
+			 * GetWeaponInfo(CSWeaponID)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "weapon_reparse_server" string.
+			 * 2. The string can only be found in one function.
+			 * 3. The second function call in that function should be "weapon_reparse_server".
+			 * 4. The first function call in "weapon_reparse_server" should be this function.
+			 **/
+			"GetWeaponInfo"
+			{
+				"library"	"server"
+				"linux"		"@_Z13GetWeaponInfo10CSWeaponID"
+				"mac"		"@_Z13GetWeaponInfo10CSWeaponID"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x33\x2A\x5B\x5D\xC3\x80"
+						/* ? ? ? ? ? ? ? 85 ? 75 ? 33 ? 5B 5D C3 80 */
 			}
 
 			/**

@@ -307,6 +307,7 @@ enum struct esGeneral
 	Address g_adDirector;
 	Address g_adDoJumpValue;
 	Address g_adOriginalJumpHeight[2];
+	Address g_adOriginalVerticalPunch;
 
 	ArrayList g_alAbilitySections[4];
 	ArrayList g_alColorKeys[2];
@@ -325,11 +326,13 @@ enum struct esGeneral
 	bool g_bNormalMap;
 	bool g_bOverrideDetour;
 	bool g_bOverridePatch;
-	bool g_bPatchDoJumpValue;
 	bool g_bPatchFallingSound;
+	bool g_bPatchJumpHeight;
+	bool g_bPatchVerticalPunch;
 	bool g_bPluginEnabled;
 	bool g_bSameMission;
 	bool g_bUpdateDoJumpMemAccess;
+	bool g_bUpdateWeaponInfoMemAccess;
 	bool g_bUsedParser;
 	bool g_bWitchKilled[2048];
 
@@ -346,6 +349,7 @@ enum struct esGeneral
 	char g_sCurrentSubSection[128];
 	char g_sCurrentSubSection2[128];
 	char g_sCurrentSubSection3[128];
+	char g_sDefaultGunVerticalPunch[6];
 	char g_sDisabledGameModes[513];
 	char g_sEnabledGameModes[513];
 	char g_sFallVoicelineReward[64];
@@ -397,6 +401,7 @@ enum struct esGeneral
 	ConVar g_cvMTGasCanUseDuration;
 	ConVar g_cvMTGrenadeLauncherAmmo;
 	ConVar g_cvMTGunSwingInterval;
+	ConVar g_cvMTGunVerticalPunch;
 	ConVar g_cvMTHuntingRifleAmmo;
 	ConVar g_cvMTListenSupport;
 	ConVar g_cvMTMeleeRange;
@@ -556,6 +561,8 @@ enum struct esGeneral
 	Handle g_hSDKGetName;
 	Handle g_hSDKGetRefEHandle;
 	Handle g_hSDKGetUseAction;
+	Handle g_hSDKGetWeaponID;
+	Handle g_hSDKGetWeaponInfo;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
 	Handle g_hSDKHasConfigurableDifficultySetting;
 	Handle g_hSDKIsCoopMode;
@@ -585,6 +592,7 @@ enum struct esGeneral
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
+	int g_iAttackerOffset;
 	int g_iAutoAggravate;
 	int g_iAutoUpdate;
 	int g_iBaseHealth;
@@ -609,7 +617,6 @@ enum struct esGeneral
 	int g_iDetourCount;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
-	int g_iEventKilledAttackerOffset;
 	int g_iExplosiveImmunity;
 	int g_iExtraHealth;
 	int g_iFileTimeOld[8];
@@ -661,6 +668,7 @@ enum struct esGeneral
 	int g_iPlayerCount[3];
 	int g_iPluginEnabled;
 	int g_iPrefsNotify[4];
+	int g_iRecoilDampenerReward[4];
 	int g_iRegularAmount;
 	int g_iRegularCount;
 	int g_iRegularLimit;
@@ -702,12 +710,14 @@ enum struct esGeneral
 	int g_iTeammateLimit;
 	int g_iThornsReward[4];
 	int g_iUsefulRewards[4];
+	int g_iVerticalPunchOffset;
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
 	int g_iVomitImmunity;
 #if defined _adminmenu_included
 	TopMenu g_tmMTMenu;
 #endif
+	UserMsg g_umSayText2;
 }
 
 esGeneral g_esGeneral;
@@ -1008,6 +1018,8 @@ enum struct esPlayer
 	int g_iPropaneTank;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
+	int g_iRecoilDampener;
+	int g_iRecoilDampenerReward[4];
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveCount;
 	int g_iReviveHealth;
@@ -1218,6 +1230,7 @@ enum struct esTank
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
+	int g_iRecoilDampenerReward[4];
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
@@ -1402,6 +1415,7 @@ enum struct esCache
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
+	int g_iRecoilDampenerReward[4];
 	int g_iRespawnLoadoutReward[4];
 	int g_iReviveHealthReward[4];
 	int g_iRewardBots[4];
@@ -1561,8 +1575,8 @@ public void OnPluginStart()
 
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	g_esGeneral.g_bUpdateDoJumpMemAccess = true;
-
-	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
+	g_esGeneral.g_bUpdateWeaponInfoMemAccess = true;
+	g_esGeneral.g_umSayText2 = GetUserMessageId("SayText2");
 
 	vHookGlobalEvents();
 	vLateLoad();
@@ -3685,6 +3699,7 @@ Action cmdMutantTank(int client, int args)
 
 void vDefaultConVarSettings()
 {
+	g_esGeneral.g_cvMTGunVerticalPunch.GetString(g_esGeneral.g_sDefaultGunVerticalPunch, sizeof esGeneral::g_sDefaultGunVerticalPunch);
 	g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
 	g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
 	g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
@@ -3743,6 +3758,7 @@ void vRegisterConVars()
 	g_esGeneral.g_cvMTSurvivorReviveDuration = FindConVar("survivor_revive_duration");
 	g_esGeneral.g_cvMTSurvivorReviveHealth = FindConVar("survivor_revive_health");
 	g_esGeneral.g_cvMTGunSwingInterval = FindConVar("z_gun_swing_interval");
+	g_esGeneral.g_cvMTGunVerticalPunch = FindConVar("z_gun_vertical_punch");
 	g_esGeneral.g_cvMTTankIncapHealth = FindConVar("z_tank_incapacitated_health");
 
 	if (g_bSecondGame)
@@ -3762,6 +3778,7 @@ void vRegisterConVars()
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vGameDifficultyCvar);
+	g_esGeneral.g_cvMTGunVerticalPunch.AddChangeHook(vGunVerticalPunchCvar);
 }
 
 void vSetDurationCvars(int item, bool reset, float duration = 1.0)
@@ -3929,6 +3946,19 @@ void vGameDifficultyCvar(ConVar convar, const char[] oldValue, const char[] newV
 			vCustomConfig(sDifficultyConfig);
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
+		}
+	}
+}
+
+void vGunVerticalPunchCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_esGeneral.g_cvMTGunVerticalPunch.GetString(g_esGeneral.g_sDefaultGunVerticalPunch, sizeof esGeneral::g_sDefaultGunVerticalPunch);
+
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsHumanSurvivor(iPlayer) && (bIsDeveloper(iPlayer, 4) || ((g_esPlayer[iPlayer].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iPlayer].g_iRecoilDampener == 1)))
+		{
+			vToggleWeaponVerticalPunch(iPlayer, true);
 		}
 	}
 }
@@ -4881,9 +4911,10 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				else if (bIsSurvivor(iPlayer))
 				{
 					vRemoveSurvivorEffects(iBot);
-					vCopySurvivorStats(iBot, iPlayer);
 					vSetupDeveloper(iPlayer, .usual = true);
+					vCopySurvivorStats(iBot, iPlayer);
 					vResetSurvivorStats(iBot, false);
+					vToggleSurvivorEffects(iPlayer);
 				}
 			}
 		}
@@ -5005,9 +5036,10 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				else if (bIsSurvivor(iBot))
 				{
 					vRemoveSurvivorEffects(iPlayer);
-					vCopySurvivorStats(iPlayer, iBot);
 					vSetupDeveloper(iPlayer, false);
+					vCopySurvivorStats(iPlayer, iBot);
 					vResetSurvivorStats(iPlayer, false);
+					vToggleSurvivorEffects(iBot);
 				}
 			}
 		}
@@ -5096,7 +5128,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-			vRestorePlayerEffects(iPlayer);
+			vRestorePlayerGlow(iPlayer);
 
 			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iPlayer].g_bVomited)
 			{
@@ -5274,6 +5306,7 @@ void vHookEvents(bool hook)
 		}
 
 		vHookEventForward(true);
+		vHookUserMessage(true);
 	}
 	else if (!hook && bHooked)
 	{
@@ -5343,6 +5376,7 @@ void vHookEvents(bool hook)
 		}
 
 		vHookEventForward(false);
+		vHookUserMessage(false);
 	}
 }
 
@@ -5369,20 +5403,20 @@ void vReadGameData()
 
 			if (g_bSecondGame)
 			{
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
 
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
 			}
 			else
 			{
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
-				vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
 			}
 
 			g_esGeneral.g_adDirector = g_esGeneral.g_gdMutantTanks.GetAddress("CDirector");
@@ -5393,17 +5427,18 @@ void vReadGameData()
 
 			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress("DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
-			vSetupSimpleSDKCalls(g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetWeaponID, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
+			vSetupSimpleSDKCall(g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
 
 			StartPrepSDKCall(SDKCall_Static);
 			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
@@ -5452,6 +5487,20 @@ void vReadGameData()
 				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 
+			StartPrepSDKCall(SDKCall_Static);
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "GetWeaponInfo"))
+			{
+				LogError("%s Failed to find signature: GetWeaponInfo", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKGetWeaponInfo = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKGetWeaponInfo == null)
+			{
+				LogError("%s Your \"GetWeaponInfo\" signature is outdated.", MT_TAG);
+			}
+
 			StartPrepSDKCall(SDKCall_Raw);
 			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "KeyValues::GetString"))
 			{
@@ -5467,8 +5516,9 @@ void vReadGameData()
 				LogError("%s Your \"KeyValues::GetString\" signature is outdated.", MT_TAG);
 			}
 
-			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset("CTerrorPlayer::Event_Killed::Attacker");
-			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset("Tank::GetIntentionInterface");
+			g_esGeneral.g_iAttackerOffset = iGetGameDataOffset("CTerrorPlayer::Event_Killed::Attacker");
+			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset("Tank::GetIntentionInterface::Intention");
+			g_esGeneral.g_iVerticalPunchOffset = iGetGameDataOffset("CTerrorWeaponInfo::Parse::VerticalPunch");
 
 			int iOffset = iGetGameDataOffset("Action<Tank>::FirstContainedResponder");
 			StartPrepSDKCall(SDKCall_Raw);
@@ -5503,7 +5553,7 @@ void vReadGameData()
 	}
 }
 
-void vSetupSimpleSDKCalls(Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
+void vSetupSimpleSDKCall(Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
 {
 	StartPrepSDKCall(callType);
 	if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, source, name))
@@ -6342,7 +6392,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					vSetupRewardDurations(survivor, iRecipient, 5, g_esCache[tank].g_iStackLimits[5], flTime, flTime2, flCurrentTime, flDuration, flDuration2);
 				}
 
-				if ((iType & MT_REWARD_REFILL))
+				if (iType & MT_REWARD_REFILL)
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
 					{
@@ -6469,9 +6519,12 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				g_esPlayer[survivor].g_iHollowpointAmmo = 0;
 				g_esPlayer[survivor].g_iInextinguishableFire = 0;
 				g_esPlayer[survivor].g_iMeleeRange = 0;
+				g_esPlayer[survivor].g_iRecoilDampener = 0;
 				g_esPlayer[survivor].g_iSledgehammerRounds = 0;
 				g_esPlayer[survivor].g_iThorns = 0;
 				iRewardCount++;
+
+				vToggleWeaponVerticalPunch(survivor, false);
 			}
 
 			if ((iType & MT_REWARD_ATTACKBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
@@ -6584,6 +6637,7 @@ void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffe
 		iNewUses = (iReward + iUses),
 		iFinalUses = iClamp(iNewUses, 0, iLimit),
 		iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : iReward;
+
 	if (g_esPlayer[survivor].g_iNotify >= 2 && iReceivedUses > 0)
 	{
 		char sTemp[64];
@@ -6813,8 +6867,11 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iHollowpointAmmo = g_esCache[tank].g_iHollowpointAmmoReward[priority];
 				g_esPlayer[survivor].g_iInextinguishableFire = g_esCache[tank].g_iInextinguishableFireReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange = g_esCache[tank].g_iMeleeRangeReward[priority];
+				g_esPlayer[survivor].g_iRecoilDampener = g_esCache[tank].g_iRecoilDampenerReward[priority];
 				g_esPlayer[survivor].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[priority];
 				g_esPlayer[survivor].g_iThorns = g_esCache[tank].g_iThornsReward[priority];
+
+				vToggleWeaponVerticalPunch(survivor, true);
 			}
 			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[2] > 0 && g_esPlayer[survivor].g_iRewardStack[2] < g_esCache[tank].g_iStackLimits[2])
 			{
@@ -6830,9 +6887,12 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iInextinguishableFire = g_esCache[tank].g_iInextinguishableFireReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange += g_esCache[tank].g_iMeleeRangeReward[priority];
 				g_esPlayer[survivor].g_iMeleeRange = iClamp(g_esPlayer[survivor].g_iMeleeRange, 0, 999999);
+				g_esPlayer[survivor].g_iRecoilDampener = g_esCache[tank].g_iRecoilDampenerReward[priority];
 				g_esPlayer[survivor].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[priority];
 				g_esPlayer[survivor].g_iThorns = g_esCache[tank].g_iThornsReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[2]++;
+
+				vToggleWeaponVerticalPunch(survivor, true);
 			}
 		}
 		case MT_REWARD_ATTACKBOOST:
@@ -7198,7 +7258,7 @@ void vResetTankDamage(int tank)
 	}
 }
 
-void vRestorePlayerEffects(int client)
+void vRestorePlayerGlow(int client)
 {
 	if (bIsTank(client) && !bIsPlayerIncapacitated(client))
 	{
@@ -7277,6 +7337,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_iNotify = g_esPlayer[oldSurvivor].g_iNotify;
 	g_esPlayer[newSurvivor].g_iPrefsAccess = g_esPlayer[oldSurvivor].g_iPrefsAccess;
 	g_esPlayer[newSurvivor].g_iParticleEffect = g_esPlayer[oldSurvivor].g_iParticleEffect;
+	g_esPlayer[newSurvivor].g_iRecoilDampener = g_esPlayer[oldSurvivor].g_iRecoilDampener;
 	g_esPlayer[newSurvivor].g_iReviveHealth = g_esPlayer[oldSurvivor].g_iReviveHealth;
 	g_esPlayer[newSurvivor].g_iRewardTypes = g_esPlayer[oldSurvivor].g_iRewardTypes;
 	g_esPlayer[newSurvivor].g_iShovePenalty = g_esPlayer[oldSurvivor].g_iShovePenalty;
@@ -7662,6 +7723,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_iNotify = 0;
 	g_esPlayer[survivor].g_iPrefsAccess = 0;
 	g_esPlayer[survivor].g_iParticleEffect = 0;
+	g_esPlayer[survivor].g_iRecoilDampener = 0;
 	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
@@ -8209,6 +8271,12 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 				vToggleSurvivorEffects(developer);
 			}
 
+			switch (bIsDeveloper(developer, 4) || ((g_esPlayer[developer].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[developer].g_iRecoilDampener == 1))
+			{
+				case true: vToggleWeaponVerticalPunch(developer, true);
+				case false: vToggleWeaponVerticalPunch(developer, false);
+			}
+
 			switch (bIsDeveloper(developer, 5) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
 				case true:
@@ -8250,6 +8318,7 @@ void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 	}
 	else if (bIsValidClient(developer))
 	{
+		vToggleWeaponVerticalPunch(developer, false);
 		SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 		SDKUnhook(developer, SDKHook_PostThinkPost, OnSurvivorPostThinkPost);
 
@@ -8748,6 +8817,27 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		{
 			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
 			case false: vRemovePlayerGlow(survivor);
+		}
+	}
+}
+
+void vToggleWeaponVerticalPunch(int survivor, bool toggle)
+{
+	switch (toggle)
+	{
+		case true:
+		{
+			if ((bIsDeveloper(survivor, 4) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iRecoilDampener == 1)) && bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
+			{
+				g_esGeneral.g_cvMTGunVerticalPunch.ReplicateToClient(survivor, "0");
+			}
+		}
+		case false:
+		{
+			if (!bIsDeveloper(survivor, 4) && (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) || g_esPlayer[survivor].g_iRecoilDampener == 0) && bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
+			{
+				g_esGeneral.g_cvMTGunVerticalPunch.ReplicateToClient(survivor, g_esGeneral.g_sDefaultGunVerticalPunch);
+			}
 		}
 	}
 }
@@ -10803,6 +10893,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iPrefsNotify[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iPrefsNotify[iPos], g_esCache[tank].g_iPrefsNotify[iPos]);
 			g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchResistanceReward[iPos], g_esGeneral.g_flPunchResistanceReward[iPos]);
 			g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos]);
+			g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRecoilDampenerReward[iPos], g_esGeneral.g_iRecoilDampenerReward[iPos]);
+			g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos]);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos]);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos]);
 			g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos]);
@@ -11273,6 +11365,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTank[type].g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
 					g_esTank[type].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esTank[type].g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 					g_esTank[type].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esTank[type].g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
+					g_esTank[type].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esTank[type].g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esTank[type].g_iRespawnLoadoutReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esTank[type].g_iReviveHealthReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 					g_esTank[type].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esTank[type].g_iShareRewards[iPos], sSet[iPos], 0, 3);
@@ -12605,6 +12698,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_flPipeBombDurationReward[iPos] = 10.0;
 				g_esGeneral.g_iPrefsNotify[iPos] = 1;
 				g_esGeneral.g_flPunchResistanceReward[iPos] = 0.25;
+				g_esGeneral.g_iRecoilDampenerReward[iPos] = 1;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
 				g_esGeneral.g_iReviveHealthReward[iPos] = 100;
 				g_esGeneral.g_iShareRewards[iPos] = 0;
@@ -12783,6 +12877,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_flPipeBombDurationReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iPrefsNotify[iPos] = 0;
 					g_esTank[iIndex].g_flPunchResistanceReward[iPos] = 0.0;
+					g_esTank[iIndex].g_iRecoilDampenerReward[iPos] = 0;
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
 					g_esTank[iIndex].g_iReviveHealthReward[iPos] = 0;
 					g_esTank[iIndex].g_iShareRewards[iPos] = 0;
@@ -12998,6 +13093,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_flPipeBombDurationReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = 0;
 						g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = 0.0;
+						g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iReviveHealthReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iShareRewards[iPos] = 0;
@@ -13295,6 +13391,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							g_esGeneral.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esGeneral.g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
 							g_esGeneral.g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esGeneral.g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 							g_esGeneral.g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esGeneral.g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
+							g_esGeneral.g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esGeneral.g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esGeneral.g_iRespawnLoadoutReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esGeneral.g_iReviveHealthReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 							g_esGeneral.g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esGeneral.g_iShareRewards[iPos], sSet[iPos], 0, 3);
@@ -13598,6 +13695,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 									g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
 									g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 									g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esPlayer[iPlayer].g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
+									g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = iGetClampedValue(key, "RespawnLoadoutReward", "Respawn Loadout Reward", "Respawn_Loadout_Reward", "resloadout", g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iReviveHealthReward[iPos] = iGetClampedValue(key, "ReviveHealthReward", "Revive Health Reward", "Revive_Health_Reward", "revivehp", g_esPlayer[iPlayer].g_iReviveHealthReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 									g_esPlayer[iPlayer].g_iShareRewards[iPos] = iGetClampedValue(key, "ShareRewards", "Share Rewards", "Share_Rewards", "share", g_esPlayer[iPlayer].g_iShareRewards[iPos], sSet[iPos], 0, 3);
@@ -15221,6 +15319,20 @@ Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATF
  * UserMessage hooks
  **/
 
+void vHookUserMessage(bool toggle)
+{
+	if (g_esGeneral.g_umSayText2 == INVALID_MESSAGE_ID)
+	{
+		return;
+	}
+
+	switch (toggle)
+	{
+		case true: HookUserMessage(g_esGeneral.g_umSayText2, umNameChange, true);
+		case false: UnhookUserMessage(g_esGeneral.g_umSayText2, umNameChange, true);
+	}
+}
+
 Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
 	if (!g_esGeneral.g_bHideNameChange)
@@ -15433,8 +15545,6 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, toggle, 2);
-	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, toggle, 2);
-	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
@@ -15459,6 +15569,8 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddExtinguishDetour, "MTDetour_CTerrorPlayer::Extinguish", Hook_Pre, mreExtinguishPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddFallingDetour, "MTDetour_CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Pre, mreIncapacitatedAsTankPre, toggle);
@@ -15673,19 +15785,19 @@ MRESReturn mreDoAnimationEventPre(int pThis, DHookParam hParams)
 
 MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 {
-	Address adSurvivor = view_as<Address>(LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32));
+	Address adSurvivor = LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32);
 	int iSurvivor = iGetEntityIndex(iGetRefEHandle(adSurvivor));
 	if (bIsSurvivor(iSurvivor))
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 5);
 		if (bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 		{
-			if (!g_esGeneral.g_bPatchDoJumpValue)
+			if (!g_esGeneral.g_bPatchJumpHeight)
 			{
 				float flHeight = (bDeveloper && g_esDeveloper[iSurvivor].g_flDevJumpHeight > g_esPlayer[iSurvivor].g_flJumpHeight) ? g_esDeveloper[iSurvivor].g_flDevJumpHeight : g_esPlayer[iSurvivor].g_flJumpHeight;
 				if (flHeight > 0.0)
 				{
-					g_esGeneral.g_bPatchDoJumpValue = true;
+					g_esGeneral.g_bPatchJumpHeight = true;
 
 					switch (!g_bSecondGame && g_esGeneral.g_iPlatformType > 0)
 					{
@@ -15718,9 +15830,9 @@ MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 
 MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 {
-	if (g_esGeneral.g_bPatchDoJumpValue)
+	if (g_esGeneral.g_bPatchJumpHeight)
 	{
-		g_esGeneral.g_bPatchDoJumpValue = false;
+		g_esGeneral.g_bPatchJumpHeight = false;
 
 		switch (!g_bSecondGame && g_esGeneral.g_iPlatformType > 0)
 		{
@@ -15763,7 +15875,7 @@ MRESReturn mreEnterStasisPost(int pThis)
 
 MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 {
-	int iAttacker = hParams.GetObjectVar(1, g_esGeneral.g_iEventKilledAttackerOffset, ObjectValueType_Ehandle);
+	int iAttacker = hParams.GetObjectVar(1, g_esGeneral.g_iAttackerOffset, ObjectValueType_Ehandle);
 	if (bIsSurvivor(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esPlayer[pThis].g_bLastLife = false;
@@ -16015,10 +16127,27 @@ MRESReturn mreFinishHealingPost(int pThis)
 MRESReturn mreFireBulletPre(int pThis)
 {
 	int iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iSledgehammerRounds == 1)) && g_esGeneral.g_cvMTPhysicsPushScale != null)
+	if (bIsSurvivor(iSurvivor))
 	{
-		g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
-		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = 5.0;
+		if ((bIsDeveloper(iSurvivor, 4) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iRecoilDampener == 1)) && !g_esGeneral.g_bPatchVerticalPunch)
+		{
+			g_esGeneral.g_bPatchVerticalPunch = true;
+
+			int iWeapon = iGetWeaponInfoID(pThis);
+			if (iWeapon != -1)
+			{
+				Address adWeapon = view_as<Address>(iWeapon + g_esGeneral.g_iVerticalPunchOffset);
+				g_esGeneral.g_adOriginalVerticalPunch = LoadFromAddress(adWeapon, NumberType_Int32);
+				StoreToAddress(adWeapon, 0.0, NumberType_Int32, g_esGeneral.g_bUpdateWeaponInfoMemAccess);
+				g_esGeneral.g_bUpdateWeaponInfoMemAccess = false;
+			}
+		}
+
+		if (g_bSecondGame && (bIsDeveloper(iSurvivor, 9) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iSledgehammerRounds == 1)) && g_esGeneral.g_cvMTPhysicsPushScale != null)
+		{
+			g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
+			g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = 5.0;
+		}
 	}
 
 	return MRES_Ignored;
@@ -16026,6 +16155,17 @@ MRESReturn mreFireBulletPre(int pThis)
 
 MRESReturn mreFireBulletPost(int pThis)
 {
+	if (g_esGeneral.g_bPatchVerticalPunch)
+	{
+		g_esGeneral.g_bPatchVerticalPunch = false;
+
+		int iWeapon = iGetWeaponInfoID(pThis);
+		if (iWeapon != -1)
+		{
+			StoreToAddress(view_as<Address>(iWeapon + g_esGeneral.g_iVerticalPunchOffset), g_esGeneral.g_adOriginalVerticalPunch, NumberType_Int32, g_esGeneral.g_bUpdateWeaponInfoMemAccess);
+		}
+	}
+
 	if (g_esGeneral.g_flDefaultPhysicsPushScale != -1.0)
 	{
 		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = g_esGeneral.g_flDefaultPhysicsPushScale;
@@ -16159,7 +16299,7 @@ MRESReturn mreITExpiredPost(int pThis)
 	{
 		g_esPlayer[pThis].g_bVomited = false;
 
-		vRestorePlayerEffects(pThis);
+		vRestorePlayerGlow(pThis);
 	}
 
 	return MRES_Ignored;
@@ -17643,7 +17783,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
  * 2 - 1 - immune to abilities, access to all tanks (off by default)
  * 4 - 2 - loadout on initial spawn
  * 8 - 3 - all rewards/effects
- * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration
+ * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener
  * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving, ammo regen, ladder actions
  * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire (off by default)
@@ -17869,7 +18009,7 @@ bool bIsTankIdle(int tank, int type = 0)
 		return false;
 	}
 
-	Address adIntention = view_as<Address>(LoadFromAddress((adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset)), NumberType_Int32));
+	Address adIntention = LoadFromAddress((adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset)), NumberType_Int32);
 	if (adIntention == Address_Null)
 	{
 		return false;
@@ -18438,6 +18578,20 @@ int iGetUsefulRewards(int survivor, int tank, int types, int priority)
 	}
 
 	return iType;
+}
+
+int iGetWeaponInfoID(int weapon)
+{
+	if (bIsValidEntity(weapon) && g_esGeneral.g_hSDKGetWeaponID != null)
+	{
+		int iWeaponID = SDKCall(g_esGeneral.g_hSDKGetWeaponID, weapon);
+		if (iWeaponID != -1 && g_esGeneral.g_hSDKGetWeaponInfo != null)
+		{
+			return SDKCall(g_esGeneral.g_hSDKGetWeaponInfo, iWeaponID);
+		}
+	}
+
+	return -1;
 }
 
 /**
