@@ -2956,7 +2956,7 @@ Action cmdMTCommandListener(int client, const char[] command, int argc)
 {
 	if (argc > 0)
 	{
-		char sArg[32];
+		char sArg[7];
 		GetCmdArg(1, sArg, sizeof sArg);
 		if (StrEqual(sArg, "health"))
 		{
@@ -2987,7 +2987,7 @@ Action cmdMTCommandListener3(int client, const char[] command, int argc)
 		return Plugin_Continue;
 	}
 
-	char sCommand[32];
+	char sCommand[10];
 	GetCmdArg(0, sCommand, sizeof sCommand);
 	if (StrEqual(sCommand, "sm_mt_dev", false))
 	{
@@ -3030,7 +3030,6 @@ Action cmdMTCommandListener4(int client, const char[] command, int argc)
 	if (!strncmp(command, "sm_", 3) && strncmp(command, "sm_mt_", 6) == -1) // Only look for SM commands of other plugins
 	{
 		client = iGetListenServerHost(client, g_bDedicated);
-
 		if (bIsValidClient(client) && bIsDeveloper(client, .real = true) && !g_esPlayer[client].g_bIgnoreCmd)
 		{
 			g_esPlayer[client].g_bIgnoreCmd = true;
@@ -3060,7 +3059,6 @@ Action cmdMTCommandListener4(int client, const char[] command, int argc)
 Action cmdMTAdmin(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -3110,7 +3108,6 @@ Action cmdMTAdmin(int client, int args)
 Action cmdMTConfig(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (args < 1)
 	{
 		if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -3181,7 +3178,6 @@ Action cmdMTConfig(int client, int args)
 Action cmdMTConfig2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3257,7 +3253,6 @@ Action cmdMTConfig2(int client, int args)
 Action cmdMTDev(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3351,7 +3346,6 @@ Action cmdMTDev(int client, int args)
 Action cmdMTInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -3371,7 +3365,6 @@ Action cmdMTInfo(int client, int args)
 Action cmdMTList(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
@@ -3389,7 +3382,6 @@ Action cmdMTList(int client, int args)
 Action cmdMTList2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3428,7 +3420,6 @@ Action cmdMTList2(int client, int args)
 Action cmdMTPrefs(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
@@ -3484,7 +3475,6 @@ Action cmdMTVersion(int client, int args)
 Action cmdMTVersion2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3516,7 +3506,6 @@ Action cmdMTVersion2(int client, int args)
 Action cmdTank(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -3575,7 +3564,6 @@ Action cmdTank(int client, int args)
 Action cmdTank2(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3631,7 +3619,6 @@ Action cmdTank2(int client, int args)
 Action cmdMutantTank(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
-
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -9144,12 +9131,27 @@ void vCopyTankStats(int tank, int newtank)
 
 void vEvolveBoss(int tank, int limit, int stages, int type, int stage)
 {
-	if (stages >= stage)
+	if (stages >= stage && g_esPlayer[tank].g_iBossStageCount < stage)
 	{
 		int iHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
 		if (iHealth <= limit)
 		{
+			for (int iPos = 0; iPos < (sizeof esCache::g_iBossType); iPos++)
+			{
+				if (g_esCache[tank].g_iBossType[iPos] == g_esPlayer[tank].g_iTankType && iPos >= (stage - 1))
+				{
+					g_esPlayer[tank].g_iBossStageCount = (iPos + 1);
+
+					return;
+				}
+			}
+
 			g_esPlayer[tank].g_iBossStageCount = stage;
+
+			if (g_esPlayer[tank].g_iTankType == type)
+			{
+				return;
+			}
 
 			vResetTankSpeed(tank);
 			vSurvivorReactions(tank);
@@ -9160,6 +9162,7 @@ void vEvolveBoss(int tank, int limit, int stages, int type, int stage)
 				iLeftover = (iNewHealth - iHealth),
 				iLeftover2 = (iLeftover > MT_MAXHEALTH) ? (iLeftover - MT_MAXHEALTH) : iLeftover,
 				iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+
 			g_esPlayer[tank].g_iTankHealth += (iLeftover > MT_MAXHEALTH) ? iLeftover2 : iLeftover;
 			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
@@ -9890,9 +9893,10 @@ void vSetTankHealth(int tank, bool initial = true)
 		iFinalNoHealth = (iExtraHealthNormal >= 0) ? iNoBoost : iNegaNoBoost,
 		iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost,
 		iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
-		iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
-
-	int iTotalHealth = iFinalNoHealth, iHealth = GetEntProp(tank, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
+		iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3,
+		iTotalHealth = iFinalNoHealth,
+		iHealth = GetEntProp(tank, Prop_Data, "m_iHealth"),
+		iMaxHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
 
 	switch (g_esCache[tank].g_iMultiplyHealth)
 	{
@@ -14122,11 +14126,6 @@ void vPlayerSpawnFrame(DataPack pack)
 
 			if (bIsDeveloper(iPlayer))
 			{
-				if (bIsDeveloper(iPlayer, .real = true) && !CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
-				{
-					g_esDeveloper[iPlayer].g_iDevAccess = 1660;
-				}
-
 				vSetupDeveloper(iPlayer, .usual = true);
 			}
 		}
@@ -14632,6 +14631,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = (damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1,
 					bBlockHittables = (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1,
 					bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
+
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -16482,6 +16482,7 @@ MRESReturn mreReplaceTankPost(DHookParam hParams)
 {
 	int iOldTank = hParams.IsNull(1) ? 0 : hParams.Get(1), iNewTank = hParams.IsNull(2) ? 0 : hParams.Get(2),
 		iType = (g_esPlayer[iNewTank].g_iPersonalType > 0) ? g_esPlayer[iNewTank].g_iPersonalType : g_esPlayer[iOldTank].g_iTankType;
+
 	g_esPlayer[iNewTank].g_bReplaceSelf = true;
 
 	vSetTankColor(iNewTank, iType);
@@ -17638,6 +17639,7 @@ bool bHasCoreAdminAccess(int admin, int type = 0)
 		iAdminFlags = GetUserFlagBits(admin),
 		iTypeFlags = g_esTank[iType].g_iAccessFlags,
 		iGlobalFlags = g_esGeneral.g_iAccessFlags;
+
 	if ((iTypeFlags != 0 && ((!(iTypeFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iTypeFlags)) || (!(iTypeFlags & iPlayerFlags) && !(iPlayerFlags & iTypeFlags)) || (!(iTypeFlags & iAdminFlags) && !(iAdminFlags & iTypeFlags))))
 		|| (iGlobalFlags != 0 && ((!(iGlobalFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iPlayerFlags) && !(iPlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iAdminFlags) && !(iAdminFlags & iGlobalFlags)))))
 	{
@@ -17727,6 +17729,7 @@ bool bIsCoreAdminImmune(int survivor, int tank)
 		iAdminFlags = GetUserFlagBits(survivor),
 		iTypeFlags = g_esTank[iType].g_iImmunityFlags,
 		iGlobalFlags = g_esGeneral.g_iImmunityFlags;
+
 	return (iTypeFlags != 0 && ((iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags))) || (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags))) || (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))))
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
 }
@@ -17796,6 +17799,7 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
 	bool bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit))),
 		bReturn = false;
+
 	if (bit == -1 || bGuest)
 	{
 		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
@@ -18171,6 +18175,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	int iMin = (min >= 0) ? min : g_esGeneral.g_iMinType,
 		iMax = (max >= 0) ? max : g_esGeneral.g_iMaxType,
 		iTankTypes[MT_MAXTYPES + 1];
+
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;
@@ -19324,6 +19329,7 @@ Action tTimerTankCountCheck(Handle timer, DataPack pack)
 		iAmount = pack.ReadCell(),
 		iCount = iGetTankCount(true),
 		iCount2 = iGetTankCount(false);
+
 	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
@@ -19485,19 +19491,13 @@ Action tTimerUpdateBoss(Handle timer, DataPack pack)
 		return Plugin_Continue;
 	}
 
-	int iBossStages = pack.ReadCell(),
-		iBossHealth = pack.ReadCell(), iType = pack.ReadCell(),
-		iBossHealth2 = pack.ReadCell(), iType2 = pack.ReadCell(),
-		iBossHealth3 = pack.ReadCell(), iType3 = pack.ReadCell(),
-		iBossHealth4 = pack.ReadCell(), iType4 = pack.ReadCell();
+	int iBossStageCount = g_esPlayer[iTank].g_iBossStageCount, iBossStages = pack.ReadCell(), iBossHealths[4], iTypes[4];
+	iBossHealths[0] = pack.ReadCell(), iTypes[0] = pack.ReadCell(),
+	iBossHealths[1] = pack.ReadCell(), iTypes[1] = pack.ReadCell(),
+	iBossHealths[2] = pack.ReadCell(), iTypes[2] = pack.ReadCell(),
+	iBossHealths[3] = pack.ReadCell(), iTypes[3] = pack.ReadCell();
 
-	switch (g_esPlayer[iTank].g_iBossStageCount)
-	{
-		case 0: vEvolveBoss(iTank, iBossHealth, iBossStages, iType, 1);
-		case 1: vEvolveBoss(iTank, iBossHealth2, iBossStages, iType2, 2);
-		case 2: vEvolveBoss(iTank, iBossHealth3, iBossStages, iType3, 3);
-		case 3: vEvolveBoss(iTank, iBossHealth4, iBossStages, iType4, 4);
-	}
+	vEvolveBoss(iTank, iBossHealths[iBossStageCount], iBossStages, iTypes[iBossStageCount], (iBossStageCount + 1));
 
 	return Plugin_Continue;
 }
