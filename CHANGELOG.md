@@ -29,7 +29,7 @@
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
-- Added MacOS support. (Currently only signatures and VTable offsets.) [Untested]
+- Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
 - Removed default developer access level.
 
 #### Core plugin

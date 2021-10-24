@@ -5567,7 +5567,7 @@ Address adGetGameDataAddress(const char[] name, const char[] backup, const char[
 	{
 		LogError("%s Failed to find address from \"%s\". Retrieving from \"%s\" instead.", MT_TAG, name, backup);
 
-		if (g_bSecondGame || g_esGeneral.g_iPlatformType == 0)
+		if (g_bSecondGame || g_esGeneral.g_iPlatformType < 2)
 		{
 			adResult = g_esGeneral.g_gdMutantTanks.GetAddress(backup);
 			if (adResult == Address_Null)
@@ -15799,7 +15799,7 @@ MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 				{
 					g_esGeneral.g_bPatchJumpHeight = true;
 
-					switch (!g_bSecondGame && g_esGeneral.g_iPlatformType > 0)
+					switch (!g_bSecondGame && g_esGeneral.g_iPlatformType == 2)
 					{
 						case true:
 						{
