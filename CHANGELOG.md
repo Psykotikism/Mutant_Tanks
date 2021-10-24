@@ -8,6 +8,7 @@
 - Fixed props not deleting themselves when Tanks change their Mutant Tank types.
 - Fixed the Tank's health not updating in some scenarios. (Thanks to `saberQAQ` for reporting!)
 - Fixed the Tank's attack and throw intervals not resetting themselves when Tanks change their Mutant Tank types.
+- Fixed Tanks devolving when spawning as later stages of the `Boss` feature. (Thanks to `Maku` for reporting!)
 - Fixed custom configs not refreshing when the main config file is refreshed.
 - Fixed `Client Preferences` not being optional.
 - Fixed the logic for the detour and patching systems.
@@ -29,6 +30,7 @@
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Currently only signatures and VTable offsets.) [Untested]
+- Removed default developer access level.
 
 #### Core plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
