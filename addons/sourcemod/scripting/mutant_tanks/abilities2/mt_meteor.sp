@@ -951,7 +951,6 @@ void vMeteorReset3(int tank)
 	}
 }
 
-#if !defined MT_ABILITIES_MAIN2
 Action tTimerMeteorCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -983,7 +982,6 @@ Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 
 	return Plugin_Continue;
 }
-#endif
 
 Action tTimerMeteor(Handle timer, DataPack pack)
 {

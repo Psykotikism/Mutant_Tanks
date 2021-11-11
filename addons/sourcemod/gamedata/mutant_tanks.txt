@@ -737,7 +737,7 @@
 			 **/
 			"MTDetour_ZombieManager::SpawnTank"
 			{
-				"signature"	"ZombieManager::SpawnTank"
+				"signature"	"ZombieManager::SpawnTank<Vector>"
 				"callconv"	"thiscall"
 				"return"	"int"
 				"this"		"ignore"
@@ -2937,7 +2937,7 @@
 			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.
 			 * 2. The second function call in that function should be this function.
 			 **/
-			"ZombieManager::SpawnTank"
+			"ZombieManager::SpawnTank<Vector>"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
@@ -5168,7 +5168,7 @@
 			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.
 			 * 2. The second function call in that function should be this function.
 			 **/
-			"ZombieManager::SpawnTank"
+			"ZombieManager::SpawnTank<Vector>"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"

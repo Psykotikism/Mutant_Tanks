@@ -171,7 +171,9 @@ public void OnPluginStart()
 	g_esRestartGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("CTerrorPlayer::GetFlowDistance::m_flow");
 	if (g_esRestartGeneral.g_iFlowOffset == -1)
 	{
-		LogError("%s Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow", MT_TAG);
+		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -1047,7 +1049,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
 	bool bReturn = false;
-	if (g_esRestartPlayer[survivor].g_bCheckpoint && g_esRestartGeneral.g_iFlowOffset != -1)
+	if (g_esRestartPlayer[survivor].g_bCheckpoint)
 	{
 		int iArea = SDKCall(g_esRestartGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)

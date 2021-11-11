@@ -1176,7 +1176,7 @@ stock bool ST_TankChance(int type)
 #pragma deprecated Use MT_GetTankColors() instead.
 stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha)
 {
-	MT_GetTankColors(tank, type, red, green, blue, alpha);
+	MT_GetTankColors(tank, GetRandomInt(1, 2), red, green, blue, alpha);
 }
 
 /**

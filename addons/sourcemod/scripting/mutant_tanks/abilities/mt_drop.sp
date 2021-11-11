@@ -785,7 +785,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					}
 				}
 
-				if (GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance && g_esDropGeneral.g_hSDKGetMaxClip1 != null)
+				if (GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
 				{
 					iClip = SDKCall(g_esDropGeneral.g_hSDKGetMaxClip1, iDrop);
 				}

@@ -819,10 +819,7 @@ void vFling(int survivor, int tank)
 	flVelocity[1] = ((flRatio[1] * -1) * g_esFlingCache[tank].g_flFlingForce);
 	flVelocity[2] = g_esFlingCache[tank].g_flFlingForce;
 
-	if (g_hSDKFling != null)
-	{
-		SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
-	}
+	SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
 }
 
 void vFlingAbility(int tank, float random, int pos = -1)

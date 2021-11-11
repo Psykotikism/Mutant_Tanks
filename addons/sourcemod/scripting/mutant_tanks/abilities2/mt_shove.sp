@@ -965,14 +965,6 @@ void vShoveHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-void vShovePlayer(int player, int shover, float pos[3])
-{
-	if (g_hSDKStagger != null)
-	{
-		SDKCall(g_hSDKStagger, player, shover, pos);
-	}
-}
-
 void vShoveRange(int tank, int value, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esShoveCache[tank].g_flShoveDeathChance;
@@ -993,7 +985,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					vShovePlayer(iSurvivor, tank, flTankPos);
+					SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
 				}
 			}
 		}
@@ -1082,7 +1074,7 @@ Action tTimerShove(Handle timer, DataPack pack)
 
 	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	vShovePlayer(iSurvivor, iTank, flOrigin);
+	SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
 
 	return Plugin_Continue;
 }

@@ -900,10 +900,7 @@ void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
 
-	if (g_hSDKDeafen != null)
-	{
-		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
-	}
+	SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
 }
 
 void vYellAbility(int tank)

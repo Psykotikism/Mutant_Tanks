@@ -997,10 +997,7 @@ void vStopBury(int survivor, int tank)
 
 	if (bIsPlayerIncapacitated(survivor))
 	{
-		if (g_hSDKRevive != null)
-		{
-			SDKCall(g_hSDKRevive, survivor);
-		}
+		SDKCall(g_hSDKRevive, survivor);
 
 		if (g_esBuryCache[tank].g_flBuryBuffer > 0.0)
 		{

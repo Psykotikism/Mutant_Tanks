@@ -910,7 +910,6 @@ int iGetThrownWitchCount(int tank)
 	return iWitchCount;
 }
 
-#if !defined MT_ABILITIES_MAIN2
 Action tTimerThrowKillInfected(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
@@ -936,7 +935,6 @@ Action tTimerThrowKillWitch(Handle timer, int ref)
 
 	return Plugin_Continue;
 }
-#endif
 
 Action tTimerThrow(Handle timer, DataPack pack)
 {

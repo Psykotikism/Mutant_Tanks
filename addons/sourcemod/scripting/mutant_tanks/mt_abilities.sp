@@ -30,52 +30,49 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
-#if MT_ABILITIES_GROUP > 0
-	#undef REQUIRE_PLUGIN
-	#if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
-		#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
-		#tryinclude "mutant_tanks/abilities/mt_acid.sp"
-		#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
-		#tryinclude "mutant_tanks/abilities/mt_blind.sp"
-		#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
-		#tryinclude "mutant_tanks/abilities/mt_bury.sp"
-		#tryinclude "mutant_tanks/abilities/mt_car.sp"
-		#tryinclude "mutant_tanks/abilities/mt_choke.sp"
-		#tryinclude "mutant_tanks/abilities/mt_clone.sp"
-		#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drop.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drug.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
-		#tryinclude "mutant_tanks/abilities/mt_electric.sp"
-		#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fast.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fire.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fling.sp"
-	#endif
-	#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
-		#tryinclude "mutant_tanks/abilities/mt_fly.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
-		#tryinclude "mutant_tanks/abilities/mt_god.sp"
-		#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
-		#tryinclude "mutant_tanks/abilities/mt_heal.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hit.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ice.sp"
-		#tryinclude "mutant_tanks/abilities/mt_idle.sp"
-		#tryinclude "mutant_tanks/abilities/mt_invert.sp"
-		#tryinclude "mutant_tanks/abilities/mt_item.sp"
-		#tryinclude "mutant_tanks/abilities/mt_jump.sp"
-		#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
-		#tryinclude "mutant_tanks/abilities/mt_lag.sp"
-		#tryinclude "mutant_tanks/abilities/mt_laser.sp"
-		#tryinclude "mutant_tanks/abilities/mt_leech.sp"
-		#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
-	#endif
-	#define REQUIRE_PLUGIN
+#undef REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
+	#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
+	#tryinclude "mutant_tanks/abilities/mt_acid.sp"
+	#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
+	#tryinclude "mutant_tanks/abilities/mt_blind.sp"
+	#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
+	#tryinclude "mutant_tanks/abilities/mt_bury.sp"
+	#tryinclude "mutant_tanks/abilities/mt_car.sp"
+	#tryinclude "mutant_tanks/abilities/mt_choke.sp"
+	#tryinclude "mutant_tanks/abilities/mt_clone.sp"
+	#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drop.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drug.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
+	#tryinclude "mutant_tanks/abilities/mt_electric.sp"
+	#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fast.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fire.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fling.sp"
+#elseif MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
+	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
+	#tryinclude "mutant_tanks/abilities/mt_god.sp"
+	#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
+	#tryinclude "mutant_tanks/abilities/mt_heal.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hit.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ice.sp"
+	#tryinclude "mutant_tanks/abilities/mt_idle.sp"
+	#tryinclude "mutant_tanks/abilities/mt_invert.sp"
+	#tryinclude "mutant_tanks/abilities/mt_item.sp"
+	#tryinclude "mutant_tanks/abilities/mt_jump.sp"
+	#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
+	#tryinclude "mutant_tanks/abilities/mt_lag.sp"
+	#tryinclude "mutant_tanks/abilities/mt_laser.sp"
+	#tryinclude "mutant_tanks/abilities/mt_leech.sp"
+	#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
 #endif
+#define REQUIRE_PLUGIN
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -2593,20 +2590,4 @@ void vAbilitySetup(int type)
 	}
 #endif
 	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
-}
-
-Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
-{
-	return Plugin_Handled;
-}
-
-void OnItemUse(int entity, int activator, int caller, UseType type, float value)
-{
-	if (!bIsValidEntity(entity))
-	{
-		return;
-	}
-
-	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
-	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }

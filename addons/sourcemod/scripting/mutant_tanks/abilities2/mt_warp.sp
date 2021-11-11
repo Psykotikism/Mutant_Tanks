@@ -181,7 +181,9 @@ public void OnPluginStart()
 	g_esWarpGeneral.g_iAttributeFlagsOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 	if (g_esWarpGeneral.g_iAttributeFlagsOffset == -1)
 	{
-		LogError("%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags", MT_TAG);
+		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -1014,9 +1016,7 @@ void vWarp2(int tank, int other)
 	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
-	flOtherOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
-	flOtherOrigin[1] += (50.0 * (Sine(DegToRad(flOtherAngles[1]))));
-	flOtherOrigin[2] += 5.0;
+	flOtherOrigin[2] += 20.0;
 
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
@@ -1228,9 +1228,6 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 		float flRockPos[3], flRockAngles[3];
 		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
 		GetEntPropVector(rock, Prop_Data, "m_angRotation", flRockAngles);
-		flRockPos[0] += (50.0 * (Cosine(DegToRad(flRockAngles[1]))));
-		flRockPos[1] += (50.0 * (Sine(DegToRad(flRockAngles[1]))));
-		flRockPos[2] += 5.0;
 
 		vAttachParticle(tank, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP, tank);
@@ -1248,16 +1245,13 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 
 bool bIsInsideSaferoom(int survivor)
 {
-	if (g_esWarpGeneral.g_iAttributeFlagsOffset != -1)
+	int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
+	if (iArea)
 	{
-		int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
-		if (iArea)
+		int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esWarpGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
+		if ((iAttributeFlags & 2048))
 		{
-			int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esWarpGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
-			if ((iAttributeFlags & 2048))
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 
