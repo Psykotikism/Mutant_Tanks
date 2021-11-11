@@ -12,6 +12,7 @@
 - Fixed custom configs not refreshing when the main config file is refreshed.
 - Fixed `Client Preferences` not being optional.
 - Fixed the logic for the detour and patching systems.
+- Fixed any compilation errors with the latest `SM 1.11` builds.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -19,6 +20,7 @@
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
+- Warp: Fixed the Tank teleporting inside props and other solid objects. (Thanks to `yuzumi` for testing and reporting!)
 
 ### Changes
 

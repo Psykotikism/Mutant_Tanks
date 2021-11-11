@@ -72,7 +72,7 @@ native bool MT_IsTankClone(int tank);
  * @error			Invalid client index.
  **/
 #pragma deprecated Use MT_IsCloneSupported() instead.
-stock bool MT_CloneAllowed(int client, bool clone)
+stock bool MT_CloneAllowed(int tank, bool clone)
 {
 	return MT_IsCloneSupported(tank) && clone;
 }

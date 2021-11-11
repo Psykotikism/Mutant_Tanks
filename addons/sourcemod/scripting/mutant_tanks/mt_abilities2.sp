@@ -29,52 +29,49 @@ public Plugin myinfo =
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
-#if MT_ABILITIES_GROUP2 > 0
-	#undef REQUIRE_PLUGIN
-	#if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
-		#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
-	#endif
-	#if MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
-		#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_track.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
-		#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
-	#endif
-	#define REQUIRE_PLUGIN
+#undef REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
+	#tryinclude "mutant_tanks/abilities2/mt_medic.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_minion.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_necro.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_nullify.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_omni.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_panic.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_pimp.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_restart.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_rock.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_rocket.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_shake.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_shield.sp"
+#elseif MT_ABILITIES_GROUP2 == 2 || MT_ABILITIES_GROUP2 == 3
+	#tryinclude "mutant_tanks/abilities2/mt_shove.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_slow.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_smash.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_smite.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_spam.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_splash.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_splatter.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_throw.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_track.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_ultimate.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_undead.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_vampire.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_vision.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_warp.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_whirl.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_witch.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_xiphos.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_yell.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
 #endif
+#define REQUIRE_PLUGIN
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -2579,62 +2576,4 @@ void vAbilitySetup(int type)
 	}
 #endif
 	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
-}
-
-Action tTimerMeteorCombo(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
-	{
-		return Plugin_Stop;
-	}
-
-	int iPos = pack.ReadCell();
-	vMeteor(iTank, iPos);
-
-	return Plugin_Continue;
-}
-
-Action tTimerDestroyMeteor(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iMeteor = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
-	{
-		return Plugin_Stop;
-	}
-
-	int iPos = pack.ReadCell();
-	vMeteor3(iTank, iMeteor, iPos);
-
-	return Plugin_Continue;
-}
-
-Action tTimerThrowKillInfected(Handle timer, int userid)
-{
-	int iSpecial = GetClientOfUserId(userid);
-	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
-	{
-		return Plugin_Stop;
-	}
-
-	ForcePlayerSuicide(iSpecial);
-
-	return Plugin_Continue;
-}
-
-Action tTimerThrowKillWitch(Handle timer, int ref)
-{
-	int iWitch = EntRefToEntIndex(ref);
-	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
-	{
-		return Plugin_Stop;
-	}
-
-	RemoveEntity(iWitch);
-
-	return Plugin_Continue;
 }

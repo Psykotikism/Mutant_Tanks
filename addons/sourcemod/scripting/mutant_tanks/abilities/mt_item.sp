@@ -336,7 +336,6 @@ void OnItemModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-#if !defined MT_ABILITIES_MAIN
 Action OnItemTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	return Plugin_Handled;
@@ -352,7 +351,6 @@ void OnItemUse(int entity, int activator, int caller, UseType type, float value)
 	SDKUnhook(entity, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(entity, SDKHook_Use, OnItemUse);
 }
-#endif
 
 #if defined MT_ABILITIES_MAIN
 void vItemPluginCheck(ArrayList list)

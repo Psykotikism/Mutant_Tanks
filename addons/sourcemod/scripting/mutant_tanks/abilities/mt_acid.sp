@@ -851,7 +851,7 @@ void vAcid(int survivor, int tank)
 	float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-	vCreateAcid(tank, flOrigin, flAngles);
+	SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 }
 
 void vAcidAbility(int tank, float random, int pos = -1)
@@ -979,7 +979,7 @@ void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flOrigin);
 		GetEntPropVector(rock, Prop_Data, "m_angRotation", flAngles);
 		flOrigin[2] += 40.0;
-		vCreateAcid(tank, flOrigin, flAngles);
+		SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 
 		if (g_esAcidCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{
@@ -995,14 +995,6 @@ void vAcidCopyStats2(int oldTank, int newTank)
 {
 	g_esAcidPlayer[newTank].g_iAmmoCount = g_esAcidPlayer[oldTank].g_iAmmoCount;
 	g_esAcidPlayer[newTank].g_iCooldown = g_esAcidPlayer[oldTank].g_iCooldown;
-}
-
-void vCreateAcid(int spitter, float pos[3], float angles[3])
-{
-	if (g_hSDKSpitterProjectileCreate != null)
-	{
-		SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
-	}
 }
 
 void vRemoveAcid(int tank)

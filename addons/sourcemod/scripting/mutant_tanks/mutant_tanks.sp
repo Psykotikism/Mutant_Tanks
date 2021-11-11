@@ -2349,6 +2349,8 @@ any aNative_DetonateTankRock(Handle plugin, int numParams)
 	{
 		RequestFrame(vDetonateRockFrame, EntIndexToEntRef(iRock));
 	}
+
+	return 0;
 }
 
 any aNative_DoesSurvivorHaveRewardType(Handle plugin, int numParams)
@@ -2455,6 +2457,8 @@ any aNative_GetConfigColors(Handle plugin, int numParams)
 	GetNativeString(3, sColor, iSize);
 	vGetConfigColors(sValue, iSize, sColor);
 	SetNativeString(1, sValue, iSize);
+
+	return 0;
 }
 
 any aNative_GetCurrentFinaleWave(Handle plugin, int numParams)
@@ -2540,6 +2544,8 @@ any aNative_GetPropColors(Handle plugin, int numParams)
 			SetNativeCellRef((iPos + 3), iColor[iPos]);
 		}
 	}
+
+	return 0;
 }
 
 any aNative_GetRunSpeed(Handle plugin, int numParams)
@@ -2591,6 +2597,8 @@ any aNative_GetTankColors(Handle plugin, int numParams)
 			SetNativeCellRef((iPos + 3), iColor[iPos]);
 		}
 	}
+
+	return 0;
 }
 
 any aNative_GetTankName(Handle plugin, int numParams)
@@ -2602,6 +2610,8 @@ any aNative_GetTankName(Handle plugin, int numParams)
 		vGetTranslatedName(sTankName, sizeof sTankName, iTank);
 		SetNativeString(2, sTankName, sizeof sTankName);
 	}
+
+	return 0;
 }
 
 any aNative_GetTankType(Handle plugin, int numParams)
@@ -2634,6 +2644,8 @@ any aNative_HideEntity(Handle plugin, int numParams)
 			case false: SDKUnhook(iEntity, SDKHook_SetTransmit, OnPropSetTransmit);
 		}
 	}
+
+	return 0;
 }
 
 any aNative_IsAdminImmune(Handle plugin, int numParams)
@@ -2707,6 +2719,8 @@ any aNative_LogMessage(Handle plugin, int numParams)
 			vLogMessage(iType, _, sBuffer);
 		}
 	}
+
+	return 0;
 }
 
 any aNative_RespawnSurvivor(Handle plugin, int numParams)
@@ -2716,6 +2730,8 @@ any aNative_RespawnSurvivor(Handle plugin, int numParams)
 	{
 		vRespawnSurvivor(iSurvivor);
 	}
+
+	return 0;
 }
 
 any aNative_SetTankType(Handle plugin, int numParams)
@@ -2743,6 +2759,8 @@ any aNative_SetTankType(Handle plugin, int numParams)
 			}
 		}
 	}
+
+	return 0;
 }
 
 any aNative_ShoveBySurvivor(Handle plugin, int numParams)
@@ -2754,6 +2772,8 @@ any aNative_ShoveBySurvivor(Handle plugin, int numParams)
 	{
 		SDKCall(g_esGeneral.g_hSDKShovedBySurvivor, iSpecial, iSurvivor, flDirection);
 	}
+
+	return 0;
 }
 
 any aNative_SpawnTank(Handle plugin, int numParams)
@@ -2763,6 +2783,8 @@ any aNative_SpawnTank(Handle plugin, int numParams)
 	{
 		vQueueTank(iTank, iType, .log = false);
 	}
+
+	return 0;
 }
 
 any aNative_TankMaxHealth(Handle plugin, int numParams)
@@ -2794,6 +2816,8 @@ any aNative_UnvomitPlayer(Handle plugin, int numParams)
 	{
 		vUnvomitPlayer(iPlayer);
 	}
+
+	return 0;
 }
 
 any aNative_VomitPlayer(Handle plugin, int numParams)
@@ -2806,6 +2830,8 @@ any aNative_VomitPlayer(Handle plugin, int numParams)
 			SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, true);
 		}
 	}
+
+	return 0;
 }
 
 /**
@@ -4127,7 +4153,7 @@ void vAdminPanel(int admin)
 
 int iAdminMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
-	// Do nothing...
+	return 0;
 }
 
 void vConfigMenu(int admin, int item = 0)
@@ -4420,6 +4446,8 @@ int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	{
 		vDeveloperPanel(param1, ((g_esDeveloper[param1].g_iDevPanelLevel == 0) ? 1 : 0));
 	}
+
+	return 0;
 }
 
 void vFavoriteMenu(int admin)
