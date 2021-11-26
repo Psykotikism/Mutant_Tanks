@@ -51,7 +51,8 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities/mt_fast.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fire.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fling.sp"
-#elseif MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
+#endif
+#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
 	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
 	#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
