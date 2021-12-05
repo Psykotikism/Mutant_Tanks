@@ -19628,6 +19628,26 @@
 			// "often"/"likely"/"frequently" - 66.6% chance
 			// "always" - 100% chance
 			"Vampire Chance"			"33.3"
+
+			// The Mutant Tank receives this much health each time it hits a survivor and triggers the ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: -1000000
+			// Maximum: 1000000
+			// --
+			// Positive numbers: Current health + Vampire health
+			// Negative numbers: Current health - Vampire health
+			"Vampire Health"			"0"
+
+			// The health received by the Mutant Tank is multiplied by this value.
+			// Note: Health = Health x Vampire health multiplier
+			// Example: Health = 100.0 x 3.0 (300.0)
+			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Vampire Health Multiplier"		"1.0"
 		}
 	}
 }

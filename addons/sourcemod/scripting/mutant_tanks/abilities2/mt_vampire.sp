@@ -62,6 +62,7 @@ enum struct esVampirePlayer
 {
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
+	float g_flVampireHealthMultiplier;
 
 	int g_iAccessFlags;
 	int g_iHumanAbility;
@@ -70,6 +71,7 @@ enum struct esVampirePlayer
 	int g_iTankType;
 	int g_iVampireAbility;
 	int g_iVampireEffect;
+	int g_iVampireHealth;
 	int g_iVampireMessage;
 }
 
@@ -79,6 +81,7 @@ enum struct esVampireAbility
 {
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
+	float g_flVampireHealthMultiplier;
 
 	int g_iAccessFlags;
 	int g_iHumanAbility;
@@ -86,6 +89,7 @@ enum struct esVampireAbility
 	int g_iRequiresHumans;
 	int g_iVampireAbility;
 	int g_iVampireEffect;
+	int g_iVampireHealth;
 	int g_iVampireMessage;
 }
 
@@ -95,11 +99,13 @@ enum struct esVampireCache
 {
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
+	float g_flVampireHealthMultiplier;
 
 	int g_iHumanAbility;
 	int g_iRequiresHumans;
 	int g_iVampireAbility;
 	int g_iVampireEffect;
+	int g_iVampireHealth;
 	int g_iVampireMessage;
 }
 
@@ -279,7 +285,9 @@ Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esVampireCache[attacker].g_iHumanAbility == 1)
 				{
-					int iDamage = RoundToNearest(damage),
+					float flHealth = (g_esVampireCache[attacker].g_iVampireHealth > 0) ? float(g_esVampireCache[attacker].g_iVampireHealth) : damage;
+					flHealth *= g_esVampireCache[attacker].g_flVampireHealthMultiplier;
+					int iDamage = RoundToNearest(flHealth),
 						iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth"),
 						iMaxHealth = MT_TankMaxHealth(attacker, 1),
 						iNewHealth = (iHealth + iDamage),
@@ -346,8 +354,10 @@ public void MT_OnConfigsLoad(int mode)
 				g_esVampireAbility[iIndex].g_iRequiresHumans = 0;
 				g_esVampireAbility[iIndex].g_iVampireAbility = 0;
 				g_esVampireAbility[iIndex].g_iVampireEffect = 0;
+				g_esVampireAbility[iIndex].g_iVampireHealth = 0;
 				g_esVampireAbility[iIndex].g_iVampireMessage = 0;
 				g_esVampireAbility[iIndex].g_flVampireChance = 33.3;
+				g_esVampireAbility[iIndex].g_flVampireHealthMultiplier = 1.0;
 			}
 		}
 		case 3:
@@ -363,8 +373,10 @@ public void MT_OnConfigsLoad(int mode)
 					g_esVampirePlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esVampirePlayer[iPlayer].g_iVampireAbility = 0;
 					g_esVampirePlayer[iPlayer].g_iVampireEffect = 0;
+					g_esVampirePlayer[iPlayer].g_iVampireHealth = 0;
 					g_esVampirePlayer[iPlayer].g_iVampireMessage = 0;
 					g_esVampirePlayer[iPlayer].g_flVampireChance = 0.0;
+					g_esVampirePlayer[iPlayer].g_flVampireHealthMultiplier = 0.0;
 				}
 			}
 		}
@@ -384,8 +396,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVampirePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampirePlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esVampirePlayer[admin].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampirePlayer[admin].g_iVampireAbility, value, 0, 1);
 		g_esVampirePlayer[admin].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampirePlayer[admin].g_iVampireEffect, value, 0, 1);
+		g_esVampirePlayer[admin].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampirePlayer[admin].g_iVampireHealth, value, 0, MT_MAXHEALTH);
 		g_esVampirePlayer[admin].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampirePlayer[admin].g_iVampireMessage, value, 0, 1);
 		g_esVampirePlayer[admin].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampirePlayer[admin].g_flVampireChance, value, 0.0, 100.0);
+		g_esVampirePlayer[admin].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampirePlayer[admin].g_flVampireHealthMultiplier, value, 1.0, 999999.0);
 		g_esVampirePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esVampirePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -397,8 +411,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVampireAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esVampireAbility[type].g_iVampireAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVampireAbility[type].g_iVampireAbility, value, 0, 1);
 		g_esVampireAbility[type].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireAbility[type].g_iVampireEffect, value, 0, 1);
+		g_esVampireAbility[type].g_iVampireHealth = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireHealth", "Vampire Health", "Vampire_Health", "health", g_esVampireAbility[type].g_iVampireHealth, value, 0, MT_MAXHEALTH);
 		g_esVampireAbility[type].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireAbility[type].g_iVampireMessage, value, 0, 1);
 		g_esVampireAbility[type].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireAbility[type].g_flVampireChance, value, 0.0, 100.0);
+		g_esVampireAbility[type].g_flVampireHealthMultiplier = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireHealthMultiplier", "Vampire Health Multiplier", "Vampire_Health_Multiplier", "hpmulti", g_esVampireAbility[type].g_flVampireHealthMultiplier, value, 1.0, 999999.0);
 		g_esVampireAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esVampireAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -412,11 +428,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance);
+	g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier);
 	g_esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility);
 	g_esVampireCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flOpenAreasOnly, g_esVampireAbility[type].g_flOpenAreasOnly);
 	g_esVampireCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iRequiresHumans, g_esVampireAbility[type].g_iRequiresHumans);
 	g_esVampireCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireAbility, g_esVampireAbility[type].g_iVampireAbility);
 	g_esVampireCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireEffect, g_esVampireAbility[type].g_iVampireEffect);
+	g_esVampireCache[tank].g_iVampireHealth = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireHealth, g_esVampireAbility[type].g_iVampireHealth);
 	g_esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage);
 	g_esVampirePlayer[tank].g_iTankType = apply ? type : 0;
 }

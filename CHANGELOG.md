@@ -32,7 +32,6 @@
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
-- Removed default developer access level.
 
 #### Core plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
@@ -86,6 +85,9 @@
 #### Abilities
 - Drop: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
 - Shield: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
+- Vampire
+	- Added the `Vampire Health` setting. (Requested by `moschinovac`.)
+	- Added the `Vampire Health Multiplier` setting. (Requested by `moschinovac`.)
 - Warp
 	- Added the `Warp Rock Break` setting.
 	- Added the `Warp Rock Chance` setting.
