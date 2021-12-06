@@ -1252,7 +1252,7 @@ void vShield(int tank)
 		}
 	}
 
-	SetEntityCollisionGroup(g_esShieldPlayer[tank].g_iShield, 1);
+	SetEntProp(g_esShieldPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 	MT_HideEntity(g_esShieldPlayer[tank].g_iShield, true);
 	g_esShieldPlayer[tank].g_iShield = EntIndexToEntRef(g_esShieldPlayer[tank].g_iShield);
 }

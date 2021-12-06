@@ -83,8 +83,6 @@
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
 
 #### Abilities
-- Drop: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
-- Shield: Changed setting collision group method to use the `SetEntityCollisionGroup` native introduced in `SourceMod 1.11.0.6700` instead.
 - Vampire
 	- Added the `Vampire Health` setting. (Requested by `moschinovac`.)
 	- Added the `Vampire Health Multiplier` setting. (Requested by `moschinovac`.)

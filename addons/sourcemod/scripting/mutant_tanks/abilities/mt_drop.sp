@@ -1038,7 +1038,7 @@ void vDropFrame(int userid)
 			}
 		}
 
-		SetEntityCollisionGroup(g_esDropPlayer[iTank].g_iWeapon, 2);
+		SetEntProp(g_esDropPlayer[iTank].g_iWeapon, Prop_Send, "m_CollisionGroup", 2);
 		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(g_esDropPlayer[iTank].g_iWeapon);
 
