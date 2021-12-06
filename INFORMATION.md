@@ -6,7 +6,6 @@
 - Visit the [`Wiki`](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `97-98` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
-- Most of these settings can be overridden for each player via their Steam IDs.
 
 ## Sections
 - Plugin Settings
@@ -19632,11 +19631,8 @@
 			// The Mutant Tank receives this much health each time it hits a survivor and triggers the ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -1000000
+			// Minimum: 0 (OFF, use the damage value of the attack.)
 			// Maximum: 1000000
-			// --
-			// Positive numbers: Current health + Vampire health
-			// Negative numbers: Current health - Vampire health
 			"Vampire Health"			"0"
 
 			// The health received by the Mutant Tank is multiplied by this value.

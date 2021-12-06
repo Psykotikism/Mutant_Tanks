@@ -12,7 +12,7 @@
 - Fixed custom configs not refreshing when the main config file is refreshed.
 - Fixed `Client Preferences` not being optional.
 - Fixed the logic for the detour and patching systems.
-- Fixed any compilation errors with the latest `SM 1.11` builds.
+- Fixed any compilation errors on the latest `SM 1.11` builds.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
