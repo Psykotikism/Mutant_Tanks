@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1340,7 +1340,6 @@ void vFlyThink(int tank, int buttons, float duration)
 void vRemoveFly(int tank)
 {
 	vStopFly(tank);
-	vFlyReset4(tank);
 
 	g_esFlyPlayer[tank].g_iAmmoCount = 0;
 	g_esFlyPlayer[tank].g_iCooldown = -1;
@@ -1403,7 +1402,7 @@ void vStopFly(int tank)
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
-	if (bIsValidClient(tank))
+	if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		SetEntityMoveType(tank, MOVETYPE_WALK);
 		SetEntityGravity(tank, 1.0);
