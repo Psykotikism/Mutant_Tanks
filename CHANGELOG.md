@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.90 (TBA)
+## Version 8.90 (2022)
 
 ### Bug Fixes
 
@@ -20,6 +20,7 @@
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
+- Fly: Fixed camera bug where spectators are dropped to the ground and forced to travel to map origin. (Thanks to `Angelace113` for testing and reporting!)
 - Warp: Fixed the Tank teleporting inside props and other solid objects. (Thanks to `yuzumi` for testing and reporting!)
 
 ### Changes
@@ -1389,7 +1390,6 @@
 	- Weapons attached to Tanks are now affected by the `Ghost` ability's fade feature. (Requested by `3aljiyavslgazana`.)
 - Fire: Added a sound effect for L4D1.
 - Fling: Incapacitated or ledge-hanging survivors are no longer affected. (Requested by `3aljiyavslgazana`.)
-- Fly: Added the `Immunity Flags` setting.
 - Fragile
 	- Added the `Immunity Flags` setting.
 	- Multiplier settings will not take effect unless their values are greater than `1.0`.
