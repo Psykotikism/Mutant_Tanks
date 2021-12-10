@@ -874,7 +874,7 @@ native void MT_VomitPlayer(int player, int boomer);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnAbilityActivated() instead.
+#pragma deprecated Use the MT_OnAbilityActivated() forward instead.
 forward void ST_Ability(int client);
 
 /**
@@ -884,7 +884,7 @@ forward void ST_Ability(int client);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnRockThrow() instead.
+#pragma deprecated Use the MT_OnRockThrow() forward instead.
 forward void ST_AbilityThrow(int client);
 
 /**
@@ -894,7 +894,7 @@ forward void ST_AbilityThrow(int client);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnChangeType() instead.
+#pragma deprecated Use the MT_OnChangeType() forward instead.
 forward void ST_BossStage(int client);
 
 /**
@@ -903,7 +903,7 @@ forward void ST_BossStage(int client);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnChangeType() instead.
+#pragma deprecated Use the MT_OnChangeType() forward instead.
 forward void ST_ChangeType(int tank);
 
 /**
@@ -914,7 +914,7 @@ forward void ST_ChangeType(int tank);
  * @param limit			The limit for how many Super Tank types' settings to check for.
  * @param main			Checks whether the main config or a custom config is being used.
  **/
-#pragma deprecated Use MT_OnConfigsLoaded() instead.
+#pragma deprecated Use the MT_OnConfigsLoaded() forward instead.
 forward void ST_Configs(char[] savepath, int limit, bool main);
 
 /**
@@ -925,7 +925,7 @@ forward void ST_Configs(char[] savepath, int limit, bool main);
  *
  * @param client		Client index of the victim.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Death(int client);
 
 /**
@@ -937,7 +937,7 @@ forward void ST_Death(int client);
  * @param enemy			Client index of the attacker.
  * @param client		Client index of the victim.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Death2(int enemy, int client);
 
 /**
@@ -947,7 +947,7 @@ forward void ST_Death2(int enemy, int client);
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
  **/
-#pragma deprecated Use MT_OnEventFired() instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Event(Event event, const char[] name);
 
 /**
@@ -958,7 +958,7 @@ forward void ST_Event(Event event, const char[] name);
  * @param name			String containing the name of the event.
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-#pragma deprecated Use MT_OnEventFired() instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
 
 /**
@@ -968,7 +968,7 @@ forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the incap event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Incap(int client);
 
 /**
@@ -978,7 +978,7 @@ forward void ST_Incap(int client);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_OnPreset(int tank);
 
 /**
@@ -988,7 +988,7 @@ forward void ST_OnPreset(int tank);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_Preset(int tank);
 
 /**
@@ -998,7 +998,7 @@ forward void ST_Preset(int tank);
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
  **/
-#pragma deprecated Use MT_OnRockBreak() instead.
+#pragma deprecated Use the MT_OnRockBreak() forward instead.
 forward void ST_RockBreak(int client, int entity);
 
 /**
@@ -1008,7 +1008,7 @@ forward void ST_RockBreak(int client, int entity);
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
  **/
-#pragma deprecated Use MT_OnRockThrow() instead.
+#pragma deprecated Use the MT_OnRockThrow() forward instead.
 forward void ST_RockThrow(int client, int entity);
 
 /**
@@ -1016,7 +1016,7 @@ forward void ST_RockThrow(int client, int entity);
  * Use this forward for setting something when
  * the round starts.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the round start event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_RoundStart();
 
 /**
@@ -1026,7 +1026,7 @@ forward void ST_RoundStart();
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_Spawn(int client);
 
 /**
@@ -1037,7 +1037,7 @@ forward void ST_Spawn(int client);
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_CanTypeSpawn() instead.
+#pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool MT_CanTankSpawn(int type)
 {
 	return MT_CanTypeSpawn(type);
@@ -1051,7 +1051,7 @@ stock bool MT_CanTankSpawn(int type)
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_IsFinaleType() instead.
+#pragma deprecated Use the MT_IsFinaleType() native instead.
 stock bool MT_IsFinaleTank(int type)
 {
 	return MT_IsFinaleType(type);
@@ -1062,7 +1062,7 @@ stock bool MT_IsFinaleTank(int type)
  *
  * @return			The value of the "Maximum Types" setting.
  **/
-#pragma deprecated Use MT_GetMaxType() instead.
+#pragma deprecated Use the MT_GetMaxType() native instead.
 stock int ST_MaxTypes()
 {
 	return MT_GetMaxType();
@@ -1073,7 +1073,7 @@ stock int ST_MaxTypes()
  *
  * @return			The maximum value of the "Type Range" setting.
  **/
-#pragma deprecated Use MT_GetMaxType() instead.
+#pragma deprecated Use the MT_GetMaxType() native instead.
 stock int ST_MaxType()
 {
 	return MT_GetMaxType();
@@ -1084,7 +1084,7 @@ stock int ST_MaxType()
  *
  * @return			The minimum value of the "Type Range" setting.
  **/
-#pragma deprecated Use MT_GetMinType() instead.
+#pragma deprecated Use the MT_GetMinType() native instead.
 stock int ST_MinType()
 {
 	return MT_GetMinType();
@@ -1095,7 +1095,7 @@ stock int ST_MinType()
  *
  * @return			True on success, false if core plugin is disabled.
  **/
-#pragma deprecated Use MT_IsCorePluginEnabled() instead.
+#pragma deprecated Use the MT_IsCorePluginEnabled() native instead.
 stock bool ST_PluginEnabled()
 {
 	return MT_IsCorePluginEnabled();
@@ -1114,7 +1114,7 @@ stock bool ST_PluginEnabled()
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetPropColors() instead.
+#pragma deprecated Use the MT_GetPropColors() native instead.
 stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha)
 {
 	MT_GetPropColors(tank, mode, red, green, blue, alpha);
@@ -1128,7 +1128,7 @@ stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, i
  * @return			True if the type can be spawned, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_CanTypeSpawn() instead.
+#pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool ST_SpawnEnabled(int type)
 {
 	return MT_CanTypeSpawn(type);
@@ -1141,7 +1141,7 @@ stock bool ST_SpawnEnabled(int type)
  *
  * @return			True on success, false if the setting is disabled.
  **/
-#pragma deprecated Use MT_IsTankSupported() instead.
+#pragma deprecated Use the MT_IsTankSupported() native instead.
 stock bool ST_TankAllowed(int client)
 {
 	return MT_IsTankSupported(client);
@@ -1155,7 +1155,7 @@ stock bool ST_TankAllowed(int client)
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_HasChanceToSpawn() instead.
+#pragma deprecated Use the MT_HasChanceToSpawn() native instead.
 stock bool ST_TankChance(int type)
 {
 	return MT_HasChanceToSpawn(type);
@@ -1173,10 +1173,10 @@ stock bool ST_TankChance(int type)
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankColors() instead.
+#pragma deprecated Use the MT_GetTankColors() native instead.
 stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha)
 {
-	MT_GetTankColors(tank, GetRandomInt(1, 2), red, green, blue, alpha);
+	MT_GetTankColors(tank, mode, red, green, blue, alpha);
 }
 
 /**
@@ -1187,7 +1187,7 @@ stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, in
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankName() instead.
+#pragma deprecated Use the MT_GetTankName() native instead.
 stock void ST_TankName(int tank, char[] buffer)
 {
 	MT_GetTankName(tank, buffer);
@@ -1201,7 +1201,7 @@ stock void ST_TankName(int tank, char[] buffer)
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankType() instead.
+#pragma deprecated Use the MT_GetTankType() native instead.
 stock int ST_TankType(int client)
 {
 	return MT_GetTankType(client);
@@ -1212,7 +1212,7 @@ stock int ST_TankType(int client)
  *
  * @return			The current finale wave.
  **/
-#pragma deprecated Use MT_GetCurrentFinaleWave() instead.
+#pragma deprecated Use the MT_GetCurrentFinaleWave() native instead.
 stock int ST_TankWave()
 {
 	return MT_GetCurrentFinaleWave();
@@ -1226,7 +1226,7 @@ stock int ST_TankWave()
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_IsTypeEnabled() instead.
+#pragma deprecated Use the MT_IsTypeEnabled() native instead.
 stock bool ST_TypeEnabled(int type)
 {
 	return MT_IsTypeEnabled(type);

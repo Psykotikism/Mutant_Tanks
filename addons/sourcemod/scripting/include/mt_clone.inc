@@ -71,7 +71,7 @@ native bool MT_IsTankClone(int tank);
  * @return			True if clone can use abilities, false otherwise.
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_IsCloneSupported() instead.
+#pragma deprecated Use the MT_IsCloneSupported() native instead.
 stock bool MT_CloneAllowed(int tank, bool clone)
 {
 	return MT_IsCloneSupported(tank) && clone;
@@ -86,7 +86,7 @@ stock bool MT_CloneAllowed(int tank, bool clone)
  * @return			True if clone can use abilities, false otherwise.
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_IsCloneSupported() instead.
+#pragma deprecated Use the MT_IsCloneSupported() native instead.
 stock bool ST_CloneAllowed(int tank, bool clone)
 {
 	return MT_IsCloneSupported(tank) && clone;
