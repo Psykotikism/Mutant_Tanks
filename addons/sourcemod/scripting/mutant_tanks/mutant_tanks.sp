@@ -11609,7 +11609,7 @@ void vSetupConfigs()
 					case 3: sDifficulty = "Impossible";
 				}
 
-				vCreateConfigFile(MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
+				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_DIFFICULTY, sDifficulty);
 			}
 		}
 
@@ -11633,7 +11633,7 @@ void vSetupConfigs()
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
 						alMaps.GetString(iPos, sMapName, sizeof sMapName);
-						vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_MAP2 : MT_CONFIG_PATH_MAP), sMapName);
+						vCreateConfigFile((g_bSecondGame ? (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_MAP2) : (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_MAP)), sMapName);
 					}
 				}
 
@@ -11655,7 +11655,7 @@ void vSetupConfigs()
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 				{
-					vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_GAMEMODE2 : MT_CONFIG_PATH_GAMEMODE), sTypes[iMode]);
+					vCreateConfigFile((g_bSecondGame ? (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_GAMEMODE2) : (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_GAMEMODE)), sTypes[iMode]);
 				}
 			}
 		}
@@ -11670,7 +11670,7 @@ void vSetupConfigs()
 			for (int iDay = 0; iDay < 7; iDay++)
 			{
 				vGetDayName(iDay, sWeekday, sizeof sWeekday);
-				vCreateConfigFile(MT_CONFIG_PATH_DAY, sWeekday);
+				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_DAY, sWeekday);
 			}
 		}
 
@@ -11684,7 +11684,8 @@ void vSetupConfigs()
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
+				LogMessage("Creating config file: %s%s", MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
 			}
 		}
 
@@ -11698,7 +11699,7 @@ void vSetupConfigs()
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_SURVIVORCOUNT, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_SURVIVORCOUNT, sPlayerCount);
 			}
 		}
 
@@ -11712,7 +11713,7 @@ void vSetupConfigs()
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				vCreateConfigFile(MT_CONFIG_PATH_INFECTEDCOUNT, sPlayerCount);
+				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_INFECTEDCOUNT, sPlayerCount);
 			}
 		}
 
@@ -11741,7 +11742,7 @@ void vSetupConfigs()
 					case 10: sEvent = "gauntlet_finale_start";
 				}
 
-				vCreateConfigFile((g_bSecondGame ? MT_CONFIG_PATH_FINALE2 : MT_CONFIG_PATH_FINALE), sEvent);
+				vCreateConfigFile((g_bSecondGame ? (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_FINALE2) : (MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_FINALE)), sEvent);
 			}
 		}
 

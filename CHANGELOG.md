@@ -13,6 +13,7 @@
 - Fixed `Client Preferences` not being optional.
 - Fixed the logic for the detour and patching systems.
 - Fixed any compilation errors on the latest `SM 1.11` builds.
+- Fixed custom config files not being created. (Thanks to `l` and `Mi.Cura` for testing and reporting!)
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -82,6 +83,9 @@
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
+#### Natives & Forwards
+- Updated all compiler warnings for deprecated forwards and natives.
 
 #### Abilities
 - Vampire
