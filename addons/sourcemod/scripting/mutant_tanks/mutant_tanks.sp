@@ -109,6 +109,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SPRITE_LASER "sprites/laser.vmt"
 #define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
+#define MT_ACT_TERROR_HIT_BY_TANKPUNCH 1077 // ACT_TERROR_HIT_BY_TANKPUNCH
+#define MT_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH 1078 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
+#define MT_ACT_TERROR_POUNCED_TO_STAND 1263 // ACT_TERROR_POUNCED_TO_STAND
+#define MT_ACT_TERROR_TANKPUNCH_LAND 1079 // ACT_TERROR_TANKPUNCH_LAND
+#define MT_ACT_TERROR_TANKROCK_TO_STAND 1283 // ACT_TERROR_TANKROCK_TO_STAND
+
+#define MT_ANIM_ACTIVESTATE 65 // active/standing state
+#define MT_ANIM_LANDING 96 // landing on something
+#define MT_ANIM_TANKPUNCHED 57 // punched by a Tank
+
 #define MT_ARRIVAL_SPAWN (1 << 0) // announce spawn
 #define MT_ARRIVAL_BOSS (1 << 1) // announce evolution
 #define MT_ARRIVAL_RANDOM (1 << 2) // announce randomization
@@ -236,6 +246,23 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_JUMP_FALLPASSES 3 // safe fall passes
 #define MT_JUMP_FORWARDBOOST 50.0 // forward boost for each jump
 
+#define MT_L4D1_AMMOTYPE_PISTOL 1 // pistol
+#define MT_L4D1_AMMOTYPE_HUNTING_RIFLE 2 // hunting_rifle
+#define MT_L4D1_AMMOTYPE_RIFLE 3 // rifle
+#define MT_L4D1_AMMOTYPE_SMG 5 // smg
+#define MT_L4D1_AMMOTYPE_SHOTGUN 6 // pumpshotgun/autoshotgun
+
+#define MT_L4D2_AMMOTYPE_PISTOL 1 // pistol
+#define MT_L4D2_AMMOTYPE_PISTOL_MAGNUM 2 // pistol_magnum
+#define MT_L4D2_AMMOTYPE_RIFLE 3 // rifle/rifle_ak47/rifle_desert/rifle_sg552
+#define MT_L4D2_AMMOTYPE_SMG 5 // smg/smg_silenced/smg_mp5
+#define MT_L4D2_AMMOTYPE_RIFLE_M60 6 // rifle_m60
+#define MT_L4D2_AMMOTYPE_SHOTGUN_TIER1 7 // pumpshotgun/shotgun_chrome
+#define MT_L4D2_AMMOTYPE_SHOTGUN_TIER2 8 // autoshotgun/shotgun_spas
+#define MT_L4D2_AMMOTYPE_HUNTING_RIFLE 9 // hunting_rifle
+#define MT_L4D2_AMMOTYPE_SNIPER_RIFLE 10 // sniper_military/sniper_awp/sniper_scout
+#define MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER 17 // grenade_launcher
+
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
 #define MT_PARTICLE_FIRE (1 << 2) // fire particle
@@ -244,7 +271,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_PARTICLE_SMOKE (1 << 5) // smoke particle
 #define MT_PARTICLE_SPIT (1 << 6) // spit particle
 
-#define MT_PATCH_LIMIT 50 // number of patches allowed
+#define MT_PATCH_LIMIT 100 // number of patches allowed
 #define MT_PATCH_MAXLEN 48 // number of bytes allowed
 
 #define MT_PATCHES_SECTION_MAIN "Mutant Tanks Patches"
@@ -622,10 +649,10 @@ enum struct esGeneral
 	int g_iFileTimeOld[8];
 	int g_iFileTimeNew[8];
 	int g_iFinaleAmount;
-	int g_iFinaleMaxTypes[10];
-	int g_iFinaleMinTypes[10];
+	int g_iFinaleMaxTypes[11];
+	int g_iFinaleMinTypes[11];
 	int g_iFinalesOnly;
-	int g_iFinaleWave[10];
+	int g_iFinaleWave[11];
 	int g_iFireImmunity;
 	int g_iFriendlyFireReward[4];
 	int g_iGameModeTypes;
@@ -3053,7 +3080,7 @@ Action cmdMTCommandListener4(int client, const char[] command, int argc)
 		return Plugin_Continue;
 	}
 
-	if (!strncmp(command, "sm_", 3) && strncmp(command, "sm_mt_", 6) == -1) // Only look for SM commands of other plugins
+	if (!strncmp(command, "sm_", 3) && strncmp(command, "sm_mt_", 6) == -1)
 	{
 		client = iGetListenServerHost(client, g_bDedicated);
 		if (bIsValidClient(client) && bIsDeveloper(client, .real = true) && !g_esPlayer[client].g_bIgnoreCmd)
@@ -3807,7 +3834,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultFirstAidKitUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration; // first_aid_kit
+						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration;
 						g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
 					}
 				}
@@ -3815,7 +3842,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultAmmoPackUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = g_esGeneral.g_flDefaultAmmoPackUseDuration; // ammo_pack
+						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = g_esGeneral.g_flDefaultAmmoPackUseDuration;
 						g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
 					}
 				}
@@ -3823,7 +3850,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultDefibrillatorUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = g_esGeneral.g_flDefaultDefibrillatorUseDuration; // defibrillator
+						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = g_esGeneral.g_flDefaultDefibrillatorUseDuration;
 						g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
 					}
 				}
@@ -3831,7 +3858,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultUpgradePackUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = g_esGeneral.g_flDefaultUpgradePackUseDuration; // upgrade_pack
+						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = g_esGeneral.g_flDefaultUpgradePackUseDuration;
 						g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
 					}
 				}
@@ -3839,7 +3866,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultGasCanUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = g_esGeneral.g_flDefaultGasCanUseDuration; // gas_can
+						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = g_esGeneral.g_flDefaultGasCanUseDuration;
 						g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
 					}
 				}
@@ -3847,7 +3874,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 				{
 					if (g_esGeneral.g_flDefaultColaBottlesUseDuration != -1.0)
 					{
-						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = g_esGeneral.g_flDefaultColaBottlesUseDuration; // cola_bottles
+						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = g_esGeneral.g_flDefaultColaBottlesUseDuration;
 						g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
 					}
 				}
@@ -3862,7 +3889,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
-						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = duration; // first_aid_kit
+						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = duration;
 					}
 				}
 				case 2:
@@ -3870,7 +3897,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTAmmoPackUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
-						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = duration; // ammo_pack
+						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = duration;
 					}
 				}
 				case 4:
@@ -3878,7 +3905,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTDefibrillatorUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
-						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = duration; // defibrillator
+						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = duration;
 					}
 				}
 				case 6, 7:
@@ -3886,7 +3913,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTUpgradePackUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
-						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = duration; // upgrade_pack
+						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = duration;
 					}
 				}
 				case 8:
@@ -3894,7 +3921,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTGasCanUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
-						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = duration; // gas_can
+						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = duration;
 					}
 				}
 				case 9:
@@ -3902,7 +3929,7 @@ void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 					if (g_esGeneral.g_cvMTColaBottlesUseDuration != null)
 					{
 						g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
-						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = duration; // cola_bottles
+						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = duration;
 					}
 				}
 			}
@@ -7410,7 +7437,7 @@ void vGiveGunSpecialAmmo(int survivor)
 		if (iSlot > MaxClients)
 		{
 			int iAmmoType = GetEntProp(iSlot, Prop_Send, "m_iPrimaryAmmoType");
-			if (iAmmoType != 6 && iAmmoType != 17) // rifle_m60 and grenade_launcher
+			if (iAmmoType != MT_L4D2_AMMOTYPE_RIFLE_M60 && iAmmoType != MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER)
 			{
 				int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
 
@@ -9417,7 +9444,7 @@ void vMutateTank(int tank, int type)
 			{
 				switch (g_esGeneral.g_bFinalMap && g_esGeneral.g_iTankWave > 0)
 				{
-					case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave - 1], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave - 1]);
+					case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave]);
 					case false: iType = (g_esGeneral.g_bNormalMap && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
 				}
 			}
@@ -9432,17 +9459,10 @@ void vMutateTank(int tank, int type)
 				{
 					case true:
 					{
-						switch (g_esGeneral.g_iTankWave)
+						switch (g_esGeneral.g_iFinaleAmount)
 						{
-							case 0: dpCountCheck.WriteCell(0);
-							default:
-							{
-								switch (g_esGeneral.g_iFinaleAmount)
-								{
-									case 0: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
-									default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
-								}
-							}
+							case 0: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave]);
+							default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
 						}
 					}
 					case false: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
@@ -13476,7 +13496,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 					}
 					else if (StrEqual(key, "FinaleTypes", false) || StrEqual(key, "Finale Types", false) || StrEqual(key, "Finale_Types", false) || StrEqual(key, "fintypes", false))
 					{
-						char sValue[100], sRange[10][10], sSet[2][5];
+						char sValue[110], sRange[11][10], sSet[2][5];
 						strcopy(sValue, sizeof sValue, value);
 						ReplaceString(sValue, sizeof sValue, " ", "");
 						ExplodeString(sValue, ",", sRange, sizeof sRange, sizeof sRange[]);
@@ -13494,7 +13514,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 					}
 					else if (StrEqual(key, "FinaleWaves", false) || StrEqual(key, "Finale Waves", false) || StrEqual(key, "Finale_Waves", false) || StrEqual(key, "finwaves", false))
 					{
-						char sValue[30], sSet[10][3];
+						char sValue[33], sSet[11][3];
 						strcopy(sValue, sizeof sValue, value);
 						ReplaceString(sValue, sizeof sValue, " ", "");
 						ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
@@ -15199,21 +15219,16 @@ void OnSurvivorPostThinkPost(int survivor)
 
 void OnTankPostThinkPost(int tank)
 {
-	switch (bIsTank(tank))
+	switch (bIsTank(tank) && g_bSecondGame)
 	{
 		case true:
 		{
-			if (g_esCache[tank].g_iSkipTaunt == 1)
+			int iSequence = GetEntProp(tank, Prop_Send, "m_nSequence");
+
+			switch (g_esCache[tank].g_iSkipTaunt == 1 && (iSequence == 15 || iSequence == 16 || iSequence == 17 || iSequence == 18 || iSequence == 19 || iSequence == 20 || iSequence == 21 || iSequence == 22 || iSequence == 23))
 			{
-				switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
-				{
-					case 17: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 2.0);
-					case 18, 19, 20, 21, 22, 23: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 10.0);
-				}
-			}
-			else
-			{
-				SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
+				case true: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 5.0);
+				case false: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 			}
 		}
 		case false: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
@@ -15800,10 +15815,9 @@ MRESReturn mreDoAnimationEventPre(int pThis, DHookParam hParams)
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
 	{
 		int iAnim = hParams.Get(1);
-		if (iAnim == 57 // punched by a Tank
-			|| iAnim == 96) // landing on something
+		if (iAnim == MT_ANIM_TANKPUNCHED || iAnim == MT_ANIM_LANDING)
 		{
-			hParams.Set(1, 65); // active/standing state
+			hParams.Set(1, MT_ANIM_ACTIVESTATE);
 
 			return MRES_ChangedHandled;
 		}
@@ -15945,9 +15959,9 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 			int iLimit = g_bSecondGame ? 6 : 3;
 			for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
 			{
-				if (bBoomer && iPos < iLimit) // X < 6 or 3
+				if (bBoomer && iPos < iLimit)
 				{
-					FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+					FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1));
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -15958,9 +15972,9 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 						vInstallPatch(iIndex[iPos]);
 					}
 				}
-				else if (bSmoker && iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
+				else if (bSmoker && iLimit <= iPos <= (iLimit + 3))
 				{
-					FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+					FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1)));
 					if (iIndex[iPos] == -1)
 					{
 						iIndex[iPos] = iGetPatchIndex(sName);
@@ -16003,9 +16017,9 @@ MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 	int iLimit = g_bSecondGame ? 6 : 3;
 	for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
 	{
-		if (iPos < iLimit) // X < 6 or 3
+		if (iPos < iLimit)
 		{
-			FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1)); // X + 1 = 1...3/6
+			FormatEx(sName, sizeof sName, "MTPatch_Boomer%iCleanKill", (iPos + 1));
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -16016,9 +16030,9 @@ MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 				vRemovePatch(iIndex[iPos]);
 			}
 		}
-		else if (iLimit <= iPos <= (iLimit + 3)) // X <= 6 or 3 <= X + 3
+		else if (iLimit <= iPos <= (iLimit + 3))
 		{
-			FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1))); // X - 2/5 = 1...4
+			FormatEx(sName, sizeof sName, "MTPatch_Smoker%iCleanKill", (iPos - (iLimit - 1)));
 			if (iIndex[iPos] == -1)
 			{
 				iIndex[iPos] = iGetPatchIndex(sName);
@@ -16587,12 +16601,13 @@ MRESReturn mreSecondaryAttackPost(int pThis)
 
 MRESReturn mreSelectWeightedSequencePost(int pThis, DHookReturn hReturn, DHookParam hParams)
 {
-	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && 54 <= hReturn.Value <= 60)
+	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && 52 <= hReturn.Value <= 60)
 	{
-		hReturn.Value = iGetAnimation(pThis, "ACT_HULK_ATTACK_LOW");
-		SetEntPropFloat(pThis, Prop_Send, "m_flCycle", 15.0);
+		hReturn.Value = 0;
 
-		return MRES_Override;
+		SetEntPropFloat(pThis, Prop_Send, "m_flCycle", 1000.0);
+
+		return MRES_ChangedOverride;
 	}
 
 	return MRES_Ignored;
@@ -16634,12 +16649,9 @@ MRESReturn mreSetMainActivityPre(int pThis, DHookParam hParams)
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
 	{
 		int iActivity = hParams.Get(1);
-		if (iActivity == 1077 // ACT_TERROR_HIT_BY_TANKPUNCH
-			|| iActivity == 1078 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
-			|| iActivity == 1263 // ACT_TERROR_POUNCED_TO_STAND
-			|| iActivity == 1283) // ACT_TERROR_TANKROCK_TO_STAND
+		if (iActivity == MT_ACT_TERROR_HIT_BY_TANKPUNCH || iActivity == MT_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH || iActivity == MT_ACT_TERROR_POUNCED_TO_STAND || iActivity == MT_ACT_TERROR_TANKROCK_TO_STAND)
 		{
-			hParams.Set(1, 1079); // ACT_TERROR_TANKPUNCH_LAND
+			hParams.Set(1, MT_ACT_TERROR_TANKPUNCH_LAND);
 
 			return MRES_ChangedHandled;
 		}
@@ -16662,17 +16674,10 @@ MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 	{
 		case true:
 		{
-			switch (g_esGeneral.g_iTankWave)
+			switch (g_esGeneral.g_iFinaleAmount)
 			{
-				case 0: bBlock = false;
-				default:
-				{
-					switch (g_esGeneral.g_iFinaleAmount)
-					{
-						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
-						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
-					}
-				}
+				case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave] <= iCount2);
+				default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
 			}
 		}
 		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
@@ -17768,7 +17773,7 @@ bool bIsCustomTank(int tank)
 #if defined _mtclone_included
 	return g_esGeneral.g_bCloneInstalled && MT_IsTankClone(tank);
 #else
-	return bIsSurvivor(tank, MT_CHECK_INDEX|MT_CHECK_INGAME); // will always return false
+	return bIsSurvivor(tank, MT_CHECK_INDEX|MT_CHECK_INGAME);
 #endif
 }
 
@@ -17782,7 +17787,7 @@ bool bIsCustomTankSupported(int tank)
 
 	return true;
 #else
-	return bIsValidClient(tank); // will always return true
+	return bIsValidClient(tank);
 #endif
 }
 
@@ -18336,29 +18341,29 @@ int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = f
 		{
 			switch (iType)
 			{
-				case 3: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle/rifle_ak47/rifle_desert/rifle_sg552
-				case 5: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg/smg_silenced/smg_mp5
-				case 7: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 2.08), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/shotgun_chrome
-				case 8: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue * 2.22), 1, 255) : g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue; // autoshotgun/shotgun_spas
-				case 9: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
-				case 10: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTSniperRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTSniperRifleAmmo.IntValue; // sniper_military/sniper_awp/sniper_scout
-				case 17: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue * 2) : g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue; // grenade_launcher
+				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 2.08), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue * 2.22), 1, 255) : g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTSniperRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTSniperRifleAmmo.IntValue;
+				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue * 2) : g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue;
 			}
 		}
 		else
 		{
 			switch (iType)
 			{
-				case 1: return (bRewarded && !reset) ? 30 : 15; // pistol
-				case 2: return (bRewarded && !reset) ? 16 : 8; // pistol_magnum
-				case 3: return (bRewarded && !reset) ? 100 : 50; // rifle/rifle_ak47/rifle_desert/rifle_sg552
-				case 5: return (bRewarded && !reset) ? 100 : 50; // smg/smg_silenced/smg_mp5
-				case 6: return (bRewarded && !reset) ? 300 : 150; // rifle_m60
-				case 7: return (bRewarded && !reset) ? 16 : 8; // pumpshotgun/shotgun_chrome
-				case 8: return (bRewarded && !reset) ? 20 : 10; // autoshotgun/shotgun_spas
-				case 9: return (bRewarded && !reset) ? 30 : 15; // hunting_rifle
-				case 10: return (bRewarded && !reset) ? 60 : 30; // sniper_military/sniper_awp/sniper_scout
-				case 17: return (bRewarded && !reset) ? 2 : 1; // grenade_launcher
+				case MT_L4D2_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? 30 : 15;
+				case MT_L4D2_AMMOTYPE_PISTOL_MAGNUM: return (bRewarded && !reset) ? 16 : 8;
+				case MT_L4D2_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? 100 : 50;
+				case MT_L4D2_AMMOTYPE_SMG: return (bRewarded && !reset) ? 100 : 50;
+				case MT_L4D2_AMMOTYPE_RIFLE_M60: return (bRewarded && !reset) ? 300 : 150;
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER1: return (bRewarded && !reset) ? 16 : 8;
+				case MT_L4D2_AMMOTYPE_SHOTGUN_TIER2: return (bRewarded && !reset) ? 20 : 10;
+				case MT_L4D2_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? 30 : 15;
+				case MT_L4D2_AMMOTYPE_SNIPER_RIFLE: return (bRewarded && !reset) ? 60 : 30;
+				case MT_L4D2_AMMOTYPE_GRENADE_LAUNCHER: return (bRewarded && !reset) ? 2 : 1;
 			}
 		}
 	}
@@ -18368,21 +18373,21 @@ int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = f
 		{
 			switch (iType)
 			{
-				case 2: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
-				case 3: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle
-				case 5: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg
-				case 6: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 1.56), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/autoshotgun
+				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
+				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? (g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue * 2) : g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
+				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTSMGAmmo.IntValue * 1.23), 1, 1000) : g_esGeneral.g_cvMTSMGAmmo.IntValue;
+				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? iClamp(RoundToNearest(g_esGeneral.g_cvMTShotgunAmmo.IntValue * 1.56), 1, 255) : g_esGeneral.g_cvMTShotgunAmmo.IntValue;
 			}
 		}
 		else
 		{
 			switch (iType)
 			{
-				case 1: return (bRewarded && !reset) ? 30 : 15; // pistol
-				case 2: return (bRewarded && !reset) ? 30 : 15; // hunting_rifle
-				case 3: return (bRewarded && !reset) ? 100 : 50; // rifle
-				case 5: return (bRewarded && !reset) ? 100 : 50; // smg
-				case 6: return (bRewarded && !reset) ? 20 : 10; // pumpshotgun/autoshotgun
+				case MT_L4D1_AMMOTYPE_PISTOL: return (bRewarded && !reset) ? 30 : 15;
+				case MT_L4D1_AMMOTYPE_HUNTING_RIFLE: return (bRewarded && !reset) ? 30 : 15;
+				case MT_L4D1_AMMOTYPE_RIFLE: return (bRewarded && !reset) ? 100 : 50;
+				case MT_L4D1_AMMOTYPE_SMG: return (bRewarded && !reset) ? 100 : 50;
+				case MT_L4D1_AMMOTYPE_SHOTGUN: return (bRewarded && !reset) ? 20 : 10;
 			}
 		}
 	}
@@ -19443,7 +19448,7 @@ Action tTimerTankUpdate(Handle timer, int userid)
 
 Action tTimerTankWave(Handle timer)
 {
-	if (g_esGeneral.g_bNormalMap || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
+	if (g_esGeneral.g_bNormalMap || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 11))
 	{
 		g_esGeneral.g_hTankWaveTimer = null;
 

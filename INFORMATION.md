@@ -6,6 +6,7 @@
 - Visit the [`Wiki`](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `97-98` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
+- Most of these settings can be overridden for each player via their Steam IDs.
 
 ## Sections
 - Plugin Settings
@@ -2309,7 +2310,7 @@
 			// Separate types per wave with commas (",").
 			// Separate values with "-".
 			// --
-			// Wave limit: 10
+			// Wave limit: 11
 			// Character limit for each wave: 10
 			// --
 			// Minimum value for each wave: -1 (OFF)
@@ -2327,7 +2328,7 @@
 			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
-			"Finale Types"				"1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500"
+			"Finale Types"				"1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500"
 
 			// Number of Tanks to spawn for each finale wave.
 			// Note: This setting does not seem to work on the official Left 4 Dead 1 campaigns' finale maps in Left 4 Dead 2. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
@@ -2336,26 +2337,27 @@
 			// --
 			// Separate waves with commas (",").
 			// --
-			// Wave limit: 10
+			// Wave limit: 11
 			// Character limit for each wave: 3
 			// --
 			// Minimum value for each wave: 1
 			// Maximum value for each wave: 32
 			// --
-			// 1st number = 1st wave
-			// 2nd number = 2nd wave
-			// 3rd number = 3rd wave
-			// 4th number = 4th wave
-			// 5th number = 5th wave
-			// 6th number = 6th wave
-			// 7th number = 7th wave
-			// 8th number = 8th wave
-			// 9th number = 9th wave
-			// 10th number = 10th wave
+			// 1st number = 0th wave (Before finale event starts.)
+			// 2nd number = 1st wave
+			// 3rd number = 2nd wave
+			// 4th number = 3rd wave
+			// 5th number = 4th wave
+			// 6th number = 5th wave
+			// 7th number = 6th wave
+			// 8th number = 7th wave
+			// 9th number = 8th wave
+			// 10th number = 9th wave
+			// 11th number = 10th wave
 			// --
 			// 0: OFF, no limit.
 			// 1-32: ON, the number of Tanks that will spawn.
-			"Finale Waves"				"0,0,0,0,0,0,0,0,0,0"
+			"Finale Waves"				"0,0,0,0,0,0,0,0,0,0,0"
 		}
 		"ConVars"
 		{
@@ -19637,7 +19639,7 @@
 
 			// The health received by the Mutant Tank is multiplied by this value.
 			// Note: Health = Health x Vampire health multiplier
-			// Example: Health = 1000.0 x 5.0 (5000.0)
+			// Example: Health = 100.0 x 5.0 (500.0)
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be overridden for specific players.
 			// --
