@@ -18,6 +18,9 @@
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
 
+#### Settings
+- Fixed the `Skip Taunt` setting not being exclusive to Left 4 Dead 2.
+
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
@@ -34,6 +37,7 @@
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
+- Created macros for several arbitrary values.
 
 #### Core plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
@@ -44,6 +48,7 @@
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
 - Improved logging for patching system.
 - Changed the method for aggravating idle Tanks. (Thanks to `cravenge` for the code and gamedata info!)
+- Updated the logic for skipping the Tank's taunt animation. (Thanks to `sorallll` for the code!)
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
@@ -77,6 +82,9 @@
 - The `Aggressive Tanks` setting under the `Plugin Settings/Competitive` can now be overridden for each Mutant Tank type.
 - Renamed the `Aggressive Tanks` setting to `Auto Aggravate`.
 - Added the `Rock Sound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections.
+- Updated the following settings to support the `0th` wave on finale maps (before finale events start):
+	- `Finale Types`
+	- `Finale Waves`
 
 #### Translations
 - Updated English translations.

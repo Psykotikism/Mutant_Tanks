@@ -2692,26 +2692,6 @@ stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const 
 	return 0;
 }
 
-stock int iGetAnimation(int player, const char[] sequence)
-{
-	int iProp = CreateEntityByName("prop_dynamic");
-	if (bIsValidEntity(iProp))
-	{
-		char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
-		SetEntityModel(iProp, sModel);
-		SetVariantString(sequence);
-		AcceptEntityInput(iProp, "SetAnimation");
-
-		int iResult = GetEntProp(iProp, Prop_Send, "m_nSequence");
-		RemoveEdict(iProp);
-
-		return iResult;
-	}
-
-	return 0;
-}
-
 stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot > 0; iBot--)

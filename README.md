@@ -2093,6 +2093,8 @@ Examples:
 
 **Forgetest** - For helping with gamedata offsets.
 
+**sorallll** - For the [Skip Tank Taunt](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp) plugin.
+
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
 **exvel** - For the [Colors](https://forums.alliedmods.net/showthread.php?t=96831) include.

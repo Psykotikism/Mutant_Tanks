@@ -2093,6 +2093,8 @@ Overrides
 
 **Forgetest** - За помощь с смещениями.
 
+**sorallll** - За плагин [Skip Tank Taunt](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp).
+
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
 **exvel** - За include [Colors](https://forums.alliedmods.net/showthread.php?t=96831).
