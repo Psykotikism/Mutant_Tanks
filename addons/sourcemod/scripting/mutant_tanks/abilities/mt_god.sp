@@ -818,7 +818,7 @@ void vGodAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esGodCache[tank].g_flGodChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esGodCache[tank].g_flGodChance)
 		{
 			vGod(tank);
 		}

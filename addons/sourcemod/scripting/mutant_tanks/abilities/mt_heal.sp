@@ -415,7 +415,7 @@ Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHealHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHealCache[attacker].g_flHealChance, g_esHealCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHealHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHealCache[attacker].g_flHealChance, g_esHealCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esHealCache[victim].g_iHealHitMode == 0 || g_esHealCache[victim].g_iHealHitMode == 2) && bIsSurvivor(attacker) && g_esHealCache[victim].g_iComboAbility == 0)
@@ -427,7 +427,7 @@ Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vHealHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHealCache[victim].g_flHealChance, g_esHealCache[victim].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vHealHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHealCache[victim].g_flHealChance, g_esHealCache[victim].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -822,7 +822,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHealCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHealCache[tank].g_iHealAbility > 0 && g_esHealCache[tank].g_iComboAbility == 0)
 	{
 		vHealAbility(tank, false);
-		vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vHealAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -901,7 +901,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esHealPlayer[tank].g_iCooldown2 != -1 && g_esHealPlayer[tank].g_iCooldown2 > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman6", (g_esHealPlayer[tank].g_iCooldown2 - iTime));
-					case false: vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case false: vHealAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}

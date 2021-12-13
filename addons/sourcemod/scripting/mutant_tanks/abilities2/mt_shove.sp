@@ -389,7 +389,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShoveHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esShoveCache[attacker].g_flShoveChance, g_esShoveCache[attacker].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vShoveHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esShoveCache[attacker].g_flShoveChance, g_esShoveCache[attacker].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esShoveCache[victim].g_iShoveHitMode == 0 || g_esShoveCache[victim].g_iShoveHitMode == 2) && bIsSurvivor(attacker) && g_esShoveCache[victim].g_iComboAbility == 0)
@@ -401,7 +401,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vShoveHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esShoveCache[victim].g_flShoveChance, g_esShoveCache[victim].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vShoveHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esShoveCache[victim].g_flShoveChance, g_esShoveCache[victim].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -717,7 +717,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vShoveRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vShoveRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveShove(iTank);
 		}
 	}
@@ -740,7 +740,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShoveCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esShoveCache[tank].g_iShoveAbility == 1 && g_esShoveCache[tank].g_iComboAbility == 0)
 	{
-		vShoveAbility(tank, GetRandomFloat(0.1, 100.0));
+		vShoveAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -765,7 +765,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esShovePlayer[tank].g_iCooldown == -1 || g_esShovePlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vShoveAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vShoveAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShoveHuman3", (g_esShovePlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -793,7 +793,7 @@ void vShovePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vShoveRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vShoveRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 void vShoveCopyStats2(int oldTank, int newTank)

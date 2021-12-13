@@ -755,7 +755,7 @@ void vFastAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esFastCache[tank].g_flFastChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFastCache[tank].g_flFastChance)
 		{
 			vFast(tank);
 		}

@@ -912,7 +912,7 @@ void vYellAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esYellPlayer[tank].g_iAmmoCount < g_esYellCache[tank].g_iHumanAmmo && g_esYellCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esYellCache[tank].g_flYellChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esYellCache[tank].g_flYellChance)
 		{
 			vYell(tank);
 		}

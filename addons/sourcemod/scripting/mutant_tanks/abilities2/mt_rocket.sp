@@ -398,7 +398,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRocketHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRocketCache[victim].g_iRocketHitMode == 0 || g_esRocketCache[victim].g_iRocketHitMode == 2) && bIsSurvivor(attacker) && g_esRocketCache[victim].g_iComboAbility == 0)
@@ -410,7 +410,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRocketHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRocketHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -745,7 +745,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRocketCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRocketCache[tank].g_iRocketAbility == 1 && g_esRocketCache[tank].g_iComboAbility == 0)
 	{
-		vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -771,7 +771,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esRocketPlayer[tank].g_iCooldown != -1 && g_esRocketPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman3", (g_esRocketPlayer[tank].g_iCooldown - iTime));
-					case false: vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}

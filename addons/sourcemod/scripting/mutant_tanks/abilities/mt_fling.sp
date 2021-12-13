@@ -395,7 +395,7 @@ Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFlingHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esFlingCache[attacker].g_flFlingChance, g_esFlingCache[attacker].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vFlingHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esFlingCache[attacker].g_flFlingChance, g_esFlingCache[attacker].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esFlingCache[victim].g_iFlingHitMode == 0 || g_esFlingCache[victim].g_iFlingHitMode == 2) && bIsSurvivor(attacker) && g_esFlingCache[victim].g_iComboAbility == 0)
@@ -407,7 +407,7 @@ Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vFlingHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esFlingCache[victim].g_flFlingChance, g_esFlingCache[victim].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vFlingHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esFlingCache[victim].g_flFlingChance, g_esFlingCache[victim].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -717,7 +717,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFlingRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vFlingRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveFling(iTank);
 		}
 	}
@@ -740,7 +740,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFlingCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFlingCache[tank].g_iFlingAbility == 1 && g_esFlingCache[tank].g_iComboAbility == 0)
 	{
-		vFlingAbility(tank, GetRandomFloat(0.1, 100.0));
+		vFlingAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -766,7 +766,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esFlingPlayer[tank].g_iCooldown != -1 && g_esFlingPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman3", (g_esFlingPlayer[tank].g_iCooldown - iTime));
-					case false: vFlingAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vFlingAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -793,7 +793,7 @@ void vFlingPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vFlingRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vFlingRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 void vFlingCopyStats2(int oldTank, int newTank)

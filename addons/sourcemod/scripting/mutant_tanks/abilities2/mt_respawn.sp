@@ -549,7 +549,7 @@ void vRespawnPlayerEventKilled(int victim)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(victim) && g_esRespawnCache[victim].g_iRespawnAbility == 1 && g_esRespawnCache[victim].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esRespawnCache[victim].g_flRespawnChance)
+	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(victim) && g_esRespawnCache[victim].g_iRespawnAbility == 1 && g_esRespawnCache[victim].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esRespawnCache[victim].g_flRespawnChance)
 	{
 		vRespawn(victim);
 	}
@@ -763,7 +763,7 @@ void vRespawn2(int tank, int min = 0, int max = 0)
 		iTypeCount++;
 	}
 
-	int iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
+	int iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 

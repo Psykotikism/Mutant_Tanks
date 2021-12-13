@@ -891,7 +891,7 @@ void vFlyAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
 		{
 			vFly(tank, true);
 		}

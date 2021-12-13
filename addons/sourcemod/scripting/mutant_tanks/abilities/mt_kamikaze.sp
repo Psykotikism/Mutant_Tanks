@@ -387,7 +387,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vKamikazeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vKamikazeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esKamikazeCache[victim].g_iKamikazeHitMode == 0 || g_esKamikazeCache[victim].g_iKamikazeHitMode == 2) && bIsSurvivor(attacker) && g_esKamikazeCache[victim].g_iComboAbility == 0)
@@ -399,7 +399,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vKamikazeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[victim].g_flKamikazeChance, g_esKamikazeCache[victim].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vKamikazeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esKamikazeCache[victim].g_flKamikazeChance, g_esKamikazeCache[victim].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -700,7 +700,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esKamikazeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iComboAbility == 0)
 	{
-		vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
+		vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -721,7 +721,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iHumanAbility == 1)
 			{
-				vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
+				vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 			}
 		}
 	}

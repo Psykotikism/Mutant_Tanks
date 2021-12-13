@@ -354,7 +354,7 @@ Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPimpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esPimpCache[attacker].g_flPimpChance, g_esPimpCache[attacker].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vPimpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esPimpCache[attacker].g_flPimpChance, g_esPimpCache[attacker].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esPimpCache[victim].g_iPimpHitMode == 0 || g_esPimpCache[victim].g_iPimpHitMode == 2) && bIsSurvivor(attacker) && g_esPimpCache[victim].g_iComboAbility == 0)
@@ -366,7 +366,7 @@ Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vPimpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esPimpCache[victim].g_flPimpChance, g_esPimpCache[victim].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vPimpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esPimpCache[victim].g_flPimpChance, g_esPimpCache[victim].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -692,7 +692,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esPimpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esPimpCache[tank].g_iPimpAbility == 1 && g_esPimpCache[tank].g_iComboAbility == 0)
 	{
-		vPimpAbility(tank, GetRandomFloat(0.1, 100.0));
+		vPimpAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -717,7 +717,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esPimpPlayer[tank].g_iCooldown == -1 || g_esPimpPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vPimpAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vPimpAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpHuman3", (g_esPimpPlayer[tank].g_iCooldown - iTime));
 				}
 			}

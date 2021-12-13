@@ -803,7 +803,7 @@ void vSplatterAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esSplatterCache[tank].g_flSplatterChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSplatterCache[tank].g_flSplatterChance)
 		{
 			vSplatter(tank);
 		}
@@ -820,7 +820,7 @@ void vSplatterAbility(int tank)
 
 void vSplatterRange(int tank, bool idle)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esSplatterCache[tank].g_iSplatterAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esSplatterCache[tank].g_flSplatterChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esSplatterCache[tank].g_iSplatterAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esSplatterCache[tank].g_flSplatterChance)
 	{
 		if (!g_bSecondGame || (idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)) || g_esSplatterCache[tank].g_iHumanAbility == 0)))
 		{
@@ -828,7 +828,7 @@ void vSplatterRange(int tank, bool idle)
 		}
 
 		char sParticle[40];
-		FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof g_sParticles - 1))]);
+		FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[MT_GetRandomInt(0, (sizeof g_sParticles - 1))]);
 		vAttachParticle(tank, sParticle, 10.0, .teleport = false);
 	}
 }
@@ -870,7 +870,7 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 	}
 
 	char sParticle[40];
-	FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, (sizeof g_sParticles - 1))]);
+	FormatEx(sParticle, sizeof sParticle, "%s", (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[MT_GetRandomInt(0, (sizeof g_sParticles - 1))]);
 	vAttachParticle(iTank, sParticle, 10.0, .teleport = false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)

@@ -371,7 +371,7 @@ Action OnElectricTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vElectricHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esElectricCache[attacker].g_flElectricChance, g_esElectricCache[attacker].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vElectricHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esElectricCache[attacker].g_flElectricChance, g_esElectricCache[attacker].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esElectricCache[victim].g_iElectricHitMode == 0 || g_esElectricCache[victim].g_iElectricHitMode == 2) && bIsSurvivor(attacker) && g_esElectricCache[victim].g_iComboAbility == 0)
@@ -383,7 +383,7 @@ Action OnElectricTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vElectricHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esElectricCache[victim].g_flElectricChance, g_esElectricCache[victim].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vElectricHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esElectricCache[victim].g_flElectricChance, g_esElectricCache[victim].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -710,7 +710,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esElectricCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esElectricCache[tank].g_iElectricAbility == 1 && g_esElectricCache[tank].g_iComboAbility == 0)
 	{
-		vElectricAbility(tank, GetRandomFloat(0.1, 100.0));
+		vElectricAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -735,7 +735,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vElectricAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vElectricAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman3", (g_esElectricPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -1032,7 +1032,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
-	EmitSoundToAll(g_sElectricSounds[GetRandomInt(0, (sizeof g_sElectricSounds - 1))], iSurvivor);
+	EmitSoundToAll(g_sElectricSounds[MT_GetRandomInt(0, (sizeof g_sElectricSounds - 1))], iSurvivor);
 
 	return Plugin_Continue;
 }

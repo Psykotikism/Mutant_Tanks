@@ -380,7 +380,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vJumpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vJumpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esJumpCache[victim].g_iJumpHitMode == 0 || g_esJumpCache[victim].g_iJumpHitMode == 2) && bIsSurvivor(attacker) && g_esJumpCache[victim].g_iComboAbility == 0)
@@ -392,7 +392,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vJumpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vJumpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -753,7 +753,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esJumpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esJumpCache[tank].g_iJumpAbility > 0 && g_esJumpCache[tank].g_iComboAbility == 0)
 	{
 		vJumpAbility(tank, false);
-		vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -831,7 +831,7 @@ public void MT_OnButtonPressed(int tank, int button)
 			{
 				switch (g_esJumpPlayer[tank].g_iCooldown2 == -1 || g_esJumpPlayer[tank].g_iCooldown2 < iTime)
 				{
-					case true: vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case true: vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "JumpHuman6", (g_esJumpPlayer[tank].g_iCooldown2 - iTime));
 				}
 			}
@@ -1282,7 +1282,7 @@ Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
+	if (MT_GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
 	{
 		return Plugin_Continue;
 	}

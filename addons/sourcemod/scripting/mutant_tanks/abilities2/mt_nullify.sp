@@ -354,7 +354,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vNullifyHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esNullifyCache[attacker].g_flNullifyChance, g_esNullifyCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vNullifyHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esNullifyCache[attacker].g_flNullifyChance, g_esNullifyCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
@@ -363,7 +363,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esNullifyPlayer[victim].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[attacker].g_iImmunityFlags))
 				{
-					vNullifyHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esNullifyCache[victim].g_flNullifyChance, g_esNullifyCache[victim].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vNullifyHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esNullifyCache[victim].g_flNullifyChance, g_esNullifyCache[victim].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 
@@ -699,7 +699,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esNullifyCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esNullifyCache[tank].g_iNullifyAbility == 1 && g_esNullifyCache[tank].g_iComboAbility == 0)
 	{
-		vNullifyAbility(tank, GetRandomFloat(0.1, 100.0));
+		vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -724,7 +724,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esNullifyPlayer[tank].g_iCooldown == -1 || g_esNullifyPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vNullifyAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman3", (g_esNullifyPlayer[tank].g_iCooldown - iTime));
 				}
 			}

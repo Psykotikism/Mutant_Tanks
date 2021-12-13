@@ -710,7 +710,7 @@ void vUndeadAbility(int tank)
 
 	if (g_esUndeadPlayer[tank].g_iCount < g_esUndeadCache[tank].g_iUndeadAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUndeadPlayer[tank].g_iAmmoCount < g_esUndeadCache[tank].g_iHumanAmmo && g_esUndeadCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
 		{
 			vUndead(tank);
 		}

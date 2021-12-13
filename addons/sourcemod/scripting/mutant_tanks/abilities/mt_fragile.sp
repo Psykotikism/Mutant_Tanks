@@ -414,7 +414,7 @@ Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esFragileCache[victim].g_flFragileMeleeMultiplier;
 
-				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0)
+				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && MT_GetRandomFloat(0.0, 100.0) <= 15.0)
 				{
 					float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
 					GetClientAbsOrigin(attacker, flSurvivorOrigin);
@@ -910,7 +910,7 @@ void vFragileAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esFragileCache[tank].g_flFragileChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFragileCache[tank].g_flFragileChance)
 		{
 			vFragile(tank);
 		}

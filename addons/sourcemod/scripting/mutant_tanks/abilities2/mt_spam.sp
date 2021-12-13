@@ -856,7 +856,7 @@ void vSpamAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
 		{
 			vSpam(tank);
 		}

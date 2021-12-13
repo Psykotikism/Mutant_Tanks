@@ -895,7 +895,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 		iTypeCount++;
 	}
 
-	int iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
+	int iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 
@@ -908,7 +908,7 @@ void vCloneAbility(int tank)
 
 	if (g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esClonePlayer[tank].g_iAmmoCount < g_esCloneCache[tank].g_iHumanAmmo && g_esCloneCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCloneCache[tank].g_flCloneChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCloneCache[tank].g_flCloneChance)
 		{
 			vClone(tank);
 		}

@@ -652,7 +652,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags))
 			{
-				vDropWeapon(iTank, 1, GetRandomFloat(0.1, 100.0));
+				vDropWeapon(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			}
 
 			vDropReset2(iTank);
@@ -724,7 +724,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		return;
 	}
 
-	vDropWeapon(tank, 1, GetRandomFloat(0.1, 100.0));
+	vDropWeapon(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 void vDropCopyStats2(int oldTank, int newTank)
@@ -785,7 +785,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					}
 				}
 
-				if (GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
+				if (MT_GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
 				{
 					iClip = SDKCall(g_esDropGeneral.g_hSDKGetMaxClip1, iDrop);
 				}
@@ -900,12 +900,12 @@ int iGetRandomWeapon(int tank)
 
 	switch (g_esDropCache[tank].g_iDropMode)
 	{
-		case 0: iDropValue = GetRandomInt(0, 32);
-		case 1: iDropValue = GetRandomInt(0, 18);
-		case 2: iDropValue = GetRandomInt(19, 32);
+		case 0: iDropValue = MT_GetRandomInt(0, 32);
+		case 1: iDropValue = MT_GetRandomInt(0, 18);
+		case 2: iDropValue = MT_GetRandomInt(19, 32);
 	}
 
-	return g_bSecondGame ? iDropValue : GetRandomInt(0, 5);
+	return g_bSecondGame ? iDropValue : MT_GetRandomInt(0, 5);
 }
 
 void vDropFrame(int userid)
@@ -920,7 +920,7 @@ void vDropFrame(int userid)
 
 	vRemoveDrop(iTank);
 
-	int iPosition = (0 < g_esDropCache[iTank].g_iDropHandPosition < 3) ? g_esDropCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2),
+	int iPosition = (0 < g_esDropCache[iTank].g_iDropHandPosition < 3) ? g_esDropCache[iTank].g_iDropHandPosition : MT_GetRandomInt(1, 2),
 		iWeapon = iGetNamedWeapon(iTank);
 	if (iWeapon == -1)
 	{

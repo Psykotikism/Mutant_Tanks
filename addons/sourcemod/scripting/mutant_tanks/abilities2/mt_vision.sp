@@ -351,7 +351,7 @@ Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vVisionHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esVisionCache[attacker].g_flVisionChance, g_esVisionCache[attacker].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vVisionHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esVisionCache[attacker].g_flVisionChance, g_esVisionCache[attacker].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esVisionCache[victim].g_iVisionHitMode == 0 || g_esVisionCache[victim].g_iVisionHitMode == 2) && bIsHumanSurvivor(attacker) && g_esVisionCache[victim].g_iComboAbility == 0)
@@ -363,7 +363,7 @@ Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vVisionHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esVisionCache[victim].g_flVisionChance, g_esVisionCache[victim].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vVisionHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esVisionCache[victim].g_flVisionChance, g_esVisionCache[victim].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -700,7 +700,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esVisionCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esVisionCache[tank].g_iVisionAbility == 1 && g_esVisionCache[tank].g_iComboAbility == 0)
 	{
-		vVisionAbility(tank, GetRandomFloat(0.1, 100.0));
+		vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -725,7 +725,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vVisionAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", (g_esVisionPlayer[tank].g_iCooldown - iTime));
 				}
 			}

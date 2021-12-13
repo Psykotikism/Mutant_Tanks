@@ -370,7 +370,7 @@ Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBombHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esBombCache[attacker].g_flBombChance, g_esBombCache[attacker].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vBombHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBombCache[attacker].g_flBombChance, g_esBombCache[attacker].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBombCache[victim].g_iBombHitMode == 0 || g_esBombCache[victim].g_iBombHitMode == 2) && bIsSurvivor(attacker) && g_esBombCache[victim].g_iComboAbility == 0)
@@ -382,7 +382,7 @@ Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vBombHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esBombCache[victim].g_flBombChance, g_esBombCache[victim].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vBombHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBombCache[victim].g_flBombChance, g_esBombCache[victim].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -699,7 +699,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vBombRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vBombRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveBomb(iTank);
 		}
 	}
@@ -722,7 +722,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esBombCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esBombCache[tank].g_iBombAbility == 1 && g_esBombCache[tank].g_iComboAbility == 0)
 	{
-		vBombAbility(tank, GetRandomFloat(0.1, 100.0));
+		vBombAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -748,7 +748,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esBombPlayer[tank].g_iCooldown != -1 && g_esBombPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman3", (g_esBombPlayer[tank].g_iCooldown - iTime));
-					case false: vBombAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vBombAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -793,7 +793,7 @@ void vBombPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vBombRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vBombRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -809,7 +809,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esBombCache[tank].g_iBombRockBreak == 1 && g_esBombCache[tank].g_iComboAbility == 0)
 	{
-		vBombRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
+		vBombRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 

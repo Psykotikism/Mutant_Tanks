@@ -785,7 +785,7 @@ void vSplashAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
 		{
 			vSplash(tank);
 		}

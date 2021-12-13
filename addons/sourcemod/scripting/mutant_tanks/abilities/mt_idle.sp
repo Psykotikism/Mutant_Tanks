@@ -368,7 +368,7 @@ Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIdleCache[attacker].g_flIdleChance, g_esIdleCache[attacker].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vIdleHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esIdleCache[attacker].g_flIdleChance, g_esIdleCache[attacker].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esIdleCache[victim].g_iIdleHitMode == 0 || g_esIdleCache[victim].g_iIdleHitMode == 2) && bIsHumanSurvivor(attacker) && g_esIdleCache[victim].g_iComboAbility == 0)
@@ -380,7 +380,7 @@ Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vIdleHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIdleCache[victim].g_flIdleChance, g_esIdleCache[victim].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vIdleHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esIdleCache[victim].g_flIdleChance, g_esIdleCache[victim].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -690,7 +690,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esIdleCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esIdleCache[tank].g_iIdleAbility == 1 && g_esIdleCache[tank].g_iComboAbility == 0)
 	{
-		vIdleAbility(tank, GetRandomFloat(0.1, 100.0));
+		vIdleAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -716,7 +716,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esIdlePlayer[tank].g_iCooldown != -1 && g_esIdlePlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "IdleHuman3", (g_esIdlePlayer[tank].g_iCooldown - iTime));
-					case false: vIdleAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vIdleAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}

@@ -606,7 +606,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					continue;
 				}
 
-				bRandom = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
+				bRandom = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
 				if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
 				{
 					float flTankPos[3], flRange = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition) : g_esNecroCache[iTank].g_flNecroRange;
@@ -820,7 +820,7 @@ void vNecroAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esNecroCache[tank].g_flNecroChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[tank].g_flNecroChance)
 		{
 			g_esNecroPlayer[tank].g_bActivated = true;
 

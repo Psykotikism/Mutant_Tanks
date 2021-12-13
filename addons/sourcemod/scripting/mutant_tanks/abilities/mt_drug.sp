@@ -360,7 +360,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrugHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esDrugCache[attacker].g_flDrugChance, g_esDrugCache[attacker].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vDrugHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esDrugCache[attacker].g_flDrugChance, g_esDrugCache[attacker].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esDrugCache[victim].g_iDrugHitMode == 0 || g_esDrugCache[victim].g_iDrugHitMode == 2) && bIsHumanSurvivor(attacker) && g_esDrugCache[victim].g_iComboAbility == 0)
@@ -372,7 +372,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vDrugHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esDrugCache[victim].g_flDrugChance, g_esDrugCache[victim].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vDrugHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esDrugCache[victim].g_flDrugChance, g_esDrugCache[victim].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -720,7 +720,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esDrugCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDrugCache[tank].g_iDrugAbility == 1 && g_esDrugCache[tank].g_iComboAbility == 0)
 	{
-		vDrugAbility(tank, GetRandomFloat(0.1, 100.0));
+		vDrugAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -745,7 +745,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esDrugPlayer[tank].g_iCooldown == -1 || g_esDrugPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vDrugAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vDrugAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman3", (g_esDrugPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -777,7 +777,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 {
 	float flAngles[3];
 	GetClientEyeAngles(survivor, flAngles);
-	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
+	flAngles[2] = toggle ? angles[MT_GetRandomInt(0, 100) % 20] : 0.0;
 	TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 
 	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
@@ -787,7 +787,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 	{
 		for (int iPos = 0; iPos < (sizeof iColor - 1); iPos++)
 		{
-			iColor[iPos] = GetRandomInt(0, 255);
+			iColor[iPos] = MT_GetRandomInt(0, 255);
 		}
 	}
 

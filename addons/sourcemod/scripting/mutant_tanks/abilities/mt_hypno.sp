@@ -372,7 +372,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHypnoHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHypnoHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
@@ -381,7 +381,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
 				{
-					vHypnoHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vHypnoHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 
@@ -786,7 +786,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
 	{
-		vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+		vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -811,7 +811,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman3", (g_esHypnoPlayer[tank].g_iCooldown - iTime));
 				}
 			}
