@@ -9442,7 +9442,7 @@ void vMutateTank(int tank, int type)
 			}
 			else
 			{
-				switch (g_esGeneral.g_bFinalMap && g_esGeneral.g_iTankWave > 0)
+				switch (g_esGeneral.g_bFinalMap)
 				{
 					case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave]);
 					case false: iType = (g_esGeneral.g_bNormalMap && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
@@ -19448,7 +19448,7 @@ Action tTimerTankUpdate(Handle timer, int userid)
 
 Action tTimerTankWave(Handle timer)
 {
-	if (g_esGeneral.g_bNormalMap || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 11))
+	if (g_esGeneral.g_bNormalMap || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
 		g_esGeneral.g_hTankWaveTimer = null;
 
