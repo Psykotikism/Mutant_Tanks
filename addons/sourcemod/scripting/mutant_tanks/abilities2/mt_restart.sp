@@ -399,7 +399,7 @@ Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRestartHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRestartCache[attacker].g_flRestartChance, g_esRestartCache[attacker].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRestartHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRestartCache[attacker].g_flRestartChance, g_esRestartCache[attacker].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRestartCache[victim].g_iRestartHitMode == 0 || g_esRestartCache[victim].g_iRestartHitMode == 2) && bIsSurvivor(attacker) && g_esRestartCache[victim].g_iComboAbility == 0)
@@ -411,7 +411,7 @@ Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRestartHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRestartCache[victim].g_flRestartChance, g_esRestartCache[victim].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRestartHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRestartCache[victim].g_flRestartChance, g_esRestartCache[victim].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -815,7 +815,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRestartCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRestartCache[tank].g_iRestartAbility == 1 && g_esRestartCache[tank].g_iComboAbility == 0)
 	{
-		vRestartAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRestartAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -841,7 +841,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esRestartPlayer[tank].g_iCooldown != -1 && g_esRestartPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartHuman3", (g_esRestartPlayer[tank].g_iCooldown - iTime));
-					case false: vRestartAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vRestartAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}

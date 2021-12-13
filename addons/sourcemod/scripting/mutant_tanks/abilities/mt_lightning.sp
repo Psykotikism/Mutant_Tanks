@@ -757,7 +757,7 @@ void vLightningAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esLightningCache[tank].g_flLightningChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esLightningCache[tank].g_flLightningChance)
 		{
 			vLightning(tank);
 		}
@@ -859,8 +859,8 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	char sTargetName[64];
 	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	float flRadius = GetRandomFloat(100.0, 360.0),
-		flRadius2 = GetRandomFloat(0.0, 360.0);
+	float flRadius = MT_GetRandomFloat(100.0, 360.0),
+		flRadius2 = MT_GetRandomFloat(0.0, 360.0);
 	flOrigin[0] += (flRadius * Cosine(DegToRad(flRadius2)));
 	flOrigin[1] += (flRadius * Sine(DegToRad(flRadius2)));
 
@@ -887,7 +887,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
 				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
-				EmitSoundToAll(g_sLightningSounds[GetRandomInt(0, (sizeof g_sLightningSounds - 1))], iSurvivor);
+				EmitSoundToAll(g_sLightningSounds[MT_GetRandomInt(0, (sizeof g_sLightningSounds - 1))], iSurvivor);
 			}
 		}
 	}

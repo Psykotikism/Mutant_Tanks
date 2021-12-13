@@ -618,7 +618,7 @@ void vTrackRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{
 		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{

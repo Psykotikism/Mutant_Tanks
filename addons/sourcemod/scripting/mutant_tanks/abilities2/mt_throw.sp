@@ -794,7 +794,7 @@ void vThrowRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esThrowCache[tank].g_flThrowChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esThrowCache[tank].g_flThrowChance)
 	{
 		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
 		{
@@ -975,7 +975,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 		if (iAbilityCount > 0)
 		{
-			switch (iAbilities[GetRandomInt(0, (iAbilityCount - 1))])
+			switch (iAbilities[MT_GetRandomInt(0, (iAbilityCount - 1))])
 			{
 				case 1:
 				{
@@ -995,14 +995,14 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
+						switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
 						{
 							case 1: SetEntityModel(iCar, MODEL_CAR);
 							case 2: SetEntityModel(iCar, MODEL_CAR2);
 							case 4: SetEntityModel(iCar, MODEL_CAR3);
 							default:
 							{
-								switch (GetRandomInt(1, (sizeof iOptions)))
+								switch (MT_GetRandomInt(1, (sizeof iOptions)))
 								{
 									case 1: SetEntityModel(iCar, MODEL_CAR);
 									case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -1014,7 +1014,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						int iCarColor[3];
 						for (int iPos = 0; iPos < (sizeof iCarColor); iPos++)
 						{
-							iCarColor[iPos] = GetRandomInt(0, 255);
+							iCarColor[iPos] = MT_GetRandomInt(0, 255);
 						}
 
 						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
@@ -1076,7 +1076,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
+						switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
 						{
 							case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
 							case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
@@ -1087,7 +1087,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
 							default:
 							{
-								switch (GetRandomInt(1, (sizeof iOptions)))
+								switch (MT_GetRandomInt(1, (sizeof iOptions)))
 								{
 									case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
 									case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");

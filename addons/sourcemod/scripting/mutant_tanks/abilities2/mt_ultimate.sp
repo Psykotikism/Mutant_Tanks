@@ -926,7 +926,7 @@ void vUltimateAbility(int tank)
 		return;
 	}
 
-	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
+	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && MT_GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
 	{
 		if (g_esUltimatePlayer[tank].g_iCount < g_esUltimateCache[tank].g_iUltimateAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUltimatePlayer[tank].g_iAmmoCount < g_esUltimateCache[tank].g_iHumanAmmo && g_esUltimateCache[tank].g_iHumanAmmo > 0)))
 		{

@@ -354,7 +354,7 @@ Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrunkHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esDrunkCache[attacker].g_flDrunkChance, g_esDrunkCache[attacker].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vDrunkHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esDrunkCache[attacker].g_flDrunkChance, g_esDrunkCache[attacker].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esDrunkCache[victim].g_iDrunkHitMode == 0 || g_esDrunkCache[victim].g_iDrunkHitMode == 2) && bIsSurvivor(attacker) && g_esDrunkCache[victim].g_iComboAbility == 0)
@@ -366,7 +366,7 @@ Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vDrunkHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esDrunkCache[victim].g_flDrunkChance, g_esDrunkCache[victim].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vDrunkHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esDrunkCache[victim].g_flDrunkChance, g_esDrunkCache[victim].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -707,7 +707,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esDrunkCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDrunkCache[tank].g_iDrunkAbility == 1 && g_esDrunkCache[tank].g_iComboAbility == 0)
 	{
-		vDrunkAbility(tank, GetRandomFloat(0.1, 100.0));
+		vDrunkAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -732,7 +732,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esDrunkPlayer[tank].g_iCooldown == -1 || g_esDrunkPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vDrunkAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vDrunkAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman3", (g_esDrunkPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -1008,8 +1008,8 @@ Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", GetRandomFloat(1.5, 3.0));
-	CreateTimer(GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", MT_GetRandomFloat(1.5, 3.0));
+	CreateTimer(MT_GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	return Plugin_Continue;
 }
@@ -1045,7 +1045,7 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flPunchAngles[3], flEyeAngles[3], flAngle = GetRandomFloat(-360.0, 360.0);
+	float flPunchAngles[3], flEyeAngles[3], flAngle = MT_GetRandomFloat(-360.0, 360.0);
 	flPunchAngles[0] = 0.0;
 	flPunchAngles[1] = 0.0;
 	flPunchAngles[2] = 0.0;

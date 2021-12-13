@@ -351,7 +351,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vQuietHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esQuietCache[attacker].g_flQuietChance, g_esQuietCache[attacker].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vQuietHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esQuietCache[attacker].g_flQuietChance, g_esQuietCache[attacker].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esQuietCache[victim].g_iQuietHitMode == 0 || g_esQuietCache[victim].g_iQuietHitMode == 2) && bIsHumanSurvivor(attacker) && g_esQuietCache[victim].g_iComboAbility == 0)
@@ -363,7 +363,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vQuietHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esQuietCache[victim].g_flQuietChance, g_esQuietCache[victim].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vQuietHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esQuietCache[victim].g_flQuietChance, g_esQuietCache[victim].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -703,7 +703,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esQuietCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esQuietCache[tank].g_iQuietAbility == 1 && g_esQuietCache[tank].g_iComboAbility == 0)
 	{
-		vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
+		vQuietAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -728,7 +728,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esQuietPlayer[tank].g_iCooldown == -1 || g_esQuietPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vQuietAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman3", (g_esQuietPlayer[tank].g_iCooldown - iTime));
 				}
 			}

@@ -895,7 +895,7 @@ void vMeteorAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esMeteorPlayer[tank].g_iAmmoCount < g_esMeteorCache[tank].g_iHumanAmmo && g_esMeteorCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esMeteorCache[tank].g_flMeteorChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esMeteorCache[tank].g_flMeteorChance)
 		{
 			vMeteor(tank);
 		}
@@ -1012,8 +1012,8 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
-	flAngles[0] = GetRandomFloat(-20.0, 20.0);
-	flAngles[1] = GetRandomFloat(-20.0, 20.0);
+	flAngles[0] = MT_GetRandomFloat(-20.0, 20.0);
+	flAngles[1] = MT_GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
 	GetVectorAngles(flAngles, flAngles);
 
@@ -1040,13 +1040,13 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 			float flAngles2[3];
 			for (int iIndex = 0; iIndex < (sizeof flAngles2); iIndex++)
 			{
-				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
+				flAngles2[iIndex] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
 			float flVelocity[3];
-			flVelocity[0] = GetRandomFloat(0.0, 350.0);
-			flVelocity[1] = GetRandomFloat(0.0, 350.0);
-			flVelocity[2] = GetRandomFloat(0.0, 30.0);
+			flVelocity[0] = MT_GetRandomFloat(0.0, 350.0);
+			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
+			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
 			TeleportEntity(iMeteor, flHitpos, flAngles2, NULL_VECTOR);
 			DispatchSpawn(iMeteor);

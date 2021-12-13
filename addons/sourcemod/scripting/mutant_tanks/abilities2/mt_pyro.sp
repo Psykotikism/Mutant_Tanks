@@ -876,7 +876,7 @@ void vPyroAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esPyroCache[tank].g_flPyroChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esPyroCache[tank].g_flPyroChance)
 		{
 			vPyro(tank);
 		}

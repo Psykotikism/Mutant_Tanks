@@ -724,7 +724,7 @@ void vCloudAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esCloudPlayer[tank].g_iAmmoCount < g_esCloudCache[tank].g_iHumanAmmo && g_esCloudCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCloudCache[tank].g_flCloudChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCloudCache[tank].g_flCloudChance)
 		{
 			vCloud(tank);
 		}

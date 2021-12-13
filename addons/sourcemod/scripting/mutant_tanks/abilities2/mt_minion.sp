@@ -737,7 +737,7 @@ void vMinion(int tank)
 						iTypeCount++;
 					}
 
-					switch (iTypes[GetRandomInt(0, (iTypeCount - 1))])
+					switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
 					{
 						case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 						case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
@@ -747,7 +747,7 @@ void vMinion(int tank)
 						case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
 						default:
 						{
-							switch (GetRandomInt(1, (sizeof iTypes)))
+							switch (MT_GetRandomInt(1, (sizeof iTypes)))
 							{
 								case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
 								case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
@@ -822,7 +822,7 @@ void vMinionAbility(int tank)
 
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esMinionCache[tank].g_flMinionChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esMinionCache[tank].g_flMinionChance)
 		{
 			vMinion(tank);
 		}

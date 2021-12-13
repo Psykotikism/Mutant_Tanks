@@ -1412,7 +1412,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 	if (mode & flags)
 	{
 		int iColor[4];
-		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
 		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
 		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
 		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
@@ -1828,6 +1828,16 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	{
 		MT_PrintToChat(client, sBuffer);
 	}
+}
+
+stock float MT_GetRandomFloat(float min, float max)
+{
+	return (GetURandomFloat() * (max - min + 1)) + min;
+}
+
+stock int MT_GetRandomInt(int min, int max)
+{
+	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
 }
 
 // Checks
@@ -3058,7 +3068,7 @@ stock int iGetPlayerCount()
 
 stock int iGetRandomColor(int color)
 {
-	return (color == -1 || color < 0 || color > 255) ? GetRandomInt(0, 255) : color;
+	return (color == -1 || color < 0 || color > 255) ? MT_GetRandomInt(0, 255) : color;
 }
 
 stock int iGetRandomSurvivor(int tank)
@@ -3074,7 +3084,7 @@ stock int iGetRandomSurvivor(int tank)
 		iSurvivors[iSurvivorCount++] = iSurvivor;
 	}
 
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
+	return iSurvivors[MT_GetRandomInt(0, iSurvivorCount - 1)];
 }
 
 stock int iGetRandomTank(int tank)
@@ -3088,7 +3098,7 @@ stock int iGetRandomTank(int tank)
 		}
 	}
 
-	return iTanks[GetRandomInt(0, iTankCount - 1)];
+	return iTanks[MT_GetRandomInt(0, iTankCount - 1)];
 }
 
 stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)

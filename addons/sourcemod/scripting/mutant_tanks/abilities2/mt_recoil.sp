@@ -348,7 +348,7 @@ Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRecoilHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRecoilCache[attacker].g_flRecoilChance, g_esRecoilCache[attacker].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRecoilHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRecoilCache[attacker].g_flRecoilChance, g_esRecoilCache[attacker].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRecoilCache[victim].g_iRecoilHitMode == 0 || g_esRecoilCache[victim].g_iRecoilHitMode == 2) && bIsSurvivor(attacker) && g_esRecoilCache[victim].g_iComboAbility == 0)
@@ -360,7 +360,7 @@ Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRecoilHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRecoilCache[victim].g_flRecoilChance, g_esRecoilCache[victim].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRecoilHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRecoilCache[victim].g_flRecoilChance, g_esRecoilCache[victim].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -667,9 +667,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_INFAMMO) && g_esRecoilPlayer[iSurvivor].g_bAffected)
 		{
 			float flRecoil[3];
-			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
-			flRecoil[1] = GetRandomFloat(-25.0, 25.0);
-			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
+			flRecoil[0] = MT_GetRandomFloat(-20.0, -80.0);
+			flRecoil[1] = MT_GetRandomFloat(-25.0, 25.0);
+			flRecoil[2] = MT_GetRandomFloat(-25.0, 25.0);
 			SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flRecoil);
 		}
 	}
@@ -688,7 +688,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRecoilCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRecoilCache[tank].g_iRecoilAbility == 1 && g_esRecoilCache[tank].g_iComboAbility == 0)
 	{
-		vRecoilAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRecoilAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -713,7 +713,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esRecoilPlayer[tank].g_iCooldown == -1 || g_esRecoilPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vRecoilAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vRecoilAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman3", (g_esRecoilPlayer[tank].g_iCooldown - iTime));
 				}
 			}

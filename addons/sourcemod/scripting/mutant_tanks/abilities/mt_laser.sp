@@ -755,8 +755,8 @@ void vLaser2(int tank, int pos = -1)
 		flSurvivorPos[2] -= 15.0;
 		vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_LASER, 3.0);
 
-		EmitSoundToAll(((GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
-		EmitSoundToAll(((GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
+		EmitSoundToAll(((MT_GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
+		EmitSoundToAll(((MT_GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
 
 		int iColor[4];
 		GetEntityRenderColor(tank, iColor[0], iColor[1], iColor[2], iColor[3]);
@@ -785,7 +785,7 @@ void vLaserAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLaserPlayer[tank].g_iAmmoCount < g_esLaserCache[tank].g_iHumanAmmo && g_esLaserCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esLaserCache[tank].g_flLaserChance && !g_esLaserPlayer[tank].g_bActivated)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esLaserCache[tank].g_flLaserChance && !g_esLaserPlayer[tank].g_bActivated)
 		{
 			vLaser(tank);
 		}
@@ -859,7 +859,7 @@ int iGetNearestSurvivor(int tank, float pos[3])
 		}
 	}
 
-	return iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))];
+	return iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))];
 }
 
 Action tTimerLaserCombo(Handle timer, DataPack pack)

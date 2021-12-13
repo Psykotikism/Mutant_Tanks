@@ -801,7 +801,7 @@ void vSpawnZombie(int tank, bool uncommon)
 					iTypeCount++;
 				}
 
-				switch (iTypes[GetRandomInt(0, (iTypeCount - 1))])
+				switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
 				{
 					case 1: vSpawnUncommon(tank, MODEL_CEDA);
 					case 2: vSpawnUncommon(tank, MODEL_JIMMY);
@@ -812,7 +812,7 @@ void vSpawnZombie(int tank, bool uncommon)
 					case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
 					default:
 					{
-						switch (GetRandomInt(1, (sizeof iTypes)))
+						switch (MT_GetRandomInt(1, (sizeof iTypes)))
 						{
 							case 1: vSpawnUncommon(tank, MODEL_CEDA);
 							case 2: vSpawnUncommon(tank, MODEL_JIMMY);
@@ -888,7 +888,7 @@ void vZombie3(int tank)
 	{
 		switch (g_esZombieCache[tank].g_iZombieMode)
 		{
-			case 0: vSpawnZombie(tank, (GetRandomInt(1, 2) == 2));
+			case 0: vSpawnZombie(tank, (MT_GetRandomInt(1, 2) == 2));
 			case 1: vSpawnZombie(tank, false);
 			case 2: vSpawnZombie(tank, true);
 		}
@@ -904,7 +904,7 @@ void vZombieAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
 		{
 			vZombie(tank);
 		}
@@ -921,7 +921,7 @@ void vZombieAbility(int tank)
 
 void vZombieRange(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esZombieCache[tank].g_iZombieAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esZombieCache[tank].g_iZombieAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
 	{
 		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)) || g_esZombieCache[tank].g_iHumanAbility == 0)))
 		{

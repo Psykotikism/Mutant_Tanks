@@ -272,7 +272,7 @@ Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esXiphosCache[attacker].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esXiphosCache[attacker].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
 		{
 			if (bIsAreaNarrow(attacker, g_esXiphosCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[attacker].g_iTankType) || (g_esXiphosCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esXiphosPlayer[attacker].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[victim].g_iImmunityFlags))
 			{
@@ -287,7 +287,7 @@ Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				vEffect(victim, attacker, g_esXiphosCache[attacker].g_iXiphosEffect, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
 		{
 			if (bIsAreaNarrow(victim, g_esXiphosCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[victim].g_iTankType) || (g_esXiphosCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esXiphosPlayer[victim].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[attacker].g_iImmunityFlags))
 			{

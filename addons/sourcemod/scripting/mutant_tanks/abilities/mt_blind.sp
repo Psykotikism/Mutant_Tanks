@@ -371,7 +371,7 @@ Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBlindHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esBlindCache[attacker].g_flBlindChance, g_esBlindCache[attacker].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vBlindHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBlindCache[attacker].g_flBlindChance, g_esBlindCache[attacker].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBlindCache[victim].g_iBlindHitMode == 0 || g_esBlindCache[victim].g_iBlindHitMode == 2) && bIsHumanSurvivor(attacker) && g_esBlindCache[victim].g_iComboAbility == 0)
@@ -383,7 +383,7 @@ Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vBlindHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esBlindCache[victim].g_flBlindChance, g_esBlindCache[victim].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vBlindHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBlindCache[victim].g_flBlindChance, g_esBlindCache[victim].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -731,7 +731,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esBlindCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esBlindCache[tank].g_iBlindAbility == 1 && g_esBlindCache[tank].g_iComboAbility == 0)
 	{
-		vBlindAbility(tank, GetRandomFloat(0.1, 100.0));
+		vBlindAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -756,7 +756,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esBlindPlayer[tank].g_iCooldown == -1 || g_esBlindPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vBlindAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vBlindAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindHuman3", (g_esBlindPlayer[tank].g_iCooldown - iTime));
 				}
 			}

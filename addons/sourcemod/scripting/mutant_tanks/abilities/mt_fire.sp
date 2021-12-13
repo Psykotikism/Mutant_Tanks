@@ -367,7 +367,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFireHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esFireCache[attacker].g_flFireChance, g_esFireCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vFireHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esFireCache[attacker].g_flFireChance, g_esFireCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esFireCache[victim].g_iFireHitMode == 0 || g_esFireCache[victim].g_iFireHitMode == 2) && bIsSurvivor(attacker) && g_esFireCache[victim].g_iComboAbility == 0)
@@ -379,7 +379,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vFireHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esFireCache[victim].g_flFireChance, g_esFireCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vFireHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esFireCache[victim].g_flFireChance, g_esFireCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -696,7 +696,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFireRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vFireRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveFire(iTank);
 		}
 	}
@@ -719,7 +719,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFireCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFireCache[tank].g_iFireAbility == 1 && g_esFireCache[tank].g_iComboAbility == 0)
 	{
-		vFireAbility(tank, GetRandomFloat(0.1, 100.0));
+		vFireAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -745,7 +745,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esFirePlayer[tank].g_iCooldown != -1 && g_esFirePlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FireHuman3", (g_esFirePlayer[tank].g_iCooldown - iTime));
-					case false: vFireAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vFireAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -784,7 +784,7 @@ void vFirePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vFireRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vFireRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -800,7 +800,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esFireCache[tank].g_iFireRockBreak == 1 && g_esFireCache[tank].g_iComboAbility == 0)
 	{
-		vFireRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
+		vFireRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 

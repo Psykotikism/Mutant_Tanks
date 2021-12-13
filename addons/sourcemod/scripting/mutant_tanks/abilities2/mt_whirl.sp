@@ -357,7 +357,7 @@ Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWhirlHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esWhirlCache[attacker].g_flWhirlChance, g_esWhirlCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vWhirlHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esWhirlCache[attacker].g_flWhirlChance, g_esWhirlCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esWhirlCache[victim].g_iWhirlHitMode == 0 || g_esWhirlCache[victim].g_iWhirlHitMode == 2) && bIsHumanSurvivor(attacker) && g_esWhirlCache[victim].g_iComboAbility == 0)
@@ -369,7 +369,7 @@ Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vWhirlHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esWhirlCache[victim].g_flWhirlChance, g_esWhirlCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vWhirlHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esWhirlCache[victim].g_flWhirlChance, g_esWhirlCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -710,7 +710,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esWhirlCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWhirlCache[tank].g_iWhirlAbility == 1 && g_esWhirlCache[tank].g_iComboAbility == 0)
 	{
-		vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
+		vWhirlAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -735,7 +735,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esWhirlPlayer[tank].g_iCooldown == -1 || g_esWhirlPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vWhirlAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman3", (g_esWhirlPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -923,12 +923,12 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						iAxisCount++;
 					}
 
-					switch (iAxes[GetRandomInt(0, (iAxisCount - 1))])
+					switch (iAxes[MT_GetRandomInt(0, (iAxisCount - 1))])
 					{
 						case 1: iAxis = 0;
 						case 2: iAxis = 1;
 						case 4: iAxis = 2;
-						default: iAxis = GetRandomInt(0, (sizeof iAxes - 1));
+						default: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
 					}
 
 					DataPack dpWhirl;

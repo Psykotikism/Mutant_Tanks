@@ -352,7 +352,7 @@ Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vIceHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esIceCache[victim].g_iIceHitMode == 0 || g_esIceCache[victim].g_iIceHitMode == 2) && bIsSurvivor(attacker) && g_esIceCache[victim].g_iComboAbility == 0)
@@ -364,7 +364,7 @@ Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vIceHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vIceHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -695,7 +695,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esIceCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esIceCache[tank].g_iIceAbility == 1 && g_esIceCache[tank].g_iComboAbility == 0)
 	{
-		vIceAbility(tank, GetRandomFloat(0.1, 100.0));
+		vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -720,7 +720,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esIcePlayer[tank].g_iCooldown == -1 || g_esIcePlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vIceAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "IceHuman3", (g_esIcePlayer[tank].g_iCooldown - iTime));
 				}
 			}

@@ -814,7 +814,7 @@ void vOmni2(int tank, int pos = -1)
 
 	if (iTypeCount > 0)
 	{
-		MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+		MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
 	}
 	else
 	{
@@ -833,7 +833,7 @@ void vOmni2(int tank, int pos = -1)
 
 		if (iTypeCount > 0)
 		{
-			MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+			MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
 		}
 	}
 }
@@ -847,7 +847,7 @@ void vOmniAbility(int tank)
 
 	if (g_esOmniPlayer[tank].g_iAmmoCount < g_esOmniCache[tank].g_iHumanAmmo && g_esOmniCache[tank].g_iHumanAmmo > 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esOmniCache[tank].g_flOmniChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esOmniCache[tank].g_flOmniChance)
 		{
 			vOmni(tank);
 		}

@@ -594,7 +594,7 @@ void vItemPlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && MT_GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(victim, flPos);
@@ -629,7 +629,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esItemCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esItemCache[tank].g_flItemChance && !g_esItemPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esItemCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esItemCache[tank].g_flItemChance && !g_esItemPlayer[tank].g_bActivated)
 	{
 		g_esItemPlayer[tank].g_bActivated = true;
 	}
@@ -707,7 +707,7 @@ void vItemAbility(int tank)
 		{
 			switch (g_esItemCache[tank].g_iItemMode)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, (sizeof sItems)) - 1]);
+				case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
 				case 1:
 				{
 					for (int iItem = 0; iItem < (sizeof sItems); iItem++)

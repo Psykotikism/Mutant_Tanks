@@ -796,7 +796,7 @@ void vCarAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCarCache[tank].g_flCarChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCarCache[tank].g_flCarChance)
 		{
 			vCar(tank);
 		}
@@ -887,8 +887,8 @@ Action tTimerCar(Handle timer, DataPack pack)
 
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
-	flAngles[0] = GetRandomFloat(-20.0, 20.0);
-	flAngles[1] = GetRandomFloat(-20.0, 20.0);
+	flAngles[0] = MT_GetRandomFloat(-20.0, 20.0);
+	flAngles[1] = MT_GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
 	GetVectorAngles(flAngles, flAngles);
 
@@ -926,14 +926,14 @@ Action tTimerCar(Handle timer, DataPack pack)
 				iOptionCount++;
 			}
 
-			switch (iOptions[GetRandomInt(0, (iOptionCount - 1))])
+			switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
 			{
 				case 1: SetEntityModel(iCar, MODEL_CAR);
 				case 2: SetEntityModel(iCar, MODEL_CAR2);
 				case 4: SetEntityModel(iCar, MODEL_CAR3);
 				default:
 				{
-					switch (GetRandomInt(1, (sizeof iOptions)))
+					switch (MT_GetRandomInt(1, (sizeof iOptions)))
 					{
 						case 1: SetEntityModel(iCar, MODEL_CAR);
 						case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -946,8 +946,8 @@ Action tTimerCar(Handle timer, DataPack pack)
 			int iCarColor[3];
 			for (int iIndex = 0; iIndex < (sizeof iCarColor); iIndex++)
 			{
-				iCarColor[iIndex] = GetRandomInt(0, 255);
-				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
+				iCarColor[iIndex] = MT_GetRandomInt(0, 255);
+				flAngles2[iIndex] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
 			SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
@@ -958,9 +958,9 @@ Action tTimerCar(Handle timer, DataPack pack)
 			}
 
 			float flVelocity[3];
-			flVelocity[0] = GetRandomFloat(0.0, 350.0);
-			flVelocity[1] = GetRandomFloat(0.0, 350.0);
-			flVelocity[2] = GetRandomFloat(0.0, 30.0);
+			flVelocity[0] = MT_GetRandomFloat(0.0, 350.0);
+			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
+			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
 			TeleportEntity(iCar, flHitpos, flAngles2, NULL_VECTOR);
 			DispatchSpawn(iCar);

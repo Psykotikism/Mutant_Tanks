@@ -2030,7 +2030,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				g_esPlayer[client].g_bAttackedAgain = true;
 			}
 
-			if (GetRandomFloat(0.1, 100.0) <= g_esCache[client].g_flPunchThrow)
+			if (MT_GetRandomFloat(0.1, 100.0) <= g_esCache[client].g_flPunchThrow)
 			{
 				buttons |= IN_ATTACK2;
 
@@ -2656,7 +2656,7 @@ any aNative_HasAdminAccess(Handle plugin, int numParams)
 any aNative_HasChanceToSpawn(Handle plugin, int numParams)
 {
 	int iType = iClamp(GetNativeCell(1), 1, MT_MAXTYPES);
-	return GetRandomFloat(0.1, 100.0) <= g_esTank[iType].g_flTankChance;
+	return MT_GetRandomFloat(0.1, 100.0) <= g_esTank[iType].g_flTankChance;
 }
 
 any aNative_HideEntity(Handle plugin, int numParams)
@@ -5683,12 +5683,12 @@ void vChangeTypeForward(int tank, int oldType, int newType, bool revert)
 
 void vCombineAbilitiesForward(int tank, int type, int survivor = 0, int weapon = 0, const char[] classname = "")
 {
-	if (bIsTankSupported(tank) && bIsCustomTankSupported(tank) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
+	if (bIsTankSupported(tank) && bIsCustomTankSupported(tank) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
 	{
 		Call_StartForward(g_esGeneral.g_gfCombineAbilitiesForward);
 		Call_PushCell(tank);
 		Call_PushCell(type);
-		Call_PushFloat(GetRandomFloat(0.1, 100.0));
+		Call_PushFloat(MT_GetRandomFloat(0.1, 100.0));
 		Call_PushString(g_esCache[tank].g_sComboSet);
 		Call_PushCell(survivor);
 		Call_PushCell(weapon);
@@ -5773,7 +5773,7 @@ void vChooseRecipient(int survivor, int recipient, const char[] phrase, char[] b
 
 void vChooseReward(int survivor, int tank, int priority, int setting)
 {
-	int iType = (setting > 0) ? setting : (1 << GetRandomInt(0, 7));
+	int iType = (setting > 0) ? setting : (1 << MT_GetRandomInt(0, 7));
 	if (bIsDeveloper(survivor, 3))
 	{
 		iType = g_esDeveloper[survivor].g_iDevRewardTypes;
@@ -6048,7 +6048,7 @@ void vRewardPriority(int tank, int priority, int recipient = 0, int recipient2 =
 {
 	char sTankName[33];
 	vGetTranslatedName(sTankName, sizeof sTankName, tank);
-	float flPercentage = 0.0, flRandom = GetRandomFloat(0.1, 100.0);
+	float flPercentage = 0.0, flRandom = MT_GetRandomFloat(0.1, 100.0);
 	int iPriority = (priority - 1), iSetting = 0;
 
 	switch (priority)
@@ -7447,7 +7447,7 @@ void vGiveGunSpecialAmmo(int survivor)
 					case 2: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_EXPLOSIVE : MT_UPGRADE_EXPLOSIVE;
 					case 3:
 					{
-						int iSpecialAmmo = (GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE;
+						int iSpecialAmmo = (MT_GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE;
 						iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|iSpecialAmmo : iSpecialAmmo;
 					}
 				}
@@ -8634,7 +8634,7 @@ void vSetupLoadout(int developer, bool usual = true)
 			{
 				vGiveSurvivorRandomMeleeWeapon(developer, usual);
 
-				switch (GetRandomInt(1, 5))
+				switch (MT_GetRandomInt(1, 5))
 				{
 					case 1: vCheatCommand(developer, "give", "shotgun_spas");
 					case 2: vCheatCommand(developer, "give", "autoshotgun");
@@ -8643,20 +8643,20 @@ void vSetupLoadout(int developer, bool usual = true)
 					case 5: vCheatCommand(developer, "give", "sniper_military");
 				}
 
-				switch (GetRandomInt(1, 3))
+				switch (MT_GetRandomInt(1, 3))
 				{
 					case 1: vCheatCommand(developer, "give", "molotov");
 					case 2: vCheatCommand(developer, "give", "pipe_bomb");
 					case 3: vCheatCommand(developer, "give", "vomitjar");
 				}
 
-				switch (GetRandomInt(1, 2))
+				switch (MT_GetRandomInt(1, 2))
 				{
 					case 1: vCheatCommand(developer, "give", "first_aid_kit");
 					case 2: vCheatCommand(developer, "give", "defibrillator");
 				}
 
-				switch (GetRandomInt(1, 2))
+				switch (MT_GetRandomInt(1, 2))
 				{
 					case 1: vCheatCommand(developer, "give", "pain_pills");
 					case 2: vCheatCommand(developer, "give", "adrenaline");
@@ -8664,14 +8664,14 @@ void vSetupLoadout(int developer, bool usual = true)
 			}
 			else
 			{
-				switch (GetRandomInt(1, 3))
+				switch (MT_GetRandomInt(1, 3))
 				{
 					case 1: vCheatCommand(developer, "give", "autoshotgun");
 					case 2: vCheatCommand(developer, "give", "rifle");
 					case 3: vCheatCommand(developer, "give", "hunting_rifle");
 				}
 
-				switch (GetRandomInt(1, 2))
+				switch (MT_GetRandomInt(1, 2))
 				{
 					case 1: vCheatCommand(developer, "give", "molotov");
 					case 2: vCheatCommand(developer, "give", "pipe_bomb");
@@ -8750,7 +8750,7 @@ void vSurvivorReactions(int tank)
 				}
 			}
 
-			switch (GetRandomInt(1, 5))
+			switch (MT_GetRandomInt(1, 5))
 			{
 				case 1:
 				{
@@ -8942,7 +8942,7 @@ void vAnnounceTankArrival(int tank, const char[] name)
 			{
 				if (g_esCache[tank].g_iVocalizeArrival == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
-					switch (GetRandomInt(1, 3))
+					switch (MT_GetRandomInt(1, 3))
 					{
 						case 1: vForceVocalize(iPlayer, "PlayerYellRun");
 						case 2: vForceVocalize(iPlayer, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
@@ -9022,7 +9022,7 @@ void vAnnounceTankDeath(int tank, int killer, float percentage, int assistant, f
 			{
 				if (bAnnounce && g_esCache[tank].g_iVocalizeDeath == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
-					switch (GetRandomInt(1, 3))
+					switch (MT_GetRandomInt(1, 3))
 					{
 						case 1: vForceVocalize(iPlayer, "PlayerHurrah");
 						case 2: vForceVocalize(iPlayer, "PlayerTaunt");
@@ -9274,7 +9274,7 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 void vKnockbackTank(int tank, int survivor, int damagetype)
 {
 	float flResult = (damagetype & DMG_BULLET) ? 1.0 : 10.0;
-	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && GetRandomFloat(0.0, 100.0) <= flResult)
+	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && MT_GetRandomFloat(0.0, 100.0) <= flResult)
 	{
 		vPerformKnockback(tank, survivor);
 	}
@@ -9835,7 +9835,7 @@ void vSetRockModel(int tank, int rock)
 	{
 		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
 		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
-		case 2: SetEntityModel(rock, ((GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
+		case 2: SetEntityModel(rock, ((MT_GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
 	}
 }
 
@@ -9981,14 +9981,14 @@ void vSetTankModel(int tank)
 
 		if (iModelCount > 0)
 		{
-			switch (iModels[GetRandomInt(0, (iModelCount - 1))])
+			switch (iModels[MT_GetRandomInt(0, (iModelCount - 1))])
 			{
 				case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 				case 2: SetEntityModel(tank, MODEL_TANK_DLC);
 				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
 				default:
 				{
-					switch (GetRandomInt(1, (sizeof iModels)))
+					switch (MT_GetRandomInt(1, (sizeof iModels)))
 					{
 						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
@@ -10005,7 +10005,7 @@ void vSetTankModel(int tank)
 	}
 	else if (g_esCache[tank].g_flBurntSkin == 0.0)
 	{
-		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", GetRandomFloat(0.01, 1.0));
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", MT_GetRandomFloat(0.01, 1.0));
 	}
 }
 
@@ -10045,7 +10045,7 @@ void vSetTankProps(int tank)
 {
 	if (bIsTankSupported(tank))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[0] && (g_esCache[tank].g_iPropsAttached & MT_PROP_BLUR) && !g_esPlayer[tank].g_bBlur)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[0] && (g_esCache[tank].g_iPropsAttached & MT_PROP_BLUR) && !g_esPlayer[tank].g_bBlur)
 		{
 			float flTankPos[3], flTankAngles[3];
 			GetClientAbsOrigin(tank, flTankPos);
@@ -10103,11 +10103,11 @@ void vSetTankProps(int tank)
 		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
-		float flChance = GetRandomFloat(0.1, 100.0), flValue = 0.0;
+		float flChance = MT_GetRandomFloat(0.1, 100.0), flValue = 0.0;
 		int iFlag = 0, iType = 0;
 		for (int iLight = 0; iLight < (sizeof esPlayer::g_iLight); iLight++)
 		{
-			flValue = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
+			flValue = (iLight < 3) ? MT_GetRandomFloat(0.1, 100.0) : flChance;
 			iFlag = (iLight < 3) ? MT_PROP_LIGHT : MT_PROP_CROWN;
 			iType = (iLight < 3) ? 1 : 8;
 			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && flValue <= g_esCache[tank].g_flPropsChance[iType] && (g_esCache[tank].g_iPropsAttached & iFlag))
@@ -10137,7 +10137,7 @@ void vSetTankProps(int tank)
 		float flOrigin2[3], flAngles2[3] = {0.0, 0.0, 90.0};
 		for (int iOzTank = 0; iOzTank < (sizeof esPlayer::g_iOzTank); iOzTank++)
 		{
-			if ((g_esPlayer[tank].g_iOzTank[iOzTank] == 0 || g_esPlayer[tank].g_iOzTank[iOzTank] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[2] && (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK))
+			if ((g_esPlayer[tank].g_iOzTank[iOzTank] == 0 || g_esPlayer[tank].g_iOzTank[iOzTank] == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[2] && (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK))
 			{
 				g_esPlayer[tank].g_iOzTank[iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
@@ -10172,7 +10172,7 @@ void vSetTankProps(int tank)
 					SDKHook(g_esPlayer[tank].g_iOzTank[iOzTank], SDKHook_SetTransmit, OnPropSetTransmit);
 					g_esPlayer[tank].g_iOzTank[iOzTank] = EntIndexToEntRef(g_esPlayer[tank].g_iOzTank[iOzTank]);
 
-					if ((g_esPlayer[tank].g_iFlame[iOzTank] == 0 || g_esPlayer[tank].g_iFlame[iOzTank] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[3] && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME))
+					if ((g_esPlayer[tank].g_iFlame[iOzTank] == 0 || g_esPlayer[tank].g_iFlame[iOzTank] == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[3] && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME))
 					{
 						g_esPlayer[tank].g_iFlame[iOzTank] = CreateEntityByName("env_steam");
 						if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
@@ -10247,7 +10247,7 @@ void vSetTankProps(int tank)
 
 		for (int iRock = 0; iRock < (sizeof esPlayer::g_iRock); iRock++)
 		{
-			if ((g_esPlayer[tank].g_iRock[iRock] == 0 || g_esPlayer[tank].g_iRock[iRock] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[4] && (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK))
+			if ((g_esPlayer[tank].g_iRock[iRock] == 0 || g_esPlayer[tank].g_iRock[iRock] == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[4] && (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK))
 			{
 				g_esPlayer[tank].g_iRock[iRock] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
@@ -10280,9 +10280,9 @@ void vSetTankProps(int tank)
 						}
 					}
 
-					flAngles[0] += GetRandomFloat(-90.0, 90.0);
-					flAngles[1] += GetRandomFloat(-90.0, 90.0);
-					flAngles[2] += GetRandomFloat(-90.0, 90.0);
+					flAngles[0] += MT_GetRandomFloat(-90.0, 90.0);
+					flAngles[1] += MT_GetRandomFloat(-90.0, 90.0);
+					flAngles[2] += MT_GetRandomFloat(-90.0, 90.0);
 
 					TeleportEntity(g_esPlayer[tank].g_iRock[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(g_esPlayer[tank].g_iRock[iRock]);
@@ -10318,7 +10318,7 @@ void vSetTankProps(int tank)
 
 		for (int iTire = 0; iTire < (sizeof esPlayer::g_iTire); iTire++)
 		{
-			if ((g_esPlayer[tank].g_iTire[iTire] == 0 || g_esPlayer[tank].g_iTire[iTire] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[5] && (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE))
+			if ((g_esPlayer[tank].g_iTire[iTire] == 0 || g_esPlayer[tank].g_iTire[iTire] == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[5] && (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE))
 			{
 				g_esPlayer[tank].g_iTire[iTire] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
@@ -10375,7 +10375,7 @@ void vSetTankProps(int tank)
 		GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 
-		if ((g_esPlayer[tank].g_iPropaneTank == 0 || g_esPlayer[tank].g_iPropaneTank == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[6] && (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK))
+		if ((g_esPlayer[tank].g_iPropaneTank == 0 || g_esPlayer[tank].g_iPropaneTank == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[6] && (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK))
 		{
 			g_esPlayer[tank].g_iPropaneTank = CreateEntityByName("prop_dynamic_override");
 			if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
@@ -10425,7 +10425,7 @@ void vSetTankProps(int tank)
 			}
 		}
 
-		if ((g_esPlayer[tank].g_iFlashlight == 0 || g_esPlayer[tank].g_iFlashlight == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[7] && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLASHLIGHT))
+		if ((g_esPlayer[tank].g_iFlashlight == 0 || g_esPlayer[tank].g_iFlashlight == INVALID_ENT_REFERENCE) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[7] && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLASHLIGHT))
 		{
 			vFlashlightProp(tank, flOrigin, flAngles, g_esCache[tank].g_iFlashlightColor);
 		}
@@ -10538,7 +10538,7 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 					case 1: MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestSucceeded", g_esGeneral.g_iChosenType);
 					default:
 					{
-						g_esGeneral.g_iChosenType = iTankTypes[GetRandomInt(1, iTypeCount)];
+						g_esGeneral.g_iChosenType = iTankTypes[MT_GetRandomInt(1, iTypeCount)];
 
 						MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches", g_esGeneral.g_iChosenType);
 					}
@@ -18225,7 +18225,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		switch (exclude)
 		{
-			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || (g_esPlayer[tank].g_iTankType == iIndex);
+			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || MT_GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || (g_esPlayer[tank].g_iTankType == iIndex);
 			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || (g_esTank[iIndex].g_iRandomTank == 0) || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || (g_esPlayer[tank].g_iTankType == iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
@@ -18240,7 +18240,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 	if (iTypeCount > 0)
 	{
-		return iTankTypes[GetRandomInt(1, iTypeCount)];
+		return iTankTypes[MT_GetRandomInt(1, iTypeCount)];
 	}
 
 	return 0;
@@ -18441,7 +18441,7 @@ int iGetMessageType(int setting)
 		iMessageCount++;
 	}
 
-	switch (iMessages[GetRandomInt(0, (iMessageCount - 1))])
+	switch (iMessages[MT_GetRandomInt(0, (iMessageCount - 1))])
 	{
 		case 1: return 1;
 		case 2: return 2;
@@ -18453,7 +18453,7 @@ int iGetMessageType(int setting)
 		case 128: return 8;
 		case 256: return 9;
 		case 512: return 10;
-		default: return GetRandomInt(1, (sizeof iMessages));
+		default: return MT_GetRandomInt(1, (sizeof iMessages));
 	}
 }
 
@@ -18479,7 +18479,7 @@ int iGetRandomRecipient(int recipient, int tank, int priority, bool none)
 
 	if (iRecipientCount > 0)
 	{
-		iRecipient = iRecipients[GetRandomInt(0, (iRecipientCount - 1))];
+		iRecipient = iRecipients[MT_GetRandomInt(0, (iRecipientCount - 1))];
 	}
 
 	if ((g_esCache[tank].g_iShareRewards[priority] == 2 || g_esCache[tank].g_iShareRewards[priority] == 3) && (iRecipientCount == 0 || iRecipient == recipient))
@@ -18502,7 +18502,7 @@ int iGetRandomRecipient(int recipient, int tank, int priority, bool none)
 
 		if (iRecipientCount > 0)
 		{
-			iRecipient = iRecipients[GetRandomInt(0, (iRecipientCount - 1))];
+			iRecipient = iRecipients[MT_GetRandomInt(0, (iRecipientCount - 1))];
 		}
 	}
 
@@ -19476,7 +19476,7 @@ Action tTimerTransform(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 
-	int iPos = GetRandomInt(0, (sizeof esCache::g_iTransformType - 1));
+	int iPos = MT_GetRandomInt(0, (sizeof esCache::g_iTransformType - 1));
 	vSetTankColor(iTank, g_esCache[iTank].g_iTransformType[iPos]);
 	vTankSpawn(iTank, 3);
 

@@ -368,7 +368,7 @@ Action OnShakeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShakeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esShakeCache[attacker].g_flShakeChance, g_esShakeCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vShakeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esShakeCache[attacker].g_flShakeChance, g_esShakeCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esShakeCache[victim].g_iShakeHitMode == 0 || g_esShakeCache[victim].g_iShakeHitMode == 2) && bIsHumanSurvivor(attacker) && g_esShakeCache[victim].g_iComboAbility == 0)
@@ -380,7 +380,7 @@ Action OnShakeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vShakeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esShakeCache[victim].g_flShakeChance, g_esShakeCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vShakeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esShakeCache[victim].g_flShakeChance, g_esShakeCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -696,7 +696,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vShakeRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vShakeRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveShake(iTank);
 		}
 	}
@@ -719,7 +719,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShakeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esShakeCache[tank].g_iShakeAbility == 1 && g_esShakeCache[tank].g_iComboAbility == 0)
 	{
-		vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
+		vShakeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -744,7 +744,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esShakePlayer[tank].g_iCooldown == -1 || g_esShakePlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vShakeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShakeHuman3", (g_esShakePlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -772,7 +772,7 @@ void vShakePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vShakeRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vShakeRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 void vShakeCopyStats2(int oldTank, int newTank)

@@ -370,7 +370,7 @@ Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHurtHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHurtCache[attacker].g_flHurtChance, g_esHurtCache[attacker].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHurtHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHurtCache[attacker].g_flHurtChance, g_esHurtCache[attacker].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esHurtCache[victim].g_iHurtHitMode == 0 || g_esHurtCache[victim].g_iHurtHitMode == 2) && bIsSurvivor(attacker) && g_esHurtCache[victim].g_iComboAbility == 0)
@@ -382,7 +382,7 @@ Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vHurtHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHurtCache[victim].g_flHurtChance, g_esHurtCache[victim].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vHurtHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHurtCache[victim].g_flHurtChance, g_esHurtCache[victim].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -708,7 +708,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHurtCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHurtCache[tank].g_iHurtAbility == 1 && g_esHurtCache[tank].g_iComboAbility == 0)
 	{
-		vHurtAbility(tank, GetRandomFloat(0.1, 100.0));
+		vHurtAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -733,7 +733,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esHurtPlayer[tank].g_iCooldown == -1 || g_esHurtPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vHurtAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vHurtAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HurtHuman3", (g_esHurtPlayer[tank].g_iCooldown - iTime));
 				}
 			}

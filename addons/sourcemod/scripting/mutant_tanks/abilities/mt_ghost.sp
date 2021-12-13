@@ -443,7 +443,7 @@ Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGhostHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esGhostCache[attacker].g_flGhostChance, g_esGhostCache[attacker].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vGhostHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esGhostCache[attacker].g_flGhostChance, g_esGhostCache[attacker].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esGhostCache[victim].g_iGhostHitMode == 0 || g_esGhostCache[victim].g_iGhostHitMode == 2) && bIsSurvivor(attacker) && g_esGhostCache[victim].g_iComboAbility == 0)
@@ -455,7 +455,7 @@ Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vGhostHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esGhostCache[victim].g_flGhostChance, g_esGhostCache[victim].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vGhostHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esGhostCache[victim].g_flGhostChance, g_esGhostCache[victim].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -830,7 +830,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esGhostCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esGhostCache[tank].g_iGhostAbility > 0 && g_esGhostCache[tank].g_iComboAbility == 0)
 	{
 		vGhostAbility(tank, false);
-		vGhostAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vGhostAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -909,7 +909,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esGhostPlayer[tank].g_iCooldown2 != -1 && g_esGhostPlayer[tank].g_iCooldown2 > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman6", (g_esGhostPlayer[tank].g_iCooldown2 - iTime));
-					case false: vGhostAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case false: vGhostAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -997,7 +997,7 @@ void vGhost(int tank, int pos = -1)
 	dpGhost.WriteCell(GetClientUserId(tank));
 	dpGhost.WriteCell(g_esGhostPlayer[tank].g_iTankType);
 	dpGhost.WriteCell(GetTime());
-	dpGhost.WriteFloat(GetRandomFloat(0.1, 100.0));
+	dpGhost.WriteFloat(MT_GetRandomFloat(0.1, 100.0));
 
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 }
@@ -1127,7 +1127,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				vEffect(survivor, tank, g_esGhostCache[tank].g_iGhostEffect, flags);
 
-				switch (GetRandomInt(1, 2))
+				switch (MT_GetRandomInt(1, 2))
 				{
 					case 1: EmitSoundToClient(survivor, SOUND_DEATH, tank);
 					case 2: EmitSoundToClient(survivor, SOUND_DEATH2, tank);

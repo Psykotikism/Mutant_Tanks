@@ -386,7 +386,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
-					vChokeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esChokeCache[attacker].g_flChokeChance, g_esChokeCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+					vChokeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esChokeCache[attacker].g_flChokeChance, g_esChokeCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 				}
 			}
 			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esChokeCache[victim].g_iChokeHitMode == 0 || g_esChokeCache[victim].g_iChokeHitMode == 2) && bIsSurvivor(attacker) && g_esChokeCache[victim].g_iComboAbility == 0)
@@ -398,7 +398,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 				if (StrEqual(sClassname[7], "melee"))
 				{
-					vChokeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esChokeCache[victim].g_flChokeChance, g_esChokeCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vChokeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esChokeCache[victim].g_flChokeChance, g_esChokeCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 		}
@@ -753,7 +753,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esChokeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esChokeCache[tank].g_iChokeAbility == 1 && g_esChokeCache[tank].g_iComboAbility == 0)
 	{
-		vChokeAbility(tank, GetRandomFloat(0.1, 100.0));
+		vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -778,7 +778,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vChokeAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman3", (g_esChokePlayer[tank].g_iCooldown - iTime));
 				}
 			}

@@ -401,7 +401,7 @@ Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSmashHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esSmashCache[attacker].g_flSmashChance, g_esSmashCache[attacker].g_iSmashHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSmashHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSmashCache[attacker].g_flSmashChance, g_esSmashCache[attacker].g_iSmashHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSmashCache[victim].g_iSmashHitMode == 0 || g_esSmashCache[victim].g_iSmashHitMode == 2) && bIsSurvivor(attacker) && g_esSmashCache[victim].g_iComboAbility == 0)
@@ -413,7 +413,7 @@ Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vSmashHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esSmashCache[victim].g_flSmashChance, g_esSmashCache[victim].g_iSmashHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSmashHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esSmashCache[victim].g_flSmashChance, g_esSmashCache[victim].g_iSmashHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -728,7 +728,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSmashCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSmashCache[tank].g_iSmashAbility == 1 && g_esSmashCache[tank].g_iComboAbility == 0)
 	{
-		vSmashAbility(tank, GetRandomFloat(0.1, 100.0));
+		vSmashAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -754,7 +754,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esSmashPlayer[tank].g_iCooldown != -1 && g_esSmashPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmashHuman3", (g_esSmashPlayer[tank].g_iCooldown - iTime));
-					case false: vSmashAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vSmashAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}

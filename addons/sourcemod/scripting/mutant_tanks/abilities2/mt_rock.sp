@@ -893,7 +893,7 @@ void vRockAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esRockCache[tank].g_flRockChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esRockCache[tank].g_flRockChance)
 		{
 			vRock(tank);
 		}
@@ -962,8 +962,8 @@ Action tTimerRock(Handle timer, DataPack pack)
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	flPos[2] += 20.0;
-	flAngles[0] = GetRandomFloat(-1.0, 1.0);
-	flAngles[1] = GetRandomFloat(-1.0, 1.0);
+	flAngles[0] = MT_GetRandomFloat(-1.0, 1.0);
+	flAngles[1] = MT_GetRandomFloat(-1.0, 1.0);
 	flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);
 
@@ -987,8 +987,8 @@ Action tTimerRock(Handle timer, DataPack pack)
 		float flAngles2[3];
 		if (bIsValidEntity(iLauncher))
 		{
-			flAngles2[0] = GetRandomFloat(flMinRadius, flMaxRadius);
-			flAngles2[1] = GetRandomFloat(flMinRadius, flMaxRadius);
+			flAngles2[0] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
+			flAngles2[1] = MT_GetRandomFloat(flMinRadius, flMaxRadius);
 			flAngles2[2] = -2.0;
 			GetVectorAngles(flAngles2, flAngles2);
 
