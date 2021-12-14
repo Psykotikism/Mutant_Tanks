@@ -19,12 +19,13 @@
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
 
 #### Settings
-- Fixed the `Skip Taunt` setting not being exclusive to Left 4 Dead 2.
+- Fixed the `Skip Taunt` setting not being exclusive to L4D2.
 
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
 - Fly: Fixed camera bug where spectators are dropped to the ground and forced to travel to map origin. (Thanks to `Angelace113` for testing and reporting!)
+- Spam: Fixed the rocks exploding upon launch in L4D1.
 - Warp: Fixed the Tank teleporting inside props and other solid objects. (Thanks to `yuzumi` for testing and reporting!)
 
 ### Changes
@@ -37,6 +38,7 @@
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
+- Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 
 #### Core plugin
@@ -252,7 +254,7 @@
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
-	- `Share Rewards` (Thanks to `peachie` and `FusionFlarez` for the idea!)
+	- `Share Rewards` (Thanks to `FusionFlarez` for the idea!)
 	- `Stack Limits`
 
 #### Translations
@@ -662,7 +664,7 @@
 	- Blocks fall damage for the recipient within a certain height limit (`900` HMU). (Thanks to `epzminion` for the code!)
 	- Use a different voiceline when falling.
 	- Blocks the deathfall camera for the recipient. (Thanks to `epzminion` for the help!)
-	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to Left 4 Dead 2.) [Thanks to `Lux` for the code!]
+	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to L4D2.) [Thanks to `Lux` for the code!]
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by `3aljiyavslgazana`.)
 	- Gives the recipient damage resistance throughout its duration.
@@ -729,7 +731,7 @@
 	- `Shove Penalty Reward` (Thanks to `3aljiyavslgazana` for the idea!)
 	- `Shove Rate Reward` (Thanks to `epzminion` for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to `epzminion` for the code!)
-	- `Special Ammo Reward` (Exclusive to Left 4 Dead 2.)
+	- `Special Ammo Reward` (Exclusive to L4D2.)
 	- `Thorns Reward` (Thanks to `epzminion` for the idea!)
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by `TheStarRocker`.) [Thanks to `Silvers` for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by `TheStarRocker`.)
@@ -847,7 +849,7 @@
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by `3aljiyavslgazana`.)
 	- Added the `Absorb Hittable Divisor` setting.
 	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
-- Acid: The ability is now exclusive to Left 4 Dead 2.
+- Acid: The ability is now exclusive to L4D2.
 - Aimless: Survivors with the godmode reward are no longer affected. (Requested by `3aljiyavslgazana`.)
 - Ammo: Survivors with no ammunition are no longer affected.
 - Bury
@@ -866,7 +868,7 @@
 	- Clones are removed when their Tank owner changes its Mutant Tank type if the `Clone Remove` setting is enabled. (Thanks to `3aljiyavslgazana` for suggesting!)
 - Fling
 	- Survivors with the godmode reward are no longer affected. (Requested by `3aljiyavslgazana`.)
-	- The ability is now exclusive to Left 4 Dead 2.
+	- The ability is now exclusive to L4D2.
 - Fragile
 	- Added the `Fragile Hittable Multiplier` setting.
 	- Tank now have a `15%` chance of being knocked back when shoved by recipients of the attack boost reward. (Thanks to `3aljiyavslgazana` for suggesting!)
@@ -1373,7 +1375,7 @@
 #### Abilities
 - Enabled the `Requires Humans` setting for some more abilities by default.
 - Added the `Fly` ability. (Thanks to `Ernecio` for the code!)
-- Added the `Lightning` ability which is exclusive to Left 4 Dead 2.
+- Added the `Lightning` ability which is exclusive to L4D2.
 - None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
 - Added the `Combo Ability` setting for each ability.
 
@@ -1524,7 +1526,7 @@ Changes:
 5. Added new options for the `Warp` ability's `Warp Mode` setting.
 6. Added the `MT_OnResetTimers` forward to allow developers to reset repeating timers with intervals set by config files.
 7. The timer for spawning Tanks periodically on non-finale maps now resets when `Regular Interval` is changed. (Thanks to `Tank Rush` for testing!)
-8. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by `Tank Rush` and thanks to `Silvers` for the code.)
+8. Added the `Splatter` ability which is exclusive to L4D2. (Requested by `Tank Rush` and thanks to `Silvers` for the code.)
 9. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
 11. `DHooks` and `Left 4 DHooks` are now mandatory.
