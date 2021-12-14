@@ -925,7 +925,7 @@ Action tTimerSpam(Handle timer, DataPack pack)
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	GetClientEyeAngles(iTank, flAngles);
-	flPos[2] += 70.0;
+	flPos[2] += 80.0;
 
 	if (bIsValidEntity(iLauncher))
 	{
