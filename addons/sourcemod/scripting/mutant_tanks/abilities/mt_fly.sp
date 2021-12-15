@@ -527,7 +527,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFlyAbility[iIndex].g_iHumanAmmo = 5;
 				g_esFlyAbility[iIndex].g_iHumanCooldown = 30;
 				g_esFlyAbility[iIndex].g_iHumanMode = 1;
-				g_esFlyAbility[iIndex].g_flOpenAreasOnly = 150.0;
+				g_esFlyAbility[iIndex].g_flOpenAreasOnly = 500.0;
 				g_esFlyAbility[iIndex].g_iRequiresHumans = 0;
 				g_esFlyAbility[iIndex].g_iFlyAbility = 0;
 				g_esFlyAbility[iIndex].g_iFlyMessage = 0;

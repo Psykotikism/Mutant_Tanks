@@ -21,6 +21,9 @@
 #### Settings
 - Fixed the `Skip Taunt` setting not being exclusive to L4D2.
 
+#### Natives & Forwards
+- Fixed the `SDKCall` error for the `MT_VomitPlayer` native.
+
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
@@ -41,7 +44,7 @@
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 
-#### Core plugin
+#### Core Plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
@@ -98,7 +101,9 @@
 - Updated all compiler warnings for deprecated forwards and natives.
 
 #### Abilities
-- Fly: Incapacitated or ledge-hanging survivors are no longer affected.
+- Fly
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+	- Changed the default value of the `Open Areas Only` setting from `150.0` to `500.0`.
 - Vampire
 	- Added the `Vampire Health` setting. (Requested by `moschinovac`.)
 	- Added the `Vampire Health Multiplier` setting. (Requested by `moschinovac`.)
