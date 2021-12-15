@@ -2854,7 +2854,11 @@ any aNative_VomitPlayer(Handle plugin, int numParams)
 	{
 		if (g_esGeneral.g_hSDKVomitedUpon != null)
 		{
-			SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, true);
+			switch (g_bSecondGame)
+			{
+				case true: SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, false);
+				case false: SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, false, false);
+			}
 		}
 	}
 
