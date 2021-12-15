@@ -98,6 +98,7 @@
 - Updated all compiler warnings for deprecated forwards and natives.
 
 #### Abilities
+- Fly: Incapacitated or ledge-hanging survivors are no longer affected.
 - Vampire
 	- Added the `Vampire Health` setting. (Requested by `moschinovac`.)
 	- Added the `Vampire Health Multiplier` setting. (Requested by `moschinovac`.)

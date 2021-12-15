@@ -90,6 +90,7 @@
 		"Notes"		"Natives & Forwards:"
 		"Notes"		"- Updated all compiler warnings for deprecated forwards and natives."
 		"Notes"		"Abilities:"
+		"Notes"		"- Fly: Incapacitated or ledge-hanging survivors are no longer affected."
 		"Notes"		"- Vampire"
 		"Notes"		"	- Added the \"Vampire Health\" setting. (Requested by \"moschinovac\".)"
 		"Notes"		"	- Added the \"Vampire Health Multiplier\" setting. (Requested by \"moschinovac\".)"
