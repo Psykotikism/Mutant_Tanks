@@ -1417,7 +1417,7 @@ int iGetFlyTarget(float pos[3], float angles[3], int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esFlyPlayer[tank].g_iTankType, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivorDisabled(iSurvivor) || MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esFlyPlayer[tank].g_iTankType, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				continue;
 			}
