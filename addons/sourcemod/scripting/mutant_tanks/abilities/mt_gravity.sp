@@ -777,6 +777,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	{
 		vStopGravity(survivor);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN

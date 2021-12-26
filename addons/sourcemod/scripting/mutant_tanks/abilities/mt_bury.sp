@@ -61,6 +61,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esBuryPlayer
 {
 	bool g_bAffected;
+	bool g_bBlockFall;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
@@ -392,32 +393,41 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBuryCache[attacker].g_iBuryHitMode == 0 || g_esBuryCache[attacker].g_iBuryHitMode == 1) && bIsSurvivor(victim) && g_esBuryCache[attacker].g_iComboAbility == 0)
+		if (bIsSurvivor(victim) && (damagetype & DMG_FALL) && g_esBuryPlayer[victim].g_bBlockFall)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBuryPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBuryPlayer[attacker].g_iTankType, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[victim].g_iImmunityFlags))
-			{
-				return Plugin_Continue;
-			}
+			g_esBuryPlayer[victim].g_bBlockFall = false;
 
-			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
-			{
-				vBuryHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
-			}
+			return Plugin_Handled;
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBuryCache[victim].g_iBuryHitMode == 0 || g_esBuryCache[victim].g_iBuryHitMode == 2) && bIsSurvivor(attacker) && g_esBuryCache[victim].g_iComboAbility == 0)
+		else if (bIsValidEntity(inflictor))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iAccessFlags, g_esBuryPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esBuryPlayer[victim].g_iTankType, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[attacker].g_iImmunityFlags))
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBuryCache[attacker].g_iBuryHitMode == 0 || g_esBuryCache[attacker].g_iBuryHitMode == 1) && bIsSurvivor(victim) && g_esBuryCache[attacker].g_iComboAbility == 0)
 			{
-				return Plugin_Continue;
-			}
+				if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBuryPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBuryPlayer[attacker].g_iTankType, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[victim].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
 
-			if (StrEqual(sClassname[7], "melee"))
+				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+				{
+					vBuryHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				}
+			}
+			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBuryCache[victim].g_iBuryHitMode == 0 || g_esBuryCache[victim].g_iBuryHitMode == 2) && bIsSurvivor(attacker) && g_esBuryCache[victim].g_iComboAbility == 0)
 			{
-				vBuryHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iAccessFlags, g_esBuryPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esBuryPlayer[victim].g_iTankType, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[attacker].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
+
+				if (StrEqual(sClassname[7], "melee"))
+				{
+					vBuryHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				}
 			}
 		}
 	}
@@ -746,6 +756,21 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vBuryFatalFalling(int survivor)
+#else
+public Action MT_OnFatalFalling(int survivor)
+#endif
+{
+	if (bIsSurvivor(survivor) && g_esBuryPlayer[survivor].g_bBlockFall)
+	{
+		g_esBuryPlayer[survivor].g_bBlockFall = false;
+	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
+}
+
+#if defined MT_ABILITIES_MAIN
 void vBuryRewardSurvivor(int survivor, int type, bool apply)
 #else
 public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
@@ -755,6 +780,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	{
 		vStopBury(survivor, g_esBuryPlayer[survivor].g_iOwner);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -960,7 +988,7 @@ void vRemoveBury(int tank)
 		}
 	}
 
-	vBuryReset2(tank);
+	vBuryReset2(tank, false);
 }
 
 void vBuryReset()
@@ -970,24 +998,29 @@ void vBuryReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vBuryReset2(iPlayer);
-
-			g_esBuryPlayer[iPlayer].g_iOwner = 0;
 		}
 	}
 }
 
-void vBuryReset2(int tank)
+void vBuryReset2(int tank, bool full = true)
 {
 	g_esBuryPlayer[tank].g_bAffected = false;
 	g_esBuryPlayer[tank].g_bFailed = false;
 	g_esBuryPlayer[tank].g_bNoAmmo = false;
 	g_esBuryPlayer[tank].g_iAmmoCount = 0;
 	g_esBuryPlayer[tank].g_iCooldown = -1;
+
+	if (full)
+	{
+		g_esBuryPlayer[tank].g_bBlockFall = false;
+		g_esBuryPlayer[tank].g_iOwner = 0;
+	}
 }
 
 void vStopBury(int survivor, int tank)
 {
 	g_esBuryPlayer[survivor].g_bAffected = false;
+	g_esBuryPlayer[survivor].g_bBlockFall = true;
 	g_esBuryPlayer[survivor].g_iOwner = 0;
 
 	float flOrigin[3];
@@ -1015,12 +1048,14 @@ void vStopBury(int survivor, int tank)
 	float flAngles[3];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && !g_esBuryPlayer[iSurvivor].g_bBlockFall && iSurvivor != survivor)
 		{
 			bTeleport = false;
 
 			GetClientAbsOrigin(iSurvivor, flOrigin);
 			GetClientEyeAngles(iSurvivor, flAngles);
+			flOrigin[2] += g_esBuryCache[tank].g_flBuryHeight;
+
 			TeleportEntity(survivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 			break;
@@ -1029,6 +1064,8 @@ void vStopBury(int survivor, int tank)
 
 	if (bTeleport)
 	{
+		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight;
+
 		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	}
 

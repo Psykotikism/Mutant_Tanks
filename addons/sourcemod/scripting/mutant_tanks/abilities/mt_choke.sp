@@ -738,6 +738,9 @@ public Action MT_OnFatalFalling(int survivor)
 	{
 		g_esChokePlayer[survivor].g_bBlockFall = false;
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN
