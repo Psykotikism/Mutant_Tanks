@@ -1864,6 +1864,9 @@ public void MT_OnPostTankSpawn(int tank)
 
 public Action MT_OnFatalFalling(int survivor)
 {
+#if defined MT_MENU_BURY
+	vBuryFatalFalling(survivor);
+#endif
 #if defined MT_MENU_CHOKE
 	vChokeFatalFalling(survivor);
 #endif

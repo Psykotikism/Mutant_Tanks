@@ -22,11 +22,12 @@
 - Fixed the `Skip Taunt` setting not being exclusive to L4D2.
 
 #### Natives & Forwards
-- Fixed the `SDKCall` error for the `MT_VomitPlayer` native.
+- Fixed the `SDKCall` error for the `MT_VomitPlayer` native in L4D1.
 
 #### Abilities
 - Acid: Fixed survivors not taking damage from acid puddles in some scenarios. (Thanks to `yuzumi` for testing and reporting!)
 - Blind: Fixed the ability not resetting properly when the Tank dies before the duration ends. (Thanks to `Mi.Cura` for reporting!)
+- Bury: Fixed survivors getting stuck under the map when the ability's effect wears off.
 - Fly: Fixed camera bug where spectators are dropped to the ground and forced to travel to map origin. (Thanks to `Angelace113` for testing and reporting!)
 - Spam: Fixed the rocks exploding upon launch in L4D1.
 - Warp: Fixed the Tank teleporting inside props and other solid objects. (Thanks to `yuzumi` for testing and reporting!)
@@ -101,6 +102,7 @@
 - Updated all compiler warnings for deprecated forwards and natives.
 
 #### Abilities
+- Bury: The ability now automatically teleports targeted survivors and blocks fall damage until they land to avoid being stuck under the map when the ability's effect ends.
 - Fly
 	- Incapacitated or ledge-hanging survivors are no longer affected.
 	- Changed the default value of the `Open Areas Only` setting from `150.0` to `500.0`.

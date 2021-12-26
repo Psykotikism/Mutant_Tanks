@@ -27,20 +27,16 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	switch (GetEngineVersion())
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		case Engine_Left4Dead: g_bSecondGame = false;
-		case Engine_Left4Dead2: g_bSecondGame = true;
-		default:
-		{
-			strcopy(error, err_max, "\"[MT] Electric Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Electric Ability\" only supports Left 4 Dead 1 & 2.");
 
-			return APLRes_SilentFailure;
-		}
+		return APLRes_SilentFailure;
 	}
 
 	g_bDedicated = IsDedicatedServer();
