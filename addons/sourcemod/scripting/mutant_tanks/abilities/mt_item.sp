@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ITEM_SECTION2 "item ability"
 #define MT_ITEM_SECTION3 "item_ability"
 #define MT_ITEM_SECTION4 "item"
-#define MT_ITEM_SECTIONS MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4
 
 #define MT_MENU_ITEM "Item Ability"
 
@@ -481,40 +480,40 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esItemPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esItemPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esItemPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esItemPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esItemPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esItemPlayer[admin].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemPlayer[admin].g_iItemAbility, value, 0, 1);
-		g_esItemPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemPlayer[admin].g_iItemMessage, value, 0, 1);
-		g_esItemPlayer[admin].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemPlayer[admin].g_flItemChance, value, 0.0, 100.0);
-		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 1);
-		g_esItemPlayer[admin].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemPlayer[admin].g_iItemPinataBody, value, 0, 1);
-		g_esItemPlayer[admin].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemPlayer[admin].g_flItemPinataChance, value, 0.0, 100.0);
-		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esItemPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esItemPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esItemPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esItemPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esItemPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esItemPlayer[admin].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemPlayer[admin].g_iItemAbility, value, 0, 1);
+		g_esItemPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemPlayer[admin].g_iItemMessage, value, 0, 1);
+		g_esItemPlayer[admin].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemPlayer[admin].g_flItemChance, value, 0.0, 100.0);
+		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 1);
+		g_esItemPlayer[admin].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemPlayer[admin].g_iItemPinataBody, value, 0, 1);
+		g_esItemPlayer[admin].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemPlayer[admin].g_flItemPinataChance, value, 0.0, 100.0);
+		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof esItemPlayer::g_sItemLoadout, value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof esItemPlayer::g_sItemPinata, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof esItemPlayer::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemPlayer[admin].g_sItemPinata, sizeof esItemPlayer::g_sItemPinata, value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esItemAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemAbility[type].g_iComboAbility, value, 0, 1);
-		g_esItemAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esItemAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esItemAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esItemAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esItemAbility[type].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemAbility[type].g_iItemAbility, value, 0, 1);
-		g_esItemAbility[type].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemAbility[type].g_iItemMessage, value, 0, 1);
-		g_esItemAbility[type].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemAbility[type].g_flItemChance, value, 0.0, 100.0);
-		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 1);
-		g_esItemAbility[type].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemAbility[type].g_iItemPinataBody, value, 0, 1);
-		g_esItemAbility[type].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemAbility[type].g_flItemPinataChance, value, 0.0, 100.0);
-		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esItemAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemAbility[type].g_iComboAbility, value, 0, 1);
+		g_esItemAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esItemAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esItemAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esItemAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esItemAbility[type].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemAbility[type].g_iItemAbility, value, 0, 1);
+		g_esItemAbility[type].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemAbility[type].g_iItemMessage, value, 0, 1);
+		g_esItemAbility[type].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemAbility[type].g_flItemChance, value, 0.0, 100.0);
+		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 1);
+		g_esItemAbility[type].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemAbility[type].g_iItemPinataBody, value, 0, 1);
+		g_esItemAbility[type].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemAbility[type].g_flItemPinataChance, value, 0.0, 100.0);
+		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof esItemAbility::g_sItemLoadout, value);
-		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof esItemAbility::g_sItemPinata, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof esItemAbility::g_sItemLoadout, value);
+		vGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinata", "Item Pinata", "Item_Pinata", "pinata", g_esItemAbility[type].g_sItemPinata, sizeof esItemAbility::g_sItemPinata, value);
 	}
 }
 

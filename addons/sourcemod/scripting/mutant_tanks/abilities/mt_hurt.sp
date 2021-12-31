@@ -62,7 +62,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_HURT_SECTION2 "hurt ability"
 #define MT_HURT_SECTION3 "hurt_ability"
 #define MT_HURT_SECTION4 "hurt"
-#define MT_HURT_SECTIONS MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4
 
 #define MT_MENU_HURT "Hurt Ability"
 
@@ -569,48 +568,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esHurtPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esHurtPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esHurtPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esHurtPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esHurtPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHurtPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esHurtPlayer[admin].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtPlayer[admin].g_iHurtAbility, value, 0, 1);
-		g_esHurtPlayer[admin].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtPlayer[admin].g_iHurtEffect, value, 0, 7);
-		g_esHurtPlayer[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtPlayer[admin].g_iHurtMessage, value, 0, 3);
-		g_esHurtPlayer[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtPlayer[admin].g_flHurtChance, value, 0.0, 100.0);
-		g_esHurtPlayer[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtPlayer[admin].g_flHurtDamage, value, 1.0, 999999.0);
-		g_esHurtPlayer[admin].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtPlayer[admin].g_iHurtDuration, value, 1, 999999);
-		g_esHurtPlayer[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtPlayer[admin].g_iHurtHit, value, 0, 1);
-		g_esHurtPlayer[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtPlayer[admin].g_iHurtHitMode, value, 0, 2);
-		g_esHurtPlayer[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtPlayer[admin].g_flHurtInterval, value, 0.1, 999999.0);
-		g_esHurtPlayer[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtPlayer[admin].g_flHurtRange, value, 1.0, 999999.0);
-		g_esHurtPlayer[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtPlayer[admin].g_flHurtRangeChance, value, 0.0, 100.0);
-		g_esHurtPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHurtPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHurtPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esHurtPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esHurtPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esHurtPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esHurtPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esHurtPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esHurtPlayer[admin].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtPlayer[admin].g_iHurtAbility, value, 0, 1);
+		g_esHurtPlayer[admin].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtPlayer[admin].g_iHurtEffect, value, 0, 7);
+		g_esHurtPlayer[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtPlayer[admin].g_iHurtMessage, value, 0, 3);
+		g_esHurtPlayer[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtPlayer[admin].g_flHurtChance, value, 0.0, 100.0);
+		g_esHurtPlayer[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtPlayer[admin].g_flHurtDamage, value, 1.0, 999999.0);
+		g_esHurtPlayer[admin].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtPlayer[admin].g_iHurtDuration, value, 1, 999999);
+		g_esHurtPlayer[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtPlayer[admin].g_iHurtHit, value, 0, 1);
+		g_esHurtPlayer[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtPlayer[admin].g_iHurtHitMode, value, 0, 2);
+		g_esHurtPlayer[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtPlayer[admin].g_flHurtInterval, value, 0.1, 999999.0);
+		g_esHurtPlayer[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtPlayer[admin].g_flHurtRange, value, 1.0, 999999.0);
+		g_esHurtPlayer[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtPlayer[admin].g_flHurtRangeChance, value, 0.0, 100.0);
+		g_esHurtPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHurtPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esHurtAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtAbility[type].g_iComboAbility, value, 0, 1);
-		g_esHurtAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esHurtAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esHurtAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esHurtAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHurtAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esHurtAbility[type].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtAbility[type].g_iHurtAbility, value, 0, 1);
-		g_esHurtAbility[type].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtAbility[type].g_iHurtEffect, value, 0, 7);
-		g_esHurtAbility[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtAbility[type].g_iHurtMessage, value, 0, 3);
-		g_esHurtAbility[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtAbility[type].g_flHurtChance, value, 0.0, 100.0);
-		g_esHurtAbility[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtAbility[type].g_flHurtDamage, value, 1.0, 999999.0);
-		g_esHurtAbility[type].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtAbility[type].g_iHurtDuration, value, 1, 999999);
-		g_esHurtAbility[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtAbility[type].g_iHurtHit, value, 0, 1);
-		g_esHurtAbility[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtAbility[type].g_iHurtHitMode, value, 0, 2);
-		g_esHurtAbility[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtAbility[type].g_flHurtInterval, value, 0.1, 999999.0);
-		g_esHurtAbility[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtAbility[type].g_flHurtRange, value, 1.0, 999999.0);
-		g_esHurtAbility[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtAbility[type].g_flHurtRangeChance, value, 0.0, 100.0);
-		g_esHurtAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHurtAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHurtAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtAbility[type].g_iComboAbility, value, 0, 1);
+		g_esHurtAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esHurtAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esHurtAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esHurtAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esHurtAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esHurtAbility[type].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtAbility[type].g_iHurtAbility, value, 0, 1);
+		g_esHurtAbility[type].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtAbility[type].g_iHurtEffect, value, 0, 7);
+		g_esHurtAbility[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtAbility[type].g_iHurtMessage, value, 0, 3);
+		g_esHurtAbility[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtAbility[type].g_flHurtChance, value, 0.0, 100.0);
+		g_esHurtAbility[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtAbility[type].g_flHurtDamage, value, 1.0, 999999.0);
+		g_esHurtAbility[type].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtAbility[type].g_iHurtDuration, value, 1, 999999);
+		g_esHurtAbility[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtAbility[type].g_iHurtHit, value, 0, 1);
+		g_esHurtAbility[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtAbility[type].g_iHurtHitMode, value, 0, 2);
+		g_esHurtAbility[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtAbility[type].g_flHurtInterval, value, 0.1, 999999.0);
+		g_esHurtAbility[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtAbility[type].g_flHurtRange, value, 1.0, 999999.0);
+		g_esHurtAbility[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtAbility[type].g_flHurtRangeChance, value, 0.0, 100.0);
+		g_esHurtAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHurtAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

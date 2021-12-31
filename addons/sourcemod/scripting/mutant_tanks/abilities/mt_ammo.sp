@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_AMMO_SECTION2 "ammo ability"
 #define MT_AMMO_SECTION3 "ammo_ability"
 #define MT_AMMO_SECTION4 "ammo"
-#define MT_AMMO_SECTIONS MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4
 
 #define MT_MENU_AMMO "Ammo Ability"
 
@@ -537,44 +536,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esAmmoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esAmmoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esAmmoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esAmmoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAmmoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esAmmoPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoPlayer[admin].g_iAmmoAbility, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoPlayer[admin].g_iAmmoEffect, value, 0, 7);
-		g_esAmmoPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoPlayer[admin].g_iAmmoMessage, value, 0, 3);
-		g_esAmmoPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
-		g_esAmmoPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoPlayer[admin].g_iAmmoAmount, value, 0, 25);
-		g_esAmmoPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoPlayer[admin].g_iAmmoHit, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoPlayer[admin].g_iAmmoHitMode, value, 0, 2);
-		g_esAmmoPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoPlayer[admin].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esAmmoPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
-		g_esAmmoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAmmoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAmmoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esAmmoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esAmmoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esAmmoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esAmmoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esAmmoPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoPlayer[admin].g_iAmmoAbility, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoPlayer[admin].g_iAmmoEffect, value, 0, 7);
+		g_esAmmoPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoPlayer[admin].g_iAmmoMessage, value, 0, 3);
+		g_esAmmoPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAmmoPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoPlayer[admin].g_iAmmoAmount, value, 0, 25);
+		g_esAmmoPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoPlayer[admin].g_iAmmoHit, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoPlayer[admin].g_iAmmoHitMode, value, 0, 2);
+		g_esAmmoPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoPlayer[admin].g_flAmmoRange, value, 1.0, 999999.0);
+		g_esAmmoPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esAmmoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAmmoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAmmoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoAbility[type].g_iComboAbility, value, 0, 1);
-		g_esAmmoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAmmoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAmmoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAmmoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAmmoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAmmoAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoAbility[type].g_iAmmoAbility, value, 0, 1);
-		g_esAmmoAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoAbility[type].g_iAmmoEffect, value, 0, 7);
-		g_esAmmoAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoAbility[type].g_iAmmoMessage, value, 0, 3);
-		g_esAmmoAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoAbility[type].g_flAmmoChance, value, 0.0, 100.0);
-		g_esAmmoAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoAbility[type].g_iAmmoAmount, value, 0, 25);
-		g_esAmmoAbility[type].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoAbility[type].g_iAmmoHit, value, 0, 1);
-		g_esAmmoAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoAbility[type].g_iAmmoHitMode, value, 0, 2);
-		g_esAmmoAbility[type].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esAmmoAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
-		g_esAmmoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAmmoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAmmoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoAbility[type].g_iComboAbility, value, 0, 1);
+		g_esAmmoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAmmoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAmmoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAmmoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esAmmoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAmmoAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoAbility[type].g_iAmmoAbility, value, 0, 1);
+		g_esAmmoAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoAbility[type].g_iAmmoEffect, value, 0, 7);
+		g_esAmmoAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoAbility[type].g_iAmmoMessage, value, 0, 3);
+		g_esAmmoAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoAbility[type].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAmmoAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoAbility[type].g_iAmmoAmount, value, 0, 25);
+		g_esAmmoAbility[type].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoAbility[type].g_iAmmoHit, value, 0, 1);
+		g_esAmmoAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoAbility[type].g_iAmmoHitMode, value, 0, 2);
+		g_esAmmoAbility[type].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
+		g_esAmmoAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esAmmoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAmmoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

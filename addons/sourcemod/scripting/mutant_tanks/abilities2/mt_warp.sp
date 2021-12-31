@@ -59,7 +59,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_WARP_SECTION2 "warp ability"
 #define MT_WARP_SECTION3 "warp_ability"
 #define MT_WARP_SECTION4 "warp"
-#define MT_WARP_SECTIONS MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4
 
 #define MT_MENU_WARP "Warp Ability"
 
@@ -651,54 +650,54 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esWarpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esWarpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esWarpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esWarpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esWarpPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esWarpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esWarpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esWarpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, 0, 3);
-		g_esWarpPlayer[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpPlayer[admin].g_iWarpEffect, value, 0, 7);
-		g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, 0, 7);
-		g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, 0.0, 100.0);
-		g_esWarpPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpPlayer[admin].g_iWarpHit, value, 0, 1);
-		g_esWarpPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpPlayer[admin].g_iWarpHitMode, value, 0, 2);
-		g_esWarpPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpPlayer[admin].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esWarpPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpPlayer[admin].g_iWarpMode, value, 0, 3);
-		g_esWarpPlayer[admin].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpPlayer[admin].g_flWarpRange, value, 1.0, 999999.0);
-		g_esWarpPlayer[admin].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpPlayer[admin].g_flWarpRangeChance, value, 0.0, 100.0);
-		g_esWarpPlayer[admin].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpPlayer[admin].g_iWarpRockBreak, value, 0, 1);
-		g_esWarpPlayer[admin].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpPlayer[admin].g_flWarpRockChance, value, 0.0, 100.0);
-		g_esWarpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWarpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esWarpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esWarpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esWarpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esWarpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esWarpPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esWarpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esWarpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esWarpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, 0, 3);
+		g_esWarpPlayer[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpPlayer[admin].g_iWarpEffect, value, 0, 7);
+		g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, 0, 7);
+		g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpPlayer[admin].g_iWarpHit, value, 0, 1);
+		g_esWarpPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpPlayer[admin].g_iWarpHitMode, value, 0, 2);
+		g_esWarpPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpPlayer[admin].g_flWarpInterval, value, 0.1, 999999.0);
+		g_esWarpPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpPlayer[admin].g_iWarpMode, value, 0, 3);
+		g_esWarpPlayer[admin].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpPlayer[admin].g_flWarpRange, value, 1.0, 999999.0);
+		g_esWarpPlayer[admin].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpPlayer[admin].g_flWarpRangeChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpPlayer[admin].g_iWarpRockBreak, value, 0, 1);
+		g_esWarpPlayer[admin].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpPlayer[admin].g_flWarpRockChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWarpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esWarpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpAbility[type].g_iComboAbility, value, 0, 1);
-		g_esWarpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esWarpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esWarpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esWarpAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esWarpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpAbility[type].g_iHumanMode, value, 0, 1);
-		g_esWarpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esWarpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, 0, 3);
-		g_esWarpAbility[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpAbility[type].g_iWarpEffect, value, 0, 7);
-		g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, 0, 7);
-		g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, 0.0, 100.0);
-		g_esWarpAbility[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpAbility[type].g_iWarpHit, value, 0, 1);
-		g_esWarpAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpAbility[type].g_iWarpHitMode, value, 0, 2);
-		g_esWarpAbility[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpAbility[type].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esWarpAbility[type].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpAbility[type].g_iWarpMode, value, 0, 3);
-		g_esWarpAbility[type].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpAbility[type].g_flWarpRange, value, 1.0, 999999.0);
-		g_esWarpAbility[type].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpAbility[type].g_flWarpRangeChance, value, 0.0, 100.0);
-		g_esWarpAbility[type].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpAbility[type].g_iWarpRockBreak, value, 0, 1);
-		g_esWarpAbility[type].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpAbility[type].g_flWarpRockChance, value, 0.0, 100.0);
-		g_esWarpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWarpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esWarpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpAbility[type].g_iComboAbility, value, 0, 1);
+		g_esWarpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esWarpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esWarpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esWarpAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esWarpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpAbility[type].g_iHumanMode, value, 0, 1);
+		g_esWarpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esWarpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, 0, 3);
+		g_esWarpAbility[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpAbility[type].g_iWarpEffect, value, 0, 7);
+		g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, 0, 7);
+		g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpAbility[type].g_iWarpHit, value, 0, 1);
+		g_esWarpAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpAbility[type].g_iWarpHitMode, value, 0, 2);
+		g_esWarpAbility[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpAbility[type].g_flWarpInterval, value, 0.1, 999999.0);
+		g_esWarpAbility[type].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpAbility[type].g_iWarpMode, value, 0, 3);
+		g_esWarpAbility[type].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpAbility[type].g_flWarpRange, value, 1.0, 999999.0);
+		g_esWarpAbility[type].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpAbility[type].g_flWarpRangeChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpAbility[type].g_iWarpRockBreak, value, 0, 1);
+		g_esWarpAbility[type].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpAbility[type].g_flWarpRockChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWarpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

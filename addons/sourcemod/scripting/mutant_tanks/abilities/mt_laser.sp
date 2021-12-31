@@ -65,7 +65,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_LASER_SECTION2 "laser ability"
 #define MT_LASER_SECTION3 "laser_ability"
 #define MT_LASER_SECTION4 "laser"
-#define MT_LASER_SECTIONS MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4
 
 #define MT_MENU_LASER "Laser Ability"
 
@@ -477,42 +476,42 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esLaserPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esLaserPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esLaserPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esLaserPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esLaserPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esLaserPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esLaserPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esLaserPlayer[admin].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserPlayer[admin].g_iLaserAbility, value, 0, 1);
-		g_esLaserPlayer[admin].g_iLaserMessage = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLaserPlayer[admin].g_iLaserMessage, value, 0, 1);
-		g_esLaserPlayer[admin].g_flLaserChance = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esLaserPlayer[admin].g_flLaserChance, value, 0.0, 100.0);
-		g_esLaserPlayer[admin].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserPlayer[admin].g_flLaserDamage, value, 0.1, 999999.0);
-		g_esLaserPlayer[admin].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserPlayer[admin].g_iLaserDuration, value, 1, 999999);
-		g_esLaserPlayer[admin].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserPlayer[admin].g_flLaserInterval, value, 0.1, 999999.0);
-		g_esLaserPlayer[admin].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserPlayer[admin].g_flLaserRange, value, 0.1, 999999.0);
-		g_esLaserPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esLaserPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esLaserPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esLaserPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esLaserPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esLaserPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esLaserPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esLaserPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esLaserPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esLaserPlayer[admin].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserPlayer[admin].g_iLaserAbility, value, 0, 1);
+		g_esLaserPlayer[admin].g_iLaserMessage = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLaserPlayer[admin].g_iLaserMessage, value, 0, 1);
+		g_esLaserPlayer[admin].g_flLaserChance = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esLaserPlayer[admin].g_flLaserChance, value, 0.0, 100.0);
+		g_esLaserPlayer[admin].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserPlayer[admin].g_flLaserDamage, value, 0.1, 999999.0);
+		g_esLaserPlayer[admin].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserPlayer[admin].g_iLaserDuration, value, 1, 999999);
+		g_esLaserPlayer[admin].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserPlayer[admin].g_flLaserInterval, value, 0.1, 999999.0);
+		g_esLaserPlayer[admin].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserPlayer[admin].g_flLaserRange, value, 0.1, 999999.0);
+		g_esLaserPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLaserPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esLaserAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserAbility[type].g_iComboAbility, value, 0, 1);
-		g_esLaserAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esLaserAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esLaserAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esLaserAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserAbility[type].g_iHumanMode, value, 0, 1);
-		g_esLaserAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esLaserAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esLaserAbility[type].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserAbility[type].g_iLaserAbility, value, 0, 1);
-		g_esLaserAbility[type].g_iLaserMessage = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLaserAbility[type].g_iLaserMessage, value, 0, 1);
-		g_esLaserAbility[type].g_flLaserChance = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esLaserAbility[type].g_flLaserChance, value, 0.0, 100.0);
-		g_esLaserAbility[type].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserAbility[type].g_flLaserDamage, value, 0.1, 999999.0);
-		g_esLaserAbility[type].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserAbility[type].g_iLaserDuration, value, 1, 999999);
-		g_esLaserAbility[type].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserAbility[type].g_flLaserInterval, value, 0.1, 999999.0);
-		g_esLaserAbility[type].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTIONS, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserAbility[type].g_flLaserRange, value, 0.1, 999999.0);
-		g_esLaserAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esLaserAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esLaserAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLaserAbility[type].g_iComboAbility, value, 0, 1);
+		g_esLaserAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLaserAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esLaserAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLaserAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esLaserAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLaserAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esLaserAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esLaserAbility[type].g_iHumanMode, value, 0, 1);
+		g_esLaserAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLaserAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esLaserAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLaserAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esLaserAbility[type].g_iLaserAbility = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLaserAbility[type].g_iLaserAbility, value, 0, 1);
+		g_esLaserAbility[type].g_iLaserMessage = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLaserAbility[type].g_iLaserMessage, value, 0, 1);
+		g_esLaserAbility[type].g_flLaserChance = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esLaserAbility[type].g_flLaserChance, value, 0.0, 100.0);
+		g_esLaserAbility[type].g_flLaserDamage = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esLaserAbility[type].g_flLaserDamage, value, 0.1, 999999.0);
+		g_esLaserAbility[type].g_iLaserDuration = iGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esLaserAbility[type].g_iLaserDuration, value, 1, 999999);
+		g_esLaserAbility[type].g_flLaserInterval = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_esLaserAbility[type].g_flLaserInterval, value, 0.1, 999999.0);
+		g_esLaserAbility[type].g_flLaserRange = flGetKeyValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "LaserRange", "Laser Range", "Laser_Range", "range", g_esLaserAbility[type].g_flLaserRange, value, 0.1, 999999.0);
+		g_esLaserAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLaserAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LASER_SECTION, MT_LASER_SECTION2, MT_LASER_SECTION3, MT_LASER_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

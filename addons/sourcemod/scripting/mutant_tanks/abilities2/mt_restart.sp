@@ -58,7 +58,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_RESTART_SECTION2 "restart ability"
 #define MT_RESTART_SECTION3 "restart_ability"
 #define MT_RESTART_SECTION4 "restart"
-#define MT_RESTART_SECTIONS MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4
 
 #define MT_MENU_RESTART "Restart Ability"
 
@@ -595,48 +594,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRestartPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRestartPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRestartPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRestartPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esRestartPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRestartPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, 0, 1);
-		g_esRestartPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartPlayer[admin].g_iRestartEffect, value, 0, 7);
-		g_esRestartPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartPlayer[admin].g_iRestartMessage, value, 0, 3);
-		g_esRestartPlayer[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartPlayer[admin].g_flRestartChance, value, 0.0, 100.0);
-		g_esRestartPlayer[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartPlayer[admin].g_iRestartHit, value, 0, 1);
-		g_esRestartPlayer[admin].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartPlayer[admin].g_iRestartHitMode, value, 0, 2);
-		g_esRestartPlayer[admin].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartPlayer[admin].g_iRestartMode, value, 0, 1);
-		g_esRestartPlayer[admin].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartPlayer[admin].g_flRestartRange, value, 1.0, 999999.0);
-		g_esRestartPlayer[admin].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartPlayer[admin].g_flRestartRangeChance, value, 0.0, 100.0);
-		g_esRestartPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRestartPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRestartPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRestartPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRestartPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esRestartPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esRestartPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRestartPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, 0, 1);
+		g_esRestartPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartPlayer[admin].g_iRestartEffect, value, 0, 7);
+		g_esRestartPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartPlayer[admin].g_iRestartMessage, value, 0, 3);
+		g_esRestartPlayer[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartPlayer[admin].g_flRestartChance, value, 0.0, 100.0);
+		g_esRestartPlayer[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartPlayer[admin].g_iRestartHit, value, 0, 1);
+		g_esRestartPlayer[admin].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartPlayer[admin].g_iRestartHitMode, value, 0, 2);
+		g_esRestartPlayer[admin].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartPlayer[admin].g_iRestartMode, value, 0, 1);
+		g_esRestartPlayer[admin].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartPlayer[admin].g_flRestartRange, value, 1.0, 999999.0);
+		g_esRestartPlayer[admin].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartPlayer[admin].g_flRestartRangeChance, value, 0.0, 100.0);
+		g_esRestartPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRestartPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof esRestartPlayer::g_sRestartLoadout, value);
+		vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof esRestartPlayer::g_sRestartLoadout, value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRestartAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRestartAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRestartAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRestartAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esRestartAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRestartAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, 0, 1);
-		g_esRestartAbility[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartAbility[type].g_iRestartEffect, value, 0, 7);
-		g_esRestartAbility[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartAbility[type].g_iRestartMessage, value, 0, 3);
-		g_esRestartAbility[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartAbility[type].g_flRestartChance, value, 0.0, 100.0);
-		g_esRestartAbility[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartAbility[type].g_iRestartHit, value, 0, 1);
-		g_esRestartAbility[type].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartAbility[type].g_iRestartHitMode, value, 0, 2);
-		g_esRestartAbility[type].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartAbility[type].g_iRestartMode, value, 0, 1);
-		g_esRestartAbility[type].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartAbility[type].g_flRestartRange, value, 1.0, 999999.0);
-		g_esRestartAbility[type].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartAbility[type].g_flRestartRangeChance, value, 0.0, 100.0);
-		g_esRestartAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRestartAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRestartAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRestartAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRestartAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esRestartAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esRestartAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRestartAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, 0, 1);
+		g_esRestartAbility[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartAbility[type].g_iRestartEffect, value, 0, 7);
+		g_esRestartAbility[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartAbility[type].g_iRestartMessage, value, 0, 3);
+		g_esRestartAbility[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartAbility[type].g_flRestartChance, value, 0.0, 100.0);
+		g_esRestartAbility[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartAbility[type].g_iRestartHit, value, 0, 1);
+		g_esRestartAbility[type].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartAbility[type].g_iRestartHitMode, value, 0, 2);
+		g_esRestartAbility[type].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartAbility[type].g_iRestartMode, value, 0, 1);
+		g_esRestartAbility[type].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartAbility[type].g_flRestartRange, value, 1.0, 999999.0);
+		g_esRestartAbility[type].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartAbility[type].g_flRestartRangeChance, value, 0.0, 100.0);
+		g_esRestartAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRestartAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, value);
+		vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, value);
 	}
 }
 

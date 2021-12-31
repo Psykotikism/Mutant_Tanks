@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_FAST_SECTION2 "fast ability"
 #define MT_FAST_SECTION3 "fast_ability"
 #define MT_FAST_SECTION4 "fast"
-#define MT_FAST_SECTIONS MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4
 
 #define MT_MENU_FAST "Fast Ability"
 
@@ -471,36 +470,36 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esFastPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esFastPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esFastPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esFastPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esFastPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esFastPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esFastPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esFastPlayer[admin].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastPlayer[admin].g_iFastAbility, value, 0, 1);
-		g_esFastPlayer[admin].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastPlayer[admin].g_iFastMessage, value, 0, 1);
-		g_esFastPlayer[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastPlayer[admin].g_flFastChance, value, 0.0, 100.0);
-		g_esFastPlayer[admin].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastPlayer[admin].g_iFastDuration, value, 1, 999999);
-		g_esFastPlayer[admin].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastPlayer[admin].g_flFastSpeed, value, 3.0, 10.0);
-		g_esFastPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFastPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esFastPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esFastPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esFastPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esFastPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esFastPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esFastPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esFastPlayer[admin].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastPlayer[admin].g_iFastAbility, value, 0, 1);
+		g_esFastPlayer[admin].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastPlayer[admin].g_iFastMessage, value, 0, 1);
+		g_esFastPlayer[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastPlayer[admin].g_flFastChance, value, 0.0, 100.0);
+		g_esFastPlayer[admin].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastPlayer[admin].g_iFastDuration, value, 1, 999999);
+		g_esFastPlayer[admin].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastPlayer[admin].g_flFastSpeed, value, 3.0, 10.0);
+		g_esFastPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esFastAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastAbility[type].g_iComboAbility, value, 0, 1);
-		g_esFastAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esFastAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esFastAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esFastAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastAbility[type].g_iHumanMode, value, 0, 1);
-		g_esFastAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esFastAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esFastAbility[type].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastAbility[type].g_iFastAbility, value, 0, 1);
-		g_esFastAbility[type].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastAbility[type].g_iFastMessage, value, 0, 1);
-		g_esFastAbility[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastAbility[type].g_flFastChance, value, 0.0, 100.0);
-		g_esFastAbility[type].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastAbility[type].g_iFastDuration, value, 1, 999999);
-		g_esFastAbility[type].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastAbility[type].g_flFastSpeed, value, 3.0, 10.0);
-		g_esFastAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFastAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFastAbility[type].g_iComboAbility, value, 0, 1);
+		g_esFastAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esFastAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esFastAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esFastAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastAbility[type].g_iHumanMode, value, 0, 1);
+		g_esFastAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esFastAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esFastAbility[type].g_iFastAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFastAbility[type].g_iFastAbility, value, 0, 1);
+		g_esFastAbility[type].g_iFastMessage = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFastAbility[type].g_iFastMessage, value, 0, 1);
+		g_esFastAbility[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastAbility[type].g_flFastChance, value, 0.0, 100.0);
+		g_esFastAbility[type].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastAbility[type].g_iFastDuration, value, 1, 999999);
+		g_esFastAbility[type].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastAbility[type].g_flFastSpeed, value, 3.0, 10.0);
+		g_esFastAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

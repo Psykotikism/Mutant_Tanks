@@ -61,7 +61,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_BLIND_SECTION2 "blind ability"
 #define MT_BLIND_SECTION3 "blind_ability"
 #define MT_BLIND_SECTION4 "blind"
-#define MT_BLIND_SECTIONS MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4
 
 #define MT_MENU_BLIND "Blind Ability"
 
@@ -568,46 +567,46 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esBlindPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBlindPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esBlindPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBlindPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esBlindPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBlindPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esBlindPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBlindPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esBlindPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBlindPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esBlindPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBlindPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esBlindPlayer[admin].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindPlayer[admin].g_iBlindAbility, value, 0, 1);
-		g_esBlindPlayer[admin].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindPlayer[admin].g_iBlindEffect, value, 0, 7);
-		g_esBlindPlayer[admin].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindPlayer[admin].g_iBlindMessage, value, 0, 3);
-		g_esBlindPlayer[admin].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindPlayer[admin].g_flBlindChance, value, 0.0, 100.0);
-		g_esBlindPlayer[admin].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindPlayer[admin].g_flBlindDuration, value, 0.1, 999999.0);
-		g_esBlindPlayer[admin].g_iBlindHit = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esBlindPlayer[admin].g_iBlindHit, value, 0, 1);
-		g_esBlindPlayer[admin].g_iBlindHitMode = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esBlindPlayer[admin].g_iBlindHitMode, value, 0, 2);
-		g_esBlindPlayer[admin].g_iBlindIntensity = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esBlindPlayer[admin].g_iBlindIntensity, value, 0, 255);
-		g_esBlindPlayer[admin].g_flBlindRange = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esBlindPlayer[admin].g_flBlindRange, value, 1.0, 999999.0);
-		g_esBlindPlayer[admin].g_flBlindRangeChance = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esBlindPlayer[admin].g_flBlindRangeChance, value, 0.0, 100.0);
-		g_esBlindPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esBlindPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esBlindPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBlindPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esBlindPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBlindPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esBlindPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBlindPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esBlindPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBlindPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esBlindPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBlindPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esBlindPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBlindPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esBlindPlayer[admin].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindPlayer[admin].g_iBlindAbility, value, 0, 1);
+		g_esBlindPlayer[admin].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindPlayer[admin].g_iBlindEffect, value, 0, 7);
+		g_esBlindPlayer[admin].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindPlayer[admin].g_iBlindMessage, value, 0, 3);
+		g_esBlindPlayer[admin].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindPlayer[admin].g_flBlindChance, value, 0.0, 100.0);
+		g_esBlindPlayer[admin].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindPlayer[admin].g_flBlindDuration, value, 0.1, 999999.0);
+		g_esBlindPlayer[admin].g_iBlindHit = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esBlindPlayer[admin].g_iBlindHit, value, 0, 1);
+		g_esBlindPlayer[admin].g_iBlindHitMode = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esBlindPlayer[admin].g_iBlindHitMode, value, 0, 2);
+		g_esBlindPlayer[admin].g_iBlindIntensity = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esBlindPlayer[admin].g_iBlindIntensity, value, 0, 255);
+		g_esBlindPlayer[admin].g_flBlindRange = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esBlindPlayer[admin].g_flBlindRange, value, 1.0, 999999.0);
+		g_esBlindPlayer[admin].g_flBlindRangeChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esBlindPlayer[admin].g_flBlindRangeChance, value, 0.0, 100.0);
+		g_esBlindPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBlindPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esBlindAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBlindAbility[type].g_iComboAbility, value, 0, 1);
-		g_esBlindAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBlindAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esBlindAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBlindAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esBlindAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBlindAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esBlindAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBlindAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esBlindAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBlindAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esBlindAbility[type].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindAbility[type].g_iBlindAbility, value, 0, 1);
-		g_esBlindAbility[type].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindAbility[type].g_iBlindEffect, value, 0, 7);
-		g_esBlindAbility[type].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindAbility[type].g_iBlindMessage, value, 0, 3);
-		g_esBlindAbility[type].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindAbility[type].g_flBlindChance, value, 0.0, 100.0);
-		g_esBlindAbility[type].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindAbility[type].g_flBlindDuration, value, 0.1, 999999.0);
-		g_esBlindAbility[type].g_iBlindHit = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esBlindAbility[type].g_iBlindHit, value, 0, 1);
-		g_esBlindAbility[type].g_iBlindHitMode = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esBlindAbility[type].g_iBlindHitMode, value, 0, 2);
-		g_esBlindAbility[type].g_iBlindIntensity = iGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esBlindAbility[type].g_iBlindIntensity, value, 0, 255);
-		g_esBlindAbility[type].g_flBlindRange = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esBlindAbility[type].g_flBlindRange, value, 1.0, 999999.0);
-		g_esBlindAbility[type].g_flBlindRangeChance = flGetKeyValue(subsection, MT_BLIND_SECTIONS, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esBlindAbility[type].g_flBlindRangeChance, value, 0.0, 100.0);
-		g_esBlindAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esBlindAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esBlindAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBlindAbility[type].g_iComboAbility, value, 0, 1);
+		g_esBlindAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBlindAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esBlindAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBlindAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esBlindAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBlindAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esBlindAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBlindAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esBlindAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBlindAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esBlindAbility[type].g_iBlindAbility = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBlindAbility[type].g_iBlindAbility, value, 0, 1);
+		g_esBlindAbility[type].g_iBlindEffect = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBlindAbility[type].g_iBlindEffect, value, 0, 7);
+		g_esBlindAbility[type].g_iBlindMessage = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBlindAbility[type].g_iBlindMessage, value, 0, 3);
+		g_esBlindAbility[type].g_flBlindChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esBlindAbility[type].g_flBlindChance, value, 0.0, 100.0);
+		g_esBlindAbility[type].g_flBlindDuration = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esBlindAbility[type].g_flBlindDuration, value, 0.1, 999999.0);
+		g_esBlindAbility[type].g_iBlindHit = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esBlindAbility[type].g_iBlindHit, value, 0, 1);
+		g_esBlindAbility[type].g_iBlindHitMode = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esBlindAbility[type].g_iBlindHitMode, value, 0, 2);
+		g_esBlindAbility[type].g_iBlindIntensity = iGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esBlindAbility[type].g_iBlindIntensity, value, 0, 255);
+		g_esBlindAbility[type].g_flBlindRange = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esBlindAbility[type].g_flBlindRange, value, 1.0, 999999.0);
+		g_esBlindAbility[type].g_flBlindRangeChance = flGetKeyValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esBlindAbility[type].g_flBlindRangeChance, value, 0.0, 100.0);
+		g_esBlindAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBlindAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BLIND_SECTION, MT_BLIND_SECTION2, MT_BLIND_SECTION3, MT_BLIND_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
