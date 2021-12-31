@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_RESPAWN_SECTION2 "respawn ability"
 #define MT_RESPAWN_SECTION3 "respawn_ability"
 #define MT_RESPAWN_SECTION4 "respawn"
-#define MT_RESPAWN_SECTIONS MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4
 
 #define MT_MENU_RESPAWN "Respawn Ability"
 
@@ -421,16 +420,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRespawnPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRespawnPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRespawnPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRespawnPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRespawnPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRespawnPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRespawnPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRespawnPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRespawnPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRespawnPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRespawnPlayer[admin].g_iRespawnAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRespawnPlayer[admin].g_iRespawnAbility, value, 0, 1);
-		g_esRespawnPlayer[admin].g_iRespawnMessage = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRespawnPlayer[admin].g_iRespawnMessage, value, 0, 1);
-		g_esRespawnPlayer[admin].g_iRespawnAmount = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esRespawnPlayer[admin].g_iRespawnAmount, value, 1, 999999);
-		g_esRespawnPlayer[admin].g_flRespawnChance = flGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esRespawnPlayer[admin].g_flRespawnChance, value, 0.0, 100.0);
-		g_esRespawnPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESPAWN_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRespawnPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRespawnPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRespawnPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRespawnPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRespawnPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRespawnPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esRespawnPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRespawnPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRespawnPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRespawnPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRespawnPlayer[admin].g_iRespawnAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRespawnPlayer[admin].g_iRespawnAbility, value, 0, 1);
+		g_esRespawnPlayer[admin].g_iRespawnMessage = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRespawnPlayer[admin].g_iRespawnMessage, value, 0, 1);
+		g_esRespawnPlayer[admin].g_iRespawnAmount = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esRespawnPlayer[admin].g_iRespawnAmount, value, 1, 999999);
+		g_esRespawnPlayer[admin].g_flRespawnChance = flGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esRespawnPlayer[admin].g_flRespawnChance, value, 0.0, 100.0);
+		g_esRespawnPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 
 		if (StrEqual(subsection, MT_RESPAWN_SECTION, false) || StrEqual(subsection, MT_RESPAWN_SECTION2, false) || StrEqual(subsection, MT_RESPAWN_SECTION3, false) || StrEqual(subsection, MT_RESPAWN_SECTION4, false))
 		{
@@ -449,16 +448,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRespawnAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRespawnAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRespawnAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRespawnAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRespawnAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRespawnAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRespawnAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRespawnAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRespawnAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRespawnAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRespawnAbility[type].g_iRespawnAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRespawnAbility[type].g_iRespawnAbility, value, 0, 1);
-		g_esRespawnAbility[type].g_iRespawnMessage = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRespawnAbility[type].g_iRespawnMessage, value, 0, 1);
-		g_esRespawnAbility[type].g_iRespawnAmount = iGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esRespawnAbility[type].g_iRespawnAmount, value, 1, 999999);
-		g_esRespawnAbility[type].g_flRespawnChance = flGetKeyValue(subsection, MT_RESPAWN_SECTIONS, key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esRespawnAbility[type].g_flRespawnChance, value, 0.0, 100.0);
-		g_esRespawnAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESPAWN_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRespawnAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRespawnAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRespawnAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRespawnAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRespawnAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRespawnAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esRespawnAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRespawnAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRespawnAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRespawnAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRespawnAbility[type].g_iRespawnAbility = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRespawnAbility[type].g_iRespawnAbility, value, 0, 1);
+		g_esRespawnAbility[type].g_iRespawnMessage = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRespawnAbility[type].g_iRespawnMessage, value, 0, 1);
+		g_esRespawnAbility[type].g_iRespawnAmount = iGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esRespawnAbility[type].g_iRespawnAmount, value, 1, 999999);
+		g_esRespawnAbility[type].g_flRespawnChance = flGetKeyValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esRespawnAbility[type].g_flRespawnChance, value, 0.0, 100.0);
+		g_esRespawnAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESPAWN_SECTION, MT_RESPAWN_SECTION2, MT_RESPAWN_SECTION3, MT_RESPAWN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 
 		if (StrEqual(subsection, MT_RESPAWN_SECTION, false) || StrEqual(subsection, MT_RESPAWN_SECTION2, false) || StrEqual(subsection, MT_RESPAWN_SECTION3, false) || StrEqual(subsection, MT_RESPAWN_SECTION4, false))
 		{

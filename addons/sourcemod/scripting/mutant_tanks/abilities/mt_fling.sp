@@ -60,7 +60,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_FLING_SECTION2 "fling ability"
 #define MT_FLING_SECTION3 "fling_ability"
 #define MT_FLING_SECTION4 "fling"
-#define MT_FLING_SECTIONS MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4
 
 #define MT_MENU_FLING "Fling Ability"
 
@@ -597,50 +596,50 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esFlingPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esFlingPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esFlingPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esFlingPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esFlingPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esFlingPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esFlingPlayer[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingPlayer[admin].g_iFlingAbility, value, 0, 1);
-		g_esFlingPlayer[admin].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingPlayer[admin].g_iFlingEffect, value, 0, 7);
-		g_esFlingPlayer[admin].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingPlayer[admin].g_iFlingMessage, value, 0, 3);
-		g_esFlingPlayer[admin].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingPlayer[admin].g_flFlingChance, value, 0.0, 100.0);
-		g_esFlingPlayer[admin].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingPlayer[admin].g_iFlingDeath, value, 0, 1);
-		g_esFlingPlayer[admin].g_flFlingDeathChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeathChance", "Fling Death Chance", "Fling_Death_Chance", "deathchance", g_esFlingPlayer[admin].g_flFlingDeathChance, value, 0.0, 100.0);
-		g_esFlingPlayer[admin].g_flFlingDeathRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeathRange", "Fling Death Range", "Fling_Death_Range", "deathrange", g_esFlingPlayer[admin].g_flFlingDeathRange, value, 1.0, 999999.0);
-		g_esFlingPlayer[admin].g_flFlingForce = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingForce", "Fling Force", "Fling_Force", "force", g_esFlingPlayer[admin].g_flFlingForce, value, 1.0, 999999.0);
-		g_esFlingPlayer[admin].g_iFlingHit = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_esFlingPlayer[admin].g_iFlingHit, value, 0, 1);
-		g_esFlingPlayer[admin].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingPlayer[admin].g_iFlingHitMode, value, 0, 2);
-		g_esFlingPlayer[admin].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingPlayer[admin].g_flFlingRange, value, 1.0, 999999.0);
-		g_esFlingPlayer[admin].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingPlayer[admin].g_flFlingRangeChance, value, 0.0, 100.0);
-		g_esFlingPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFlingPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esFlingPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esFlingPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esFlingPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esFlingPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esFlingPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esFlingPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esFlingPlayer[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingPlayer[admin].g_iFlingAbility, value, 0, 1);
+		g_esFlingPlayer[admin].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingPlayer[admin].g_iFlingEffect, value, 0, 7);
+		g_esFlingPlayer[admin].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingPlayer[admin].g_iFlingMessage, value, 0, 3);
+		g_esFlingPlayer[admin].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingPlayer[admin].g_flFlingChance, value, 0.0, 100.0);
+		g_esFlingPlayer[admin].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingPlayer[admin].g_iFlingDeath, value, 0, 1);
+		g_esFlingPlayer[admin].g_flFlingDeathChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeathChance", "Fling Death Chance", "Fling_Death_Chance", "deathchance", g_esFlingPlayer[admin].g_flFlingDeathChance, value, 0.0, 100.0);
+		g_esFlingPlayer[admin].g_flFlingDeathRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeathRange", "Fling Death Range", "Fling_Death_Range", "deathrange", g_esFlingPlayer[admin].g_flFlingDeathRange, value, 1.0, 999999.0);
+		g_esFlingPlayer[admin].g_flFlingForce = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingForce", "Fling Force", "Fling_Force", "force", g_esFlingPlayer[admin].g_flFlingForce, value, 1.0, 999999.0);
+		g_esFlingPlayer[admin].g_iFlingHit = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_esFlingPlayer[admin].g_iFlingHit, value, 0, 1);
+		g_esFlingPlayer[admin].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingPlayer[admin].g_iFlingHitMode, value, 0, 2);
+		g_esFlingPlayer[admin].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingPlayer[admin].g_flFlingRange, value, 1.0, 999999.0);
+		g_esFlingPlayer[admin].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingPlayer[admin].g_flFlingRangeChance, value, 0.0, 100.0);
+		g_esFlingPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlingPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esFlingAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingAbility[type].g_iComboAbility, value, 0, 1);
-		g_esFlingAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esFlingAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esFlingAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esFlingAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esFlingAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esFlingAbility[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingAbility[type].g_iFlingAbility, value, 0, 1);
-		g_esFlingAbility[type].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingAbility[type].g_iFlingEffect, value, 0, 7);
-		g_esFlingAbility[type].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingAbility[type].g_iFlingMessage, value, 0, 3);
-		g_esFlingAbility[type].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingAbility[type].g_flFlingChance, value, 0.0, 100.0);
-		g_esFlingAbility[type].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingAbility[type].g_iFlingDeath, value, 0, 1);
-		g_esFlingAbility[type].g_flFlingDeathChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeathChance", "Fling Death Chance", "Fling_Death_Chance", "deathchance", g_esFlingAbility[type].g_flFlingDeathChance, value, 0.0, 100.0);
-		g_esFlingAbility[type].g_flFlingDeathRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingDeathRange", "Fling Death Range", "Fling_Death_Range", "deathrange", g_esFlingAbility[type].g_flFlingDeathRange, value, 1.0, 999999.0);
-		g_esFlingAbility[type].g_flFlingForce = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingForce", "Fling Force", "Fling_Force", "force", g_esFlingAbility[type].g_flFlingForce, value, 1.0, 999999.0);
-		g_esFlingAbility[type].g_iFlingHit = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_esFlingAbility[type].g_iFlingHit, value, 0, 1);
-		g_esFlingAbility[type].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingAbility[type].g_iFlingHitMode, value, 0, 2);
-		g_esFlingAbility[type].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingAbility[type].g_flFlingRange, value, 1.0, 999999.0);
-		g_esFlingAbility[type].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingAbility[type].g_flFlingRangeChance, value, 0.0, 100.0);
-		g_esFlingAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFlingAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esFlingAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlingAbility[type].g_iComboAbility, value, 0, 1);
+		g_esFlingAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlingAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esFlingAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlingAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esFlingAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlingAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esFlingAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlingAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esFlingAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlingAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esFlingAbility[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingAbility[type].g_iFlingAbility, value, 0, 1);
+		g_esFlingAbility[type].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingAbility[type].g_iFlingEffect, value, 0, 7);
+		g_esFlingAbility[type].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingAbility[type].g_iFlingMessage, value, 0, 3);
+		g_esFlingAbility[type].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingAbility[type].g_flFlingChance, value, 0.0, 100.0);
+		g_esFlingAbility[type].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingAbility[type].g_iFlingDeath, value, 0, 1);
+		g_esFlingAbility[type].g_flFlingDeathChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeathChance", "Fling Death Chance", "Fling_Death_Chance", "deathchance", g_esFlingAbility[type].g_flFlingDeathChance, value, 0.0, 100.0);
+		g_esFlingAbility[type].g_flFlingDeathRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeathRange", "Fling Death Range", "Fling_Death_Range", "deathrange", g_esFlingAbility[type].g_flFlingDeathRange, value, 1.0, 999999.0);
+		g_esFlingAbility[type].g_flFlingForce = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingForce", "Fling Force", "Fling_Force", "force", g_esFlingAbility[type].g_flFlingForce, value, 1.0, 999999.0);
+		g_esFlingAbility[type].g_iFlingHit = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_esFlingAbility[type].g_iFlingHit, value, 0, 1);
+		g_esFlingAbility[type].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingAbility[type].g_iFlingHitMode, value, 0, 2);
+		g_esFlingAbility[type].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingAbility[type].g_flFlingRange, value, 1.0, 999999.0);
+		g_esFlingAbility[type].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingAbility[type].g_flFlingRangeChance, value, 0.0, 100.0);
+		g_esFlingAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlingAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_DRUNK_SECTION2 "drunk ability"
 #define MT_DRUNK_SECTION3 "drunk_ability"
 #define MT_DRUNK_SECTION4 "drunk"
-#define MT_DRUNK_SECTIONS MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4
 
 #define MT_MENU_DRUNK "Drunk Ability"
 
@@ -553,48 +552,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esDrunkPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrunkPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esDrunkPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrunkPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esDrunkPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrunkPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esDrunkPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrunkPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esDrunkPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrunkPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esDrunkPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrunkPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esDrunkPlayer[admin].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkPlayer[admin].g_iDrunkAbility, value, 0, 1);
-		g_esDrunkPlayer[admin].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkPlayer[admin].g_iDrunkEffect, value, 0, 7);
-		g_esDrunkPlayer[admin].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkPlayer[admin].g_iDrunkMessage, value, 0, 3);
-		g_esDrunkPlayer[admin].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkPlayer[admin].g_flDrunkChance, value, 0.0, 100.0);
-		g_esDrunkPlayer[admin].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkPlayer[admin].g_iDrunkDuration, value, 1, 999999);
-		g_esDrunkPlayer[admin].g_iDrunkHit = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkHit", "Drunk Hit", "Drunk_Hit", "hit", g_esDrunkPlayer[admin].g_iDrunkHit, value, 0, 1);
-		g_esDrunkPlayer[admin].g_iDrunkHitMode = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkHitMode", "Drunk Hit Mode", "Drunk_Hit_Mode", "hitmode", g_esDrunkPlayer[admin].g_iDrunkHitMode, value, 0, 2);
-		g_esDrunkPlayer[admin].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkPlayer[admin].g_flDrunkRange, value, 1.0, 999999.0);
-		g_esDrunkPlayer[admin].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkPlayer[admin].g_flDrunkRangeChance, value, 0.0, 100.0);
-		g_esDrunkPlayer[admin].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkPlayer[admin].g_flDrunkSpeedInterval, value, 0.1, 999999.0);
-		g_esDrunkPlayer[admin].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkPlayer[admin].g_flDrunkTurnInterval, value, 0.1, 999999.0);
-		g_esDrunkPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esDrunkPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esDrunkPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrunkPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esDrunkPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrunkPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esDrunkPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrunkPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esDrunkPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrunkPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esDrunkPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrunkPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esDrunkPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrunkPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esDrunkPlayer[admin].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkPlayer[admin].g_iDrunkAbility, value, 0, 1);
+		g_esDrunkPlayer[admin].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkPlayer[admin].g_iDrunkEffect, value, 0, 7);
+		g_esDrunkPlayer[admin].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkPlayer[admin].g_iDrunkMessage, value, 0, 3);
+		g_esDrunkPlayer[admin].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkPlayer[admin].g_flDrunkChance, value, 0.0, 100.0);
+		g_esDrunkPlayer[admin].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkPlayer[admin].g_iDrunkDuration, value, 1, 999999);
+		g_esDrunkPlayer[admin].g_iDrunkHit = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkHit", "Drunk Hit", "Drunk_Hit", "hit", g_esDrunkPlayer[admin].g_iDrunkHit, value, 0, 1);
+		g_esDrunkPlayer[admin].g_iDrunkHitMode = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkHitMode", "Drunk Hit Mode", "Drunk_Hit_Mode", "hitmode", g_esDrunkPlayer[admin].g_iDrunkHitMode, value, 0, 2);
+		g_esDrunkPlayer[admin].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkPlayer[admin].g_flDrunkRange, value, 1.0, 999999.0);
+		g_esDrunkPlayer[admin].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkPlayer[admin].g_flDrunkRangeChance, value, 0.0, 100.0);
+		g_esDrunkPlayer[admin].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkPlayer[admin].g_flDrunkSpeedInterval, value, 0.1, 999999.0);
+		g_esDrunkPlayer[admin].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkPlayer[admin].g_flDrunkTurnInterval, value, 0.1, 999999.0);
+		g_esDrunkPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esDrunkPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esDrunkAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrunkAbility[type].g_iComboAbility, value, 0, 1);
-		g_esDrunkAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrunkAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esDrunkAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrunkAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esDrunkAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrunkAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esDrunkAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrunkAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esDrunkAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrunkAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esDrunkAbility[type].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkAbility[type].g_iDrunkAbility, value, 0, 1);
-		g_esDrunkAbility[type].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkAbility[type].g_iDrunkEffect, value, 0, 7);
-		g_esDrunkAbility[type].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkAbility[type].g_iDrunkMessage, value, 0, 3);
-		g_esDrunkAbility[type].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkAbility[type].g_flDrunkChance, value, 0.0, 100.0);
-		g_esDrunkAbility[type].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkAbility[type].g_iDrunkDuration, value, 1, 999999);
-		g_esDrunkAbility[type].g_iDrunkHit = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkHit", "Drunk Hit", "Drunk_Hit", "hit", g_esDrunkAbility[type].g_iDrunkHit, value, 0, 1);
-		g_esDrunkAbility[type].g_iDrunkHitMode = iGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkHitMode", "Drunk Hit Mode", "Drunk_Hit_Mode", "hitmode", g_esDrunkAbility[type].g_iDrunkHitMode, value, 0, 2);
-		g_esDrunkAbility[type].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkAbility[type].g_flDrunkRange, value, 1.0, 999999.0);
-		g_esDrunkAbility[type].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkAbility[type].g_flDrunkRangeChance, value, 0.0, 100.0);
-		g_esDrunkAbility[type].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkAbility[type].g_flDrunkSpeedInterval, value, 0.1, 999999.0);
-		g_esDrunkAbility[type].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTIONS, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkAbility[type].g_flDrunkTurnInterval, value, 0.1, 999999.0);
-		g_esDrunkAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esDrunkAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esDrunkAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDrunkAbility[type].g_iComboAbility, value, 0, 1);
+		g_esDrunkAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDrunkAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esDrunkAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esDrunkAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esDrunkAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esDrunkAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esDrunkAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDrunkAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esDrunkAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esDrunkAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esDrunkAbility[type].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkAbility[type].g_iDrunkAbility, value, 0, 1);
+		g_esDrunkAbility[type].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkAbility[type].g_iDrunkEffect, value, 0, 7);
+		g_esDrunkAbility[type].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkAbility[type].g_iDrunkMessage, value, 0, 3);
+		g_esDrunkAbility[type].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkAbility[type].g_flDrunkChance, value, 0.0, 100.0);
+		g_esDrunkAbility[type].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkAbility[type].g_iDrunkDuration, value, 1, 999999);
+		g_esDrunkAbility[type].g_iDrunkHit = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkHit", "Drunk Hit", "Drunk_Hit", "hit", g_esDrunkAbility[type].g_iDrunkHit, value, 0, 1);
+		g_esDrunkAbility[type].g_iDrunkHitMode = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkHitMode", "Drunk Hit Mode", "Drunk_Hit_Mode", "hitmode", g_esDrunkAbility[type].g_iDrunkHitMode, value, 0, 2);
+		g_esDrunkAbility[type].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkAbility[type].g_flDrunkRange, value, 1.0, 999999.0);
+		g_esDrunkAbility[type].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkAbility[type].g_flDrunkRangeChance, value, 0.0, 100.0);
+		g_esDrunkAbility[type].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkAbility[type].g_flDrunkSpeedInterval, value, 0.1, 999999.0);
+		g_esDrunkAbility[type].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkAbility[type].g_flDrunkTurnInterval, value, 0.1, 999999.0);
+		g_esDrunkAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esDrunkAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

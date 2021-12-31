@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_LEECH_SECTION2 "leech ability"
 #define MT_LEECH_SECTION3 "leech_ability"
 #define MT_LEECH_SECTION4 "leech"
-#define MT_LEECH_SECTIONS MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4
 
 #define MT_MENU_LEECH "Leech Ability"
 
@@ -548,46 +547,46 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esLeechPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esLeechPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esLeechPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esLeechPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esLeechPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esLeechPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esLeechPlayer[admin].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechPlayer[admin].g_iLeechAbility, value, 0, 1);
-		g_esLeechPlayer[admin].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechPlayer[admin].g_iLeechEffect, value, 0, 7);
-		g_esLeechPlayer[admin].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechPlayer[admin].g_iLeechMessage, value, 0, 3);
-		g_esLeechPlayer[admin].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechPlayer[admin].g_flLeechChance, value, 0.0, 100.0);
-		g_esLeechPlayer[admin].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechPlayer[admin].g_iLeechDuration, value, 1, 999999);
-		g_esLeechPlayer[admin].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechPlayer[admin].g_iLeechHit, value, 0, 1);
-		g_esLeechPlayer[admin].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechPlayer[admin].g_iLeechHitMode, value, 0, 2);
-		g_esLeechPlayer[admin].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechPlayer[admin].g_flLeechInterval, value, 0.1, 999999.0);
-		g_esLeechPlayer[admin].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechPlayer[admin].g_flLeechRange, value, 1.0, 999999.0);
-		g_esLeechPlayer[admin].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechPlayer[admin].g_flLeechRangeChance, value, 0.0, 100.0);
-		g_esLeechPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esLeechPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esLeechPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esLeechPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esLeechPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esLeechPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esLeechPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esLeechPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esLeechPlayer[admin].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechPlayer[admin].g_iLeechAbility, value, 0, 1);
+		g_esLeechPlayer[admin].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechPlayer[admin].g_iLeechEffect, value, 0, 7);
+		g_esLeechPlayer[admin].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechPlayer[admin].g_iLeechMessage, value, 0, 3);
+		g_esLeechPlayer[admin].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechPlayer[admin].g_flLeechChance, value, 0.0, 100.0);
+		g_esLeechPlayer[admin].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechPlayer[admin].g_iLeechDuration, value, 1, 999999);
+		g_esLeechPlayer[admin].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechPlayer[admin].g_iLeechHit, value, 0, 1);
+		g_esLeechPlayer[admin].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechPlayer[admin].g_iLeechHitMode, value, 0, 2);
+		g_esLeechPlayer[admin].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechPlayer[admin].g_flLeechInterval, value, 0.1, 999999.0);
+		g_esLeechPlayer[admin].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechPlayer[admin].g_flLeechRange, value, 1.0, 999999.0);
+		g_esLeechPlayer[admin].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechPlayer[admin].g_flLeechRangeChance, value, 0.0, 100.0);
+		g_esLeechPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLeechPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esLeechAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechAbility[type].g_iComboAbility, value, 0, 1);
-		g_esLeechAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esLeechAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esLeechAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esLeechAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esLeechAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esLeechAbility[type].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechAbility[type].g_iLeechAbility, value, 0, 1);
-		g_esLeechAbility[type].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechAbility[type].g_iLeechEffect, value, 0, 7);
-		g_esLeechAbility[type].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechAbility[type].g_iLeechMessage, value, 0, 3);
-		g_esLeechAbility[type].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechAbility[type].g_flLeechChance, value, 0.0, 100.0);
-		g_esLeechAbility[type].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechAbility[type].g_iLeechDuration, value, 1, 999999);
-		g_esLeechAbility[type].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechAbility[type].g_iLeechHit, value, 0, 1);
-		g_esLeechAbility[type].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechAbility[type].g_iLeechHitMode, value, 0, 2);
-		g_esLeechAbility[type].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechAbility[type].g_flLeechInterval, value, 0.1, 999999.0);
-		g_esLeechAbility[type].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechAbility[type].g_flLeechRange, value, 1.0, 999999.0);
-		g_esLeechAbility[type].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTIONS, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechAbility[type].g_flLeechRangeChance, value, 0.0, 100.0);
-		g_esLeechAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esLeechAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esLeechAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechAbility[type].g_iComboAbility, value, 0, 1);
+		g_esLeechAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esLeechAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esLeechAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esLeechAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esLeechAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esLeechAbility[type].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechAbility[type].g_iLeechAbility, value, 0, 1);
+		g_esLeechAbility[type].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechAbility[type].g_iLeechEffect, value, 0, 7);
+		g_esLeechAbility[type].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechAbility[type].g_iLeechMessage, value, 0, 3);
+		g_esLeechAbility[type].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechAbility[type].g_flLeechChance, value, 0.0, 100.0);
+		g_esLeechAbility[type].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechAbility[type].g_iLeechDuration, value, 1, 999999);
+		g_esLeechAbility[type].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechAbility[type].g_iLeechHit, value, 0, 1);
+		g_esLeechAbility[type].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechAbility[type].g_iLeechHitMode, value, 0, 2);
+		g_esLeechAbility[type].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechAbility[type].g_flLeechInterval, value, 0.1, 999999.0);
+		g_esLeechAbility[type].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechAbility[type].g_flLeechRange, value, 1.0, 999999.0);
+		g_esLeechAbility[type].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechAbility[type].g_flLeechRangeChance, value, 0.0, 100.0);
+		g_esLeechAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLeechAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

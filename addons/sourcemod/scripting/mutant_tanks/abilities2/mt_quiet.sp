@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_QUIET_SECTION2 "quiet ability"
 #define MT_QUIET_SECTION3 "quiet_ability"
 #define MT_QUIET_SECTION4 "quiet"
-#define MT_QUIET_SECTIONS MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4
 
 #define MT_MENU_QUIET "Quiet Ability"
 
@@ -570,44 +569,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esQuietPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esQuietPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esQuietPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esQuietPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esQuietPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esQuietPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esQuietPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietPlayer[admin].g_iQuietAbility, value, 0, 1);
-		g_esQuietPlayer[admin].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietPlayer[admin].g_iQuietEffect, value, 0, 7);
-		g_esQuietPlayer[admin].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietPlayer[admin].g_iQuietMessage, value, 0, 3);
-		g_esQuietPlayer[admin].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietPlayer[admin].g_flQuietChance, value, 0.0, 100.0);
-		g_esQuietPlayer[admin].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietPlayer[admin].g_flQuietDuration, value, 0.1, 999999.0);
-		g_esQuietPlayer[admin].g_iQuietHit = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esQuietPlayer[admin].g_iQuietHit, value, 0, 1);
-		g_esQuietPlayer[admin].g_iQuietHitMode = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esQuietPlayer[admin].g_iQuietHitMode, value, 0, 2);
-		g_esQuietPlayer[admin].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietPlayer[admin].g_flQuietRange, value, 1.0, 999999.0);
-		g_esQuietPlayer[admin].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietPlayer[admin].g_flQuietRangeChance, value, 0.0, 100.0);
-		g_esQuietPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esQuietPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esQuietPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esQuietPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esQuietPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esQuietPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esQuietPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esQuietPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esQuietPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietPlayer[admin].g_iQuietAbility, value, 0, 1);
+		g_esQuietPlayer[admin].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietPlayer[admin].g_iQuietEffect, value, 0, 7);
+		g_esQuietPlayer[admin].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietPlayer[admin].g_iQuietMessage, value, 0, 3);
+		g_esQuietPlayer[admin].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietPlayer[admin].g_flQuietChance, value, 0.0, 100.0);
+		g_esQuietPlayer[admin].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietPlayer[admin].g_flQuietDuration, value, 0.1, 999999.0);
+		g_esQuietPlayer[admin].g_iQuietHit = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esQuietPlayer[admin].g_iQuietHit, value, 0, 1);
+		g_esQuietPlayer[admin].g_iQuietHitMode = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esQuietPlayer[admin].g_iQuietHitMode, value, 0, 2);
+		g_esQuietPlayer[admin].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietPlayer[admin].g_flQuietRange, value, 1.0, 999999.0);
+		g_esQuietPlayer[admin].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietPlayer[admin].g_flQuietRangeChance, value, 0.0, 100.0);
+		g_esQuietPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esQuietPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esQuietAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietAbility[type].g_iComboAbility, value, 0, 1);
-		g_esQuietAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esQuietAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esQuietAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esQuietAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esQuietAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esQuietAbility[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietAbility[type].g_iQuietAbility, value, 0, 1);
-		g_esQuietAbility[type].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietAbility[type].g_iQuietEffect, value, 0, 7);
-		g_esQuietAbility[type].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietAbility[type].g_iQuietMessage, value, 0, 3);
-		g_esQuietAbility[type].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietAbility[type].g_flQuietChance, value, 0.0, 100.0);
-		g_esQuietAbility[type].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietAbility[type].g_flQuietDuration, value, 0.1, 999999.0);
-		g_esQuietAbility[type].g_iQuietHit = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esQuietAbility[type].g_iQuietHit, value, 0, 1);
-		g_esQuietAbility[type].g_iQuietHitMode = iGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esQuietAbility[type].g_iQuietHitMode, value, 0, 2);
-		g_esQuietAbility[type].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietAbility[type].g_flQuietRange, value, 1.0, 999999.0);
-		g_esQuietAbility[type].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTIONS, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietAbility[type].g_flQuietRangeChance, value, 0.0, 100.0);
-		g_esQuietAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esQuietAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esQuietAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esQuietAbility[type].g_iComboAbility, value, 0, 1);
+		g_esQuietAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esQuietAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esQuietAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esQuietAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esQuietAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esQuietAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esQuietAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esQuietAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esQuietAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esQuietAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esQuietAbility[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietAbility[type].g_iQuietAbility, value, 0, 1);
+		g_esQuietAbility[type].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietAbility[type].g_iQuietEffect, value, 0, 7);
+		g_esQuietAbility[type].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietAbility[type].g_iQuietMessage, value, 0, 3);
+		g_esQuietAbility[type].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietAbility[type].g_flQuietChance, value, 0.0, 100.0);
+		g_esQuietAbility[type].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietAbility[type].g_flQuietDuration, value, 0.1, 999999.0);
+		g_esQuietAbility[type].g_iQuietHit = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esQuietAbility[type].g_iQuietHit, value, 0, 1);
+		g_esQuietAbility[type].g_iQuietHitMode = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esQuietAbility[type].g_iQuietHitMode, value, 0, 2);
+		g_esQuietAbility[type].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietAbility[type].g_flQuietRange, value, 1.0, 999999.0);
+		g_esQuietAbility[type].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietAbility[type].g_flQuietRangeChance, value, 0.0, 100.0);
+		g_esQuietAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esQuietAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

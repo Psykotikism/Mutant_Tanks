@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ROCK_SECTION2 "rock ability"
 #define MT_ROCK_SECTION3 "rock_ability"
 #define MT_ROCK_SECTION4 "rock"
-#define MT_ROCK_SECTIONS MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4
 
 #define MT_MENU_ROCK "Rock Ability"
 
@@ -497,21 +496,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRockPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRockPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRockPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRockPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esRockPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esRockPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRockPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRockPlayer[admin].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockPlayer[admin].g_iRockAbility, value, 0, 1);
-		g_esRockPlayer[admin].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockPlayer[admin].g_iRockMessage, value, 0, 1);
-		g_esRockPlayer[admin].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockPlayer[admin].g_flRockChance, value, 0.0, 100.0);
-		g_esRockPlayer[admin].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockPlayer[admin].g_iRockDamage, value, 1, 999999);
-		g_esRockPlayer[admin].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockPlayer[admin].g_iRockDuration, value, 1, 999999);
-		g_esRockPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockPlayer[admin].g_flRockInterval, value, 0.1, 1.0);
-		g_esRockPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRockPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRockPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRockPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRockPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esRockPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esRockPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esRockPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRockPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRockPlayer[admin].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockPlayer[admin].g_iRockAbility, value, 0, 1);
+		g_esRockPlayer[admin].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockPlayer[admin].g_iRockMessage, value, 0, 1);
+		g_esRockPlayer[admin].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockPlayer[admin].g_flRockChance, value, 0.0, 100.0);
+		g_esRockPlayer[admin].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockPlayer[admin].g_iRockDamage, value, 1, 999999);
+		g_esRockPlayer[admin].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockPlayer[admin].g_iRockDuration, value, 1, 999999);
+		g_esRockPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockPlayer[admin].g_flRockInterval, value, 0.1, 1.0);
+		g_esRockPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRockPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		if (StrEqual(subsection, MT_ROCK_SECTION, false) || StrEqual(subsection, MT_ROCK_SECTION2, false) || StrEqual(subsection, MT_ROCK_SECTION3, false) || StrEqual(subsection, MT_ROCK_SECTION4, false))
 		{
@@ -530,21 +529,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRockAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRockAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRockAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRockAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esRockAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockAbility[type].g_iHumanMode, value, 0, 1);
-		g_esRockAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRockAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRockAbility[type].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockAbility[type].g_iRockAbility, value, 0, 1);
-		g_esRockAbility[type].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockAbility[type].g_iRockMessage, value, 0, 1);
-		g_esRockAbility[type].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockAbility[type].g_flRockChance, value, 0.0, 100.0);
-		g_esRockAbility[type].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockAbility[type].g_iRockDamage, value, 1, 999999);
-		g_esRockAbility[type].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockAbility[type].g_iRockDuration, value, 1, 999999);
-		g_esRockAbility[type].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockAbility[type].g_flRockInterval, value, 0.1, 1.0);
-		g_esRockAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRockAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRockAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRockAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRockAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esRockAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esRockAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockAbility[type].g_iHumanMode, value, 0, 1);
+		g_esRockAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esRockAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRockAbility[type].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockAbility[type].g_iRockAbility, value, 0, 1);
+		g_esRockAbility[type].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockAbility[type].g_iRockMessage, value, 0, 1);
+		g_esRockAbility[type].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockAbility[type].g_flRockChance, value, 0.0, 100.0);
+		g_esRockAbility[type].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockAbility[type].g_iRockDamage, value, 1, 999999);
+		g_esRockAbility[type].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockAbility[type].g_iRockDuration, value, 1, 999999);
+		g_esRockAbility[type].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockAbility[type].g_flRockInterval, value, 0.1, 1.0);
+		g_esRockAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRockAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		if (StrEqual(subsection, MT_ROCK_SECTION, false) || StrEqual(subsection, MT_ROCK_SECTION2, false) || StrEqual(subsection, MT_ROCK_SECTION3, false) || StrEqual(subsection, MT_ROCK_SECTION4, false))
 		{

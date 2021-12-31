@@ -57,7 +57,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_MINION_SECTION2 "minion ability"
 #define MT_MINION_SECTION3 "minion_ability"
 #define MT_MINION_SECTION4 "minion"
-#define MT_MINION_SECTIONS MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4
 
 #define MT_MENU_MINION "Minion Ability"
 
@@ -459,40 +458,40 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esMinionPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esMinionPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esMinionPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esMinionPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esMinionPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esMinionPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esMinionPlayer[admin].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionPlayer[admin].g_iMinionAbility, value, 0, 1);
-		g_esMinionPlayer[admin].g_iMinionMessage = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMinionPlayer[admin].g_iMinionMessage, value, 0, 1);
-		g_esMinionPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionPlayer[admin].g_iMinionAmount, value, 1, 15);
-		g_esMinionPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionPlayer[admin].g_flMinionChance, value, 0.0, 100.0);
-		g_esMinionPlayer[admin].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionPlayer[admin].g_flMinionLifetime, value, 0.0, 999999.0);
-		g_esMinionPlayer[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionPlayer[admin].g_iMinionRemove, value, 0, 1);
-		g_esMinionPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionPlayer[admin].g_iMinionReplace, value, 0, 1);
-		g_esMinionPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionPlayer[admin].g_iMinionTypes, value, 0, 63);
-		g_esMinionPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esMinionPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esMinionPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esMinionPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esMinionPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esMinionPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esMinionPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esMinionPlayer[admin].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionPlayer[admin].g_iMinionAbility, value, 0, 1);
+		g_esMinionPlayer[admin].g_iMinionMessage = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMinionPlayer[admin].g_iMinionMessage, value, 0, 1);
+		g_esMinionPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionPlayer[admin].g_iMinionAmount, value, 1, 15);
+		g_esMinionPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionPlayer[admin].g_flMinionChance, value, 0.0, 100.0);
+		g_esMinionPlayer[admin].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionPlayer[admin].g_flMinionLifetime, value, 0.0, 999999.0);
+		g_esMinionPlayer[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionPlayer[admin].g_iMinionRemove, value, 0, 1);
+		g_esMinionPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionPlayer[admin].g_iMinionReplace, value, 0, 1);
+		g_esMinionPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionPlayer[admin].g_iMinionTypes, value, 0, 63);
+		g_esMinionPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esMinionAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionAbility[type].g_iComboAbility, value, 0, 1);
-		g_esMinionAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esMinionAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esMinionAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esMinionAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esMinionAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esMinionAbility[type].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionAbility[type].g_iMinionAbility, value, 0, 1);
-		g_esMinionAbility[type].g_iMinionMessage = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMinionAbility[type].g_iMinionMessage, value, 0, 1);
-		g_esMinionAbility[type].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionAbility[type].g_iMinionAmount, value, 1, 15);
-		g_esMinionAbility[type].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionAbility[type].g_flMinionChance, value, 0.0, 100.0);
-		g_esMinionAbility[type].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionAbility[type].g_flMinionLifetime, value, 0.0, 999999.0);
-		g_esMinionAbility[type].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionAbility[type].g_iMinionRemove, value, 0, 1);
-		g_esMinionAbility[type].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionAbility[type].g_iMinionReplace, value, 0, 1);
-		g_esMinionAbility[type].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionAbility[type].g_iMinionTypes, value, 0, 63);
-		g_esMinionAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esMinionAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esMinionAbility[type].g_iComboAbility, value, 0, 1);
+		g_esMinionAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMinionAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esMinionAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMinionAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esMinionAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMinionAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esMinionAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMinionAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esMinionAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMinionAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esMinionAbility[type].g_iMinionAbility = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esMinionAbility[type].g_iMinionAbility, value, 0, 1);
+		g_esMinionAbility[type].g_iMinionMessage = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMinionAbility[type].g_iMinionMessage, value, 0, 1);
+		g_esMinionAbility[type].g_iMinionAmount = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esMinionAbility[type].g_iMinionAmount, value, 1, 15);
+		g_esMinionAbility[type].g_flMinionChance = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esMinionAbility[type].g_flMinionChance, value, 0.0, 100.0);
+		g_esMinionAbility[type].g_flMinionLifetime = flGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esMinionAbility[type].g_flMinionLifetime, value, 0.0, 999999.0);
+		g_esMinionAbility[type].g_iMinionRemove = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esMinionAbility[type].g_iMinionRemove, value, 0, 1);
+		g_esMinionAbility[type].g_iMinionReplace = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esMinionAbility[type].g_iMinionReplace, value, 0, 1);
+		g_esMinionAbility[type].g_iMinionTypes = iGetKeyValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esMinionAbility[type].g_iMinionTypes, value, 0, 63);
+		g_esMinionAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_MINION_SECTION, MT_MINION_SECTION2, MT_MINION_SECTION3, MT_MINION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 
