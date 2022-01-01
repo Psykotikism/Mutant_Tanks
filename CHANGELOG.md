@@ -14,6 +14,7 @@
 - Fixed the logic for the detour and patching systems.
 - Fixed any compilation errors on the latest `SM 1.11` builds.
 - Fixed custom config files not being created. (Thanks to `kot4404` and `Mi.Cura` for testing and reporting!)
+- Fixed grouped sections in config files not being read properly.
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
@@ -44,6 +45,7 @@
 - Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
+- Removed default developer access level.
 
 #### Core Plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
