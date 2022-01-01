@@ -13592,7 +13592,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 				}
 				else if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 				{
-					if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) && (FindCharInString(g_esGeneral.g_sCurrentSection, ',') == -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') == -1))
+					if (IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) && FindCharInString(g_esGeneral.g_sCurrentSection, ',') == -1 && FindCharInString(g_esGeneral.g_sCurrentSection, '-') == -1)
 					{
 						iIndex = StringToInt(g_esGeneral.g_sCurrentSection);
 						vReadTankSettings(iIndex, g_esGeneral.g_sCurrentSubSection, key, value);
@@ -13923,7 +13923,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							}
 							else if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') != -1)
 							{
-								if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) && (FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') == -1 || FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') == -1))
+								if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) && FindCharInString(g_esGeneral.g_sCurrentSubSection, ',') == -1 && FindCharInString(g_esGeneral.g_sCurrentSubSection, '-') == -1)
 								{
 									iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection);
 									vReadAdminSettings(iPlayer, iIndex, key, value);
