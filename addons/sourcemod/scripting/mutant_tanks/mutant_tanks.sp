@@ -17721,7 +17721,7 @@ bool bIsConVarConflictFound(const char[] name, const char[] set, const char[] ac
 			if (sCvarSet[iPos][0] != '\0')
 			{
 				g_esGeneral.g_cvMTTempSetting = FindConVar(sCvarSet[iPos]);
-				if (g_esGeneral.g_cvMTTempSetting != null)
+				if (g_esGeneral.g_cvMTTempSetting != null && g_esGeneral.g_cvMTTempSetting.Plugin != g_hPluginHandle)
 				{
 					if (log)
 					{
