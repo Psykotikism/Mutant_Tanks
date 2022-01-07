@@ -8598,7 +8598,7 @@ void vSetupLoadout(int developer, bool usual = true)
 		if (usual)
 		{
 			char sSet[6][64];
-			ExplodeString(g_esDeveloper[developer].g_sDevLoadout, ";", sSet, sizeof sSet, sizeof sSet[]);
+			ExplodeString(g_esDeveloper[developer].g_sDevLoadout, ",", sSet, sizeof sSet, sizeof sSet[]);
 			vCheatCommand(developer, "give", "health");
 
 			switch (g_bSecondGame && StrContains(sSet[1], "pistol") == -1 && StrContains(sSet[1], "chainsaw") == -1)
@@ -9277,7 +9277,7 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 
 void vKnockbackTank(int tank, int survivor, int damagetype)
 {
-	float flResult = (damagetype & DMG_BULLET) ? 1.0 : 10.0;
+	float flResult = ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)) ? 1.0 : 10.0;
 	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && MT_GetRandomFloat(0.0, 100.0) <= flResult)
 	{
 		vPerformKnockback(tank, survivor);
@@ -11222,7 +11222,7 @@ void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_sDevFallVoiceline = "PlayerLaugh";
 	g_esDeveloper[developer].g_sDevFlashlight = "rainbow";
 	g_esDeveloper[developer].g_sDevGlowOutline = "rainbow";
-	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "shotgun_spas;machete;molotov;first_aid_kit;pain_pills" : "autoshotgun;pistol;molotov;first_aid_kit;pain_pills;pistol";
+	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "shotgun_spas,machete,molotov,first_aid_kit,pain_pills" : "autoshotgun,pistol,molotov,first_aid_kit,pain_pills,pistol";
 	g_esDeveloper[developer].g_sDevSkinColor = "rainbow";
 	g_esDeveloper[developer].g_flDevActionDuration = 2.0;
 	g_esDeveloper[developer].g_flDevAttackBoost = 1.25;
@@ -14679,12 +14679,11 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					return Plugin_Handled;
 				}
 
-				bool bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1,
-					bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1,
-					bBlockFire = (damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1,
-					bBlockHittables = (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1,
-					bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
-
+				bool bBlockBullets = (((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)) && g_esCache[victim].g_iBulletImmunity == 1),
+					bBlockExplosives = (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1),
+					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
+					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
+					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -14705,9 +14704,30 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						return Plugin_Continue;
 					}
 
+					if (bBlockBullets && ((!bBlockExplosives && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))) || (!bBlockFire && (damagetype & DMG_BURN))))
+					{
+						damagetype &= ~DMG_BULLET|DMG_BUCKSHOT;
+
+						return Plugin_Changed;
+					}
+
+					if (bBlockExplosives && !bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
+					{
+						damagetype &= ~DMG_BLAST|DMG_BLAST_SURFACE|DMG_AIRBOAT|DMG_PLASMA;
+
+						return Plugin_Changed;
+					}
+
 					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
+
+						if (!bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
+						{
+							damagetype &= ~DMG_BURN;
+
+							return Plugin_Changed;
+						}
 					}
 
 					if (bPlayer && attacker != victim && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
@@ -14745,7 +14765,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 				if (bSurvivor)
 				{
-					if ((damagetype & DMG_BULLET) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH))
+					if ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH))
 					{
 						vKnockbackTank(victim, attacker, damagetype);
 					}
