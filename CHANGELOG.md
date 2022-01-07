@@ -15,6 +15,8 @@
 - Fixed any compilation errors on the latest `SM 1.11` builds.
 - Fixed custom config files not being created. (Thanks to `kot4404` and `Mi.Cura` for testing and reporting!)
 - Fixed grouped sections in config files not being read properly.
+- Fixed fire immunity blocking overall damage from guns with incendiary ammo. (Thanks to `weffer` for testing and reporting!)
+- Fixed explosive immunity blocking overall damage from guns with explosive rounds. (Thanks to `weffer` for testing and reporting!)
 
 #### Commands
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
