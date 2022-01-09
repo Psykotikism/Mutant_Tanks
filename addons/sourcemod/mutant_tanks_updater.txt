@@ -47,7 +47,7 @@
 		"Notes"		"- Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]"
 		"Notes"		"- Created macros for several arbitrary values."
 		"Notes"		"- Improved the RNG logic for all features that are RNG-based."
-		"Notes"		"- Removed default developer access level."
+		"Notes"		"- Added developer HUD panel for viewing currently alive Tanks."
 		"Notes"		"Core Plugin:"
 		"Notes"		"- The attack boost reward now prevents recipients from being interrupted when performing any actions."
 		"Notes"		"- The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to \"HarryPotter\" for the idea and \"Forgetest\" for the method!)"

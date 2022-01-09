@@ -47,7 +47,7 @@
 - Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
-- Removed default developer access level.
+- Added developer HUD panel for viewing currently alive Tanks.
 
 #### Core Plugin
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.

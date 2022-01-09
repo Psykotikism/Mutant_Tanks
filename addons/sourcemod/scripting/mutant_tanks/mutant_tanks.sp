@@ -954,6 +954,8 @@ enum struct esPlayer
 	float g_flTransformDuration;
 	float g_flVisualTime[6];
 
+	Handle g_hHudTimer;
+
 	int g_iAccessFlags;
 	int g_iAmmoBoost;
 	int g_iAmmoBoostReward[4];
@@ -975,6 +977,8 @@ enum struct esPlayer
 	int g_iBunnyHop;
 	int g_iBunnyHopReward[4];
 	int g_iCheckAbilities;
+	int g_iClawCount;
+	int g_iClawDamage;
 	int g_iCleanKills;
 	int g_iCleanKillsReward[4];
 	int g_iCooldown;
@@ -1009,11 +1013,15 @@ enum struct esPlayer
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmo;
 	int g_iHollowpointAmmoReward[4];
+	int g_iHudPanelLevel;
+	int g_iHudPanelPages;
 	int g_iImmunityFlags;
+	int g_iIncapCount;
 	int g_iInextinguishableFire;
 	int g_iInextinguishableFireReward[4];
 	int g_iInfiniteAmmo;
 	int g_iInfiniteAmmoReward[4];
+	int g_iKillCount;
 	int g_iKillMessage;
 	int g_iLadderActions;
 	int g_iLadderActionsReward[4];
@@ -1031,6 +1039,8 @@ enum struct esPlayer
 	int g_iMeleeRange;
 	int g_iMeleeRangeReward[4];
 	int g_iMinimumHumans;
+	int g_iMiscCount;
+	int g_iMiscDamage;
 	int g_iMultiplyHealth;
 	int g_iNotify;
 	int g_iOldTankType;
@@ -1041,6 +1051,8 @@ enum struct esPlayer
 	int g_iPersonalType;
 	int g_iPrefsAccess;
 	int g_iPrefsNotify[4];
+	int g_iPropCount;
+	int g_iPropDamage;
 	int g_iPropsAttached;
 	int g_iPropaneTank;
 	int g_iPropTankColor[4];
@@ -1062,6 +1074,8 @@ enum struct esPlayer
 	int g_iRewardVisuals;
 	int g_iRock[20];
 	int g_iRockColor[4];
+	int g_iRockCount;
+	int g_iRockDamage;
 	int g_iRockEffects;
 	int g_iRockModel;
 	int g_iRockSound;
@@ -1079,6 +1093,7 @@ enum struct esPlayer
 	int g_iSpecialAmmoReward[4];
 	int g_iStackLimits[7];
 	int g_iStackRewards[4];
+	int g_iSurvivorDamage;
 	int g_iSweepFist;
 	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankHealth;
@@ -2048,6 +2063,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 void vInitialReset(int client)
 {
+	g_esPlayer[client].g_iHudPanelLevel = 0;
+	g_esPlayer[client].g_iHudPanelPages = 0;
 	g_esPlayer[client].g_iLadyKiller = 0;
 	g_esPlayer[client].g_iLadyKillerCount = 0;
 	g_esPlayer[client].g_iPersonalType = 0;
@@ -2152,6 +2169,8 @@ void vResetCore(int client)
 	g_esPlayer[client].g_iReviveCount = 0;
 
 	vResetTankDamage(client);
+
+	delete g_esPlayer[client].g_hHudTimer;
 }
 
 void vResetPlugin()
@@ -3321,10 +3340,18 @@ Action cmdMTDev(int client, int args)
 	{
 		case 1:
 		{
-			char sValue[2];
+			char sValue[5];
 			GetCmdArg(1, sValue, sizeof sValue);
-			vSetupGuest(client, "access", sValue);
-			MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, client, g_esDeveloper[client].g_iDevAccess);
+
+			switch (StrEqual(sValue, "hud", false))
+			{
+				case true: vSetupGuest(client, sValue, "0");
+				case false:
+				{
+					vSetupGuest(client, "access", sValue);
+					MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, client, g_esDeveloper[client].g_iDevAccess);
+				}
+			}
 		}
 		case 2:
 		{
@@ -4200,12 +4227,14 @@ void vConfigMenu(int admin, int item = 0)
 	if (g_esGeneral.g_alSections != null)
 	{
 		SMCParser smcConfig = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Config, SMCNewSection_Config, SMCKeyValues_Config, SMCEndSection_Config, SMCParseEnd_Config);
+
 		switch (smcConfig != null)
 		{
 			case true: delete smcConfig;
 			case false:
 			{
 				delete mConfigMenu;
+
 				return;
 			}
 		}
@@ -4524,6 +4553,125 @@ int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 				return RedrawMenuItem(sMenuOption);
 			}
+		}
+	}
+
+	return 0;
+}
+
+void vHudPanel(int developer, int level = 0)
+{
+	if (iGetTankCount(true, true) <= 0)
+	{
+		MT_PrintToChat(developer, "%s There are no{olive} %s{default} right now.", MT_TAG2, MT_CONFIG_SECTION_MAIN);
+
+		delete g_esPlayer[developer].g_hHudTimer;
+
+		return;
+	}
+
+	g_esPlayer[developer].g_iHudPanelLevel = level;
+	g_esPlayer[developer].g_iHudPanelPages = 0;
+
+	bool bHuman = false;
+	char sDisplay[PLATFORM_MAX_PATH], sDisplay2[PLATFORM_MAX_PATH], sDisplay3[PLATFORM_MAX_PATH], sDisplay4[PLATFORM_MAX_PATH], sFrustration[10], sRealName[33], sStatus[32], sTankName[33];
+	int iHealth = 0, iMaxHealth = 0, iTankCount = 0, iTanks[MAXPLAYERS + 1];
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			iTanks[iTankCount] = iTank;
+			iTankCount++;
+		}
+	}
+
+	g_esPlayer[developer].g_iHudPanelPages = (RoundToNearest(float(iTankCount / 2)) - 1);
+	FormatEx(sDisplay, sizeof sDisplay, "%s HUD Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
+	
+	Panel pHudPanel = new Panel();
+	pHudPanel.SetTitle(sDisplay);
+	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+
+	int iStartPos = (g_esPlayer[developer].g_iHudPanelLevel * 2), iTank = 0;
+	for (int iPos = iStartPos; iPos < (iStartPos + 2); iPos++)
+	{
+		iTank = iTanks[iPos];
+		if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			bHuman = bIsValidClient(iTank, MT_CHECK_FAKECLIENT);
+			vGetTranslatedName(sTankName, sizeof sTankName, iTank);
+			SetGlobalTransTarget(developer);
+			FormatEx(sRealName, sizeof sRealName, "%T", "MTTankItem", developer, sTankName, g_esPlayer[iTank].g_iTankType);
+
+			switch (bIsValidClient(iTank, MT_CHECK_ALIVE))
+			{
+				case true:
+				{
+					switch (bIsPlayerIncapacitated(iTank))
+					{
+						case true: sStatus = "INCAPPED";
+						case false:
+						{
+							iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
+							iMaxHealth = GetEntProp(iTank, Prop_Data, "m_iMaxHealth");
+							FormatEx(sStatus, sizeof sStatus, "%i/%i HP (%.0f%%)", iHealth, iMaxHealth, (iHealth / iMaxHealth));
+						}
+					}
+				}
+				case false: sStatus = "DEAD";
+			}
+
+			FormatEx(sFrustration, sizeof sFrustration, "%i%%", (100 - GetEntProp(iTank, Prop_Send, "m_frustration")));
+			FormatEx(sDisplay, sizeof sDisplay, "%i. %s - %s [%s]", (iPos + 1), sRealName, sStatus, (bIsCustomTank(iTank) ? "Clone" : "Original"));
+			pHudPanel.DrawText(sDisplay);
+			FormatEx(sDisplay2, sizeof sDisplay2, "- Punches: %i (%i) | Rocks: %i (%i) | Props: %i (%i)", g_esPlayer[iTank].g_iClawDamage, g_esPlayer[iTank].g_iClawCount, g_esPlayer[iTank].g_iRockDamage, g_esPlayer[iTank].g_iRockCount, g_esPlayer[iTank].g_iPropDamage, g_esPlayer[iTank].g_iPropCount);
+			pHudPanel.DrawText(sDisplay2);
+			FormatEx(sDisplay3, sizeof sDisplay3, "- Misc: %i (%i) | Incaps: %i | Kills: %i", g_esPlayer[iTank].g_iMiscCount, g_esPlayer[iTank].g_iMiscDamage, g_esPlayer[iTank].g_iIncapCount, g_esPlayer[iTank].g_iKillCount);
+			pHudPanel.DrawText(sDisplay3);
+			FormatEx(sDisplay4, sizeof sDisplay4, "- Control: %N | Frustration: %s | Total Damage: %i", iTank, (bHuman ? sFrustration : "AI"), g_esPlayer[iTank].g_iSurvivorDamage);
+			pHudPanel.DrawText(sDisplay4);
+		}
+	}
+
+	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
+	pHudPanel.CurrentKey = 8;
+	pHudPanel.DrawItem("Prev Page", ITEMDRAW_CONTROL);
+	pHudPanel.CurrentKey = 9;
+	pHudPanel.DrawItem("Next Page", ITEMDRAW_CONTROL);
+	pHudPanel.CurrentKey = 10;
+	pHudPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
+	pHudPanel.Send(developer, iHudMenuHandler, 1);
+
+	delete pHudPanel;
+}
+
+int iHudMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select)
+	{
+		switch (param2)
+		{
+			case 8:
+			{
+				switch (g_esPlayer[param1].g_iHudPanelLevel == 0)
+				{
+					case true: g_esPlayer[param1].g_iHudPanelLevel = g_esPlayer[param1].g_iHudPanelPages;
+					case false: g_esPlayer[param1].g_iHudPanelLevel--;
+				}
+
+				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelLevel);
+			}
+			case 9:
+			{
+				switch (g_esPlayer[param1].g_iHudPanelLevel == g_esPlayer[param1].g_iHudPanelPages)
+				{
+					case true: g_esPlayer[param1].g_iHudPanelLevel = 0;
+					case false: g_esPlayer[param1].g_iHudPanelLevel++;
+				}
+
+				vHudPanel(param1, g_esPlayer[param1].g_iHudPanelLevel);
+			}
+			case 10: delete g_esPlayer[param1].g_hHudTimer;
 		}
 	}
 
@@ -5122,16 +5270,21 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			}
 			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iAttacker].g_iAnnounceKill == 1)
+				if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
-					int iOption = iGetMessageType(g_esCache[iAttacker].g_iKillMessage);
-					if (iOption > 0)
+					g_esPlayer[iAttacker].g_iKillCount++;
+
+					if (g_esCache[iAttacker].g_iAnnounceKill == 1)
 					{
-						char sPhrase[32], sTankName[33];
-						FormatEx(sPhrase, sizeof sPhrase, "Kill%i", iOption);
-						vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
-						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
-						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
+						int iOption = iGetMessageType(g_esCache[iAttacker].g_iKillMessage);
+						if (iOption > 0)
+						{
+							char sPhrase[32], sTankName[33];
+							FormatEx(sPhrase, sizeof sPhrase, "Kill%i", iOption);
+							vGetTranslatedName(sTankName, sizeof sTankName, iAttacker);
+							MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
+							vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
+						}
 					}
 				}
 
@@ -5140,22 +5293,30 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_hurt"))
 		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsTank(iTank) && !bIsPlayerIncapacitated(iTank) && bIsSurvivor(iSurvivor))
+			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId),
+				iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
+			if (bIsTank(iVictim) && !bIsPlayerIncapacitated(iVictim) && bIsSurvivor(iAttacker))
 			{
-				g_esPlayer[iSurvivor].g_iTankDamage[iTank] += event.GetInt("dmg_health");
+				g_esPlayer[iAttacker].g_iTankDamage[iVictim] += event.GetInt("dmg_health");
 			}
 		}
 		else if (StrEqual(name, "player_incapacitated"))
 		{
-			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-			if (bIsTank(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId);
+			if (bIsTank(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				g_esPlayer[iPlayer].g_bDied = false;
+				g_esPlayer[iVictim].g_bDied = false;
 
-				CreateTimer(10.0, tTimerKillStuckTank, iPlayerId, TIMER_FLAG_NO_MAPCHANGE);
-				vCombineAbilitiesForward(iPlayer, MT_COMBO_UPONINCAP);
+				CreateTimer(10.0, tTimerKillStuckTank, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
+				vCombineAbilitiesForward(iVictim, MT_COMBO_UPONINCAP);
+			}
+			else if (bIsSurvivor(iVictim))
+			{
+				int iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
+				if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
+				{
+					g_esPlayer[iAttacker].g_iIncapCount++;
+				}
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
@@ -8413,7 +8574,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevActionDuration = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
-	else if (StrContains(keyword, "regenammo", false) != -1 || StrContains(keyword, "ammoregen", false) != -1)
+	else if (StrContains(keyword, "ammoregen", false) != -1 || StrContains(keyword, "regenammo", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevAmmoRegen = iClamp(StringToInt(value), 0, 999999);
@@ -8461,6 +8622,12 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
+	else if (StrContains(keyword, "hud", false) != -1)
+	{
+		delete g_esPlayer[guest].g_hHudTimer;
+
+		g_esPlayer[guest].g_hHudTimer = CreateTimer(1.0, tTimerHudPanel, GetClientUserId(guest), TIMER_REPEAT);
+	}
 	else if (StrContains(keyword, "infammo", false) != -1 || StrContains(keyword, "infinite", false) != -1)
 	{
 		bPanel = true;
@@ -8471,7 +8638,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
-	else if (StrContains(keyword, "leechhp", false) != -1 || StrContains(keyword, "hpleech", false) != -1)
+	else if (StrContains(keyword, "leech", false) != -1)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
@@ -9167,8 +9334,19 @@ void vCopyTankStats(int tank, int newtank)
 	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
 	g_esPlayer[newtank].g_bTransformed = g_esPlayer[tank].g_bTransformed;
 	g_esPlayer[newtank].g_iBossStageCount = g_esPlayer[tank].g_iBossStageCount;
+	g_esPlayer[newtank].g_iClawCount = g_esPlayer[tank].g_iClawCount;
+	g_esPlayer[newtank].g_iClawDamage = g_esPlayer[tank].g_iClawDamage;
 	g_esPlayer[newtank].g_iCooldown = g_esPlayer[tank].g_iCooldown;
+	g_esPlayer[newtank].g_iIncapCount = g_esPlayer[tank].g_iIncapCount;
+	g_esPlayer[newtank].g_iKillCount = g_esPlayer[tank].g_iKillCount;
+	g_esPlayer[newtank].g_iMiscCount = g_esPlayer[tank].g_iMiscCount;
+	g_esPlayer[newtank].g_iMiscDamage = g_esPlayer[tank].g_iMiscDamage;
 	g_esPlayer[newtank].g_iOldTankType = g_esPlayer[tank].g_iOldTankType;
+	g_esPlayer[newtank].g_iPropCount = g_esPlayer[tank].g_iPropCount;
+	g_esPlayer[newtank].g_iPropDamage = g_esPlayer[tank].g_iPropDamage;
+	g_esPlayer[newtank].g_iRockCount = g_esPlayer[tank].g_iRockCount;
+	g_esPlayer[newtank].g_iRockDamage = g_esPlayer[tank].g_iRockDamage;
+	g_esPlayer[newtank].g_iSurvivorDamage = g_esPlayer[tank].g_iSurvivorDamage;
 	g_esPlayer[newtank].g_iTankHealth = g_esPlayer[tank].g_iTankHealth;
 	g_esPlayer[newtank].g_iTankType = g_esPlayer[tank].g_iTankType;
 
@@ -9765,8 +9943,19 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
+	g_esPlayer[tank].g_iClawCount = 0;
+	g_esPlayer[tank].g_iClawDamage = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iIncapCount = 0;
+	g_esPlayer[tank].g_iKillCount = 0;
+	g_esPlayer[tank].g_iMiscCount = 0;
+	g_esPlayer[tank].g_iMiscDamage = 0;
 	g_esPlayer[tank].g_iOldTankType = 0;
+	g_esPlayer[tank].g_iPropCount = 0;
+	g_esPlayer[tank].g_iPropDamage = 0;
+	g_esPlayer[tank].g_iRockCount = 0;
+	g_esPlayer[tank].g_iRockDamage = 0;
+	g_esPlayer[tank].g_iSurvivorDamage = 0;
 	g_esPlayer[tank].g_iTankType = 0;
 
 	for (int iPos = 0; iPos < (sizeof esPlayer::g_iThrownRock); iPos++)
@@ -14914,22 +15103,56 @@ Action OnPropTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 void OnPlayerTakeDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage >= 1.0)
+	if (g_esGeneral.g_bPluginEnabled && damage >= 1.0)
 	{
-		if (bIsSurvivor(attacker) && g_esGeneral.g_iInfectedHealth[victim] > GetEntProp(victim, Prop_Data, "m_iHealth"))
+		if (bIsTank(attacker) && bIsSurvivor(victim))
 		{
-			vLifeLeech(attacker, damagetype, victim);
-		}
+			g_esPlayer[attacker].g_iSurvivorDamage += RoundToNearest(damage);
 
-		if (bIsInfected(victim))
-		{
-			if ((damagetype & DMG_BURN) && bIsSurvivor(attacker))
+			char sClassname[32];
+			if (bIsValidEntity(inflictor))
 			{
-				g_esPlayer[victim].g_iLastFireAttacker = attacker;
+				GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 			}
-			else if (!bIsPlayerBurning(victim) || !bIsValidClient(attacker))
+
+			if (StrEqual(sClassname[7], "tank_claw"))
 			{
-				g_esPlayer[victim].g_iLastFireAttacker = 0;
+				g_esPlayer[attacker].g_iClawCount++;
+				g_esPlayer[attacker].g_iClawDamage += RoundToNearest(damage);
+			}
+			else if (StrEqual(sClassname, "tank_rock"))
+			{
+				g_esPlayer[attacker].g_iRockCount++;
+				g_esPlayer[attacker].g_iRockDamage += RoundToNearest(damage);
+			}
+			else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+			{
+				g_esPlayer[attacker].g_iPropCount++;
+				g_esPlayer[attacker].g_iPropDamage += RoundToNearest(damage);
+			}
+			else
+			{
+				g_esPlayer[attacker].g_iMiscCount++;
+				g_esPlayer[attacker].g_iMiscDamage += RoundToNearest(damage);
+			}
+		}
+		else if (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim))
+		{
+			if (bIsSurvivor(attacker) && g_esGeneral.g_iInfectedHealth[victim] > GetEntProp(victim, Prop_Data, "m_iHealth"))
+			{
+				vLifeLeech(attacker, damagetype, victim);
+			}
+
+			if (bIsInfected(victim))
+			{
+				if ((damagetype & DMG_BURN) && bIsSurvivor(attacker))
+				{
+					g_esPlayer[victim].g_iLastFireAttacker = attacker;
+				}
+				else if (!bIsPlayerBurning(victim) || !bIsValidClient(attacker))
+				{
+					g_esPlayer[victim].g_iLastFireAttacker = 0;
+				}
 			}
 		}
 	}
@@ -18961,6 +19184,21 @@ Action tTimerForceSpawnTank(Handle timer, int userid)
 		case -1: MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnManually");
 		default: vTankSpawn(iTank);
 	}
+
+	return Plugin_Continue;
+}
+
+Action tTimerHudPanel(Handle timer, int userid)
+{
+	int iPlayer = GetClientOfUserId(userid);
+	if (!g_esGeneral.g_bPluginEnabled || !bIsValidClient(iPlayer) || !bIsDeveloper(iPlayer, .real = true) || iGetTankCount(true, true) <= 0)
+	{
+		g_esPlayer[iPlayer].g_hHudTimer = null;
+
+		return Plugin_Stop;
+	}
+
+	vHudPanel(iPlayer, g_esPlayer[iPlayer].g_iHudPanelLevel);
 
 	return Plugin_Continue;
 }
