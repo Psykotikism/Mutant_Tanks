@@ -1936,7 +1936,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (bIsValidClient(client, MT_CHECK_ALIVE))
 		{
-			bool bDeveloper = bIsDeveloper(client, 5);
+			bool bDeveloper = bIsDeveloper(client, 5) || bIsDeveloper(client, 6);
 			if ((bDeveloper || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP))
 			{
 				if (bIsEntityGrounded(client) && !bIsSurvivorDisabled(client) && !bIsSurvivorCaught(client))
@@ -18069,7 +18069,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
  * 8 - 3 - all rewards/effects
  * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener
  * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop
- * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving, ammo regen, ladder actions
+ * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recovery, full health when healing/reviving, ammo regen, ladder actions, bunny hop
  * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire (off by default)
  * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle (off by default)
  * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
