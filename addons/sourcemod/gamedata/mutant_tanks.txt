@@ -1609,6 +1609,23 @@
 			/**
 			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
 			 *
+			 * Note: Patches the "CBasePlayer::SetPunchAngle" function call.
+			 *
+			 * How to find:
+			 * 1. Look for two calls to the "RandomFloat" function.
+			 * 2. The first function call after that should be "CBasePlayer::SetPunchAngle".
+			 * 3. That is the patch location.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle"
+			{
+				"linux"		"3521" // start at E8 and patch 5 bytes with NOPs (0x90)
+				// Add Mac support
+				"windows"	"1975" // start at 8D and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
 			 * Note: Patches the "CTerrorPlayer::StopBeingRevived" function call.
 			 *
 			 * How to find on Windows:
@@ -3760,6 +3777,23 @@
 				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
 				// Add Mac support
 				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
+			}
+
+			/**
+			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Patches the "CBasePlayer::SetPunchAngle" function call.
+			 *
+			 * How to find:
+			 * 1. Look for two calls to the "RandomFloat" function.
+			 * 2. The first function call after that should be "CBasePlayer::SetPunchAngle".
+			 * 3. That is the patch location.
+			 **/
+			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle"
+			{
+				"linux"		"4947" // start at E8 and patch 5 bytes with NOPs (0x90)
+				// Add Mac support
+				"windows"	"2830" // start at 8D and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**

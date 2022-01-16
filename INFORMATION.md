@@ -569,6 +569,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent slowing down when attacked by infected.
+			// - Prevent infected attacks from offsetting aim.
 			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
@@ -669,6 +671,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent slowing down when attacked by infected.
+			// - Prevent infected attacks from offsetting aim.
 			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
@@ -2834,6 +2838,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent slowing down when attacked by infected.
+			// - Prevent infected attacks from offsetting aim.
 			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.
@@ -2934,6 +2940,8 @@
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
+			// - Prevent slowing down when attacked by infected.
+			// - Prevent infected attacks from offsetting aim.
 			// - Prevent interruption when performing actions.
 			// - Prevent switching to secondary slot when equipping a secondary pistol.
 			// - Prevent switching to throwables and health supplies given by teammates.

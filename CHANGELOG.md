@@ -53,6 +53,8 @@
 - The attack boost reward now prevents recipients from being interrupted when performing any actions.
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
 - The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
+- The attack boost reward now prevents recipients from being slowed down when attacked by infected.
+- The attack boost reward now prevents infected attacks from offsetting recipients' aim.
 - The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
