@@ -243,6 +243,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_INFAMMO_MEDKIT (1 << 3) // medkit
 #define MT_INFAMMO_PILLS (1 << 4) // pills
 
+#define MT_JUMP_DEFAULTHEIGHT 57.0 // default jump height
 #define MT_JUMP_FALLPASSES 3 // safe fall passes
 #define MT_JUMP_FORWARDBOOST 50.0 // forward boost for each jump
 
@@ -1936,14 +1937,15 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (bIsValidClient(client, MT_CHECK_ALIVE))
 		{
-			bool bDeveloper = bIsDeveloper(client, 5) || bIsDeveloper(client, 6);
-			if ((bDeveloper || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP))
+			bool bDeveloper = bIsDeveloper(client, 5), bDeveloper2 = bIsDeveloper(client, 6);
+			if ((bDeveloper || bDeveloper2 || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP))
 			{
 				if (bIsEntityGrounded(client) && !bIsSurvivorDisabled(client) && !bIsSurvivorCaught(client))
 				{
-					if (bDeveloper || g_esPlayer[client].g_iBunnyHop == 1)
+					if (bDeveloper || bDeveloper2 || g_esPlayer[client].g_iBunnyHop == 1)
 					{
 						float flHeight = (bDeveloper && g_esDeveloper[client].g_flDevJumpHeight > g_esPlayer[client].g_flJumpHeight) ? g_esDeveloper[client].g_flDevJumpHeight : g_esPlayer[client].g_flJumpHeight;
+						flHeight = (!bDeveloper && bDeveloper2) ? MT_JUMP_DEFAULTHEIGHT : flHeight;
 						if (flHeight > 0.0)
 						{
 							vPushPlayer(client, {-90.0, 0.0, 0.0}, ((flHeight + 100.0) * 2.0));
@@ -14704,20 +14706,36 @@ Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float 
 {
 	if (g_esGeneral.g_bPluginEnabled && damage > 0.0 && bIsSurvivor(victim))
 	{
-		int iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
-		if ((bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST)) || (bIsSurvivor(iReviver) && (bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST))))
+		bool bDeveloper = (bIsDeveloper(victim, 6) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_ATTACKBOOST));
+		if (bDeveloper)
 		{
-			static int iIndex = -1;
-			if (iIndex == -1)
+			static int iIndex[2] = {-1, -1};
+			int iReviver = GetClientOfUserId(g_esPlayer[victim].g_iReviver);
+			if (bDeveloper || (bIsSurvivor(iReviver) && (bIsDeveloper(iReviver, 6) || (g_esPlayer[iReviver].g_iRewardTypes & MT_REWARD_ATTACKBOOST))))
 			{
-				iIndex = iGetPatchIndex("MTPatch_ReviveInterrupt");
+				if (iIndex[0] == -1)
+				{
+					iIndex[0] = iGetPatchIndex("MTPatch_ReviveInterrupt");
+				}
+
+				if (iIndex[0] != -1)
+				{
+					vInstallPatch(iIndex[0]);
+				}
 			}
 
-			if (iIndex != -1)
+			if (iIndex[1] == -1)
 			{
-				vInstallPatch(iIndex);
+				iIndex[1] = iGetPatchIndex("MTPatch_PunchAngle");
+			}
+
+			if (iIndex[1] != -1)
+			{
+				vInstallPatch(iIndex[1]);
 			}
 		}
+
+		SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 1.0);
 	}
 
 	return Plugin_Continue;
@@ -14725,15 +14743,25 @@ Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float 
 
 void OnPlayerTakeDamageAlivePost(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
-	static int iIndex = -1;
-	if (iIndex == -1)
+	static int iIndex[2] = {-1, -1};
+	if (iIndex[0] == -1)
 	{
-		iIndex = iGetPatchIndex("MTPatch_ReviveInterrupt");
+		iIndex[0] = iGetPatchIndex("MTPatch_ReviveInterrupt");
 	}
 
-	if (iIndex != -1)
+	if (iIndex[0] != -1)
 	{
-		vRemovePatch(iIndex);
+		vRemovePatch(iIndex[0]);
+	}
+
+	if (iIndex[1] == -1)
+	{
+		iIndex[1] = iGetPatchIndex("MTPatch_PunchAngle");
+	}
+
+	if (iIndex[1] != -1)
+	{
+		vRemovePatch(iIndex[1]);
 	}
 }
 
@@ -16489,7 +16517,7 @@ MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 	int iSurvivor = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iClip = iGetMaxAmmo(iSurvivor, 0, pThis, false);
 	if (bIsSurvivor(iSurvivor) && iClip > 0)
 	{
-		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
+		bool bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
 		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
 			hReturn.Value = iClip;
@@ -16690,7 +16718,7 @@ MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hParams)
 	int iSurvivor = hParams.IsNull(2) ? 0 : hParams.Get(2), iAmmo = iGetMaxAmmo(iSurvivor, hParams.Get(1), 0, true);
 	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
 	{
-		bool bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
+		bool bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
 		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
 			hReturn.Value = iAmmo;
@@ -19336,7 +19364,7 @@ Action tTimerRegenerateAmmo(Handle timer)
 			continue;
 		}
 
-		bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
+		bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
 		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) || g_esPlayer[iSurvivor].g_flRewardTime[4] == -1.0)) || iRegen == 0)
 		{
