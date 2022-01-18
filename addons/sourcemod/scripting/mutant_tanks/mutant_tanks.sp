@@ -11899,7 +11899,6 @@ void vSetupConfigs()
 			for (int iCount = 0; iCount <= (MAXPLAYERS + 1); iCount++)
 			{
 				IntToString(iCount, sPlayerCount, sizeof sPlayerCount);
-				LogMessage("Creating config file: %s%s", MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
 				vCreateConfigFile(MT_CONFIG_FILEPATH ... MT_CONFIG_PATH_PLAYERCOUNT, sPlayerCount);
 			}
 		}
@@ -14901,6 +14900,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
+
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
