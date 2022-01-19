@@ -56,6 +56,8 @@
 - The attack boost reward now prevents recipients from being slowed down when attacked by infected.
 - The attack boost reward now prevents infected attacks from offsetting recipients' aim.
 - The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
+- The regular waves spawner now stops when there is at least one Tank alive on the map. (Requested by `yuzumi`.)
+- The regular waves spawner now restarts once every Tank on the map is dead. (Requested by `yuzumi`.)
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
 - Improved logging for patching system.

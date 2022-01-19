@@ -2236,6 +2236,8 @@
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
 			// Note: This will not work unless the "Regular Mode" setting is set to "1".
+			// Note: The timer for this interval will stop when there is at least one Tank alive on the map.
+			// Note: The timer for this interval will restart once every Tank on the map is dead.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0

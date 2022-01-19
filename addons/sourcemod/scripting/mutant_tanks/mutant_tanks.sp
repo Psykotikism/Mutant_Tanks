@@ -5269,6 +5269,12 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vResetTank(iVictim, g_esCache[iVictim].g_iDeathRevert);
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				}
+
+				int iCount = iGetTankCount(true);
+				if (iCount == 0)
+				{
+					vResetTimers();
+				}
 			}
 			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
@@ -14900,7 +14906,6 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
-
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -18979,14 +18984,11 @@ void vResetTimers(bool delay = false)
 		case true: CreateTimer(g_esGeneral.g_flRegularDelay, tTimerDelayRegularWaves, .flags = TIMER_FLAG_NO_MAPCHANGE);
 		case false:
 		{
-			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null)
+			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null && SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector))
 			{
-				if (SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector))
-				{
-					delete g_esGeneral.g_hRegularWavesTimer;
+				delete g_esGeneral.g_hRegularWavesTimer;
 
-					g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, .flags = TIMER_REPEAT);
-				}
+				g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, .flags = TIMER_REPEAT);
 			}
 		}
 	}
@@ -19463,15 +19465,15 @@ Action tTimerRegenerateHealth(Handle timer)
 
 Action tTimerRegularWaves(Handle timer)
 {
-	if (!bCanTypeSpawn() || g_esGeneral.g_bFinalMap || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
+	int iCount = iGetTankCount(true);
+	iCount = (iCount > 0) ? iCount : iGetTankCount(false);
+	if (!bCanTypeSpawn() || g_esGeneral.g_bFinalMap || g_esGeneral.g_iTankWave > 0 || iCount > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
 	{
 		g_esGeneral.g_hRegularWavesTimer = null;
 
 		return Plugin_Stop;
 	}
 
-	int iCount = iGetTankCount(true);
-	iCount = (iCount > 0) ? iCount : iGetTankCount(false);
 	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
 		return Plugin_Continue;
@@ -19491,7 +19493,9 @@ Action tTimerRegularWaves(Handle timer)
 		}
 	}
 
-	return Plugin_Continue;
+	g_esGeneral.g_hRegularWavesTimer = null;
+
+	return Plugin_Stop;
 }
 
 Action tTimerReloadConfigs(Handle timer)
