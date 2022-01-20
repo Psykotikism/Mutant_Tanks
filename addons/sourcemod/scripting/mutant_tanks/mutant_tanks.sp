@@ -4474,7 +4474,7 @@ void vDeveloperPanel(int developer, int level = 0)
 
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof sDisplay, "Special Ammo Type(s): %i (1: Incendiary ammo, 2: Explosive ammo, 3: Random)", g_esDeveloper[developer].g_iDevSpecialAmmo);
+				FormatEx(sDisplay, sizeof sDisplay, "Special Ammo Type(s): %i (1: Incendiary, 2: Explosive, 3: Random)", g_esDeveloper[developer].g_iDevSpecialAmmo);
 				pDevPanel.DrawText(sDisplay);
 			}
 

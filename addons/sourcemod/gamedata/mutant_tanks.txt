@@ -1169,7 +1169,7 @@
 			 * This is the failsafe method for finding the default jump height (57.0) by jumping to its location.
 			 * If the "DoJumpValueBytes" method fails, the plugin will rely on this method instead.
 			 *
-			 * Note: This method only works on Windows/Mac, since on Linux, it just points to the offset's address not the value's actual address.
+			 * Note: This method only works on Mac/Windows, since on Linux, it just points to the offset's address not the value's actual address.
 			 **/
 			"DoJumpValueRead"
 			{
@@ -1246,21 +1246,22 @@
 			 *
 			 * Note: Patches the "IsVersusMode" check.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "IsVersusMode".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 * 3a. (Linux) Verify that the next line starts with "84" and is 2 bytes long.
+			 * 3b. (Mac) Verify that the next two lines each start with "89" and are each 6 bytes long.
+			 *
 			 * How to find on Windows:
 			 * 1. Look in the "CTankClaw::GroundPound" function for a variable assigned to another variable right below a funtion call to "CBaseEntity::GetTeamNumber".
 			 * 2. Verify that it starts with "74" and is 2 bytes long.
 			 * 3. Verify that the next line starts with "80" and is 5 bytes long.
 			 * 4. Verify that the next line starts with "74" and is 2 bytes long.
-			 *
-			 * How to find on Linux:
-			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "IsVersusMode".
-			 * 2. Verify that it starts with "E8" and is 5 bytes long.
-			 * 3. Verify that the next line starts with "84" and is 2 bytes long.
 			 **/
 			"CTankClaw::GroundPound::Check"
 			{
 				"linux"		"1043" // start at E8 and patch 7 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"913" // start at E8 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"761" // start at 74 and patch 9 bytes with NOPs (0x90)
 			}
 
@@ -1277,7 +1278,7 @@
 			"CTankClaw::SweepFist::Check1"
 			{
 				"linux"		"1051" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2869" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1294,7 +1295,7 @@
 			"CTankClaw::SweepFist::Check2"
 			{
 				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2878" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1302,6 +1303,10 @@
 			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
 			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
 			 *
 			 * How to find on Windows:
 			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
@@ -1311,15 +1316,11 @@
 			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
 			 * Equation: a2 - a1 = JMP instruction length
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
-			 * 2. The instruction should look like a function call.
 			 **/
 			"CTankRock::OnRelease::SoundLoop"
 			{
 				"linux"		"182" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"206" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"117" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1338,10 +1339,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::Deploy"
+			"CTerrorGun::EquipSecondWeapon::Deploy" // JMP instruction
 			{
 				"linux"		"332" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"405" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"425" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1358,10 +1359,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::Holster"
+			"CTerrorGun::EquipSecondWeapon::Holster" // JMP instruction
 			{
 				"linux"		"297" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"374" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"403" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1379,10 +1380,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
+			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon" // JMP instruction
 			{
 				"linux"		"316" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"393" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"417" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1427,7 +1428,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
 				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"6361" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1443,7 +1444,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
 				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"6395" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1460,7 +1461,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
 				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"6201" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -1477,7 +1478,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"5274" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5502" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1493,7 +1494,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"5488" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5578" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1509,12 +1510,17 @@
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
 				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"5712" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
 			/**
 			 * CTerrorPlayer::GetFlowDistance(CNavArea const*)
+			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the function.
+			 * 2. Look for the 7-byte float (FLD) instruction.
+			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -1523,11 +1529,6 @@
 			 * 4. Look for the target function in the Windows binary.
 			 * 5. Look for the 7-byte float (FLD) instruction.
 			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the function.
-			 * 2. Look for the 7-byte float (FLD) instruction.
-			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 **/
 			"CTerrorPlayer::GetFlowDistance::m_flow"
 			{
@@ -1554,6 +1555,10 @@
 			 *
 			 * Note: Patches the "CBaseEntity::EmitTrackedSound" call for "Player.Fall".
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "Player.Fall" string.
 			 * 2. The instruction should look like a function call.
@@ -1562,15 +1567,11 @@
 			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
 			 * Equation: a2 - a1 = JMP instruction length
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the "Player.Fall" string.
-			 * 2. The instruction should look like a function call.
 			 **/
-			"CTerrorPlayer::OnFalling::Scream"
+			"CTerrorPlayer::OnFalling::Scream" // "Player.Fall"
 			{
 				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"850" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"611" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1586,7 +1587,7 @@
 			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
 			{
 				"linux"		"61" // start at 8B and patch 11 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"44" // start at 8B and patch 11 bytes with NOPs (0x90)
 				"windows"	"41" // start at FF and patch 2 bytes with NOPs (0x90)
 			}
 
@@ -1602,7 +1603,7 @@
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
 			{
 				"linux"		"73" // start at 74 and patch 2 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"187" // start at 75 and patch 2 bytes with NOPs (0x90)
 				"windows"	"39" // start at 75 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 			}
 
@@ -1616,10 +1617,10 @@
 			 * 2. The first function call after that should be "CBasePlayer::SetPunchAngle".
 			 * 3. That is the patch location.
 			 **/
-			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle"
+			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle" // punch angle
 			{
 				"linux"		"3521" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2788" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1975" // start at 8D and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -1628,18 +1629,18 @@
 			 *
 			 * Note: Patches the "CTerrorPlayer::StopBeingRevived" function call.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
+			 * 2. The function call that the bool value is being passed to is the patch location.
+			 *
 			 * How to find on Windows:
 			 * 1. Find a 2-byte instruction that pushes a "1" to a function call.
 			 * 2. The function call that the "1" is being passed to is the patch location.
-			 *
-			 * How to find on Linux:
-			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
-			 * 2. The function call that the bool value is being passed to is the patch location.
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
 				"linux"		"2247" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2538" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
 			}
 
@@ -1655,7 +1656,7 @@
 			"CTerrorPlayer::PreThink::SafeDropLogic"
 			{
 				"linux"		"161" // start at 09 and patch 1 byte with CALL (0xFF)
-				// Add Mac support
+				"mac"		"711" // start at 09 and patch 1 byte with CALL (0xFF)
 				"windows"	"470" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
@@ -1671,7 +1672,7 @@
 			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
 				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
-				// Add Mac support
+				"mac"		"23" // start at 75 and patch 1 byte with JNS (0x79)
 				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 
@@ -1687,7 +1688,7 @@
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
 				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
-				// Add Mac support
+				"mac"		"195" // start at 09 and patch 1 byte with CALL (0xFF)
 				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
@@ -1713,27 +1714,27 @@
 			 *
 			 * Note: Patches the damage check to trigger hollow point ammo.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Find a 7-byte instruction that tests an offset before doing a jump (JZ) instruction.
+			 * 2. The patch location should be a TEST instruction that is a few instructions above the "CTerrorPlayer::GetMinigun" function call.
+			 *
 			 * How to find on Windows:
 			 * 1. Look for the team check.
 			 * 2. Look for an if statement inside that team check's code block.
 			 * 3. The first function in that if statement is the target function to patch.
 			 * 4. The patch starts at the PUSH instruction that pushes an offset to the function call.
-			 *
-			 * How to find on Linux:
-			 * 1. Find a 7-byte instruction that tests an offset before doing a jump (JZ) instruction.
-			 * 2. The patch location should be a TEST instruction that is a few instructions above the "CTerrorPlayer::GetMinigun" function call.
 			 **/
 			"InfectedExecAction::OnInjured::Requirement"
 			{
 				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
-				// Add Mac support
+				"mac"		"221" // start at F6 and patch 7 bytes with a different instruction
 				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 			}
 
 			/**
 			 * PlayerLocomotion::GetMaxJumpHeight()
 			 *
-			 * Note for Windows/Mac users: This isn't required.
+			 * Note for Mac/Windows users: This isn't required.
 			 *
 			 * How to find:
 			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
@@ -1748,7 +1749,7 @@
 			/**
 			 * PlayerLocomotion::GetMaxJumpHeight()
 			 *
-			 * Note for Windows/Mac users: This isn't required.
+			 * Note for Mac/Windows users: This isn't required.
 			 *
 			 * How to find:
 			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
@@ -1762,7 +1763,7 @@
 			/**
 			 * PlayerLocomotion::GetMaxJumpHeight()
 			 *
-			 * Note for Windows/Mac users: This isn't required.
+			 * Note for Mac/Windows users: This isn't required.
 			 *
 			 * How to find:
 			 * 1. Look at the instructions for "PlayerLocomotion::GetMaxJumpHeight".
@@ -1800,18 +1801,18 @@
 			 *
 			 * Note: Patches the condition for choosing between attack mode and idle state.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Look for the third two-byte jump (JZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 *
 			 * How to find on Windows:
 			 * 1. Look for the fourth two-byte jump (JNZ) instruction.
 			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
-			 *
-			 * How to find on Linux:
-			 * 1. Look for the third two-byte jump (JZ) instruction.
-			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
 			 **/
-			"TankBehavior::InitialContainedAction::Condition"
+			"TankBehavior::InitialContainedAction::Condition" // JMP instruction
 			{
 				"linux"		"101" // start at 74 and patch 2 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"98" // start at 74 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"49" // start at 75 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3313,22 +3314,26 @@
 			 *
 			 * Note: Patches the "HasPlayerControlledZombies" check.
 			 *
+			 * How to find on Linux:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Look for a condition that validates that variable.
+			 * 3. Verify that it starts with "0F" and is 6 bytes long.
+			 *
+			 * How to find on Mac:
+			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
+			 * 2. Verify that it starts with "E8" and is 5 bytes long.
+			 *
 			 * How to find on Windows:
 			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
 			 * 2. Look for a condition that validates that variable.
 			 * 3. Verify that it starts with "74" and is 2 bytes long.
 			 * 4. Verify that the next line starts with "80" and is 4 bytes long.
 			 * 5. Verify that the next line starts with "74" and is 2 bytes long.
-			 *
-			 * How to find on Linux:
-			 * 1. Look in the "CTankClaw::GroundPound" function for a variable that stores the return value of "HasPlayerControlledZombies".
-			 * 2. Look for a condition that validates that variable.
-			 * 3. Verify that it starts with "0F" and is 6 bytes long.
 			 **/
 			"CTankClaw::GroundPound::Check"
 			{
 				"linux"		"988" // start at 0F and patch 2 bytes with NOP (0x90) and an unconditional jump (0xE9) to skip instruction
-				// Add Mac support
+				"mac"		"962" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"923" // start at 74 and patch 8 bytes with NOPs (0x90)
 			}
 
@@ -3345,7 +3350,7 @@
 			"CTankClaw::SweepFist::Check1"
 			{
 				"linux"		"2554" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2923" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3362,7 +3367,7 @@
 			"CTankClaw::SweepFist::Check2"
 			{
 				"linux"		"3488" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"2932" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3370,6 +3375,10 @@
 			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
 			 * Note: Patches the "CBaseEntity::EmitSound" call for "HulkZombie.Throw.FlyLoop".
+			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
+			 * 2. The instruction should look like a function call.
 			 *
 			 * How to find on Windows:
 			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
@@ -3379,15 +3388,11 @@
 			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the "CBaseEntity::ThinkSet" call
 			 * Equation: a2 - a1 = JMP instruction length
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the "HulkZombie.Throw.FlyLoop" string.
-			 * 2. The instruction should look like a function call.
 			 **/
-			"CTankRock::OnRelease::SoundLoop"
+			"CTankRock::OnRelease::SoundLoop" // "HulkZombie.Throw.FlyLoop"
 			{
 				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"212" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"122" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3406,10 +3411,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Deploy" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::Deploy"
+			"CTerrorGun::EquipSecondWeapon::Deploy" // JMP instruction
 			{
 				"linux"		"325" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"475" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"392" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3426,10 +3431,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CTerrorGun::Holster" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::Holster"
+			"CTerrorGun::EquipSecondWeapon::Holster" // JMP instruction
 			{
 				"linux"		"294" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"444" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"370" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3447,10 +3452,10 @@
 			 * Let a2 = Address of the start of the instruction after the "CBaseCombatCharacter::SetActiveWeapon" call instruction
 			 * Equation: a2 - a1 = JMP instruction length
 			 **/
-			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon"
+			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon" // JMP instruction
 			{
 				"linux"		"313" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
-				// Add Mac support
+				"mac"		"463" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"384" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3497,7 +3502,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
 				"linux"		"10925" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11897" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7411" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3515,7 +3520,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
 				"linux"		"10957" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11931" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7434" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3534,7 +3539,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
 				"linux"		"8228" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11727" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7749" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3552,7 +3557,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
 			{
 				"linux"		"6353" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11305" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7603" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3570,7 +3575,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
 			{
 				"linux"		"6385" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11339" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7626" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3587,7 +3592,7 @@
 			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
 			{
 				"linux"		"6543" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"11511" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"7905" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3604,7 +3609,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
 				"linux"		"10263" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"8828" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"8174" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3620,7 +3625,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
 				"linux"		"10419" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"9040" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"8266" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3636,7 +3641,7 @@
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
 				"linux"		"10611" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"9271" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"8480" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 
@@ -3658,12 +3663,17 @@
 			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
 			{
 				"linux"		"12526" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
-				// Add Mac support
+				"mac"		"10068" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 				"windows"	"9332" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
 			}
 
 			/**
 			 * CTerrorPlayer::GetFlowDistance(CNavArea const*)
+			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the function.
+			 * 2. Look for the 9-byte move (MOVSS) instruction.
+			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -3672,11 +3682,6 @@
 			 * 4. Look for the target function in the Windows binary.
 			 * 5. Look for the 7-byte float (FLD) instruction.
 			 * 6. The offset at the very end of that line of code is the offset for "m_flow".
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the function.
-			 * 2. Look for the 9-byte move (MOVSS) instruction.
-			 * 3. The offset at the very end of that line of code is the offset for "m_flow".
 			 **/
 			"CTerrorPlayer::GetFlowDistance::m_flow"
 			{
@@ -3703,6 +3708,10 @@
 			 *
 			 * Note: Patches the "CBaseEntity::EmitTrackedSound" call for "Player.Fall".
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the "Player.Fall" string.
+			 * 2. The instruction should look like a function call.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "Player.Fall" string.
 			 * 2. The instruction should look like a function call.
@@ -3711,20 +3720,23 @@
 			 * Let a1 = Address of the patch location + two bytes (because the patch itself takes two bytes)
 			 * Let a2 = Address of the start of the setup for the 2-byte JMP instruction
 			 * Equation: a2 - a1 = JMP instruction length
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the "Player.Fall" string.
-			 * 2. The instruction should look like a function call.
 			 **/
-			"CTerrorPlayer::OnFalling::Scream"
+			"CTerrorPlayer::OnFalling::Scream" // "Player.Fall"
 			{
 				"linux"		"678" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"880" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"552" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
 			/**
 			 * CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&)
+			 *
+			 * How to find on Linux/Mac:
+			 * 1. Locate the function.
+			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
+			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
+			 * 4. The variable that is being assigned a value below those two function calls has an offset.
+			 * 5. Multiply the offset by 4 to get the offset for the hidden melee weapon.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerIncapacitated" string to locate the "CTerrorPlayer::OnIncapacitatedAsSurvivor" function.
@@ -3732,13 +3744,6 @@
 			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
 			 * 4. The variable that is being assigned a value below those two function calls has an offset.
 			 * 5. The offset will be the offset for the hidden melee weapon.
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the function.
-			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
-			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
-			 * 4. The variable that is being assigned a value below those two function calls has an offset.
-			 * 5. Multiply the offset by 4 to get the offset for the hidden melee weapon.
 			 **/
 			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
@@ -3759,7 +3764,7 @@
 			"CTerrorPlayer::OnLadderDismount::WeaponDeploy"
 			{
 				"linux"		"68" // start at 8B and patch 11 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"51" // start at 8B and patch 11 bytes with NOPs (0x90)
 				"windows"	"49" // start at FF and patch 2 bytes with NOPs (0x90)
 			}
 
@@ -3775,7 +3780,7 @@
 			"CTerrorPlayer::OnLadderMount::WeaponHolster"
 			{
 				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"196" // start at 74 and patch 2 bytes with NOPs (0x90)
 				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
 			}
 
@@ -3789,10 +3794,10 @@
 			 * 2. The first function call after that should be "CBasePlayer::SetPunchAngle".
 			 * 3. That is the patch location.
 			 **/
-			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle"
+			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle" // punch angle
 			{
 				"linux"		"4947" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"4003" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"2830" // start at 8D and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
@@ -3801,18 +3806,18 @@
 			 *
 			 * Note: Patches the "CTerrorPlayer::StopBeingRevived" function call.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
+			 * 2. The function call that the bool value is being passed to is the patch location.
+			 *
 			 * How to find on Windows:
 			 * 1. Find a 2-byte instruction that pushes a "1" to a function call.
 			 * 2. The function call that the "1" is being passed to is the patch location.
-			 *
-			 * How to find on Linux:
-			 * 1. Find an 8-byte instruction that moves a bool value to a function call.
-			 * 2. The function call that the bool value is being passed to is the patch location.
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
 				"linux"		"3217" // start at E8 and patch 5 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"3372" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"2387" // start at 6A and patch 9 bytes with NOPs (0x90)
 			}
 
@@ -3828,7 +3833,7 @@
 			"CTerrorPlayer::PreThink::SafeDropLogic"
 			{
 				"linux"		"181" // start at 09 and patch 1 byte with CALL (0xFF)
-				// Add Mac support
+				"mac"		"734" // start at 09 and patch 1 byte with CALL (0xFF)
 				"windows"	"498" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
@@ -3844,12 +3849,12 @@
 			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
 				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
-				// Add Mac support
+				"mac"		"23" // start at 75 and patch 1 byte with JNS (0x79)
 				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 
 			/**
-			 * CTerrorWeapon::CanDeploy()
+			 * CTerrorWeapon::CanDeployFor()
 			 *
 			 * Note: Patches the move type logic.
 			 *
@@ -3860,7 +3865,7 @@
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
 				"linux"		"76" // start at 09 and patch 1 byte with CALL (0xFF)
-				// Add Mac support
+				"mac"		"103" // start at 09 and patch 1 byte with CALL (0xFF)
 				"windows"	"87" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
 
@@ -3907,18 +3912,18 @@
 			 *
 			 * Note: Patches the condition for choosing between attack mode and idle state.
 			 *
+			 * How to find on Linux/Mac:
+			 * 1. Look for the first two-byte jump (JZ) instruction.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
+			 *
 			 * How to find on Windows:
 			 * 1. Look for the first two-byte jump (JNZ) instruction.
 			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
-			 *
-			 * How to find on Linux:
-			 * 1. Look for the first two-byte jump (JZ) instruction.
-			 * 2. The instruction refers to the if statement that determines whether the Tank should be in attack mode or idle state.
 			 **/
-			"TankBehavior::InitialContainedAction::Condition"
+			"TankBehavior::InitialContainedAction::Condition" // condition
 			{
 				"linux"		"23" // start at 74 and patch 2 bytes with NOPs (0x90)
-				// Add Mac support
+				"mac"		"32" // start at 75 and patch 2 bytes with NOPs (0x90)
 				"windows"	"16" // start at 75 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
 
