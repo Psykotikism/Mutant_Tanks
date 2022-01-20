@@ -44,7 +44,7 @@
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
-- Added MacOS support. (Currently only signatures, VTable offsets, and member variable offsets.) [Untested]
+- Added MacOS support. (Untested)
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 - Added developer HUD panel for viewing currently alive Tanks.
