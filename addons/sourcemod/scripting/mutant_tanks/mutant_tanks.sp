@@ -202,6 +202,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_IMMUNE "Immunities"
 #define MT_CONFIG_SECTION_IMMUNE2 "immune"
 
+#define MT_DASH_COOLDOWN 0.15 // time between air dashes
+
 #define MT_DATA_SECTION_GAME_BOTH "Both"
 #define MT_DATA_SECTION_GAME "Left4Dead"
 #define MT_DATA_SECTION_GAME2 "Left 4 Dead"
@@ -310,6 +312,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_VISUAL_LIGHT (1 << 3) // flashlight
 #define MT_VISUAL_BODY (1 << 4) // body color
 #define MT_VISUAL_GLOW (1 << 5) // glow outline
+
+#define MT_WATER_NONE 0 // not in water
+#define MT_WATER_FEET 1 // feet in water
+#define MT_WATER_WAIST 2 // waist in water
+#define MT_WATER_HEAD 3 // head in water
 
 enum ConfigState
 {
@@ -454,8 +461,10 @@ enum struct esGeneral
 
 	DynamicDetour g_ddActionCompleteDetour;
 	DynamicDetour g_ddBaseEntityCreateDetour;
+	DynamicDetour g_ddBaseEntityGetGroundEntityDetour;
 	DynamicDetour g_ddBeginChangeLevelDetour;
 	DynamicDetour g_ddCanDeployForDetour;
+	DynamicDetour g_ddCheckJumpButtonDetour;
 	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoAnimationEventDetour;
 	DynamicDetour g_ddDoJumpDetour;
@@ -686,6 +695,8 @@ enum struct esGeneral
 	int g_iMeleeImmunity;
 	int g_iMeleeOffset;
 	int g_iMeleeRangeReward[4];
+	int g_iMidairDashesLimit;
+	int g_iMidairDashesReward[4];
 	int g_iMinType;
 	int g_iMinimumHumans;
 	int g_iMultiplyHealth;
@@ -787,6 +798,7 @@ enum struct esDeveloper
 	int g_iDevInfiniteAmmo;
 	int g_iDevLifeLeech;
 	int g_iDevMeleeRange;
+	int g_iDevMidairDashes;
 	int g_iDevPanelLevel;
 	int g_iDevParticle;
 	int g_iDevReviveHealth;
@@ -826,6 +838,7 @@ enum struct esPlayer
 	bool g_bNeedHealth;
 	bool g_bRainbowColor;
 	bool g_bRandomized;
+	bool g_bReleasedJump;
 	bool g_bReplaceSelf;
 	bool g_bSetup;
 	bool g_bSmoke;
@@ -926,6 +939,7 @@ enum struct esPlayer
 	float g_flHittableDamage;
 	float g_flJumpHeight;
 	float g_flJumpHeightReward[4];
+	float g_flLastJumpTime;
 	float g_flLoopingVoicelineInterval[4];
 	float g_flPipeBombDuration;
 	float g_flPipeBombDurationReward[4];
@@ -1026,8 +1040,8 @@ enum struct esPlayer
 	int g_iKillMessage;
 	int g_iLadderActions;
 	int g_iLadderActionsReward[4];
-	int g_iLadyKiller;
 	int g_iLadyKillerCount;
+	int g_iLadyKillerLimit;
 	int g_iLadyKillerReward[4];
 	int g_iLastButtons;
 	int g_iLastFireAttacker;
@@ -1039,6 +1053,9 @@ enum struct esPlayer
 	int g_iMeleeImmunity;
 	int g_iMeleeRange;
 	int g_iMeleeRangeReward[4];
+	int g_iMidairDashesCount;
+	int g_iMidairDashesLimit;
+	int g_iMidairDashesReward[4];
 	int g_iMinimumHumans;
 	int g_iMiscCount;
 	int g_iMiscDamage;
@@ -1265,6 +1282,8 @@ enum struct esTank
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMenuEnabled;
+	int g_iMidairDashesLimit;
+	int g_iMidairDashesReward[4];
 	int g_iMinimumHumans;
 	int g_iMultiplyHealth;
 	int g_iOzTankColor[4];
@@ -1448,6 +1467,8 @@ enum struct esCache
 	int g_iLadyKillerReward[4];
 	int g_iLifeLeechReward[4];
 	int g_iLightColor[4];
+	int g_iMidairDashesLimit;
+	int g_iMidairDashesReward[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[4];
 	int g_iMinimumHumans;
@@ -1965,7 +1986,20 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				}
 			}
 
-			if ((bIsDeveloper(client, 6) || ((g_esPlayer[client].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[client].g_iShovePenalty == 1)) && (buttons & IN_ATTACK2))
+			if ((bDeveloper || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && g_esPlayer[client].g_iMidairDashesCount > 0)
+			{
+				if (!(buttons & IN_JUMP) && !g_esPlayer[client].g_bReleasedJump)
+				{
+					g_esPlayer[client].g_bReleasedJump = true;
+				}
+
+				if (bIsEntityGrounded(client))
+				{
+					g_esPlayer[client].g_iMidairDashesCount = 0;
+				}
+			}
+
+			if ((bDeveloper2 || ((g_esPlayer[client].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[client].g_iShovePenalty == 1)) && (buttons & IN_ATTACK2))
 			{
 				SetEntProp(client, Prop_Send, "m_iShovePenalty", 0, 1);
 			}
@@ -2067,8 +2101,8 @@ void vInitialReset(int client)
 {
 	g_esPlayer[client].g_iHudPanelLevel = 0;
 	g_esPlayer[client].g_iHudPanelPages = 0;
-	g_esPlayer[client].g_iLadyKiller = 0;
 	g_esPlayer[client].g_iLadyKillerCount = 0;
+	g_esPlayer[client].g_iLadyKillerLimit = 0;
 	g_esPlayer[client].g_iPersonalType = 0;
 }
 
@@ -4417,7 +4451,7 @@ void vDeveloperPanel(int developer, int level = 0)
 			FormatEx(sDisplay, sizeof sDisplay, "Infinite Ammo Slots: %i (0: OFF, 31: ALL)", g_esDeveloper[developer].g_iDevInfiniteAmmo);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof sDisplay, "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
+			FormatEx(sDisplay, sizeof sDisplay, "Jump Height: %.2f HMU (Dashes: %i)", g_esDeveloper[developer].g_flDevJumpHeight, g_esDeveloper[developer].g_iDevMidairDashes);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
@@ -5194,7 +5228,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsSurvivor(iSurvivor) && bIsWitch(iWitch) && !g_esGeneral.g_bWitchKilled[iWitch])
 			{
 				bool bDeveloper = bIsDeveloper(iSurvivor, 11);
-				if (bDeveloper || (g_esPlayer[iSurvivor].g_iLadyKillerCount < g_esPlayer[iSurvivor].g_iLadyKiller))
+				if (bDeveloper || (g_esPlayer[iSurvivor].g_iLadyKillerCount < g_esPlayer[iSurvivor].g_iLadyKillerLimit))
 				{
 					g_esGeneral.g_bWitchKilled[iWitch] = true;
 
@@ -5205,7 +5239,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						g_esPlayer[iSurvivor].g_iLadyKillerCount++;
 
-						MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", (g_esPlayer[iSurvivor].g_iLadyKiller - g_esPlayer[iSurvivor].g_iLadyKillerCount));
+						MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", (g_esPlayer[iSurvivor].g_iLadyKillerLimit - g_esPlayer[iSurvivor].g_iLadyKillerCount));
 					}
 				}
 			}
@@ -5446,9 +5480,9 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iHarasserId = event.GetInt("userid"), iHarasser = GetClientOfUserId(iHarasserId);
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsSurvivor(iSurvivor) && g_esPlayer[iSurvivor].g_iLadyKiller > 0 && iSurvivor != iHarasser)
+				if (bIsSurvivor(iSurvivor) && g_esPlayer[iSurvivor].g_iLadyKillerLimit > 0 && iSurvivor != iHarasser)
 				{
-					MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", (g_esPlayer[iSurvivor].g_iLadyKiller - g_esPlayer[iSurvivor].g_iLadyKillerCount));
+					MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", (g_esPlayer[iSurvivor].g_iLadyKillerLimit - g_esPlayer[iSurvivor].g_iLadyKillerCount));
 				}
 			}
 		}
@@ -6211,8 +6245,8 @@ void vResetLadyKiller(bool override)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			g_esPlayer[iSurvivor].g_iLadyKiller = 0;
 			g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
+			g_esPlayer[iSurvivor].g_iLadyKillerLimit = 0;
 		}
 	}
 }
@@ -6848,7 +6882,7 @@ void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffe
 	}
 
 	int iLimit = 999999, iReward = g_esCache[tank].g_iLadyKillerReward[priority],
-		iUses = (g_esPlayer[survivor].g_iLadyKiller - g_esPlayer[survivor].g_iLadyKillerCount),
+		iUses = (g_esPlayer[survivor].g_iLadyKillerLimit - g_esPlayer[survivor].g_iLadyKillerCount),
 		iNewUses = (iReward + iUses),
 		iFinalUses = iClamp(iNewUses, 0, iLimit),
 		iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : iReward;
@@ -6860,8 +6894,8 @@ void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffe
 		StrCat(buffer, size, sTemp);
 	}
 
-	g_esPlayer[survivor].g_iLadyKiller = iFinalUses;
 	g_esPlayer[survivor].g_iLadyKillerCount = 0;
+	g_esPlayer[survivor].g_iLadyKillerLimit = iFinalUses;
 }
 
 void vRewardMessage(int survivor, int recipient, int priority, int count, const char[] list, const char[] namePhrase)
@@ -7059,6 +7093,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flJumpHeight = g_esCache[tank].g_flJumpHeightReward[priority];
 				g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
 				g_esPlayer[survivor].g_iFallPasses = 0;
+				g_esPlayer[survivor].g_iMidairDashesLimit = g_esCache[tank].g_iMidairDashesReward[priority];
 			}
 			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[1] > 0 && g_esPlayer[survivor].g_iRewardStack[1] < g_esCache[tank].g_iStackLimits[1])
 			{
@@ -7067,6 +7102,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flSpeedBoost += g_esCache[tank].g_flSpeedBoostReward[priority];
 				g_esPlayer[survivor].g_flSpeedBoost = flClamp(g_esPlayer[survivor].g_flSpeedBoost, 0.1, 999999.0);
 				g_esPlayer[survivor].g_iFallPasses = 0;
+				g_esPlayer[survivor].g_iMidairDashesLimit += iClamp(g_esCache[tank].g_iMidairDashesReward[priority], 0, 999999);
 				g_esPlayer[survivor].g_iRewardStack[1]++;
 			}
 		}
@@ -7522,6 +7558,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_bFalling = g_esPlayer[oldSurvivor].g_bFalling;
 	g_esPlayer[newSurvivor].g_bFallTracked = g_esPlayer[oldSurvivor].g_bFallTracked;
 	g_esPlayer[newSurvivor].g_bFatalFalling = g_esPlayer[oldSurvivor].g_bFatalFalling;
+	g_esPlayer[newSurvivor].g_bReleasedJump = g_esPlayer[oldSurvivor].g_bReleasedJump;
 	g_esPlayer[newSurvivor].g_bSetup = g_esPlayer[oldSurvivor].g_bSetup;
 	g_esPlayer[newSurvivor].g_bVomited = g_esPlayer[oldSurvivor].g_bVomited;
 	g_esPlayer[newSurvivor].g_sLoopingVoiceline = g_esPlayer[oldSurvivor].g_sLoopingVoiceline;
@@ -7531,6 +7568,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_flDamageResistance = g_esPlayer[oldSurvivor].g_flDamageResistance;
 	g_esPlayer[newSurvivor].g_flHealPercent = g_esPlayer[oldSurvivor].g_flHealPercent;
 	g_esPlayer[newSurvivor].g_flJumpHeight = g_esPlayer[oldSurvivor].g_flJumpHeight;
+	g_esPlayer[newSurvivor].g_flLastJumpTime = g_esPlayer[oldSurvivor].g_flLastJumpTime;
 	g_esPlayer[newSurvivor].g_flPipeBombDuration = g_esPlayer[oldSurvivor].g_flPipeBombDuration;
 	g_esPlayer[newSurvivor].g_flPreFallZ = g_esPlayer[oldSurvivor].g_flPreFallZ;
 	g_esPlayer[newSurvivor].g_flShoveDamage = g_esPlayer[oldSurvivor].g_flShoveDamage;
@@ -7549,6 +7587,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_iLadderActions = g_esPlayer[oldSurvivor].g_iLadderActions;
 	g_esPlayer[newSurvivor].g_iLifeLeech = g_esPlayer[oldSurvivor].g_iLifeLeech;
 	g_esPlayer[newSurvivor].g_iMeleeRange = g_esPlayer[oldSurvivor].g_iMeleeRange;
+	g_esPlayer[newSurvivor].g_iMidairDashesLimit = g_esPlayer[oldSurvivor].g_iMidairDashesLimit;
 	g_esPlayer[newSurvivor].g_iNotify = g_esPlayer[oldSurvivor].g_iNotify;
 	g_esPlayer[newSurvivor].g_iPrefsAccess = g_esPlayer[oldSurvivor].g_iPrefsAccess;
 	g_esPlayer[newSurvivor].g_iParticleEffect = g_esPlayer[oldSurvivor].g_iParticleEffect;
@@ -7909,6 +7948,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_bFallTracked = false;
 	g_esPlayer[survivor].g_bFatalFalling = false;
 	g_esPlayer[survivor].g_bRainbowColor = false;
+	g_esPlayer[survivor].g_bReleasedJump = false;
 	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
 	g_esPlayer[survivor].g_flActionDuration = 0.0;
@@ -7917,6 +7957,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_flDamageResistance = 0.0;
 	g_esPlayer[survivor].g_flHealPercent = 0.0;
 	g_esPlayer[survivor].g_flJumpHeight = 0.0;
+	g_esPlayer[survivor].g_flLastJumpTime = 0.0;
 	g_esPlayer[survivor].g_flPipeBombDuration = 0.0;
 	g_esPlayer[survivor].g_flPreFallZ = 0.0;
 	g_esPlayer[survivor].g_flShoveDamage = 0.0;
@@ -7935,6 +7976,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_iLadderActions = 0;
 	g_esPlayer[survivor].g_iLifeLeech = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
+	g_esPlayer[survivor].g_iMidairDashesLimit = 0;
 	g_esPlayer[survivor].g_iNotify = 0;
 	g_esPlayer[survivor].g_iPrefsAccess = 0;
 	g_esPlayer[survivor].g_iParticleEffect = 0;
@@ -8645,6 +8687,11 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		bPanel = true;
 		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(StringToFloat(value), 0.0, 999999.0);
+	}
+	else if (StrContains(keyword, "midair", false) != -1 || StrContains(keyword, "dash", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevMidairDashes = iClamp(StringToInt(value), 0, 999999);
 	}
 	else if (StrContains(keyword, "leech", false) != -1)
 	{
@@ -11138,6 +11185,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flLoopingVoicelineInterval[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flLoopingVoicelineInterval[iPos], g_esCache[tank].g_flLoopingVoicelineInterval[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos]);
+			g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMidairDashesReward[iPos], g_esGeneral.g_iMidairDashesReward[iPos]);
+			g_esCache[tank].g_iMidairDashesReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMidairDashesReward[iPos], g_esCache[tank].g_iMidairDashesReward[iPos]);
 			g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iParticleEffectVisual[iPos], g_esGeneral.g_iParticleEffectVisual[iPos]);
 			g_esCache[tank].g_iParticleEffectVisual[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iParticleEffectVisual[iPos], g_esCache[tank].g_iParticleEffectVisual[iPos]);
 			g_esCache[tank].g_flPipeBombDurationReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPipeBombDurationReward[iPos], g_esGeneral.g_flPipeBombDurationReward[iPos]);
@@ -11439,6 +11488,7 @@ void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevInfiniteAmmo = 31;
 	g_esDeveloper[developer].g_iDevLifeLeech = 5;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
+	g_esDeveloper[developer].g_iDevMidairDashes = 2;
 	g_esDeveloper[developer].g_iDevPanelLevel = 0;
 	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_FIRE;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
@@ -11616,6 +11666,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esTank[type].g_iLadyKillerReward[iPos], sSet[iPos], 0, 999999);
 					g_esTank[type].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esTank[type].g_iLifeLeechReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 					g_esTank[type].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esTank[type].g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
+					g_esTank[type].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esTank[type].g_iMidairDashesReward[iPos], sSet[iPos], 0, 999999);
 					g_esTank[type].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esTank[type].g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 					g_esTank[type].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esTank[type].g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esTank[type].g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
@@ -12947,6 +12998,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iLifeLeechReward[iPos] = 1;
 				g_esGeneral.g_flLoopingVoicelineInterval[iPos] = 10.0;
 				g_esGeneral.g_iMeleeRangeReward[iPos] = 150;
+				g_esGeneral.g_iMidairDashesReward[iPos] = 2;
 				g_esGeneral.g_iParticleEffectVisual[iPos] = 15;
 				g_esGeneral.g_flPipeBombDurationReward[iPos] = 10.0;
 				g_esGeneral.g_iPrefsNotify[iPos] = 1;
@@ -13126,6 +13178,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iLifeLeechReward[iPos] = 0;
 					g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos] = 0.0;
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = 0;
+					g_esTank[iIndex].g_iMidairDashesReward[iPos] = 0;
 					g_esTank[iIndex].g_iParticleEffectVisual[iPos] = 0;
 					g_esTank[iIndex].g_flPipeBombDurationReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iPrefsNotify[iPos] = 0;
@@ -13342,6 +13395,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = 0;
+						g_esPlayer[iPlayer].g_iMidairDashesReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = 0;
 						g_esPlayer[iPlayer].g_flPipeBombDurationReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = 0;
@@ -13638,10 +13692,11 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							g_esGeneral.g_iHollowpointAmmoReward[iPos] = iGetClampedValue(key, "HollowpointAmmoReward", "Hollowpoint Ammo Reward", "Hollowpoint_Ammo_Reward", "hollowpoint", g_esGeneral.g_iHollowpointAmmoReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esGeneral.g_iInextinguishableFireReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esGeneral.g_iInfiniteAmmoReward[iPos], sSet[iPos], 0, 31);
-							g_esGeneral.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esGeneral.g_iLadderActionsReward[iPos], sSet[iPos], 0, 999999);
+							g_esGeneral.g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esGeneral.g_iLadderActionsReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esGeneral.g_iLadyKillerReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esGeneral.g_iLifeLeechReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 							g_esGeneral.g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esGeneral.g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
+							g_esGeneral.g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esGeneral.g_iMidairDashesReward[iPos], sSet[iPos], 0, 999999);
 							g_esGeneral.g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esGeneral.g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 							g_esGeneral.g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esGeneral.g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esGeneral.g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
@@ -13942,10 +13997,11 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 									g_esPlayer[iPlayer].g_iHollowpointAmmoReward[iPos] = iGetClampedValue(key, "HollowpointAmmoReward", "Hollowpoint Ammo Reward", "Hollowpoint_Ammo_Reward", "hollowpoint", g_esPlayer[iPlayer].g_iHollowpointAmmoReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iInextinguishableFireReward[iPos] = iGetClampedValue(key, "InextinguishableFireReward", "Inextinguishable Fire Reward", "Inextinguishable_Fire_Reward", "inexfire", g_esPlayer[iPlayer].g_iInextinguishableFireReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iInfiniteAmmoReward[iPos] = iGetClampedValue(key, "InfiniteAmmoReward", "Infinite Ammo Reward", "Infinite_Ammo_Reward", "infammo", g_esPlayer[iPlayer].g_iInfiniteAmmoReward[iPos], sSet[iPos], 0, 31);
-									g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esPlayer[iPlayer].g_iLadderActionsReward[iPos], sSet[iPos], 0, 999999);
+									g_esPlayer[iPlayer].g_iLadderActionsReward[iPos] = iGetClampedValue(key, "LadderActionsReward", "Ladder Actions Reward", "Ladder_Action_Reward", "ladderactions", g_esPlayer[iPlayer].g_iLadderActionsReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = iGetClampedValue(key, "LadyKillerReward", "Lady Killer Reward", "Lady_Killer_Reward", "ladykiller", g_esPlayer[iPlayer].g_iLadyKillerReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = iGetClampedValue(key, "LifeLeechReward", "Life Leech Reward", "Life_Leech_Reward", "lifeleech", g_esPlayer[iPlayer].g_iLifeLeechReward[iPos], sSet[iPos], 0, MT_MAXHEALTH);
 									g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = iGetClampedValue(key, "MeleeRangeReward", "Melee Range Reward", "Melee_Range_Reward", "meleerange", g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos], sSet[iPos], 0, 999999);
+									g_esPlayer[iPlayer].g_iMidairDashesReward[iPos] = iGetClampedValue(key, "MidairDashesReward", "Midair Dashes Reward", "Midair_Dashes_Reward", "midairdashes", g_esPlayer[iPlayer].g_iMidairDashesReward[iPos], sSet[iPos], 0, 999999);
 									g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos] = iGetClampedValue(key, "ParticleEffectVisual", "Particle Effect Visual", "Particle_Effect_Visual", "particle", g_esPlayer[iPlayer].g_iParticleEffectVisual[iPos], sSet[iPos], 0, 15);
 									g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = iGetClampedValue(key, "PrefsNotify", "Prefs Notify", "Prefs_Notify", "pnotify", g_esPlayer[iPlayer].g_iPrefsNotify[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = iGetClampedValue(key, "RecoilDampenerReward", "Recoil Dampener Reward", "Recoil_Dampener_Reward", "recoil", g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos], sSet[iPos], 0, 1);
@@ -14804,7 +14860,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				{
 					RequestFrame(vDetonateRockFrame, EntIndexToEntRef(inflictor));
 				}
-				else if (((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || ((damagetype & DMG_FALL) && !bIsSafeFalling(victim) && g_esPlayer[victim].g_bFatalFalling))
+				else if (((damagetype & DMG_DROWN) && iGetPlayerWaterLevel(victim) > MT_WATER_NONE) || ((damagetype & DMG_FALL) && !bIsSafeFalling(victim) && g_esPlayer[victim].g_bFatalFalling))
 				{
 					SetEntProp(victim, Prop_Data, "m_takedamage", 2, 1);
 
@@ -14906,6 +14962,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
+
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -15768,8 +15825,10 @@ void vSetupDetours()
 {
 	vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, "MTDetour_CFirstAidKit::OnActionComplete");
 	vSetupDetour(g_esGeneral.g_ddBaseEntityCreateDetour, "MTDetour_CBaseEntity::Create");
+	vSetupDetour(g_esGeneral.g_ddBaseEntityGetGroundEntityDetour, "MTDetour_CBaseEntity::GetGroundEntity");
 	vSetupDetour(g_esGeneral.g_ddBeginChangeLevelDetour, "MTDetour_CTerrorPlayer::OnBeginChangeLevel");
 	vSetupDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor");
+	vSetupDetour(g_esGeneral.g_ddCheckJumpButtonDetour, "MTDetour_CTerrorGameMovement::CheckJumpButton");
 	vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "MTDetour_CDeathFallCamera::Enable");
 	vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent");
 	vSetupDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump");
@@ -15883,6 +15942,8 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddBeginChangeLevelDetour, "MTDetour_CTerrorPlayer::OnBeginChangeLevel", Hook_Pre, mreBeginChangeLevelPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Pre, mreCanDeployForPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddCanDeployForDetour, "MTDetour_CTerrorWeapon::CanDeployFor", Hook_Post, mreCanDeployForPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddCheckJumpButtonDetour, "MTDetour_CTerrorGameMovement::CheckJumpButton", Hook_Pre, mreCheckJumpButtonPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddCheckJumpButtonDetour, "MTDetour_CTerrorGameMovement::CheckJumpButton", Hook_Post, mreCheckJumpButtonPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "MTDetour_CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "MTDetour_CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, toggle);
@@ -16012,6 +16073,32 @@ MRESReturn mreBaseEntityCreatePost(DHookReturn hReturn, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+MRESReturn mreBaseEntityGetGroundEntityPre(int pThis, DHookReturn hReturn)
+{
+	if (bIsSurvivor(pThis) && !bIsSurvivorDisabled(pThis) && !bIsSurvivorCaught(pThis) && iGetPlayerWaterLevel(pThis) < MT_WATER_WAIST)
+	{
+		float flCurrentTime = GetGameTime();
+		if ((g_esPlayer[pThis].g_flLastJumpTime + MT_DASH_COOLDOWN) > flCurrentTime)
+		{
+			g_esPlayer[pThis].g_bReleasedJump = false;
+
+			return MRES_Ignored;
+		}
+
+		int iLimit = (bIsDeveloper(pThis, 5) && g_esDeveloper[pThis].g_iDevMidairDashes > g_esPlayer[pThis].g_iMidairDashesLimit) ? g_esDeveloper[pThis].g_iDevMidairDashes : g_esPlayer[pThis].g_iMidairDashesLimit;
+		if (g_esPlayer[pThis].g_iMidairDashesCount < iLimit)
+		{
+			g_esPlayer[pThis].g_flLastJumpTime = flCurrentTime;
+			g_esPlayer[pThis].g_iMidairDashesCount++;
+			hReturn.Value = pThis;
+
+			return MRES_Override;
+		}
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreBeginChangeLevelPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && g_esPlayer[pThis].g_iRewardTypes > 0)
@@ -16065,6 +16152,20 @@ MRESReturn mreCanDeployForPost(int pThis, DHookReturn hReturn, DHookParam hParam
 	return MRES_Ignored;
 }
 
+MRESReturn mreCheckJumpButtonPre(Address pThis, DHookReturn hReturn)
+{
+	vToggleDetour(g_esGeneral.g_ddBaseEntityGetGroundEntityDetour, "MTDetour_CBaseEntity::GetGroundEntity", Hook_Pre, mreBaseEntityGetGroundEntityPre, true);
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreCheckJumpButtonPost(Address pThis, DHookReturn hReturn)
+{
+	vToggleDetour(g_esGeneral.g_ddBaseEntityGetGroundEntityDetour, "MTDetour_CBaseEntity::GetGroundEntity", Hook_Pre, mreBaseEntityGetGroundEntityPre, false);
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreDeathFallCameraEnablePre(int pThis, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
@@ -16082,12 +16183,7 @@ MRESReturn mreDeathFallCameraEnablePre(int pThis, DHookParam hParams)
 	Call_PushCell(iSurvivor);
 	Call_Finish(aResult);
 
-	if (aResult == Plugin_Handled)
-	{
-		return MRES_Supercede;
-	}
-
-	return MRES_Ignored;
+	return (aResult == Plugin_Handled) ? MRES_Supercede : MRES_Ignored;
 }
 
 MRESReturn mreDoAnimationEventPre(int pThis, DHookParam hParams)
@@ -16106,9 +16202,9 @@ MRESReturn mreDoAnimationEventPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
+MRESReturn mreDoJumpPre(Address pThis, DHookParam hParams)
 {
-	Address adSurvivor = LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32);
+	Address adSurvivor = LoadFromAddress((pThis + view_as<Address>(4)), NumberType_Int32);
 	int iSurvivor = iGetEntityIndex(iGetRefEHandle(adSurvivor));
 	if (bIsSurvivor(iSurvivor))
 	{
@@ -16151,7 +16247,7 @@ MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
+MRESReturn mreDoJumpPost(Address pThis, DHookParam hParams)
 {
 	if (g_esGeneral.g_bPatchJumpHeight)
 	{
@@ -16548,12 +16644,7 @@ MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
 	Call_PushCell(iSurvivor);
 	Call_Finish(aResult);
 
-	if (aResult == Plugin_Handled)
-	{
-		return MRES_Supercede;
-	}
-
-	return MRES_Ignored;
+	return (aResult == Plugin_Handled) ? MRES_Supercede : MRES_Ignored;
 }
 
 MRESReturn mreIncapacitatedAsTankPre(int pThis, DHookParam hParams)
@@ -16580,7 +16671,7 @@ MRESReturn mreIncapacitatedAsTankPost(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-MRESReturn mreInitialContainedActionPre(int pThis, DHookParam hParams)
+MRESReturn mreInitialContainedActionPre(Address pThis, DHookParam hParams)
 {
 	int iTank = hParams.Get(1);
 	if (bIsTank(iTank) && bIsCoopMode() && g_esCache[iTank].g_iAutoAggravate == 1)
@@ -16600,7 +16691,7 @@ MRESReturn mreInitialContainedActionPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-MRESReturn mreInitialContainedActionPost(int pThis, DHookParam hParams)
+MRESReturn mreInitialContainedActionPost(Address pThis, DHookParam hParams)
 {
 	static int iIndex = -1;
 	if (iIndex == -1)
@@ -16718,7 +16809,7 @@ MRESReturn mreLeaveStasisPost(int pThis)
 	return MRES_Ignored;
 }
 
-MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hParams)
+MRESReturn mreMaxCarryPre(Address pThis, DHookReturn hReturn, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(2) ? 0 : hParams.Get(2), iAmmo = iGetMaxAmmo(iSurvivor, hParams.Get(1), 0, true);
 	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
@@ -16916,12 +17007,7 @@ MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 	Call_PushArray(flDirection, sizeof flDirection);
 	Call_Finish(aResult);
 
-	if (aResult == Plugin_Handled)
-	{
-		return MRES_Supercede;
-	}
-
-	return MRES_Ignored;
+	return (aResult == Plugin_Handled) ? MRES_Supercede : MRES_Ignored;
 }
 
 MRESReturn mreSetMainActivityPre(int pThis, DHookParam hParams)
@@ -18101,7 +18187,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
  * 4 - 2 - loadout on initial spawn
  * 8 - 3 - all rewards/effects
  * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener
- * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop
+ * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop, midair dash
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recovery, full health when healing/reviving, ammo regen, ladder actions, bunny hop
  * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire (off by default)
  * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle (off by default)

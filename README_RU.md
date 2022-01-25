@@ -2053,6 +2053,8 @@ Overrides
 
 **mi123645** - За плагин [[L4D(2)] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409).
 
+**Chanz** - За плагин [[ANY] Infinite-Jumping](https://forums.alliedmods.net/showthread.php?t=132391).
+
 **Farbror Godis** - За плагин [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146).
 
 **GoD-Tony** - За плагин [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) и [Updater](https://forums.alliedmods.net/showthread.php?t=169095).

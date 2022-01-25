@@ -596,7 +596,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
-			// - Give up to five items.
+			// - Receive up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -698,7 +698,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
-			// - Give up to five items.
+			// - Receive up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -953,7 +953,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 6
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 999999 (Highest)
@@ -998,7 +998,7 @@
 			// 2nd number = Allow bunnyhopping to assistants.
 			// 3rd number = Allow bunnyhopping to teammates.
 			// 4th number = Allow bunnyhopping to assistant killers.
-			"Bunny Hopping Reward"			"1,1,1,1"
+			"Bunny Hop Reward"			"1,1,1,1"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1112,7 +1112,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 7
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 1000000 (Highest)
@@ -1261,7 +1261,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 7
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 1000000 (Highest)
@@ -1289,6 +1289,24 @@
 			// 3rd number = Range for teammates.
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"100,100,100,100"
+
+			// Allow survivors to perform a number of midair dashes (extra jumps).
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 6
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 999999 (Highest)
+			// --
+			// 1st number = Number of dashes (jumps) to give to killers.
+			// 2nd number = Number of dashes (jumps) to give to assistants.
+			// 3rd number = Number of dashes (jumps) to give to teammates.
+			// 4th number = Number of dashes (jumps) to give to assistant killers.
+			"Midair Dashes Reward"			"2,2,2,2"
 
 			// The pipebomb duration to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1369,7 +1387,7 @@
 			// Separate values with commas (",").
 			// --
 			// Values limit: 4
-			// Character limit for each value: 12
+			// Character limit for each value: 7
 			// --
 			// Minimum value for each: 0 (OFF)
 			// Maximum value for each: 1000000 (Highest)
@@ -1507,7 +1525,7 @@
 			// Separate limits with commas (",").
 			// --
 			// Limits limit: 7
-			// Character limit for each limit: 7
+			// Character limit for each limit: 6
 			// --
 			// Minimum value for each limit: 0 (No limit)
 			// Maximum value for each limit: 999999 (Highest limit)
@@ -2867,7 +2885,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
-			// - Give up to five items.
+			// - Receive up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -2969,7 +2987,7 @@
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
-			// - Give up to five items.
+			// - Receive up to five items.
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
 			// - Immune to all types of damage.
@@ -3224,7 +3242,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 6
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 999999 (Highest)
@@ -3269,7 +3287,7 @@
 			// 2nd number = Allow bunnyhopping to assistants.
 			// 3rd number = Allow bunnyhopping to teammates.
 			// 4th number = Allow bunnyhopping to assistant killers.
-			"Bunny Hopping Reward"			"0,0,0,0"
+			"Bunny Hop Reward"			"0,0,0,0"
 
 			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3383,7 +3401,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 7
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 1000000 (Highest)
@@ -3532,7 +3550,7 @@
 			// Separate amounts with commas (",").
 			// --
 			// Amounts limit: 4
-			// Character limit for each amount: 12
+			// Character limit for each amount: 7
 			// --
 			// Minimum value for each amount: 0 (OFF)
 			// Maximum value for each amount: 1000000 (Highest)
@@ -3560,6 +3578,24 @@
 			// 3rd number = Range for teammates.
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"0,0,0,0"
+
+			// Allow survivors to perform a number of midair dashes (extra jumps).
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 6
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 999999 (Highest)
+			// --
+			// 1st number = Number of dashes (jumps) to give to killers.
+			// 2nd number = Number of dashes (jumps) to give to assistants.
+			// 3rd number = Number of dashes (jumps) to give to teammates.
+			// 4th number = Number of dashes (jumps) to give to assistant killers.
+			"Midair Dashes Reward"			"0,0,0,0"
 
 			// The pipebomb duration to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -3640,7 +3676,7 @@
 			// Separate values with commas (",").
 			// --
 			// Values limit: 4
-			// Character limit for each value: 12
+			// Character limit for each value: 7
 			// --
 			// Minimum value for each: 0 (OFF)
 			// Maximum value for each: 1000000 (Highest)
@@ -3778,7 +3814,7 @@
 			// Separate limits with commas (",").
 			// --
 			// Limits limit: 7
-			// Character limit for each limit: 7
+			// Character limit for each limit: 6
 			// --
 			// Minimum value for each limit: 0 (No limit)
 			// Maximum value for each limit: 999999 (Highest limit)
