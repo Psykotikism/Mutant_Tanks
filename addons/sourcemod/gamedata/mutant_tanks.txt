@@ -48,6 +48,19 @@
 			}
 
 			/**
+			 * CBaseEntity::GetGroundEntity()
+			 *
+			 * Note: Detouring as a pre-hook for allowing mid-air jumps.
+			 **/
+			"MTDetour_CBaseEntity::GetGroundEntity"
+			{
+				"signature"	"CBaseEntity::GetGroundEntity"
+				"callconv"	"thiscall"
+				"return"	"cbaseentity"
+				"this"		"entity"
+			}
+
+			/**
 			 * CDeathFallCamera::Enable(CBasePlayer*)
 			 *
 			 * Note: Detouring as a pre-hook for disabling "death_fall_camera" entity per player.
@@ -237,6 +250,20 @@
 						"type"		"vectorptr"
 					}
 				}
+			}
+
+			/**
+			 * CTerrorGameMovement::CheckJumpButton()
+			 *
+			 * Note: Detouring as a pre-hook for enabling "CBaseEntity::GetGroundEntity" detour.
+			 * Note: Detouring as a post-hook for disabling "CBaseEntity::GetGroundEntity" detour.
+			 **/
+			"MTDetour_CTerrorGameMovement::CheckJumpButton"
+			{
+				"signature"	"CTerrorGameMovement::CheckJumpButton"
+				"callconv"	"thiscall"
+				"return"	"bool"
+				"this"		"address"
 			}
 
 			/**
@@ -1906,6 +1933,22 @@
 			}
 
 			/**
+			 * CBaseEntity::GetGroundEntity()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTerrorGameMovement::CheckJumpButton" function.
+			 * 2. This function is called in an if-statement by itself without any comparison checks.
+			 **/
+			"CBaseEntity::GetGroundEntity"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity15GetGroundEntityEv"
+				"mac"		"@_ZN11CBaseEntity15GetGroundEntityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x8D\x2A\x2A\x2A\x85\x2A\x74\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x8B\x2A\xC3\x33\x2A\xC3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57"
+						/* ? ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? C1 ? ? 8D ? ? ? 85 ? 74 ? C1 ? ? 39 ? ? 75 ? 8B ? C3 33 ? C3 ? ? ? ? ? ? ? ? ? ? ? ? ? ? 56 57 */
+			}
+
+			/**
 			 * CDeathFallCamera::Enable(CBasePlayer*)
 			 *
 			 * How to find on Windows:
@@ -2147,6 +2190,22 @@
 				"mac"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_.constprop.121"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC7\x86\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x57"
 						/* ? ? ? ? ? ? ? ? ? ? ? C7 86 ? ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? 57 */
+			}
+
+			/**
+			 * CTerrorGameMovement::CheckJumpButton()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTerrorGameMovement::DoJump" function.
+			 * 2. One of the functions that calls "CTerrorGameMovement::DoJump" should be this function.
+			 **/
+			"CTerrorGameMovement::CheckJumpButton"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement15CheckJumpButtonEv"
+				"mac"		"@_ZN19CTerrorGameMovement15CheckJumpButtonEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x80\xB8\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x83\x2A\x2A\x2A\x32\x2A\x5E\xC3"
+						/* ? ? ? ? ? ? ? ? ? 85 ? 74 ? 80 B8 ? ? ? ? ? 74 ? 8B ? ? 83 ? ? ? 32 ? 5E C3 */
 			}
 
 			/**
@@ -4018,6 +4077,22 @@
 			}
 
 			/**
+			 * CBaseEntity::GetGroundEntity()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTerrorGameMovement::CheckJumpButton" function.
+			 * 2. This function is called in an if-statement by itself without any comparison checks.
+			 **/
+			"CBaseEntity::GetGroundEntity"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity15GetGroundEntityEv"
+				"mac"		"@_ZN11CBaseEntity15GetGroundEntityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x74\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x8B\x2A\xC3\x33\x2A\xC3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF6\x81"
+						/* ? ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? 03 ? 8D ? ? ? 85 ? 74 ? C1 ? ? 39 ? ? 75 ? 8B ? C3 33 ? C3 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? F6 81 */
+			}
+
+			/**
 			 * CDeathFallCamera::Enable(CBasePlayer*)
 			 *
 			 * How to find on Windows:
@@ -4325,6 +4400,22 @@
 				"mac"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\xC6\x86\x2A\x2A\x2A\x2A\x2A\xC7"
 						/* ? ? ? ? ? ? 57 C6 86 ? ? ? ? ? C7 */
+			}
+
+			/**
+			 * CTerrorGameMovement::CheckJumpButton()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTerrorGameMovement::DoJump" function.
+			 * 2. One of the functions that calls "CTerrorGameMovement::DoJump" should be this function.
+			 **/
+			"CTerrorGameMovement::CheckJumpButton"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement15CheckJumpButtonEv"
+				"mac"		"@_ZN19CTerrorGameMovement15CheckJumpButtonEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x80\xB8\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x83\x2A\x2A\x2A\x32\x2A\x5E\xC3"
+						/* ? ? ? ? ? ? ? ? ? 85 ? 74 ? 80 B8 ? ? ? ? ? 74 ? 8B ? ? 83 ? ? ? 32 ? 5E C3 */
 			}
 
 			/**

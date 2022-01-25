@@ -2053,6 +2053,8 @@ Examples:
 
 **mi123645** - For the [[L4D(2)] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
+**Chanz** - For the [[ANY] Infinite-Jumping](https://forums.alliedmods.net/showthread.php?t=132391) plugin.
+
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
 **GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) and [Updater](https://forums.alliedmods.net/showthread.php?t=169095) plugins.

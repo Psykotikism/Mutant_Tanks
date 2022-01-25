@@ -50,14 +50,23 @@
 - Added developer HUD panel for viewing currently alive Tanks.
 
 #### Core Plugin
-- The attack boost reward now prevents recipients from being interrupted when performing any actions.
-- The attack boost reward now prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
-- The attack boost reward now prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
-- The attack boost reward now prevents recipients from being slowed down when attacked by infected.
-- The attack boost reward now prevents infected attacks from offsetting recipients' aim.
-- The damage boost reward now prevents recipients from dealing and receiving friendly-fire.
-- The regular waves spawner now stops when there is at least one Tank alive on the map. (Requested by `yuzumi`.)
-- The regular waves spawner now restarts once every Tank on the map is dead. (Requested by `yuzumi`.)
+- The speed boost reward now does the following:
+	- Allows recipients to bunny hop. (Thanks to `Chanz` for the code!)
+	- Allows recipients to perform midair dashes (extra jumps). (Thanks to `epzminion` for the idea and help!)
+- The attack boost reward now does the following:
+	- Prevents recipients from being interrupted when performing any actions.
+	- Prevents recipients from switching to their secondary slots when equipping secondary pistols. (Thanks to `HarryPotter` for the idea and `Forgetest` for the method!)
+	- Prevents recipients from switching to their secondary slots when equipping throwables and health supplies given by teammates. (Thanks to `Silvers` for the code!)
+	- Prevents recipients from being slowed down when attacked by infected.
+	- Prevents infected attacks from offsetting recipients' aim.
+- The damage boost reward now does the following:
+	- Prevents recipients from dealing and receiving friendly-fire.
+	- Allows recipients to burn their special infected targets indefinitely (until the recipient or target dies, or the reward ends).
+	- Allows recipients to have an extended pipebomb duration.
+	- Removes recipients' gun recoil. (Thanks to `epzminion` for the help!)
+- The regular waves spawner now does the following (Requested by `yuzumi`.):
+	- Stops when there is at least one Tank alive on the map.
+	- Restarts once every Tank on the map is dead.
 - Added another method for detecting vomited/unvomited players. (Thanks to `Marttt` for the information!)
 - Improved friendly-fire checks. (Thanks to `Silvers` for the code!)
 - Improved logging for patching system.
@@ -70,12 +79,16 @@
 #### Game Data
 - Added offsets for `CPainPills::GetWeaponID`.
 - Added signatures for `GetWeaponInfo`.
-- Added signatures and patch offsets for `CTerrorGun::EquipSecondWeapon`.
+- Added signatures and patch offsets for the following functions:
+	- `CTerrorGun::EquipSecondWeapon`
+	- `CTerrorPlayer::OnTakeDamage_Alive`
 - Added detour setup for the following functions:
 	- `CTankRock::Detonate`
 	- `CTerrorPlayer::OnITExpired`
 - Added detour setup and signatures for the following functions:
+	- `CBaseEntity::GetGroundEntity`
 	- `CPipeBombProjectile::Create`
+	- `CTerrorGameMovement::CheckJumpButton`
 	- `CTerrorGun::FireBullet` (L4D1)
 	- `CTerrorGun::Use`
 	- `CTerrorPlayer::Extinguish`
@@ -89,6 +102,7 @@
 	- `Friendly Fire Reward`
 	- `Inextinguishable Fire Reward`
 	- `Looping Voiceline Interval`
+	- `Midair Dashes Reward`
 	- `Pipebomb Duration Reward`
 	- `Recoil Dampener Reward`
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)

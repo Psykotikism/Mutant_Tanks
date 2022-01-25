@@ -1912,6 +1912,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1964,7 +1965,8 @@ stock bool bIsCommonInfected(int common)
 
 stock bool bIsEntityGrounded(int entity)
 {
-	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
+	int iGround = GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity");
+	return bIsValidEntity(iGround, true, -1);
 }
 
 stock bool bIsGunWeapon(int survivor)
@@ -2217,9 +2219,10 @@ stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME
 	return true;
 }
 
-stock bool bIsValidEntity(int entity)
+stock bool bIsValidEntity(int entity, bool override = false, int start = 0)
 {
-	return entity > MaxClients && IsValidEntity(entity);
+	int iIndex = override ? start : MaxClients;
+	return entity > iIndex && IsValidEntity(entity);
 }
 
 stock bool bIsValidEntRef(int ref)
@@ -2409,6 +2412,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2498,6 +2502,7 @@ stock float flGetGroundUnits(int entity)
 				float flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
@@ -3037,7 +3042,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 			if (iHostOffset != -1)
 			{
 				bool bHost[MAXPLAYERS + 1];
-				GetEntDataArray(iManager, iHostOffset, bHost, MAXPLAYERS + 1, 1);
+				GetEntDataArray(iManager, iHostOffset, bHost, (MAXPLAYERS + 1), 1);
 				for (int iPlayer = 1; iPlayer < sizeof bHost; iPlayer++)
 				{
 					if (bHost[iPlayer])
@@ -3064,6 +3069,11 @@ stock int iGetPlayerCount()
 	}
 
 	return iPlayerCount;
+}
+
+stock int iGetPlayerWaterLevel(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_nWaterLevel");
 }
 
 stock int iGetRandomColor(int color)
