@@ -505,6 +505,7 @@ enum struct esGeneral
 	DynamicDetour g_ddTankClawDoSwingDetour;
 	DynamicDetour g_ddTankClawGroundPoundDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
+	DynamicDetour g_ddTankClawPrimaryAttackDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTankRockDetonateDetour;
 	DynamicDetour g_ddTankRockReleaseDetour;
@@ -814,8 +815,6 @@ enum struct esPlayer
 	bool g_bAdminMenu;
 	bool g_bApplyVisuals[6];
 	bool g_bArtificial;
-	bool g_bAttacked;
-	bool g_bAttackedAgain;
 	bool g_bBlood;
 	bool g_bBlur;
 	bool g_bBoss;
@@ -911,7 +910,6 @@ enum struct esPlayer
 	float g_flActionDurationReward[4];
 	float g_flAttackBoost;
 	float g_flAttackBoostReward[4];
-	float g_flAttackDelay;
 	float g_flAttackInterval;
 	float g_flBurnDuration;
 	float g_flBurntSkin;
@@ -939,6 +937,7 @@ enum struct esPlayer
 	float g_flHittableDamage;
 	float g_flJumpHeight;
 	float g_flJumpHeightReward[4];
+	float g_flLastAttackTime;
 	float g_flLastJumpTime;
 	float g_flLoopingVoicelineInterval[4];
 	float g_flPipeBombDuration;
@@ -2074,19 +2073,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_esPlayer[client].g_iLastButtons = buttons;
 		}
 
-		if (buttons & IN_ATTACK)
+		if ((buttons & IN_ATTACK) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[client].g_flPunchThrow)
 		{
-			if (!g_esPlayer[client].g_bAttackedAgain)
-			{
-				g_esPlayer[client].g_bAttackedAgain = true;
-			}
+			buttons |= IN_ATTACK2;
 
-			if (MT_GetRandomFloat(0.1, 100.0) <= g_esCache[client].g_flPunchThrow)
-			{
-				buttons |= IN_ATTACK2;
-
-				return Plugin_Changed;
-			}
+			return Plugin_Changed;
 		}
 	}
 
@@ -2189,7 +2180,6 @@ void vPluginStatus()
 void vResetCore(int client)
 {
 	g_esPlayer[client].g_bAdminMenu = false;
-	g_esPlayer[client].g_bAttacked = false;
 	g_esPlayer[client].g_bDied = false;
 	g_esPlayer[client].g_bIgnoreCmd = false;
 	g_esPlayer[client].g_bInitialRound = g_esGeneral.g_bNextRound;
@@ -5438,33 +5428,6 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_esGeneral.g_bNextRound = !!GameRules_GetProp("m_bInSecondHalfOfRound");
 
 			vResetRound();
-		}
-		else if (StrEqual(name, "weapon_fire"))
-		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTank(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
-			{
-				char sWeapon[32];
-				event.GetString("weapon", sWeapon, sizeof sWeapon);
-				if (StrEqual(sWeapon, "tank_claw"))
-				{
-					if (!g_esPlayer[iTank].g_bAttacked)
-					{
-						g_esPlayer[iTank].g_bAttacked = true;
-
-						vSetTankAttackInterval(iTank);
-					}
-					else if (g_esPlayer[iTank].g_flAttackDelay == -1.0 && g_esPlayer[iTank].g_bAttackedAgain)
-					{
-						CreateTimer(g_esCache[iTank].g_flAttackInterval, tTimerResetAttackDelay, iTankId, TIMER_FLAG_NO_MAPCHANGE);
-						vSetTankAttackInterval(iTank);
-					}
-					else if (g_esPlayer[iTank].g_flAttackDelay < GetGameTime())
-					{
-						g_esPlayer[iTank].g_flAttackDelay = -1.0;
-					}
-				}
-			}
 		}
 		else if (StrEqual(name, "weapon_given"))
 		{
@@ -9388,6 +9351,7 @@ void vCopyTankStats(int tank, int newtank)
 	g_esPlayer[newtank].g_bSmoke = g_esPlayer[tank].g_bSmoke;
 	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
 	g_esPlayer[newtank].g_bTransformed = g_esPlayer[tank].g_bTransformed;
+	g_esPlayer[newtank].g_flLastAttackTime = g_esPlayer[tank].g_flLastAttackTime;
 	g_esPlayer[newtank].g_iBossStageCount = g_esPlayer[tank].g_iBossStageCount;
 	g_esPlayer[newtank].g_iClawCount = g_esPlayer[tank].g_iClawCount;
 	g_esPlayer[newtank].g_iClawDamage = g_esPlayer[tank].g_iClawDamage;
@@ -9744,7 +9708,6 @@ void vMutateTank(int tank, int type)
 			vSetTankModel(tank);
 			vSetTankHealth(tank);
 			vResetTankSpeed(tank, false);
-			vSetTankAttackInterval(tank);
 			vSetTankThrowInterval(tank);
 
 			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
@@ -9755,6 +9718,7 @@ void vMutateTank(int tank, int type)
 				case false: vAnnounceTankArrival(tank, "NoName");
 			}
 
+			g_esPlayer[tank].g_flLastAttackTime = GetGameTime();
 			g_esPlayer[tank].g_iTankHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
 			g_esGeneral.g_iTankCount++;
 		}
@@ -9983,7 +9947,6 @@ void vResetTank(int tank, int mode = 1)
 void vResetTank2(int tank, bool full = true)
 {
 	g_esPlayer[tank].g_bArtificial = false;
-	g_esPlayer[tank].g_bAttackedAgain = false;
 	g_esPlayer[tank].g_bBlood = false;
 	g_esPlayer[tank].g_bBlur = false;
 	g_esPlayer[tank].g_bElectric = false;
@@ -9996,7 +9959,7 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_bReplaceSelf = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
-	g_esPlayer[tank].g_flAttackDelay = -1.0;
+	g_esPlayer[tank].g_flLastAttackTime = 0.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iClawCount = 0;
 	g_esPlayer[tank].g_iClawDamage = 0;
@@ -10084,21 +10047,6 @@ void vSetRockModel(int tank, int rock)
 		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
 		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
 		case 2: SetEntityModel(rock, ((MT_GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
-	}
-}
-
-void vSetTankAttackInterval(int tank, float defValue = 5.0)
-{
-	if (bIsTank(tank))
-	{
-		float flInterval = (g_esCache[tank].g_flAttackInterval > 0.0) ? g_esCache[tank].g_flAttackInterval : defValue;
-		int iWeapon = GetPlayerWeaponSlot(tank, 0);
-		if (iWeapon > MaxClients)
-		{
-			g_esPlayer[tank].g_flAttackDelay = (GetGameTime() + flInterval);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", flInterval, 0);
-			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
-		}
 	}
 }
 
@@ -14587,6 +14535,7 @@ void vTankSpawnFrame(DataPack pack)
 		if (!bIsInfectedGhost(iTank) && !g_esPlayer[iTank].g_bStasis)
 		{
 			g_esPlayer[iTank].g_bKeepCurrentType = false;
+			g_esPlayer[iTank].g_flLastAttackTime = GetGameTime();
 
 			char sOldName[33], sNewName[33];
 			vGetTranslatedName(sOldName, sizeof sOldName, .type = g_esPlayer[iTank].g_iOldTankType);
@@ -14596,7 +14545,6 @@ void vTankSpawnFrame(DataPack pack)
 			vParticleEffects(iTank);
 			vResetTankSpeed(iTank, false);
 			vSetTankProps(iTank);
-			vSetTankAttackInterval(iTank);
 			vSetTankThrowInterval(iTank);
 
 			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
@@ -15051,7 +14999,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
 					{
-						if (bIsTankSupported(victim) && bRewarded)
+						if (bIsTank(victim) && bRewarded)
 						{
 							flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 							if (flDamage > 0.0)
@@ -15869,6 +15817,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing");
 	vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound");
 	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit");
+	vSetupDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack");
 	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create");
 	vSetupDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate");
 	vSetupDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease");
@@ -15991,6 +15940,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound", Hook_Post, mreTankClawGroundPoundPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack", Hook_Pre, mreTankClawPrimaryAttackPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleasePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleasePost, toggle);
@@ -17300,6 +17250,23 @@ MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 				TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 			}
 		}
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTankClawPrimaryAttackPre(int pThis)
+{
+	int iTank = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsTank(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
+	{
+		float flCurrentTime = GetGameTime();
+		if ((g_esPlayer[iTank].g_flLastAttackTime + g_esCache[iTank].g_flAttackInterval) > flCurrentTime)
+		{
+			return MRES_Supercede;
+		}
+
+		g_esPlayer[iTank].g_flLastAttackTime = flCurrentTime;
 	}
 
 	return MRES_Ignored;
@@ -19601,19 +19568,6 @@ Action tTimerRemoveTimescale(Handle timer, int ref)
 
 	AcceptEntityInput(iTimescale, "Stop");
 	RemoveEntity(iTimescale);
-
-	return Plugin_Continue;
-}
-
-Action tTimerResetAttackDelay(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankSupported(iTank))
-	{
-		return Plugin_Stop;
-	}
-
-	g_esPlayer[iTank].g_bAttackedAgain = false;
 
 	return Plugin_Continue;
 }

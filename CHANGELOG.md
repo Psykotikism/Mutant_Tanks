@@ -22,6 +22,7 @@
 - Fixed the `sm_mutanttank` command not resetting its cooldown between `Versus`/`Scavenge` rounds.
 
 #### Settings
+- Fixed the `Attack Interval` setting causing Tanks to never use their primary attack. (Thanks to `KadabraZz` for reporting!)
 - Fixed the `Skip Taunt` setting not being exclusive to L4D2.
 
 #### Natives & Forwards
@@ -88,6 +89,7 @@
 - Added detour setup and signatures for the following functions:
 	- `CBaseEntity::GetGroundEntity`
 	- `CPipeBombProjectile::Create`
+	- `CTankClaw::PrimaryAttack`
 	- `CTerrorGameMovement::CheckJumpButton`
 	- `CTerrorGun::FireBullet` (L4D1)
 	- `CTerrorGun::Use`

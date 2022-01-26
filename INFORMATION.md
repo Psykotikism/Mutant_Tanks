@@ -1950,7 +1950,6 @@
 		"Enhancements"
 		{
 			// Every Mutant Tank can only attack every time this many seconds passes.
-			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -4964,7 +4963,6 @@
 		"Enhancements"
 		{
 			// The Mutant Tank can only attack every time this many seconds passes.
-			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
