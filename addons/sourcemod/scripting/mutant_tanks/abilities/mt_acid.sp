@@ -926,7 +926,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 
 				vAcid(survivor, tank);
-				vEffect(survivor, tank, g_esAcidCache[tank].g_iAcidEffect, flags);
+				vScreenEffect(survivor, tank, g_esAcidCache[tank].g_iAcidEffect, flags);
 
 				char sTankName[33];
 				MT_GetTankName(tank, sTankName);

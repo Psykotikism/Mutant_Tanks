@@ -2090,7 +2090,6 @@
 			"Sweep Fist"				"0"
 
 			// Every Mutant Tank throws a rock every time this many seconds passes.
-			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -5103,7 +5102,6 @@
 			"Sweep Fist"				"0"
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
-			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --

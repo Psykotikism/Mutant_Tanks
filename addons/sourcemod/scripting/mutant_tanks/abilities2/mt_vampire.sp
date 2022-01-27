@@ -295,7 +295,7 @@ Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iDamage;
 					MT_TankMaxHealth(attacker, 3, (iMaxHealth + iTotalHealth));
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
-					vEffect(victim, attacker, g_esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
+					vScreenEffect(victim, attacker, g_esVampireCache[attacker].g_iVampireEffect, MT_ATTACK_CLAW);
 
 					if (g_esVampireCache[attacker].g_iVampireMessage == 1)
 					{

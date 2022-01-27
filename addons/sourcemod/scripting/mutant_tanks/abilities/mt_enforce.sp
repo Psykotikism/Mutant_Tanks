@@ -879,7 +879,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 				dpStopEnforce.WriteCell(GetClientUserId(tank));
 				dpStopEnforce.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esEnforceCache[tank].g_iEnforceEffect, flags);
+				vScreenEffect(survivor, tank, g_esEnforceCache[tank].g_iEnforceEffect, flags);
 
 				if (g_esEnforceCache[tank].g_iEnforceMessage & messages)
 				{

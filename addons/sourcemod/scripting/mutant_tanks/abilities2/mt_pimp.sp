@@ -830,7 +830,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpPimp.WriteCell(pos);
 				dpPimp.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esPimpCache[tank].g_iPimpEffect, flags);
+				vScreenEffect(survivor, tank, g_esPimpCache[tank].g_iPimpEffect, flags);
 
 				if (g_esPimpCache[tank].g_iPimpMessage & messages)
 				{

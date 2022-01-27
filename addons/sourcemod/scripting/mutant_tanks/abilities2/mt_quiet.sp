@@ -837,7 +837,7 @@ void vQuietHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpStopQuiet.WriteCell(GetClientUserId(tank));
 				dpStopQuiet.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esQuietCache[tank].g_iQuietEffect, flags);
+				vScreenEffect(survivor, tank, g_esQuietCache[tank].g_iQuietEffect, flags);
 
 				if (g_esQuietCache[tank].g_iQuietMessage & messages)
 				{

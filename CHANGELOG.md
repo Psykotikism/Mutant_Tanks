@@ -94,6 +94,7 @@
 	- `CTerrorGun::FireBullet` (L4D1)
 	- `CTerrorGun::Use`
 	- `CTerrorPlayer::Extinguish`
+	- `CThrow::ActivateAbility`
 	- `CWeaponSpawn::Use`
 - Added detour setup, signatures, and patch offsets for `TankBehavior::InitialContainedAction`.
 
@@ -115,6 +116,7 @@
 - Updated the following settings to support the `0th` wave on finale maps (before finale events start):
 	- `Finale Types`
 	- `Finale Waves`
+- Changed the `Throw Interval` setting's logic.
 
 #### Translations
 - Updated English translations.

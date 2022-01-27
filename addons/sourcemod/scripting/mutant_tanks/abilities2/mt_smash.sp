@@ -902,7 +902,7 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				vSmash(survivor, tank);
 				ForcePlayerSuicide(survivor);
-				vEffect(survivor, tank, g_esSmashCache[tank].g_iSmashEffect, flags);
+				vScreenEffect(survivor, tank, g_esSmashCache[tank].g_iSmashEffect, flags);
 
 				if (g_esSmashCache[tank].g_iSmashMessage & messages)
 				{

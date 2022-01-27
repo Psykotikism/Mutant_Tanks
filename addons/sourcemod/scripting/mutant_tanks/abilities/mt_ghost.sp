@@ -1124,7 +1124,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				vEffect(survivor, tank, g_esGhostCache[tank].g_iGhostEffect, flags);
+				vScreenEffect(survivor, tank, g_esGhostCache[tank].g_iGhostEffect, flags);
 
 				switch (MT_GetRandomInt(1, 2))
 				{

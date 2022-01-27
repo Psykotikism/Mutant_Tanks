@@ -826,7 +826,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 				dpLagPosition.WriteCell(pos);
 				dpLagPosition.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esLagCache[tank].g_iLagEffect, flags);
+				vScreenEffect(survivor, tank, g_esLagCache[tank].g_iLagEffect, flags);
 
 				if (g_esLagCache[tank].g_iLagMessage & messages)
 				{

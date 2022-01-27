@@ -887,7 +887,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpChokeLaunch.WriteCell(messages);
 				dpChokeLaunch.WriteCell(pos);
 
-				vEffect(survivor, tank, g_esChokeCache[tank].g_iChokeEffect, flags);
+				vScreenEffect(survivor, tank, g_esChokeCache[tank].g_iChokeEffect, flags);
 
 				if (g_esChokeCache[tank].g_iChokeMessage & messages)
 				{

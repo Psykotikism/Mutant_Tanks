@@ -125,6 +125,13 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_COMBO_UPONDEATH 5 // when dying
 #define MT_COMBO_UPONINCAP 6 // when incapacitated
 
+// Fade effects
+#define MT_FADE_IN 0x0001
+#define MT_FADE_OUT 0x0002
+#define MT_FADE_MODULATE 0x0004
+#define MT_FADE_STAYOUT 0x0008
+#define MT_FADE_PURGE 0x0010
+
 // Logging flags
 #define MT_LOG_LIFE (1 << 0) // spawned or died
 #define MT_LOG_CHANGE (1 << 1) // mutant type changed
@@ -1407,16 +1414,23 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 	}
 }
 
-stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1)
+stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1, int type1 = MT_FADE_IN, int type2 = MT_FADE_PURGE)
 {
 	if (mode & flags)
 	{
 		int iColor[4];
-		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
-		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
-		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
-		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
+
+		switch (tank > 0)
+		{
+			case true: MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+			case false:
+			{
+				iColor[0] = (0 <= red <= 255) ? red : 255;
+				iColor[1] = (0 <= green <= 255) ? green : 255;
+				iColor[2] = (0 <= blue <= 255) ? blue : 255;
+				iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
+			}
+		}
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)
@@ -1424,7 +1438,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
 			bfWrite.WriteShort(800);
 			bfWrite.WriteShort(300);
-			bfWrite.WriteShort((0x0010|0x0001));
+			bfWrite.WriteShort(type1|type2);
 
 			for (int iPos = 0; iPos < sizeof iColor; iPos++)
 			{

@@ -854,7 +854,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 				dpElectric.WriteCell(iTime);
 
 				vAttachParticle(survivor, PARTICLE_ELECTRICITY2, 2.0, 30.0);
-				vEffect(survivor, tank, g_esElectricCache[tank].g_iElectricEffect, flags);
+				vScreenEffect(survivor, tank, g_esElectricCache[tank].g_iElectricEffect, flags);
 
 				if (g_esElectricCache[tank].g_iElectricMessage & messages)
 				{

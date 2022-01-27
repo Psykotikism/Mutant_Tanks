@@ -824,7 +824,7 @@ void vIdleHit(int survivor, int tank, float random, float chance, int enabled, i
 				{
 					g_esIdlePlayer[survivor].g_bAffected = true;
 
-					vEffect(survivor, tank, g_esIdleCache[tank].g_iIdleEffect, flags);
+					vScreenEffect(survivor, tank, g_esIdleCache[tank].g_iIdleEffect, flags);
 
 					if (g_esIdleCache[tank].g_iIdleMessage & messages)
 					{

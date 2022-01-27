@@ -510,6 +510,7 @@ enum struct esGeneral
 	DynamicDetour g_ddTankRockDetonateDetour;
 	DynamicDetour g_ddTankRockReleaseDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
+	DynamicDetour g_ddThrowActivateAbilityDetour;
 	DynamicDetour g_ddUseDetour;
 	DynamicDetour g_ddUseDetour2;
 	DynamicDetour g_ddVomitedUponDetour;
@@ -939,6 +940,7 @@ enum struct esPlayer
 	float g_flJumpHeightReward[4];
 	float g_flLastAttackTime;
 	float g_flLastJumpTime;
+	float g_flLastThrowTime;
 	float g_flLoopingVoicelineInterval[4];
 	float g_flPipeBombDuration;
 	float g_flPipeBombDurationReward[4];
@@ -5105,15 +5107,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (g_esGeneral.g_bPluginEnabled)
 	{
-		if (StrEqual(name, "ability_use"))
-		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTank(iTank))
-			{
-				vSetTankThrowInterval(iTank);
-			}
-		}
-		else if (StrEqual(name, "bot_player_replace"))
+		if (StrEqual(name, "bot_player_replace"))
 		{
 			int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 				iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId);
@@ -5465,56 +5459,52 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 void vHookEvents(bool hook)
 {
-	static bool bHooked, bCheck[42];
+	static bool bHooked, bCheck[38];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
 
-		bCheck[0] = HookEventEx("ability_use", vEventHandler);
-		bCheck[1] = HookEventEx("bot_player_replace", vEventHandler);
-		bCheck[2] = HookEventEx("choke_start", vEventHandler);
-		bCheck[3] = HookEventEx("create_panic_event", vEventHandler);
-		bCheck[4] = HookEventEx("entity_shoved", vEventHandler);
-		bCheck[5] = HookEventEx("finale_escape_start", vEventHandler);
-		bCheck[6] = HookEventEx("finale_start", vEventHandler, EventHookMode_Pre);
-		bCheck[7] = HookEventEx("finale_vehicle_leaving", vEventHandler);
-		bCheck[8] = HookEventEx("finale_vehicle_ready", vEventHandler);
-		bCheck[9] = HookEventEx("finale_rush", vEventHandler);
-		bCheck[10] = HookEventEx("finale_radio_start", vEventHandler);
-		bCheck[11] = HookEventEx("finale_radio_damaged", vEventHandler);
-		bCheck[12] = HookEventEx("finale_win", vEventHandler);
-		bCheck[13] = HookEventEx("heal_success", vEventHandler);
-		bCheck[14] = HookEventEx("infected_hurt", vEventHandler);
-		bCheck[15] = HookEventEx("lunge_pounce", vEventHandler);
-		bCheck[16] = HookEventEx("mission_lost", vEventHandler);
-		bCheck[17] = HookEventEx("player_bot_replace", vEventHandler);
-		bCheck[18] = HookEventEx("player_connect", vEventHandler, EventHookMode_Pre);
-		bCheck[19] = HookEventEx("player_death", vEventHandler, EventHookMode_Pre);
-		bCheck[20] = HookEventEx("player_disconnect", vEventHandler, EventHookMode_Pre);
-		bCheck[21] = HookEventEx("player_hurt", vEventHandler);
-		bCheck[22] = HookEventEx("player_incapacitated", vEventHandler);
-		bCheck[23] = HookEventEx("player_jump", vEventHandler);
-		bCheck[24] = HookEventEx("player_ledge_grab", vEventHandler);
-		bCheck[25] = HookEventEx("player_now_it", vEventHandler);
-		bCheck[26] = HookEventEx("player_no_longer_it", vEventHandler);
-		bCheck[27] = HookEventEx("player_shoved", vEventHandler);
-		bCheck[28] = HookEventEx("player_spawn", vEventHandler);
-		bCheck[29] = HookEventEx("player_team", vEventHandler);
-		bCheck[30] = HookEventEx("revive_success", vEventHandler);
-		bCheck[31] = HookEventEx("tongue_grab", vEventHandler);
-		bCheck[32] = HookEventEx("weapon_fire", vEventHandler);
-		bCheck[33] = HookEventEx("weapon_given", vEventHandler);
-		bCheck[34] = HookEventEx("witch_harasser_set", vEventHandler);
-		bCheck[35] = HookEventEx("witch_killed", vEventHandler);
+		bCheck[0] = HookEventEx("bot_player_replace", vEventHandler);
+		bCheck[1] = HookEventEx("choke_start", vEventHandler);
+		bCheck[2] = HookEventEx("create_panic_event", vEventHandler);
+		bCheck[3] = HookEventEx("entity_shoved", vEventHandler);
+		bCheck[4] = HookEventEx("finale_escape_start", vEventHandler);
+		bCheck[5] = HookEventEx("finale_start", vEventHandler, EventHookMode_Pre);
+		bCheck[6] = HookEventEx("finale_vehicle_leaving", vEventHandler);
+		bCheck[7] = HookEventEx("finale_vehicle_ready", vEventHandler);
+		bCheck[8] = HookEventEx("finale_rush", vEventHandler);
+		bCheck[9] = HookEventEx("finale_radio_start", vEventHandler);
+		bCheck[10] = HookEventEx("finale_radio_damaged", vEventHandler);
+		bCheck[11] = HookEventEx("finale_win", vEventHandler);
+		bCheck[12] = HookEventEx("heal_success", vEventHandler);
+		bCheck[13] = HookEventEx("infected_hurt", vEventHandler);
+		bCheck[14] = HookEventEx("lunge_pounce", vEventHandler);
+		bCheck[15] = HookEventEx("mission_lost", vEventHandler);
+		bCheck[16] = HookEventEx("player_bot_replace", vEventHandler);
+		bCheck[17] = HookEventEx("player_connect", vEventHandler, EventHookMode_Pre);
+		bCheck[18] = HookEventEx("player_death", vEventHandler, EventHookMode_Pre);
+		bCheck[19] = HookEventEx("player_disconnect", vEventHandler, EventHookMode_Pre);
+		bCheck[20] = HookEventEx("player_hurt", vEventHandler);
+		bCheck[21] = HookEventEx("player_incapacitated", vEventHandler);
+		bCheck[22] = HookEventEx("player_now_it", vEventHandler);
+		bCheck[23] = HookEventEx("player_no_longer_it", vEventHandler);
+		bCheck[24] = HookEventEx("player_shoved", vEventHandler);
+		bCheck[25] = HookEventEx("player_spawn", vEventHandler);
+		bCheck[26] = HookEventEx("player_team", vEventHandler);
+		bCheck[27] = HookEventEx("revive_success", vEventHandler);
+		bCheck[28] = HookEventEx("tongue_grab", vEventHandler);
+		bCheck[29] = HookEventEx("weapon_given", vEventHandler);
+		bCheck[30] = HookEventEx("witch_harasser_set", vEventHandler);
+		bCheck[31] = HookEventEx("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			bCheck[36] = HookEventEx("charger_carry_start", vEventHandler);
-			bCheck[37] = HookEventEx("charger_pummel_start", vEventHandler);
-			bCheck[38] = HookEventEx("finale_vehicle_incoming", vEventHandler);
-			bCheck[39] = HookEventEx("finale_bridge_lowering", vEventHandler);
-			bCheck[40] = HookEventEx("gauntlet_finale_start", vEventHandler);
-			bCheck[41] = HookEventEx("jockey_ride", vEventHandler);
+			bCheck[32] = HookEventEx("charger_carry_start", vEventHandler);
+			bCheck[33] = HookEventEx("charger_pummel_start", vEventHandler);
+			bCheck[34] = HookEventEx("finale_vehicle_incoming", vEventHandler);
+			bCheck[35] = HookEventEx("finale_bridge_lowering", vEventHandler);
+			bCheck[36] = HookEventEx("gauntlet_finale_start", vEventHandler);
+			bCheck[37] = HookEventEx("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(true);
@@ -5523,66 +5513,61 @@ void vHookEvents(bool hook)
 	else if (!hook && bHooked)
 	{
 		bHooked = false;
-		bool bPreHook[42];
+		bool bPreHook[38];
 		char sEvent[32];
 
 		for (int iPos = 0; iPos < (sizeof bCheck); iPos++)
 		{
 			switch (iPos)
 			{
-				case 0: sEvent = "ability_use";
-				case 1: sEvent = "bot_player_replace";
-				case 2: sEvent = "choke_start";
-				case 3: sEvent = "create_panic_event";
-				case 4: sEvent = "entity_shoved";
-				case 5: sEvent = "finale_escape_start";
-				case 6: sEvent = "finale_start";
-				case 7: sEvent = "finale_vehicle_leaving";
-				case 8: sEvent = "finale_vehicle_ready";
-				case 9: sEvent = "finale_rush";
-				case 10: sEvent = "finale_radio_start";
-				case 11: sEvent = "finale_radio_damaged";
-				case 12: sEvent = "finale_win";
-				case 13: sEvent = "heal_success";
-				case 14: sEvent = "infected_hurt";
-				case 15: sEvent = "lunge_pounce";
-				case 16: sEvent = "mission_lost";
-				case 17: sEvent = "player_bot_replace";
-				case 18: sEvent = "player_connect";
-				case 19: sEvent = "player_death";
-				case 20: sEvent = "player_disconnect";
-				case 21: sEvent = "player_hurt";
-				case 22: sEvent = "player_incapacitated";
-				case 23: sEvent = "player_jump";
-				case 24: sEvent = "player_ledge_grab";
-				case 25: sEvent = "player_now_it";
-				case 26: sEvent = "player_no_longer_it";
-				case 27: sEvent = "player_shoved";
-				case 28: sEvent = "player_spawn";
-				case 29: sEvent = "player_team";
-				case 30: sEvent = "revive_success";
-				case 31: sEvent = "tongue_grab";
-				case 32: sEvent = "weapon_fire";
-				case 33: sEvent = "weapon_given";
-				case 34: sEvent = "witch_harasser_set";
-				case 35: sEvent = "witch_killed";
-				case 36: sEvent = "charger_carry_start";
-				case 37: sEvent = "charger_pummel_start";
-				case 38: sEvent = "finale_vehicle_incoming";
-				case 39: sEvent = "finale_bridge_lowering";
-				case 40: sEvent = "gauntlet_finale_start";
-				case 41: sEvent = "jockey_ride";
+				case 0: sEvent = "bot_player_replace";
+				case 1: sEvent = "choke_start";
+				case 2: sEvent = "create_panic_event";
+				case 3: sEvent = "entity_shoved";
+				case 4: sEvent = "finale_escape_start";
+				case 5: sEvent = "finale_start";
+				case 6: sEvent = "finale_vehicle_leaving";
+				case 7: sEvent = "finale_vehicle_ready";
+				case 8: sEvent = "finale_rush";
+				case 9: sEvent = "finale_radio_start";
+				case 10: sEvent = "finale_radio_damaged";
+				case 11: sEvent = "finale_win";
+				case 12: sEvent = "heal_success";
+				case 13: sEvent = "infected_hurt";
+				case 14: sEvent = "lunge_pounce";
+				case 15: sEvent = "mission_lost";
+				case 16: sEvent = "player_bot_replace";
+				case 17: sEvent = "player_connect";
+				case 18: sEvent = "player_death";
+				case 19: sEvent = "player_disconnect";
+				case 20: sEvent = "player_hurt";
+				case 21: sEvent = "player_incapacitated";
+				case 22: sEvent = "player_now_it";
+				case 23: sEvent = "player_no_longer_it";
+				case 24: sEvent = "player_shoved";
+				case 25: sEvent = "player_spawn";
+				case 26: sEvent = "player_team";
+				case 27: sEvent = "revive_success";
+				case 28: sEvent = "tongue_grab";
+				case 29: sEvent = "weapon_given";
+				case 30: sEvent = "witch_harasser_set";
+				case 31: sEvent = "witch_killed";
+				case 32: sEvent = "charger_carry_start";
+				case 33: sEvent = "charger_pummel_start";
+				case 34: sEvent = "finale_vehicle_incoming";
+				case 35: sEvent = "finale_bridge_lowering";
+				case 36: sEvent = "gauntlet_finale_start";
+				case 37: sEvent = "jockey_ride";
 			}
 
 			if (bCheck[iPos])
 			{
-				bPreHook[iPos] = (iPos == 6) || (iPos >= 18 && iPos <= 20);
-
-				if (!g_bSecondGame && iPos >= 36 && iPos <= 41)
+				if (!g_bSecondGame && iPos >= 32 && iPos <= 37)
 				{
 					continue;
 				}
 
+				bPreHook[iPos] = (iPos == 5) || (iPos >= 17 && iPos <= 19);
 				UnhookEvent(sEvent, vEventHandler, (bPreHook[iPos] ? EventHookMode_Pre : EventHookMode_Post));
 			}
 		}
@@ -9352,6 +9337,7 @@ void vCopyTankStats(int tank, int newtank)
 	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
 	g_esPlayer[newtank].g_bTransformed = g_esPlayer[tank].g_bTransformed;
 	g_esPlayer[newtank].g_flLastAttackTime = g_esPlayer[tank].g_flLastAttackTime;
+	g_esPlayer[newtank].g_flLastThrowTime = g_esPlayer[tank].g_flLastThrowTime;
 	g_esPlayer[newtank].g_iBossStageCount = g_esPlayer[tank].g_iBossStageCount;
 	g_esPlayer[newtank].g_iClawCount = g_esPlayer[tank].g_iClawCount;
 	g_esPlayer[newtank].g_iClawDamage = g_esPlayer[tank].g_iClawDamage;
@@ -9708,7 +9694,6 @@ void vMutateTank(int tank, int type)
 			vSetTankModel(tank);
 			vSetTankHealth(tank);
 			vResetTankSpeed(tank, false);
-			vSetTankThrowInterval(tank);
 
 			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
@@ -9718,7 +9703,9 @@ void vMutateTank(int tank, int type)
 				case false: vAnnounceTankArrival(tank, "NoName");
 			}
 
-			g_esPlayer[tank].g_flLastAttackTime = GetGameTime();
+			float flCurrentTime = GetGameTime();
+			g_esPlayer[tank].g_flLastAttackTime = flCurrentTime;
+			g_esPlayer[tank].g_flLastThrowTime = flCurrentTime;
 			g_esPlayer[tank].g_iTankHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth");
 			g_esGeneral.g_iTankCount++;
 		}
@@ -9960,6 +9947,7 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_flLastAttackTime = 0.0;
+	g_esPlayer[tank].g_flLastThrowTime = 0.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iClawCount = 0;
 	g_esPlayer[tank].g_iClawDamage = 0;
@@ -10663,20 +10651,6 @@ void vSetTankRainbowColor(int tank)
 		{
 			SetEntityRenderMode(tank, RENDER_NORMAL);
 			SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
-		}
-	}
-}
-
-void vSetTankThrowInterval(int tank, float defValue = 5.0)
-{
-	if (bIsTank(tank))
-	{
-		float flInterval = (g_esCache[tank].g_flThrowInterval > 0.0) ? g_esCache[tank].g_flThrowInterval : defValue;
-		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
-		if (iAbility > 0)
-		{
-			SetEntPropFloat(iAbility, Prop_Send, "m_duration", flInterval);
-			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", (GetGameTime() + flInterval));
 		}
 	}
 }
@@ -14534,8 +14508,10 @@ void vTankSpawnFrame(DataPack pack)
 
 		if (!bIsInfectedGhost(iTank) && !g_esPlayer[iTank].g_bStasis)
 		{
+			float flCurrentTime = GetGameTime();
 			g_esPlayer[iTank].g_bKeepCurrentType = false;
-			g_esPlayer[iTank].g_flLastAttackTime = GetGameTime();
+			g_esPlayer[iTank].g_flLastAttackTime = flCurrentTime;
+			g_esPlayer[iTank].g_flLastThrowTime = flCurrentTime;
 
 			char sOldName[33], sNewName[33];
 			vGetTranslatedName(sOldName, sizeof sOldName, .type = g_esPlayer[iTank].g_iOldTankType);
@@ -14545,7 +14521,6 @@ void vTankSpawnFrame(DataPack pack)
 			vParticleEffects(iTank);
 			vResetTankSpeed(iTank, false);
 			vSetTankProps(iTank);
-			vSetTankThrowInterval(iTank);
 
 			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
@@ -15822,6 +15797,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate");
 	vSetupDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease");
 	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
+	vSetupDetour(g_esGeneral.g_ddThrowActivateAbilityDetour, "MTDetour_CThrow::ActivateAbility");
 	vSetupDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use");
 	vSetupDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use");
 	vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon");
@@ -15944,6 +15920,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleasePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleasePost, toggle);
+	vToggleDetour(g_esGeneral.g_ddThrowActivateAbilityDetour, "MTDetour_CThrow::ActivateAbility", Hook_Pre, mreThrowActivateAbilityPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
@@ -17366,6 +17343,23 @@ MRESReturn mreTestMeleeSwingCollisionPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_cvMTMeleeRange.IntValue = g_esGeneral.g_iDefaultMeleeRange;
 		g_esGeneral.g_iDefaultMeleeRange = -1;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreThrowActivateAbilityPre(int pThis)
+{
+	int iTank = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwnerEntity");
+	if (bIsTank(iTank) && g_esCache[iTank].g_flThrowInterval > 0.0)
+	{
+		float flCurrentTime = GetGameTime();
+		if ((g_esPlayer[iTank].g_flLastThrowTime + g_esCache[iTank].g_flThrowInterval) > flCurrentTime)
+		{
+			return MRES_Supercede;
+		}
+
+		g_esPlayer[iTank].g_flLastThrowTime = flCurrentTime;
 	}
 
 	return MRES_Ignored;
@@ -19653,7 +19647,7 @@ Action tTimerScreenEffect(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 #endif
-	vEffect(iSurvivor, 0, MT_ATTACK_RANGE, MT_ATTACK_RANGE, g_esPlayer[iSurvivor].g_iScreenColorVisual[0], g_esPlayer[iSurvivor].g_iScreenColorVisual[1], g_esPlayer[iSurvivor].g_iScreenColorVisual[2], g_esPlayer[iSurvivor].g_iScreenColorVisual[3]);
+	vScreenEffect(iSurvivor, 0, MT_ATTACK_RANGE, MT_ATTACK_RANGE, g_esPlayer[iSurvivor].g_iScreenColorVisual[0], g_esPlayer[iSurvivor].g_iScreenColorVisual[1], g_esPlayer[iSurvivor].g_iScreenColorVisual[2], g_esPlayer[iSurvivor].g_iScreenColorVisual[3]);
 
 	return Plugin_Continue;
 }

@@ -935,7 +935,7 @@ void vShoveHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpShove.WriteCell(pos);
 				dpShove.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esShoveCache[tank].g_iShoveEffect, flags);
+				vScreenEffect(survivor, tank, g_esShoveCache[tank].g_iShoveEffect, flags);
 
 				if (g_esShoveCache[tank].g_iShoveMessage & messages)
 				{

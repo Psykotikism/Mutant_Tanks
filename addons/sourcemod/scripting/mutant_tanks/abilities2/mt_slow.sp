@@ -904,7 +904,7 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpStopSlow.WriteCell(GetClientUserId(tank));
 				dpStopSlow.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
+				vScreenEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
 				EmitSoundToAll(SOUND_RAGE, survivor);
 
 				if (g_esSlowCache[tank].g_iSlowMessage & messages)

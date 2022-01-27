@@ -833,7 +833,7 @@ void vNullifyHit(int survivor, int tank, float random, float chance, int enabled
 				dpStopNullify.WriteCell(GetClientUserId(tank));
 				dpStopNullify.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esNullifyCache[tank].g_iNullifyEffect, flags);
+				vScreenEffect(survivor, tank, g_esNullifyCache[tank].g_iNullifyEffect, flags);
 
 				if (g_esNullifyCache[tank].g_iNullifyMessage & messages)
 				{
