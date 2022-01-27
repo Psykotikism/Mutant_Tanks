@@ -15725,7 +15725,7 @@ void vRegisterDetours()
 void vSetupDetour(DynamicDetour &detourHandle, const char[] name)
 {
 	int iIndex = iGetDetourIndex(name);
-	if (iIndex == -1 || g_esDetour[iIndex].g_iType == 0)
+	if (iIndex == -1 || g_esDetour[iIndex].g_iType == 0 || ((g_esDetour[iIndex].g_iType == 1 || g_esDetour[iIndex].g_iType == 3) && g_esDetour[iIndex].g_bBypassNeeded))
 	{
 		return;
 	}
@@ -15811,9 +15811,13 @@ void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode
 		return;
 	}
 
-	if (g_esDetour[iIndex].g_iType < 3 || (!override && g_esDetour[iIndex].g_iType == 3 && g_esDetour[iIndex].g_bBypassNeeded))
+	if (g_esDetour[iIndex].g_iType <= 3)
 	{
-		if (g_esDetour[iIndex].g_iType == 0)
+		if (g_esDetour[iIndex].g_iType == 0 || (!override && g_esDetour[iIndex].g_iType < 3))
+		{
+			return;
+		}
+		else if (!override && g_esDetour[iIndex].g_iType == 3 && g_esDetour[iIndex].g_bBypassNeeded)
 		{
 			return;
 		}
@@ -15839,7 +15843,7 @@ void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode
 
 	if (g_esDetour[iIndex].g_bLog)
 	{
-		vLogMessage(-1, _, "%s %sabled the \"%s\" detour.", MT_TAG, (toggle ? "En" : "Dis"), name);
+		vLogMessage(-1, _, "%s %sabled the \"%s\" %s-hook detour.", MT_TAG, (toggle ? "En" : "Dis"), name, ((mode == Hook_Pre) ? "pre" : "post"));
 	}
 }
 
