@@ -840,7 +840,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 				dpStopIce.WriteCell(GetClientUserId(tank));
 				dpStopIce.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esIceCache[tank].g_iIceEffect, flags);
+				vScreenEffect(survivor, tank, g_esIceCache[tank].g_iIceEffect, flags);
 
 				if (g_esIceCache[tank].g_iIceMessage & messages)
 				{

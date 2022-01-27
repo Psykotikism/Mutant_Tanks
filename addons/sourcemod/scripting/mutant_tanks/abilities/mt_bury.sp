@@ -941,7 +941,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpStopBury.WriteCell(GetClientUserId(tank));
 				dpStopBury.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esBuryCache[tank].g_iBuryEffect, flags);
+				vScreenEffect(survivor, tank, g_esBuryCache[tank].g_iBuryEffect, flags);
 
 				if (g_esBuryCache[tank].g_iBuryMessage & messages)
 				{

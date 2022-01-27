@@ -887,7 +887,7 @@ void vBombHit(int survivor, int tank, float random, float chance, int enabled, i
 				float flPos[3];
 				GetClientAbsOrigin(survivor, flPos);
 				vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
-				vEffect(survivor, tank, g_esBombCache[tank].g_iBombEffect, flags);
+				vScreenEffect(survivor, tank, g_esBombCache[tank].g_iBombEffect, flags);
 				EmitSoundToAll(SOUND_HIT, survivor);
 
 				if (g_esBombCache[tank].g_iBombMessage & messages)

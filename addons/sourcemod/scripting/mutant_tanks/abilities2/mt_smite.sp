@@ -883,7 +883,7 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				vSmite(survivor);
 				ForcePlayerSuicide(survivor);
-				vEffect(survivor, tank, g_esSmiteCache[tank].g_iSmiteEffect, flags);
+				vScreenEffect(survivor, tank, g_esSmiteCache[tank].g_iSmiteEffect, flags);
 
 				if (g_esSmiteCache[tank].g_iSmiteMessage & messages)
 				{

@@ -940,7 +940,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					iFlame = EntIndexToEntRef(iFlame);
 					vDeleteEntity(iFlame, 3.0);
 
-					vEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
+					vScreenEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
 					EmitSoundToAll(SOUND_FIRE, survivor);
 
 					float flDelay = (pos != -1) ? 0.1 : g_esRocketCache[tank].g_flRocketDelay;

@@ -779,7 +779,7 @@ void vDrug(int survivor, bool toggle, float angles[20])
 	flAngles[2] = toggle ? angles[MT_GetRandomInt(0, 100) % 20] : 0.0;
 	TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 
-	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
+	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? MT_FADE_OUT : (MT_FADE_IN|MT_FADE_PURGE);
 	iClients[0] = survivor;
 
 	if (toggle)
@@ -798,10 +798,10 @@ void vDrug(int survivor, bool toggle, float angles[20])
 			case true:
 			{
 				Protobuf pbSet = UserMessageToProtobuf(hTarget);
-				pbSet.SetInt("duration", toggle ? 255: 1536);
-				pbSet.SetInt("hold_time", toggle ? 255 : 1536);
+				pbSet.SetInt("duration", (toggle ? 255: 1536));
+				pbSet.SetInt("hold_time", (toggle ? 255 : 1536));
 				pbSet.SetInt("flags", iFlags);
-				pbSet.SetColor("clr", toggle ? iColor : iColor2);
+				pbSet.SetColor("clr", (toggle ? iColor : iColor2));
 			}
 			case false:
 			{
@@ -907,7 +907,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpDrug.WriteCell(pos);
 				dpDrug.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esDrugCache[tank].g_iDrugEffect, flags);
+				vScreenEffect(survivor, tank, g_esDrugCache[tank].g_iDrugEffect, flags);
 
 				if (g_esDrugCache[tank].g_iDrugMessage & messages)
 				{

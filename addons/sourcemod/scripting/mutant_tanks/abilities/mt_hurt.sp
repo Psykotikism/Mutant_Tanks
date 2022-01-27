@@ -846,7 +846,7 @@ void vHurtHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpHurt.WriteCell(pos);
 				dpHurt.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esHurtCache[tank].g_iHurtEffect, flags);
+				vScreenEffect(survivor, tank, g_esHurtCache[tank].g_iHurtEffect, flags);
 
 				switch (g_bSecondGame)
 				{

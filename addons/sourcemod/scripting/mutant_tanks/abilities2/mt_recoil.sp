@@ -822,7 +822,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 				dpStopRecoil.WriteCell(GetClientUserId(tank));
 				dpStopRecoil.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esRecoilCache[tank].g_iRecoilEffect, flags);
+				vScreenEffect(survivor, tank, g_esRecoilCache[tank].g_iRecoilEffect, flags);
 
 				if (g_esRecoilCache[tank].g_iRecoilMessage & messages)
 				{

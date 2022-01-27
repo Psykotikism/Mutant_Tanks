@@ -283,7 +283,7 @@ Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
 				vXiphos(attacker, victim, damage, true);
-				vEffect(victim, attacker, g_esXiphosCache[attacker].g_iXiphosEffect, MT_ATTACK_CLAW);
+				vScreenEffect(victim, attacker, g_esXiphosCache[attacker].g_iXiphosEffect, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))

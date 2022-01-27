@@ -1090,7 +1090,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 					SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
 				}
 
-				vEffect(survivor, tank, g_esHealCache[tank].g_iHealEffect, flags);
+				vScreenEffect(survivor, tank, g_esHealCache[tank].g_iHealEffect, flags);
 
 				if (g_esHealCache[tank].g_iHealMessage & messages)
 				{

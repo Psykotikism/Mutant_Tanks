@@ -920,7 +920,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpStopHypno.WriteCell(GetClientUserId(tank));
 				dpStopHypno.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esHypnoCache[tank].g_iHypnoEffect, flags);
+				vScreenEffect(survivor, tank, g_esHypnoCache[tank].g_iHypnoEffect, flags);
 
 				if (g_esHypnoCache[tank].g_iHypnoMessage & messages)
 				{

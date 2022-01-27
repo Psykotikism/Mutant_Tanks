@@ -1052,7 +1052,7 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpJump3.WriteCell(pos);
 				dpJump3.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esJumpCache[tank].g_iJumpEffect, flags);
+				vScreenEffect(survivor, tank, g_esJumpCache[tank].g_iJumpEffect, flags);
 
 				if (g_esJumpCache[tank].g_iJumpMessage & messages)
 				{

@@ -884,7 +884,7 @@ void vFireHit(int survivor, int tank, float random, float chance, int enabled, i
 				float flPos[3];
 				GetClientAbsOrigin(survivor, flPos);
 				vSpawnBreakProp(tank, flPos, 10.0, MODEL_GASCAN);
-				vEffect(survivor, tank, g_esFireCache[tank].g_iFireEffect, flags);
+				vScreenEffect(survivor, tank, g_esFireCache[tank].g_iFireEffect, flags);
 
 				switch (g_bSecondGame)
 				{

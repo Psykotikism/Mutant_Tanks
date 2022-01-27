@@ -857,7 +857,7 @@ void vDrunkHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpDrunkTurn.WriteCell(pos);
 				dpDrunkTurn.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esDrunkCache[tank].g_iDrunkEffect, flags);
+				vScreenEffect(survivor, tank, g_esDrunkCache[tank].g_iDrunkEffect, flags);
 
 				if (g_esDrunkCache[tank].g_iDrunkMessage & messages)
 				{

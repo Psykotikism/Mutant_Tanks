@@ -853,7 +853,7 @@ void vInvertHit(int survivor, int tank, float random, float chance, int enabled,
 				dpStopInvert.WriteCell(GetClientUserId(tank));
 				dpStopInvert.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esInvertCache[tank].g_iInvertEffect, flags);
+				vScreenEffect(survivor, tank, g_esInvertCache[tank].g_iInvertEffect, flags);
 
 				if (g_esInvertCache[tank].g_iInvertMessage & messages)
 				{

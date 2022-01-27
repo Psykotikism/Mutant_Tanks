@@ -844,7 +844,7 @@ void vPukeHit(int survivor, int tank, float random, float chance, int enabled, i
 				else
 				{
 					MT_VomitPlayer(survivor, tank);
-					vEffect(survivor, tank, g_esPukeCache[tank].g_iPukeEffect, flags);
+					vScreenEffect(survivor, tank, g_esPukeCache[tank].g_iPukeEffect, flags);
 				}
 
 				if (g_esPukeCache[tank].g_iPukeMessage & messages)
@@ -992,7 +992,7 @@ Action tTimerPukeHit(Handle timer, DataPack pack)
 
 	int iFlags = pack.ReadCell();
 	MT_VomitPlayer(iSurvivor, iTank);
-	vEffect(iSurvivor, iTank, g_esPukeCache[iTank].g_iPukeEffect, iFlags);
+	vScreenEffect(iSurvivor, iTank, g_esPukeCache[iTank].g_iPukeEffect, iFlags);
 
 	return Plugin_Continue;
 }

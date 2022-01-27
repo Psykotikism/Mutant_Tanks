@@ -791,7 +791,7 @@ void vAmmoHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				SetEntProp(survivor, Prop_Send, "m_iAmmo", g_esAmmoCache[tank].g_iAmmoAmount, .element = iGetWeaponOffset(iSlot));
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esAmmoCache[tank].g_iAmmoAmount);
-				vEffect(survivor, tank, g_esAmmoCache[tank].g_iAmmoEffect, flags);
+				vScreenEffect(survivor, tank, g_esAmmoCache[tank].g_iAmmoEffect, flags);
 
 				if (g_esAmmoCache[tank].g_iAmmoMessage & messages)
 				{

@@ -779,7 +779,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vBlind(int survivor, int intensity)
 {
-	int iTargets[2], iFlags = (intensity == 0) ? (0x0001|0x0010) : (0x0002|0x0008), iColor[4] = {0, 0, 0, 0};
+	int iTargets[2], iFlags = (intensity == 0) ? (MT_FADE_IN|MT_FADE_PURGE) : (MT_FADE_OUT|MT_FADE_STAYOUT), iColor[4] = {0, 0, 0, 0};
 	iTargets[0] = survivor;
 	iColor[3] = intensity;
 
@@ -905,7 +905,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 				dpStopBlind.WriteCell(iTankId);
 				dpStopBlind.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esBlindCache[tank].g_iBlindEffect, flags);
+				vScreenEffect(survivor, tank, g_esBlindCache[tank].g_iBlindEffect, flags);
 
 				switch (g_bSecondGame)
 				{

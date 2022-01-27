@@ -667,6 +667,19 @@
 			}
 
 			/**
+			 * CThrow::ActivateAbility()
+			 *
+			 * Note: Detouring as a pre-hook for blocking rock throws per Tank.
+			 **/
+			"MTDetour_CThrow::ActivateAbility"
+			{
+				"signature"	"CThrow::ActivateAbility"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
 			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * Note: Detouring as a pre-hook for patching weapon switches to secondary slots per player.
@@ -2887,6 +2900,28 @@
 				"mac"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
+			 * CThrow::ActivateAbility()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "HulkZombie.Throw.Fail" or "HulkZombie.Throw.Pickup" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3b. Search for "CThrow::`vftable'" to jump to the "CThrow" vtable.
+			 * 4b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5b. Look for the target function in the Windows binary.
+			 **/
+			"CThrow::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow15ActivateAbilityEv"
+				"mac"		"@_ZN6CThrow15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x85\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x15\x2A\x2A\x2A\x2A\x8B\x2A\x81\xE1\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x53\x8B\x2A\x85\x2A\x89"
+						/* ? ? ? ? ? ? 8B 85 ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B 15 ? ? ? ? 8B ? 81 E1 ? ? ? ? C1 ? ? 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? ? 39 ? ? 0F 85 ? ? ? ? 53 8B ? 85 ? 89 */
 			}
 
 			/**
@@ -5274,6 +5309,28 @@
 				"mac"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
+			 * CThrow::ActivateAbility()
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for the "HulkZombie.Throw.Fail" or "HulkZombie.Throw.Pickup" string.
+			 * 2a. One of the functions that references that string should be this function.
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3b. Search for "CThrow::`vftable'" to jump to the "CThrow" vtable.
+			 * 4b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5b. Look for the target function in the Windows binary.
+			 **/
+			"CThrow::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow15ActivateAbilityEv"
+				"mac"		"@_ZN6CThrow15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x15\x2A\x2A\x2A\x2A\x8B\x2A\x81\xE1\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74"
+						/* ? ? ? ? ? ? ? 8B 83 ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B 15 ? ? ? ? 8B ? 81 E1 ? ? ? ? 03 ? 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? ? 39 ? ? 0F 85 ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 74 */
 			}
 
 			/**

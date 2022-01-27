@@ -1075,7 +1075,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 				}
 
 				SetEntityGravity(survivor, g_esGravityCache[tank].g_flGravityValue);
-				vEffect(survivor, tank, g_esGravityCache[tank].g_iGravityEffect, flags);
+				vScreenEffect(survivor, tank, g_esGravityCache[tank].g_iGravityEffect, flags);
 				EmitSoundToAll(SOUND_BELL, survivor);
 
 				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : float(g_esGravityCache[tank].g_iGravityDuration);

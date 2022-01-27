@@ -822,7 +822,7 @@ void vAimlessHit(int survivor, int tank, float random, float chance, int enabled
 				dpStopAimless.WriteCell(GetClientUserId(tank));
 				dpStopAimless.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esAimlessCache[tank].g_iAimlessEffect, flags);
+				vScreenEffect(survivor, tank, g_esAimlessCache[tank].g_iAimlessEffect, flags);
 
 				if (g_esAimlessCache[tank].g_iAimlessMessage & messages)
 				{

@@ -1016,7 +1016,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				vEffect(survivor, tank, g_esRestartCache[tank].g_iRestartEffect, flags);
+				vScreenEffect(survivor, tank, g_esRestartCache[tank].g_iRestartEffect, flags);
 
 				if (g_esRestartCache[tank].g_iRestartMessage & messages)
 				{

@@ -888,7 +888,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 				dpVision.WriteCell(pos);
 				dpVision.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esVisionCache[tank].g_iVisionEffect, flags);
+				vScreenEffect(survivor, tank, g_esVisionCache[tank].g_iVisionEffect, flags);
 
 				if (g_esVisionCache[tank].g_iVisionMessage & messages)
 				{

@@ -942,7 +942,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 					dpWhirl.WriteCell(iAxis);
 					dpWhirl.WriteCell(iTime);
 
-					vEffect(survivor, tank, g_esWhirlCache[tank].g_iWhirlEffect, flags);
+					vScreenEffect(survivor, tank, g_esWhirlCache[tank].g_iWhirlEffect, flags);
 
 					if (g_esWhirlCache[tank].g_iWhirlMessage & messages)
 					{

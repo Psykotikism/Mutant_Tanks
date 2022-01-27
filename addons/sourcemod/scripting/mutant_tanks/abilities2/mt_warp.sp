@@ -1170,7 +1170,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				vEffect(survivor, tank, g_esWarpCache[tank].g_iWarpEffect, flags);
+				vScreenEffect(survivor, tank, g_esWarpCache[tank].g_iWarpEffect, flags);
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esWarpPlayer[tank].g_iCooldown2 == -1 || g_esWarpPlayer[tank].g_iCooldown2 < iTime))
 			{
