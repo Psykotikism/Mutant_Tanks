@@ -821,16 +821,6 @@
 			}
 
 			/**
-			 * CTerrorGameMovement::DoJump(Vector*)
-			 *
-			 * Note: Uses the signature for "CTerrorGameMovement::DoJump" to find the address.
-			 **/
-			"DoJumpStart"
-			{
-				"signature"	"CTerrorGameMovement::DoJump"
-			}
-
-			/**
 			 * This is the initial method for finding the default jump height (57.0) using its byte signature.
 			 * If this method fails, the plugin will rely on the "DoJumpValueRead" method instead.
 			 **/
