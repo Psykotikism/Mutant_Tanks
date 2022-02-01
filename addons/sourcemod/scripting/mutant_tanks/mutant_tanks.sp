@@ -103,6 +103,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_NULL "common/null.wav"
 #define SOUND_SPAWN "ui/pickup_secret01.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav" // Only available in L4D2
+#define SOUND_THROWN "player/tank/attack/thrown_missile_loop_1.wav"
 
 #define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 #define SPRITE_GLOW "sprites/glow01.vmt"
@@ -1700,12 +1701,14 @@ public void OnMapStart()
 	PrecacheSound(SOUND_METAL, true);
 	PrecacheSound(SOUND_NULL, true);
 	PrecacheSound(SOUND_SPAWN, true);
+	PrecacheSound(SOUND_THROWN, true);
 
 	vResetPlugin();
 	vResetLadyKiller(false);
 	vToggleLogging(1);
 
 	AddNormalSoundHook(FallSoundHook);
+	AddNormalSoundHook(RockSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -1786,6 +1789,7 @@ public void OnMapEnd()
 	vToggleLogging(0);
 
 	RemoveNormalSoundHook(FallSoundHook);
+	RemoveNormalSoundHook(RockSoundHook);
 }
 
 public void OnPluginEnd()
@@ -14884,6 +14888,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
+
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -15617,6 +15622,18 @@ Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATF
 	return Plugin_Continue;
 }
 
+Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+{
+	if (StrEqual(sample, SOUND_THROWN, false))
+	{
+		numClients = 0;
+
+		return Plugin_Changed;
+	}
+
+	return Plugin_Continue;
+}
+
 /**
  * UserMessage hooks
  **/
@@ -15920,8 +15937,6 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack", Hook_Pre, mreTankClawPrimaryAttackPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
-	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleasePre, toggle);
-	vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleasePost, toggle);
 	vToggleDetour(g_esGeneral.g_ddThrowActivateAbilityDetour, "MTDetour_CThrow::ActivateAbility", Hook_Pre, mreThrowActivateAbilityPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
@@ -15930,17 +15945,21 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon", Hook_Post, mreVomitedUponPost, toggle);
 
-	switch (g_esGeneral.g_iPlatformType > 0)
+	switch (g_esGeneral.g_iPlatformType == 2)
 	{
 		case true:
 		{
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingLinuxPre, toggle, 1);
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Post, mreStartHealingLinuxPost, toggle, 1);
+			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleaseLinuxPre, toggle);
+			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleaseLinuxPost, toggle);
 		}
 		case false:
 		{
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingWindowsPre, toggle, 1);
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Post, mreStartHealingWindowsPost, toggle, 1);
+			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleaseWindowsPre, toggle);
+			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleaseWindowsPost, toggle);
 		}
 	}
 }
@@ -17280,30 +17299,63 @@ MRESReturn mreTankRockDetonatePre(int pThis)
 	return MRES_Ignored;
 }
 
-MRESReturn mreTankRockReleasePre(int pThis, DHookParam hParams)
+MRESReturn mreTankRockReleaseLinuxPre(DHookParam hParams)
 {
-	if (bIsValidEntity(pThis))
+	int pThis = hParams.Get(1), iThrower = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
+	if (bIsTank(iThrower) && g_esCache[iThrower].g_iRockSound == 0)
 	{
-		int iThrower = GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
-		if (bIsTank(iThrower) && g_esCache[iThrower].g_iRockSound == 0)
+		static int iIndex = -1;
+		if (iIndex == -1)
 		{
-			static int iIndex = -1;
-			if (iIndex == -1)
-			{
-				iIndex = iGetPatchIndex("MTPatch_TankRockRelease");
-			}
+			iIndex = iGetPatchIndex("MTPatch_TankRockRelease");
+		}
 
-			if (iIndex != -1)
-			{
-				vInstallPatch(iIndex);
-			}
+		if (iIndex != -1)
+		{
+			vInstallPatch(iIndex);
 		}
 	}
 
 	return MRES_Ignored;
 }
 
-MRESReturn mreTankRockReleasePost(int pThis, DHookParam hParams)
+MRESReturn mreTankRockReleaseLinuxPost(DHookParam hParams)
+{
+	static int iIndex = -1;
+	if (iIndex == -1)
+	{
+		iIndex = iGetPatchIndex("MTPatch_TankRockRelease");
+	}
+
+	if (iIndex != -1)
+	{
+		vRemovePatch(iIndex);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTankRockReleaseWindowsPre(int pThis, DHookParam hParams)
+{
+	int iThrower = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
+	if (bIsTank(iThrower) && g_esCache[iThrower].g_iRockSound == 0)
+	{
+		static int iIndex = -1;
+		if (iIndex == -1)
+		{
+			iIndex = iGetPatchIndex("MTPatch_TankRockRelease");
+		}
+
+		if (iIndex != -1)
+		{
+			vInstallPatch(iIndex);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTankRockReleaseWindowsPost(int pThis, DHookParam hParams)
 {
 	static int iIndex = -1;
 	if (iIndex == -1)
@@ -18162,6 +18214,7 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
 	bool bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit))),
 		bReturn = false;
+
 	if (bit == -1 || bGuest)
 	{
 		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
@@ -19692,6 +19745,7 @@ Action tTimerTankCountCheck(Handle timer, DataPack pack)
 		iAmount = pack.ReadCell(),
 		iCount = iGetTankCount(true),
 		iCount2 = iGetTankCount(false);
+
 	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
