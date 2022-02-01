@@ -241,26 +241,85 @@
 			"MTDetour_CTankRock::OnRelease"
 			{
 				"signature"	"CTankRock::OnRelease"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
+				"linux"
 				{
-					"origin"
+					"callconv"	"cdecl"
+					"return"	"void"
+					"this"		"ignore"
+					"arguments"
 					{
-						"type"		"vectorptr"
+						"this"
+						{
+							"type"		"cbaseentity"
+							"register"	"eax"
+						}
+						"origin"
+						{
+							"type"		"vectorptr"
+							"register"	"edx"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
 					}
-					"angles"
+				}
+				"mac"
+				{
+					"callconv"	"thiscall"
+					"return"	"void"
+					"this"		"entity"
+					"arguments"
 					{
-						"type"		"vectorptr"
+						"origin"
+						{
+							"type"		"vectorptr"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
 					}
-					"velocity"
+				}
+				"windows"
+				{
+					"callconv"	"thiscall"
+					"return"	"void"
+					"this"		"entity"
+					"arguments"
 					{
-						"type"		"vectorptr"
-					}
-					"rotation"
-					{
-						"type"		"vectorptr"
+						"origin"
+						{
+							"type"		"vectorptr"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
 					}
 				}
 			}
@@ -1384,7 +1443,7 @@
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Deploy" // JMP instruction
 			{
-				"linux"		"332" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"linux"		"325" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"405" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"425" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1404,7 +1463,7 @@
 			 **/
 			"CTerrorGun::EquipSecondWeapon::Holster" // JMP instruction
 			{
-				"linux"		"297" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"linux"		"290" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"374" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"403" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1425,7 +1484,7 @@
 			 **/
 			"CTerrorGun::EquipSecondWeapon::SetActiveWeapon" // JMP instruction
 			{
-				"linux"		"316" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
+				"linux"		"309" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"393" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"417" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1470,7 +1529,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
 			{
-				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6892" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"6361" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5114" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -1486,7 +1545,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
 			{
-				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6926" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"6395" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5137" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -1503,7 +1562,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
 			{
-				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"5633" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"6201" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5255" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -1520,7 +1579,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
 			{
-				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7072" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"5274" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5502" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1536,7 +1595,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
 			{
-				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7235" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"5488" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5578" // start at 8B and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1552,7 +1611,7 @@
 			 **/
 			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
 			{
-				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7418" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"5712" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"5766" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -1614,7 +1673,7 @@
 			 **/
 			"CTerrorPlayer::OnFalling::Scream" // "Player.Fall"
 			{
-				"linux"		"397" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"1018" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"850" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"611" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1663,7 +1722,7 @@
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::PunchAngle" // punch angle
 			{
-				"linux"		"3521" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3609" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"2788" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1975" // start at 8D and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
@@ -1683,7 +1742,7 @@
 			 **/
 			"CTerrorPlayer::OnTakeDamage_Alive::Revive"
 			{
-				"linux"		"2247" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"2147" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"2538" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1775" // start at 6A and patch 9 bytes with NOPs (0x90)
 			}
@@ -1731,7 +1790,7 @@
 			 **/
 			"CTerrorWeapon::CanDeployFor::MoveType"
 			{
-				"linux"		"143" // start at 09 and patch 1 byte with CALL (0xFF)
+				"linux"		"149" // start at 09 and patch 1 byte with CALL (0xFF)
 				"mac"		"195" // start at 09 and patch 1 byte with CALL (0xFF)
 				"windows"	"140" // start at 09 and patch 1 byte with CALL (0xFF)
 			}
@@ -1770,7 +1829,7 @@
 			 **/
 			"InfectedExecAction::OnInjured::Requirement"
 			{
-				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
+				"linux"		"825" // start at F6 and patch 7 bytes with a different instruction
 				"mac"		"221" // start at F6 and patch 7 bytes with a different instruction
 				"windows"	"147" // start at 6A and patch 11 bytes with a different instruction
 			}
