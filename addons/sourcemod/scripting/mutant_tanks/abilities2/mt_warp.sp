@@ -1015,7 +1015,7 @@ void vWarp2(int tank, int other)
 	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
-	flOtherOrigin[2] += 20.0;
+	flOtherOrigin[2] += 50.0;
 
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
