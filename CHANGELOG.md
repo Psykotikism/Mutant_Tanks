@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.90 (2022)
+## Version 8.90 (February 1, 2022)
 
 ### Bug Fixes
 
@@ -45,7 +45,7 @@
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
 - Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
-- Added MacOS support. (Untested)
+- Added full MacOS support. (Untested)
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 - Added developer HUD panel for viewing currently alive Tanks.
@@ -73,6 +73,7 @@
 - Improved logging for patching system.
 - Changed the method for aggravating idle Tanks. (Thanks to `cravenge` for the code and gamedata info!)
 - Updated the logic for skipping the Tank's taunt animation. (Thanks to `sorallll` for the code!)
+- Added compatibility for several plugins that detour or patch functions.
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
@@ -97,6 +98,8 @@
 	- `CThrow::ActivateAbility`
 	- `CWeaponSpawn::Use`
 - Added detour setup, signatures, and patch offsets for `TankBehavior::InitialContainedAction`.
+- Updated documentation for finding several signatures and offsets.
+- L4D1: Updated a couple of offsets for the `1.0.4.1` update.
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.
@@ -117,6 +120,7 @@
 	- `Finale Types`
 	- `Finale Waves`
 - Changed the `Throw Interval` setting's logic.
+- All settings with a maximum value of `999999` are now limited to `99999`.
 
 #### Translations
 - Updated English translations.

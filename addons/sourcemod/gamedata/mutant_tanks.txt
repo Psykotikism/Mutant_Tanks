@@ -1320,7 +1320,7 @@
 			 **/
 			"CTankClaw::SweepFist::Check1"
 			{
-				"linux"		"1051" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"1052" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"2869" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -1337,7 +1337,7 @@
 			 **/
 			"CTankClaw::SweepFist::Check2"
 			{
-				"linux"		"3418" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3424" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"2878" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
@@ -2067,7 +2067,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN12CFirstAidKit12StartHealingENS_14HealTargetTypeE.part.43"
-				"mac"		"@_ZN12CFirstAidKit12StartHealingENS_14HealTargetTypeE.part.43"
+				"mac"		"@_ZN12CFirstAidKit12StartHealingENS_14HealTargetTypeE"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8D\xB1\x2A\x2A\x2A\x2A\x57\x89"
 						/* ? ? ? ? ? ? ? ? 53 55 56 8D B1 ? ? ? ? 57 89 */
 			}
@@ -2194,8 +2194,8 @@
 			"CTankClaw::SweepFist"
 			{
 				"library"	"server"
-				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_.constprop.248"
-				"mac"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_.constprop.248"
+				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_.constprop.246"
+				"mac"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x0D"
 						/* ? ? ? ? ? ? 55 56 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B 0D */
 			}
@@ -2233,7 +2233,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_.constprop.121"
-				"mac"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_.constprop.121"
+				"mac"		"@_ZN9CTankRock9OnReleaseERK6VectorRK6QAngleS2_S2_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC7\x86\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x57"
 						/* ? ? ? ? ? ? ? ? ? ? ? C7 86 ? ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? 57 */
 			}

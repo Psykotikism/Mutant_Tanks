@@ -2598,7 +2598,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
+	else if ((min == -1.0 || min == 1.0) && max == 99999.0)
 	{
 		bool bDamageSetting = StrContains(key, "damage", false) != -1,
 			bForceSetting = StrContains(key, "force", false) != -1,
@@ -2616,7 +2616,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 999999.0)
+	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 99999.0)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
@@ -2627,7 +2627,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == -1.0 || min == 0.0 || min == 0.1) && max == 999999.0)
+	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == -1.0 || min == 0.0 || min == 0.1) && max == 99999.0)
 	{
 		if (min == 0.0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
 		{
@@ -2650,7 +2650,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (StrContains(key, "height", false) != -1 && min == 0.1 && max == 999999.0)
+	else if (StrContains(key, "height", false) != -1 && min == 0.1 && max == 99999.0)
 	{
 		if (StrEqual(value, "shortest", false))
 		{
@@ -3011,7 +3011,7 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 			}
 		}
 	}
-	else if ((StrContains(key, "humanammo", false) != -1 || StrContains(key, "human ammo", false) != -1 || StrContains(key, "human_ammo", false) != -1 || StrContains(key, "hammo", false) != -1) && min == 0 && max == 999999)
+	else if ((StrContains(key, "humanammo", false) != -1 || StrContains(key, "human ammo", false) != -1 || StrContains(key, "human_ammo", false) != -1 || StrContains(key, "hammo", false) != -1) && min == 0 && max == 99999)
 	{
 		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
 		{
@@ -3022,7 +3022,7 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 			return max;
 		}
 	}
-	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == 0 || min == 1) && max == 999999)
+	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == 0 || min == 1) && max == 99999)
 	{
 		if (min == 0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
 		{
