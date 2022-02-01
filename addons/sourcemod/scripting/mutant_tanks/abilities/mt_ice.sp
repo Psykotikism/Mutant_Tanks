@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_ICE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_ICE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -56,7 +56,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ICE_SECTION2 "ice ability"
 #define MT_ICE_SECTION3 "ice_ability"
 #define MT_ICE_SECTION4 "ice"
-#define MT_ICE_SECTIONS MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4
 
 #define MT_MENU_ICE "Ice Ability"
 
@@ -202,13 +201,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdIceInfo(int client, int args)
+Action cmdIceInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -249,7 +248,7 @@ void vIceMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iIceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iIceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -337,7 +336,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -350,9 +349,9 @@ public Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vIceHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esIceCache[victim].g_iIceHitMode == 0 || g_esIceCache[victim].g_iIceHitMode == 2) && bIsSurvivor(attacker) && g_esIceCache[victim].g_iComboAbility == 0)
@@ -362,9 +361,9 @@ public Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vIceHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vIceHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -414,7 +413,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ICE_SECTION, false) || StrEqual(sSubset[iPos], MT_ICE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ICE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ICE_SECTION4, false))
 			{
@@ -448,11 +447,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esIceCache[tank].g_iIceHitMode == 0 || g_esIceCache[tank].g_iIceHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esIceCache[tank].g_iIceHitMode == 0 || g_esIceCache[tank].g_iIceHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vIceHit(survivor, tank, random, flChance, g_esIceCache[tank].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esIceCache[tank].g_iIceHitMode == 0 || g_esIceCache[tank].g_iIceHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esIceCache[tank].g_iIceHitMode == 0 || g_esIceCache[tank].g_iIceHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vIceHit(survivor, tank, random, flChance, g_esIceCache[tank].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -547,44 +546,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esIcePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIcePlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esIcePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIcePlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esIcePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIcePlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esIcePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIcePlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esIcePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIcePlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esIcePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIcePlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esIcePlayer[admin].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIcePlayer[admin].g_iIceAbility, value, 0, 1);
-		g_esIcePlayer[admin].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIcePlayer[admin].g_iIceEffect, value, 0, 7);
-		g_esIcePlayer[admin].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIcePlayer[admin].g_iIceMessage, value, 0, 3);
-		g_esIcePlayer[admin].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIcePlayer[admin].g_flIceChance, value, 0.0, 100.0);
-		g_esIcePlayer[admin].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIcePlayer[admin].g_flIceDuration, value, 0.1, 999999.0);
-		g_esIcePlayer[admin].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIcePlayer[admin].g_iIceHit, value, 0, 1);
-		g_esIcePlayer[admin].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIcePlayer[admin].g_iIceHitMode, value, 0, 2);
-		g_esIcePlayer[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIcePlayer[admin].g_flIceRange, value, 1.0, 999999.0);
-		g_esIcePlayer[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIcePlayer[admin].g_flIceRangeChance, value, 0.0, 100.0);
-		g_esIcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esIcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esIcePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIcePlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esIcePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIcePlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esIcePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIcePlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esIcePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIcePlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esIcePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIcePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esIcePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIcePlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esIcePlayer[admin].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIcePlayer[admin].g_iIceAbility, value, 0, 1);
+		g_esIcePlayer[admin].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIcePlayer[admin].g_iIceEffect, value, 0, 7);
+		g_esIcePlayer[admin].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIcePlayer[admin].g_iIceMessage, value, 0, 3);
+		g_esIcePlayer[admin].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIcePlayer[admin].g_flIceChance, value, 0.0, 100.0);
+		g_esIcePlayer[admin].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIcePlayer[admin].g_flIceDuration, value, 0.1, 99999.0);
+		g_esIcePlayer[admin].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIcePlayer[admin].g_iIceHit, value, 0, 1);
+		g_esIcePlayer[admin].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIcePlayer[admin].g_iIceHitMode, value, 0, 2);
+		g_esIcePlayer[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIcePlayer[admin].g_flIceRange, value, 1.0, 99999.0);
+		g_esIcePlayer[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIcePlayer[admin].g_flIceRangeChance, value, 0.0, 100.0);
+		g_esIcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esIceAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceAbility[type].g_iComboAbility, value, 0, 1);
-		g_esIceAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esIceAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esIceAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esIceAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esIceAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esIceAbility[type].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceAbility[type].g_iIceAbility, value, 0, 1);
-		g_esIceAbility[type].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceAbility[type].g_iIceEffect, value, 0, 7);
-		g_esIceAbility[type].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceAbility[type].g_iIceMessage, value, 0, 3);
-		g_esIceAbility[type].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceAbility[type].g_flIceChance, value, 0.0, 100.0);
-		g_esIceAbility[type].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceAbility[type].g_flIceDuration, value, 0.1, 999999.0);
-		g_esIceAbility[type].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceAbility[type].g_iIceHit, value, 0, 1);
-		g_esIceAbility[type].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceAbility[type].g_iIceHitMode, value, 0, 2);
-		g_esIceAbility[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceAbility[type].g_flIceRange, value, 1.0, 999999.0);
-		g_esIceAbility[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceAbility[type].g_flIceRangeChance, value, 0.0, 100.0);
-		g_esIceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esIceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esIceAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceAbility[type].g_iComboAbility, value, 0, 1);
+		g_esIceAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esIceAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esIceAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esIceAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esIceAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esIceAbility[type].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceAbility[type].g_iIceAbility, value, 0, 1);
+		g_esIceAbility[type].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceAbility[type].g_iIceEffect, value, 0, 7);
+		g_esIceAbility[type].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceAbility[type].g_iIceMessage, value, 0, 3);
+		g_esIceAbility[type].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceAbility[type].g_flIceChance, value, 0.0, 100.0);
+		g_esIceAbility[type].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceAbility[type].g_flIceDuration, value, 0.1, 99999.0);
+		g_esIceAbility[type].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceAbility[type].g_iIceHit, value, 0, 1);
+		g_esIceAbility[type].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceAbility[type].g_iIceHitMode, value, 0, 2);
+		g_esIceAbility[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceAbility[type].g_flIceRange, value, 1.0, 99999.0);
+		g_esIceAbility[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceAbility[type].g_flIceRangeChance, value, 0.0, 100.0);
+		g_esIceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -695,7 +694,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esIceCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esIceCache[tank].g_iIceAbility == 1 && g_esIceCache[tank].g_iComboAbility == 0)
 	{
-		vIceAbility(tank, GetRandomFloat(0.1, 100.0));
+		vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -720,7 +719,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esIcePlayer[tank].g_iCooldown == -1 || g_esIcePlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vIceAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "IceHuman3", (g_esIcePlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -729,11 +728,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vIceChangeType(int tank)
+void vIceChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveIce(tank);
 }
 
@@ -836,7 +840,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 				dpStopIce.WriteCell(GetClientUserId(tank));
 				dpStopIce.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esIceCache[tank].g_iIceEffect, flags);
+				vScreenEffect(survivor, tank, g_esIceCache[tank].g_iIceEffect, flags);
 
 				if (g_esIceCache[tank].g_iIceMessage & messages)
 				{
@@ -918,7 +922,7 @@ void vStopIce(int survivor)
 	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 }
 
-public Action tTimerIceCombo(Handle timer, DataPack pack)
+Action tTimerIceCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -935,7 +939,7 @@ public Action tTimerIceCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerIceCombo2(Handle timer, DataPack pack)
+Action tTimerIceCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -955,11 +959,11 @@ public Action tTimerIceCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esIceCache[iTank].g_iIceHitMode == 0 || g_esIceCache[iTank].g_iIceHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esIceCache[iTank].g_iIceHitMode == 0 || g_esIceCache[iTank].g_iIceHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vIceHit(iSurvivor, iTank, flRandom, flChance, g_esIceCache[iTank].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esIceCache[iTank].g_iIceHitMode == 0 || g_esIceCache[iTank].g_iIceHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esIceCache[iTank].g_iIceHitMode == 0 || g_esIceCache[iTank].g_iIceHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vIceHit(iSurvivor, iTank, flRandom, flChance, g_esIceCache[iTank].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -967,7 +971,7 @@ public Action tTimerIceCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopIce(Handle timer, DataPack pack)
+Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

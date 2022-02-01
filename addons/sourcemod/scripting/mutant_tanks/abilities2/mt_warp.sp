@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_WARP_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -47,30 +44,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_WARP_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -83,7 +59,6 @@ public void OnAllPluginsLoaded()
 #define MT_WARP_SECTION2 "warp ability"
 #define MT_WARP_SECTION3 "warp_ability"
 #define MT_WARP_SECTION4 "warp"
-#define MT_WARP_SECTIONS MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4
 
 #define MT_MENU_WARP "Warp Ability"
 
@@ -107,6 +82,7 @@ enum struct esWarpPlayer
 	float g_flWarpInterval;
 	float g_flWarpRange;
 	float g_flWarpRangeChance;
+	float g_flWarpRockChance;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -128,6 +104,7 @@ enum struct esWarpPlayer
 	int g_iWarpHitMode;
 	int g_iWarpMessage;
 	int g_iWarpMode;
+	int g_iWarpRockBreak;
 }
 
 esWarpPlayer g_esWarpPlayer[MAXPLAYERS + 1];
@@ -139,6 +116,7 @@ enum struct esWarpAbility
 	float g_flWarpInterval;
 	float g_flWarpRange;
 	float g_flWarpRangeChance;
+	float g_flWarpRockChance;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
@@ -155,6 +133,7 @@ enum struct esWarpAbility
 	int g_iWarpHitMode;
 	int g_iWarpMessage;
 	int g_iWarpMode;
+	int g_iWarpRockBreak;
 }
 
 esWarpAbility g_esWarpAbility[MT_MAXTYPES + 1];
@@ -166,6 +145,7 @@ enum struct esWarpCache
 	float g_flWarpInterval;
 	float g_flWarpRange;
 	float g_flWarpRangeChance;
+	float g_flWarpRockChance;
 
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -180,6 +160,7 @@ enum struct esWarpCache
 	int g_iWarpHitMode;
 	int g_iWarpMessage;
 	int g_iWarpMode;
+	int g_iWarpRockBreak;
 }
 
 esWarpCache g_esWarpCache[MAXPLAYERS + 1];
@@ -199,7 +180,9 @@ public void OnPluginStart()
 	g_esWarpGeneral.g_iAttributeFlagsOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 	if (g_esWarpGeneral.g_iAttributeFlagsOffset == -1)
 	{
-		LogError("%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags", MT_TAG);
+		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -281,13 +264,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdWarpInfo(int client, int args)
+Action cmdWarpInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -329,7 +312,7 @@ void vWarpMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -427,7 +410,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -440,9 +423,9 @@ public Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWarpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esWarpCache[attacker].g_flWarpChance, g_esWarpCache[attacker].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vWarpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esWarpCache[attacker].g_flWarpChance, g_esWarpCache[attacker].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esWarpCache[victim].g_iWarpHitMode == 0 || g_esWarpCache[victim].g_iWarpHitMode == 2) && bIsSurvivor(attacker) && g_esWarpCache[victim].g_iComboAbility == 0)
@@ -452,9 +435,9 @@ public Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vWarpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esWarpCache[victim].g_flWarpChance, g_esWarpCache[victim].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vWarpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esWarpCache[victim].g_flWarpChance, g_esWarpCache[victim].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -484,7 +467,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWarpCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+void vWarpCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
@@ -504,7 +487,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
 			{
@@ -552,11 +535,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vWarpHit(survivor, tank, random, flChance, g_esWarpCache[tank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esWarpCache[tank].g_iWarpHitMode == 0 || g_esWarpCache[tank].g_iWarpHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vWarpHit(survivor, tank, random, flChance, g_esWarpCache[tank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -571,6 +554,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteFloat(flChance);
 								dpCombo.WriteString(classname);
 							}
+						}
+					}
+					case MT_COMBO_ROCKBREAK:
+					{
+						if (g_esWarpCache[tank].g_iWarpRockBreak == 1 && bIsValidEntity(weapon))
+						{
+							vWarpRockBreak2(tank, weapon, random, iPos);
 						}
 					}
 				}
@@ -614,6 +604,8 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWarpAbility[iIndex].g_iWarpMode = 0;
 				g_esWarpAbility[iIndex].g_flWarpRange = 150.0;
 				g_esWarpAbility[iIndex].g_flWarpRangeChance = 15.0;
+				g_esWarpAbility[iIndex].g_iWarpRockBreak = 0;
+				g_esWarpAbility[iIndex].g_flWarpRockChance = 33.3;
 			}
 		}
 		case 3:
@@ -642,6 +634,8 @@ public void MT_OnConfigsLoad(int mode)
 					g_esWarpPlayer[iPlayer].g_iWarpMode = 0;
 					g_esWarpPlayer[iPlayer].g_flWarpRange = 0.0;
 					g_esWarpPlayer[iPlayer].g_flWarpRangeChance = 0.0;
+					g_esWarpPlayer[iPlayer].g_iWarpRockBreak = 0;
+					g_esWarpPlayer[iPlayer].g_flWarpRockChance = 0.0;
 				}
 			}
 		}
@@ -656,50 +650,54 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esWarpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esWarpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esWarpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esWarpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esWarpPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esWarpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esWarpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esWarpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, 0, 3);
-		g_esWarpPlayer[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpPlayer[admin].g_iWarpEffect, value, 0, 7);
-		g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, 0, 7);
-		g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, 0.0, 100.0);
-		g_esWarpPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpPlayer[admin].g_iWarpHit, value, 0, 1);
-		g_esWarpPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpPlayer[admin].g_iWarpHitMode, value, 0, 2);
-		g_esWarpPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpPlayer[admin].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esWarpPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpPlayer[admin].g_iWarpMode, value, 0, 3);
-		g_esWarpPlayer[admin].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpPlayer[admin].g_flWarpRange, value, 1.0, 999999.0);
-		g_esWarpPlayer[admin].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpPlayer[admin].g_flWarpRangeChance, value, 0.0, 100.0);
-		g_esWarpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWarpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esWarpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esWarpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esWarpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esWarpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esWarpPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esWarpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esWarpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esWarpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esWarpPlayer[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpPlayer[admin].g_iWarpAbility, value, 0, 3);
+		g_esWarpPlayer[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpPlayer[admin].g_iWarpEffect, value, 0, 7);
+		g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, 0, 7);
+		g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpPlayer[admin].g_iWarpHit, value, 0, 1);
+		g_esWarpPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpPlayer[admin].g_iWarpHitMode, value, 0, 2);
+		g_esWarpPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpPlayer[admin].g_flWarpInterval, value, 0.1, 99999.0);
+		g_esWarpPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpPlayer[admin].g_iWarpMode, value, 0, 3);
+		g_esWarpPlayer[admin].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpPlayer[admin].g_flWarpRange, value, 1.0, 99999.0);
+		g_esWarpPlayer[admin].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpPlayer[admin].g_flWarpRangeChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpPlayer[admin].g_iWarpRockBreak, value, 0, 1);
+		g_esWarpPlayer[admin].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpPlayer[admin].g_flWarpRockChance, value, 0.0, 100.0);
+		g_esWarpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWarpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esWarpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpAbility[type].g_iComboAbility, value, 0, 1);
-		g_esWarpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esWarpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esWarpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esWarpAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esWarpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpAbility[type].g_iHumanMode, value, 0, 1);
-		g_esWarpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esWarpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, 0, 3);
-		g_esWarpAbility[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpAbility[type].g_iWarpEffect, value, 0, 7);
-		g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, 0, 7);
-		g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, 0.0, 100.0);
-		g_esWarpAbility[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpAbility[type].g_iWarpHit, value, 0, 1);
-		g_esWarpAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpAbility[type].g_iWarpHitMode, value, 0, 2);
-		g_esWarpAbility[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpAbility[type].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esWarpAbility[type].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpAbility[type].g_iWarpMode, value, 0, 3);
-		g_esWarpAbility[type].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpAbility[type].g_flWarpRange, value, 1.0, 999999.0);
-		g_esWarpAbility[type].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTIONS, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpAbility[type].g_flWarpRangeChance, value, 0.0, 100.0);
-		g_esWarpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWarpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esWarpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpAbility[type].g_iComboAbility, value, 0, 1);
+		g_esWarpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esWarpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esWarpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esWarpAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esWarpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpAbility[type].g_iHumanMode, value, 0, 1);
+		g_esWarpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esWarpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esWarpAbility[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpAbility[type].g_iWarpAbility, value, 0, 3);
+		g_esWarpAbility[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpAbility[type].g_iWarpEffect, value, 0, 7);
+		g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, 0, 7);
+		g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpAbility[type].g_iWarpHit, value, 0, 1);
+		g_esWarpAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpAbility[type].g_iWarpHitMode, value, 0, 2);
+		g_esWarpAbility[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpAbility[type].g_flWarpInterval, value, 0.1, 99999.0);
+		g_esWarpAbility[type].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpAbility[type].g_iWarpMode, value, 0, 3);
+		g_esWarpAbility[type].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpAbility[type].g_flWarpRange, value, 1.0, 99999.0);
+		g_esWarpAbility[type].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpAbility[type].g_flWarpRangeChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpAbility[type].g_iWarpRockBreak, value, 0, 1);
+		g_esWarpAbility[type].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpAbility[type].g_flWarpRockChance, value, 0.0, 100.0);
+		g_esWarpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWarpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -714,6 +712,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esWarpCache[tank].g_flWarpInterval = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpAbility[type].g_flWarpInterval);
 	g_esWarpCache[tank].g_flWarpRange = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpAbility[type].g_flWarpRange);
 	g_esWarpCache[tank].g_flWarpRangeChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpAbility[type].g_flWarpRangeChance);
+	g_esWarpCache[tank].g_flWarpRockChance = flGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpAbility[type].g_flWarpRockChance);
 	g_esWarpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpAbility[type].g_iComboAbility);
 	g_esWarpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpAbility[type].g_iHumanAbility);
 	g_esWarpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpAbility[type].g_iHumanAmmo);
@@ -728,6 +727,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esWarpCache[tank].g_iWarpHitMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode);
 	g_esWarpCache[tank].g_iWarpMessage = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpAbility[type].g_iWarpMessage);
 	g_esWarpCache[tank].g_iWarpMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpAbility[type].g_iWarpMode);
+	g_esWarpCache[tank].g_iWarpRockBreak = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpAbility[type].g_iWarpRockBreak);
 	g_esWarpPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -800,7 +800,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esWarpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWarpCache[tank].g_iWarpAbility > 0 && g_esWarpCache[tank].g_iComboAbility == 0)
 	{
 		vWarpAbility(tank, false);
-		vWarpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vWarpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -879,7 +879,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman6", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
-					case false: vWarpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case false: vWarpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -905,11 +905,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWarpChangeType(int tank)
+void vWarpChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveWarp(tank);
 }
 
@@ -920,6 +925,23 @@ public void MT_OnPostTankSpawn(int tank)
 #endif
 {
 	vWarpRange(tank);
+}
+
+#if defined MT_ABILITIES_MAIN2
+void vWarpRockBreak(int tank, int rock)
+#else
+public void MT_OnRockBreak(int tank, int rock)
+#endif
+{
+	if (bIsAreaNarrow(tank, g_esWarpCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWarpPlayer[tank].g_iTankType) || (g_esWarpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWarpCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[tank].g_iAccessFlags)) || g_esWarpCache[tank].g_iHumanAbility == 0)))
+	{
+		return;
+	}
+
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esWarpCache[tank].g_iWarpRockBreak == 1 && g_esWarpCache[tank].g_iComboAbility == 0)
+	{
+		vWarpRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
+	}
 }
 
 void vWarpCopyStats2(int oldTank, int newTank)
@@ -993,9 +1015,7 @@ void vWarp2(int tank, int other)
 	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
-	flOtherOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
-	flOtherOrigin[1] += (50.0 * (Sine(DegToRad(flOtherAngles[1]))));
-	flOtherOrigin[2] += 5.0;
+	flOtherOrigin[2] += 20.0;
 
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
@@ -1150,7 +1170,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				vEffect(survivor, tank, g_esWarpCache[tank].g_iWarpEffect, flags);
+				vScreenEffect(survivor, tank, g_esWarpCache[tank].g_iWarpEffect, flags);
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esWarpPlayer[tank].g_iCooldown2 == -1 || g_esWarpPlayer[tank].g_iCooldown2 < iTime))
 			{
@@ -1185,31 +1205,59 @@ void vWarpRange(int tank)
 	}
 }
 
+void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
+{
+	int iLauncher = GetEntPropEnt(rock, Prop_Data, "m_hOwnerEntity");
+	if (bIsValidEntity(iLauncher))
+	{
+		int iThrower = GetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity");
+		if (bIsTank(iThrower) && iThrower == tank)
+		{
+			return;
+		}
+	}
+
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esWarpCache[tank].g_flWarpRockChance;
+	if (random <= flChance)
+	{
+		float flTankPos[3], flTankAngles[3];
+		GetClientAbsOrigin(tank, flTankPos);
+		GetClientAbsAngles(tank, flTankAngles);
+
+		float flRockPos[3], flRockAngles[3];
+		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
+		GetEntPropVector(rock, Prop_Data, "m_angRotation", flRockAngles);
+
+		vAttachParticle(tank, PARTICLE_WARP, 1.0);
+		EmitSoundToAll(SOUND_WARP, tank);
+		TeleportEntity(tank, flRockPos, flRockAngles, view_as<float>({0.0, 0.0, 0.0}));
+
+		if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
+		{
+			char sTankName[33];
+			MT_GetTankName(tank, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Warp4", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp4", LANG_SERVER, sTankName);
+		}
+	}
+}
+
 bool bIsInsideSaferoom(int survivor)
 {
-#if defined _l4dh_included
-	if (g_bLeft4DHooksInstalled || g_esWarpGeneral.g_hSDKGetLastKnownArea == null)
+	int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
+	if (iArea)
 	{
-		return L4D_IsInLastCheckpoint(survivor);
-	}
-#endif
-	if (g_esWarpGeneral.g_iAttributeFlagsOffset != -1)
-	{
-		int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
-		if (iArea)
+		int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esWarpGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
+		if ((iAttributeFlags & 2048))
 		{
-			int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esWarpGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
-			if ((iAttributeFlags & 2048))
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 
 	return false;
 }
 
-public Action tTimerWarpCombo(Handle timer, DataPack pack)
+Action tTimerWarpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1226,7 +1274,7 @@ public Action tTimerWarpCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarpCombo2(Handle timer, DataPack pack)
+Action tTimerWarpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1242,7 +1290,7 @@ public Action tTimerWarpCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarpCombo3(Handle timer, DataPack pack)
+Action tTimerWarpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1261,11 +1309,11 @@ public Action tTimerWarpCombo3(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vWarpHit(iSurvivor, iTank, flRandom, flChance, g_esWarpCache[iTank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esWarpCache[iTank].g_iWarpHitMode == 0 || g_esWarpCache[iTank].g_iWarpHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vWarpHit(iSurvivor, iTank, flRandom, flChance, g_esWarpCache[iTank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
@@ -1273,7 +1321,7 @@ public Action tTimerWarpCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerWarp(Handle timer, DataPack pack)
+Action tTimerWarp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

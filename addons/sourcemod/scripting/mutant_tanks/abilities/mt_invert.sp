@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_INVERT_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_INVERT_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_INVERT_SECTION2 "invert ability"
 #define MT_INVERT_SECTION3 "invert_ability"
 #define MT_INVERT_SECTION4 "invert"
-#define MT_INVERT_SECTIONS MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4
 
 #define MT_MENU_INVERT "Invert Ability"
 
@@ -198,13 +197,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdInvertInfo(int client, int args)
+Action cmdInvertInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -245,7 +244,7 @@ void vInvertMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iInvertMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iInvertMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -376,7 +375,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -389,9 +388,9 @@ public Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vInvertHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esInvertCache[attacker].g_flInvertChance, g_esInvertCache[attacker].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vInvertHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esInvertCache[attacker].g_flInvertChance, g_esInvertCache[attacker].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esInvertCache[victim].g_iInvertHitMode == 0 || g_esInvertCache[victim].g_iInvertHitMode == 2) && bIsSurvivor(attacker) && g_esInvertCache[victim].g_iComboAbility == 0)
@@ -401,9 +400,9 @@ public Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vInvertHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esInvertCache[victim].g_flInvertChance, g_esInvertCache[victim].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vInvertHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esInvertCache[victim].g_flInvertChance, g_esInvertCache[victim].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -453,7 +452,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_INVERT_SECTION, false) || StrEqual(sSubset[iPos], MT_INVERT_SECTION2, false) || StrEqual(sSubset[iPos], MT_INVERT_SECTION3, false) || StrEqual(sSubset[iPos], MT_INVERT_SECTION4, false))
 			{
@@ -487,11 +486,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esInvertCache[tank].g_iInvertHitMode == 0 || g_esInvertCache[tank].g_iInvertHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esInvertCache[tank].g_iInvertHitMode == 0 || g_esInvertCache[tank].g_iInvertHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vInvertHit(survivor, tank, random, flChance, g_esInvertCache[tank].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esInvertCache[tank].g_iInvertHitMode == 0 || g_esInvertCache[tank].g_iInvertHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esInvertCache[tank].g_iInvertHitMode == 0 || g_esInvertCache[tank].g_iInvertHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vInvertHit(survivor, tank, random, flChance, g_esInvertCache[tank].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -586,44 +585,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esInvertPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esInvertPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esInvertPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esInvertPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esInvertPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esInvertPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esInvertPlayer[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertPlayer[admin].g_iInvertAbility, value, 0, 1);
-		g_esInvertPlayer[admin].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertPlayer[admin].g_iInvertEffect, value, 0, 7);
-		g_esInvertPlayer[admin].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertPlayer[admin].g_iInvertMessage, value, 0, 3);
-		g_esInvertPlayer[admin].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertPlayer[admin].g_flInvertChance, value, 0.0, 100.0);
-		g_esInvertPlayer[admin].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertPlayer[admin].g_flInvertDuration, value, 0.1, 999999.0);
-		g_esInvertPlayer[admin].g_iInvertHit = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_esInvertPlayer[admin].g_iInvertHit, value, 0, 1);
-		g_esInvertPlayer[admin].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertPlayer[admin].g_iInvertHitMode, value, 0, 2);
-		g_esInvertPlayer[admin].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertPlayer[admin].g_flInvertRange, value, 1.0, 999999.0);
-		g_esInvertPlayer[admin].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertPlayer[admin].g_flInvertRangeChance, value, 0.0, 100.0);
-		g_esInvertPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esInvertPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esInvertPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esInvertPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esInvertPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esInvertPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esInvertPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esInvertPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esInvertPlayer[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertPlayer[admin].g_iInvertAbility, value, 0, 1);
+		g_esInvertPlayer[admin].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertPlayer[admin].g_iInvertEffect, value, 0, 7);
+		g_esInvertPlayer[admin].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertPlayer[admin].g_iInvertMessage, value, 0, 3);
+		g_esInvertPlayer[admin].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertPlayer[admin].g_flInvertChance, value, 0.0, 100.0);
+		g_esInvertPlayer[admin].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertPlayer[admin].g_flInvertDuration, value, 0.1, 99999.0);
+		g_esInvertPlayer[admin].g_iInvertHit = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_esInvertPlayer[admin].g_iInvertHit, value, 0, 1);
+		g_esInvertPlayer[admin].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertPlayer[admin].g_iInvertHitMode, value, 0, 2);
+		g_esInvertPlayer[admin].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertPlayer[admin].g_flInvertRange, value, 1.0, 99999.0);
+		g_esInvertPlayer[admin].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertPlayer[admin].g_flInvertRangeChance, value, 0.0, 100.0);
+		g_esInvertPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esInvertPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esInvertAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertAbility[type].g_iComboAbility, value, 0, 1);
-		g_esInvertAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esInvertAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esInvertAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esInvertAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esInvertAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esInvertAbility[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertAbility[type].g_iInvertAbility, value, 0, 1);
-		g_esInvertAbility[type].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertAbility[type].g_iInvertEffect, value, 0, 7);
-		g_esInvertAbility[type].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertAbility[type].g_iInvertMessage, value, 0, 3);
-		g_esInvertAbility[type].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertAbility[type].g_flInvertChance, value, 0.0, 100.0);
-		g_esInvertAbility[type].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertAbility[type].g_flInvertDuration, value, 0.1, 999999.0);
-		g_esInvertAbility[type].g_iInvertHit = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_esInvertAbility[type].g_iInvertHit, value, 0, 1);
-		g_esInvertAbility[type].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertAbility[type].g_iInvertHitMode, value, 0, 2);
-		g_esInvertAbility[type].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertAbility[type].g_flInvertRange, value, 1.0, 999999.0);
-		g_esInvertAbility[type].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertAbility[type].g_flInvertRangeChance, value, 0.0, 100.0);
-		g_esInvertAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esInvertAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esInvertAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esInvertAbility[type].g_iComboAbility, value, 0, 1);
+		g_esInvertAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esInvertAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esInvertAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esInvertAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esInvertAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esInvertAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esInvertAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esInvertAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esInvertAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esInvertAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esInvertAbility[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertAbility[type].g_iInvertAbility, value, 0, 1);
+		g_esInvertAbility[type].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertAbility[type].g_iInvertEffect, value, 0, 7);
+		g_esInvertAbility[type].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertAbility[type].g_iInvertMessage, value, 0, 3);
+		g_esInvertAbility[type].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertAbility[type].g_flInvertChance, value, 0.0, 100.0);
+		g_esInvertAbility[type].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertAbility[type].g_flInvertDuration, value, 0.1, 99999.0);
+		g_esInvertAbility[type].g_iInvertHit = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_esInvertAbility[type].g_iInvertHit, value, 0, 1);
+		g_esInvertAbility[type].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertAbility[type].g_iInvertHitMode, value, 0, 2);
+		g_esInvertAbility[type].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertAbility[type].g_flInvertRange, value, 1.0, 99999.0);
+		g_esInvertAbility[type].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertAbility[type].g_flInvertRangeChance, value, 0.0, 100.0);
+		g_esInvertAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esInvertAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -719,7 +718,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esInvertCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esInvertCache[tank].g_iInvertAbility == 1 && g_esInvertCache[tank].g_iComboAbility == 0)
 	{
-		vInvertAbility(tank, GetRandomFloat(0.1, 100.0));
+		vInvertAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -744,7 +743,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esInvertPlayer[tank].g_iCooldown == -1 || g_esInvertPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vInvertAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vInvertAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "InvertHuman3", (g_esInvertPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -753,11 +752,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vInvertChangeType(int tank)
+void vInvertChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveInvert(tank);
 }
 
@@ -849,7 +853,7 @@ void vInvertHit(int survivor, int tank, float random, float chance, int enabled,
 				dpStopInvert.WriteCell(GetClientUserId(tank));
 				dpStopInvert.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esInvertCache[tank].g_iInvertEffect, flags);
+				vScreenEffect(survivor, tank, g_esInvertCache[tank].g_iInvertEffect, flags);
 
 				if (g_esInvertCache[tank].g_iInvertMessage & messages)
 				{
@@ -914,7 +918,7 @@ void vInvertReset2(int tank)
 	g_esInvertPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerInvertCombo(Handle timer, DataPack pack)
+Action tTimerInvertCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -931,7 +935,7 @@ public Action tTimerInvertCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerInvertCombo2(Handle timer, DataPack pack)
+Action tTimerInvertCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -951,11 +955,11 @@ public Action tTimerInvertCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esInvertCache[iTank].g_iInvertHitMode == 0 || g_esInvertCache[iTank].g_iInvertHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esInvertCache[iTank].g_iInvertHitMode == 0 || g_esInvertCache[iTank].g_iInvertHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vInvertHit(iSurvivor, iTank, flRandom, flChance, g_esInvertCache[iTank].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esInvertCache[iTank].g_iInvertHitMode == 0 || g_esInvertCache[iTank].g_iInvertHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esInvertCache[iTank].g_iInvertHitMode == 0 || g_esInvertCache[iTank].g_iInvertHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vInvertHit(iSurvivor, iTank, flRandom, flChance, g_esInvertCache[iTank].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -963,7 +967,7 @@ public Action tTimerInvertCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopInvert(Handle timer, DataPack pack)
+Action tTimerStopInvert(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

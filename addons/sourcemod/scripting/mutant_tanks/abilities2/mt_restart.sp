@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_RESTART_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,30 +48,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_RESTART_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -82,7 +58,6 @@ public void OnAllPluginsLoaded()
 #define MT_RESTART_SECTION2 "restart ability"
 #define MT_RESTART_SECTION3 "restart_ability"
 #define MT_RESTART_SECTION4 "restart"
-#define MT_RESTART_SECTIONS MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4
 
 #define MT_MENU_RESTART "Restart Ability"
 
@@ -195,7 +170,9 @@ public void OnPluginStart()
 	g_esRestartGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("CTerrorPlayer::GetFlowDistance::m_flow");
 	if (g_esRestartGeneral.g_iFlowOffset == -1)
 	{
-		LogError("%s Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow", MT_TAG);
+		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -273,13 +250,14 @@ public void OnMapEnd()
 	vRestartReset();
 }
 
-public Action cmdRestartInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdRestartInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -299,6 +277,7 @@ public Action cmdRestartInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vRestartMenu(int client, const char[] name, int item)
 {
@@ -318,7 +297,7 @@ void vRestartMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -404,7 +383,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -417,9 +396,9 @@ public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, flo
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRestartHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRestartCache[attacker].g_flRestartChance, g_esRestartCache[attacker].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRestartHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRestartCache[attacker].g_flRestartChance, g_esRestartCache[attacker].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRestartCache[victim].g_iRestartHitMode == 0 || g_esRestartCache[victim].g_iRestartHitMode == 2) && bIsSurvivor(attacker) && g_esRestartCache[victim].g_iComboAbility == 0)
@@ -429,9 +408,9 @@ public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, flo
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRestartHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRestartCache[victim].g_flRestartChance, g_esRestartCache[victim].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRestartHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRestartCache[victim].g_flRestartChance, g_esRestartCache[victim].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -481,7 +460,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_RESTART_SECTION, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION2, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION3, false) || StrEqual(sSubset[iPos], MT_RESTART_SECTION4, false))
 			{
@@ -515,11 +494,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esRestartCache[tank].g_iRestartHitMode == 0 || g_esRestartCache[tank].g_iRestartHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esRestartCache[tank].g_iRestartHitMode == 0 || g_esRestartCache[tank].g_iRestartHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vRestartHit(survivor, tank, random, flChance, g_esRestartCache[tank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esRestartCache[tank].g_iRestartHitMode == 0 || g_esRestartCache[tank].g_iRestartHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esRestartCache[tank].g_iRestartHitMode == 0 || g_esRestartCache[tank].g_iRestartHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vRestartHit(survivor, tank, random, flChance, g_esRestartCache[tank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -615,48 +594,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRestartPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRestartPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRestartPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRestartPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esRestartPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRestartPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, 0, 1);
-		g_esRestartPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartPlayer[admin].g_iRestartEffect, value, 0, 7);
-		g_esRestartPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartPlayer[admin].g_iRestartMessage, value, 0, 3);
-		g_esRestartPlayer[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartPlayer[admin].g_flRestartChance, value, 0.0, 100.0);
-		g_esRestartPlayer[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartPlayer[admin].g_iRestartHit, value, 0, 1);
-		g_esRestartPlayer[admin].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartPlayer[admin].g_iRestartHitMode, value, 0, 2);
-		g_esRestartPlayer[admin].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartPlayer[admin].g_iRestartMode, value, 0, 1);
-		g_esRestartPlayer[admin].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartPlayer[admin].g_flRestartRange, value, 1.0, 999999.0);
-		g_esRestartPlayer[admin].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartPlayer[admin].g_flRestartRangeChance, value, 0.0, 100.0);
-		g_esRestartPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRestartPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRestartPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRestartPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRestartPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esRestartPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esRestartPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRestartPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRestartPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartPlayer[admin].g_iRestartAbility, value, 0, 1);
+		g_esRestartPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartPlayer[admin].g_iRestartEffect, value, 0, 7);
+		g_esRestartPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartPlayer[admin].g_iRestartMessage, value, 0, 3);
+		g_esRestartPlayer[admin].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartPlayer[admin].g_flRestartChance, value, 0.0, 100.0);
+		g_esRestartPlayer[admin].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartPlayer[admin].g_iRestartHit, value, 0, 1);
+		g_esRestartPlayer[admin].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartPlayer[admin].g_iRestartHitMode, value, 0, 2);
+		g_esRestartPlayer[admin].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartPlayer[admin].g_iRestartMode, value, 0, 1);
+		g_esRestartPlayer[admin].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartPlayer[admin].g_flRestartRange, value, 1.0, 99999.0);
+		g_esRestartPlayer[admin].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartPlayer[admin].g_flRestartRangeChance, value, 0.0, 100.0);
+		g_esRestartPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRestartPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof esRestartPlayer::g_sRestartLoadout, value);
+		vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartPlayer[admin].g_sRestartLoadout, sizeof esRestartPlayer::g_sRestartLoadout, value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRestartAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRestartAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRestartAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRestartAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esRestartAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRestartAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, 0, 1);
-		g_esRestartAbility[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartAbility[type].g_iRestartEffect, value, 0, 7);
-		g_esRestartAbility[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartAbility[type].g_iRestartMessage, value, 0, 3);
-		g_esRestartAbility[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartAbility[type].g_flRestartChance, value, 0.0, 100.0);
-		g_esRestartAbility[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartAbility[type].g_iRestartHit, value, 0, 1);
-		g_esRestartAbility[type].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartAbility[type].g_iRestartHitMode, value, 0, 2);
-		g_esRestartAbility[type].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartAbility[type].g_iRestartMode, value, 0, 1);
-		g_esRestartAbility[type].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartAbility[type].g_flRestartRange, value, 1.0, 999999.0);
-		g_esRestartAbility[type].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartAbility[type].g_flRestartRangeChance, value, 0.0, 100.0);
-		g_esRestartAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRestartAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRestartAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRestartAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRestartAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRestartAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRestartAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRestartAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esRestartAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRestartAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esRestartAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRestartAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRestartAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRestartAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRestartAbility[type].g_iRestartAbility = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRestartAbility[type].g_iRestartAbility, value, 0, 1);
+		g_esRestartAbility[type].g_iRestartEffect = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRestartAbility[type].g_iRestartEffect, value, 0, 7);
+		g_esRestartAbility[type].g_iRestartMessage = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRestartAbility[type].g_iRestartMessage, value, 0, 3);
+		g_esRestartAbility[type].g_flRestartChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartChance", "Restart Chance", "Restart_Chance", "chance", g_esRestartAbility[type].g_flRestartChance, value, 0.0, 100.0);
+		g_esRestartAbility[type].g_iRestartHit = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_esRestartAbility[type].g_iRestartHit, value, 0, 1);
+		g_esRestartAbility[type].g_iRestartHitMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_esRestartAbility[type].g_iRestartHitMode, value, 0, 2);
+		g_esRestartAbility[type].g_iRestartMode = iGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_esRestartAbility[type].g_iRestartMode, value, 0, 1);
+		g_esRestartAbility[type].g_flRestartRange = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRange", "Restart Range", "Restart_Range", "range", g_esRestartAbility[type].g_flRestartRange, value, 1.0, 99999.0);
+		g_esRestartAbility[type].g_flRestartRangeChance = flGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_esRestartAbility[type].g_flRestartRangeChance, value, 0.0, 100.0);
+		g_esRestartAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRestartAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		vGetKeyValue(subsection, MT_RESTART_SECTIONS, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, value);
+		vGetKeyValue(subsection, MT_RESTART_SECTION, MT_RESTART_SECTION2, MT_RESTART_SECTION3, MT_RESTART_SECTION4, key, "RestartLoadout", "Restart Loadout", "Restart_Loadout", "loadout", g_esRestartAbility[type].g_sRestartLoadout, sizeof esRestartAbility::g_sRestartLoadout, value);
 	}
 }
 
@@ -724,7 +703,7 @@ public void MT_OnHookEvent(bool hooked)
 		case false:
 		{
 			char sEvent[32];
-			for (int iPos = 0; iPos < sizeof bCheck; iPos++)
+			for (int iPos = 0; iPos < (sizeof bCheck); iPos++)
 			{
 				switch (iPos)
 				{
@@ -835,7 +814,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRestartCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRestartCache[tank].g_iRestartAbility == 1 && g_esRestartCache[tank].g_iComboAbility == 0)
 	{
-		vRestartAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRestartAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -861,7 +840,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esRestartPlayer[tank].g_iCooldown != -1 && g_esRestartPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartHuman3", (g_esRestartPlayer[tank].g_iCooldown - iTime));
-					case false: vRestartAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vRestartAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -869,11 +848,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRestartChangeType(int tank)
+void vRestartChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveRestart(tank);
 }
 
@@ -981,7 +965,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 				MT_RespawnSurvivor(survivor);
 				vRemoveWeapons(survivor);
 
-				for (int iItem = 0; iItem < sizeof sItems; iItem++)
+				for (int iItem = 0; iItem < (sizeof sItems); iItem++)
 				{
 					if (sItems[iItem][0] != '\0')
 					{
@@ -1032,7 +1016,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				vEffect(survivor, tank, g_esRestartCache[tank].g_iRestartEffect, flags);
+				vScreenEffect(survivor, tank, g_esRestartCache[tank].g_iRestartEffect, flags);
 
 				if (g_esRestartCache[tank].g_iRestartMessage & messages)
 				{
@@ -1063,14 +1047,8 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
-#if defined _l4dh_included
-	if (g_bLeft4DHooksInstalled || g_esRestartGeneral.g_hSDKGetLastKnownArea == null)
-	{
-		return start ? (L4D_IsInFirstCheckpoint(survivor) || !!GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea")) : L4D_IsInLastCheckpoint(survivor);
-	}
-#endif
 	bool bReturn = false;
-	if (g_esRestartPlayer[survivor].g_bCheckpoint && g_esRestartGeneral.g_iFlowOffset != -1)
+	if (g_esRestartPlayer[survivor].g_bCheckpoint)
 	{
 		int iArea = SDKCall(g_esRestartGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)
@@ -1084,7 +1062,7 @@ bool bIsSurvivorInCheckpoint(int survivor, bool start)
 	return bReturn || bReturn2;
 }
 
-public Action tTimerRestartCombo(Handle timer, DataPack pack)
+Action tTimerRestartCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1101,7 +1079,7 @@ public Action tTimerRestartCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRestartCombo2(Handle timer, DataPack pack)
+Action tTimerRestartCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1120,11 +1098,11 @@ public Action tTimerRestartCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esRestartCache[iTank].g_iRestartHitMode == 0 || g_esRestartCache[iTank].g_iRestartHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esRestartCache[iTank].g_iRestartHitMode == 0 || g_esRestartCache[iTank].g_iRestartHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vRestartHit(iSurvivor, iTank, flRandom, flChance, g_esRestartCache[iTank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esRestartCache[iTank].g_iRestartHitMode == 0 || g_esRestartCache[iTank].g_iRestartHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esRestartCache[iTank].g_iRestartHitMode == 0 || g_esRestartCache[iTank].g_iRestartHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vRestartHit(iSurvivor, iTank, flRandom, flChance, g_esRestartCache[iTank].g_iRestartHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

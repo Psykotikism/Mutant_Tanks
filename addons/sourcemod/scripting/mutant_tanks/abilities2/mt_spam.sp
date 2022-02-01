@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SPAM_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SPAM_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_SPAM_SECTION2 "spam ability"
 #define MT_SPAM_SECTION3 "spam_ability"
 #define MT_SPAM_SECTION4 "spam"
-#define MT_SPAM_SECTIONS MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4
 
 #define MT_MENU_SPAM "Spam Ability"
 
@@ -177,13 +176,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSpamInfo(int client, int args)
+Action cmdSpamInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -225,7 +224,7 @@ void vSpamMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSpamMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -315,7 +314,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -323,11 +322,11 @@ public Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float 
 		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			int iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0,
+			int iLauncher = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity"),
 				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
 			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				int iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				int iTank = GetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity");
 				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esSpamCache[iTank].g_iSpamAbility == 1 && g_esSpamPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esSpamPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esSpamPlayer[iTank].g_iTankType, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSpamPlayer[victim].g_iImmunityFlags))))
@@ -395,7 +394,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPAM_SECTION, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPAM_SECTION4, false))
 				{
@@ -490,40 +489,40 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esSpamPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esSpamPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esSpamPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esSpamPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esSpamPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esSpamPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSpamPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esSpamPlayer[admin].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamPlayer[admin].g_iSpamAbility, value, 0, 1);
-		g_esSpamPlayer[admin].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamPlayer[admin].g_iSpamMessage, value, 0, 1);
-		g_esSpamPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamPlayer[admin].g_flSpamChance, value, 0.0, 100.0);
-		g_esSpamPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamPlayer[admin].g_iSpamDamage, value, 1, 999999);
-		g_esSpamPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamPlayer[admin].g_iSpamDuration, value, 1, 999999);
-		g_esSpamPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamPlayer[admin].g_flSpamInterval, value, 0.1, 1.0);
-		g_esSpamPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSpamPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSpamPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esSpamPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esSpamPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esSpamPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esSpamPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esSpamPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSpamPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esSpamPlayer[admin].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamPlayer[admin].g_iSpamAbility, value, 0, 1);
+		g_esSpamPlayer[admin].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamPlayer[admin].g_iSpamMessage, value, 0, 1);
+		g_esSpamPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamPlayer[admin].g_flSpamChance, value, 0.0, 100.0);
+		g_esSpamPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamPlayer[admin].g_iSpamDamage, value, 1, 99999);
+		g_esSpamPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamPlayer[admin].g_iSpamDuration, value, 1, 99999);
+		g_esSpamPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamPlayer[admin].g_flSpamInterval, value, 0.1, 1.0);
+		g_esSpamPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSpamPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esSpamAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamAbility[type].g_iComboAbility, value, 0, 1);
-		g_esSpamAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esSpamAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esSpamAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esSpamAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamAbility[type].g_iHumanMode, value, 0, 1);
-		g_esSpamAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSpamAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esSpamAbility[type].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamAbility[type].g_iSpamAbility, value, 0, 1);
-		g_esSpamAbility[type].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamAbility[type].g_iSpamMessage, value, 0, 1);
-		g_esSpamAbility[type].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamAbility[type].g_flSpamChance, value, 0.0, 100.0);
-		g_esSpamAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamAbility[type].g_iSpamDamage, value, 1, 999999);
-		g_esSpamAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamAbility[type].g_iSpamDuration, value, 1, 999999);
-		g_esSpamAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamAbility[type].g_flSpamInterval, value, 0.1, 1.0);
-		g_esSpamAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSpamAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSpamAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamAbility[type].g_iComboAbility, value, 0, 1);
+		g_esSpamAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esSpamAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esSpamAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esSpamAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamAbility[type].g_iHumanMode, value, 0, 1);
+		g_esSpamAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSpamAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esSpamAbility[type].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamAbility[type].g_iSpamAbility, value, 0, 1);
+		g_esSpamAbility[type].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamAbility[type].g_iSpamMessage, value, 0, 1);
+		g_esSpamAbility[type].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamAbility[type].g_flSpamChance, value, 0.0, 100.0);
+		g_esSpamAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamAbility[type].g_iSpamDamage, value, 1, 99999);
+		g_esSpamAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamAbility[type].g_iSpamDuration, value, 1, 99999);
+		g_esSpamAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamAbility[type].g_flSpamInterval, value, 0.1, 1.0);
+		g_esSpamAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSpamAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -711,11 +710,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSpamChangeType(int tank)
+void vSpamChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSpam(tank);
 }
 
@@ -824,7 +828,7 @@ void vSpam2(int tank, int pos = -1)
 	int iLauncher = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iLauncher))
 	{
-		SetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
 		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(iLauncher);
 		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
@@ -851,7 +855,7 @@ void vSpamAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
 		{
 			vSpam(tank);
 		}
@@ -866,7 +870,7 @@ void vSpamAbility(int tank)
 	}
 }
 
-public Action tTimerSpamCombo(Handle timer, DataPack pack)
+Action tTimerSpamCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -882,7 +886,7 @@ public Action tTimerSpamCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSpam(Handle timer, DataPack pack)
+Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -920,7 +924,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	GetClientEyeAngles(iTank, flAngles);
-	flPos[2] += 70.0;
+	flPos[2] += 80.0;
 
 	if (bIsValidEntity(iLauncher))
 	{

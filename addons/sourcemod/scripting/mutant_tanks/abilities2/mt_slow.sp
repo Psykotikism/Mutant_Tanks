@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SLOW_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SLOW_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -57,7 +57,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_SLOW_SECTION2 "slow ability"
 #define MT_SLOW_SECTION3 "slow_ability"
 #define MT_SLOW_SECTION4 "slow"
-#define MT_SLOW_SECTIONS MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4
 
 #define MT_MENU_SLOW "Slow Ability"
 
@@ -179,7 +178,6 @@ public void OnMapStart()
 {
 	PrecacheSound(SOUND_DRIP, true);
 	PrecacheSound(SOUND_RAGE, true);
-
 	vSlowReset();
 }
 
@@ -211,13 +209,14 @@ public void OnMapEnd()
 	vSlowReset();
 }
 
-public Action cmdSlowInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdSlowInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -237,6 +236,7 @@ public Action cmdSlowInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vSlowMenu(int client, const char[] name, int item)
 {
@@ -257,7 +257,7 @@ void vSlowMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -345,7 +345,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -358,9 +358,9 @@ public Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSlowHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esSlowCache[attacker].g_flSlowChance, g_esSlowCache[attacker].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSlowHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSlowCache[attacker].g_flSlowChance, g_esSlowCache[attacker].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSlowCache[victim].g_iSlowHitMode == 0 || g_esSlowCache[victim].g_iSlowHitMode == 2) && bIsSurvivor(attacker) && g_esSlowCache[victim].g_iComboAbility == 0)
@@ -370,9 +370,9 @@ public Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vSlowHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esSlowCache[victim].g_flSlowChance, g_esSlowCache[victim].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSlowHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esSlowCache[victim].g_flSlowChance, g_esSlowCache[victim].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -422,7 +422,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_SLOW_SECTION, false) || StrEqual(sSubset[iPos], MT_SLOW_SECTION2, false) || StrEqual(sSubset[iPos], MT_SLOW_SECTION3, false) || StrEqual(sSubset[iPos], MT_SLOW_SECTION4, false))
 			{
@@ -456,11 +456,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esSlowCache[tank].g_iSlowHitMode == 0 || g_esSlowCache[tank].g_iSlowHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esSlowCache[tank].g_iSlowHitMode == 0 || g_esSlowCache[tank].g_iSlowHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vSlowHit(survivor, tank, random, flChance, g_esSlowCache[tank].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esSlowCache[tank].g_iSlowHitMode == 0 || g_esSlowCache[tank].g_iSlowHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esSlowCache[tank].g_iSlowHitMode == 0 || g_esSlowCache[tank].g_iSlowHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vSlowHit(survivor, tank, random, flChance, g_esSlowCache[tank].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -559,48 +559,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esSlowPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSlowPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esSlowPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSlowPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esSlowPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSlowPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esSlowPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSlowPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esSlowPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSlowPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSlowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSlowPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esSlowPlayer[admin].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowPlayer[admin].g_iSlowAbility, value, 0, 1);
-		g_esSlowPlayer[admin].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowPlayer[admin].g_iSlowEffect, value, 0, 7);
-		g_esSlowPlayer[admin].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowPlayer[admin].g_iSlowMessage, value, 0, 3);
-		g_esSlowPlayer[admin].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowPlayer[admin].g_flSlowChance, value, 0.0, 100.0);
-		g_esSlowPlayer[admin].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowPlayer[admin].g_flSlowDuration, value, 0.1, 999999.0);
-		g_esSlowPlayer[admin].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowPlayer[admin].g_iSlowHit, value, 0, 1);
-		g_esSlowPlayer[admin].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowPlayer[admin].g_iSlowHitMode, value, 0, 2);
-		g_esSlowPlayer[admin].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowPlayer[admin].g_iSlowIncline, value, 0, 1);
-		g_esSlowPlayer[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowPlayer[admin].g_flSlowRange, value, 1.0, 999999.0);
-		g_esSlowPlayer[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowPlayer[admin].g_flSlowRangeChance, value, 0.0, 100.0);
-		g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, 0.1, 0.9);
-		g_esSlowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSlowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSlowPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSlowPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esSlowPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSlowPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esSlowPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSlowPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esSlowPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSlowPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esSlowPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSlowPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSlowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSlowPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esSlowPlayer[admin].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowPlayer[admin].g_iSlowAbility, value, 0, 1);
+		g_esSlowPlayer[admin].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowPlayer[admin].g_iSlowEffect, value, 0, 7);
+		g_esSlowPlayer[admin].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowPlayer[admin].g_iSlowMessage, value, 0, 3);
+		g_esSlowPlayer[admin].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowPlayer[admin].g_flSlowChance, value, 0.0, 100.0);
+		g_esSlowPlayer[admin].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowPlayer[admin].g_flSlowDuration, value, 0.1, 99999.0);
+		g_esSlowPlayer[admin].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowPlayer[admin].g_iSlowHit, value, 0, 1);
+		g_esSlowPlayer[admin].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowPlayer[admin].g_iSlowHitMode, value, 0, 2);
+		g_esSlowPlayer[admin].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowPlayer[admin].g_iSlowIncline, value, 0, 1);
+		g_esSlowPlayer[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowPlayer[admin].g_flSlowRange, value, 1.0, 99999.0);
+		g_esSlowPlayer[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowPlayer[admin].g_flSlowRangeChance, value, 0.0, 100.0);
+		g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, 0.1, 0.9);
+		g_esSlowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSlowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esSlowAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSlowAbility[type].g_iComboAbility, value, 0, 1);
-		g_esSlowAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSlowAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esSlowAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSlowAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esSlowAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSlowAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esSlowAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSlowAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSlowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSlowAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esSlowAbility[type].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowAbility[type].g_iSlowAbility, value, 0, 1);
-		g_esSlowAbility[type].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowAbility[type].g_iSlowEffect, value, 0, 7);
-		g_esSlowAbility[type].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowAbility[type].g_iSlowMessage, value, 0, 3);
-		g_esSlowAbility[type].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowAbility[type].g_flSlowChance, value, 0.0, 100.0);
-		g_esSlowAbility[type].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowAbility[type].g_flSlowDuration, value, 0.1, 999999.0);
-		g_esSlowAbility[type].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowAbility[type].g_iSlowHit, value, 0, 1);
-		g_esSlowAbility[type].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowAbility[type].g_iSlowHitMode, value, 0, 2);
-		g_esSlowAbility[type].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowAbility[type].g_iSlowIncline, value, 0, 1);
-		g_esSlowAbility[type].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowAbility[type].g_flSlowRange, value, 1.0, 999999.0);
-		g_esSlowAbility[type].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowAbility[type].g_flSlowRangeChance, value, 0.0, 100.0);
-		g_esSlowAbility[type].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTIONS, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowAbility[type].g_flSlowSpeed, value, 0.1, 0.9);
-		g_esSlowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSlowAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSlowAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSlowAbility[type].g_iComboAbility, value, 0, 1);
+		g_esSlowAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSlowAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esSlowAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSlowAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esSlowAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSlowAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esSlowAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSlowAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSlowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSlowAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esSlowAbility[type].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowAbility[type].g_iSlowAbility, value, 0, 1);
+		g_esSlowAbility[type].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowAbility[type].g_iSlowEffect, value, 0, 7);
+		g_esSlowAbility[type].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowAbility[type].g_iSlowMessage, value, 0, 3);
+		g_esSlowAbility[type].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowAbility[type].g_flSlowChance, value, 0.0, 100.0);
+		g_esSlowAbility[type].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowAbility[type].g_flSlowDuration, value, 0.1, 99999.0);
+		g_esSlowAbility[type].g_iSlowHit = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esSlowAbility[type].g_iSlowHit, value, 0, 1);
+		g_esSlowAbility[type].g_iSlowHitMode = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esSlowAbility[type].g_iSlowHitMode, value, 0, 2);
+		g_esSlowAbility[type].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowAbility[type].g_iSlowIncline, value, 0, 1);
+		g_esSlowAbility[type].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowAbility[type].g_flSlowRange, value, 1.0, 99999.0);
+		g_esSlowAbility[type].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowAbility[type].g_flSlowRangeChance, value, 0.0, 100.0);
+		g_esSlowAbility[type].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowAbility[type].g_flSlowSpeed, value, 0.1, 0.9);
+		g_esSlowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSlowAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -710,6 +710,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	{
 		vStopSlow(survivor);
 	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -725,7 +728,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSlowCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSlowCache[tank].g_iSlowAbility == 1 && g_esSlowCache[tank].g_iComboAbility == 0)
 	{
-		vSlowAbility(tank, GetRandomFloat(0.1, 100.0));
+		vSlowAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -750,7 +753,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esSlowPlayer[tank].g_iCooldown == -1 || g_esSlowPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vSlowAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vSlowAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman3", (g_esSlowPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -759,11 +762,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSlowChangeType(int tank)
+void vSlowChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSlow(tank);
 }
 
@@ -896,7 +904,7 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpStopSlow.WriteCell(GetClientUserId(tank));
 				dpStopSlow.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
+				vScreenEffect(survivor, tank, g_esSlowCache[tank].g_iSlowEffect, flags);
 				EmitSoundToAll(SOUND_RAGE, survivor);
 
 				if (g_esSlowCache[tank].g_iSlowMessage & messages)
@@ -937,7 +945,7 @@ void vStopSlow(int survivor)
 	EmitSoundToAll(SOUND_DRIP, survivor);
 }
 
-public Action tTimerSlowCombo(Handle timer, DataPack pack)
+Action tTimerSlowCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -954,7 +962,7 @@ public Action tTimerSlowCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSlowCombo2(Handle timer, DataPack pack)
+Action tTimerSlowCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -974,11 +982,11 @@ public Action tTimerSlowCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esSlowCache[iTank].g_iSlowHitMode == 0 || g_esSlowCache[iTank].g_iSlowHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esSlowCache[iTank].g_iSlowHitMode == 0 || g_esSlowCache[iTank].g_iSlowHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vSlowHit(iSurvivor, iTank, flRandom, flChance, g_esSlowCache[iTank].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esSlowCache[iTank].g_iSlowHitMode == 0 || g_esSlowCache[iTank].g_iSlowHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esSlowCache[iTank].g_iSlowHitMode == 0 || g_esSlowCache[iTank].g_iSlowHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vSlowHit(iSurvivor, iTank, flRandom, flChance, g_esSlowCache[iTank].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -986,7 +994,7 @@ public Action tTimerSlowCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopSlow(Handle timer, DataPack pack)
+Action tTimerStopSlow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

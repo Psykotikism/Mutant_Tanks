@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_IDLE_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_IDLE_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_IDLE_SECTION2 "idle ability"
 #define MT_IDLE_SECTION3 "idle_ability"
 #define MT_IDLE_SECTION4 "idle"
-#define MT_IDLE_SECTIONS MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4
 
 #define MT_MENU_IDLE "Idle Ability"
 
@@ -221,13 +220,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdIdleInfo(int client, int args)
+Action cmdIdleInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -267,7 +266,7 @@ void vIdleMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iIdleMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iIdleMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -353,7 +352,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -366,9 +365,9 @@ public Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIdleCache[attacker].g_flIdleChance, g_esIdleCache[attacker].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vIdleHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esIdleCache[attacker].g_flIdleChance, g_esIdleCache[attacker].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esIdleCache[victim].g_iIdleHitMode == 0 || g_esIdleCache[victim].g_iIdleHitMode == 2) && bIsHumanSurvivor(attacker) && g_esIdleCache[victim].g_iComboAbility == 0)
@@ -378,9 +377,9 @@ public Action OnIdleTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vIdleHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIdleCache[victim].g_flIdleChance, g_esIdleCache[victim].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vIdleHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esIdleCache[victim].g_flIdleChance, g_esIdleCache[victim].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -430,7 +429,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_IDLE_SECTION, false) || StrEqual(sSubset[iPos], MT_IDLE_SECTION2, false) || StrEqual(sSubset[iPos], MT_IDLE_SECTION3, false) || StrEqual(sSubset[iPos], MT_IDLE_SECTION4, false))
 			{
@@ -464,11 +463,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vIdleHit(survivor, tank, random, flChance, g_esIdleCache[tank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esIdleCache[tank].g_iIdleHitMode == 0 || g_esIdleCache[tank].g_iIdleHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vIdleHit(survivor, tank, random, flChance, g_esIdleCache[tank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -560,42 +559,42 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esIdlePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIdlePlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esIdlePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIdlePlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esIdlePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIdlePlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esIdlePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIdlePlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esIdlePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIdlePlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esIdlePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIdlePlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esIdlePlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdlePlayer[admin].g_iIdleAbility, value, 0, 1);
-		g_esIdlePlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdlePlayer[admin].g_iIdleEffect, value, 0, 7);
-		g_esIdlePlayer[admin].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdlePlayer[admin].g_iIdleMessage, value, 0, 3);
-		g_esIdlePlayer[admin].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdlePlayer[admin].g_flIdleChance, value, 0.0, 100.0);
-		g_esIdlePlayer[admin].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdlePlayer[admin].g_iIdleHit, value, 0, 1);
-		g_esIdlePlayer[admin].g_iIdleHitMode = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esIdlePlayer[admin].g_iIdleHitMode, value, 0, 2);
-		g_esIdlePlayer[admin].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdlePlayer[admin].g_flIdleRange, value, 1.0, 999999.0);
-		g_esIdlePlayer[admin].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdlePlayer[admin].g_flIdleRangeChance, value, 0.0, 100.0);
-		g_esIdlePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esIdlePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esIdlePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIdlePlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esIdlePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIdlePlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esIdlePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIdlePlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esIdlePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIdlePlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esIdlePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIdlePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esIdlePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIdlePlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esIdlePlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdlePlayer[admin].g_iIdleAbility, value, 0, 1);
+		g_esIdlePlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdlePlayer[admin].g_iIdleEffect, value, 0, 7);
+		g_esIdlePlayer[admin].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdlePlayer[admin].g_iIdleMessage, value, 0, 3);
+		g_esIdlePlayer[admin].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdlePlayer[admin].g_flIdleChance, value, 0.0, 100.0);
+		g_esIdlePlayer[admin].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdlePlayer[admin].g_iIdleHit, value, 0, 1);
+		g_esIdlePlayer[admin].g_iIdleHitMode = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esIdlePlayer[admin].g_iIdleHitMode, value, 0, 2);
+		g_esIdlePlayer[admin].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdlePlayer[admin].g_flIdleRange, value, 1.0, 99999.0);
+		g_esIdlePlayer[admin].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdlePlayer[admin].g_flIdleRangeChance, value, 0.0, 100.0);
+		g_esIdlePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIdlePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esIdleAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIdleAbility[type].g_iComboAbility, value, 0, 1);
-		g_esIdleAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIdleAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esIdleAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIdleAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esIdleAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIdleAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esIdleAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIdleAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esIdleAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIdleAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esIdleAbility[type].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdleAbility[type].g_iIdleAbility, value, 0, 1);
-		g_esIdleAbility[type].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdleAbility[type].g_iIdleEffect, value, 0, 7);
-		g_esIdleAbility[type].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdleAbility[type].g_iIdleMessage, value, 0, 3);
-		g_esIdleAbility[type].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdleAbility[type].g_flIdleChance, value, 0.0, 100.0);
-		g_esIdleAbility[type].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdleAbility[type].g_iIdleHit, value, 0, 1);
-		g_esIdleAbility[type].g_iIdleHitMode = iGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esIdleAbility[type].g_iIdleHitMode, value, 0, 2);
-		g_esIdleAbility[type].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdleAbility[type].g_flIdleRange, value, 1.0, 999999.0);
-		g_esIdleAbility[type].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTIONS, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdleAbility[type].g_flIdleRangeChance, value, 0.0, 100.0);
-		g_esIdleAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esIdleAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esIdleAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIdleAbility[type].g_iComboAbility, value, 0, 1);
+		g_esIdleAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIdleAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esIdleAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIdleAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esIdleAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIdleAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esIdleAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIdleAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esIdleAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIdleAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esIdleAbility[type].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdleAbility[type].g_iIdleAbility, value, 0, 1);
+		g_esIdleAbility[type].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdleAbility[type].g_iIdleEffect, value, 0, 7);
+		g_esIdleAbility[type].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdleAbility[type].g_iIdleMessage, value, 0, 3);
+		g_esIdleAbility[type].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdleAbility[type].g_flIdleChance, value, 0.0, 100.0);
+		g_esIdleAbility[type].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdleAbility[type].g_iIdleHit, value, 0, 1);
+		g_esIdleAbility[type].g_iIdleHitMode = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esIdleAbility[type].g_iIdleHitMode, value, 0, 2);
+		g_esIdleAbility[type].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdleAbility[type].g_flIdleRange, value, 1.0, 99999.0);
+		g_esIdleAbility[type].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdleAbility[type].g_flIdleRangeChance, value, 0.0, 100.0);
+		g_esIdleAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIdleAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -690,7 +689,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esIdleCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esIdleCache[tank].g_iIdleAbility == 1 && g_esIdleCache[tank].g_iComboAbility == 0)
 	{
-		vIdleAbility(tank, GetRandomFloat(0.1, 100.0));
+		vIdleAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -716,7 +715,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esIdlePlayer[tank].g_iCooldown != -1 && g_esIdlePlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "IdleHuman3", (g_esIdlePlayer[tank].g_iCooldown - iTime));
-					case false: vIdleAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vIdleAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -724,11 +723,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vIdleChangeType(int tank)
+void vIdleChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveIdle(tank);
 }
 
@@ -820,7 +824,7 @@ void vIdleHit(int survivor, int tank, float random, float chance, int enabled, i
 				{
 					g_esIdlePlayer[survivor].g_bAffected = true;
 
-					vEffect(survivor, tank, g_esIdleCache[tank].g_iIdleEffect, flags);
+					vScreenEffect(survivor, tank, g_esIdleCache[tank].g_iIdleEffect, flags);
 
 					if (g_esIdleCache[tank].g_iIdleMessage & messages)
 					{
@@ -870,7 +874,7 @@ void vIdleReset()
 	}
 }
 
-public Action tTimerIdleCombo(Handle timer, DataPack pack)
+Action tTimerIdleCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -887,7 +891,7 @@ public Action tTimerIdleCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerIdleCombo2(Handle timer, DataPack pack)
+Action tTimerIdleCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -906,11 +910,11 @@ public Action tTimerIdleCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vIdleHit(iSurvivor, iTank, flRandom, flChance, g_esIdleCache[iTank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esIdleCache[iTank].g_iIdleHitMode == 0 || g_esIdleCache[iTank].g_iIdleHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vIdleHit(iSurvivor, iTank, flRandom, flChance, g_esIdleCache[iTank].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

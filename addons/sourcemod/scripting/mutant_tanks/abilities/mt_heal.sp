@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_HEAL_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_HEAL_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -60,7 +60,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_HEAL_SECTION2 "heal ability"
 #define MT_HEAL_SECTION3 "heal_ability"
 #define MT_HEAL_SECTION4 "heal"
-#define MT_HEAL_SECTIONS MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4
 
 #define MT_MENU_HEAL "Heal Ability"
 
@@ -88,6 +87,7 @@ enum struct esHealPlayer
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -120,6 +120,7 @@ enum struct esHealAbility
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -150,6 +151,7 @@ enum struct esHealCache
 	int g_iHealAbility;
 	int g_iHealCommon;
 	int g_iHealEffect;
+	int g_iHealGlow;
 	int g_iHealHit;
 	int g_iHealHitMode;
 	int g_iHealMessage;
@@ -251,13 +253,13 @@ public void MT_OnPluginEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdHealInfo(int client, int args)
+Action cmdHealInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -299,7 +301,7 @@ void vHealMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -397,7 +399,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -410,9 +412,9 @@ public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHealHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHealCache[attacker].g_flHealChance, g_esHealCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHealHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHealCache[attacker].g_flHealChance, g_esHealCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esHealCache[victim].g_iHealHitMode == 0 || g_esHealCache[victim].g_iHealHitMode == 2) && bIsSurvivor(attacker) && g_esHealCache[victim].g_iComboAbility == 0)
@@ -422,9 +424,9 @@ public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vHealHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHealCache[victim].g_flHealChance, g_esHealCache[victim].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vHealHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHealCache[victim].g_flHealChance, g_esHealCache[victim].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -474,7 +476,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HEAL_SECTION, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION2, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION3, false) || StrEqual(sSubset[iPos], MT_HEAL_SECTION4, false))
 			{
@@ -522,11 +524,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vHealHit(survivor, tank, random, flChance, g_esHealCache[tank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esHealCache[tank].g_iHealHitMode == 0 || g_esHealCache[tank].g_iHealHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vHealHit(survivor, tank, random, flChance, g_esHealCache[tank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -586,6 +588,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHealAbility[iIndex].g_flHealRange = 150.0;
 				g_esHealAbility[iIndex].g_flHealRangeChance = 15.0;
 				g_esHealAbility[iIndex].g_iHealCommon = 50;
+				g_esHealAbility[iIndex].g_iHealGlow = 1;
 				g_esHealAbility[iIndex].g_iHealSpecial = 100;
 				g_esHealAbility[iIndex].g_iHealTank = 500;
 			}
@@ -618,6 +621,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHealPlayer[iPlayer].g_flHealRange = 0.0;
 					g_esHealPlayer[iPlayer].g_flHealRangeChance = 0.0;
 					g_esHealPlayer[iPlayer].g_iHealCommon = 0;
+					g_esHealPlayer[iPlayer].g_iHealGlow = 0;
 					g_esHealPlayer[iPlayer].g_iHealSpecial = 0;
 					g_esHealPlayer[iPlayer].g_iHealTank = 0;
 				}
@@ -634,58 +638,60 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esHealPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHealPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esHealPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHealPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esHealPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHealPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esHealPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHealPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esHealPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esHealPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esHealPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esHealPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esHealPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHealPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHealPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHealPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esHealPlayer[admin].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealPlayer[admin].g_iHealAbility, value, 0, 3);
-		g_esHealPlayer[admin].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealPlayer[admin].g_iHealEffect, value, 0, 7);
-		g_esHealPlayer[admin].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealPlayer[admin].g_iHealMessage, value, 0, 7);
-		g_esHealPlayer[admin].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealPlayer[admin].g_flHealAbsorbRange, value, 1.0, 999999.0);
-		g_esHealPlayer[admin].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealPlayer[admin].g_flHealBuffer, value, 1.0, float(MT_MAXHEALTH));
-		g_esHealPlayer[admin].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealPlayer[admin].g_flHealChance, value, 0.0, 100.0);
-		g_esHealPlayer[admin].g_iHealHit = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealHit", "Heal Hit", "Heal_Hit", "hit", g_esHealPlayer[admin].g_iHealHit, value, 0, 1);
-		g_esHealPlayer[admin].g_iHealHitMode = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealHitMode", "Heal Hit Mode", "Heal_Hit_Mode", "hitmode", g_esHealPlayer[admin].g_iHealHitMode, value, 0, 2);
-		g_esHealPlayer[admin].g_flHealInterval = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealInterval", "Heal Interval", "Heal_Interval", "interval", g_esHealPlayer[admin].g_flHealInterval, value, 0.1, 999999.0);
-		g_esHealPlayer[admin].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealPlayer[admin].g_flHealRange, value, 1.0, 999999.0);
-		g_esHealPlayer[admin].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealPlayer[admin].g_flHealRangeChance, value, 0.0, 100.0);
-		g_esHealPlayer[admin].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealPlayer[admin].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealPlayer[admin].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealPlayer[admin].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealPlayer[admin].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealPlayer[admin].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHealPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHealPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHealPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esHealPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHealPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esHealPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHealPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esHealPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHealPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esHealPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esHealPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esHealPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esHealPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esHealPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHealPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esHealPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHealPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esHealPlayer[admin].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealPlayer[admin].g_iHealAbility, value, 0, 3);
+		g_esHealPlayer[admin].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealPlayer[admin].g_iHealEffect, value, 0, 7);
+		g_esHealPlayer[admin].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealPlayer[admin].g_iHealMessage, value, 0, 7);
+		g_esHealPlayer[admin].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealPlayer[admin].g_flHealAbsorbRange, value, 1.0, 99999.0);
+		g_esHealPlayer[admin].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealPlayer[admin].g_flHealBuffer, value, 1.0, float(MT_MAXHEALTH));
+		g_esHealPlayer[admin].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealPlayer[admin].g_flHealChance, value, 0.0, 100.0);
+		g_esHealPlayer[admin].g_iHealHit = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealHit", "Heal Hit", "Heal_Hit", "hit", g_esHealPlayer[admin].g_iHealHit, value, 0, 1);
+		g_esHealPlayer[admin].g_iHealHitMode = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealHitMode", "Heal Hit Mode", "Heal_Hit_Mode", "hitmode", g_esHealPlayer[admin].g_iHealHitMode, value, 0, 2);
+		g_esHealPlayer[admin].g_flHealInterval = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealInterval", "Heal Interval", "Heal_Interval", "interval", g_esHealPlayer[admin].g_flHealInterval, value, 0.1, 99999.0);
+		g_esHealPlayer[admin].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealPlayer[admin].g_flHealRange, value, 1.0, 99999.0);
+		g_esHealPlayer[admin].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealPlayer[admin].g_flHealRangeChance, value, 0.0, 100.0);
+		g_esHealPlayer[admin].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealPlayer[admin].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealPlayer[admin].g_iHealGlow = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealGlow", "Heal Glow", "Heal_Glow", "glow", g_esHealPlayer[admin].g_iHealGlow, value, 0, 1);
+		g_esHealPlayer[admin].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealPlayer[admin].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealPlayer[admin].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealPlayer[admin].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHealPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esHealAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHealAbility[type].g_iComboAbility, value, 0, 1);
-		g_esHealAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHealAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esHealAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHealAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esHealAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHealAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esHealAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esHealAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esHealAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esHealAbility[type].g_iHumanMode, value, 0, 1);
-		g_esHealAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHealAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHealAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHealAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esHealAbility[type].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealAbility[type].g_iHealAbility, value, 0, 3);
-		g_esHealAbility[type].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealAbility[type].g_iHealEffect, value, 0, 7);
-		g_esHealAbility[type].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealAbility[type].g_iHealMessage, value, 0, 7);
-		g_esHealAbility[type].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealAbility[type].g_flHealAbsorbRange, value, 1.0, 999999.0);
-		g_esHealAbility[type].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealAbility[type].g_flHealBuffer, value, 1.0, float(MT_MAXHEALTH));
-		g_esHealAbility[type].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealAbility[type].g_flHealChance, value, 0.0, 100.0);
-		g_esHealAbility[type].g_iHealHit = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealHit", "Heal Hit", "Heal_Hit", "hit", g_esHealAbility[type].g_iHealHit, value, 0, 1);
-		g_esHealAbility[type].g_iHealHitMode = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealHitMode", "Heal Hit Mode", "Heal_Hit_Mode", "hitmode", g_esHealAbility[type].g_iHealHitMode, value, 0, 2);
-		g_esHealAbility[type].g_flHealInterval = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealInterval", "Heal Interval", "Heal_Interval", "interval", g_esHealAbility[type].g_flHealInterval, value, 0.1, 999999.0);
-		g_esHealAbility[type].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealAbility[type].g_flHealRange, value, 1.0, 999999.0);
-		g_esHealAbility[type].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealAbility[type].g_flHealRangeChance, value, 0.0, 100.0);
-		g_esHealAbility[type].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealAbility[type].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealAbility[type].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealAbility[type].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealAbility[type].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTIONS, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealAbility[type].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esHealAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHealAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHealAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHealAbility[type].g_iComboAbility, value, 0, 1);
+		g_esHealAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHealAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esHealAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHealAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esHealAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHealAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esHealAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esHealAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esHealAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esHealAbility[type].g_iHumanMode, value, 0, 1);
+		g_esHealAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHealAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esHealAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHealAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esHealAbility[type].g_iHealAbility = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHealAbility[type].g_iHealAbility, value, 0, 3);
+		g_esHealAbility[type].g_iHealEffect = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHealAbility[type].g_iHealEffect, value, 0, 7);
+		g_esHealAbility[type].g_iHealMessage = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHealAbility[type].g_iHealMessage, value, 0, 7);
+		g_esHealAbility[type].g_flHealAbsorbRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealAbsorbRange", "Heal Absorb Range", "Heal_Absorb_Range", "absorbrange", g_esHealAbility[type].g_flHealAbsorbRange, value, 1.0, 99999.0);
+		g_esHealAbility[type].g_flHealBuffer = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealBuffer", "Heal Buffer", "Heal_Buffer", "buffer", g_esHealAbility[type].g_flHealBuffer, value, 1.0, float(MT_MAXHEALTH));
+		g_esHealAbility[type].g_flHealChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealChance", "Heal Chance", "Heal_Chance", "chance", g_esHealAbility[type].g_flHealChance, value, 0.0, 100.0);
+		g_esHealAbility[type].g_iHealHit = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealHit", "Heal Hit", "Heal_Hit", "hit", g_esHealAbility[type].g_iHealHit, value, 0, 1);
+		g_esHealAbility[type].g_iHealHitMode = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealHitMode", "Heal Hit Mode", "Heal_Hit_Mode", "hitmode", g_esHealAbility[type].g_iHealHitMode, value, 0, 2);
+		g_esHealAbility[type].g_flHealInterval = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealInterval", "Heal Interval", "Heal_Interval", "interval", g_esHealAbility[type].g_flHealInterval, value, 0.1, 99999.0);
+		g_esHealAbility[type].g_flHealRange = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealRange", "Heal Range", "Heal_Range", "range", g_esHealAbility[type].g_flHealRange, value, 1.0, 99999.0);
+		g_esHealAbility[type].g_flHealRangeChance = flGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealRangeChance", "Heal Range Chance", "Heal_Range_Chance", "rangechance", g_esHealAbility[type].g_flHealRangeChance, value, 0.0, 100.0);
+		g_esHealAbility[type].g_iHealCommon = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromCommons", "Health From Commons", "Health_From_Commons", "commons", g_esHealAbility[type].g_iHealCommon, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealAbility[type].g_iHealGlow = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealGlow", "Heal Glow", "Heal_Glow", "glow", g_esHealAbility[type].g_iHealGlow, value, 0, 1);
+		g_esHealAbility[type].g_iHealSpecial = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromSpecials", "Health From Specials", "Health_From_Specials", "specials", g_esHealAbility[type].g_iHealSpecial, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealAbility[type].g_iHealTank = iGetKeyValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "HealthFromTanks", "Health From Tanks", "Health_From_Tanks", "tanks", g_esHealAbility[type].g_iHealTank, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esHealAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHealAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HEAL_SECTION, MT_HEAL_SECTION2, MT_HEAL_SECTION3, MT_HEAL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -705,6 +711,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esHealCache[tank].g_iHealAbility = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealAbility, g_esHealAbility[type].g_iHealAbility);
 	g_esHealCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealCommon, g_esHealAbility[type].g_iHealCommon, 2);
 	g_esHealCache[tank].g_iHealEffect = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealEffect, g_esHealAbility[type].g_iHealEffect);
+	g_esHealCache[tank].g_iHealGlow = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealGlow, g_esHealAbility[type].g_iHealGlow);
 	g_esHealCache[tank].g_iHealHit = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealHit, g_esHealAbility[type].g_iHealHit);
 	g_esHealCache[tank].g_iHealHitMode = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealHitMode, g_esHealAbility[type].g_iHealHitMode);
 	g_esHealCache[tank].g_iHealMessage = iGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_iHealMessage, g_esHealAbility[type].g_iHealMessage);
@@ -814,7 +821,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHealCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHealCache[tank].g_iHealAbility > 0 && g_esHealCache[tank].g_iComboAbility == 0)
 	{
 		vHealAbility(tank, false);
-		vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vHealAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -893,7 +900,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esHealPlayer[tank].g_iCooldown2 != -1 && g_esHealPlayer[tank].g_iCooldown2 > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman6", (g_esHealPlayer[tank].g_iCooldown2 - iTime));
-					case false: vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case false: vHealAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -920,11 +927,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHealChangeType(int tank)
+void vHealChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveHeal(tank);
 }
 
@@ -1078,7 +1090,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 					SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
 				}
 
-				vEffect(survivor, tank, g_esHealCache[tank].g_iHealEffect, flags);
+				vScreenEffect(survivor, tank, g_esHealCache[tank].g_iHealEffect, flags);
 
 				if (g_esHealCache[tank].g_iHealMessage & messages)
 				{
@@ -1170,7 +1182,7 @@ void vHealResetGlow(int tank)
 		{
 			int iGlowColor[4];
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+			vSetHealGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
 		}
 		case false: vSetHealGlow(tank, 0, 0, 0, 0, 0);
 	}
@@ -1190,7 +1202,7 @@ void vSetHealGlow(int tank, int color, int flashing, int min, int max, int type)
 	SetEntProp(tank, Prop_Send, "m_iGlowType", type);
 }
 
-public Action tTimerHealCombo(Handle timer, DataPack pack)
+Action tTimerHealCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1207,7 +1219,7 @@ public Action tTimerHealCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHealCombo2(Handle timer, DataPack pack)
+Action tTimerHealCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1223,7 +1235,7 @@ public Action tTimerHealCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHealCombo3(Handle timer, DataPack pack)
+Action tTimerHealCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1242,11 +1254,11 @@ public Action tTimerHealCombo3(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vHealHit(iSurvivor, iTank, flRandom, flChance, g_esHealCache[iTank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esHealCache[iTank].g_iHealHitMode == 0 || g_esHealCache[iTank].g_iHealHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vHealHit(iSurvivor, iTank, flRandom, flChance, g_esHealCache[iTank].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
@@ -1254,7 +1266,7 @@ public Action tTimerHealCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerHeal(Handle timer, DataPack pack)
+Action tTimerHeal(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1281,7 +1293,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		iMaxHealth = MT_TankMaxHealth(iTank, 1), iRealHealth, iSpecialHealth, iTankHealth, iTotalHealth = 0;
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
-		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flInfectedPos);
+		GetEntPropVector(iCommon, Prop_Data, "m_vecOrigin", flInfectedPos);
 		if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esHealCache[iTank].g_flHealAbsorbRange)
 		{
 			iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
@@ -1341,17 +1353,17 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		}
 	}
 
-	switch (iGreen)
+	switch (iGreen == 0 || g_esHealCache[iTank].g_iHealGlow == 0)
 	{
-		case 0: vHealResetGlow(iTank);
-		default:
+		case true: vHealResetGlow(iTank);
+		case false:
 		{
 			int iColor[4];
 			MT_GetTankColors(iTank, 2, iColor[0], iColor[1], iColor[2], iColor[3]);
 			if (!(iColor[0] == -2 && iColor[1] == -2 && iColor[2] == -2))
 			{
 				MT_TankMaxHealth(iTank, 3, (iMaxHealth + iTotalHealth));
-				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), 1, MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), 3);
+				vSetHealGlow(iTank, iGetRGBColor(0, iGreen, 0), !!MT_IsGlowFlashing(iTank), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), ((MT_GetGlowType(iTank) == 1) ? 3 : 2));
 			}
 		}
 	}

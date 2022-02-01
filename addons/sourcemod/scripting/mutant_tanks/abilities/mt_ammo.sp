@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_AMMO_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_AMMO_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_AMMO_SECTION2 "ammo ability"
 #define MT_AMMO_SECTION3 "ammo_ability"
 #define MT_AMMO_SECTION4 "ammo"
-#define MT_AMMO_SECTIONS MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4
 
 #define MT_MENU_AMMO "Ammo Ability"
 
@@ -196,13 +195,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAmmoInfo(int client, int args)
+Action cmdAmmoInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -242,7 +241,7 @@ void vAmmoMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -328,7 +327,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnAmmoTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAmmoTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -341,9 +340,9 @@ public Action OnAmmoTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAmmoHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esAmmoCache[attacker].g_flAmmoChance, g_esAmmoCache[attacker].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAmmoHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esAmmoCache[attacker].g_flAmmoChance, g_esAmmoCache[attacker].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esAmmoCache[victim].g_iAmmoHitMode == 0 || g_esAmmoCache[victim].g_iAmmoHitMode == 2) && bIsSurvivor(attacker) && g_esAmmoCache[victim].g_iComboAbility == 0)
@@ -353,9 +352,9 @@ public Action OnAmmoTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vAmmoHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esAmmoCache[victim].g_flAmmoChance, g_esAmmoCache[victim].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAmmoHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esAmmoCache[victim].g_flAmmoChance, g_esAmmoCache[victim].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -405,7 +404,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_AMMO_SECTION, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION2, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION3, false) || StrEqual(sSubset[iPos], MT_AMMO_SECTION4, false))
 			{
@@ -439,11 +438,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esAmmoCache[tank].g_iAmmoHitMode == 0 || g_esAmmoCache[tank].g_iAmmoHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esAmmoCache[tank].g_iAmmoHitMode == 0 || g_esAmmoCache[tank].g_iAmmoHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vAmmoHit(survivor, tank, random, flChance, g_esAmmoCache[tank].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esAmmoCache[tank].g_iAmmoHitMode == 0 || g_esAmmoCache[tank].g_iAmmoHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esAmmoCache[tank].g_iAmmoHitMode == 0 || g_esAmmoCache[tank].g_iAmmoHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vAmmoHit(survivor, tank, random, flChance, g_esAmmoCache[tank].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -537,44 +536,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esAmmoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esAmmoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esAmmoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esAmmoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAmmoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esAmmoPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoPlayer[admin].g_iAmmoAbility, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoPlayer[admin].g_iAmmoEffect, value, 0, 7);
-		g_esAmmoPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoPlayer[admin].g_iAmmoMessage, value, 0, 3);
-		g_esAmmoPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
-		g_esAmmoPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoPlayer[admin].g_iAmmoAmount, value, 0, 25);
-		g_esAmmoPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoPlayer[admin].g_iAmmoHit, value, 0, 1);
-		g_esAmmoPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoPlayer[admin].g_iAmmoHitMode, value, 0, 2);
-		g_esAmmoPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoPlayer[admin].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esAmmoPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
-		g_esAmmoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAmmoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAmmoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esAmmoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esAmmoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esAmmoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esAmmoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esAmmoPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoPlayer[admin].g_iAmmoAbility, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoPlayer[admin].g_iAmmoEffect, value, 0, 7);
+		g_esAmmoPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoPlayer[admin].g_iAmmoMessage, value, 0, 3);
+		g_esAmmoPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAmmoPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoPlayer[admin].g_iAmmoAmount, value, 0, 25);
+		g_esAmmoPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoPlayer[admin].g_iAmmoHit, value, 0, 1);
+		g_esAmmoPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoPlayer[admin].g_iAmmoHitMode, value, 0, 2);
+		g_esAmmoPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoPlayer[admin].g_flAmmoRange, value, 1.0, 99999.0);
+		g_esAmmoPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esAmmoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAmmoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAmmoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoAbility[type].g_iComboAbility, value, 0, 1);
-		g_esAmmoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAmmoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAmmoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAmmoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAmmoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAmmoAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoAbility[type].g_iAmmoAbility, value, 0, 1);
-		g_esAmmoAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoAbility[type].g_iAmmoEffect, value, 0, 7);
-		g_esAmmoAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoAbility[type].g_iAmmoMessage, value, 0, 3);
-		g_esAmmoAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoAbility[type].g_flAmmoChance, value, 0.0, 100.0);
-		g_esAmmoAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoAbility[type].g_iAmmoAmount, value, 0, 25);
-		g_esAmmoAbility[type].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoAbility[type].g_iAmmoHit, value, 0, 1);
-		g_esAmmoAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoAbility[type].g_iAmmoHitMode, value, 0, 2);
-		g_esAmmoAbility[type].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esAmmoAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
-		g_esAmmoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAmmoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAmmoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAmmoAbility[type].g_iComboAbility, value, 0, 1);
+		g_esAmmoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAmmoAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAmmoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAmmoAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esAmmoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAmmoAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esAmmoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAmmoAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esAmmoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAmmoAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAmmoAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAmmoAbility[type].g_iAmmoAbility, value, 0, 1);
+		g_esAmmoAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAmmoAbility[type].g_iAmmoEffect, value, 0, 7);
+		g_esAmmoAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAmmoAbility[type].g_iAmmoMessage, value, 0, 3);
+		g_esAmmoAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAmmoAbility[type].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAmmoAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAmmoAbility[type].g_iAmmoAmount, value, 0, 25);
+		g_esAmmoAbility[type].g_iAmmoHit = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAmmoAbility[type].g_iAmmoHit, value, 0, 1);
+		g_esAmmoAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAmmoAbility[type].g_iAmmoHitMode, value, 0, 2);
+		g_esAmmoAbility[type].g_flAmmoRange = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAmmoAbility[type].g_flAmmoRange, value, 1.0, 99999.0);
+		g_esAmmoAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAmmoAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esAmmoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAmmoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_AMMO_SECTION, MT_AMMO_SECTION2, MT_AMMO_SECTION3, MT_AMMO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -670,7 +669,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esAmmoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esAmmoCache[tank].g_iAmmoAbility == 1 && g_esAmmoCache[tank].g_iComboAbility == 0)
 	{
-		vAmmoAbility(tank, GetRandomFloat(0.1, 100.0));
+		vAmmoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -696,7 +695,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esAmmoPlayer[tank].g_iCooldown != -1 && g_esAmmoPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman3", (g_esAmmoPlayer[tank].g_iCooldown - iTime));
-					case false: vAmmoAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vAmmoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -704,11 +703,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAmmoChangeType(int tank)
+void vAmmoChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveAmmo(tank);
 }
 
@@ -787,7 +791,7 @@ void vAmmoHit(int survivor, int tank, float random, float chance, int enabled, i
 
 				SetEntProp(survivor, Prop_Send, "m_iAmmo", g_esAmmoCache[tank].g_iAmmoAmount, .element = iGetWeaponOffset(iSlot));
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esAmmoCache[tank].g_iAmmoAmount);
-				vEffect(survivor, tank, g_esAmmoCache[tank].g_iAmmoEffect, flags);
+				vScreenEffect(survivor, tank, g_esAmmoCache[tank].g_iAmmoEffect, flags);
 
 				if (g_esAmmoCache[tank].g_iAmmoMessage & messages)
 				{
@@ -841,7 +845,7 @@ void vAmmoReset()
 	}
 }
 
-public Action tTimerAmmoCombo(Handle timer, DataPack pack)
+Action tTimerAmmoCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -858,7 +862,7 @@ public Action tTimerAmmoCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerAmmoCombo2(Handle timer, DataPack pack)
+Action tTimerAmmoCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -877,11 +881,11 @@ public Action tTimerAmmoCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esAmmoCache[iTank].g_iAmmoHitMode == 0 || g_esAmmoCache[iTank].g_iAmmoHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esAmmoCache[iTank].g_iAmmoHitMode == 0 || g_esAmmoCache[iTank].g_iAmmoHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vAmmoHit(iSurvivor, iTank, flRandom, flChance, g_esAmmoCache[iTank].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esAmmoCache[iTank].g_iAmmoHitMode == 0 || g_esAmmoCache[iTank].g_iAmmoHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esAmmoCache[iTank].g_iAmmoHitMode == 0 || g_esAmmoCache[iTank].g_iAmmoHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vAmmoHit(iSurvivor, iTank, flRandom, flChance, g_esAmmoCache[iTank].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -10,16 +10,11 @@
  **/
 
 #define MT_ABILITIES_MAIN
-#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-19),
-				// 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
 
 #include <sourcemod>
 #include <mutant_tanks>
 #include <mt_clone>
-
-#undef REQUIRE_PLUGIN
-#tryinclude <left4dhooks>
-#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -33,54 +28,52 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
-#if MT_ABILITIES_GROUP > 0
-	#undef REQUIRE_PLUGIN
-	#if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
-		#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
-		#tryinclude "mutant_tanks/abilities/mt_acid.sp"
-		#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
-		#tryinclude "mutant_tanks/abilities/mt_blind.sp"
-		#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
-		#tryinclude "mutant_tanks/abilities/mt_bury.sp"
-		#tryinclude "mutant_tanks/abilities/mt_car.sp"
-		#tryinclude "mutant_tanks/abilities/mt_choke.sp"
-		#tryinclude "mutant_tanks/abilities/mt_clone.sp"
-		#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drop.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drug.sp"
-		#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
-		#tryinclude "mutant_tanks/abilities/mt_electric.sp"
-		#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fast.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fire.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fling.sp"
-	#endif
-	#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
-		#tryinclude "mutant_tanks/abilities/mt_fly.sp"
-		#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
-		#tryinclude "mutant_tanks/abilities/mt_god.sp"
-		#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
-		#tryinclude "mutant_tanks/abilities/mt_heal.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hit.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
-		#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
-		#tryinclude "mutant_tanks/abilities/mt_ice.sp"
-		#tryinclude "mutant_tanks/abilities/mt_idle.sp"
-		#tryinclude "mutant_tanks/abilities/mt_invert.sp"
-		#tryinclude "mutant_tanks/abilities/mt_item.sp"
-		#tryinclude "mutant_tanks/abilities/mt_jump.sp"
-		#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
-		#tryinclude "mutant_tanks/abilities/mt_lag.sp"
-		#tryinclude "mutant_tanks/abilities/mt_laser.sp"
-		#tryinclude "mutant_tanks/abilities/mt_leech.sp"
-		#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
-	#endif
-	#define REQUIRE_PLUGIN
+#undef REQUIRE_PLUGIN
+#if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
+	#tryinclude "mutant_tanks/abilities/mt_absorb.sp"
+	#tryinclude "mutant_tanks/abilities/mt_acid.sp"
+	#tryinclude "mutant_tanks/abilities/mt_aimless.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ammo.sp"
+	#tryinclude "mutant_tanks/abilities/mt_blind.sp"
+	#tryinclude "mutant_tanks/abilities/mt_bomb.sp"
+	#tryinclude "mutant_tanks/abilities/mt_bury.sp"
+	#tryinclude "mutant_tanks/abilities/mt_car.sp"
+	#tryinclude "mutant_tanks/abilities/mt_choke.sp"
+	#tryinclude "mutant_tanks/abilities/mt_clone.sp"
+	#tryinclude "mutant_tanks/abilities/mt_cloud.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drop.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drug.sp"
+	#tryinclude "mutant_tanks/abilities/mt_drunk.sp"
+	#tryinclude "mutant_tanks/abilities/mt_electric.sp"
+	#tryinclude "mutant_tanks/abilities/mt_enforce.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fast.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fire.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fling.sp"
 #endif
+#if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
+	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
+	#tryinclude "mutant_tanks/abilities/mt_god.sp"
+	#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
+	#tryinclude "mutant_tanks/abilities/mt_heal.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hit.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
+	#tryinclude "mutant_tanks/abilities/mt_hypno.sp"
+	#tryinclude "mutant_tanks/abilities/mt_ice.sp"
+	#tryinclude "mutant_tanks/abilities/mt_idle.sp"
+	#tryinclude "mutant_tanks/abilities/mt_invert.sp"
+	#tryinclude "mutant_tanks/abilities/mt_item.sp"
+	#tryinclude "mutant_tanks/abilities/mt_jump.sp"
+	#tryinclude "mutant_tanks/abilities/mt_kamikaze.sp"
+	#tryinclude "mutant_tanks/abilities/mt_lag.sp"
+	#tryinclude "mutant_tanks/abilities/mt_laser.sp"
+	#tryinclude "mutant_tanks/abilities/mt_leech.sp"
+	#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
+#endif
+#define REQUIRE_PLUGIN
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -96,7 +89,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 #if defined MT_MENU_CLONE
-	vCloneRegisterNatives();
+	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
+	CreateNative("MT_IsTankClone", aNative_IsTankClone);
+
+	RegPluginLibrary("mt_clone");
 #endif
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
@@ -104,26 +100,24 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnLibraryAdded(const char[] name)
+#if defined MT_MENU_CLONE
+any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
-	if (StrEqual(name, "left4dhooks"))
+	int iTank = GetNativeCell(1);
+	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned && g_esClonePlayer[iTank].g_bFiltered)
 	{
-		g_bLeft4DHooksInstalled = true;
+		return false;
 	}
+
+	return true;
 }
 
-public void OnLibraryRemoved(const char[] name)
+any aNative_IsTankClone(Handle plugin, int numParams)
 {
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
+	int iTank = GetNativeCell(1);
+	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
+#endif
 
 public void OnPluginStart()
 {
@@ -189,13 +183,13 @@ public void OnEntityCreated(int entity, const char[] classname)
 #endif
 }
 
-public Action cmdAbilityInfo(int client, int args)
+Action cmdAbilityInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -1751,115 +1745,115 @@ public void MT_OnButtonReleased(int tank, int button)
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 #if defined MT_MENU_ABSORB
-	vAbsorbChangeType(tank);
+	vAbsorbChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ACID
-	vAcidChangeType(tank);
+	vAcidChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_AIMLESS
-	vAimlessChangeType(tank);
+	vAimlessChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_AMMO
-	vAmmoChangeType(tank);
+	vAmmoChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_BLIND
-	vBlindChangeType(tank);
+	vBlindChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_BOMB
-	vBombChangeType(tank);
+	vBombChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_BURY
-	vBuryChangeType(tank);
+	vBuryChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_CAR
-	vCarChangeType(tank);
+	vCarChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_CHOKE
-	vChokeChangeType(tank);
+	vChokeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_CLONE
-	vCloneChangeType(tank, revert);
+	vCloneChangeType(tank, oldType, revert);
 #endif
 #if defined MT_MENU_CLOUD
-	vCloudChangeType(tank);
+	vCloudChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_DROP
-	vDropChangeType(tank);
+	vDropChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_DRUG
-	vDrugChangeType(tank);
+	vDrugChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_DRUNK
-	vDrunkChangeType(tank);
+	vDrunkChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ELECTRIC
-	vElectricChangeType(tank);
+	vElectricChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ENFORCE
-	vEnforceChangeType(tank);
+	vEnforceChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_FAST
-	vFastChangeType(tank);
+	vFastChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_FIRE
-	vFireChangeType(tank);
+	vFireChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_FLING
-	vFlingChangeType(tank);
+	vFlingChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_FLY
-	vFlyChangeType(tank);
+	vFlyChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_FRAGILE
-	vFragileChangeType(tank);
+	vFragileChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_GHOST
-	vGhostChangeType(tank);
+	vGhostChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_GOD
-	vGodChangeType(tank);
+	vGodChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_GRAVITY
-	vGravityChangeType(tank);
+	vGravityChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_HEAL
-	vHealChangeType(tank);
+	vHealChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_HURT
-	vHurtChangeType(tank);
+	vHurtChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_HYPNO
-	vHypnoChangeType(tank);
+	vHypnoChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ICE
-	vIceChangeType(tank);
+	vIceChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_IDLE
-	vIdleChangeType(tank);
+	vIdleChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_INVERT
-	vInvertChangeType(tank);
+	vInvertChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_ITEM
-	vItemChangeType(tank);
+	vItemChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_JUMP
-	vJumpChangeType(tank);
+	vJumpChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_KAMIKAZE
-	vKamikazeChangeType(tank);
+	vKamikazeChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_LAG
-	vLagChangeType(tank);
+	vLagChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_LASER
-	vLaserChangeType(tank);
+	vLaserChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_LEECH
-	vLeechChangeType(tank);
+	vLeechChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_LIGHTNING
-	vLightningChangeType(tank);
+	vLightningChangeType(tank, oldType);
 #endif
 }
 
@@ -1870,6 +1864,9 @@ public void MT_OnPostTankSpawn(int tank)
 
 public Action MT_OnFatalFalling(int survivor)
 {
+#if defined MT_MENU_BURY
+	vBuryFatalFalling(survivor);
+#endif
 #if defined MT_MENU_CHOKE
 	vChokeFatalFalling(survivor);
 #endif

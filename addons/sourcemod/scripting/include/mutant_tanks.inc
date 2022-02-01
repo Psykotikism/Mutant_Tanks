@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -20,9 +20,11 @@
 // Core plugin information
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik"
+#define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.89"
+#define MT_VERSION "8.90"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
+#define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
 public SharedPlugin __pl_mutanttanks =
 {
@@ -86,7 +88,8 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_TAG "[MT]"
 #define MT_TAG2 "\x04[MT]\x01"
 #define MT_TAG3 "\x04[MT]\x03"
-#define MT_TAG4 "\x04[MT]\x05"
+#define MT_TAG4 "\x04[MT]\x04"
+#define MT_TAG5 "\x04[MT]\x05"
 
 // Constants
 #define MT_MAXABILITIES 100
@@ -121,6 +124,13 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_COMBO_POSTSPAWN 4 // after spawning
 #define MT_COMBO_UPONDEATH 5 // when dying
 #define MT_COMBO_UPONINCAP 6 // when incapacitated
+
+// Fade effects
+#define MT_FADE_IN 0x0001
+#define MT_FADE_OUT 0x0002
+#define MT_FADE_MODULATE 0x0004
+#define MT_FADE_STAYOUT 0x0008
+#define MT_FADE_PURGE 0x0010
 
 // Logging flags
 #define MT_LOG_LIFE (1 << 0) // spawned or died
@@ -157,6 +167,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
 #define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+#define INVALID_EHANDLE_INDEX 0xFFFFFFFF
 
 // Forwards
 /**
@@ -870,7 +881,7 @@ native void MT_VomitPlayer(int player, int boomer);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnAbilityActivated() instead.
+#pragma deprecated Use the MT_OnAbilityActivated() forward instead.
 forward void ST_Ability(int client);
 
 /**
@@ -880,7 +891,7 @@ forward void ST_Ability(int client);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnRockThrow() instead.
+#pragma deprecated Use the MT_OnRockThrow() forward instead.
 forward void ST_AbilityThrow(int client);
 
 /**
@@ -890,7 +901,7 @@ forward void ST_AbilityThrow(int client);
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnChangeType() instead.
+#pragma deprecated Use the MT_OnChangeType() forward instead.
 forward void ST_BossStage(int client);
 
 /**
@@ -899,7 +910,7 @@ forward void ST_BossStage(int client);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use MT_OnChangeType() instead.
+#pragma deprecated Use the MT_OnChangeType() forward instead.
 forward void ST_ChangeType(int tank);
 
 /**
@@ -910,7 +921,7 @@ forward void ST_ChangeType(int tank);
  * @param limit			The limit for how many Super Tank types' settings to check for.
  * @param main			Checks whether the main config or a custom config is being used.
  **/
-#pragma deprecated Use MT_OnConfigsLoaded() instead.
+#pragma deprecated Use the MT_OnConfigsLoaded() forward instead.
 forward void ST_Configs(char[] savepath, int limit, bool main);
 
 /**
@@ -921,7 +932,7 @@ forward void ST_Configs(char[] savepath, int limit, bool main);
  *
  * @param client		Client index of the victim.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Death(int client);
 
 /**
@@ -933,7 +944,7 @@ forward void ST_Death(int client);
  * @param enemy			Client index of the attacker.
  * @param client		Client index of the victim.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Death2(int enemy, int client);
 
 /**
@@ -943,7 +954,7 @@ forward void ST_Death2(int enemy, int client);
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
  **/
-#pragma deprecated Use MT_OnEventFired() instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Event(Event event, const char[] name);
 
 /**
@@ -954,7 +965,7 @@ forward void ST_Event(Event event, const char[] name);
  * @param name			String containing the name of the event.
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-#pragma deprecated Use MT_OnEventFired() instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
 
 /**
@@ -964,7 +975,7 @@ forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the incap event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_Incap(int client);
 
 /**
@@ -974,7 +985,7 @@ forward void ST_Incap(int client);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_OnPreset(int tank);
 
 /**
@@ -984,7 +995,7 @@ forward void ST_OnPreset(int tank);
  *
  * @param tank			Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_Preset(int tank);
 
 /**
@@ -994,7 +1005,7 @@ forward void ST_Preset(int tank);
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
  **/
-#pragma deprecated Use MT_OnRockBreak() instead.
+#pragma deprecated Use the MT_OnRockBreak() forward instead.
 forward void ST_RockBreak(int client, int entity);
 
 /**
@@ -1004,7 +1015,7 @@ forward void ST_RockBreak(int client, int entity);
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
  **/
-#pragma deprecated Use MT_OnRockThrow() instead.
+#pragma deprecated Use the MT_OnRockThrow() forward instead.
 forward void ST_RockThrow(int client, int entity);
 
 /**
@@ -1012,7 +1023,7 @@ forward void ST_RockThrow(int client, int entity);
  * Use this forward for setting something when
  * the round starts.
  **/
-#pragma deprecated Use the MT_OnEventFired() forward to catch the round start event instead.
+#pragma deprecated Use the MT_OnEventFired() forward instead.
 forward void ST_RoundStart();
 
 /**
@@ -1022,7 +1033,7 @@ forward void ST_RoundStart();
  *
  * @param client		Client index of the Tank.
  **/
-#pragma deprecated Use the MT_OnPostTankSpawn() instead.
+#pragma deprecated Use the MT_OnPostTankSpawn() forward instead.
 forward void ST_Spawn(int client);
 
 /**
@@ -1033,7 +1044,7 @@ forward void ST_Spawn(int client);
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_CanTypeSpawn() instead.
+#pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool MT_CanTankSpawn(int type)
 {
 	return MT_CanTypeSpawn(type);
@@ -1047,7 +1058,7 @@ stock bool MT_CanTankSpawn(int type)
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_IsFinaleType() instead.
+#pragma deprecated Use the MT_IsFinaleType() native instead.
 stock bool MT_IsFinaleTank(int type)
 {
 	return MT_IsFinaleType(type);
@@ -1058,7 +1069,7 @@ stock bool MT_IsFinaleTank(int type)
  *
  * @return			The value of the "Maximum Types" setting.
  **/
-#pragma deprecated Use MT_GetMaxType() instead.
+#pragma deprecated Use the MT_GetMaxType() native instead.
 stock int ST_MaxTypes()
 {
 	return MT_GetMaxType();
@@ -1069,7 +1080,7 @@ stock int ST_MaxTypes()
  *
  * @return			The maximum value of the "Type Range" setting.
  **/
-#pragma deprecated Use MT_GetMaxType() instead.
+#pragma deprecated Use the MT_GetMaxType() native instead.
 stock int ST_MaxType()
 {
 	return MT_GetMaxType();
@@ -1080,7 +1091,7 @@ stock int ST_MaxType()
  *
  * @return			The minimum value of the "Type Range" setting.
  **/
-#pragma deprecated Use MT_GetMinType() instead.
+#pragma deprecated Use the MT_GetMinType() native instead.
 stock int ST_MinType()
 {
 	return MT_GetMinType();
@@ -1091,7 +1102,7 @@ stock int ST_MinType()
  *
  * @return			True on success, false if core plugin is disabled.
  **/
-#pragma deprecated Use MT_IsCorePluginEnabled() instead.
+#pragma deprecated Use the MT_IsCorePluginEnabled() native instead.
 stock bool ST_PluginEnabled()
 {
 	return MT_IsCorePluginEnabled();
@@ -1110,7 +1121,7 @@ stock bool ST_PluginEnabled()
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetPropColors() instead.
+#pragma deprecated Use the MT_GetPropColors() native instead.
 stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha)
 {
 	MT_GetPropColors(tank, mode, red, green, blue, alpha);
@@ -1124,7 +1135,7 @@ stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, i
  * @return			True if the type can be spawned, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_CanTypeSpawn() instead.
+#pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool ST_SpawnEnabled(int type)
 {
 	return MT_CanTypeSpawn(type);
@@ -1137,7 +1148,7 @@ stock bool ST_SpawnEnabled(int type)
  *
  * @return			True on success, false if the setting is disabled.
  **/
-#pragma deprecated Use MT_IsTankSupported() instead.
+#pragma deprecated Use the MT_IsTankSupported() native instead.
 stock bool ST_TankAllowed(int client)
 {
 	return MT_IsTankSupported(client);
@@ -1151,7 +1162,7 @@ stock bool ST_TankAllowed(int client)
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_HasChanceToSpawn() instead.
+#pragma deprecated Use the MT_HasChanceToSpawn() native instead.
 stock bool ST_TankChance(int type)
 {
 	return MT_HasChanceToSpawn(type);
@@ -1169,10 +1180,10 @@ stock bool ST_TankChance(int type)
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankColors() instead.
+#pragma deprecated Use the MT_GetTankColors() native instead.
 stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha)
 {
-	MT_GetTankColors(tank, type, red, green, blue, alpha);
+	MT_GetTankColors(tank, mode, red, green, blue, alpha);
 }
 
 /**
@@ -1183,7 +1194,7 @@ stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, in
  *
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankName() instead.
+#pragma deprecated Use the MT_GetTankName() native instead.
 stock void ST_TankName(int tank, char[] buffer)
 {
 	MT_GetTankName(tank, buffer);
@@ -1197,7 +1208,7 @@ stock void ST_TankName(int tank, char[] buffer)
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
-#pragma deprecated Use MT_GetTankType() instead.
+#pragma deprecated Use the MT_GetTankType() native instead.
 stock int ST_TankType(int client)
 {
 	return MT_GetTankType(client);
@@ -1208,7 +1219,7 @@ stock int ST_TankType(int client)
  *
  * @return			The current finale wave.
  **/
-#pragma deprecated Use MT_GetCurrentFinaleWave() instead.
+#pragma deprecated Use the MT_GetCurrentFinaleWave() native instead.
 stock int ST_TankWave()
 {
 	return MT_GetCurrentFinaleWave();
@@ -1222,7 +1233,7 @@ stock int ST_TankWave()
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_IsTypeEnabled() instead.
+#pragma deprecated Use the MT_IsTypeEnabled() native instead.
 stock bool ST_TypeEnabled(int type)
 {
 	return MT_IsTypeEnabled(type);
@@ -1257,13 +1268,13 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 	}
 }
 
-stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlename, float duration = 0.0)
+stock void vAttachParticle2(float pos[3], float angles[3], const char[] particlename, float duration = 0.0)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
-		TeleportEntity(iParticle, pos, angle, NULL_VECTOR);
+		TeleportEntity(iParticle, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "Start");
@@ -1319,14 +1330,14 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angle[3], float pause, float duration, const char[] attachment = "")
+stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angles[3], float pause, float duration, const char[] attachment = "")
 {
 	int iEffect = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iEffect))
 	{
 		DispatchKeyValue(iEffect, "effect_name", particlename);
 		vSetEntityParent(iEffect, player);
-		TeleportEntity(iEffect, pos, angle, NULL_VECTOR);
+		TeleportEntity(iEffect, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");
@@ -1403,30 +1414,39 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 	}
 }
 
-stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1)
+stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1, int type1 = MT_FADE_IN, int type2 = MT_FADE_PURGE)
 {
 	if (mode & flags)
 	{
 		int iColor[4];
-		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
-		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
-		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
-		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
-		Handle hFadeTarget = StartMessageOne("Fade", survivor);
-
-		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(800);
-		bfWrite.WriteShort(300);
-		bfWrite.WriteShort((0x0010|0x0001));
-
-		for (int iPos = 0; iPos < sizeof iColor; iPos++)
+		switch (tank > 0)
 		{
-			bfWrite.WriteByte(iColor[iPos]);
+			case true: MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+			case false:
+			{
+				iColor[0] = (0 <= red <= 255) ? red : 255;
+				iColor[1] = (0 <= green <= 255) ? green : 255;
+				iColor[2] = (0 <= blue <= 255) ? blue : 255;
+				iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
+			}
 		}
 
-		EndMessage();
+		Handle hFadeTarget = StartMessageOne("Fade", survivor);
+		if (hFadeTarget != null)
+		{
+			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+			bfWrite.WriteShort(800);
+			bfWrite.WriteShort(300);
+			bfWrite.WriteShort(type1|type2);
+
+			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			{
+				bfWrite.WriteByte(iColor[iPos]);
+			}
+
+			EndMessage();
+		}
 	}
 }
 
@@ -1478,12 +1498,20 @@ stock void vGetEntityMidOrigin(int entity, float origin[3])
 
 stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
 {
-	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
 	{
 		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
 		{
 			strcopy(buffer, size, value);
 		}
+	}
+}
+
+stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		strcopy(buffer, size, value);
 	}
 }
 
@@ -1687,14 +1715,16 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 stock void vShakePlayerScreen(int player, float duration = 1.0)
 {
 	Handle hTarget = StartMessageOne("Shake", player);
+	if (hTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hTarget);
+		bfWrite.WriteByte(0);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(duration);
 
-	BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-	bfWrite.WriteByte(0);
-	bfWrite.WriteFloat(16.0);
-	bfWrite.WriteFloat(0.5);
-	bfWrite.WriteFloat(duration);
-
-	EndMessage();
+		EndMessage();
+	}
 }
 
 stock void vStopSound(int client, const char[] sound)
@@ -1814,6 +1844,16 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 }
 
+stock float MT_GetRandomFloat(float min, float max)
+{
+	return (GetURandomFloat() * (max - min + 1)) + min;
+}
+
+stock int MT_GetRandomInt(int min, int max)
+{
+	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
+}
+
 // Checks
 stock bool bHasAdminAccess(int admin, int flags, int flags2)
 {
@@ -1838,9 +1878,7 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 
 stock bool bHasIdlePlayer(int survivor)
 {
-	char sClassname[32];
-	GetEntityNetClass(survivor, sClassname, sizeof sClassname);
-	if (StrEqual(sClassname, "SurvivorBot"))
+	if (bIsBotSurvivor(survivor))
 	{
 		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
@@ -1888,6 +1926,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1916,7 +1955,9 @@ stock bool bIsBotIdleSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
+	char sClassname[32];
+	GetEntityNetClass(bot, sClassname, sizeof sClassname);
+	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT) && StrEqual(sClassname, "SurvivorBot");
 }
 
 stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1938,7 +1979,8 @@ stock bool bIsCommonInfected(int common)
 
 stock bool bIsEntityGrounded(int entity)
 {
-	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
+	int iGround = GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity");
+	return bIsValidEntity(iGround, true, -1);
 }
 
 stock bool bIsGunWeapon(int survivor)
@@ -1956,7 +1998,7 @@ stock bool bIsGunWeapon(int survivor)
 		{
 			char sWeapon[32];
 			GetEntityClassname(iWeapon, sWeapon, sizeof sWeapon);
-			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
+			if (!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw"))
 			{
 				return true;
 			}
@@ -2010,20 +2052,15 @@ stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (!bIsValidClient(iPlayer, MT_CHECK_INGAME) || bIsValidClient(iPlayer, MT_CHECK_FAKECLIENT) || !bHasIdlePlayer(iPlayer) || GetClientTeam(iPlayer) != 2)
+		if (!bIsSurvivor(iPlayer) || !bIsBotSurvivor(iPlayer))
 		{
 			continue;
 		}
 
-		char sClassname[32];
-		GetEntityNetClass(iPlayer, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
+		if (iSpectatorUserId > 0)
 		{
-			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
-			if (iSpectatorUserId > 0)
-			{
-				return GetClientOfUserId(iSpectatorUserId) == survivor;
-			}
+			return GetClientOfUserId(iSpectatorUserId) == survivor;
 		}
 	}
 
@@ -2196,9 +2233,10 @@ stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME
 	return true;
 }
 
-stock bool bIsValidEntity(int entity)
+stock bool bIsValidEntity(int entity, bool override = false, int start = 0)
 {
-	return entity > MaxClients && IsValidEntity(entity);
+	int iIndex = override ? start : MaxClients;
+	return entity > iIndex && IsValidEntity(entity);
 }
 
 stock bool bIsValidEntRef(int ref)
@@ -2218,130 +2256,130 @@ stock bool bIsWitch(int witch)
 	return false;
 }
 
-public bool bBoomerFilter(const char[] pattern, Handle clients)
+bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bChargerFilter(const char[] pattern, Handle clients)
+bool bChargerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bHunterFilter(const char[] pattern, Handle clients)
+bool bHunterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bInfectedFilter(const char[] pattern, Handle clients)
+bool bInfectedFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bJockeyFilter(const char[] pattern, Handle clients)
+bool bJockeyFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bMutantFilter(const char[] pattern, Handle clients)
+bool bMutantFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSmokerFilter(const char[] pattern, Handle clients)
+bool bSmokerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpecialFilter(const char[] pattern, Handle clients)
+bool bSpecialFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bSpitterFilter(const char[] pattern, Handle clients)
+bool bSpitterFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
 	return true;
 }
 
-public bool bTankFilter(const char[] pattern, Handle clients)
+bool bTankFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			PushArrayCell(clients, iPlayer);
+			clients.Push(iPlayer);
 		}
 	}
 
@@ -2388,6 +2426,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2433,9 +2472,9 @@ stock float flGetAdrenalineTime(int survivor)
 	return flDuration - flTime;
 }
 
-stock float flGetAngle(float angle1[3], float angle2[3])
+stock float flGetAngle(float angles1[3], float angles2[3])
 {
-	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
+	return ArcCosine(GetVectorDotProduct(angles1, angles2) / (GetVectorLength(angles1) * GetVectorLength(angles2)));
 }
 
 stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, float check = -1.0)
@@ -2449,10 +2488,10 @@ stock float flGetClampedValue(const char[] key, const char[] setting1, const cha
 	return curVal;
 }
 
-stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
+stock float flGetDistance(float pos[3], float angles[3], float offset1, float offset2, float force[3], int entity, int type)
 {
 	float flAngle[3];
-	vCopyVector(angle, flAngle);
+	vCopyVector(angles, flAngle);
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
@@ -2477,6 +2516,7 @@ stock float flGetGroundUnits(int entity)
 				float flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
@@ -2504,6 +2544,16 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
 		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return flGetKeywordValue(key, curVal, value, min, max);
+	}
+
+	return curVal;
+}
+
+stock float flGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return flGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -2548,7 +2598,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
+	else if ((min == -1.0 || min == 1.0) && max == 99999.0)
 	{
 		bool bDamageSetting = StrContains(key, "damage", false) != -1,
 			bForceSetting = StrContains(key, "force", false) != -1,
@@ -2566,7 +2616,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (StrContains(key, "open", false) == 0 && min == 0.0 && max == 999999.0)
+	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 99999.0)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
@@ -2577,7 +2627,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == -1.0 || min == 0.0 || min == 0.1) && max == 999999.0)
+	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == -1.0 || min == 0.0 || min == 0.1) && max == 99999.0)
 	{
 		if (min == 0.0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
 		{
@@ -2600,7 +2650,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (StrContains(key, "height", false) != -1 && min == 0.1 && max == 999999.0)
+	else if (StrContains(key, "height", false) != -1 && min == 0.1 && max == 99999.0)
 	{
 		if (StrEqual(value, "shortest", false))
 		{
@@ -2615,10 +2665,10 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	return flClamp(StringToFloat(value), min, max);
 }
 
-stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
+stock float flGetRayDistance(float pos[3], float angles[3], int entity, int type)
 {
 	float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
+	iGetRayHitPos(pos, angles, flHitPos, entity, false, type);
 	return GetVectorDistance(pos, flHitPos);
 }
 
@@ -2671,26 +2721,6 @@ stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const 
 	return 0;
 }
 
-stock int iGetAnimation(int player, const char[] sequence)
-{
-	int iProp = CreateEntityByName("prop_dynamic");
-	if (bIsValidEntity(iProp))
-	{
-		char sModel[32];
-		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof sModel);
-		SetEntityModel(iProp, sModel);
-		SetVariantString(sequence);
-		AcceptEntityInput(iProp, "SetAnimation");
-
-		int iResult = GetEntProp(iProp, Prop_Send, "m_nSequence");
-		RemoveEdict(iProp);
-
-		return iResult;
-	}
-
-	return 0;
-}
-
 stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot > 0; iBot--)
@@ -2715,16 +2745,9 @@ stock int iGetClampedValue(const char[] key, const char[] setting1, const char[]
 	return curVal;
 }
 
-stock int iGetEntityIndex(any refHandle)
+stock int iGetEntityIndex(int ref)
 {
-	Address adHandle = view_as<Address>(refHandle);
-	return iGetEntryIndex(adHandle);
-}
-
-stock int iGetEntryIndex(Address entityHandle)
-{
-	int iMaskIndex = LoadFromAddress(entityHandle, NumberType_Int32);
-	return iMaskIndex & ENT_ENTRY_MASK;
+	return (ref & ENT_ENTRY_MASK);
 }
 
 stock int iGetHumanCount(bool infected = false)
@@ -2760,15 +2783,10 @@ stock int iGetIdlePlayer(int bot)
 {
 	if (bIsBotSurvivor(bot))
 	{
-		char sClassname[32];
-		GetEntityNetClass(bot, sClassname, sizeof sClassname);
-		if (StrEqual(sClassname, "SurvivorBot"))
+		int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
+		if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
 		{
-			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
+			return iIdler;
 		}
 	}
 
@@ -2808,6 +2826,16 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
 		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return iGetKeywordValue(key, curVal, value, min, max);
+	}
+
+	return curVal;
+}
+
+stock int iGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return iGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -2894,7 +2922,7 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 			return max;
 		}
 	}
-	else if (StrContains(key, "message", false) != -1 && min == 0 && (max == 3 || max == 7))
+	else if (StrContains(key, "message", false) != -1 && min == 0 && (max == 3 || max == 7 || max == 15))
 	{
 		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
 		{
@@ -2931,8 +2959,59 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 				return max;
 			}
 		}
+		else if (max == 15)
+		{
+			if (StrEqual(value, "rock", false))
+			{
+				return 4;
+			}
+			else if (StrEqual(value, "hit,rock", false))
+			{
+				return 5;
+			}
+			else if (StrEqual(value, "ability,rock", false))
+			{
+				return 6;
+			}
+			else if (StrEqual(value, "hit,ability,rock", false))
+			{
+				return 7;
+			}
+			else if (StrEqual(value, "break", false))
+			{
+				return 8;
+			}
+			else if (StrEqual(value, "hit,break", false))
+			{
+				return 9;
+			}
+			else if (StrEqual(value, "ability,break", false))
+			{
+				return 10;
+			}
+			else if (StrEqual(value, "hit,ability,break", false))
+			{
+				return 11;
+			}
+			else if (StrEqual(value, "rock,break", false))
+			{
+				return 12;
+			}
+			else if (StrEqual(value, "hit,rock,break", false))
+			{
+				return 13;
+			}
+			else if (StrEqual(value, "ability,rock,break", false))
+			{
+				return 14;
+			}
+			else if (StrEqual(value, "hit,ability,rock,break", false) || StrEqual(value, "all", false))
+			{
+				return max;
+			}
+		}
 	}
-	else if ((StrContains(key, "humanammo", false) != -1 || StrContains(key, "human ammo", false) != -1 || StrContains(key, "human_ammo", false) != -1 || StrContains(key, "hammo", false) != -1) && min == 0 && max == 999999)
+	else if ((StrContains(key, "humanammo", false) != -1 || StrContains(key, "human ammo", false) != -1 || StrContains(key, "human_ammo", false) != -1 || StrContains(key, "hammo", false) != -1) && min == 0 && max == 99999)
 	{
 		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
 		{
@@ -2943,7 +3022,7 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 			return max;
 		}
 	}
-	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == 0 || min == 1) && max == 999999)
+	else if ((StrContains(key, "cooldown", false) != -1 || StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == 0 || min == 1) && max == 99999)
 	{
 		if (min == 0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
 		{
@@ -2977,7 +3056,7 @@ stock int iGetListenServerHost(int client, bool dedicated)
 			if (iHostOffset != -1)
 			{
 				bool bHost[MAXPLAYERS + 1];
-				GetEntDataArray(iManager, iHostOffset, bHost, MAXPLAYERS + 1, 1);
+				GetEntDataArray(iManager, iHostOffset, bHost, (MAXPLAYERS + 1), 1);
 				for (int iPlayer = 1; iPlayer < sizeof bHost; iPlayer++)
 				{
 					if (bHost[iPlayer])
@@ -3006,9 +3085,14 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
+stock int iGetPlayerWaterLevel(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_nWaterLevel");
+}
+
 stock int iGetRandomColor(int color)
 {
-	return (color == -1 || color < 0 || color > 255) ? GetRandomInt(0, 255) : color;
+	return (color == -1 || color < 0 || color > 255) ? MT_GetRandomInt(0, 255) : color;
 }
 
 stock int iGetRandomSurvivor(int tank)
@@ -3024,7 +3108,7 @@ stock int iGetRandomSurvivor(int tank)
 		iSurvivors[iSurvivorCount++] = iSurvivor;
 	}
 
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
+	return iSurvivors[MT_GetRandomInt(0, iSurvivorCount - 1)];
 }
 
 stock int iGetRandomTank(int tank)
@@ -3038,20 +3122,20 @@ stock int iGetRandomTank(int tank)
 		}
 	}
 
-	return iTanks[GetRandomInt(0, iTankCount - 1)];
+	return iTanks[MT_GetRandomInt(0, iTankCount - 1)];
 }
 
-stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int type)
+stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
 	Handle hTrace;
 
 	switch (type)
 	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
-		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 4: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, entity);
-		case 5: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
+		case 1: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
+		case 3: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
+		case 4: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, entity);
+		case 5: hTrace = TR_TraceRayFilterEx(pos, angles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
 	}
 
 	int iHit = 0;
@@ -3118,39 +3202,39 @@ stock int iGetWeaponOffset(int weapon)
 {
 	char sWeapon[32];
 	GetEntityClassname(weapon, sWeapon, sizeof sWeapon);
-	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
+	if (StrEqual(sWeapon[7], "rifle") || StrEqual(sWeapon[7], "rifle_ak47") || StrEqual(sWeapon[7], "rifle_desert") || StrEqual(sWeapon[7], "rifle_sg552"))
 	{
 		return 3;
 	}
-	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
+	else if (StrEqual(sWeapon[7], "smg") || StrEqual(sWeapon[7], "smg_silenced") || StrEqual(sWeapon[7], "smg_mp5"))
 	{
 		return 5;
 	}
-	else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
+	else if (StrEqual(sWeapon[7], "shotgun_chrome"))
 	{
 		return 7;
 	}
-	else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
+	else if (StrEqual(sWeapon[7], "pumpshotgun"))
 	{
 		return bIsSecondGame() ? 7 : 6;
 	}
-	else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
+	else if (StrEqual(sWeapon[7], "shotgun_spas"))
 	{
 		return 8;
 	}
-	else if (StrEqual(sWeapon, "weapon_autoshotgun"))
+	else if (StrEqual(sWeapon[7], "autoshotgun"))
 	{
 		return bIsSecondGame() ? 8 : 6;
 	}
-	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
+	else if (StrEqual(sWeapon[7], "hunting_rifle"))
 	{
 		return bIsSecondGame() ? 9 : 2;
 	}
-	else if (StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_awp"))
+	else if (StrEqual(sWeapon[7], "sniper_military") || StrEqual(sWeapon[7], "sniper_scout") || StrEqual(sWeapon[7], "sniper_awp"))
 	{
 		return 10;
 	}
-	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
+	else if (StrEqual(sWeapon[7], "grenade_launcher"))
 	{
 		return 17;
 	}

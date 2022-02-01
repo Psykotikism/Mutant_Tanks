@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_UNDEAD_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_UNDEAD_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_UNDEAD_SECTION2 "undead ability"
 #define MT_UNDEAD_SECTION3 "undead_ability"
 #define MT_UNDEAD_SECTION4 "undead"
-#define MT_UNDEAD_SECTIONS MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4
 
 #define MT_MENU_UNDEAD "Undead Ability"
 
@@ -179,13 +178,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdUndeadInfo(int client, int args)
+Action cmdUndeadInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -225,7 +224,7 @@ void vUndeadMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -311,7 +310,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -401,7 +400,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_UNDEAD_SECTION, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION2, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION3, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION4, false))
 				{
@@ -480,32 +479,32 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esUndeadPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esUndeadPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esUndeadPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esUndeadPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esUndeadPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esUndeadPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esUndeadPlayer[admin].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadPlayer[admin].g_iUndeadAbility, value, 0, 1);
-		g_esUndeadPlayer[admin].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadPlayer[admin].g_iUndeadMessage, value, 0, 1);
-		g_esUndeadPlayer[admin].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadPlayer[admin].g_iUndeadAmount, value, 1, 999999);
-		g_esUndeadPlayer[admin].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadPlayer[admin].g_flUndeadChance, value, 0.0, 100.0);
-		g_esUndeadPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esUndeadPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esUndeadPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esUndeadPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esUndeadPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esUndeadPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esUndeadPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esUndeadPlayer[admin].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadPlayer[admin].g_iUndeadAbility, value, 0, 1);
+		g_esUndeadPlayer[admin].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadPlayer[admin].g_iUndeadMessage, value, 0, 1);
+		g_esUndeadPlayer[admin].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadPlayer[admin].g_iUndeadAmount, value, 1, 99999);
+		g_esUndeadPlayer[admin].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadPlayer[admin].g_flUndeadChance, value, 0.0, 100.0);
+		g_esUndeadPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esUndeadAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadAbility[type].g_iComboAbility, value, 0, 1);
-		g_esUndeadAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esUndeadAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esUndeadAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esUndeadAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esUndeadAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esUndeadAbility[type].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadAbility[type].g_iUndeadAbility, value, 0, 1);
-		g_esUndeadAbility[type].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadAbility[type].g_iUndeadMessage, value, 0, 1);
-		g_esUndeadAbility[type].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadAbility[type].g_iUndeadAmount, value, 1, 999999);
-		g_esUndeadAbility[type].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadAbility[type].g_flUndeadChance, value, 0.0, 100.0);
-		g_esUndeadAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esUndeadAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadAbility[type].g_iComboAbility, value, 0, 1);
+		g_esUndeadAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esUndeadAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esUndeadAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esUndeadAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esUndeadAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esUndeadAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esUndeadAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esUndeadAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esUndeadAbility[type].g_iUndeadAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esUndeadAbility[type].g_iUndeadAbility, value, 0, 1);
+		g_esUndeadAbility[type].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadAbility[type].g_iUndeadMessage, value, 0, 1);
+		g_esUndeadAbility[type].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadAbility[type].g_iUndeadAmount, value, 1, 99999);
+		g_esUndeadAbility[type].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadAbility[type].g_flUndeadChance, value, 0.0, 100.0);
+		g_esUndeadAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 
@@ -637,11 +636,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vUndeadChangeType(int tank)
+void vUndeadChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveUndead(tank);
 }
 
@@ -705,7 +709,7 @@ void vUndeadAbility(int tank)
 
 	if (g_esUndeadPlayer[tank].g_iCount < g_esUndeadCache[tank].g_iUndeadAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUndeadPlayer[tank].g_iAmmoCount < g_esUndeadCache[tank].g_iHumanAmmo && g_esUndeadCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
 		{
 			vUndead(tank);
 		}
@@ -720,7 +724,7 @@ void vUndeadAbility(int tank)
 	}
 }
 
-public Action tTimerUndeadCombo(Handle timer, int userid)
+Action tTimerUndeadCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUndeadAbility[g_esUndeadPlayer[iTank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUndeadPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esUndeadCache[iTank].g_iUndeadAbility == 0 || g_esUndeadPlayer[iTank].g_bActivated)

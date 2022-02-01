@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_YELL_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLeft4DHooksInstalled;
+bool g_bDedicated;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,30 +43,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_YELL_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -89,7 +65,6 @@ public void OnAllPluginsLoaded()
 #define MT_YELL_SECTION2 "yell ability"
 #define MT_YELL_SECTION3 "yell_ability"
 #define MT_YELL_SECTION4 "yell"
-#define MT_YELL_SECTIONS MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4
 
 #define MT_MENU_YELL "Yell Ability"
 
@@ -253,13 +228,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdYellInfo(int client, int args)
+Action cmdYellInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -301,7 +276,7 @@ void vYellMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iYellMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iYellMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -465,7 +440,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_YELL_SECTION, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION2, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION3, false) || StrEqual(sSubset[iPos], MT_YELL_SECTION4, false))
 				{
@@ -556,38 +531,38 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esYellPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esYellPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esYellPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esYellPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esYellPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esYellPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esYellPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esYellPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellPlayer[admin].g_iYellAbility, value, 0, 1);
-		g_esYellPlayer[admin].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellPlayer[admin].g_iYellMessage, value, 0, 1);
-		g_esYellPlayer[admin].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellPlayer[admin].g_flYellChance, value, 0.0, 100.0);
-		g_esYellPlayer[admin].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellPlayer[admin].g_iYellDuration, value, 1, 999999);
-		g_esYellPlayer[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellPlayer[admin].g_flYellRange, value, 0.1, 999999.0);
-		g_esYellPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esYellPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esYellPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esYellPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esYellPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esYellPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esYellPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esYellPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esYellPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esYellPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellPlayer[admin].g_iYellAbility, value, 0, 1);
+		g_esYellPlayer[admin].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellPlayer[admin].g_iYellMessage, value, 0, 1);
+		g_esYellPlayer[admin].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellPlayer[admin].g_flYellChance, value, 0.0, 100.0);
+		g_esYellPlayer[admin].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellPlayer[admin].g_iYellDuration, value, 1, 99999);
+		g_esYellPlayer[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellPlayer[admin].g_flYellRange, value, 0.1, 99999.0);
+		g_esYellPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esYellPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esYellAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellAbility[type].g_iComboAbility, value, 0, 1);
-		g_esYellAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esYellAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esYellAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esYellAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellAbility[type].g_iHumanMode, value, 0, 1);
-		g_esYellAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esYellAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esYellAbility[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellAbility[type].g_iYellAbility, value, 0, 1);
-		g_esYellAbility[type].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellAbility[type].g_iYellMessage, value, 0, 1);
-		g_esYellAbility[type].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellAbility[type].g_flYellChance, value, 0.0, 100.0);
-		g_esYellAbility[type].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellAbility[type].g_iYellDuration, value, 1, 999999);
-		g_esYellAbility[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTIONS, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellAbility[type].g_flYellRange, value, 0.1, 999999.0);
-		g_esYellAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esYellAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esYellAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esYellAbility[type].g_iComboAbility, value, 0, 1);
+		g_esYellAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esYellAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esYellAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esYellAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esYellAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esYellAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esYellAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esYellAbility[type].g_iHumanMode, value, 0, 1);
+		g_esYellAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esYellAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esYellAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esYellAbility[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellAbility[type].g_iYellAbility, value, 0, 1);
+		g_esYellAbility[type].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellAbility[type].g_iYellMessage, value, 0, 1);
+		g_esYellAbility[type].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellAbility[type].g_flYellChance, value, 0.0, 100.0);
+		g_esYellAbility[type].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellAbility[type].g_iYellDuration, value, 1, 99999);
+		g_esYellAbility[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellAbility[type].g_flYellRange, value, 0.1, 99999.0);
+		g_esYellAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esYellAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -774,11 +749,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vYellChangeType(int tank)
+void vYellChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveYell(tank);
 }
 
@@ -918,18 +898,8 @@ void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL9);
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKDeafen == null)
-	{
-		case true: L4D_Deafen(survivor);
-		case false: SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
-	}
-#else
-	if (g_hSDKDeafen != null)
-	{
-		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
-	}
-#endif
+
+	SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
 }
 
 void vYellAbility(int tank)
@@ -941,7 +911,7 @@ void vYellAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esYellPlayer[tank].g_iAmmoCount < g_esYellCache[tank].g_iHumanAmmo && g_esYellCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esYellCache[tank].g_flYellChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esYellCache[tank].g_flYellChance)
 		{
 			vYell(tank);
 		}
@@ -956,7 +926,7 @@ void vYellAbility(int tank)
 	}
 }
 
-public Action tTimerYellCombo(Handle timer, DataPack pack)
+Action tTimerYellCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -972,7 +942,7 @@ public Action tTimerYellCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerYell(Handle timer, DataPack pack)
+Action tTimerYell(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

@@ -4,13 +4,15 @@
 	// --
 	// Megjegyzés: Nem mindegyik kifejezés támogatja ezeket a helyőrzőket.
 	// --
-	// "{default}" Normál - \x01
+	// "{default}" - Normál - \x01
 	// --
-	// "{mint}" Ég zöld - \x03
+	// "{mint}" - Ég zöld - \x03
 	// --
-	// "{yellow}" Sárgás narancs - \x04
+	// "{yellow}" - Sárgás narancs - \x04
 	// --
-	// "{olive}" Sárgászöld - \x05
+	// "{olive}" - Sárgászöld - \x05
+	// --
+	// "{percent}" - "%"
 
 	"MutantTanks"
 	{
@@ -444,7 +446,7 @@
 
 	"Kill1"
 	{
-		"hu"			"{olive}{1}{default} kivégezte{mint} {2}{default}!"
+		"hu"			"{olive}{1}{default} kivégezte:{mint} {2}{default}!"
 	}
 
 	"Kill2"
@@ -459,7 +461,7 @@
 
 	"Kill4"
 	{
-		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
+		"hu"			"Biztos hogy a{olive} {1}{default} tényleg megölte{mint} {2}{default}-t...?"
 	}
 
 	"Kill5"
@@ -474,17 +476,17 @@
 
 	"Kill7"
 	{
-		"hu"			"{mint}{2}{default} elérte a pusztulás {olive} {1}{default} keze által!"
+		"hu"			"{mint}{2}{default} elérte a pusztulás{olive} {1}{default} keze által!"
 	}
 
 	"Kill8"
 	{
-		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
+		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}-nak!"
 	}
 
 	"Kill9"
 	{
-		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen!"
+		"hu"			"{olive}{1}{default} rávette{mint} {2}{default}-t hogy mérgében kilépjen!"
 	}
 
 	"Kill10"
@@ -494,7 +496,7 @@
 
 	"Killer1"
 	{
-		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
+		"hu"			"{mint}{1}{default} kivégezte:{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
@@ -509,7 +511,7 @@
 
 	"Killer4"
 	{
-		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
+		"hu"			"Biztos hogy a{mint} {1}{default} tényleg megölte{olive} {2}{default}-t...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
@@ -524,7 +526,7 @@
 
 	"Killer7"
 	{
-		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
+		"hu"			"{olive}{2}{default} elérte a pusztulás{mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
@@ -534,7 +536,7 @@
 
 	"Killer9"
 	{
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default}-t hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
@@ -615,6 +617,11 @@
 	"ParticleVisualOff"
 	{
 		"hu"			"Vizuális Részecske Effekt: KI"
+	}
+
+	"PersonalType"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}){default} leszel miután átveszed a{mint} Tank{default} irányítását."
 	}
 
 	"PluginDisabled"
@@ -2079,7 +2086,7 @@
 
 	"Gravity"
 	{
-		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
+		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}-re/ra!"
 	}
 
 	"Gravity2"
@@ -2089,17 +2096,17 @@
 
 	"Gravity3"
 	{
-		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
+		"hu"			"{olive}{1}{mint} gravitációs vonzást/taszítást hozott létre!"
 	}
 
 	"Gravity4"
 	{
-		"hu"			"{olive}{1}{mint} gravitációs vonzása véget ért!"
+		"hu"			"{olive}{1}{mint} gravitációs vonzása/taszítása véget ért!"
 	}
 
 	"GravityAmmo"
 	{
-		"hu"			"Elhasználtad a gravitációs vonzásod összes lőszerét."
+		"hu"			"Elhasználtad a gravitációs vonzásod/taszításod összes lőszerét."
 	}
 
 	"GravityAmmo2"
@@ -2114,7 +2121,7 @@
 
 	"GravityHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás/taszítás képességedet!"
 	}
 
 	"GravityHuman2"
@@ -2129,12 +2136,12 @@
 
 	"GravityHuman4"
 	{
-		"hu"			"Már aktiváltad a gravitációs vonzás képességedet."
+		"hu"			"Már aktiváltad a gravitációs vonzás/taszítás képességedet."
 	}
 
 	"GravityHuman5"
 	{
-		"hu"			"A gravitációs vonzás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A gravitációs vonzás/taszítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GravityHuman6"
@@ -2149,7 +2156,7 @@
 
 	"GravityHuman8"
 	{
-		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A gravitációs vonzás/taszítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"GravityHuman9"
@@ -2654,7 +2661,7 @@
 
 	"Kamikaze"
 	{
-		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
+		"hu"			"{olive}{1}{mint} kamikazét adott{olive} {2}{mint}-nak!"
 	}
 
 	"KamikazeDetails"
@@ -3769,7 +3776,7 @@
 
 	"Rocket"
 	{
-		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint} -t az űrbe!"
+		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint}-t az űrbe!"
 	}
 
 	"RocketAmmo"
@@ -3989,7 +3996,7 @@
 
 	"Slow"
 	{
-		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{percent}{mint}!"
+		"hu"			"{olive}{1}{mint} lelassította{olive} {2}{mint}-t{yellow} {3}{percent}{mint}-ra!"
 	}
 
 	"Slow2"
@@ -4424,7 +4431,7 @@
 
 	"Ultimate3"
 	{
-		"hu"			"Ennyi sebzést {yellow}{1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
+		"hu"			"Ennyi sebzést{yellow} {1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
 	}
 
 	"Ultimate4"
@@ -4554,12 +4561,12 @@
 
 	"Vision"
 	{
-		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint} -ra!"
+		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint}-ra/re!"
 	}
 
 	"Vision2"
 	{
-		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint} -ra!"
+		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint}-ra/re!"
 	}
 
 	"VisionAmmo"
@@ -4620,6 +4627,11 @@
 	"Warp3"
 	{
 		"hu"			"{olive}{1}{mint} odateleportált{olive} {2}{mint}-hoz!"
+	}
+
+	"Warp4"
+	{
+		"hu"			"{olive}{1}{mint} helyet cserélt{yellow} a sziklájával{mint}."
 	}
 
 	"WarpAmmo"
@@ -4879,7 +4891,7 @@
 
 	"Zombie2"
 	{
-		"hu"			"{olive}{1}{mint} zombikat {yellow} hozott létre{mint}!"
+		"hu"			"{olive}{1}{mint} zombikat{yellow} hozott létre{mint}!"
 	}
 
 	"ZombieAmmo"

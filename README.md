@@ -5,17 +5,13 @@
 
 ## Languages
 - Click on one of the flags to view in another language.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
-</a>
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
-</a>
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+Copyright (C) 2022  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -26,6 +22,23 @@ You should have received a copy of the GNU General Public License along with thi
 ## About
 Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
+## Requirements
+1. `SourceMod 1.11.0.6724` or higher
+2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+3. Recommended:
+- [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
+- [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
+- [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
+- [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095)
+- [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
+4. Knowledge of installing SourceMod plugins.
+
+## Notes
+1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
+2. I will not help you with installing or troubleshooting problems on your part.
+3. If you get errors from SourceMod itself, that is your problem, not mine.
+4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
+
 ## Features
 1. Fully compatible with all game modes.
 2. Fully customizable Mutant Tanks.
@@ -35,7 +48,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 6. Store up to 500 Mutant Tank types.
 7. Administration system designed for access and immunity to Mutant Tanks.
 8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
-9. Over 1,400 optional settings to configure.
+9. Over 1,500 optional settings to configure.
 10. Over 70 unique abilities to choose from.
 11. Choose which abilities to install.
 12. Add custom abilities and features through the use of forwards and natives.
@@ -46,48 +59,125 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 17. Toggle damage scaling based on difficulty.
 18. Fully customizable reward system.
 
-## Requirements
-1. `SourceMod 1.11.0.6724` or higher
-2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended:
-- [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?t=298649)
-- [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
-4. Knowledge of installing SourceMod plugins.
+## Commands
+```
+// Accessible by admins with "z" (Root) flag only.
+sm_mt_admin - View the Mutant Tanks admin panel.
+sm_mt_config - View a section of a config file.
+sm_mt_list - View a list of installed abilities.
+sm_mt_reload - Reload the config file.
+sm_tank - Spawn a Mutant Tank.
+sm_mt_tank - Spawn a Mutant Tank.
+sm_mt_version - Find out the current version of Mutant Tanks.
 
-## Notes
-1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
-2. I will not help you with installing or troubleshooting problems on your part.
-3. If you get errors from SourceMod itself, that is your problem, not mine.
-4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
+// Accessible by the developer only.
+sm_mt_config2 - View a section of a config file.
+sm_mt_dev - Used only by and for the developer.
+sm_mt_list2 - View a list of installed abilities.
+sm_tank2 - Spawn a Mutant Tank.
+sm_mt_tank2 - Spawn a Mutant Tank.
+sm_mt_version2 - Find out the current version of Mutant Tanks.
 
-## Installation
-1. Delete files from old versions of the plugin.
-2. Extract the folder inside the `mutant_tanks.zip` file.
-3. Place all the contents into their respective folders.
-4. If prompted to replace or merge anything, click `Yes`.
-5. Load up Mutant Tanks by restarting the server.
-6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+// Accessible by all players.
+sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mt_info - View information about Mutant Tanks.
+sm_mt_prefs - Set your Mutant Tanks preferences.
 
-## Uninstalling/Upgrading to Newer Versions
-1. Delete `mutant_tanks` folder from:
- - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
- - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
-2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
-3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `mutant_tanks.phrases.txt` from:
-- `addons/sourcemod/translations` folder
-- `addons/sourcemod/translations/chi` folder
-- `addons/sourcemod/translations/hu` folder
-- `addons/sourcemod/translations/ru` folder
-5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
-6. Follow the Installation guide above. (Only for upgrading to newer versions.)
+// Packaged
+sm_mt_ability - View information about each ability (A-L).
+sm_mt_ability2 - View information about each ability (M-Z).
 
-## Disabling
-1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
+// Standalone
+sm_mt_absorb - View information about the Absorb ability.
+sm_mt_acid - View information about the Acid ability.
+sm_mt_aimless - View information about the Aimless ability.
+sm_mt_ammo - View information about the Ammo ability.
+sm_mt_blind - View information about the Blind ability.
+sm_mt_bomb - View information about the Bomb ability.
+sm_mt_bury - View information about the Bury ability.
+sm_mt_car - View information about the Car ability.
+sm_mt_choke - View information about the Choke ability.
+sm_mt_clone - View information about the Clone ability.
+sm_mt_cloud - View information about the Cloud ability.
+sm_mt_drop - View information about the Drop ability.
+sm_mt_drug - View information about the Drug ability.
+sm_mt_drunk - View information about the Drunk ability.
+sm_mt_electric - View information about the Electric ability.
+sm_mt_enforce - View information about the Enforce ability.
+sm_mt_fast - View information about the Fast ability.
+sm_mt_fire - View information about the Fire ability.
+sm_mt_fling - View information about the Fling ability.
+sm_mt_fly - View information about the Fly ability.
+sm_mt_fragile - View information about the Fragile ability.
+sm_mt_ghost - View information about the Ghost ability.
+sm_mt_god - View information about the God ability.
+sm_mt_gravity - View information about the Gravity ability.
+sm_mt_heal - View information about the Heal ability.
+sm_mt_hit - View information about the Hit ability.
+sm_mt_hurt - View information about the Hurt ability.
+sm_mt_hypno - View information about the Hypno ability.
+sm_mt_ice - View information about the Ice ability.
+sm_mt_idle - View information about the Idle ability.
+sm_mt_invert - View information about the Invert ability.
+sm_mt_item - View information about the Item ability.
+sm_mt_jump - View information about the Jump ability.
+sm_mt_kamikaze - View information about the Kamikaze ability.
+sm_mt_lag - View information about the Lag ability.
+sm_mt_laser - View information about the Laser ability.
+sm_mt_leech - View information about the Leech ability.
+sm_mt_lightning - View information about the Lightning ability.
+sm_mt_medic - View information about the Medic ability.
+sm_mt_meteor - View information about the Meteor ability.
+sm_mt_minion - View information about the Minion ability.
+sm_mt_necro - View information about the Necro ability.
+sm_mt_nullify - View information about the Nullify ability.
+sm_mt_omni - View information about the Omni ability.
+sm_mt_panic - View information about the Panic ability.
+sm_mt_pimp - View information about the Pimp ability.
+sm_mt_puke - View information about the Puke ability.
+sm_mt_pyro - View information about the Pyro ability.
+sm_mt_quiet - View information about the Quiet ability.
+sm_mt_recoil - View information about the Recoil ability.
+sm_mt_regen - View information about the Regen ability.
+sm_mt_respawn - View information about the Respawn ability.
+sm_mt_restart - View information about the Restart ability.
+sm_mt_rock - View information about the Rock ability.
+sm_mt_rocket - View information about the Rocket ability.
+sm_mt_shake - View information about the Shake ability.
+sm_mt_shield - View information about the Shield ability.
+sm_mt_shove - View information about the Shove ability.
+sm_mt_slow - View information about the Slow ability.
+sm_mt_smash - View information about the Smash ability.
+sm_mt_smite - View information about the Smite ability.
+sm_mt_spam - View information about the Spam ability.
+sm_mt_splash - View information about the Splash ability.
+sm_mt_splatter - View information about the Splatter ability.
+sm_mt_throw - View information about the Throw ability.
+sm_mt_track - View information about the Track ability.
+sm_mt_ultimate - View information about the Ultimate ability.
+sm_mt_undead - View information about the Undead ability.
+sm_mt_vampire - View information about the Vampire ability.
+sm_mt_vision - View information about the Vision ability.
+sm_mt_warp - View information about the Warp ability.
+sm_mt_whirl - View information about the Whirl ability.
+sm_mt_witch - View information about the Witch ability.
+sm_mt_xiphos - View information about the Xiphos ability.
+sm_mt_yell - View information about the Yell ability.
+sm_mt_zombie - View information about the Zombie ability.
+```
 
 ## ConVar Settings
 ```
+// Automatically update Mutant Tanks.
+// Requires "Updater": https://forums.alliedmods.net/showthread.php?t=169095
+// 0: OFF
+// 1: ON
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+mt_autoupdate "0"
+
 // Disable Mutant Tanks in these game modes.
 // Separate by commas.
 // Empty: None
@@ -136,7 +226,35 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 customization options!)
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,500 customization options!)
+
+## Installation
+1. Delete files from old versions of the plugin.
+2. Extract the folder inside the `mutant_tanks.zip` file.
+3. Place all the contents into their respective folders.
+4. If prompted to replace or merge anything, click `Yes`.
+5. Load up Mutant Tanks by restarting the server.
+6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+
+## Uninstalling/Upgrading to Newer Versions
+1. Delete `mutant_tanks` folder from:
+- `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
+- `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
+2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
+3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
+4. Delete `mutant_tanks.phrases.txt` from:
+- `addons/sourcemod/translations` folder
+- `addons/sourcemod/translations/chi` folder
+- `addons/sourcemod/translations/hu` folder
+- `addons/sourcemod/translations/ru` folder
+5. Backup `mutant_tanks.cfg` in `addons/sourcemod/data/mutant_tanks` folder.
+6. Delete `mutant_tanks_detours.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
+7. Delete `mutant_tanks_patches.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
+8. Follow the Installation guide above. (Only for upgrading to newer versions.)
+
+## Disabling
+1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
+2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
@@ -159,17 +277,15 @@ By default, Mutant Tanks can create and execute the following types of configura
 
 ### Main Features
 1. How do I make my own Mutant Tank?
-
 - Create an entry.
 
 Examples:
 
 This is okay:
-
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -184,13 +300,11 @@ This is okay:
 	}
 }
 ```
-
 This is not okay:
-
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -205,13 +319,11 @@ This is not okay:
 	}
 }
 ```
-
 This is okay:
-
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -226,13 +338,11 @@ This is okay:
 	}
 }
 ```
-
 This is not okay:
-
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -247,15 +357,13 @@ This is not okay:
 	}
 }
 ```
-
 - Adding the entry to the roster.
 
 Here's our final entry:
-
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -274,9 +382,7 @@ Here's our final entry:
 	}
 }
 ```
-
 To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
-
 ```
 "Mutant Tanks"
 {
@@ -289,11 +395,9 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	}
 }
 ```
-
 Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
 - Advanced Entry Examples
-
 ```
 "Mutant Tanks"
 {
@@ -331,7 +435,6 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 	}
 }
 ```
-
 ```
 "Mutant Tanks"
 {
@@ -389,14 +492,12 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 3. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
-
 - Enable/disable in certain game mode types. (You must add numbers up together in `Game Mode Types`.)
 - Enable/disable in specific game modes. (You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.)
 
 Here are some scenarios and their outcomes:
 
 Scenario 1:
-
 ```
 "Game Mode Types" "0" // The plugin is enabled in all game mode types.
 "Enabled Game Modes" "" // The plugin is enabled in all game modes.
@@ -404,9 +505,7 @@ Scenario 1:
 
 Outcome: The plugin works in every game mode except "coop" mode.
 ```
-
 Scenario 2:
-
 ```
 "Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
 "Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
@@ -414,9 +513,7 @@ Scenario 2:
 
 Outcome: The plugin works only in "coop" mode.
 ```
-
 Scenario 3:
-
 ```
 "Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
@@ -428,16 +525,15 @@ Outcome: The plugin works only in "coop" mode.
 4. How come some Mutant Tanks aren't showing up?
 
 It may be due to one or more of the following:
-
-- The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
+- The `Tank Enabled` setting for that Mutant Tank may be set to `0` or doesn't exists at all which defaults to `0`.
+- The `Spawn Enabled` setting for that Mutant Tank may be set to `0`.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since `v8.16`.
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 500 Mutant Tanks in your config file.
+- You have more than `500` Mutant Tanks in your config file.
 - You didn't format your config file properly.
 - The Mutant Tanks requires X human-controlled survivors around and there are none.
 - The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.
@@ -448,7 +544,6 @@ It may be due to one or more of the following:
 5. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
-
 - Absorb Ability: The Mutant Tank takes way less damage. Conserve your ammo and maintain distance between you and the Mutant Tank.
 - God Ability: The Mutant Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Mutant Tank.
 - Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
@@ -463,7 +558,6 @@ Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more info
 6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
-
 ```
 "Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
 ```
@@ -485,12 +579,10 @@ Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. 
 Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
 11. How do I add more Mutant Tanks?
-
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -516,7 +608,6 @@ Example:
 Enable/disable them with the `Tank Enabled` setting.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -560,7 +651,6 @@ Example:
 Yes, you can do that with custom configs.
 
 Example:
-
 ```
 // Settings for addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
 "Mutant Tanks"
@@ -628,12 +718,10 @@ These are basically temporary Tanks that you can create for certain situations, 
 ```
 
 14. How can I move the Mutant Tanks category around on the admin menu?
-
 - You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
 - This also allows you to sort each item in the category.
 
 Example:
-
 ```
 "Menu"
 {
@@ -688,7 +776,6 @@ You can use the `mt_adminmenu` override to restrict the category to certain admi
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
 Forwards:
-
 ```
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -971,11 +1058,9 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
-
 Natives:
 
 - Core plugin
-
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -1400,9 +1485,7 @@ native void MT_UnvomitPlayer(int player);
  **/
 native void MT_VomitPlayer(int player);
 ```
-
 - Clone ability
-
 ```
 /**
  * Returns if the clone can use abilities.
@@ -1424,21 +1507,19 @@ native bool MT_IsCloneSupported(int tank);
  **/
 native bool MT_IsTankClone(int tank);
 ```
-
 Stocks:
-
 ```
 stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
 {
 	if (FileExists(path, use_valve_fs, valve_path_id))
 	{
-		static char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof(sDirectory), folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof(sOutput));
+		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
 		if (!StrEqual(filename, sOutput))
 		{
-			static char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof(sTemp), "%s%s", sDirectory, sOutput);
+			char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
 			strcopy(output, size, sTemp);
 		}
 
@@ -1460,23 +1541,23 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[1024], sMessage[1024];
+	char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
-	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
-	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	FormatEx(sMessage, sizeof sMessage, "\x01%s", message);
+	VFormat(sBuffer, sizeof sBuffer, sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, false);
 	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			SetGlobalTransTarget(iPlayer);
-			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+			VFormat(sBuffer, sizeof sBuffer, message, 2);
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1484,10 +1565,10 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
-	VFormat(sBuffer, sizeof(sBuffer), message, 2);
-	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	VFormat(sBuffer, sizeof sBuffer, message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 	PrintToServer(sBuffer);
 }
 
@@ -1510,13 +1591,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[1024];
+	char sBuffer[1024];
 	SetGlobalTransTarget(client);
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+	VFormat(sBuffer, sizeof sBuffer, message, 3);
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof sBuffer, true);
 
 		switch (client == 0)
 		{
@@ -1530,9 +1611,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 }
 ```
-
 Target filters:
-
 ```
 @smokers
 @boomers
@@ -1548,9 +1627,7 @@ Target filters:
 @mtanks
 @psytanks
 ```
-
 Commands:
-
 ```
 // Requires "z" (Root) flag.
 sm_tank - Spawn a Mutant Tank.
@@ -1574,112 +1651,6 @@ If you are a Tank:
 2. When not holding down the +speed (default: LSHIFT) button, you will transform into the chosen type.
 ```
 
-```
-// Accessible by admins with "z" (Root) flag only.
-sm_mt_admin - View the Mutant Tanks admin panel.
-sm_mt_config - View a section of a config file.
-sm_mt_list - View a list of installed abilities.
-sm_mt_reload - Reload the config file.
-sm_tank - Spawn a Mutant Tank.
-sm_mt_tank - Spawn a Mutant Tank.
-sm_mt_version - Find out the current version of Mutant Tanks.
-
-// Accessible by the developer only.
-sm_mt_config2 - View a section of a config file.
-sm_mt_dev - Used only by and for the developer.
-sm_mt_list2 - View a list of installed abilities.
-sm_tank2 - Spawn a Mutant Tank.
-sm_mt_tank2 - Spawn a Mutant Tank.
-sm_mt_version2 - Find out the current version of Mutant Tanks.
-
-// Accessible by all players.
-sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
-sm_mt_info - View information about Mutant Tanks.
-sm_mt_prefs - Set your Mutant Tanks preferences.
-
-// Packaged
-sm_mt_ability - View information about each ability (A-L).
-sm_mt_ability2 - View information about each ability (M-Z).
-
-// Standalone
-sm_mt_absorb - View information about the Absorb ability.
-sm_mt_acid - View information about the Acid ability.
-sm_mt_aimless - View information about the Aimless ability.
-sm_mt_ammo - View information about the Ammo ability.
-sm_mt_blind - View information about the Blind ability.
-sm_mt_bomb - View information about the Bomb ability.
-sm_mt_bury - View information about the Bury ability.
-sm_mt_car - View information about the Car ability.
-sm_mt_choke - View information about the Choke ability.
-sm_mt_clone - View information about the Clone ability.
-sm_mt_cloud - View information about the Cloud ability.
-sm_mt_drop - View information about the Drop ability.
-sm_mt_drug - View information about the Drug ability.
-sm_mt_drunk - View information about the Drunk ability.
-sm_mt_electric - View information about the Electric ability.
-sm_mt_enforce - View information about the Enforce ability.
-sm_mt_fast - View information about the Fast ability.
-sm_mt_fire - View information about the Fire ability.
-sm_mt_fling - View information about the Fling ability.
-sm_mt_fly - View information about the Fly ability.
-sm_mt_fragile - View information about the Fragile ability.
-sm_mt_ghost - View information about the Ghost ability.
-sm_mt_god - View information about the God ability.
-sm_mt_gravity - View information about the Gravity ability.
-sm_mt_heal - View information about the Heal ability.
-sm_mt_hit - View information about the Hit ability.
-sm_mt_hurt - View information about the Hurt ability.
-sm_mt_hypno - View information about the Hypno ability.
-sm_mt_ice - View information about the Ice ability.
-sm_mt_idle - View information about the Idle ability.
-sm_mt_invert - View information about the Invert ability.
-sm_mt_item - View information about the Item ability.
-sm_mt_jump - View information about the Jump ability.
-sm_mt_kamikaze - View information about the Kamikaze ability.
-sm_mt_lag - View information about the Lag ability.
-sm_mt_laser - View information about the Laser ability.
-sm_mt_leech - View information about the Leech ability.
-sm_mt_lightning - View information about the Lightning ability.
-sm_mt_medic - View information about the Medic ability.
-sm_mt_meteor - View information about the Meteor ability.
-sm_mt_minion - View information about the Minion ability.
-sm_mt_necro - View information about the Necro ability.
-sm_mt_nullify - View information about the Nullify ability.
-sm_mt_omni - View information about the Omni ability.
-sm_mt_panic - View information about the Panic ability.
-sm_mt_pimp - View information about the Pimp ability.
-sm_mt_puke - View information about the Puke ability.
-sm_mt_pyro - View information about the Pyro ability.
-sm_mt_quiet - View information about the Quiet ability.
-sm_mt_recoil - View information about the Recoil ability.
-sm_mt_regen - View information about the Regen ability.
-sm_mt_respawn - View information about the Respawn ability.
-sm_mt_restart - View information about the Restart ability.
-sm_mt_rock - View information about the Rock ability.
-sm_mt_rocket - View information about the Rocket ability.
-sm_mt_shake - View information about the Shake ability.
-sm_mt_shield - View information about the Shield ability.
-sm_mt_shove - View information about the Shove ability.
-sm_mt_slow - View information about the Slow ability.
-sm_mt_smash - View information about the Smash ability.
-sm_mt_smite - View information about the Smite ability.
-sm_mt_spam - View information about the Spam ability.
-sm_mt_splash - View information about the Splash ability.
-sm_mt_splatter - View information about the Splatter ability.
-sm_mt_throw - View information about the Throw ability.
-sm_mt_track - View information about the Track ability.
-sm_mt_ultimate - View information about the Ultimate ability.
-sm_mt_undead - View information about the Undead ability.
-sm_mt_vampire - View information about the Vampire ability.
-sm_mt_vision - View information about the Vision ability.
-sm_mt_warp - View information about the Warp ability.
-sm_mt_whirl - View information about the Whirl ability.
-sm_mt_witch - View information about the Witch ability.
-sm_mt_xiphos - View information about the Xiphos ability.
-sm_mt_yell - View information about the Yell ability.
-sm_mt_zombie - View information about the Zombie ability.
-```
-
 ### Configuration Formatting
 1. How many config formats are there?
 
@@ -1694,7 +1665,6 @@ No, all plugins still read the original format properly.
 Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other file with config examples will use the original format.
 
 Example:
-
 ```
 // Original format
 "Mutant Tanks"
@@ -1726,7 +1696,6 @@ mutant_tanks // 3rd format
 Yes, you can either apply global settings for all types to use or specify certain types to use them.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1770,7 +1739,6 @@ Example:
 Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1800,7 +1768,6 @@ The administration system is designed for the usage and effectiveness of each Mu
 At first, using SM's own system was the goal, but that system has certain limitations that I wanted to get rid of for this project. For example, in SM's system, assigning multiple flags to an override command requires admins to have all of those flags. In this system, admins only need one of those flags, which makes the system flexible for filtering multiple admin flags.
 
 Example:
-
 ```
 // SM's system
 "sm_tank"			"abc" // Admins need all three flags to use the command.
@@ -1822,7 +1789,6 @@ Currently, the system allows admins to each have a favorite/custom/personalized 
 Each custom admin setting will override its corresponding Mutant Tank type-specific setting or general setting. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the Mutant Tank type settings or general settings.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1848,7 +1814,6 @@ Example:
 It will sound complicated but here is the simplest way to explain it:
 
 Ability Overrides
-
 ```
 If a player's ability flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
 If a player's ability flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
@@ -1870,9 +1835,7 @@ If a player's SM flags have one of the immunity flags required for an ability or
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that ability.
 ```
-
 Type Overrides
-
 ```
 If a player's ability flags have one of the access flags required for a type or vice-versa, the player will have access to the ability of the type.
 If a player's ability flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the ability of the type.
@@ -1894,9 +1857,7 @@ If a player's SM flags have one of the immunity flags required for a type or vic
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that type.
 ```
-
 Global Overrides
-
 ```
 If a player's ability flags have one of the access flags required globally or vice-versa, the player will have access to all abilities that require those flags.
 If a player's ability flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all abilities that require those flags.
@@ -1939,7 +1900,6 @@ Set `Human Support` to `1` or `2`.
 Yes, just set `Human Ability` to 1 or 2 for EACH ability.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1956,7 +1916,6 @@ Example:
 3. How can players use the abilities manually?
 
 There are 4 buttons that players can use when they spawn as Mutant Tanks.
-
 ```
 +use (default: E) - Main ability
 +reload (default: R) - Sub/range ability
@@ -1968,7 +1927,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines `98-101` of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `101-104` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1979,7 +1938,6 @@ All related abilities may or may not activate at the same time, depending on you
 Set the `Human Ammo` setting for each ability to whatever value you want.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -1998,7 +1956,6 @@ Example:
 Yes, just set the `Human Cooldown` setting for each ability to whatever value you want.
 
 Example:
-
 ```
 "Mutant Tanks"
 {
@@ -2034,12 +1991,11 @@ The information displayed in chat will be more detailed and accurate when the pl
 
 Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
 
-12. Is there any way to exempt admins from the cooldown mentioned in question #11?
+12. Is there any way to exempt admins from the cooldown mentioned in question `#11`?
 
 Yes, assign admins the `mt_adminversus` override.
 
 Example:
-
 ```
 Overrides
 {
@@ -2057,7 +2013,6 @@ Set `Enable Custom Configs` to `1`.
 Set the values in `Create Config Types`.
 
 Examples:
-
 ```
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
@@ -2070,7 +2025,6 @@ Examples:
 Set the values in `Execute Config Types`.
 
 Examples:
-
 ```
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
@@ -2101,9 +2055,11 @@ Examples:
 
 **mi123645** - For the [[L4D(2)] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
+**Chanz** - For the [[ANY] Infinite-Jumping](https://forums.alliedmods.net/showthread.php?t=132391) plugin.
+
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) plugin.
+**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) and [Updater](https://forums.alliedmods.net/showthread.php?t=169095) plugins.
 
 **Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
@@ -2123,13 +2079,15 @@ Examples:
 
 **nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
 
-**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
+**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugins.
 
 **Luckylock** - For the [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345) plugin.
 
 **raoulduke** - For the [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175) plugin.
 
 **Pelipoika** - For the [[TF2] Rainbow Glow](https://forums.alliedmods.net/showthread.php?t=287533) plugin.
+
+**cravenge** - For the [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) and [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729) plugins.
 
 **Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
@@ -2138,6 +2096,8 @@ Examples:
 **Lux/LuxLuma** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
 **Forgetest** - For helping with gamedata offsets.
+
+**sorallll** - For the [Skip Tank Taunt](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp) plugin.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -2157,11 +2117,11 @@ Examples:
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
@@ -2169,19 +2129,15 @@ Examples:
 
 **login101** - For providing some source code for the `Lightning` ability.
 
-**peachie** - For the love and support behind the scenes.
-
 **Angelace113** - For the default colors (before `v8.12`), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (`v8.66`), helping to set up the wiki pages, and overall support.
 
 **Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
 
-**Oliver** - For helping to test the Reward system, Combination feature, and overall support.
-
-**FusionFlarez** - For helping to test the Reward system and overall support.
+**Oliver, FusionFlarez** - For helping to test the Reward system, Combination feature, and overall support.
 
 **SourceMod Team** - For continually updating/improving SourceMod.
 
-## 3rd-Party Revisions Notice
+## Third-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
 
 ## Final Words

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_RECOIL_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_RECOIL_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_RECOIL_SECTION2 "recoil ability"
 #define MT_RECOIL_SECTION3 "recoil_ability"
 #define MT_RECOIL_SECTION4 "recoil"
-#define MT_RECOIL_SECTIONS MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4
 
 #define MT_MENU_RECOIL "Recoil Ability"
 
@@ -198,13 +197,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdRecoilInfo(int client, int args)
+Action cmdRecoilInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -245,7 +244,7 @@ void vRecoilMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -333,7 +332,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -346,9 +345,9 @@ public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRecoilHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRecoilCache[attacker].g_flRecoilChance, g_esRecoilCache[attacker].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRecoilHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRecoilCache[attacker].g_flRecoilChance, g_esRecoilCache[attacker].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRecoilCache[victim].g_iRecoilHitMode == 0 || g_esRecoilCache[victim].g_iRecoilHitMode == 2) && bIsSurvivor(attacker) && g_esRecoilCache[victim].g_iComboAbility == 0)
@@ -358,9 +357,9 @@ public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRecoilHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRecoilCache[victim].g_flRecoilChance, g_esRecoilCache[victim].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRecoilHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRecoilCache[victim].g_flRecoilChance, g_esRecoilCache[victim].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -410,7 +409,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_RECOIL_SECTION, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION2, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION3, false) || StrEqual(sSubset[iPos], MT_RECOIL_SECTION4, false))
 			{
@@ -444,11 +443,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esRecoilCache[tank].g_iRecoilHitMode == 0 || g_esRecoilCache[tank].g_iRecoilHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esRecoilCache[tank].g_iRecoilHitMode == 0 || g_esRecoilCache[tank].g_iRecoilHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vRecoilHit(survivor, tank, random, flChance, g_esRecoilCache[tank].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esRecoilCache[tank].g_iRecoilHitMode == 0 || g_esRecoilCache[tank].g_iRecoilHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esRecoilCache[tank].g_iRecoilHitMode == 0 || g_esRecoilCache[tank].g_iRecoilHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vRecoilHit(survivor, tank, random, flChance, g_esRecoilCache[tank].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -543,44 +542,44 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRecoilPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRecoilPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRecoilPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRecoilPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esRecoilPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRecoilPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRecoilPlayer[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilPlayer[admin].g_iRecoilAbility, value, 0, 1);
-		g_esRecoilPlayer[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilPlayer[admin].g_iRecoilEffect, value, 0, 7);
-		g_esRecoilPlayer[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilPlayer[admin].g_iRecoilMessage, value, 0, 3);
-		g_esRecoilPlayer[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilPlayer[admin].g_flRecoilChance, value, 0.0, 100.0);
-		g_esRecoilPlayer[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilPlayer[admin].g_flRecoilDuration, value, 0.1, 999999.0);
-		g_esRecoilPlayer[admin].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilPlayer[admin].g_iRecoilHit, value, 0, 1);
-		g_esRecoilPlayer[admin].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilPlayer[admin].g_iRecoilHitMode, value, 0, 2);
-		g_esRecoilPlayer[admin].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilPlayer[admin].g_flRecoilRange, value, 1.0, 999999.0);
-		g_esRecoilPlayer[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilPlayer[admin].g_flRecoilRangeChance, value, 0.0, 100.0);
-		g_esRecoilPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRecoilPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRecoilPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRecoilPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRecoilPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esRecoilPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esRecoilPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRecoilPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRecoilPlayer[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilPlayer[admin].g_iRecoilAbility, value, 0, 1);
+		g_esRecoilPlayer[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilPlayer[admin].g_iRecoilEffect, value, 0, 7);
+		g_esRecoilPlayer[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilPlayer[admin].g_iRecoilMessage, value, 0, 3);
+		g_esRecoilPlayer[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilPlayer[admin].g_flRecoilChance, value, 0.0, 100.0);
+		g_esRecoilPlayer[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilPlayer[admin].g_flRecoilDuration, value, 0.1, 99999.0);
+		g_esRecoilPlayer[admin].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilPlayer[admin].g_iRecoilHit, value, 0, 1);
+		g_esRecoilPlayer[admin].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilPlayer[admin].g_iRecoilHitMode, value, 0, 2);
+		g_esRecoilPlayer[admin].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilPlayer[admin].g_flRecoilRange, value, 1.0, 99999.0);
+		g_esRecoilPlayer[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilPlayer[admin].g_flRecoilRangeChance, value, 0.0, 100.0);
+		g_esRecoilPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRecoilPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRecoilAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRecoilAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRecoilAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRecoilAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esRecoilAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRecoilAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRecoilAbility[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilAbility[type].g_iRecoilAbility, value, 0, 1);
-		g_esRecoilAbility[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilAbility[type].g_iRecoilEffect, value, 0, 7);
-		g_esRecoilAbility[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilAbility[type].g_iRecoilMessage, value, 0, 3);
-		g_esRecoilAbility[type].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilAbility[type].g_flRecoilChance, value, 0.0, 100.0);
-		g_esRecoilAbility[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilAbility[type].g_flRecoilDuration, value, 0.1, 999999.0);
-		g_esRecoilAbility[type].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilAbility[type].g_iRecoilHit, value, 0, 1);
-		g_esRecoilAbility[type].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilAbility[type].g_iRecoilHitMode, value, 0, 2);
-		g_esRecoilAbility[type].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilAbility[type].g_flRecoilRange, value, 1.0, 999999.0);
-		g_esRecoilAbility[type].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilAbility[type].g_flRecoilRangeChance, value, 0.0, 100.0);
-		g_esRecoilAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRecoilAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRecoilAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRecoilAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRecoilAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRecoilAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRecoilAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRecoilAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esRecoilAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRecoilAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esRecoilAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRecoilAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRecoilAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRecoilAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRecoilAbility[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRecoilAbility[type].g_iRecoilAbility, value, 0, 1);
+		g_esRecoilAbility[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRecoilAbility[type].g_iRecoilEffect, value, 0, 7);
+		g_esRecoilAbility[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRecoilAbility[type].g_iRecoilMessage, value, 0, 3);
+		g_esRecoilAbility[type].g_flRecoilChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esRecoilAbility[type].g_flRecoilChance, value, 0.0, 100.0);
+		g_esRecoilAbility[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esRecoilAbility[type].g_flRecoilDuration, value, 0.1, 99999.0);
+		g_esRecoilAbility[type].g_iRecoilHit = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esRecoilAbility[type].g_iRecoilHit, value, 0, 1);
+		g_esRecoilAbility[type].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilAbility[type].g_iRecoilHitMode, value, 0, 2);
+		g_esRecoilAbility[type].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilAbility[type].g_flRecoilRange, value, 1.0, 99999.0);
+		g_esRecoilAbility[type].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilAbility[type].g_flRecoilRangeChance, value, 0.0, 100.0);
+		g_esRecoilAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRecoilAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTION, MT_RECOIL_SECTION2, MT_RECOIL_SECTION3, MT_RECOIL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -667,10 +666,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_INFAMMO) && g_esRecoilPlayer[iSurvivor].g_bAffected)
 		{
 			float flRecoil[3];
-			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
-			flRecoil[1] = GetRandomFloat(-25.0, 25.0);
-			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
-			SetEntPropVector(iSurvivor, Prop_Send, "m_vecPunchAngle", flRecoil);
+			flRecoil[0] = MT_GetRandomFloat(-20.0, -80.0);
+			flRecoil[1] = MT_GetRandomFloat(-25.0, 25.0);
+			flRecoil[2] = MT_GetRandomFloat(-25.0, 25.0);
+			SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flRecoil);
 		}
 	}
 }
@@ -688,7 +687,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRecoilCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRecoilCache[tank].g_iRecoilAbility == 1 && g_esRecoilCache[tank].g_iComboAbility == 0)
 	{
-		vRecoilAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRecoilAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -713,7 +712,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esRecoilPlayer[tank].g_iCooldown == -1 || g_esRecoilPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vRecoilAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vRecoilAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RecoilHuman3", (g_esRecoilPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -722,11 +721,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRecoilChangeType(int tank)
+void vRecoilChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveRecoil(tank);
 }
 
@@ -818,7 +822,7 @@ void vRecoilHit(int survivor, int tank, float random, float chance, int enabled,
 				dpStopRecoil.WriteCell(GetClientUserId(tank));
 				dpStopRecoil.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esRecoilCache[tank].g_iRecoilEffect, flags);
+				vScreenEffect(survivor, tank, g_esRecoilCache[tank].g_iRecoilEffect, flags);
 
 				if (g_esRecoilCache[tank].g_iRecoilMessage & messages)
 				{
@@ -883,7 +887,7 @@ void vRecoilReset2(int tank)
 	g_esRecoilPlayer[tank].g_iCooldown = -1;
 }
 
-public Action tTimerRecoilCombo(Handle timer, DataPack pack)
+Action tTimerRecoilCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -900,7 +904,7 @@ public Action tTimerRecoilCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRecoilCombo2(Handle timer, DataPack pack)
+Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -920,11 +924,11 @@ public Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esRecoilCache[iTank].g_iRecoilHitMode == 0 || g_esRecoilCache[iTank].g_iRecoilHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esRecoilCache[iTank].g_iRecoilHitMode == 0 || g_esRecoilCache[iTank].g_iRecoilHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vRecoilHit(iSurvivor, iTank, flRandom, flChance, g_esRecoilCache[iTank].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esRecoilCache[iTank].g_iRecoilHitMode == 0 || g_esRecoilCache[iTank].g_iRecoilHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esRecoilCache[iTank].g_iRecoilHitMode == 0 || g_esRecoilCache[iTank].g_iRecoilHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vRecoilHit(iSurvivor, iTank, flRandom, flChance, g_esRecoilCache[iTank].g_iRecoilHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -932,7 +936,7 @@ public Action tTimerRecoilCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopRecoil(Handle timer, DataPack pack)
+Action tTimerStopRecoil(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

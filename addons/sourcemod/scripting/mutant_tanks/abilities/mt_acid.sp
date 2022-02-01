@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_ACID_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,30 +48,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_ACID_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -84,7 +60,6 @@ public void OnAllPluginsLoaded()
 #define MT_ACID_SECTION2 "acid ability"
 #define MT_ACID_SECTION3 "acid_ability"
 #define MT_ACID_SECTION4 "acid"
-#define MT_ACID_SECTIONS MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4
 
 #define MT_MENU_ACID "Acid Ability"
 
@@ -278,13 +253,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdAcidInfo(int client, int args)
+Action cmdAcidInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -324,7 +299,7 @@ void vAcidMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -410,7 +385,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -423,9 +398,9 @@ public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAcidHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esAcidCache[attacker].g_flAcidChance, g_esAcidCache[attacker].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAcidHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esAcidCache[attacker].g_flAcidChance, g_esAcidCache[attacker].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esAcidCache[victim].g_iAcidHitMode == 0 || g_esAcidCache[victim].g_iAcidHitMode == 2) && bIsSurvivor(attacker) && g_esAcidCache[victim].g_iComboAbility == 0)
@@ -435,9 +410,9 @@ public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vAcidHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esAcidCache[victim].g_flAcidChance, g_esAcidCache[victim].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAcidHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esAcidCache[victim].g_flAcidChance, g_esAcidCache[victim].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -487,7 +462,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ACID_SECTION, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION2, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION3, false) || StrEqual(sSubset[iPos], MT_ACID_SECTION4, false))
 			{
@@ -521,11 +496,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esAcidCache[tank].g_iAcidHitMode == 0 || g_esAcidCache[tank].g_iAcidHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esAcidCache[tank].g_iAcidHitMode == 0 || g_esAcidCache[tank].g_iAcidHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vAcidHit(survivor, tank, random, flChance, g_esAcidCache[tank].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esAcidCache[tank].g_iAcidHitMode == 0 || g_esAcidCache[tank].g_iAcidHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esAcidCache[tank].g_iAcidHitMode == 0 || g_esAcidCache[tank].g_iAcidHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vAcidHit(survivor, tank, random, flChance, g_esAcidCache[tank].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -636,52 +611,52 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esAcidPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esAcidPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esAcidPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esAcidPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esAcidPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAcidPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esAcidPlayer[admin].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidPlayer[admin].g_iAcidAbility, value, 0, 1);
-		g_esAcidPlayer[admin].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidPlayer[admin].g_iAcidEffect, value, 0, 7);
-		g_esAcidPlayer[admin].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidPlayer[admin].g_iAcidMessage, value, 0, 7);
-		g_esAcidPlayer[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidPlayer[admin].g_flAcidChance, value, 0.0, 100.0);
-		g_esAcidPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidPlayer[admin].g_iAcidDeath, value, 0, 1);
-		g_esAcidPlayer[admin].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidPlayer[admin].g_flAcidDeathChance, value, 0.0, 100.0);
-		g_esAcidPlayer[admin].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidPlayer[admin].g_flAcidDeathRange, value, 1.0, 999999.0);
-		g_esAcidPlayer[admin].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidPlayer[admin].g_iAcidHit, value, 0, 1);
-		g_esAcidPlayer[admin].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidPlayer[admin].g_iAcidHitMode, value, 0, 2);
-		g_esAcidPlayer[admin].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidPlayer[admin].g_flAcidRange, value, 1.0, 999999.0);
-		g_esAcidPlayer[admin].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidPlayer[admin].g_flAcidRangeChance, value, 0.0, 100.0);
-		g_esAcidPlayer[admin].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidPlayer[admin].g_iAcidRockBreak, value, 0, 1);
-		g_esAcidPlayer[admin].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidPlayer[admin].g_flAcidRockChance, value, 0.0, 100.0);
-		g_esAcidPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAcidPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAcidPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esAcidPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esAcidPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esAcidPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esAcidPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esAcidPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esAcidPlayer[admin].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidPlayer[admin].g_iAcidAbility, value, 0, 1);
+		g_esAcidPlayer[admin].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidPlayer[admin].g_iAcidEffect, value, 0, 7);
+		g_esAcidPlayer[admin].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidPlayer[admin].g_iAcidMessage, value, 0, 7);
+		g_esAcidPlayer[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidPlayer[admin].g_flAcidChance, value, 0.0, 100.0);
+		g_esAcidPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidPlayer[admin].g_iAcidDeath, value, 0, 1);
+		g_esAcidPlayer[admin].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidPlayer[admin].g_flAcidDeathChance, value, 0.0, 100.0);
+		g_esAcidPlayer[admin].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidPlayer[admin].g_flAcidDeathRange, value, 1.0, 99999.0);
+		g_esAcidPlayer[admin].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidPlayer[admin].g_iAcidHit, value, 0, 1);
+		g_esAcidPlayer[admin].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidPlayer[admin].g_iAcidHitMode, value, 0, 2);
+		g_esAcidPlayer[admin].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidPlayer[admin].g_flAcidRange, value, 1.0, 99999.0);
+		g_esAcidPlayer[admin].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidPlayer[admin].g_flAcidRangeChance, value, 0.0, 100.0);
+		g_esAcidPlayer[admin].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidPlayer[admin].g_iAcidRockBreak, value, 0, 1);
+		g_esAcidPlayer[admin].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidPlayer[admin].g_flAcidRockChance, value, 0.0, 100.0);
+		g_esAcidPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAcidPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAcidAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidAbility[type].g_iComboAbility, value, 0, 1);
-		g_esAcidAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAcidAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAcidAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAcidAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esAcidAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAcidAbility[type].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidAbility[type].g_iAcidAbility, value, 0, 1);
-		g_esAcidAbility[type].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidAbility[type].g_iAcidEffect, value, 0, 7);
-		g_esAcidAbility[type].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidAbility[type].g_iAcidMessage, value, 0, 7);
-		g_esAcidAbility[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidAbility[type].g_flAcidChance, value, 0.0, 100.0);
-		g_esAcidAbility[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidAbility[type].g_iAcidDeath, value, 0, 1);
-		g_esAcidAbility[type].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidAbility[type].g_flAcidDeathChance, value, 0.0, 100.0);
-		g_esAcidAbility[type].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidAbility[type].g_flAcidDeathRange, value, 1.0, 999999.0);
-		g_esAcidAbility[type].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidAbility[type].g_iAcidHit, value, 0, 1);
-		g_esAcidAbility[type].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidAbility[type].g_iAcidHitMode, value, 0, 2);
-		g_esAcidAbility[type].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidAbility[type].g_flAcidRange, value, 1.0, 999999.0);
-		g_esAcidAbility[type].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidAbility[type].g_flAcidRangeChance, value, 0.0, 100.0);
-		g_esAcidAbility[type].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidAbility[type].g_iAcidRockBreak, value, 0, 1);
-		g_esAcidAbility[type].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTIONS, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidAbility[type].g_flAcidRockChance, value, 0.0, 100.0);
-		g_esAcidAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esAcidAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esAcidAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAcidAbility[type].g_iComboAbility, value, 0, 1);
+		g_esAcidAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAcidAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAcidAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAcidAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esAcidAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAcidAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esAcidAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAcidAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esAcidAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAcidAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAcidAbility[type].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidAbility[type].g_iAcidAbility, value, 0, 1);
+		g_esAcidAbility[type].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidAbility[type].g_iAcidEffect, value, 0, 7);
+		g_esAcidAbility[type].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidAbility[type].g_iAcidMessage, value, 0, 7);
+		g_esAcidAbility[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidAbility[type].g_flAcidChance, value, 0.0, 100.0);
+		g_esAcidAbility[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidAbility[type].g_iAcidDeath, value, 0, 1);
+		g_esAcidAbility[type].g_flAcidDeathChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAcidAbility[type].g_flAcidDeathChance, value, 0.0, 100.0);
+		g_esAcidAbility[type].g_flAcidDeathRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAcidAbility[type].g_flAcidDeathRange, value, 1.0, 99999.0);
+		g_esAcidAbility[type].g_iAcidHit = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAcidAbility[type].g_iAcidHit, value, 0, 1);
+		g_esAcidAbility[type].g_iAcidHitMode = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAcidAbility[type].g_iAcidHitMode, value, 0, 2);
+		g_esAcidAbility[type].g_flAcidRange = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAcidAbility[type].g_flAcidRange, value, 1.0, 99999.0);
+		g_esAcidAbility[type].g_flAcidRangeChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAcidAbility[type].g_flAcidRangeChance, value, 0.0, 100.0);
+		g_esAcidAbility[type].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidAbility[type].g_iAcidRockBreak, value, 0, 1);
+		g_esAcidAbility[type].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidAbility[type].g_flAcidRockChance, value, 0.0, 100.0);
+		g_esAcidAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAcidAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -759,7 +734,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vAcidRange(iTank, 1, GetRandomFloat(0.1, 100.0));
+			vAcidRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
 		}
 	}
@@ -782,7 +757,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esAcidCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidAbility == 1 && g_esAcidCache[tank].g_iComboAbility == 0)
 	{
-		vAcidAbility(tank, GetRandomFloat(0.1, 100.0));
+		vAcidAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -808,7 +783,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esAcidPlayer[tank].g_iCooldown != -1 && g_esAcidPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman3", (g_esAcidPlayer[tank].g_iCooldown - iTime));
-					case false: vAcidAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vAcidAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -816,11 +791,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAcidChangeType(int tank)
+void vAcidChangeType(int tank, int oldType)
 #else
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveAcid(tank);
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidAbility == 1)
@@ -840,7 +820,7 @@ void vAcidPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vAcidRange(tank, 1, GetRandomFloat(0.1, 100.0));
+	vAcidRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -856,7 +836,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidRockBreak == 1 && g_esAcidCache[tank].g_iComboAbility == 0)
 	{
-		vAcidRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
+		vAcidRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -870,7 +850,7 @@ void vAcid(int survivor, int tank)
 	float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-	vCreateAcid(survivor, flOrigin, flAngles);
+	SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 }
 
 void vAcidAbility(int tank, float random, int pos = -1)
@@ -946,7 +926,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 
 				vAcid(survivor, tank);
-				vEffect(survivor, tank, g_esAcidCache[tank].g_iAcidEffect, flags);
+				vScreenEffect(survivor, tank, g_esAcidCache[tank].g_iAcidEffect, flags);
 
 				char sTankName[33];
 				MT_GetTankName(tank, sTankName);
@@ -995,10 +975,10 @@ void vAcidRockBreak2(int tank, int rock, float random, int pos = -1)
 	if (random <= flChance)
 	{
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
-		GetClientAbsAngles(tank, flAngles);
+		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(rock, Prop_Data, "m_angRotation", flAngles);
 		flOrigin[2] += 40.0;
-		vCreateAcid(tank, flOrigin, flAngles);
+		SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 
 		if (g_esAcidCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{
@@ -1014,22 +994,6 @@ void vAcidCopyStats2(int oldTank, int newTank)
 {
 	g_esAcidPlayer[newTank].g_iAmmoCount = g_esAcidPlayer[oldTank].g_iAmmoCount;
 	g_esAcidPlayer[newTank].g_iCooldown = g_esAcidPlayer[oldTank].g_iCooldown;
-}
-
-void vCreateAcid(int spitter, float pos[3], float angles[3])
-{
-#if defined _l4dh_included
-	switch (g_bLeft4DHooksInstalled || g_hSDKSpitterProjectileCreate == null)
-	{
-		case true: L4D2_SpitterPrj(spitter, pos, angles);
-		case false: SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
-	}
-#else
-	if (g_hSDKSpitterProjectileCreate != null)
-	{
-		SDKCall(g_hSDKSpitterProjectileCreate, pos, angles, angles, angles, spitter);
-	}
-#endif
 }
 
 void vRemoveAcid(int tank)
@@ -1051,7 +1015,7 @@ void vAcidReset()
 	}
 }
 
-public Action tTimerAcidCombo(Handle timer, DataPack pack)
+Action tTimerAcidCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1068,7 +1032,7 @@ public Action tTimerAcidCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerAcidCombo2(Handle timer, DataPack pack)
+Action tTimerAcidCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1087,11 +1051,11 @@ public Action tTimerAcidCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esAcidCache[iTank].g_iAcidHitMode == 0 || g_esAcidCache[iTank].g_iAcidHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esAcidCache[iTank].g_iAcidHitMode == 0 || g_esAcidCache[iTank].g_iAcidHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vAcidHit(iSurvivor, iTank, flRandom, flChance, g_esAcidCache[iTank].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}
-	else if ((g_esAcidCache[iTank].g_iAcidHitMode == 0 || g_esAcidCache[iTank].g_iAcidHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esAcidCache[iTank].g_iAcidHitMode == 0 || g_esAcidCache[iTank].g_iAcidHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vAcidHit(iSurvivor, iTank, flRandom, flChance, g_esAcidCache[iTank].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_ROCKET_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -27,20 +27,16 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	switch (GetEngineVersion())
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		case Engine_Left4Dead: g_bSecondGame = false;
-		case Engine_Left4Dead2: g_bSecondGame = true;
-		default:
-		{
-			strcopy(error, err_max, "\"[MT] Rocket Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Rocket Ability\" only supports Left 4 Dead 1 & 2.");
 
-			return APLRes_SilentFailure;
-		}
+		return APLRes_SilentFailure;
 	}
 
 	g_bDedicated = IsDedicatedServer();
@@ -50,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_ROCKET_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -58,11 +54,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
 
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+
 #define MT_ROCKET_SECTION "rocketability"
 #define MT_ROCKET_SECTION2 "rocket ability"
 #define MT_ROCKET_SECTION3 "rocket_ability"
 #define MT_ROCKET_SECTION4 "rocket"
-#define MT_ROCKET_SECTIONS MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4
 
 #define MT_MENU_ROCKET "Rocket Ability"
 
@@ -179,7 +176,7 @@ void vRocketMapStart()
 public void OnMapStart()
 #endif
 {
-	g_iRocketSprite = PrecacheModel("sprites/sprite_fire01.vmt", true);
+	g_iRocketSprite = PrecacheModel(SPRITE_FIRE, true);
 
 	PrecacheSound(SOUND_EXPLOSION, true);
 	PrecacheSound(SOUND_FIRE, true);
@@ -216,13 +213,14 @@ public void OnMapEnd()
 	vRocketReset();
 }
 
-public Action cmdRocketInfo(int client, int args)
+#if !defined MT_ABILITIES_MAIN2
+Action cmdRocketInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -242,6 +240,7 @@ public Action cmdRocketInfo(int client, int args)
 
 	return Plugin_Handled;
 }
+#endif
 
 void vRocketMenu(int client, const char[] name, int item)
 {
@@ -261,7 +260,7 @@ void vRocketMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -365,7 +364,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnRocketModelSpawnPost(int model)
+void OnRocketModelSpawnPost(int model)
 {
 	g_iRocketDeathModelOwner = 0;
 
@@ -379,7 +378,7 @@ public void OnRocketModelSpawnPost(int model)
 	RemoveEntity(model);
 }
 
-public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -392,9 +391,9 @@ public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRocketHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRocketCache[victim].g_iRocketHitMode == 0 || g_esRocketCache[victim].g_iRocketHitMode == 2) && bIsSurvivor(attacker) && g_esRocketCache[victim].g_iComboAbility == 0)
@@ -404,9 +403,9 @@ public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, floa
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRocketHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRocketHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -456,7 +455,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ROCKET_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION4, false))
 			{
@@ -490,11 +489,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esRocketCache[tank].g_iRocketHitMode == 0 || g_esRocketCache[tank].g_iRocketHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esRocketCache[tank].g_iRocketHitMode == 0 || g_esRocketCache[tank].g_iRocketHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vRocketHit(survivor, tank, random, flChance, g_esRocketCache[tank].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 								}
-								else if ((g_esRocketCache[tank].g_iRocketHitMode == 0 || g_esRocketCache[tank].g_iRocketHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esRocketCache[tank].g_iRocketHitMode == 0 || g_esRocketCache[tank].g_iRocketHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vRocketHit(survivor, tank, random, flChance, g_esRocketCache[tank].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 								}
@@ -590,46 +589,46 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esRocketPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRocketPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRocketPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esRocketPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esRocketPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRocketPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRocketPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketPlayer[admin].g_iRocketAbility, value, 0, 1);
-		g_esRocketPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketPlayer[admin].g_iRocketEffect, value, 0, 7);
-		g_esRocketPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketPlayer[admin].g_iRocketMessage, value, 0, 3);
-		g_esRocketPlayer[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketPlayer[admin].g_iRocketBody, value, 0, 1);
-		g_esRocketPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketPlayer[admin].g_flRocketChance, value, 0.0, 100.0);
-		g_esRocketPlayer[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketPlayer[admin].g_flRocketDelay, value, 0.1, 999999.0);
-		g_esRocketPlayer[admin].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketPlayer[admin].g_iRocketHit, value, 0, 1);
-		g_esRocketPlayer[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketPlayer[admin].g_iRocketHitMode, value, 0, 2);
-		g_esRocketPlayer[admin].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketPlayer[admin].g_flRocketRange, value, 1.0, 999999.0);
-		g_esRocketPlayer[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketPlayer[admin].g_flRocketRangeChance, value, 0.0, 100.0);
-		g_esRocketPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRocketPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRocketPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esRocketPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esRocketPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esRocketPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esRocketPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRocketPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esRocketPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketPlayer[admin].g_iRocketAbility, value, 0, 1);
+		g_esRocketPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketPlayer[admin].g_iRocketEffect, value, 0, 7);
+		g_esRocketPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketPlayer[admin].g_iRocketMessage, value, 0, 3);
+		g_esRocketPlayer[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketPlayer[admin].g_iRocketBody, value, 0, 1);
+		g_esRocketPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketPlayer[admin].g_flRocketChance, value, 0.0, 100.0);
+		g_esRocketPlayer[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketPlayer[admin].g_flRocketDelay, value, 0.1, 99999.0);
+		g_esRocketPlayer[admin].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketPlayer[admin].g_iRocketHit, value, 0, 1);
+		g_esRocketPlayer[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketPlayer[admin].g_iRocketHitMode, value, 0, 2);
+		g_esRocketPlayer[admin].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketPlayer[admin].g_flRocketRange, value, 1.0, 99999.0);
+		g_esRocketPlayer[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketPlayer[admin].g_flRocketRangeChance, value, 0.0, 100.0);
+		g_esRocketPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRocketPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRocketAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRocketAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRocketAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esRocketAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esRocketAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esRocketAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRocketAbility[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketAbility[type].g_iRocketAbility, value, 0, 1);
-		g_esRocketAbility[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketAbility[type].g_iRocketEffect, value, 0, 7);
-		g_esRocketAbility[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketAbility[type].g_iRocketMessage, value, 0, 3);
-		g_esRocketAbility[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketAbility[type].g_iRocketBody, value, 0, 1);
-		g_esRocketAbility[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketAbility[type].g_flRocketChance, value, 0.0, 100.0);
-		g_esRocketAbility[type].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketAbility[type].g_flRocketDelay, value, 0.1, 999999.0);
-		g_esRocketAbility[type].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketAbility[type].g_iRocketHit, value, 0, 1);
-		g_esRocketAbility[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketAbility[type].g_iRocketHitMode, value, 0, 2);
-		g_esRocketAbility[type].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketAbility[type].g_flRocketRange, value, 1.0, 999999.0);
-		g_esRocketAbility[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTIONS, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketAbility[type].g_flRocketRangeChance, value, 0.0, 100.0);
-		g_esRocketAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esRocketAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esRocketAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRocketAbility[type].g_iComboAbility, value, 0, 1);
+		g_esRocketAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRocketAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esRocketAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRocketAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esRocketAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRocketAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esRocketAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRocketAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esRocketAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRocketAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esRocketAbility[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketAbility[type].g_iRocketAbility, value, 0, 1);
+		g_esRocketAbility[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketAbility[type].g_iRocketEffect, value, 0, 7);
+		g_esRocketAbility[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketAbility[type].g_iRocketMessage, value, 0, 3);
+		g_esRocketAbility[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketAbility[type].g_iRocketBody, value, 0, 1);
+		g_esRocketAbility[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketAbility[type].g_flRocketChance, value, 0.0, 100.0);
+		g_esRocketAbility[type].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketAbility[type].g_flRocketDelay, value, 0.1, 99999.0);
+		g_esRocketAbility[type].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketAbility[type].g_iRocketHit, value, 0, 1);
+		g_esRocketAbility[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketAbility[type].g_iRocketHitMode, value, 0, 2);
+		g_esRocketAbility[type].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketAbility[type].g_flRocketRange, value, 1.0, 99999.0);
+		g_esRocketAbility[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketAbility[type].g_flRocketRangeChance, value, 0.0, 100.0);
+		g_esRocketAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRocketAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -741,7 +740,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRocketCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRocketCache[tank].g_iRocketAbility == 1 && g_esRocketCache[tank].g_iComboAbility == 0)
 	{
-		vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
+		vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -767,7 +766,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esRocketPlayer[tank].g_iCooldown != -1 && g_esRocketPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman3", (g_esRocketPlayer[tank].g_iCooldown - iTime));
-					case false: vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -775,11 +774,16 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRocketChangeType(int tank)
+void vRocketChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveRocket(tank);
 }
 
@@ -912,7 +916,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					}
 
 					float flPosition[3], flAngles[3];
-					GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
+					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPosition);
 					flPosition[2] += 30.0;
 					flAngles[0] = 90.0;
 					flAngles[1] = 0.0;
@@ -936,7 +940,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					iFlame = EntIndexToEntRef(iFlame);
 					vDeleteEntity(iFlame, 3.0);
 
-					vEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
+					vScreenEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
 					EmitSoundToAll(SOUND_FIRE, survivor);
 
 					float flDelay = (pos != -1) ? 0.1 : g_esRocketCache[tank].g_flRocketDelay;
@@ -975,7 +979,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-public Action tTimerRocketCombo(Handle timer, DataPack pack)
+Action tTimerRocketCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -992,7 +996,7 @@ public Action tTimerRocketCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketCombo2(Handle timer, DataPack pack)
+Action tTimerRocketCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1012,11 +1016,11 @@ public Action tTimerRocketCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esRocketCache[iTank].g_iRocketHitMode == 0 || g_esRocketCache[iTank].g_iRocketHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esRocketCache[iTank].g_iRocketHitMode == 0 || g_esRocketCache[iTank].g_iRocketHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vRocketHit(iSurvivor, iTank, flRandom, flChance, g_esRocketCache[iTank].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esRocketCache[iTank].g_iRocketHitMode == 0 || g_esRocketCache[iTank].g_iRocketHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esRocketCache[iTank].g_iRocketHitMode == 0 || g_esRocketCache[iTank].g_iRocketHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vRocketHit(iSurvivor, iTank, flRandom, flChance, g_esRocketCache[iTank].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -1024,7 +1028,7 @@ public Action tTimerRocketCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketLaunch(Handle timer, DataPack pack)
+Action tTimerRocketLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1059,7 +1063,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerRocketDetonate(Handle timer, DataPack pack)
+Action tTimerRocketDetonate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

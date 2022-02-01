@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,13 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_BURY_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
-	#undef REQUIRE_PLUGIN
-	#tryinclude <left4dhooks>
-	#define REQUIRE_PLUGIN
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -30,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled;
+bool g_bDedicated, g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -47,30 +44,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks"))
-	{
-		g_bLeft4DHooksInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
-}
 #else
 	#if MT_BURY_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -78,13 +54,13 @@ public void OnAllPluginsLoaded()
 #define MT_BURY_SECTION2 "bury ability"
 #define MT_BURY_SECTION3 "bury_ability"
 #define MT_BURY_SECTION4 "bury"
-#define MT_BURY_SECTIONS MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4
 
 #define MT_MENU_BURY "Bury Ability"
 
 enum struct esBuryPlayer
 {
 	bool g_bAffected;
+	bool g_bBlockFall;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
@@ -256,13 +232,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdBuryInfo(int client, int args)
+Action cmdBuryInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -303,7 +279,7 @@ void vBuryMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iBuryMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iBuryMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -414,34 +390,43 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBuryCache[attacker].g_iBuryHitMode == 0 || g_esBuryCache[attacker].g_iBuryHitMode == 1) && bIsSurvivor(victim) && g_esBuryCache[attacker].g_iComboAbility == 0)
+		if (bIsSurvivor(victim) && (damagetype & DMG_FALL) && g_esBuryPlayer[victim].g_bBlockFall)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBuryPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBuryPlayer[attacker].g_iTankType, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[victim].g_iImmunityFlags))
-			{
-				return Plugin_Continue;
-			}
+			g_esBuryPlayer[victim].g_bBlockFall = false;
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
-			{
-				vBuryHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
-			}
+			return Plugin_Handled;
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBuryCache[victim].g_iBuryHitMode == 0 || g_esBuryCache[victim].g_iBuryHitMode == 2) && bIsSurvivor(attacker) && g_esBuryCache[victim].g_iComboAbility == 0)
+		else if (bIsValidEntity(inflictor))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iAccessFlags, g_esBuryPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esBuryPlayer[victim].g_iTankType, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[attacker].g_iImmunityFlags))
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBuryCache[attacker].g_iBuryHitMode == 0 || g_esBuryCache[attacker].g_iBuryHitMode == 1) && bIsSurvivor(victim) && g_esBuryCache[attacker].g_iComboAbility == 0)
 			{
-				return Plugin_Continue;
-			}
+				if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBuryPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBuryPlayer[attacker].g_iTankType, g_esBuryAbility[g_esBuryPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[victim].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+				{
+					vBuryHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				}
+			}
+			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBuryCache[victim].g_iBuryHitMode == 0 || g_esBuryCache[victim].g_iBuryHitMode == 2) && bIsSurvivor(attacker) && g_esBuryCache[victim].g_iComboAbility == 0)
 			{
-				vBuryHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iAccessFlags, g_esBuryPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esBuryPlayer[victim].g_iTankType, g_esBuryAbility[g_esBuryPlayer[victim].g_iTankType].g_iImmunityFlags, g_esBuryPlayer[attacker].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
+
+				if (StrEqual(sClassname[7], "melee"))
+				{
+					vBuryHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				}
 			}
 		}
 	}
@@ -491,7 +476,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_BURY_SECTION, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION2, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION3, false) || StrEqual(sSubset[iPos], MT_BURY_SECTION4, false))
 			{
@@ -525,11 +510,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vBuryHit(survivor, tank, random, flChance, g_esBuryCache[tank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esBuryCache[tank].g_iBuryHitMode == 0 || g_esBuryCache[tank].g_iBuryHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vBuryHit(survivor, tank, random, flChance, g_esBuryCache[tank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -628,48 +613,48 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esBuryPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esBuryPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esBuryPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esBuryPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esBuryPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esBuryPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esBuryPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryPlayer[admin].g_iBuryAbility, value, 0, 1);
-		g_esBuryPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryPlayer[admin].g_iBuryEffect, value, 0, 7);
-		g_esBuryPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryPlayer[admin].g_iBuryMessage, value, 0, 3);
-		g_esBuryPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryPlayer[admin].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
-		g_esBuryPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryPlayer[admin].g_flBuryChance, value, 0.0, 100.0);
-		g_esBuryPlayer[admin].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryPlayer[admin].g_flBuryDuration, value, 0.1, 999999.0);
-		g_esBuryPlayer[admin].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryPlayer[admin].g_flBuryHeight, value, 0.1, 999999.0);
-		g_esBuryPlayer[admin].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryPlayer[admin].g_iBuryHit, value, 0, 1);
-		g_esBuryPlayer[admin].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryPlayer[admin].g_iBuryHitMode, value, 0, 2);
-		g_esBuryPlayer[admin].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryPlayer[admin].g_flBuryRange, value, 1.0, 999999.0);
-		g_esBuryPlayer[admin].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryPlayer[admin].g_flBuryRangeChance, value, 0.0, 100.0);
-		g_esBuryPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esBuryPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esBuryPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esBuryPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esBuryPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esBuryPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esBuryPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esBuryPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esBuryPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryPlayer[admin].g_iBuryAbility, value, 0, 1);
+		g_esBuryPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryPlayer[admin].g_iBuryEffect, value, 0, 7);
+		g_esBuryPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryPlayer[admin].g_iBuryMessage, value, 0, 3);
+		g_esBuryPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryPlayer[admin].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
+		g_esBuryPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryPlayer[admin].g_flBuryChance, value, 0.0, 100.0);
+		g_esBuryPlayer[admin].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryPlayer[admin].g_flBuryDuration, value, 0.1, 99999.0);
+		g_esBuryPlayer[admin].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryPlayer[admin].g_flBuryHeight, value, 0.1, 99999.0);
+		g_esBuryPlayer[admin].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryPlayer[admin].g_iBuryHit, value, 0, 1);
+		g_esBuryPlayer[admin].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryPlayer[admin].g_iBuryHitMode, value, 0, 2);
+		g_esBuryPlayer[admin].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryPlayer[admin].g_flBuryRange, value, 1.0, 99999.0);
+		g_esBuryPlayer[admin].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryPlayer[admin].g_flBuryRangeChance, value, 0.0, 100.0);
+		g_esBuryPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBuryPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esBuryAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryAbility[type].g_iComboAbility, value, 0, 1);
-		g_esBuryAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esBuryAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esBuryAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esBuryAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esBuryAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esBuryAbility[type].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryAbility[type].g_iBuryAbility, value, 0, 1);
-		g_esBuryAbility[type].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryAbility[type].g_iBuryEffect, value, 0, 7);
-		g_esBuryAbility[type].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryAbility[type].g_iBuryMessage, value, 0, 3);
-		g_esBuryAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryAbility[type].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
-		g_esBuryAbility[type].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryAbility[type].g_flBuryChance, value, 0.0, 100.0);
-		g_esBuryAbility[type].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryAbility[type].g_flBuryDuration, value, 0.1, 999999.0);
-		g_esBuryAbility[type].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryAbility[type].g_flBuryHeight, value, 0.1, 999999.0);
-		g_esBuryAbility[type].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryAbility[type].g_iBuryHit, value, 0, 1);
-		g_esBuryAbility[type].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryAbility[type].g_iBuryHitMode, value, 0, 2);
-		g_esBuryAbility[type].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryAbility[type].g_flBuryRange, value, 1.0, 999999.0);
-		g_esBuryAbility[type].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTIONS, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryAbility[type].g_flBuryRangeChance, value, 0.0, 100.0);
-		g_esBuryAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esBuryAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esBuryAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBuryAbility[type].g_iComboAbility, value, 0, 1);
+		g_esBuryAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBuryAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esBuryAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBuryAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esBuryAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBuryAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esBuryAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBuryAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esBuryAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBuryAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esBuryAbility[type].g_iBuryAbility = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBuryAbility[type].g_iBuryAbility, value, 0, 1);
+		g_esBuryAbility[type].g_iBuryEffect = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBuryAbility[type].g_iBuryEffect, value, 0, 7);
+		g_esBuryAbility[type].g_iBuryMessage = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBuryAbility[type].g_iBuryMessage, value, 0, 3);
+		g_esBuryAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esBuryAbility[type].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
+		g_esBuryAbility[type].g_flBuryChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esBuryAbility[type].g_flBuryChance, value, 0.0, 100.0);
+		g_esBuryAbility[type].g_flBuryDuration = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esBuryAbility[type].g_flBuryDuration, value, 0.1, 99999.0);
+		g_esBuryAbility[type].g_flBuryHeight = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esBuryAbility[type].g_flBuryHeight, value, 0.1, 99999.0);
+		g_esBuryAbility[type].g_iBuryHit = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esBuryAbility[type].g_iBuryHit, value, 0, 1);
+		g_esBuryAbility[type].g_iBuryHitMode = iGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esBuryAbility[type].g_iBuryHitMode, value, 0, 2);
+		g_esBuryAbility[type].g_flBuryRange = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esBuryAbility[type].g_flBuryRange, value, 1.0, 99999.0);
+		g_esBuryAbility[type].g_flBuryRangeChance = flGetKeyValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esBuryAbility[type].g_flBuryRangeChance, value, 0.0, 100.0);
+		g_esBuryAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBuryAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BURY_SECTION, MT_BURY_SECTION2, MT_BURY_SECTION3, MT_BURY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -770,6 +755,21 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vBuryFatalFalling(int survivor)
+#else
+public Action MT_OnFatalFalling(int survivor)
+#endif
+{
+	if (bIsSurvivor(survivor) && g_esBuryPlayer[survivor].g_bBlockFall)
+	{
+		g_esBuryPlayer[survivor].g_bBlockFall = false;
+	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
+}
+
+#if defined MT_ABILITIES_MAIN
 void vBuryRewardSurvivor(int survivor, int type, bool apply)
 #else
 public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
@@ -779,6 +779,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	{
 		vStopBury(survivor, g_esBuryPlayer[survivor].g_iOwner);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -794,7 +797,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esBuryCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esBuryCache[tank].g_iBuryAbility == 1 && g_esBuryCache[tank].g_iComboAbility == 0)
 	{
-		vBuryAbility(tank, GetRandomFloat(0.1, 100.0));
+		vBuryAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -819,7 +822,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esBuryPlayer[tank].g_iCooldown == -1 || g_esBuryPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vBuryAbility(tank, GetRandomFloat(0.1, 100.0));
+					case true: vBuryAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BuryHuman3", (g_esBuryPlayer[tank].g_iCooldown - iTime));
 				}
 			}
@@ -828,15 +831,17 @@ public void MT_OnButtonPressed(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryChangeType(int tank)
+void vBuryChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
-	if (MT_IsTankSupported(tank))
+	if (oldType <= 0 || !MT_IsTankSupported(tank))
 	{
-		vRemoveBury(tank);
+		return;
 	}
+
+	vRemoveBury(tank);
 }
 
 void vBuryAbility(int tank, float random, int pos = -1)
@@ -914,12 +919,12 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 				}
 
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esBuryPlayer[survivor].g_flLastPosition);
+				GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", g_esBuryPlayer[survivor].g_flLastPosition);
 
 				float flOrigin[3];
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 				flOrigin[2] -= g_esBuryCache[tank].g_flBuryHeight;
-				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+				SetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 
 				SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 				SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
@@ -936,7 +941,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpStopBury.WriteCell(GetClientUserId(tank));
 				dpStopBury.WriteCell(messages);
 
-				vEffect(survivor, tank, g_esBuryCache[tank].g_iBuryEffect, flags);
+				vScreenEffect(survivor, tank, g_esBuryCache[tank].g_iBuryEffect, flags);
 
 				if (g_esBuryCache[tank].g_iBuryMessage & messages)
 				{
@@ -982,7 +987,7 @@ void vRemoveBury(int tank)
 		}
 	}
 
-	vBuryReset2(tank);
+	vBuryReset2(tank, false);
 }
 
 void vBuryReset()
@@ -992,45 +997,40 @@ void vBuryReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vBuryReset2(iPlayer);
-
-			g_esBuryPlayer[iPlayer].g_iOwner = 0;
 		}
 	}
 }
 
-void vBuryReset2(int tank)
+void vBuryReset2(int tank, bool full = true)
 {
 	g_esBuryPlayer[tank].g_bAffected = false;
 	g_esBuryPlayer[tank].g_bFailed = false;
 	g_esBuryPlayer[tank].g_bNoAmmo = false;
 	g_esBuryPlayer[tank].g_iAmmoCount = 0;
 	g_esBuryPlayer[tank].g_iCooldown = -1;
+
+	if (full)
+	{
+		g_esBuryPlayer[tank].g_bBlockFall = false;
+		g_esBuryPlayer[tank].g_iOwner = 0;
+	}
 }
 
 void vStopBury(int survivor, int tank)
 {
 	g_esBuryPlayer[survivor].g_bAffected = false;
+	g_esBuryPlayer[survivor].g_bBlockFall = true;
 	g_esBuryPlayer[survivor].g_iOwner = 0;
 
 	float flOrigin[3];
-	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 	flOrigin[2] += g_esBuryCache[tank].g_flBuryHeight;
-	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	SetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
 
 	if (bIsPlayerIncapacitated(survivor))
 	{
-#if defined _l4dh_included
-		switch (g_bLeft4DHooksInstalled || g_hSDKRevive == null)
-		{
-			case true: L4D_ReviveSurvivor(survivor);
-			case false: SDKCall(g_hSDKRevive, survivor);
-		}
-#else
-		if (g_hSDKRevive != null)
-		{
-			SDKCall(g_hSDKRevive, survivor);
-		}
-#endif
+		SDKCall(g_hSDKRevive, survivor);
+
 		if (g_esBuryCache[tank].g_flBuryBuffer > 0.0)
 		{
 			SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
@@ -1047,12 +1047,14 @@ void vStopBury(int survivor, int tank)
 	float flAngles[3];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && !g_esBuryPlayer[iSurvivor].g_bBlockFall && iSurvivor != survivor)
 		{
 			bTeleport = false;
 
 			GetClientAbsOrigin(iSurvivor, flOrigin);
 			GetClientEyeAngles(iSurvivor, flAngles);
+			flOrigin[2] += g_esBuryCache[tank].g_flBuryHeight;
+
 			TeleportEntity(survivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 			break;
@@ -1061,6 +1063,8 @@ void vStopBury(int survivor, int tank)
 
 	if (bTeleport)
 	{
+		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight;
+
 		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	}
 
@@ -1070,7 +1074,7 @@ void vStopBury(int survivor, int tank)
 	}
 }
 
-public Action tTimerBuryCombo(Handle timer, DataPack pack)
+Action tTimerBuryCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1087,7 +1091,7 @@ public Action tTimerBuryCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerBuryCombo2(Handle timer, DataPack pack)
+Action tTimerBuryCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1107,11 +1111,11 @@ public Action tTimerBuryCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vBuryHit(iSurvivor, iTank, flRandom, flChance, g_esBuryCache[iTank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esBuryCache[iTank].g_iBuryHitMode == 0 || g_esBuryCache[iTank].g_iBuryHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vBuryHit(iSurvivor, iTank, flRandom, flChance, g_esBuryCache[iTank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -1119,7 +1123,7 @@ public Action tTimerBuryCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBury(Handle timer, DataPack pack)
+Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

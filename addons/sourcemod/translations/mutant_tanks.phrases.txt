@@ -4,13 +4,15 @@
 	// --
 	// Note: Not all phrases support these placeholders.
 	// --
-	// "{default}" Normal - \x01
+	// "{default}" - Normal - \x01
 	// --
-	// "{mint}" Sky-green - \x03
+	// "{mint}" - Sky-green - \x03
 	// --
-	// "{yellow}" Yellow-orange - \x04
+	// "{yellow}" - Yellow-orange - \x04
 	// --
-	// "{olive}" Yellow-green - \x05
+	// "{olive}" - Yellow-green - \x05
+	// --
+	// "{percent}" - "%"
 
 	"MutantTanks"
 	{
@@ -682,6 +684,12 @@
 	"ParticleVisualOff"
 	{
 		"en"			"Particle Effect Visual: OFF"
+	}
+
+	"PersonalType"
+	{
+		"#format"		"{1:t},{2:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}){default} when you take control of the{mint} Tank{default}."
 	}
 
 	"PluginDisabled"
@@ -4834,7 +4842,7 @@
 	"Ultimate3"
 	{
 		"#format"		"{1:.2f},{2:.2f}"
-		"en"			"You have dealt {yellow}{1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
+		"en"			"You have dealt{yellow} {1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
 	}
 
 	"Ultimate4"
@@ -5047,6 +5055,12 @@
 	{
 		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
+	}
+
+	"Warp4"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} switched places with their{yellow} rock{mint}."
 	}
 
 	"WarpAmmo"
@@ -5330,7 +5344,7 @@
 	"Zombie2"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} spawned {yellow} zombies{mint}!"
+		"en"			"{olive}{1}{mint} spawned{yellow} zombies{mint}!"
 	}
 
 	"ZombieAmmo"

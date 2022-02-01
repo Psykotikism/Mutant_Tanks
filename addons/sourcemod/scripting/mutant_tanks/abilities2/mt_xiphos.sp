@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_XIPHOS_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_XIPHOS_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_XIPHOS_SECTION2 "xiphos ability"
 #define MT_XIPHOS_SECTION3 "xiphos_ability"
 #define MT_XIPHOS_SECTION4 "xiphos"
-#define MT_XIPHOS_SECTIONS MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4
 
 #define MT_XIPHOS_TANK (1 << 0) // tank xiphos
 #define MT_XIPHOS_SURVIVOR (1 << 1) // survivor xiphos
@@ -145,13 +144,13 @@ public void OnClientPutInServer(int client)
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdXiphosInfo(int client, int args)
+Action cmdXiphosInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -188,7 +187,7 @@ void vXiphosMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -268,11 +267,11 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esXiphosCache[attacker].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esXiphosCache[attacker].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
 		{
 			if (bIsAreaNarrow(attacker, g_esXiphosCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[attacker].g_iTankType) || (g_esXiphosCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esXiphosPlayer[attacker].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[victim].g_iImmunityFlags))
 			{
@@ -281,13 +280,13 @@ public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, floa
 
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+			if ((!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esXiphosCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
 				vXiphos(attacker, victim, damage, true);
-				vEffect(victim, attacker, g_esXiphosCache[attacker].g_iXiphosEffect, MT_ATTACK_CLAW);
+				vScreenEffect(victim, attacker, g_esXiphosCache[attacker].g_iXiphosEffect, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
 		{
 			if (bIsAreaNarrow(victim, g_esXiphosCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[victim].g_iTankType) || (g_esXiphosCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esXiphosPlayer[victim].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[attacker].g_iImmunityFlags))
 			{
@@ -401,30 +400,30 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esXiphosPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esXiphosPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esXiphosPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esXiphosPlayer[admin].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosPlayer[admin].g_iXiphosAbility, value, 0, 1);
-		g_esXiphosPlayer[admin].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosPlayer[admin].g_iXiphosEffect, value, 0, 1);
-		g_esXiphosPlayer[admin].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosPlayer[admin].g_iXiphosMessage, value, 0, 3);
-		g_esXiphosPlayer[admin].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosPlayer[admin].g_flXiphosChance, value, 0.0, 100.0);
-		g_esXiphosPlayer[admin].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosPlayer[admin].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
-		g_esXiphosPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esXiphosPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esXiphosPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esXiphosPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esXiphosPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esXiphosPlayer[admin].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosPlayer[admin].g_iXiphosAbility, value, 0, 1);
+		g_esXiphosPlayer[admin].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosPlayer[admin].g_iXiphosEffect, value, 0, 1);
+		g_esXiphosPlayer[admin].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosPlayer[admin].g_iXiphosMessage, value, 0, 3);
+		g_esXiphosPlayer[admin].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosPlayer[admin].g_flXiphosChance, value, 0.0, 100.0);
+		g_esXiphosPlayer[admin].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosPlayer[admin].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
+		g_esXiphosPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esXiphosPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esXiphosAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esXiphosAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esXiphosAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esXiphosAbility[type].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosAbility[type].g_iXiphosAbility, value, 0, 1);
-		g_esXiphosAbility[type].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosAbility[type].g_iXiphosEffect, value, 0, 1);
-		g_esXiphosAbility[type].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosAbility[type].g_iXiphosMessage, value, 0, 3);
-		g_esXiphosAbility[type].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosAbility[type].g_flXiphosChance, value, 0.0, 100.0);
-		g_esXiphosAbility[type].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTIONS, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosAbility[type].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
-		g_esXiphosAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esXiphosAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esXiphosAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esXiphosAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esXiphosAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esXiphosAbility[type].g_iXiphosAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esXiphosAbility[type].g_iXiphosAbility, value, 0, 1);
+		g_esXiphosAbility[type].g_iXiphosEffect = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esXiphosAbility[type].g_iXiphosEffect, value, 0, 1);
+		g_esXiphosAbility[type].g_iXiphosMessage = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esXiphosAbility[type].g_iXiphosMessage, value, 0, 3);
+		g_esXiphosAbility[type].g_flXiphosChance = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esXiphosAbility[type].g_flXiphosChance, value, 0.0, 100.0);
+		g_esXiphosAbility[type].g_iXiphosMaxHealth = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esXiphosAbility[type].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
+		g_esXiphosAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esXiphosAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

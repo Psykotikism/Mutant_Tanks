@@ -4,13 +4,15 @@
 	// --
 	// Megjegyzés: Nem mindegyik kifejezés támogatja ezeket a helyőrzőket.
 	// --
-	// "{default}" Normál - \x01
+	// "{default}" - Normál - \x01
 	// --
-	// "{mint}" Ég zöld - \x03
+	// "{mint}" - Ég zöld - \x03
 	// --
-	// "{yellow}" Sárgás narancs - \x04
+	// "{yellow}" - Sárgás narancs - \x04
 	// --
-	// "{olive}" Sárgászöld - \x05
+	// "{olive}" - Sárgászöld - \x05
+	// --
+	// "{percent}" - "%"
 
 	"Tank #1 Name"
 	{
@@ -329,7 +331,7 @@
 
 	"Tank #32"
 	{
-		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat bántsák."
+		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
 	}
 
 	"Tank #33 Name"
@@ -499,7 +501,7 @@
 
 	"Tank #49"
 	{
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, sok hordányi zombival."
+		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, nagyon sok zombival."
 	}
 
 	"Tank #50 Name"

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_HIT_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_HIT_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_HIT_SECTION2 "hit ability"
 #define MT_HIT_SECTION3 "hit_ability"
 #define MT_HIT_SECTION4 "hit"
-#define MT_HIT_SECTIONS MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4
 
 #define MT_MENU_HIT "Hit Ability"
 
@@ -137,13 +136,13 @@ public void OnClientPutInServer(int client)
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdHitInfo(int client, int args)
+Action cmdHitInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -180,7 +179,7 @@ void vHitMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -260,7 +259,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
@@ -273,6 +272,7 @@ public Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &d
 
 			int iBit = (hitgroup - 1), iFlag = (1 << iBit);
 			damage *= g_esHitCache[victim].g_flHitDamageMultiplier;
+
 			return !!(g_esHitCache[victim].g_iHitGroup & iFlag) ? Plugin_Changed : Plugin_Handled;
 		}
 	}
@@ -352,26 +352,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esHitPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esHitPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHitPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esHitPlayer[admin].g_iHitAbility = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHitPlayer[admin].g_iHitAbility, value, 0, 1);
-		g_esHitPlayer[admin].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esHitPlayer[admin].g_flHitDamageMultiplier, value, 1.0, 999999.0);
-		g_esHitPlayer[admin].g_iHitGroup = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esHitPlayer[admin].g_iHitGroup, value, 1, 127);
-		g_esHitPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHitPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHitPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esHitPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esHitPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esHitPlayer[admin].g_iHitAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHitPlayer[admin].g_iHitAbility, value, 0, 1);
+		g_esHitPlayer[admin].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esHitPlayer[admin].g_flHitDamageMultiplier, value, 1.0, 99999.0);
+		g_esHitPlayer[admin].g_iHitGroup = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esHitPlayer[admin].g_iHitGroup, value, 1, 127);
+		g_esHitPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHitPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esHitAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esHitAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esHitAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esHitAbility[type].g_iHitAbility = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHitAbility[type].g_iHitAbility, value, 0, 1);
-		g_esHitAbility[type].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esHitAbility[type].g_flHitDamageMultiplier, value, 1.0, 999999.0);
-		g_esHitAbility[type].g_iHitGroup = iGetKeyValue(subsection, MT_HIT_SECTIONS, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esHitAbility[type].g_iHitGroup, value, 1, 127);
-		g_esHitAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esHitAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esHitAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esHitAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esHitAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esHitAbility[type].g_iHitAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHitAbility[type].g_iHitAbility, value, 0, 1);
+		g_esHitAbility[type].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esHitAbility[type].g_flHitDamageMultiplier, value, 1.0, 99999.0);
+		g_esHitAbility[type].g_iHitGroup = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esHitAbility[type].g_iHitGroup, value, 1, 127);
+		g_esHitAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHitAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

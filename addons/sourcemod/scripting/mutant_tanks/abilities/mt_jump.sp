@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_JUMP_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_JUMP_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -54,7 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_JUMP_SECTION2 "jump ability"
 #define MT_JUMP_SECTION3 "jump_ability"
 #define MT_JUMP_SECTION4 "jump"
-#define MT_JUMP_SECTIONS MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4
 
 #define MT_MENU_JUMP "Jump Ability"
 
@@ -219,13 +218,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdJumpInfo(int client, int args)
+Action cmdJumpInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -267,7 +266,7 @@ void vJumpMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iJumpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iJumpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -365,7 +364,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -378,9 +377,9 @@ public Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vJumpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vJumpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esJumpCache[victim].g_iJumpHitMode == 0 || g_esJumpCache[victim].g_iJumpHitMode == 2) && bIsSurvivor(attacker) && g_esJumpCache[victim].g_iComboAbility == 0)
@@ -390,9 +389,9 @@ public Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vJumpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vJumpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -442,7 +441,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_JUMP_SECTION, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION2, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION3, false) || StrEqual(sSubset[iPos], MT_JUMP_SECTION4, false))
 			{
@@ -490,11 +489,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vJumpHit(survivor, tank, random, flChance, g_esJumpCache[tank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esJumpCache[tank].g_iJumpHitMode == 0 || g_esJumpCache[tank].g_iJumpHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vJumpHit(survivor, tank, random, flChance, g_esJumpCache[tank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -601,56 +600,56 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esJumpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esJumpPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esJumpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esJumpPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esJumpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esJumpPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esJumpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esJumpPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esJumpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esJumpPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esJumpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esJumpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esJumpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esJumpPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esJumpPlayer[admin].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpPlayer[admin].g_iJumpAbility, value, 0, 3);
-		g_esJumpPlayer[admin].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpPlayer[admin].g_iJumpEffect, value, 0, 7);
-		g_esJumpPlayer[admin].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpPlayer[admin].g_iJumpMessage, value, 0, 7);
-		g_esJumpPlayer[admin].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpPlayer[admin].g_flJumpChance, value, 0.0, 100.0);
-		g_esJumpPlayer[admin].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpPlayer[admin].g_iJumpDuration, value, 1, 999999);
-		g_esJumpPlayer[admin].g_flJumpHeight = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_esJumpPlayer[admin].g_flJumpHeight, value, 0.1, 999999.0);
-		g_esJumpPlayer[admin].g_iJumpHit = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_esJumpPlayer[admin].g_iJumpHit, value, 0, 1);
-		g_esJumpPlayer[admin].g_iJumpHitMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_esJumpPlayer[admin].g_iJumpHitMode, value, 0, 2);
-		g_esJumpPlayer[admin].g_flJumpInterval = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_esJumpPlayer[admin].g_flJumpInterval, value, 0.1, 999999.0);
-		g_esJumpPlayer[admin].g_iJumpMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_esJumpPlayer[admin].g_iJumpMode, value, 0, 1);
-		g_esJumpPlayer[admin].g_flJumpRange = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpRange", "Jump Range", "Jump_Range", "range", g_esJumpPlayer[admin].g_flJumpRange, value, 1.0, 999999.0);
-		g_esJumpPlayer[admin].g_flJumpRangeChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_esJumpPlayer[admin].g_flJumpRangeChance, value, 0.0, 100.0);
-		g_esJumpPlayer[admin].g_flJumpSporadicChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_esJumpPlayer[admin].g_flJumpSporadicChance, value, 0.0, 100.0);
-		g_esJumpPlayer[admin].g_flJumpSporadicHeight = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_esJumpPlayer[admin].g_flJumpSporadicHeight, value, 0.1, 999999.0);
-		g_esJumpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esJumpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esJumpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esJumpPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esJumpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esJumpPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esJumpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esJumpPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esJumpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esJumpPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esJumpPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esJumpPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esJumpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esJumpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esJumpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esJumpPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esJumpPlayer[admin].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpPlayer[admin].g_iJumpAbility, value, 0, 3);
+		g_esJumpPlayer[admin].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpPlayer[admin].g_iJumpEffect, value, 0, 7);
+		g_esJumpPlayer[admin].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpPlayer[admin].g_iJumpMessage, value, 0, 7);
+		g_esJumpPlayer[admin].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpPlayer[admin].g_flJumpChance, value, 0.0, 100.0);
+		g_esJumpPlayer[admin].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpPlayer[admin].g_iJumpDuration, value, 1, 99999);
+		g_esJumpPlayer[admin].g_flJumpHeight = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_esJumpPlayer[admin].g_flJumpHeight, value, 0.1, 99999.0);
+		g_esJumpPlayer[admin].g_iJumpHit = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_esJumpPlayer[admin].g_iJumpHit, value, 0, 1);
+		g_esJumpPlayer[admin].g_iJumpHitMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_esJumpPlayer[admin].g_iJumpHitMode, value, 0, 2);
+		g_esJumpPlayer[admin].g_flJumpInterval = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_esJumpPlayer[admin].g_flJumpInterval, value, 0.1, 99999.0);
+		g_esJumpPlayer[admin].g_iJumpMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_esJumpPlayer[admin].g_iJumpMode, value, 0, 1);
+		g_esJumpPlayer[admin].g_flJumpRange = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpRange", "Jump Range", "Jump_Range", "range", g_esJumpPlayer[admin].g_flJumpRange, value, 1.0, 99999.0);
+		g_esJumpPlayer[admin].g_flJumpRangeChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_esJumpPlayer[admin].g_flJumpRangeChance, value, 0.0, 100.0);
+		g_esJumpPlayer[admin].g_flJumpSporadicChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_esJumpPlayer[admin].g_flJumpSporadicChance, value, 0.0, 100.0);
+		g_esJumpPlayer[admin].g_flJumpSporadicHeight = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_esJumpPlayer[admin].g_flJumpSporadicHeight, value, 0.1, 99999.0);
+		g_esJumpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esJumpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esJumpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esJumpAbility[type].g_iComboAbility, value, 0, 1);
-		g_esJumpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esJumpAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esJumpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esJumpAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esJumpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esJumpAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esJumpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esJumpAbility[type].g_iHumanMode, value, 0, 1);
-		g_esJumpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esJumpAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esJumpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esJumpAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esJumpAbility[type].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpAbility[type].g_iJumpAbility, value, 0, 3);
-		g_esJumpAbility[type].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpAbility[type].g_iJumpEffect, value, 0, 7);
-		g_esJumpAbility[type].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpAbility[type].g_iJumpMessage, value, 0, 7);
-		g_esJumpAbility[type].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpAbility[type].g_flJumpChance, value, 0.0, 100.0);
-		g_esJumpAbility[type].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpAbility[type].g_iJumpDuration, value, 1, 999999);
-		g_esJumpAbility[type].g_flJumpHeight = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_esJumpAbility[type].g_flJumpHeight, value, 0.1, 999999.0);
-		g_esJumpAbility[type].g_iJumpHit = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_esJumpAbility[type].g_iJumpHit, value, 0, 1);
-		g_esJumpAbility[type].g_iJumpHitMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_esJumpAbility[type].g_iJumpHitMode, value, 0, 2);
-		g_esJumpAbility[type].g_flJumpInterval = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_esJumpAbility[type].g_flJumpInterval, value, 0.1, 999999.0);
-		g_esJumpAbility[type].g_iJumpMode = iGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_esJumpAbility[type].g_iJumpMode, value, 0, 1);
-		g_esJumpAbility[type].g_flJumpRange = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpRange", "Jump Range", "Jump_Range", "range", g_esJumpAbility[type].g_flJumpRange, value, 1.0, 999999.0);
-		g_esJumpAbility[type].g_flJumpRangeChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_esJumpAbility[type].g_flJumpRangeChance, value, 0.0, 100.0);
-		g_esJumpAbility[type].g_flJumpSporadicChance = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_esJumpAbility[type].g_flJumpSporadicChance, value, 0.0, 100.0);
-		g_esJumpAbility[type].g_flJumpSporadicHeight = flGetKeyValue(subsection, MT_JUMP_SECTIONS, key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_esJumpAbility[type].g_flJumpSporadicHeight, value, 0.1, 999999.0);
-		g_esJumpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esJumpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esJumpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esJumpAbility[type].g_iComboAbility, value, 0, 1);
+		g_esJumpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esJumpAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esJumpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esJumpAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esJumpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esJumpAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esJumpAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esJumpAbility[type].g_iHumanMode, value, 0, 1);
+		g_esJumpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esJumpAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esJumpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esJumpAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esJumpAbility[type].g_iJumpAbility = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esJumpAbility[type].g_iJumpAbility, value, 0, 3);
+		g_esJumpAbility[type].g_iJumpEffect = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esJumpAbility[type].g_iJumpEffect, value, 0, 7);
+		g_esJumpAbility[type].g_iJumpMessage = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esJumpAbility[type].g_iJumpMessage, value, 0, 7);
+		g_esJumpAbility[type].g_flJumpChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_esJumpAbility[type].g_flJumpChance, value, 0.0, 100.0);
+		g_esJumpAbility[type].g_iJumpDuration = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_esJumpAbility[type].g_iJumpDuration, value, 1, 99999);
+		g_esJumpAbility[type].g_flJumpHeight = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_esJumpAbility[type].g_flJumpHeight, value, 0.1, 99999.0);
+		g_esJumpAbility[type].g_iJumpHit = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_esJumpAbility[type].g_iJumpHit, value, 0, 1);
+		g_esJumpAbility[type].g_iJumpHitMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_esJumpAbility[type].g_iJumpHitMode, value, 0, 2);
+		g_esJumpAbility[type].g_flJumpInterval = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_esJumpAbility[type].g_flJumpInterval, value, 0.1, 99999.0);
+		g_esJumpAbility[type].g_iJumpMode = iGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_esJumpAbility[type].g_iJumpMode, value, 0, 1);
+		g_esJumpAbility[type].g_flJumpRange = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpRange", "Jump Range", "Jump_Range", "range", g_esJumpAbility[type].g_flJumpRange, value, 1.0, 99999.0);
+		g_esJumpAbility[type].g_flJumpRangeChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_esJumpAbility[type].g_flJumpRangeChance, value, 0.0, 100.0);
+		g_esJumpAbility[type].g_flJumpSporadicChance = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_esJumpAbility[type].g_flJumpSporadicChance, value, 0.0, 100.0);
+		g_esJumpAbility[type].g_flJumpSporadicHeight = flGetKeyValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_esJumpAbility[type].g_flJumpSporadicHeight, value, 0.1, 99999.0);
+		g_esJumpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esJumpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_JUMP_SECTION, MT_JUMP_SECTION2, MT_JUMP_SECTION3, MT_JUMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -753,7 +752,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esJumpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esJumpCache[tank].g_iJumpAbility > 0 && g_esJumpCache[tank].g_iComboAbility == 0)
 	{
 		vJumpAbility(tank, false);
-		vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -831,7 +830,7 @@ public void MT_OnButtonPressed(int tank, int button)
 			{
 				switch (g_esJumpPlayer[tank].g_iCooldown2 == -1 || g_esJumpPlayer[tank].g_iCooldown2 < iTime)
 				{
-					case true: vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case true: vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "JumpHuman6", (g_esJumpPlayer[tank].g_iCooldown2 - iTime));
 				}
 			}
@@ -858,11 +857,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vJumpChangeType(int tank)
+void vJumpChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveJump(tank);
 }
 
@@ -1048,7 +1052,7 @@ void vJumpHit(int survivor, int tank, float random, float chance, int enabled, i
 				dpJump3.WriteCell(pos);
 				dpJump3.WriteCell(iTime);
 
-				vEffect(survivor, tank, g_esJumpCache[tank].g_iJumpEffect, flags);
+				vScreenEffect(survivor, tank, g_esJumpCache[tank].g_iJumpEffect, flags);
 
 				if (g_esJumpCache[tank].g_iJumpMessage & messages)
 				{
@@ -1158,7 +1162,7 @@ float flGetNearestSurvivor(int tank)
 	return flDistance;
 }
 
-public Action tTimerJumpCombo(Handle timer, DataPack pack)
+Action tTimerJumpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1175,7 +1179,7 @@ public Action tTimerJumpCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJumpCombo2(Handle timer, DataPack pack)
+Action tTimerJumpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1191,7 +1195,7 @@ public Action tTimerJumpCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJumpCombo3(Handle timer, DataPack pack)
+Action tTimerJumpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1211,11 +1215,11 @@ public Action tTimerJumpCombo3(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vJumpHit(iSurvivor, iTank, flRandom, flChance, g_esJumpCache[iTank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esJumpCache[iTank].g_iJumpHitMode == 0 || g_esJumpCache[iTank].g_iJumpHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vJumpHit(iSurvivor, iTank, flRandom, flChance, g_esJumpCache[iTank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -1223,7 +1227,7 @@ public Action tTimerJumpCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump(Handle timer, DataPack pack)
+Action tTimerJump(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1255,7 +1259,7 @@ public Action tTimerJump(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump2(Handle timer, DataPack pack)
+Action tTimerJump2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1277,7 +1281,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
+	if (MT_GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
 	{
 		return Plugin_Continue;
 	}
@@ -1312,7 +1316,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump3(Handle timer, DataPack pack)
+Action tTimerJump3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

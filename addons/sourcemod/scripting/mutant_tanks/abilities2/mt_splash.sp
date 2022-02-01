@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN2
 	#if MT_SPLASH_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -45,7 +45,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_SPLASH_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_SPLASH_SECTION2 "splash ability"
 #define MT_SPLASH_SECTION3 "splash_ability"
 #define MT_SPLASH_SECTION4 "splash"
-#define MT_SPLASH_SECTIONS MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4
 
 #define MT_MENU_SPLASH "Splash Ability"
 
@@ -177,13 +176,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN2
-public Action cmdSplashInfo(int client, int args)
+Action cmdSplashInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -225,7 +224,7 @@ void vSplashMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -359,7 +358,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-			for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLASH_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION4, false))
 				{
@@ -454,42 +453,42 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esSplashPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esSplashPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esSplashPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esSplashPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esSplashPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esSplashPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esSplashPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSplashPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esSplashPlayer[admin].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashPlayer[admin].g_iSplashAbility, value, 0, 1);
-		g_esSplashPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashPlayer[admin].g_iSplashMessage, value, 0, 1);
-		g_esSplashPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
-		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 999999.0);
-		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 999999.0);
-		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 999999.0);
-		g_esSplashPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSplashPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSplashPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esSplashPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esSplashPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esSplashPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esSplashPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esSplashPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esSplashPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSplashPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esSplashPlayer[admin].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashPlayer[admin].g_iSplashAbility, value, 0, 1);
+		g_esSplashPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashPlayer[admin].g_iSplashMessage, value, 0, 1);
+		g_esSplashPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
+		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 99999.0);
+		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 99999.0);
+		g_esSplashPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSplashPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esSplashAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashAbility[type].g_iComboAbility, value, 0, 1);
-		g_esSplashAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esSplashAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esSplashAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esSplashAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esSplashAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashAbility[type].g_iHumanMode, value, 0, 1);
-		g_esSplashAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esSplashAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esSplashAbility[type].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashAbility[type].g_iSplashAbility, value, 0, 1);
-		g_esSplashAbility[type].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashAbility[type].g_iSplashMessage, value, 0, 1);
-		g_esSplashAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashAbility[type].g_flSplashChance, value, 0.0, 100.0);
-		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 999999.0);
-		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 999999.0);
-		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 999999.0);
-		g_esSplashAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSplashAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esSplashAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashAbility[type].g_iComboAbility, value, 0, 1);
+		g_esSplashAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esSplashAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esSplashAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esSplashAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esSplashAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashAbility[type].g_iHumanMode, value, 0, 1);
+		g_esSplashAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esSplashAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esSplashAbility[type].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashAbility[type].g_iSplashAbility, value, 0, 1);
+		g_esSplashAbility[type].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashAbility[type].g_iSplashMessage, value, 0, 1);
+		g_esSplashAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashAbility[type].g_flSplashChance, value, 0.0, 100.0);
+		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 99999.0);
+		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 99999.0);
+		g_esSplashAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSplashAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -678,11 +677,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSplashChangeType(int tank)
+void vSplashChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	vRemoveSplash(tank);
 }
 
@@ -780,7 +784,7 @@ void vSplashAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
+		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
 		{
 			vSplash(tank);
 		}
@@ -795,7 +799,7 @@ void vSplashAbility(int tank)
 	}
 }
 
-public Action tTimerSplashCombo(Handle timer, DataPack pack)
+Action tTimerSplashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -811,7 +815,7 @@ public Action tTimerSplashCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSplash(Handle timer, DataPack pack)
+Action tTimerSplash(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

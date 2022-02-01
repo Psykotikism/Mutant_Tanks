@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2021  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,10 +13,10 @@
 
 #if !defined MT_ABILITIES_MAIN
 	#if MT_GRAVITY_COMPILE_METHOD == 1
-	#include <sourcemod>
-	#include <mutant_tanks>
+		#include <sourcemod>
+		#include <mutant_tanks>
 	#else
-	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+		#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
 	#endif
 public Plugin myinfo =
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 #else
 	#if MT_GRAVITY_COMPILE_METHOD == 1
-	#error This file must be compiled as a standalone plugin.
+		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
 
@@ -56,7 +56,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_GRAVITY_SECTION2 "gravity ability"
 #define MT_GRAVITY_SECTION3 "gravity_ability"
 #define MT_GRAVITY_SECTION4 "gravity"
-#define MT_GRAVITY_SECTIONS MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4
 
 #define MT_MENU_GRAVITY "Gravity Ability"
 
@@ -216,13 +215,13 @@ public void OnMapEnd()
 }
 
 #if !defined MT_ABILITIES_MAIN
-public Action cmdGravityInfo(int client, int args)
+Action cmdGravityInfo(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -264,7 +263,7 @@ void vGravityMenu(int client, const char[] name, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -392,7 +391,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 }
 
-public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
@@ -405,9 +404,9 @@ public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, flo
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGravityHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esGravityCache[attacker].g_flGravityChance, g_esGravityCache[attacker].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vGravityHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esGravityCache[attacker].g_flGravityChance, g_esGravityCache[attacker].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esGravityCache[victim].g_iGravityHitMode == 0 || g_esGravityCache[victim].g_iGravityHitMode == 2) && bIsSurvivor(attacker) && g_esGravityCache[victim].g_iComboAbility == 0)
@@ -417,9 +416,9 @@ public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, flo
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+			if (StrEqual(sClassname[7], "melee"))
 			{
-				vGravityHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esGravityCache[victim].g_flGravityChance, g_esGravityCache[victim].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vGravityHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esGravityCache[victim].g_flGravityChance, g_esGravityCache[victim].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -469,7 +468,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	{
 		char sSubset[10][32];
 		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
-		for (int iPos = 0; iPos < sizeof sSubset; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_GRAVITY_SECTION, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION2, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION3, false) || StrEqual(sSubset[iPos], MT_GRAVITY_SECTION4, false))
 			{
@@ -517,11 +516,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 						{
 							case 0.0:
 							{
-								if ((g_esGravityCache[tank].g_iGravityHitMode == 0 || g_esGravityCache[tank].g_iGravityHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								if ((g_esGravityCache[tank].g_iGravityHitMode == 0 || g_esGravityCache[tank].g_iGravityHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
 									vGravityHit(survivor, tank, random, flChance, g_esGravityCache[tank].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
-								else if ((g_esGravityCache[tank].g_iGravityHitMode == 0 || g_esGravityCache[tank].g_iGravityHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								else if ((g_esGravityCache[tank].g_iGravityHitMode == 0 || g_esGravityCache[tank].g_iGravityHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
 									vGravityHit(survivor, tank, random, flChance, g_esGravityCache[tank].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
@@ -622,50 +621,50 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esGravityPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esGravityPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esGravityPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esGravityPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esGravityPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esGravityPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esGravityPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esGravityPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityPlayer[admin].g_iGravityAbility, value, 0, 3);
-		g_esGravityPlayer[admin].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityPlayer[admin].g_iGravityEffect, value, 0, 7);
-		g_esGravityPlayer[admin].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityPlayer[admin].g_iGravityMessage, value, 0, 7);
-		g_esGravityPlayer[admin].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityPlayer[admin].g_flGravityChance, value, 0.0, 100.0);
-		g_esGravityPlayer[admin].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityPlayer[admin].g_iGravityDuration, value, 1, 999999);
-		g_esGravityPlayer[admin].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityPlayer[admin].g_flGravityForce, value, -100.0, 100.0);
-		g_esGravityPlayer[admin].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityPlayer[admin].g_iGravityHit, value, 0, 1);
-		g_esGravityPlayer[admin].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityPlayer[admin].g_iGravityHitMode, value, 0, 2);
-		g_esGravityPlayer[admin].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityPlayer[admin].g_flGravityRange, value, 1.0, 999999.0);
-		g_esGravityPlayer[admin].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityPlayer[admin].g_flGravityRangeChance, value, 0.0, 100.0);
-		g_esGravityPlayer[admin].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityPlayer[admin].g_flGravityValue, value, 0.1, 999999.0);
-		g_esGravityPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esGravityPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esGravityPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esGravityPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esGravityPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityPlayer[admin].g_iHumanAmmo, value, 0, 99999);
+		g_esGravityPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esGravityPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esGravityPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esGravityPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esGravityPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityPlayer[admin].g_iGravityAbility, value, 0, 3);
+		g_esGravityPlayer[admin].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityPlayer[admin].g_iGravityEffect, value, 0, 7);
+		g_esGravityPlayer[admin].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityPlayer[admin].g_iGravityMessage, value, 0, 7);
+		g_esGravityPlayer[admin].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityPlayer[admin].g_flGravityChance, value, 0.0, 100.0);
+		g_esGravityPlayer[admin].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityPlayer[admin].g_iGravityDuration, value, 1, 99999);
+		g_esGravityPlayer[admin].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityPlayer[admin].g_flGravityForce, value, -100.0, 100.0);
+		g_esGravityPlayer[admin].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityPlayer[admin].g_iGravityHit, value, 0, 1);
+		g_esGravityPlayer[admin].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityPlayer[admin].g_iGravityHitMode, value, 0, 2);
+		g_esGravityPlayer[admin].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityPlayer[admin].g_flGravityRange, value, 1.0, 99999.0);
+		g_esGravityPlayer[admin].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityPlayer[admin].g_flGravityRangeChance, value, 0.0, 100.0);
+		g_esGravityPlayer[admin].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityPlayer[admin].g_flGravityValue, value, 0.1, 99999.0);
+		g_esGravityPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGravityPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esGravityAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityAbility[type].g_iComboAbility, value, 0, 1);
-		g_esGravityAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esGravityAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esGravityAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esGravityAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityAbility[type].g_iHumanMode, value, 0, 1);
-		g_esGravityAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
-		g_esGravityAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esGravityAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityAbility[type].g_iGravityAbility, value, 0, 3);
-		g_esGravityAbility[type].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityAbility[type].g_iGravityEffect, value, 0, 7);
-		g_esGravityAbility[type].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityAbility[type].g_iGravityMessage, value, 0, 7);
-		g_esGravityAbility[type].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityAbility[type].g_flGravityChance, value, 0.0, 100.0);
-		g_esGravityAbility[type].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityAbility[type].g_iGravityDuration, value, 1, 999999);
-		g_esGravityAbility[type].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityAbility[type].g_flGravityForce, value, -100.0, 100.0);
-		g_esGravityAbility[type].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityAbility[type].g_iGravityHit, value, 0, 1);
-		g_esGravityAbility[type].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityAbility[type].g_iGravityHitMode, value, 0, 2);
-		g_esGravityAbility[type].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityAbility[type].g_flGravityRange, value, 1.0, 999999.0);
-		g_esGravityAbility[type].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityAbility[type].g_flGravityRangeChance, value, 0.0, 100.0);
-		g_esGravityAbility[type].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTIONS, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityAbility[type].g_flGravityValue, value, 0.1, 999999.0);
-		g_esGravityAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esGravityAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		g_esGravityAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGravityAbility[type].g_iComboAbility, value, 0, 1);
+		g_esGravityAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esGravityAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityAbility[type].g_iHumanAmmo, value, 0, 99999);
+		g_esGravityAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esGravityAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityAbility[type].g_iHumanMode, value, 0, 1);
+		g_esGravityAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esGravityAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esGravityAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityAbility[type].g_iGravityAbility, value, 0, 3);
+		g_esGravityAbility[type].g_iGravityEffect = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esGravityAbility[type].g_iGravityEffect, value, 0, 7);
+		g_esGravityAbility[type].g_iGravityMessage = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGravityAbility[type].g_iGravityMessage, value, 0, 7);
+		g_esGravityAbility[type].g_flGravityChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esGravityAbility[type].g_flGravityChance, value, 0.0, 100.0);
+		g_esGravityAbility[type].g_iGravityDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esGravityAbility[type].g_iGravityDuration, value, 1, 99999);
+		g_esGravityAbility[type].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityAbility[type].g_flGravityForce, value, -100.0, 100.0);
+		g_esGravityAbility[type].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityAbility[type].g_iGravityHit, value, 0, 1);
+		g_esGravityAbility[type].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityAbility[type].g_iGravityHitMode, value, 0, 2);
+		g_esGravityAbility[type].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityAbility[type].g_flGravityRange, value, 1.0, 99999.0);
+		g_esGravityAbility[type].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityAbility[type].g_flGravityRangeChance, value, 0.0, 100.0);
+		g_esGravityAbility[type].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityAbility[type].g_flGravityValue, value, 0.1, 99999.0);
+		g_esGravityAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGravityAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
@@ -777,6 +776,9 @@ public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priorit
 	{
 		vStopGravity(survivor);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -793,7 +795,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esGravityCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esGravityCache[tank].g_iGravityAbility > 0 && g_esGravityCache[tank].g_iComboAbility == 0)
 	{
 		vGravityAbility(tank, false);
-		vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
+		vGravityAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -875,7 +877,7 @@ public void MT_OnButtonPressed(int tank, int button)
 			{
 				switch (g_esGravityPlayer[tank].g_iCooldown2 == -1 || g_esGravityPlayer[tank].g_iCooldown2 < iTime)
 				{
-					case true: vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
+					case true: vGravityAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman6", (g_esGravityPlayer[tank].g_iCooldown2 - iTime));
 				}
 			}
@@ -903,11 +905,16 @@ public void MT_OnButtonReleased(int tank, int button)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGravityChangeType(int tank)
+void vGravityChangeType(int tank, int oldType)
 #else
-public void MT_OnChangeType(int tank)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 {
+	if (oldType <= 0)
+	{
+		return;
+	}
+
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		vRemoveGravity(tank);
@@ -932,8 +939,8 @@ void vGravity(int tank)
 	}
 
 	float flOrigin[3], flAngles[3];
-	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-	GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
+	GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
+	GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
 	flAngles[0] += -90.0;
 
 	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "origin", flOrigin);
@@ -1068,7 +1075,7 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 				}
 
 				SetEntityGravity(survivor, g_esGravityCache[tank].g_flGravityValue);
-				vEffect(survivor, tank, g_esGravityCache[tank].g_iGravityEffect, flags);
+				vScreenEffect(survivor, tank, g_esGravityCache[tank].g_iGravityEffect, flags);
 				EmitSoundToAll(SOUND_BELL, survivor);
 
 				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
@@ -1194,7 +1201,7 @@ void vStopGravity(int survivor)
 	SetEntityGravity(survivor, 1.0);
 }
 
-public Action tTimerGravityCombo(Handle timer, DataPack pack)
+Action tTimerGravityCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1211,7 +1218,7 @@ public Action tTimerGravityCombo(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGravityCombo2(Handle timer, DataPack pack)
+Action tTimerGravityCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1227,7 +1234,7 @@ public Action tTimerGravityCombo2(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerGravityCombo3(Handle timer, DataPack pack)
+Action tTimerGravityCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1247,11 +1254,11 @@ public Action tTimerGravityCombo3(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esGravityCache[iTank].g_iGravityHitMode == 0 || g_esGravityCache[iTank].g_iGravityHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esGravityCache[iTank].g_iGravityHitMode == 0 || g_esGravityCache[iTank].g_iGravityHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vGravityHit(iSurvivor, iTank, flRandom, flChance, g_esGravityCache[iTank].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
-	else if ((g_esGravityCache[iTank].g_iGravityHitMode == 0 || g_esGravityCache[iTank].g_iGravityHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	else if ((g_esGravityCache[iTank].g_iGravityHitMode == 0 || g_esGravityCache[iTank].g_iGravityHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
 		vGravityHit(iSurvivor, iTank, flRandom, flChance, g_esGravityCache[iTank].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
@@ -1259,7 +1266,7 @@ public Action tTimerGravityCombo3(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopGravity(Handle timer, DataPack pack)
+Action tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
