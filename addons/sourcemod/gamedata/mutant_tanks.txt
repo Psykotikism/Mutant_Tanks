@@ -233,98 +233,6 @@
 			}
 
 			/**
-			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
-			 *
-			 * Note: Detouring as a pre-hook for patching the sound loop per Tank.
-			 * Note: Detouring as a post-hook for removing patch for the sound loop.
-			 **/
-			"MTDetour_CTankRock::OnRelease"
-			{
-				"signature"	"CTankRock::OnRelease"
-				"linux"
-				{
-					"callconv"	"cdecl"
-					"return"	"void"
-					"this"		"ignore"
-					"arguments"
-					{
-						"this"
-						{
-							"type"		"cbaseentity"
-							"register"	"eax"
-						}
-						"origin"
-						{
-							"type"		"vectorptr"
-							"register"	"edx"
-						}
-						"angles"
-						{
-							"type"		"vectorptr"
-						}
-						"velocity"
-						{
-							"type"		"vectorptr"
-						}
-						"rotation"
-						{
-							"type"		"vectorptr"
-						}
-					}
-				}
-				"mac"
-				{
-					"callconv"	"thiscall"
-					"return"	"void"
-					"this"		"entity"
-					"arguments"
-					{
-						"origin"
-						{
-							"type"		"vectorptr"
-						}
-						"angles"
-						{
-							"type"		"vectorptr"
-						}
-						"velocity"
-						{
-							"type"		"vectorptr"
-						}
-						"rotation"
-						{
-							"type"		"vectorptr"
-						}
-					}
-				}
-				"windows"
-				{
-					"callconv"	"thiscall"
-					"return"	"void"
-					"this"		"entity"
-					"arguments"
-					{
-						"origin"
-						{
-							"type"		"vectorptr"
-						}
-						"angles"
-						{
-							"type"		"vectorptr"
-						}
-						"velocity"
-						{
-							"type"		"vectorptr"
-						}
-						"rotation"
-						{
-							"type"		"vectorptr"
-						}
-					}
-				}
-			}
-
-			/**
 			 * CTerrorGameMovement::CheckJumpButton()
 			 *
 			 * Note: Detouring as a pre-hook for enabling "CBaseEntity::GetGroundEntity" detour.
@@ -1175,6 +1083,99 @@
 					"owner"
 					{
 						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Detouring as a pre-hook for patching the sound loop per Tank.
+			 * Note: Detouring as a post-hook for removing patch for the sound loop.
+			 * Note: L4D1 has a different call setup on Linux.
+			 **/
+			"MTDetour_CTankRock::OnRelease"
+			{
+				"signature"	"CTankRock::OnRelease"
+				"linux"
+				{
+					"callconv"	"cdecl"
+					"return"	"void"
+					"this"		"ignore"
+					"arguments"
+					{
+						"this"
+						{
+							"type"		"cbaseentity"
+							"register"	"eax"
+						}
+						"origin"
+						{
+							"type"		"vectorptr"
+							"register"	"edx"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
+					}
+				}
+				"mac"
+				{
+					"callconv"	"thiscall"
+					"return"	"void"
+					"this"		"entity"
+					"arguments"
+					{
+						"origin"
+						{
+							"type"		"vectorptr"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
+					}
+				}
+				"windows"
+				{
+					"callconv"	"thiscall"
+					"return"	"void"
+					"this"		"entity"
+					"arguments"
+					{
+						"origin"
+						{
+							"type"		"vectorptr"
+						}
+						"angles"
+						{
+							"type"		"vectorptr"
+						}
+						"velocity"
+						{
+							"type"		"vectorptr"
+						}
+						"rotation"
+						{
+							"type"		"vectorptr"
+						}
 					}
 				}
 			}
@@ -3259,6 +3260,39 @@
 					"owner"
 					{
 						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
+			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
+			 *
+			 * Note: Detouring as a pre-hook for patching the sound loop per Tank.
+			 * Note: Detouring as a post-hook for removing patch for the sound loop.
+			 **/
+			"MTDetour_CTankRock::OnRelease"
+			{
+				"signature"	"CTankRock::OnRelease"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+					}
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"rotation"
+					{
+						"type"		"vectorptr"
 					}
 				}
 			}
