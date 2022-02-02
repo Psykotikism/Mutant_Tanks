@@ -49,6 +49,7 @@
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 - Added developer HUD panel for viewing currently alive Tanks.
+- Removed default developer testing access level.
 
 #### Core Plugin
 - The speed boost reward now does the following:
@@ -99,7 +100,8 @@
 	- `CWeaponSpawn::Use`
 - Added detour setup, signatures, and patch offsets for `TankBehavior::InitialContainedAction`.
 - Updated documentation for finding several signatures and offsets.
-- L4D1: Updated a couple of offsets for the `1.0.4.1` update.
+- L4D1: Updated several offsets for the `1.0.4.1` update.
+- L4D2: Updated several signatures for the `2.2.2.3` update.
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.
