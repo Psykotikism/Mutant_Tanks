@@ -14888,7 +14888,6 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
-
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -15951,8 +15950,17 @@ void vToggleDetours(bool toggle)
 		{
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingLinuxPre, toggle, 1);
 			vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing", Hook_Post, mreStartHealingLinuxPost, toggle, 1);
-			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleaseLinuxPre, toggle);
-			vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleaseLinuxPost, toggle);
+
+			if (!g_bSecondGame)
+			{
+				vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleaseLinuxPre, toggle);
+				vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleaseLinuxPost, toggle);
+			}
+			else
+			{
+				vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Pre, mreTankRockReleaseWindowsPre, toggle);
+				vToggleDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease", Hook_Post, mreTankRockReleaseWindowsPost, toggle);
+			}
 		}
 		case false:
 		{
@@ -18214,7 +18222,6 @@ bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
 	bool bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit))),
 		bReturn = false;
-
 	if (bit == -1 || bGuest)
 	{
 		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
@@ -19745,7 +19752,6 @@ Action tTimerTankCountCheck(Handle timer, DataPack pack)
 		iAmount = pack.ReadCell(),
 		iCount = iGetTankCount(true),
 		iCount2 = iGetTankCount(false);
-
 	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
