@@ -1092,7 +1092,7 @@
 			 *
 			 * Note: Detouring as a pre-hook for patching the sound loop per Tank.
 			 * Note: Detouring as a post-hook for removing patch for the sound loop.
-			 * Note: L4D1 has a different call setup on Linux.
+			 * Note for Linux users: Function prototype uses custom registers including the "this" pointer which needs to be registered as param 1.
 			 **/
 			"MTDetour_CTankRock::OnRelease"
 			{
