@@ -49,7 +49,7 @@
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 - Added developer HUD panel for viewing currently alive Tanks.
-- `SourceMod 1.11.0.6796` or higher is now required.
+- `SourceMod 1.11.0.6806` or higher is now required.
 
 #### Core Plugin
 - The speed boost reward now does the following:

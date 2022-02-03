@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License along with thi
 Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
 ## Requirements
-1. `SourceMod 1.11.0.6796` or higher
+1. `SourceMod 1.11.0.6806` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended:
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
