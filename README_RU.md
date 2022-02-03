@@ -23,7 +23,7 @@
 Первоначально был расширенной версией плагина Супертанков (Super Tanks). Танки-мутанты сочетает в себе особенности из плагинов Последний босс (Last Boss), Расширенную версию последнего босса (Last Boss Extended) и Супертанков (Super Tanks), чтобы предоставить танкам уникальные силы и способности, которые улучшают игровой опыт.
 
 ## Требования
-1. `SourceMod 1.11.0.6724` или выше
+1. `SourceMod 1.11.0.6796` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется:
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
