@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 8.91 (February 20, 2022)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed the screen effect of abilities being fully visible. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
+- Fixed a detour setup that caused Linux users to crash when Tank rocks are thrown.
+
+### Changes
+
+#### Core Plugin
+- Raised the size for Steam ID buffers to support other outputs.
+
+### Files
+
+#### Updates
+- Updated include file.
+- Updated updater file.
+
 ## Version 8.90 (February 1, 2022)
 
 ### Bug Fixes
