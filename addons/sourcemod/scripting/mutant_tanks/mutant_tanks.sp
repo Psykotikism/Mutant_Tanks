@@ -894,8 +894,8 @@ enum struct esPlayer
 	char g_sScreenColorVisual3[64];
 	char g_sScreenColorVisual4[64];
 	char g_sSkinColor[64];
-	char g_sSteamID32[32];
-	char g_sSteam3ID[32];
+	char g_sSteamID32[64];
+	char g_sSteam3ID[64];
 	char g_sStoredThrowable[32];
 	char g_sStoredMedkit[32];
 	char g_sStoredPills[32];
@@ -9284,7 +9284,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 
 			if (mode >= 0 && g_esCache[tank].g_iTankNote == 1 && bIsCustomTankSupported(tank))
 			{
-				char sPhrase[32], sSteamIDFinal[32], sTankNote[32];
+				char sPhrase[64], sSteamIDFinal[64], sTankNote[64];
 				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
 				FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", g_esPlayer[tank].g_iTankType);
 				FormatEx(sTankNote, sizeof sTankNote, "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
@@ -17941,7 +17941,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
 	int iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
 	if (tank > 0 && g_esPlayer[tank].g_sTankName[0] != '\0')
 	{
-		char sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
+		char sPhrase[64], sPhrase2[64], sSteamIDFinal[64];
 		FormatEx(sPhrase, sizeof sPhrase, "%s Name", g_esPlayer[tank].g_sSteamID32);
 		FormatEx(sPhrase2, sizeof sPhrase2, "%s Name", g_esPlayer[tank].g_sSteam3ID);
 		FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));

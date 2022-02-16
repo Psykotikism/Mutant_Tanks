@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.90"
+#define MT_VERSION "8.91"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -1419,18 +1419,11 @@ stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK
 	if (mode & flags)
 	{
 		int iColor[4];
-
-		switch (tank > 0)
-		{
-			case true: MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-			case false:
-			{
-				iColor[0] = (0 <= red <= 255) ? red : 255;
-				iColor[1] = (0 <= green <= 255) ? green : 255;
-				iColor[2] = (0 <= blue <= 255) ? blue : 255;
-				iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
-			}
-		}
+		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
+		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
+		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
+		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)
@@ -1440,7 +1433,7 @@ stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK
 			bfWrite.WriteShort(300);
 			bfWrite.WriteShort(type1|type2);
 
-			for (int iPos = 0; iPos < sizeof iColor; iPos++)
+			for (int iPos = 0; iPos < (sizeof iColor); iPos++)
 			{
 				bfWrite.WriteByte(iColor[iPos]);
 			}
@@ -1867,6 +1860,7 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 		iAdminFlags = GetUserFlagBits(admin),
 		iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin)),
 		iGlobalFlags = MT_GetAccessFlags(1);
+
 	if ((flags != 0 && ((!(flags & flags2) && !(flags2 & flags)) || (!(flags & iTypePlayerFlags) && !(iTypePlayerFlags & flags)) || (!(flags & iPlayerFlags) && !(iPlayerFlags & flags)) || (!(flags & iAdminFlags) && !(iAdminFlags & flags))))
 		|| (iTypeFlags != 0 && !(iTypeFlags & flags2) && !(flags2 & iTypeFlags)) || (iGlobalFlags != 0 && !(iGlobalFlags & flags2) && !(flags2 & iGlobalFlags)))
 	{
@@ -1903,6 +1897,7 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		iAdminFlags = GetUserFlagBits(admin),
 		iTypeFlags = MT_GetImmunityFlags(2, type),
 		iGlobalFlags = MT_GetImmunityFlags(1);
+
 	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
 		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
@@ -2413,7 +2408,7 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 {
-	Handle hTrace;
+	Handle hTrace = null;
 
 	switch (type)
 	{
@@ -2533,7 +2528,7 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	{
 		char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
-		for (int iPos = 0; iPos < sizeof sSet; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -2815,7 +2810,7 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	{
 		char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof sSet, sizeof sSet[]);
-		for (int iPos = 0; iPos < sizeof sSet; iPos++)
+		for (int iPos = 0; iPos < (sizeof sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
 				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
@@ -3057,7 +3052,8 @@ stock int iGetListenServerHost(int client, bool dedicated)
 			{
 				bool bHost[MAXPLAYERS + 1];
 				GetEntDataArray(iManager, iHostOffset, bHost, (MAXPLAYERS + 1), 1);
-				for (int iPlayer = 1; iPlayer < sizeof bHost; iPlayer++)
+
+				for (int iPlayer = 1; iPlayer < (sizeof bHost); iPlayer++)
 				{
 					if (bHost[iPlayer])
 					{
@@ -3127,7 +3123,7 @@ stock int iGetRandomTank(int tank)
 
 stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
-	Handle hTrace;
+	Handle hTrace = null;
 
 	switch (type)
 	{
