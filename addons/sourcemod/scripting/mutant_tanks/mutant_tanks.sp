@@ -8032,7 +8032,7 @@ void vSaveCaughtSurvivor(int survivor, int special = 0)
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker") : iSpecial;
 	}
 
-	if (iSpecial > 0)
+	if (bIsSpecialInfected(iSpecial))
 	{
 		SDKHooks_TakeDamage(iSpecial, survivor, survivor, float(GetEntProp(iSpecial, Prop_Data, "m_iHealth")));
 	}
@@ -11314,17 +11314,16 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || bManual)
+				bool bTimeCheck = g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5];
+				if (bTimeCheck || g_esGeneral.g_iPlayerCount[0] != iCount || bManual)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
-					vCustomConfig(sCountConfig);
+					if (bTimeCheck)
+					{
+						vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					}
 
-					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
-					g_esGeneral.g_iPlayerCount[0] = iCount;
-				}
-				else if (g_esGeneral.g_iPlayerCount[0] != iCount || bManual)
-				{
 					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 					g_esGeneral.g_iPlayerCount[0] = iCount;
 				}
 			}
@@ -11338,17 +11337,16 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6] || bManual)
+				bool bTimeCheck = g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6];
+				if (bTimeCheck || g_esGeneral.g_iPlayerCount[1] != iCount || bManual)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
-					vCustomConfig(sCountConfig);
+					if (bTimeCheck)
+					{
+						vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					}
 
-					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
-					g_esGeneral.g_iPlayerCount[1] = iCount;
-				}
-				else if (g_esGeneral.g_iPlayerCount[1] != iCount || bManual)
-				{
 					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
 					g_esGeneral.g_iPlayerCount[1] = iCount;
 				}
 			}
@@ -11362,17 +11360,16 @@ void vCheckConfig(bool manual)
 			if (FileExists(sCountConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7] || bManual)
+				bool bTimeCheck = g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7];
+				if (bTimeCheck || g_esGeneral.g_iPlayerCount[2] != iCount || bManual)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
-					vCustomConfig(sCountConfig);
+					if (bTimeCheck)
+					{
+						vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					}
 
-					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
-					g_esGeneral.g_iPlayerCount[2] = iCount;
-				}
-				else if (g_esGeneral.g_iPlayerCount[2] != iCount || bManual)
-				{
 					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
 					g_esGeneral.g_iPlayerCount[2] = iCount;
 				}
 			}
@@ -14888,7 +14885,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
-				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
+
+				if (bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
 					{
@@ -18220,8 +18218,7 @@ bool bIsDayConfigFound(char[] buffer, int size)
  **/
 bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
-	bool bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit))),
-		bReturn = false;
+	bool bReturn = false, bGuest = (bit == -1 && g_esDeveloper[developer].g_iDevAccess > 0) || (bit >= 0 && (g_esDeveloper[developer].g_iDevAccess & (1 << bit)));
 	if (bit == -1 || bGuest)
 	{
 		if (StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(g_esPlayer[developer].g_sSteamID32, "STEAM_0:0:104982031", false)
@@ -19752,6 +19749,7 @@ Action tTimerTankCountCheck(Handle timer, DataPack pack)
 		iAmount = pack.ReadCell(),
 		iCount = iGetTankCount(true),
 		iCount2 = iGetTankCount(false);
+
 	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;

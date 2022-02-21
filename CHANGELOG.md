@@ -1,12 +1,17 @@
 # Changelog
 
-## Version 8.91 (February 20, 2022)
+## Version 8.91 (March 1, 2022)
 
 ### Bug Fixes
 
 #### Core Plugin
 - Fixed the screen effect of abilities being fully visible. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
 - Fixed a detour setup that caused Linux users to crash when Tank rocks are thrown.
+- Fixed issues where certain special infected cannot suicide because of the friendly-fire block.
+- Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
+
+#### Config Files
+- Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
 
