@@ -1410,6 +1410,9 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 
 public void MT_OnHookEvent(bool hooked)
 {
+#if defined MT_MENU_RECOIL
+	vRecoilHookEvent(hooked);
+#endif
 #if defined MT_MENU_RESTART
 	vRestartHookEvent(hooked);
 #endif

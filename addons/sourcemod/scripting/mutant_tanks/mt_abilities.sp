@@ -1464,6 +1464,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 }
 
+public void MT_OnHookEvent(bool hooked)
+{
+#if defined MT_MENU_FLY
+	vFlyHookEvent(hooked);
+#endif
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 #if defined MT_MENU_ABSORB
