@@ -645,6 +645,28 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vFlyHookEvent(bool hooked)
+#else
+public void MT_OnHookEvent(bool hooked)
+#endif
+{
+	static bool bCheck;
+
+	switch (hooked)
+	{
+		case true: bCheck = HookEventEx("player_jump", MT_OnEventFired);
+		case false:
+		{
+			if (bCheck)
+			{
+				bCheck = false;
+				UnhookEvent("player_jump", MT_OnEventFired);
+			}
+		}
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
 void vFlyEventFired(Event event, const char[] name)
 #else
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)

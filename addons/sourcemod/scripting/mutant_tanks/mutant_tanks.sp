@@ -1641,6 +1641,7 @@ public void OnPluginStart()
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	g_esGeneral.g_bUpdateDoJumpMemAccess = true;
 	g_esGeneral.g_bUpdateWeaponInfoMemAccess = true;
+	g_esGeneral.g_iPlayerCount[0] = 0;
 	g_esGeneral.g_umSayText2 = GetUserMessageId("SayText2");
 
 	vHookGlobalEvents();
@@ -1713,7 +1714,6 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 	g_esPlayer[client].g_iUserID = GetClientUserId(client);
 	g_esPlayer[client].g_iUserID2 = g_esPlayer[client].g_iUserID;
 
@@ -1758,11 +1758,6 @@ public void OnClientDisconnect(int client)
 	{
 		vResetPlayerStatus(client);
 	}
-}
-
-public void OnClientDisconnect_Post(int client)
-{
-	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnConfigsExecuted()
@@ -5570,7 +5565,9 @@ void vHookEvents(bool hook)
 					continue;
 				}
 
+				bCheck[iPos] = false;
 				bPreHook[iPos] = (iPos == 5) || (iPos >= 17 && iPos <= 19);
+
 				UnhookEvent(sEvent, vEventHandler, (bPreHook[iPos] ? EventHookMode_Pre : EventHookMode_Post));
 			}
 		}
@@ -19275,6 +19272,7 @@ Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 	pack.ReadString(sSavePath, sizeof sSavePath);
 	if (sSavePath[0] != '\0')
 	{
+		vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sSavePath);
 		vLoadConfigs(sSavePath, 2);
 		vPluginStatus();
 		vResetTimers();

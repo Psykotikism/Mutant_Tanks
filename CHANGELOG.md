@@ -4,19 +4,27 @@
 
 ### Bug Fixes
 
+#### General
+- Fixed game events not being tracked properly. (Thanks to `Krufftys Killers` for reporting!)
+
 #### Core Plugin
 - Fixed the screen effect of abilities being fully visible. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
 - Fixed a detour setup that caused Linux users to crash when Tank rocks are thrown.
-- Fixed issues where certain special infected cannot suicide because of the friendly-fire block.
+- Fixed an issue where certain special infected cannot suicide because of the friendly-fire block.
 - Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
 
 #### Config Files
 - Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
 
+#### Abilities
+- Fly: Fixed the `player_jump` game event not being hooked.
+- Recoil: Fixed the `weapon_fire` game event not being hooked.
+
 ### Changes
 
 #### Core Plugin
 - Raised the size for Steam ID buffers to support other outputs.
+- Added log messages for tracking custom configs.
 
 ### Files
 
