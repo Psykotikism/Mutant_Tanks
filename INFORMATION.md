@@ -154,7 +154,7 @@
 			// Automatically update Mutant Tanks.
 			// Note: This setting has a convar equivalent (mt_autoupdate).
 			// Note: This setting requires GoD-Tony's "Updater" plugin to work. Disable this setting if you do not use that plugin.
-			// Link: https://forums.alliedmods.net/showthread.php?t=169095
+			// Link: https://github.com/Teamkiller324/Updater
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
