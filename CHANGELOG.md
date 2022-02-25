@@ -75,7 +75,7 @@
 - All settings in the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files can now be set globally and per platform.
 - The `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files now accept different formats like the main config file.
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
-- Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
+- Added [`Updater`](https://github.com/Teamkiller324/Updater) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added full MacOS support. (Untested)
 - Created macros for several arbitrary values.

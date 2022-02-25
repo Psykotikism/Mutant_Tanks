@@ -29,7 +29,7 @@
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)
-- [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095)
+- [`Updater`](https://github.com/Teamkiller324/Updater)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
 
