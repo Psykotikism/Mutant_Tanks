@@ -390,3 +390,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esHitCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iRequiresHumans, g_esHitAbility[type].g_iRequiresHumans);
 	g_esHitPlayer[tank].g_iTankType = apply ? type : 0;
 }
+
+#if !defined MT_ABILITIES_MAIN
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif

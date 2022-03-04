@@ -5,8 +5,7 @@
 
 ## Languages
 - Click on one of the flags to view in another language.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md"><img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -169,7 +168,7 @@ sm_mt_zombie - View information about the Zombie ability.
 ## ConVar Settings
 ```
 // Automatically update Mutant Tanks.
-// Requires "Updater": https://forums.alliedmods.net/showthread.php?t=169095
+// Requires "Updater": https://github.com/Teamkiller324/Updater
 // 0: OFF
 // 1: ON
 // -
@@ -235,6 +234,21 @@ mt_pluginenabled "1"
 4. If prompted to replace or merge anything, click `Yes`.
 5. Load up Mutant Tanks by restarting the server.
 6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+
+## Compiling
+1. Make sure all the ability plugin source files are in their respective folders.
+- `scripting/mutant_tanks/abilities`
+- `scripting/mutant_tanks/abilities2`
+2. To disable/exclude one or more abilities, move the file(s) to one of the corresponding folders:
+- `scripting/mutant_tanks/abilities/disabled`
+- `scripting/mutant_tanks/abilities2/disabled`
+3. Move the following files from the `scripting/mutant_tanks` folder to the `scripting` folder:
+- `mutant_tanks.sp`
+- `mt_abilities.sp`
+- `mt_abilities2.sp`
+4. Drag the files to `compile.exe` (all at once) or `spcomp.exe` (one by one).
+- If `compile.exe` is used, the plugins will be created inside the `scripting/compiled` folder.
+- If `spcomp.exe` is used, the plugins will be created inside the `scripting` folder.
 
 ## Uninstalling/Upgrading to Newer Versions
 1. Delete `mutant_tanks` folder from:
@@ -979,10 +993,17 @@ forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float
 forward void MT_OnPluginCheck(ArrayList list);
 
 /**
- * Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any modifications to Tanks or survivors.
+ * Called when the core plugin is unloaded.
+ * Use this forward to remove any modifications to Tanks or survivors.
  **/
 forward void MT_OnPluginEnd();
+
+/**
+ * Called when the core plugin is updated.
+ * Use this forward to reload abilities.
+ * Requires "Updater": https://github.com/Teamkiller324/Updater
+ **/
+forward void MT_OnPluginUpdate();
 
 /**
  * Called after a Mutant Tank spawns.
@@ -1529,6 +1550,13 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 	return false;
 }
 
+stock void MT_LoadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins load %s", sFilename);
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
@@ -1589,6 +1617,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 	}
 }
 
+stock void MT_ReloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins reload %s", sFilename);
+}
+
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	char sBuffer[1024];
@@ -1609,6 +1644,23 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	{
 		MT_PrintToChat(client, sBuffer);
 	}
+}
+
+stock void MT_UnloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins unload %s", sFilename);
+}
+
+stock float MT_GetRandomFloat(float min, float max)
+{
+	return (GetURandomFloat() * (max - min + 1)) + min;
+}
+
+stock int MT_GetRandomInt(int min, int max)
+{
+	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
 }
 ```
 Target filters:
@@ -2060,6 +2112,8 @@ Examples:
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
 **GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) and [Updater](https://forums.alliedmods.net/showthread.php?t=169095) plugins.
+
+**Teamkiller324** - For the [Updater](https://github.com/Teamkiller324/Updater) plugin.
 
 **Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 

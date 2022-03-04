@@ -11,6 +11,7 @@
 
 #define MT_ABILITIES_MAIN
 #define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_COMPILER_MESSAGE 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
 #include <mutant_tanks>
@@ -74,6 +75,239 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities/mt_lightning.sp"
 #endif
 #define REQUIRE_PLUGIN
+
+#if MT_ABILITIES_COMPILER_MESSAGE == 1
+	#if !defined MT_MENU_ABSORB
+		#warning The "Absorb" (mt_absorb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ACID
+		#warning The "Acid" (mt_acid.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_AIMLESS
+		#warning The "Aimless" (mt_aimless.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_AMMO
+		#warning The "Ammo" (mt_ammo.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BLIND
+		#warning The "Blind" (mt_blind.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BOMB
+		#warning The "Bomb" (mt_bomb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BURY
+		#warning The "Bury" (mt_bury.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CAR
+		#warning The "Car" (mt_car.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CHOKE
+		#warning The "Choke" (mt_choke.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CLONE
+		#warning The "Clone" (mt_clone.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CLOUD
+		#warning The "Cloud" (mt_cloud.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DROP
+		#warning The "Drop" (mt_drop.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DRUG
+		#warning The "Drug" (mt_drug.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DRUNK
+		#warning The "Drunk" (mt_drunk.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ELECTRIC
+		#warning The "Electric" (mt_electric.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ENFORCE
+		#warning The "Enforce" (mt_enforce.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FAST
+		#warning The "Fast" (mt_fast.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FIRE
+		#warning The "Fire" (mt_fire.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FLING
+		#warning The "Fling" (mt_fling.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FLY
+		#warning The "Fly" (mt_fly.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FRAGILE
+		#warning The "Fragile" (mt_fragile.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GHOST
+		#warning The "Ghost" (mt_ghost.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GOD
+		#warning The "God" (mt_god.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GRAVITY
+		#warning The "Gravity" (mt_gravity.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HEAL
+		#warning The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HIT
+		#warning The "Hit" (mt_hit.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HURT
+		#warning The "Hurt" (mt_hurt.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HYPNO
+		#warning The "Hypno" (mt_hypno.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ICE
+		#warning The "Ice" (mt_ice.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_IDLE
+		#warning The "Idle" (mt_idle.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_INVERT
+		#warning The "Invert" (mt_invert.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ITEM
+		#warning The "Item" (mt_item.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_JUMP
+		#warning The "Jump" (mt_jump.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_KAMIKAZE
+		#warning The "Kamikaze" (mt_kamikaze.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LAG
+		#warning The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LASER
+		#warning The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LEECH
+		#warning The "Leech" (mt_leech.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LIGHTNING
+		#warning The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+#endif
+#if MT_ABILITIES_COMPILER_MESSAGE == 2
+	#if !defined MT_MENU_ABSORB
+		#error The "Absorb" (mt_absorb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ACID
+		#error The "Acid" (mt_acid.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_AIMLESS
+		#error The "Aimless" (mt_aimless.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_AMMO
+		#error The "Ammo" (mt_ammo.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BLIND
+		#error The "Blind" (mt_blind.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BOMB
+		#error The "Bomb" (mt_bomb.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_BURY
+		#error The "Bury" (mt_bury.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CAR
+		#error The "Car" (mt_car.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CHOKE
+		#error The "Choke" (mt_choke.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CLONE
+		#error The "Clone" (mt_clone.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_CLOUD
+		#error The "Cloud" (mt_cloud.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DROP
+		#error The "Drop" (mt_drop.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DRUG
+		#error The "Drug" (mt_drug.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_DRUNK
+		#error The "Drunk" (mt_drunk.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ELECTRIC
+		#error The "Electric" (mt_electric.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ENFORCE
+		#error The "Enforce" (mt_enforce.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FAST
+		#error The "Fast" (mt_fast.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FIRE
+		#error The "Fire" (mt_fire.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FLING
+		#error The "Fling" (mt_fling.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FLY
+		#error The "Fly" (mt_fly.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_FRAGILE
+		#error The "Fragile" (mt_fragile.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GHOST
+		#error The "Ghost" (mt_ghost.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GOD
+		#error The "God" (mt_god.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GRAVITY
+		#error The "Gravity" (mt_gravity.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HEAL
+		#error The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HIT
+		#error The "Hit" (mt_hit.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HURT
+		#error The "Hurt" (mt_hurt.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_HYPNO
+		#error The "Hypno" (mt_hypno.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ICE
+		#error The "Ice" (mt_ice.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_IDLE
+		#error The "Idle" (mt_idle.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_INVERT
+		#error The "Invert" (mt_invert.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_ITEM
+		#error The "Item" (mt_item.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_JUMP
+		#error The "Jump" (mt_jump.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_KAMIKAZE
+		#error The "Kamikaze" (mt_kamikaze.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LAG
+		#error The "Lag" (mt_lag.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LASER
+		#error The "Laser" (mt_laser.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LEECH
+		#error The "Leech" (mt_leech.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_LIGHTNING
+		#error The "Lightning" (mt_lightning.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+#endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -171,6 +405,11 @@ public void OnMapEnd()
 public void MT_OnPluginEnd()
 {
 	vAbilitySetup(3);
+}
+
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)

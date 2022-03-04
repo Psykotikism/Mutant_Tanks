@@ -1,17 +1,19 @@
 # Changelog
 
-## Version 8.91 (March 1, 2022)
+## Version 8.91 (April 1, 2022)
 
 ### Bug Fixes
 
 #### General
 - Fixed game events not being tracked properly. (Thanks to `Krufftys Killers` for reporting!)
+- Fixed [`Updater`](https://github.com/Teamkiller324/Updater) support.
 
 #### Core Plugin
 - Fixed the screen effect of abilities being fully visible. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
 - Fixed a detour setup that caused Linux users to crash when Tank rocks are thrown.
 - Fixed an issue where certain special infected cannot suicide because of the friendly-fire block.
 - Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
+- Fixed some code for the `Clone` ability being compiled when the `mt_clone.inc` include is not included.
 
 #### Config Files
 - Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
@@ -22,15 +24,25 @@
 
 ### Changes
 
+#### General
+- Mutant Tanks and its sub-plugins now properly support `Updater`.
+
 #### Core Plugin
 - Raised the size for Steam ID buffers to support other outputs.
 - Added log messages for tracking custom configs.
+
+#### Natives & Forwards
+- Updated the documentation for the `MT_OnPluginEnd` forward.
+- Added the `MT_OnPluginUpdate` forward. (This forward only fires when `Updater` is installed.)
 
 ### Files
 
 #### Updates
 - Updated include file.
 - Updated updater file.
+- Added compiler warnings for the following plugin source files that notify users when one or more abilities are disabled/excluded (Thanks to `Marttt` for the idea!):
+	- `mt_abilities.sp`
+	- `mt_abilities2.sp`
 
 ## Version 8.90 (February 1, 2022)
 
@@ -106,7 +118,7 @@
 - Improved logging for patching system.
 - Changed the method for aggravating idle Tanks. (Thanks to `cravenge` for the code and gamedata info!)
 - Updated the logic for skipping the Tank's taunt animation. (Thanks to `sorallll` for the code!)
-- Added compatibility for several plugins that detour or patch functions.
+- Added compatibility for several third-party plugins that detour or patch functions.
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.

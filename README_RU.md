@@ -5,8 +5,7 @@
 
 ## Языки
 - Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32"></a>
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md"><img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32"></a>
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
@@ -169,7 +168,7 @@ sm_mt_zombie - Просмотр информации о способности �
 ## Настройка переменных
 ```
 // Автоматически обновлять Танки-мутанты.
-// Требуется "Updater": https://forums.alliedmods.net/showthread.php?t=169095
+// Требуется "Updater": https://github.com/Teamkiller324/Updater
 // 0: ВЫКЛЮЧЕНЫ
 // 1: ВКЛЮЧЕНЫ
 // -
@@ -236,6 +235,21 @@ mt_pluginenabled "1"
 5. Загрузите плагин, перезапустив сервер.
 6. Настройте плагин в `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
+## Компилирование
+1. Убедитесь, что все исходные файлы плагина способностей находятся в соответствующих папках.
+- `scripting/mutant_tanks/abilities`
+- `scripting/mutant_tanks/abilities2`
+2. Чтобы отключить/исключить одну или несколько способностей, переместите файл(-ы) в одну из соответствующих папок:
+- `scripting/mutant_tanks/abilities/disabled`
+- `scripting/mutant_tanks/abilities2/disabled`
+3. Переместите следующие файлы из папки `scripting/mutant_tanks` в папку `scripting`:
+- `mutant_tanks.sp`
+- `mt_abilities.sp`
+- `mt_abilities2.sp`
+4. Перетащите файлы в `compile.exe` (все сразу) или `spcomp.exe` (один за другим).
+- Если `compile.exe` используется, плагины будут созданы внутри папки `scripting/compiled`.
+- Если `spcomp.exe` используется, плагины будут созданы внутри папки `scripting`.
+
 ## Удаление/обновление до более новых версий
 1. Удалите папку `mutant_tanks` из папки:
 - `addons/sourcemod/plugins` (`mutant_tanks.smx` и все его модули)
@@ -250,7 +264,7 @@ mt_pluginenabled "1"
 5. Создайте копию `mutant_tanks.cfg` в `addons/sourcemod/data/mutant_tanks`.
 6. Удалите `mutant_tanks_detours.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
 7. Удалите `mutant_tanks_patches.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
-8. Следуйте руководству по установке выше. (Только для обновления до более новых версий.)
+8. Следуйте руководству по установке выше. (Только для обновление до более новых версий.)
 
 ## Отключение
 1. Переместите папку `mutant_tanks` (`mutant_tanks.smx` и все его модули) в папку `plugins/disabled`.
@@ -979,10 +993,17 @@ forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float
 forward void MT_OnPluginCheck(ArrayList list);
 
 /**
- * Вызывается при выгрузке/перезагрузке основного плагина.
- * Используйте этот forward, чтобы избавиться от любых модификаций Танков или Выживших.
+ * Вызывается при выгрузке основного плагина.
+ * Используйте этот forward, чтобы удалить любых модификаций Танков или Выживших.
  **/
 forward void MT_OnPluginEnd();
+
+/**
+ * Вызывается при обновлен основного плагина.
+ * Используйте этот forward, чтобы перезагрузка способностей.
+ * Требуется "Updater": https://github.com/Teamkiller324/Updater
+ **/
+forward void MT_OnPluginUpdate();
 
 /**
  * Вызывается после появления танка-мутанта.
@@ -1529,6 +1550,13 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 	return false;
 }
 
+stock void MT_LoadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins load %s", sFilename);
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
@@ -1589,6 +1617,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 	}
 }
 
+stock void MT_ReloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins reload %s", sFilename);
+}
+
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	char sBuffer[1024];
@@ -1609,6 +1644,23 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	{
 		MT_PrintToChat(client, sBuffer);
 	}
+}
+
+stock void MT_UnloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins unload %s", sFilename);
+}
+
+stock float MT_GetRandomFloat(float min, float max)
+{
+	return (GetURandomFloat() * (max - min + 1)) + min;
+}
+
+stock int MT_GetRandomInt(int min, int max)
+{
+	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
 }
 ```
 Фильтры цели:
@@ -2060,6 +2112,8 @@ Overrides
 **Farbror Godis** - За плагин [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146).
 
 **GoD-Tony** - За плагин [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) и [Updater](https://forums.alliedmods.net/showthread.php?t=169095).
+
+**Teamkiller324** - За плагин [Updater](https://github.com/Teamkiller324/Updater).
 
 **Phil25** - За плагин [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579).
 

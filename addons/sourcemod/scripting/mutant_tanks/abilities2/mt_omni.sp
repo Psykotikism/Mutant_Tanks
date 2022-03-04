@@ -605,6 +605,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
+
 #if defined MT_ABILITIES_MAIN2
 void vOmniEventFired(Event event, const char[] name)
 #else

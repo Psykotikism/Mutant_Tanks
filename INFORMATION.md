@@ -153,7 +153,7 @@
 
 			// Automatically update Mutant Tanks.
 			// Note: This setting has a convar equivalent (mt_autoupdate).
-			// Note: This setting requires GoD-Tony's "Updater" plugin to work. Disable this setting if you do not use that plugin.
+			// Note: This setting requires the "Updater" plugin to work. Disable this setting if you do not use that plugin.
 			// Link: https://github.com/Teamkiller324/Updater
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
@@ -19681,7 +19681,7 @@
 
 			// The health received by the Mutant Tank is multiplied by this value.
 			// Note: Health = Health x Vampire health multiplier
-			// Example: Health = 1000.0 x 5.0 (5000.0)
+			// Example: Health = 100.0 x 5.0 (500.0)
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be overridden for specific players.
 			// --
