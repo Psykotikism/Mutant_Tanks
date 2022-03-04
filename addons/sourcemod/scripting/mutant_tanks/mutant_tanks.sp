@@ -350,9 +350,10 @@ enum struct esGeneral
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
 	ArrayList g_alSections;
-
-	bool g_bAbilityPlugin[MT_MAXABILITIES + 1];
+#if defined _mtclone_included
 	bool g_bCloneInstalled;
+#endif
+	bool g_bAbilityPlugin[MT_MAXABILITIES + 1];
 	bool g_bFinaleEnded;
 	bool g_bFinalMap;
 	bool g_bForceSpawned;
@@ -591,7 +592,9 @@ enum struct esGeneral
 	GlobalForward g_gfRockThrowForward;
 	GlobalForward g_gfSettingsCachedForward;
 	GlobalForward g_gfTypeChosenForward;
-
+#if defined _updater_included
+	GlobalForward g_gfPluginUpdateForward;
+#endif
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKFirstContainedResponder;
 	Handle g_hSDKGetMaxClip1;
@@ -1564,12 +1567,14 @@ int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
 
 public void OnLibraryAdded(const char[] name)
 {
+#if defined _mtclone_included
 	if (StrEqual(name, "mt_clone"))
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
+#endif
 #if defined _updater_included
-	else if (StrEqual(name, "updater"))
+	if (StrEqual(name, "updater"))
 	{
 		Updater_AddPlugin(MT_UPDATE_URL);
 	}
@@ -1578,10 +1583,12 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
+#if defined _mtclone_included
 	if (StrEqual(name, "mt_clone"))
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
+#endif
 }
 
 public void OnAllPluginsLoaded()
@@ -2357,6 +2364,9 @@ void vRegisterForwards()
 	g_esGeneral.g_gfRockThrowForward = new GlobalForward("MT_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfSettingsCachedForward = new GlobalForward("MT_OnSettingsCached", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfTypeChosenForward = new GlobalForward("MT_OnTypeChosen", ET_Event, Param_CellByRef, Param_Cell);
+#if defined _updater_included
+	g_esGeneral.g_gfPluginUpdateForward = new GlobalForward("MT_OnPluginUpdate", ET_Ignore);
+#endif
 }
 
 void vRegisterNatives()
@@ -3818,7 +3828,7 @@ void vRegisterConVars()
 #if defined _autoexecconfig_included
 	AutoExecConfig_SetFile("mutant_tanks");
 	AutoExecConfig_SetCreateFile(true);
-	g_esGeneral.g_cvMTAutoUpdate = AutoExecConfig_CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires Updater: https://forums.alliedmods.net/showthread.php?t=169095\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_esGeneral.g_cvMTAutoUpdate = AutoExecConfig_CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires \"Updater\": https://github.com/Teamkiller324/Updater\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTDisabledGameModes = AutoExecConfig_CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTEnabledGameModes = AutoExecConfig_CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTGameModeTypes = AutoExecConfig_CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
@@ -11760,14 +11770,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 			g_esTank[type].g_iAbilityCount++;
 		}
 
-		Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
-		Call_PushString(sub);
-		Call_PushString(key);
-		Call_PushString(value);
-		Call_PushCell(type);
-		Call_PushCell(-1);
-		Call_PushCell(g_esGeneral.g_iConfigMode);
-		Call_Finish();
+		vConfigsLoadedForward(sub, key, value, type, -1, g_esGeneral.g_iConfigMode);
 	}
 }
 
@@ -12657,6 +12660,18 @@ public void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_iParserViewer = 0;
 	g_esGeneral.g_iSection = 0;
 	g_esGeneral.g_sSection[0] = '\0';
+}
+
+void vConfigsLoadedForward(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+{
+	Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
+	Call_PushString(subsection);
+	Call_PushString(key);
+	Call_PushString(value);
+	Call_PushCell(type);
+	Call_PushCell(admin);
+	Call_PushCell(mode);
+	Call_Finish();
 }
 
 void vLoadConfigs(const char[] savepath, int mode)
@@ -13743,14 +13758,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 					vGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, MT_CONFIG_SECTION_GAMEMODES2, MT_CONFIG_SECTION_GAMEMODES3, MT_CONFIG_SECTION_GAMEMODES4, key, "DisabledGameModes", "Disabled Game Modes", "Disabled_Game_Modes", "gmdisabled", g_esGeneral.g_sDisabledGameModes, sizeof esGeneral::g_sDisabledGameModes, value);
 				}
 
-				Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
-				Call_PushString(g_esGeneral.g_sCurrentSubSection);
-				Call_PushString(key);
-				Call_PushString(value);
-				Call_PushCell(0);
-				Call_PushCell(-1);
-				Call_PushCell(g_esGeneral.g_iConfigMode);
-				Call_Finish();
+				vConfigsLoadedForward(g_esGeneral.g_sCurrentSubSection, key, value, 0, -1, g_esGeneral.g_iConfigMode);
 			}
 			else if (!strncmp(g_esGeneral.g_sCurrentSection, "Tank", 4, false) || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, ',') != -1 || FindCharInString(g_esGeneral.g_sCurrentSection, '-') != -1)
 			{
@@ -14118,14 +14126,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							}
 						}
 
-						Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
-						Call_PushString(g_esGeneral.g_sCurrentSubSection);
-						Call_PushString(key);
-						Call_PushString(value);
-						Call_PushCell(0);
-						Call_PushCell(iPlayer);
-						Call_PushCell(g_esGeneral.g_iConfigMode);
-						Call_Finish();
+						vConfigsLoadedForward(g_esGeneral.g_sCurrentSubSection, key, value, 0, iPlayer, g_esGeneral.g_iConfigMode);
 
 						break;
 					}
@@ -17837,6 +17838,11 @@ public void TP_OnThirdPersonChanged(int iClient, bool bIsThirdPerson)
 #endif
 
 #if defined _updater_included
+public Action Updater_OnPluginChecking()
+{
+	return (g_esGeneral.g_cvMTAutoUpdate.BoolValue || g_esGeneral.g_iAutoUpdate == 1) ? Plugin_Continue : Plugin_Handled;
+}
+
 public Action Updater_OnPluginDownloading()
 {
 	return (g_esGeneral.g_cvMTAutoUpdate.BoolValue || g_esGeneral.g_iAutoUpdate == 1) ? Plugin_Continue : Plugin_Handled;
@@ -17844,10 +17850,10 @@ public Action Updater_OnPluginDownloading()
 
 public void Updater_OnPluginUpdated()
 {
-	char sFilename[PLATFORM_MAX_PATH];
-	GetPluginFilename(null, sFilename, sizeof(sFilename));
-	ServerCommand("sm plugins unload %s", sFilename);
-	ServerCommand("sm plugins load %s", sFilename);
+	MT_ReloadPlugin(g_hPluginHandle);
+
+	Call_StartForward(g_esGeneral.g_gfPluginUpdateForward);
+	Call_Finish();
 }
 #endif
 
@@ -18157,7 +18163,7 @@ bool bIsCustomTank(int tank)
 #if defined _mtclone_included
 	return g_esGeneral.g_bCloneInstalled && MT_IsTankClone(tank);
 #else
-	return bIsSurvivor(tank, MT_CHECK_INDEX|MT_CHECK_INGAME);
+	return false;
 #endif
 }
 
@@ -18168,11 +18174,8 @@ bool bIsCustomTankSupported(int tank)
 	{
 		return false;
 	}
-
-	return true;
-#else
-	return bIsValidClient(tank);
 #endif
+	return true;
 }
 
 bool bIsDayConfigFound(char[] buffer, int size)

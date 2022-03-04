@@ -549,6 +549,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	vItemCopyStats2(oldTank, newTank);
 }
 
+#if !defined MT_ABILITIES_MAIN
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
+
 #if defined MT_ABILITIES_MAIN
 void vItemEventFired(Event event, const char[] name)
 #else

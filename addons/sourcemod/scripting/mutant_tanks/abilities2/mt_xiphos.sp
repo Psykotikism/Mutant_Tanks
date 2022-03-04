@@ -445,6 +445,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esXiphosPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
+
 void vXiphos(int attacker, int victim, float damage, bool tank)
 {
 	int iTank = tank ? attacker : victim,

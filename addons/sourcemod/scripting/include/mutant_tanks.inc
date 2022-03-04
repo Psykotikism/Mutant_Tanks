@@ -372,10 +372,17 @@ forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float
 forward void MT_OnPluginCheck(ArrayList list);
 
 /**
- * Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any modifications to Tanks or survivors.
+ * Called when the core plugin is unloaded.
+ * Use this forward to remove any modifications to Tanks or survivors.
  **/
 forward void MT_OnPluginEnd();
+
+/**
+ * Called when the core plugin is updated.
+ * Use this forward to reload abilities.
+ * Requires "Updater": https://github.com/Teamkiller324/Updater
+ **/
+forward void MT_OnPluginUpdate();
 
 /**
  * Called after a Mutant Tank spawns.
@@ -1755,6 +1762,13 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 	return false;
 }
 
+stock void MT_LoadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins load %s", sFilename);
+}
+
 stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
@@ -1815,6 +1829,13 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 	}
 }
 
+stock void MT_ReloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins reload %s", sFilename);
+}
+
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	char sBuffer[1024];
@@ -1835,6 +1856,13 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	{
 		MT_PrintToChat(client, sBuffer);
 	}
+}
+
+stock void MT_UnloadPlugin(Handle plugin = null)
+{
+	char sFilename[64];
+	GetPluginFilename(plugin, sFilename, sizeof sFilename);
+	ServerCommand("sm plugins unload %s", sFilename);
 }
 
 stock float MT_GetRandomFloat(float min, float max)
