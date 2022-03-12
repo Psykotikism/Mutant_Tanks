@@ -3412,7 +3412,7 @@
 			/**
 			 * CTerrorPlayer::SelectWeightedSequence(Activity)
 			 *
-			 * Note: Detouring as a post-hook for accelerating Tank taunting animations after incapacitating a survivor.
+			 * Note: Detouring as a pre-hook for accelerating Tank taunting animations after incapacitating a survivor.
 			 **/
 			"MTDetour_CTerrorPlayer::SelectWeightedSequence"
 			{

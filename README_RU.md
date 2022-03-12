@@ -2151,7 +2151,7 @@ Overrides
 
 **Forgetest** - За помощь с смещениями.
 
-**sorallll** - За плагин [Skip Tank Taunt](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp).
+**sorallll** - За плагин [[L4D2]Skip Tank Taunt](https://forums.alliedmods.net/showthread.php?t=336707).
 
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
@@ -2173,9 +2173,9 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, Shao** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

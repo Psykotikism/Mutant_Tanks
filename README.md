@@ -2151,7 +2151,7 @@ Examples:
 
 **Forgetest** - For helping with gamedata offsets.
 
-**sorallll** - For the [Skip Tank Taunt](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp) plugin.
+**sorallll** - For the [[L4D2]Skip Tank Taunt](https://forums.alliedmods.net/showthread.php?t=336707) plugin.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -2173,9 +2173,9 @@ Examples:
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, Shao** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
