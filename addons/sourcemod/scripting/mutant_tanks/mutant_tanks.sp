@@ -111,6 +111,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_ACT_TERROR_HIT_BY_TANKPUNCH 1077 // ACT_TERROR_HIT_BY_TANKPUNCH
+#define MT_ACT_TERROR_HULK_VICTORY 792 // ACT_TERROR_HULK_VICTORY
+#define MT_ACT_TERROR_RAGE_AT_KNOCKDOWN 795 // ACT_TERROR_RAGE_AT_KNOCKDOWN
 #define MT_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH 1078 // ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH
 #define MT_ACT_TERROR_POUNCED_TO_STAND 1263 // ACT_TERROR_POUNCED_TO_STAND
 #define MT_ACT_TERROR_TANKPUNCH_LAND 1079 // ACT_TERROR_TANKPUNCH_LAND
@@ -1242,7 +1244,9 @@ enum struct esTank
 	int g_iAutoAggravate;
 	int g_iBaseHealth;
 	int g_iBodyEffects;
+	int g_iBossBaseType;
 	int g_iBossHealth[4];
+	int g_iBossLimit;
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
@@ -11494,9 +11498,11 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		g_esTank[type].g_iMinimumHumans = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[type].g_iMinimumHumans, value, 1, 32);
 		g_esTank[type].g_iMultiplyHealth = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[type].g_iMultiplyHealth, value, 0, 3);
 		g_esTank[type].g_iHumanSupport = iGetKeyValue(sub, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esTank[type].g_iHumanSupport, value, 0, 2);
-		g_esTank[type].g_iTypeLimit = iGetKeyValue(sub, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[type].g_iTypeLimit, value, 0, 32);
+		g_esTank[type].g_iTypeLimit = iGetKeyValue(sub, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "typelimit", g_esTank[type].g_iTypeLimit, value, 0, 32);
 		g_esTank[type].g_iFinaleTank = iGetKeyValue(sub, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[type].g_iFinaleTank, value, 0, 4);
 		g_esTank[type].g_flOpenAreasOnly = flGetKeyValue(sub, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, MT_CONFIG_SECTION_SPAWN, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTank[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
+		g_esTank[type].g_iBossBaseType = iGetKeyValue(sub, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossBaseType", "Boss Base Type", "Boss_Base_Type", "bossbase", g_esTank[type].g_iBossBaseType, value, 0, MT_MAXTYPES);
+		g_esTank[type].g_iBossLimit = iGetKeyValue(sub, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossLimit", "Boss Limit", "Boss_Limit", "bosslimit", g_esTank[type].g_iBossLimit, value, 0, 32);
 		g_esTank[type].g_iBossStages = iGetKeyValue(sub, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esTank[type].g_iBossStages, value, 1, 4);
 		g_esTank[type].g_iRandomTank = iGetKeyValue(sub, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[type].g_iRandomTank, value, 0, 1);
 		g_esTank[type].g_flRandomDuration = flGetKeyValue(sub, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, MT_CONFIG_SECTION_RANDOM, key, "RandomDuration", "Random Duration", "Random_Duration", "randduration", g_esTank[type].g_flRandomDuration, value, 0.1, 99999.0);
@@ -13046,6 +13052,8 @@ public void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_iImmunityFlags = 0;
 			g_esTank[iIndex].g_iTypeLimit = 32;
 			g_esTank[iIndex].g_iFinaleTank = 0;
+			g_esTank[iIndex].g_iBossBaseType = 0;
+			g_esTank[iIndex].g_iBossLimit = 32;
 			g_esTank[iIndex].g_iBossStages = 4;
 			g_esTank[iIndex].g_sComboSet[0] = '\0';
 			g_esTank[iIndex].g_iRandomTank = 1;
@@ -14715,9 +14723,9 @@ Action OnPlayerTakeDamageAlive(int victim, int &attacker, int &inflictor, float 
 			{
 				vInstallPatch(iIndex[1]);
 			}
-		}
 
-		SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 1.0);
+			SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 1.0);
+		}
 	}
 
 	return Plugin_Continue;
@@ -15477,16 +15485,14 @@ void OnSurvivorPostThinkPost(int survivor)
 
 void OnTankPostThinkPost(int tank)
 {
-	switch (bIsTank(tank) && g_bSecondGame)
+	switch (bIsTank(tank) && g_bSecondGame && g_esCache[tank].g_iSkipTaunt == 1)
 	{
 		case true:
 		{
-			int iSequence = GetEntProp(tank, Prop_Send, "m_nSequence");
-
-			switch (g_esCache[tank].g_iSkipTaunt == 1 && (iSequence == 15 || iSequence == 16 || iSequence == 17 || iSequence == 18 || iSequence == 19 || iSequence == 20 || iSequence == 21 || iSequence == 22 || iSequence == 23))
+			switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
 			{
-				case true: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 5.0);
-				case false: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
+				case 16, 17, 18, 19, 20, 21, 22, 23: SetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate", 10.0);
+				default: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 			}
 		}
 		case false: SDKUnhook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
@@ -15871,7 +15877,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle, 2);
-	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence", Hook_Post, mreSelectWeightedSequencePost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence", Hook_Pre, mreSelectWeightedSequencePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create", Hook_Post, mreTankRockCreatePost, toggle, 2);
@@ -16922,9 +16928,9 @@ MRESReturn mreSecondaryAttackPost(int pThis)
 	return MRES_Ignored;
 }
 
-MRESReturn mreSelectWeightedSequencePost(int pThis, DHookReturn hReturn, DHookParam hParams)
+MRESReturn mreSelectWeightedSequencePre(int pThis, DHookReturn hReturn, DHookParam hParams)
 {
-	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && 52 <= hReturn.Value <= 60)
+	if (bIsTank(pThis) && g_esCache[pThis].g_iSkipTaunt == 1 && MT_ACT_TERROR_HULK_VICTORY <= hParams.Get(1) <= MT_ACT_TERROR_RAGE_AT_KNOCKDOWN)
 	{
 		hReturn.Value = 0;
 
@@ -18073,6 +18079,29 @@ bool bHasCoreAdminAccess(int admin, int type = 0)
 	return true;
 }
 
+bool bIsBossLimited(int type)
+{
+	int iBaseType = g_esTank[type].g_iBossBaseType, iLimit = g_esTank[type].g_iBossLimit;
+	if (iBaseType <= 0 && iLimit <= 0)
+	{
+		return false;
+	}
+
+	int iTypeCount = 0, iType = 0;
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[iTank].g_bArtificial && g_esPlayer[iTank].g_iTankType > 0)
+		{
+			if (g_esTank[type].g_iBossBaseType == g_esPlayer[iTank].g_iTankType || g_esTank[g_esPlayer[iTank].g_iTankType].g_iBossBaseType == type || g_esPlayer[iTank].g_iTankType == type)
+			{
+				iTypeCount++;
+			}
+		}
+	}
+
+	return iTypeCount > 0 && (iTypeCount > iLimit || (iBaseType > 0 && iTypeCount > g_esTank[iBaseType].g_iBossLimit));
+}
+
 bool bIsCompetitiveMode()
 {
 	return bIsVersusMode() || bIsScavengeMode();
@@ -18610,7 +18639,7 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		switch (exclude)
 		{
-			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || MT_GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || (g_esPlayer[tank].g_iTankType == iIndex);
+			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || MT_GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || 0 < g_esTank[iIndex].g_iTypeLimit <= iGetTypeCount(iIndex) || bIsBossLimited(iIndex) || (g_esPlayer[tank].g_iTankType == iIndex);
 			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || (g_esTank[iIndex].g_iRandomTank == 0) || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || (g_esPlayer[tank].g_iTankType == iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 

@@ -899,9 +899,9 @@
 			"Share Rewards"				"0,0,0,0"
 
 			// The total number of teammates to reward for assisting against Mutant Tanks.
+			// Note: This setting excludes killers and most assists.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: This setting excludes killers and most assists.
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -1200,9 +1200,9 @@
 			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// The jump height to reward to survivors.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: Any value above "150.0" may cause instant death from fall damage.
 			// --
 			// Separate heights with commas (",").
 			// --
@@ -1399,9 +1399,9 @@
 			"Revive Health Reward"			"100,100,100,100"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: The max health of the target will be multiplied by this setting's value.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: The max health of the target will be multiplied by this setting's value.
 			// --
 			// Separate multipliers with commas (",").
 			// --
@@ -1438,9 +1438,9 @@
 			"Shove Penalty Reward"			"1,1,1,1"
 
 			// The shove rate to reward to survivors.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
 			// --
 			// Separate rates with commas (",").
 			// --
@@ -1477,9 +1477,9 @@
 			"Sledgehammer Rounds Reward"		"1,1,1,1"
 
 			// Give special ammo as a reward to survivors.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// Separate values with commas (",").
 			// --
@@ -1612,9 +1612,9 @@
 			"Useful Rewards"			"15,15,15,15"
 
 			// These are the RGBA values of the recipients' body color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -1641,10 +1641,10 @@
 			"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 
 			// These are the RGB values of the recipients' glow outline color visual.
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than "0" will output a random color.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate RGB sets with commas (",").
 			// Separate RGB values with semi-colons (";").
@@ -1670,9 +1670,9 @@
 			"Glow Color Visual"			"-1;-1;-1,-1;-1;-1,-1;-1;-1,-1;-1;-1"
 
 			// These are the RGBA values of the recipients' light color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -1753,9 +1753,9 @@
 			"Particle Effect Visual"		"15,15,15,15"
 
 			// These are the RGBA values of the recipients' screen color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -2228,7 +2228,6 @@
 
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
-			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -2563,7 +2562,7 @@
 
 			// Display a note for the Mutant Tank when it spawns.
 			// Note: This note can also be displayed for clones if the "Clone Mode" setting is set to "1", so the chat could be spammed if multiple clones spawn.
-			// Note: A note must be manually created in the translation file.
+			// Note: A note must be manually created in the translation file (mutant_tanks_names.phrases.txt).
 			// Note: Tank notes support chat color tags in the translation file.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -3186,9 +3185,9 @@
 			"Share Rewards"				"0,0,0,0"
 
 			// The total number of teammates to reward for assisting against the Mutant Tank.
+			// Note: This setting excludes killers and most assists.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: This setting excludes killers and most assists.
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -3487,9 +3486,9 @@
 			"Item Reward"				""
 
 			// The jump height to reward to survivors.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Any value above "150.0" may cause instant death from fall damage.
 			// --
 			// Separate heights with commas (",").
 			// --
@@ -3686,9 +3685,9 @@
 			"Revive Health Reward"			"0,0,0,0"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: The max health of the target will be multiplied by this setting's value.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: The max health of the target will be multiplied by this setting's value.
 			// --
 			// Separate multipliers with commas (",").
 			// --
@@ -3725,9 +3724,9 @@
 			"Shove Penalty Reward"			"0,0,0,0"
 
 			// The shove rate to reward to survivors.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
 			// --
 			// Separate rates with commas (",").
 			// --
@@ -3764,9 +3763,9 @@
 			"Sledgehammer Rounds Reward"		"0,0,0,0"
 
 			// Give special ammo as a reward to survivors.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// Separate values with commas (",").
 			// --
@@ -3899,9 +3898,9 @@
 			"Useful Rewards"			"0,0,0,0"
 
 			// These are the RGBA values of the recipients' body color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -3928,10 +3927,10 @@
 			"Body Color Visual"			""
 
 			// These are the RGB values of the recipients' glow outline color visual.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than "0" will output a random color.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate RGB sets with commas (",").
 			// Separate RGB values with semi-colons (";").
@@ -3957,9 +3956,9 @@
 			"Glow Color Visual"			""
 
 			// These are the RGBA values of the recipients' light color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -4040,9 +4039,9 @@
 			"Particle Effect Visual"		"0,0,0,0"
 
 			// These are the RGBA values of the recipients' screen color visual.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Any value less than "0" will output a random color.
 			// --
 			// Separate RGBA sets with commas (",").
 			// Separate RGBA values with semi-colons (";").
@@ -4081,17 +4080,17 @@
 		"Glow"
 		{
 			// The Mutant Tank will have a glow outline.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Mutant Tank's glow outline color.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than "0" will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -4103,16 +4102,16 @@
 			//"Glow Color"				"all_tank_glows" // Alternative (See "Colors" section)
 
 			// The Mutant Tank's glow outline will flash.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Flashing"				"0"
 
 			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with "-".
 			// --
@@ -4127,8 +4126,8 @@
 			"Glow Range"				"0-99999"
 
 			// The Mutant Tank's glow outline visibility type.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
@@ -4205,6 +4204,15 @@
 		}
 		"Boss"
 		{
+			// The base Mutant Tank type of the boss.
+			// Note: This setting only takes effect when the "Spawn Type" setting is set to "1".
+			// Note: This setting is only required for the boss' evolution stages, not its base form.
+			// Note: The value of this setting is used to track the boss across its evolution stages.
+			// --
+			// 0: OFF
+			// 1-500: ON, the base Mutant Tank type of the boss.
+			"Boss Base Type"			"0"
+
 			// The health of bosses needed for each stage.
 			// Note: This setting only takes effect when the "Spawn Type" setting is set to "1".
 			// Note: The values will be added to the boss's new health on every new stage.
@@ -4227,7 +4235,18 @@
 			// 4th number = Amount of health of the boss to make it evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
 			"Boss Health Stages"			"5000,2500,1666,1250"
 
-			// The number of stages for Mutant Tank bosses.
+			// The number of Mutant Tanks with this boss type that can be alive at any given time.
+			// Note: This setting only takes effect when the "Spawn Type" setting is set to "1".
+			// Note: This setting is only required for the boss' base form, not its evolution stages.
+			// Note: The value of this setting is used to limit the boss across its evolution stages.
+			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 32
+			"Boss Limit"				"0"
+
+			// The number of stages for the Mutant Tank boss.
 			// Note: This setting only takes effect when the "Spawn Type" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5620,9 +5639,9 @@
 			"Acid Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This does not need "Ability Enabled" or "Acid Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -10709,9 +10728,9 @@
 			"Heal Chance"				"33.3"
 
 			// The Mutant Tank's healing gives it a glow outline when activated.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -12238,9 +12257,9 @@
 			"Item Pinata"				""
 
 			// Removes the death model of the survivor when killed.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting only applies if the "Item Pinata" setting is not empty.
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -12694,8 +12713,8 @@
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -16793,8 +16812,8 @@
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -17349,10 +17368,10 @@
 			"Shield Display Health Type"		"2"
 
 			// The Mutant Tank's shield has a glow outline when activated.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
 			// Note: The glow outline may not appear most of the time when the "Glow Type" setting is set to "0" because the shield must be fully visible to the player in order for the glow outline to appear. Since a part of the shield is always under the ground, it is only fully visible when the Tank is climbing or is in the air.
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -18078,8 +18097,8 @@
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -18299,8 +18318,8 @@
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
-			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -19265,10 +19284,10 @@
 			"Track Chance"				"33.3"
 
 			// The Mutant Tank's heat-seeking rocks have glow outlines when activated.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
 			// Note: The glow outline may not appear when the "Glow Type" setting is set to "0" if the rock is not fully visible to the player.
 			// Note: This setting can be overridden for specific players.
-			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -20201,6 +20220,7 @@
 			"Warp Range Chance"			"15.0"
 
 			// The Mutant Tank's rock switches places with the Mutant Tank when it breaks.
+			// Note: The Tank may get stuck when teleported to where the rock breaks.
 			// Note: This does not need "Ability Enabled" or "Warp Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --

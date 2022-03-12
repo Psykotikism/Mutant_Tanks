@@ -14,9 +14,13 @@
 - Fixed an issue where certain special infected cannot suicide because of the friendly-fire block.
 - Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
 - Fixed some code for the `Clone` ability being compiled when the `mt_clone.inc` include is not included.
+- Fixed survivors not getting slowed down by common infected and most damage sources. (Thanks to `Shao` for testing and reporting!)
 
 #### Config Files
 - Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
+
+#### Settings
+- Fixed the `Skip Taunt` setting not working. (Thanks to `sorallll` for the code!)
 
 #### Abilities
 - Fly: Fixed the `player_jump` game event not being hooked.
@@ -31,18 +35,32 @@
 - Raised the size for Steam ID buffers to support other outputs.
 - Added log messages for tracking custom configs.
 
+#### Settings
+- Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
+	- `Boss Base Type`
+	- `Boss Limit`
+
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnPluginEnd` forward.
 - Added the `MT_OnPluginUpdate` forward. (This forward only fires when `Updater` is installed.)
 
 ### Files
 
-#### Updates
-- Updated include file.
-- Updated updater file.
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6806` compiler.
+
+#### Compilation
 - Added compiler warnings for the following plugin source files that notify users when one or more abilities are disabled/excluded (Thanks to `Marttt` for the idea!):
 	- `mt_abilities.sp`
 	- `mt_abilities2.sp`
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated updater file.
 
 ## Version 8.90 (February 1, 2022)
 
