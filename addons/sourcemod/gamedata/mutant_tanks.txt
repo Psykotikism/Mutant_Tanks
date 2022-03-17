@@ -344,10 +344,10 @@
 			 **/
 			"MTDetour_CTerrorPlayer::Extinguish"
 			{
-				"signature"		"CTerrorPlayer::Extinguish"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"entity"
+				"signature"	"CTerrorPlayer::Extinguish"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
 			}
 
 			/**

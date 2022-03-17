@@ -15,6 +15,7 @@
 - Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
 - Fixed some code for the `Clone` ability being compiled when the `mt_clone.inc` include is not included.
 - Fixed survivors not getting slowed down by common infected and most damage sources. (Thanks to `Shao` for testing and reporting!)
+- Fixed the Tank's glow settings not working when a player passes control to the AI. (Thanks to `yuzumi` for testing and reporting!)
 
 #### Config Files
 - Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
@@ -25,6 +26,7 @@
 #### Abilities
 - Fly: Fixed the `player_jump` game event not being hooked.
 - Recoil: Fixed the `weapon_fire` game event not being hooked.
+- Warp: Fixed the Tank teleporting in narrow areas. (Thanks to `yuzumi` for testing and reporting!)
 
 ### Changes
 
@@ -34,6 +36,8 @@
 #### Core Plugin
 - Raised the size for Steam ID buffers to support other outputs.
 - Added log messages for tracking custom configs.
+- Changed how the Tank's health is refilled when players switch between different Mutant Tank types. (Thanks to `yuzumi` for suggesting!)
+- Added support for third-party plugins manually setting Tanks in ghost mode. (Requested by `yuzumi`.)
 
 #### Settings
 - Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):

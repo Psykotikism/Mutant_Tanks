@@ -698,8 +698,8 @@ void vMinion(int tank)
 {
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount)
 	{
-		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
-		GetClientEyePosition(tank, flPosition);
+		float flHitPos[3], flPos[3], flAngles[3], flVector[3];
+		GetClientEyePosition(tank, flPos);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
 
@@ -709,16 +709,16 @@ void vMinion(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPos, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				TR_GetEndPosition(flHitPosition, hTrace);
+				TR_GetEndPosition(flHitPos, hTrace);
 				NormalizeVector(flVector, flVector);
 				ScaleVector(flVector, -40.0);
-				AddVectors(flHitPosition, flVector, flHitPosition);
-				if (40.0 < GetVectorDistance(flHitPosition, flPosition) < 200.0)
+				AddVectors(flHitPos, flVector, flHitPos);
+				if (40.0 < GetVectorDistance(flHitPos, flPos) < 200.0)
 				{
 					bool[] bExists = new bool[MaxClients + 1];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -778,7 +778,7 @@ void vMinion(int tank)
 
 					if (bIsSpecialInfected(iSpecial))
 					{
-						TeleportEntity(iSpecial, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iSpecial, flHitPos, NULL_VECTOR, NULL_VECTOR);
 
 						g_esMinionPlayer[iSpecial].g_bMinion = true;
 						g_esMinionPlayer[iSpecial].g_iOwner = tank;

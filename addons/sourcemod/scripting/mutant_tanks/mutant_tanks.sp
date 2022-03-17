@@ -501,10 +501,10 @@ enum struct esGeneral
 	DynamicDetour g_ddShovedByPounceLandingDetour;
 	DynamicDetour g_ddShovedBySurvivorDetour;
 	DynamicDetour g_ddSpawnTankDetour;
-	DynamicDetour g_ddStaggerDetour;
+	DynamicDetour g_ddStaggeredDetour;
+	DynamicDetour g_ddStartActionDetour;
 	DynamicDetour g_ddStartHealingDetour;
 	DynamicDetour g_ddStartRevivingDetour;
-	DynamicDetour g_ddStartActionDetour;
 	DynamicDetour g_ddTankClawDoSwingDetour;
 	DynamicDetour g_ddTankClawGroundPoundDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
@@ -840,7 +840,6 @@ enum struct esPlayer
 	bool g_bKeepCurrentType;
 	bool g_bLastLife;
 	bool g_bMeteor;
-	bool g_bNeedHealth;
 	bool g_bRainbowColor;
 	bool g_bRandomized;
 	bool g_bReleasedJump;
@@ -5133,6 +5132,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vResetTank(iBot, 0);
 					vResetTank2(iBot, false);
 					vCacheSettings(iBot);
+					vRestorePlayerGlow(iBot);
 				}
 				else if (bIsSurvivor(iPlayer))
 				{
@@ -5258,6 +5258,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vResetTank(iPlayer, 0);
 					vResetTank2(iPlayer, false);
 					vCacheSettings(iPlayer);
+					vRestorePlayerGlow(iPlayer);
 				}
 				else if (bIsSurvivor(iBot))
 				{
@@ -5840,6 +5841,7 @@ int iGetGameDataOffset(const char[] name)
 /**
  * Forward functions
  **/
+
 void vChangeTypeForward(int tank, int oldType, int newType, bool revert)
 {
 	Call_StartForward(g_esGeneral.g_gfChangeTypeForward);
@@ -9345,7 +9347,6 @@ void vCopyTankStats(int tank, int newtank)
 	g_esPlayer[newtank].g_bIce = g_esPlayer[tank].g_bIce;
 	g_esPlayer[newtank].g_bKeepCurrentType = g_esPlayer[tank].g_bKeepCurrentType;
 	g_esPlayer[newtank].g_bMeteor = g_esPlayer[tank].g_bMeteor;
-	g_esPlayer[newtank].g_bNeedHealth = g_esPlayer[tank].g_bNeedHealth;
 	g_esPlayer[newtank].g_bRandomized = g_esPlayer[tank].g_bRandomized;
 	g_esPlayer[newtank].g_bSmoke = g_esPlayer[tank].g_bSmoke;
 	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
@@ -9956,7 +9957,6 @@ void vResetTank2(int tank, bool full = true)
 	g_esPlayer[tank].g_bIce = false;
 	g_esPlayer[tank].g_bKeepCurrentType = false;
 	g_esPlayer[tank].g_bMeteor = false;
-	g_esPlayer[tank].g_bNeedHealth = false;
 	g_esPlayer[tank].g_bReplaceSelf = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
@@ -10151,12 +10151,13 @@ void vSetTankHealth(int tank, bool initial = true)
 		case 3: iTotalHealth = iFinalHealth3;
 	}
 
-	if (!initial && (iTotalHealth >= iMaxHealth || (iHealth < iMaxHealth && iTotalHealth >= iHealth)))
+	float flPercentage = 1.0;
+	if (!initial && iHealth != iMaxHealth)
 	{
-		return;
+		flPercentage = float(iHealth / iMaxHealth);
 	}
 
-	SetEntProp(tank, Prop_Data, "m_iHealth", iTotalHealth);
+	SetEntProp(tank, Prop_Data, "m_iHealth", RoundToNearest(iTotalHealth * flPercentage));
 	SetEntProp(tank, Prop_Data, "m_iMaxHealth", iTotalHealth);
 }
 
@@ -10762,18 +10763,7 @@ void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true
 										g_esPlayer[admin].g_bInitialRound = g_esGeneral.g_bNextRound;
 
 										vSetTankColor(admin, g_esGeneral.g_iChosenType);
-
-										switch (g_esPlayer[admin].g_bNeedHealth)
-										{
-											case true:
-											{
-												g_esPlayer[admin].g_bNeedHealth = false;
-
-												vTankSpawn(admin);
-											}
-											case false: vTankSpawn(admin, 5);
-										}
-
+										vTankSpawn(admin, 5);
 										vExternalView(admin, 1.5);
 
 										if (g_esGeneral.g_iMasterControl == 0 && (!CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT) && !bIsDeveloper(admin, 0)))
@@ -14431,8 +14421,6 @@ void vPlayerSpawnFrame(DataPack pack)
 				{
 					case true:
 					{
-						g_esPlayer[iPlayer].g_bNeedHealth = true;
-
 						if (g_esGeneral.g_iSpawnMode != 2)
 						{
 							vTankMenu(iPlayer);
@@ -15801,7 +15789,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding");
 	vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "MTDetour_CTerrorPlayer::OnShovedBySurvivor");
 	vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank");
-	vSetupDetour(g_esGeneral.g_ddStaggerDetour, "MTDetour_CTerrorPlayer::OnStaggered");
+	vSetupDetour(g_esGeneral.g_ddStaggeredDetour, "MTDetour_CTerrorPlayer::OnStaggered");
 	vSetupDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction");
 	vSetupDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing");
 	vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving");
@@ -15927,7 +15915,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "MTDetour_CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "MTDetour_CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, toggle);
-	vToggleDetour(g_esGeneral.g_ddStaggerDetour, "MTDetour_CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddStaggeredDetour, "MTDetour_CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggeredPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, toggle);
@@ -16233,7 +16221,7 @@ MRESReturn mreEnterGhostStatePost(int pThis)
 
 		if (bIsCoopMode() && g_esGeneral.g_flForceSpawn > 0.0)
 		{
-			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 
@@ -17017,7 +17005,7 @@ MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
+MRESReturn mreStaggeredPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)))
 	{

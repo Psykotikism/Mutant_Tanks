@@ -857,7 +857,7 @@ int iGetNearestSurvivor(int tank, float pos[3])
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esLaserPlayer[tank].g_iTankType, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLaserPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(pos, flSurvivorPos) <= g_esLaserCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
+			if (GetVectorDistance(pos, flSurvivorPos) <= g_esLaserCache[tank].g_flLaserRange && bIsVisiblePosition(pos, flSurvivorPos, tank, 1))
 			{
 				iSurvivors[iSurvivorCount] = iSurvivor;
 				iSurvivorCount++;

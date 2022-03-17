@@ -1024,6 +1024,11 @@ void vWarp2(int tank, int other)
 	GetClientAbsAngles(other, flOtherAngles);
 	flOtherOrigin[2] += 50.0;
 
+	if (bIsAreaNarrow(.range = g_esWarpCache[tank].g_flOpenAreasOnly, .pos = flOtherOrigin))
+	{
+		return;
+	}
+
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
 	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
@@ -1147,7 +1152,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 				float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !bIsAreaNarrow(iSurvivor, g_esWarpCache[tank].g_flOpenAreasOnly) && iSurvivor != survivor)
 					{
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esWarpPlayer[tank].g_iCooldown2 == -1 || g_esWarpPlayer[tank].g_iCooldown2 < iTime))
 						{
@@ -1234,6 +1239,11 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 		float flRockPos[3], flRockAngles[3];
 		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
 		GetEntPropVector(rock, Prop_Data, "m_angRotation", flRockAngles);
+
+		if (bIsAreaNarrow(.range = g_esWarpCache[tank].g_flOpenAreasOnly, .pos = flRockPos))
+		{
+			return;
+		}
 
 		vAttachParticle(tank, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP, tank);

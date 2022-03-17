@@ -20149,6 +20149,7 @@
 			"Warp Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: The Tank will not teleport in narrow areas.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -20193,6 +20194,7 @@
 			"Warp Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: The Tank will not teleport in narrow areas.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -20220,7 +20222,7 @@
 			"Warp Range Chance"			"15.0"
 
 			// The Mutant Tank's rock switches places with the Mutant Tank when it breaks.
-			// Note: The Tank may get stuck when teleported to where the rock breaks.
+			// Note: The Tank will not teleport in narrow areas.
 			// Note: This does not need "Ability Enabled" or "Warp Hit" to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --

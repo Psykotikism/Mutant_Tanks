@@ -1931,19 +1931,25 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
 }
 
-stock bool bIsAreaNarrow(int tank, float range = 150.0)
+stock bool bIsAreaNarrow(int tank = 0, float range = 150.0, float pos[3] = {0.0, 0.0, 0.0})
 {
 	if (range > 0.0)
 	{
-		float flOrigin[3], flPos[3], flAngles[3];
+		float flOrigin[3], flAngles[3];
 		flAngles[0] = -89.0;
-		GetClientEyePosition(tank, flOrigin);
+
+		switch (tank > 0)
+		{
+			case true: GetClientEyePosition(tank, flOrigin);
+			case false: vCopyVector(pos, flOrigin);
+		}
 
 		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
 			{
+				float flPos[3];
 				TR_GetEndPosition(flPos, hTrace);
 
 				if (GetVectorDistance(flPos, flOrigin) <= range)
@@ -2267,6 +2273,31 @@ stock bool bIsValidEntRef(int ref)
 	return ref && EntRefToEntIndex(ref) != INVALID_ENT_REFERENCE;
 }
 
+stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
+{
+	Handle hTrace = null;
+
+	switch (type)
+	{
+		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
+	}
+
+	if (hTrace != null)
+	{
+		if (TR_DidHit(hTrace))
+		{
+			delete hTrace;
+
+			return false;
+		}
+
+		delete hTrace;
+	}
+
+	return true;
+}
+
 stock bool bIsWitch(int witch)
 {
 	if (bIsValidEntity(witch))
@@ -2279,6 +2310,7 @@ stock bool bIsWitch(int witch)
 	return false;
 }
 
+// Filters
 bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -2409,6 +2441,7 @@ bool bTankFilter(const char[] pattern, ArrayList clients)
 	return true;
 }
 
+// Trace ray filters
 public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 {
 	return entity != data;
@@ -2434,45 +2467,7 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 	return entity != data && !bIsSurvivor(entity);
 }
 
-stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
-{
-	Handle hTrace = null;
-
-	switch (type)
-	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
-	}
-
-	if (hTrace != null)
-	{
-		if (TR_DidHit(hTrace))
-		{
-			delete hTrace;
-
-			return false;
-		}
-
-		delete hTrace;
-	}
-
-	return true;
-}
-
-stock float flClamp(float value, float min, float max)
-{
-	if (value < min)
-	{
-		return min;
-	}
-	else if (value > max)
-	{
-		return max;
-	}
-
-	return value;
-}
-
+// Getters
 stock float flGetAdrenalineTime(int survivor)
 {
 	if (!bIsSecondGame())
@@ -2527,7 +2522,7 @@ stock float flGetGroundUnits(int entity)
 {
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
 	{
-		float flOrigin[3], flPosition[3];
+		float flOrigin[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 
 		Handle hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
@@ -2535,8 +2530,9 @@ stock float flGetGroundUnits(int entity)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				TR_GetEndPosition(flPosition, hTrace);
-				float flUnits = flOrigin[2] - flPosition[2];
+				float flPos[3], flUnits = 0.0;
+				TR_GetEndPosition(flPos, hTrace);
+				flUnits = flOrigin[2] - flPos[2];
 
 				delete hTrace;
 
@@ -2715,20 +2711,6 @@ stock float flGetTempHealth(int survivor, float decayRate)
 	float flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
 	flTempHealth -= (GetGameTime() - GetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime")) * decayRate;
 	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
-}
-
-stock int iClamp(int value, int min, int max)
-{
-	if (value < min)
-	{
-		return min;
-	}
-	else if (value > max)
-	{
-		return max;
-	}
-
-	return value;
 }
 
 stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
@@ -3277,6 +3259,36 @@ stock int iGetWitchCount()
 	return iWitchCount;
 }
 
+// Limiters
+stock float flClamp(float value, float min, float max)
+{
+	if (value < min)
+	{
+		return min;
+	}
+	else if (value > max)
+	{
+		return max;
+	}
+
+	return value;
+}
+
+stock int iClamp(int value, int min, int max)
+{
+	if (value < min)
+	{
+		return min;
+	}
+	else if (value > max)
+	{
+		return max;
+	}
+
+	return value;
+}
+
+// Precachers
 stock int iPrecacheParticle(const char[] particlename)
 {
 	static int iTable = INVALID_STRING_TABLE;
