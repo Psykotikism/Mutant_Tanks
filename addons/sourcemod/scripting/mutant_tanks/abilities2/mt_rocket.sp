@@ -922,9 +922,9 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 						}
 					}
 
-					float flPosition[3], flAngles[3];
-					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPosition);
-					flPosition[2] += 30.0;
+					float flPos[3], flAngles[3];
+					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPos);
+					flPos[2] += 30.0;
 					flAngles[0] = 90.0;
 					flAngles[1] = 0.0;
 					flAngles[2] = 0.0;
@@ -940,7 +940,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					DispatchKeyValue(iFlame, "JetLength", "400");
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-					TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
+					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iFlame);
 					vSetEntityParent(iFlame, survivor);
 
@@ -1096,10 +1096,10 @@ Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		g_iRocketDeathModelOwner = GetClientUserId(iSurvivor);
 	}
 
-	float flPosition[3];
-	GetClientAbsOrigin(iSurvivor, flPosition);
+	float flPos[3];
+	GetClientAbsOrigin(iSurvivor, flPos);
 
-	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
+	TE_SetupExplosion(flPos, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
 	TE_SendToAll();
 
 	SetEntityGravity(iSurvivor, 1.0);

@@ -790,25 +790,25 @@ void vSmiteReset()
 
 void vSmite(int survivor)
 {
-	float flPosition[3], flStartPosition[3];
+	float flPos[3], flStartPos[3];
 	int iColor[4] = {255, 255, 255, 255};
 
-	GetClientAbsOrigin(survivor, flPosition);
-	flPosition[2] -= 26.0;
-	flStartPosition[0] = (flPosition[0] + MT_GetRandomFloat(-500.0, 500.0));
-	flStartPosition[1] = (flPosition[1] + MT_GetRandomFloat(-500.0, 500.0));
-	flStartPosition[2] = (flPosition[2] + 800.0);
+	GetClientAbsOrigin(survivor, flPos);
+	flPos[2] -= 26.0;
+	flStartPos[0] = (flPos[0] + MT_GetRandomFloat(-500.0, 500.0));
+	flStartPos[1] = (flPos[1] + MT_GetRandomFloat(-500.0, 500.0));
+	flStartPos[2] = (flPos[2] + 800.0);
 
-	TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
+	TE_SetupBeamPoints(flStartPos, flPos, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 	TE_SendToAll();
 
-	TE_SetupSparks(flPosition, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
+	TE_SetupSparks(flPos, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
 	TE_SendToAll();
 
-	TE_SetupEnergySplash(flPosition, view_as<float>({0.0, 0.0, 0.0}), false);
+	TE_SetupEnergySplash(flPos, view_as<float>({0.0, 0.0, 0.0}), false);
 	TE_SendToAll();
 
-	EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
+	EmitAmbientSound(SOUND_EXPLOSION, flStartPos, survivor, SNDLEVEL_RAIDSIREN);
 }
 
 void vSmiteAbility(int tank, float random, int pos = -1)

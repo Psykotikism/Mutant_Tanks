@@ -1115,7 +1115,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			float flPos2[3];
 			GetClientEyePosition(iTarget, flPos2);
 			flDistance = GetVectorDistance(flPos, flPos2);
-			bVisible = bVisiblePosition(flPos, flPos2, tank, 1);
+			bVisible = bIsVisiblePosition(flPos, flPos2, tank, 1);
 
 			GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 			ScaleVector(flVelocity2, duration);
