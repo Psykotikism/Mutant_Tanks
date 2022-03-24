@@ -778,30 +778,10 @@ void vSpawnUncommon(int tank, const char[] model)
 		GetClientAbsOrigin(tank, flOrigin);
 		GetClientEyeAngles(tank, flAngles);
 
-		float flTempOrigin[3], flMin[3], flMax[3];
-		GetEntPropVector(iInfected, Prop_Send, "m_vecMins", flMin);
-		GetEntPropVector(iInfected, Prop_Send, "m_vecMaxs", flMax);
-		for (int iIndex = 0; iIndex < 20; iIndex++)
-		{
-			vCopyVector(flOrigin, flTempOrigin);
-			flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flAngles[1]))));
-			flTempOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
-			flTempOrigin[2] += 5.0;
+		flOrigin[0] += (50.0 * (Cosine(DegToRad(flAngles[1]))));
+		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
+		flOrigin[2] += 5.0;
 
-			if (!bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-			{
-				break;
-			}
-		}
-
-		if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-		{
-			RemoveEntity(iInfected);
-
-			return;
-		}
-
-		vCopyVector(flTempOrigin, flOrigin);
 		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
 	}
 }
