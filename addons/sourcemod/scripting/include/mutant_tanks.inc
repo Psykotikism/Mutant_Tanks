@@ -2184,27 +2184,6 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 	return bIsPlayerIncapacitated(player) || (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0;
 }
 
-stock bool bIsPlayerStuck(int client = 0, float min[3] = {0.0, 0.0, 0.0}, float max[3] = {0.0, 0.0, 0.0}, float pos[3] = {0.0, 0.0, 0.0})
-{
-	float flMin[3], flMax[3], flOrigin[3];
-	if (client > 0)
-	{
-		GetClientMins(client, flMin);
-		GetClientMaxs(client, flMax);
-		GetClientAbsOrigin(client, flOrigin);
-	}
-	else
-	{
-		vCopyVector(min, flMin);
-		vCopyVector(max, flMax);
-		vCopyVector(pos, flOrigin);
-	}
-
-	TR_TraceHullFilter(flOrigin, flOrigin, flMin, flMax, MASK_PLAYERSOLID, bTraceRayDontHitSelfAndWorld);
-
-	return (TR_GetEntityIndex() == -1);
-}
-
 stock bool bIsSecondGame()
 {
 	static EngineVersion evEngine = Engine_Unknown;
@@ -2486,11 +2465,6 @@ public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 {
 	return entity != data && !bIsSurvivor(entity);
-}
-
-public bool bTraceRayDontHitSelfAndWorld(int entity, int mask)
-{
-	return entity < 1 || entity > MaxClients;
 }
 
 // Getters

@@ -2001,17 +2001,6 @@
 			// "strongest" - 99999.0 damage
 			"Hittable Damage"			"-1.0"
 
-			// The damage received by incapacitated survivors from the Mutant Tank is multiplied by this value.
-			// Note: Damage = Damage x Incap damage multiplier
-			// Example: Damage = 30.0 x 1.5 (45.0)
-			// Note: Use the value "1.0" to disable this setting. (Damage x 1.0 = Damage)
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
-			// --
-			// Minimum: 1.0
-			// Maximum: 99999.0
-			"Incap Damage Multiplier"		"1.0"
-
 			// Every Mutant Tank's punches have this much force.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -5042,17 +5031,6 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 99999.0 damage
 			"Hittable Damage"			"-1.0"
-
-			// The damage received by incapacitated survivors from the Mutant Tank is multiplied by this value.
-			// Note: Damage = Damage x Incap damage multiplier
-			// Example: Damage = 30.0 x 1.5 (45.0)
-			// Note: Use the value "1.0" to disable this setting. (Damage x 1.0 = Damage)
-			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1.0
-			// Maximum: 99999.0
-			"Incap Damage Multiplier"		"0.0"
 
 			// The Mutant Tank's punches have this much force.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
@@ -12264,8 +12242,6 @@
 			// --
 			// 0: Survivors get a random item.
 			// 1: Survivors get all items.
-			// 2: Tank drops a random item.
-			// 3: Tank drops all items.
 			"Item Mode"				"0"
 
 			// The Mutant Tank turns its dead survivor victims into pinatas that spawn certain items.

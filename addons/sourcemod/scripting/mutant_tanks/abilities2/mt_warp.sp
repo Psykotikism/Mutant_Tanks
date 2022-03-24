@@ -1022,29 +1022,13 @@ void vWarp2(int tank, int other)
 	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
+	flOtherOrigin[2] += 50.0;
 
-	float flTempOrigin[3], flMin[3], flMax[3];
-	GetClientMins(tank, flMin);
-	GetClientMaxs(tank, flMax);
-	for (int iIndex = 0; iIndex < 20; iIndex++)
-	{
-		vCopyVector(flOtherOrigin, flTempOrigin);
-		flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
-		flTempOrigin[1] += (50.0 * (Sine(DegToRad(flOtherAngles[1]))));
-		flTempOrigin[2] += 5.0;
-
-		if (!bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-		{
-			break;
-		}
-	}
-
-	if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
+	if (bIsAreaNarrow(.range = g_esWarpCache[tank].g_flOpenAreasOnly, .pos = flOtherOrigin))
 	{
 		return;
 	}
 
-	vCopyVector(flTempOrigin, flOtherOrigin);
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
 	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
