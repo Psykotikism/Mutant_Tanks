@@ -544,6 +544,7 @@ enum struct esGeneral
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flIdleCheck;
+	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
 	float g_flPipeBombDurationReward[4];
@@ -940,6 +941,7 @@ enum struct esPlayer
 	float g_flHealPercent;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
+	float g_flIncapDamageMultiplier;
 	float g_flJumpHeight;
 	float g_flJumpHeightReward[4];
 	float g_flLastAttackTime;
@@ -1208,6 +1210,7 @@ enum struct esTank
 	float g_flDamageResistanceReward[4];
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
+	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
 	float g_flOpenAreasOnly;
@@ -1406,6 +1409,7 @@ enum struct esCache
 	float g_flDamageResistanceReward[4];
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
+	float g_flIncapDamageMultiplier;
 	float g_flJumpHeightReward[4];
 	float g_flLoopingVoicelineInterval[4];
 	float g_flPipeBombDurationReward[4];
@@ -5126,13 +5130,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (bIsTank(iPlayer))
 				{
-					vSetTankColor(iPlayer, g_esPlayer[iBot].g_iTankType);
-					vCopyTankStats(iBot, iPlayer);
-					vTankSpawn(iPlayer, -1);
-					vResetTank(iBot, 0);
-					vResetTank2(iBot, false);
-					vCacheSettings(iBot);
-					vRestorePlayerGlow(iBot);
+					vSetupTankControl(iBot, iPlayer);
 				}
 				else if (bIsSurvivor(iPlayer))
 				{
@@ -5252,13 +5250,7 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (bIsTank(iBot))
 				{
-					vSetTankColor(iBot, g_esPlayer[iPlayer].g_iTankType);
-					vCopyTankStats(iPlayer, iBot);
-					vTankSpawn(iBot, -1);
-					vResetTank(iPlayer, 0);
-					vResetTank2(iPlayer, false);
-					vCacheSettings(iPlayer);
-					vRestorePlayerGlow(iPlayer);
+					vSetupTankControl(iPlayer, iBot);
 				}
 				else if (bIsSurvivor(iBot))
 				{
@@ -10154,7 +10146,7 @@ void vSetTankHealth(int tank, bool initial = true)
 	float flPercentage = 1.0;
 	if (!initial && iHealth != iMaxHealth)
 	{
-		flPercentage = float(iHealth / iMaxHealth);
+		flPercentage = float(iHealth) / float(iMaxHealth);
 	}
 
 	SetEntProp(tank, Prop_Data, "m_iHealth", RoundToNearest(iTotalHealth * flPercentage));
@@ -10670,6 +10662,16 @@ void vSetTankRainbowColor(int tank)
 	}
 }
 
+void vSetupTankControl(int oldTank, int newTank)
+{
+	vSetTankColor(newTank, g_esPlayer[oldTank].g_iTankType);
+	vCopyTankStats(oldTank, newTank);
+	vResetTank(oldTank, 0);
+	vResetTank2(oldTank, false);
+	vCacheSettings(oldTank);
+	CreateTimer(0.25, tTimerControlTank, GetClientUserId(newTank), TIMER_FLAG_NO_MAPCHANGE);
+}
+
 void vSetupTankSpawn(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
@@ -10902,6 +10904,8 @@ void vCacheSettings(int tank)
 	g_esCache[tank].g_flClawDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, 1);
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, true, g_esTank[iType].g_flHittableDamage, g_esGeneral.g_flHittableDamage, 1);
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1);
+	g_esCache[tank].g_flIncapDamageMultiplier = flGetSettingValue(bAccess, true, g_esTank[iType].g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier);
+	g_esCache[tank].g_flIncapDamageMultiplier = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flIncapDamageMultiplier, g_esCache[tank].g_flIncapDamageMultiplier);
 	g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchForce, g_esGeneral.g_flPunchForce, 1);
 	g_esCache[tank].g_flPunchForce = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchForce, g_esCache[tank].g_flPunchForce, 1);
 	g_esCache[tank].g_flPunchThrow = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchThrow, g_esGeneral.g_flPunchThrow);
@@ -11508,6 +11512,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		g_esTank[type].g_flClawDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[type].g_flClawDamage, value, -1.0, 99999.0);
 		g_esTank[type].g_iGroundPound = iGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esTank[type].g_iGroundPound, value, 0, 1);
 		g_esTank[type].g_flHittableDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[type].g_flHittableDamage, value, -1.0, 99999.0);
+		g_esTank[type].g_flIncapDamageMultiplier = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esTank[type].g_flIncapDamageMultiplier, value, 1.0, 99999.0);
 		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esTank[type].g_flPunchForce, value, -1.0, 99999.0);
 		g_esTank[type].g_flPunchThrow = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esTank[type].g_flPunchThrow, value, 0.0, 100.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esTank[type].g_flRockDamage, value, -1.0, 99999.0);
@@ -12853,6 +12858,7 @@ public void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_flClawDamage = -1.0;
 		g_esGeneral.g_iGroundPound = 0;
 		g_esGeneral.g_flHittableDamage = -1.0;
+		g_esGeneral.g_flIncapDamageMultiplier = 1.0;
 		g_esGeneral.g_flPunchForce = -1.0;
 		g_esGeneral.g_flPunchThrow = 0.0;
 		g_esGeneral.g_flRockDamage = -1.0;
@@ -13060,6 +13066,7 @@ public void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_flClawDamage = -1.0;
 			g_esTank[iIndex].g_iGroundPound = 0;
 			g_esTank[iIndex].g_flHittableDamage = -1.0;
+			g_esTank[iIndex].g_flIncapDamageMultiplier = 0.0;
 			g_esTank[iIndex].g_flPunchForce = -1.0;
 			g_esTank[iIndex].g_flPunchThrow = 0.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
@@ -13277,6 +13284,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
 				g_esPlayer[iPlayer].g_iGroundPound = 0;
 				g_esPlayer[iPlayer].g_flHittableDamage = -1.0;
+				g_esPlayer[iPlayer].g_flIncapDamageMultiplier = 0.0;
 				g_esPlayer[iPlayer].g_flPunchForce = -1.0;
 				g_esPlayer[iPlayer].g_flPunchThrow = 0.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
@@ -13528,6 +13536,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 				g_esGeneral.g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esGeneral.g_flClawDamage, value, -1.0, 99999.0);
 				g_esGeneral.g_iGroundPound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esGeneral.g_iGroundPound, value, 0, 1);
 				g_esGeneral.g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esGeneral.g_flHittableDamage, value, -1.0, 99999.0);
+				g_esGeneral.g_flIncapDamageMultiplier = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esGeneral.g_flIncapDamageMultiplier, value, 1.0, 99999.0);
 				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esGeneral.g_flPunchForce, value, -1.0, 99999.0);
 				g_esGeneral.g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esGeneral.g_flPunchThrow, value, 0.0, 100.0);
 				g_esGeneral.g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esGeneral.g_flRockDamage, value, -1.0, 99999.0);
@@ -13842,6 +13851,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 						g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 99999.0);
 						g_esPlayer[iPlayer].g_iGroundPound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "GroundPound", "Ground Pound", "Ground_Pound", "pound", g_esPlayer[iPlayer].g_iGroundPound, value, 0, 1);
 						g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -1.0, 99999.0);
+						g_esPlayer[iPlayer].g_flIncapDamageMultiplier = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esPlayer[iPlayer].g_flIncapDamageMultiplier, value, 1.0, 99999.0);
 						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 99999.0);
 						g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esPlayer[iPlayer].g_flPunchThrow, value, 0.0, 100.0);
 						g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 99999.0);
@@ -14807,6 +14817,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					if (StrEqual(sClassname[7], "tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
+						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
 						return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
@@ -14814,6 +14825,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flHittableDamage);
+						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
 						return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
@@ -14821,6 +14833,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iLauncher) && g_esCache[attacker].g_flRockDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
+						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
 						return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
@@ -19223,6 +19236,19 @@ Action tTimerCheckTankView(Handle timer, int userid)
 	}
 
 	QueryClientConVar(iTank, "z_view_distance", vViewDistanceQuery);
+
+	return Plugin_Continue;
+}
+
+Action tTimerControlTank(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!bIsTank(iTank))
+	{
+		return Plugin_Stop;
+	}
+
+	vTankSpawn(iTank, -1);
 
 	return Plugin_Continue;
 }
