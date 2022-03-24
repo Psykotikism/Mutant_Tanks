@@ -487,7 +487,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemPlayer[admin].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemPlayer[admin].g_iItemAbility, value, 0, 1);
 		g_esItemPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemPlayer[admin].g_iItemMessage, value, 0, 1);
 		g_esItemPlayer[admin].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemPlayer[admin].g_flItemChance, value, 0.0, 100.0);
-		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 1);
+		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 3);
 		g_esItemPlayer[admin].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemPlayer[admin].g_iItemPinataBody, value, 0, 1);
 		g_esItemPlayer[admin].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemPlayer[admin].g_flItemPinataChance, value, 0.0, 100.0);
 		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -506,7 +506,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemAbility[type].g_iItemAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esItemAbility[type].g_iItemAbility, value, 0, 1);
 		g_esItemAbility[type].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemAbility[type].g_iItemMessage, value, 0, 1);
 		g_esItemAbility[type].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemAbility[type].g_flItemChance, value, 0.0, 100.0);
-		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 1);
+		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 3);
 		g_esItemAbility[type].g_iItemPinataBody = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataBody", "Item Pinata Body", "Item_Pinata_Body", "pinatabody", g_esItemAbility[type].g_iItemPinataBody, value, 0, 1);
 		g_esItemAbility[type].g_flItemPinataChance = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ItemPinataChance", "Item Pinata Chance", "Item_Pinata_Chance", "pinatachance", g_esItemAbility[type].g_flItemPinataChance, value, 0.0, 100.0);
 		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -707,25 +707,25 @@ void vItemAbility(int tank)
 	char sItems[5][64];
 	ReplaceString(g_esItemCache[tank].g_sItemLoadout, sizeof esItemCache::g_sItemLoadout, " ", "");
 	ExplodeString(g_esItemCache[tank].g_sItemLoadout, ",", sItems, sizeof sItems, sizeof sItems[]);
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+
+	switch (g_esItemCache[tank].g_iItemMode)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
+		case 0, 1:
 		{
-			switch (g_esItemCache[tank].g_iItemMode)
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
-				case 1:
+				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esItemPlayer[tank].g_iTankType, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iImmunityFlags, g_esItemPlayer[iSurvivor].g_iImmunityFlags))
 				{
-					for (int iItem = 0; iItem < (sizeof sItems); iItem++)
+					switch (g_esItemCache[tank].g_iItemMode)
 					{
-						if (StrContains(g_esItemCache[tank].g_sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
-						{
-							vCheatCommand(iSurvivor, "give", sItems[iItem]);
-						}
+						case 0: vCheatCommand(iSurvivor, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+						case 1: vItemLoadout(tank, iSurvivor, sItems, sizeof sItems);
 					}
 				}
 			}
 		}
+		case 2: vCheatCommand(tank, "give", sItems[MT_GetRandomInt(1, (sizeof sItems)) - 1]);
+		case 3: vItemLoadout(tank, tank, sItems, sizeof sItems);
 	}
 
 	if (g_esItemCache[tank].g_iItemMessage == 1)
@@ -734,6 +734,17 @@ void vItemAbility(int tank)
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Item", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Item", LANG_SERVER, sTankName);
+	}
+}
+
+void vItemLoadout(int tank, int survivor, const char[][] list, int size)
+{
+	for (int iItem = 0; iItem < size; iItem++)
+	{
+		if (StrContains(g_esItemCache[tank].g_sItemLoadout, list[iItem]) != -1 && list[iItem][0] != '\0')
+		{
+			vCheatCommand(survivor, "give", list[iItem]);
+		}
 	}
 }
 
