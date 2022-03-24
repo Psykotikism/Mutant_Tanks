@@ -43,10 +43,16 @@
 - Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
 	- `Boss Base Type`
 	- `Boss Limit`
+- Added more options to the `Item Mode` setting.
+- Added the `Incap Damage Multiplier` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Requested by `Shao`.)
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnPluginEnd` forward.
 - Added the `MT_OnPluginUpdate` forward. (This forward only fires when `Updater` is installed.)
+
+#### Abilities
+- Warp: Added logic for checking coordinates before teleporting the Tank.
+- Zombie: Added logic for checking coordinates before spawning common infected.
 
 ### Files
 
