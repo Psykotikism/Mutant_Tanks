@@ -385,18 +385,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCK_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCK_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCK_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCK_SECTION4);
-	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iComboAbility == 1 && !g_esRockPlayer[tank].g_bActivated)
 		{
-			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			char sAbilities[320], sSubset[10][32];
+			strcopy(sAbilities, sizeof sAbilities, combo);
+			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ROCK_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION4, false))

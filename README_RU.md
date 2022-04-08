@@ -845,7 +845,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  *
  * @param tank			Клиентский индекс Танка.
  * @param type			0 = Основные/дальнобойные способности, 1 = Способности удара, 2 = Способности броска камня, 3 = Способности разбивания камня,
- *					4 = Способности после возрождения, 5 = Способности после смерти, 6 = Способности после выхода из строя
+ * 					4 = Способности после возрождения, 5 = Способности после смерти, 6 = Способности после выхода из строя
  * @param random		Случайное значение для проверки на шанс срабатывания комбинации.
  * @param combo			Строка, содержащая список способностей для объединения.
  * @param survivor		Клиентский индекс Выжившего, если таковой имеется.
@@ -1030,7 +1030,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param survivor		Клиентский индекс Выжившего.
  * @param tank			Клиентский индекс Танка.
  * @param type			1 = Здоровье, 2 = Усилитель урона, 4 = Скорость, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Пополнение здоровья и боеприпасов, 128 = Возрождение,
- *					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
+ * 					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
  * @param priority		0 = Убийца, 1 = Помощник в убийстве, который причинил наибольший ущерб, 2 = Товарищ по команде, который помог, 3 = Убийца, который причинил наибольший ущерб
  * @param duration		Срок действия награды.
  * @param apply			True, если награда дана, в противном случае - false.
@@ -1075,7 +1075,7 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  * @param tank			Клиентский индекс Танка, если выбранный тип применяется напрямую, в противном случае - 0.
  *
  * @return			Plugin_Handled, чтобы выбрать другой тип, Plugin_Stop, чтобы предотвратить мутацию Танка,
- *					Plugin_Changed, чтобы изменить выбранный тип, Plugin_Continue, чтобы разрешить.
+ * 					Plugin_Changed, чтобы изменить выбранный тип, Plugin_Continue, чтобы разрешить.
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
@@ -1107,7 +1107,7 @@ native void MT_DetonateTankRock(int rock);
  *
  * @param survivor		Клиентский индекс выжившего.
  * @param type			1 = Здоровье, 2 = Усиление урона, 4 = Ускорение, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Здоровье и пополнение боеприпасов, 128 = Возрождение,
- *					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
+ * 					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
  *
  * @return			True, если у выжившего активен тип награды, в противном случае - false.
  * @error			Неверный индекс клиента, клиента нет в игре или тип равен 0 или меньше.
@@ -1140,8 +1140,8 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * Возвращает значение настройки комбинации на основе позиции.
  *
  * @param tank			Клиентский индекс Танка.
- * @param type			1 = Шанс, 2 = Урон, 3 = Задержка, 4 = Продолжительность, 5 = Интервал, 6 = Мин. радиус, 7 = Макс. радиус,
- *					8 = Радиус, 9 = Шанс радиуса, 10 = Радиус смерти, 11 = Шанс радиуса смерти, 12 = Шанс камня, 13 = Скорость
+ * @param type			1 = Шанс, 2 = Урон, 3 = Задержка, 4 = Продолжительность, 5 = Интервал, 6 = Мин. радиус, 7 = Макс. радиус, 8 = Радиус,
+ * 					9 = Шанс радиуса, 10 = Радиус смерти, 11 = Шанс радиуса смерти, 12 = Шанс камня, 13 = Скорость, 14 = Остывать
  * @param pos			Позиция в массиве параметров, из которой нужно получить значение. (0-9)
  *
  * @return			Значение, сохранённое в настройке.
@@ -1219,7 +1219,7 @@ native int MT_GetMinType();
  *
  * @param tank			Клиентский индекс Танка.
  * @param type			1 = Светлый цвет, 2 = Цвет кислородного баллона, 3 = Цвет пламени кислородного баллона, 4 = Цвет камня,
- *					5 = Цвет шин, 6 = Цвет баллона с пропаном, 7 = Цвет фонарика, 8 = Цвет короны
+ * 					5 = Цвет шин, 6 = Цвет баллона с пропаном, 7 = Цвет фонарика, 8 = Цвет короны
  * @param red			Отсылка красного цвета.
  * @param green			Отсылка зелёного цвета.
  * @param blue			Отсылка синего цвета.
@@ -1254,7 +1254,7 @@ native float MT_GetScaledDamage(float damage);
  * @param tank			Клиентский индекс Танка.
  *
  * @return			Тип возрождения Танка.
- *					0 = Обычный, 1 = Босс, 2 = Случайно, 3 = Трансформация, 4 = Комбинированные способности
+ * 					0 = Обычный, 1 = Босс, 2 = Случайно, 3 = Трансформация, 4 = Комбинированные способности
  * @error			Неверный индекс клиента, клиент не в игре или клиент - человек.
  **/
 native int MT_GetSpawnType(int tank);
@@ -1331,7 +1331,7 @@ native void MT_HideEntity(int entity, bool mode);
  *
  * @return			True, если Выживший человек имеет иммунитет, в противном случае - false.
  * @error			Неверный индекс Выжившего, Выживший не в игре, Выживший мёртв, Выживший - бот, Выживший бездействует,
- *					недействительный индекс танка или танк не в игре.
+ * 					недействительный индекс танка или танк не в игре.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
 
@@ -1408,9 +1408,9 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  *
  * @param tank			Клиентский индекс Танка.
  * @param flags			Проверяет на запуск.
- *					MT_CHECK_INDEX = Индекс клиента, MT_CHECK_CONNECTED = Соединение, MT_CHECK_INGAME = Статус в игре,
- *					MT_CHECK_ALIVE = Состояние здоровья, MT_CHECK_INKICKQUEUE = Статус исключения из игры, MT_CHECK_FAKECLIENT = проверка бота
- *					По умолчанию: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ * 					MT_CHECK_INDEX = Индекс клиента, MT_CHECK_CONNECTED = Соединение, MT_CHECK_INGAME = Статус в игре,
+ * 					MT_CHECK_ALIVE = Состояние здоровья, MT_CHECK_INKICKQUEUE = Статус исключения из игры, MT_CHECK_FAKECLIENT = проверка бота
+ * 					По умолчанию: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
  *
  * @return			True, если Танку разрешено быть Танком-мутантом, в противном случае - false.
  * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
@@ -1482,7 +1482,7 @@ native void MT_SpawnTank(int tank, int type);
  *
  * @param tank			Клиентский индекс Танка.
  * @param mode			1 = Получить максимальное здоровье танка, 2 = Получить максимальное сохранённое здоровье танка,
- *					3 = Установить максимальное здоровье танка, не сохраняя его, 4 = Установить максимальное здоровье танка и сохранить его
+ * 					3 = Установить максимальное здоровье танка, не сохраняя его, 4 = Установить максимальное здоровье танка и сохранить его
  * @param newHealth		Новое максимальное здоровье танка.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
@@ -2171,9 +2171,9 @@ Overrides
 
 **emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ** - За сообщения о проблемах и предложения идей.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, Shao** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - За предложения идей.
 
