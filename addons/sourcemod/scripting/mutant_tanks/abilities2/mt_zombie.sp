@@ -367,18 +367,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION4);
-	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iComboAbility == 1 && !g_esZombiePlayer[tank].g_bActivated)
 		{
-			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			char sAbilities[320], sSubset[10][32];
+			strcopy(sAbilities, sizeof sAbilities, combo);
+			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION4, false))

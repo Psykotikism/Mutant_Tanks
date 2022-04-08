@@ -1925,6 +1925,25 @@
 			// 2nd character = Damage indicator
 			"Health Characters"			"|,-"
 
+			// The health of Mutant Tanks is multiplied by this value.
+			// Note: Health = Health x Health percentage multiplier
+			// Example: Health = 4000 x 2.5 (10000)
+			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// Minimum: 1.0
+			// Maximum: 99999.0
+			"Health Percentage Multiplier"		"1.0"
+
+			// The mode of the "Minimum Humans" setting.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
+			// --
+			// 0: Use as a requirement and as a multiplier for multiplying the Tank's health.
+			// 1: Use as a requirement for multiplying the Tank's health.
+			"Human Multiplier Mode"			"0"
+
 			// The number of human survivors required for the "Multiply Health" setting to take effect.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
@@ -4312,6 +4331,30 @@
 			// 10th number = Chance to trigger the tenth ability.
 			"Combo Chance"				"0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0"
 
+			// The cooldown of each ability in the combination.
+			// Note: This setting only takes effect when the "Spawn Type" setting is set to "4".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate cooldowns with commas (",").
+			// --
+			// Cooldowns limit: 10
+			// Character limit for each cooldown: 6
+			// --
+			// Minimum value for each cooldown: 0 (OFF)
+			// Maximum value for each cooldown: 99999 (Longest)
+			// --
+			// 1st number = Cooldown of the first ability.
+			// 2nd number = Cooldown of the second ability.
+			// 3rd number = Cooldown of the third ability.
+			// 4th number = Cooldown of the fourth ability.
+			// 5th number = Cooldown of the fifth ability.
+			// 6th number = Cooldown of the sixth ability.
+			// 7th number = Cooldown of the seventh ability.
+			// 8th number = Cooldown of the eighth ability.
+			// 9th number = Cooldown of the ninth ability.
+			// 10th number = Cooldown of the tenth ability.
+			"Combo Cooldown"			"0,0,0,0,0,0,0,0,0,0"
+
 			// The damage of each ability in the combination.
 			// Note: This setting only takes effect when the "Spawn Type" setting is set to "4".
 			// Note: This setting can be overridden for specific players.
@@ -4966,6 +5009,25 @@
 			// 1st character = Health indicator
 			// 2nd character = Damage indicator
 			"Health Characters"			""
+
+			// The health of the Mutant Tank is multiplied by this value.
+			// Note: Health = Health x Health percentage multiplier
+			// Example: Health = 4000 x 2.5 (10000)
+			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 99999.0
+			"Health Percentage Multiplier"		"0.0"
+
+			// The mode of the "Minimum Humans" setting.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Use as a requirement and as a multiplier for multiplying the Tank's health.
+			// 1: Use as a requirement for multiplying the Tank's health.
+			"Human Multiplier Mode"			"0"
 
 			// The number of human survivors required for the "Multiply Health" setting to take effect.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.

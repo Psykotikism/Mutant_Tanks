@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.91 (April 1, 2022)
+## Version 8.91 (May 1, 2022)
 
 ### Bug Fixes
 
@@ -45,9 +45,14 @@
 	- `Boss Limit`
 - Added more options to the `Item Mode` setting.
 - Added the `Incap Damage Multiplier` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Requested by `Shao`.)
+- Added the `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections.
+- Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
+	- `Human Multiplier Mode`
+	- `Health Percentage Multiplier`
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnPluginEnd` forward.
+- Updated the documentation for the `MT_GetCombinationSetting` native.
 - Added the `MT_OnPluginUpdate` forward. (This forward only fires when `Updater` is installed.)
 
 #### Abilities

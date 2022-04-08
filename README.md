@@ -845,7 +845,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  *
  * @param tank			Client index of the Tank.
  * @param type			0 = Main/range abilities, 1 = Hit abilities, 2 = Rock throw abilities, 3 = Rock break abilities,
- *					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
+ * 					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
  * @param random		Random value to check against for chance to trigger combination.
  * @param combo			String containing the list of abilities to combine.
  * @param survivor		Client index of the survivor, if any.
@@ -1030,7 +1030,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * 					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  * @param priority		0 = Killer, 1 = Assistant who did most damage, 2 = Teammate who helped, 3 = Assistant killer
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
@@ -1075,7 +1075,7 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  * @param tank			Client index of the Tank if the type chosen is being applied directly, 0 otherwise.
  *
  * @return			Plugin_Handled to choose another type, Plugin_Stop to prevent the Tank from mutating,
- *					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
+ * 					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
@@ -1107,7 +1107,7 @@ native void MT_DetonateTankRock(int rock);
  *
  * @param survivor		Client index of the survivor.
  * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * 					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  *
  * @return			True if the survivor has the reward type active, false otherwise.
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
@@ -1140,8 +1140,8 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * Returns the value of a combination setting based on a position.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
- *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
+ * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius, 8 = Range,
+ * 					9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed, 14 = Cooldown
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
  *
  * @return			The value stored in the setting.
@@ -1219,7 +1219,7 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
+ * 					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -1254,7 +1254,7 @@ native float MT_GetScaledDamage(float damage);
  * @param tank			Client index of the Tank.
  *
  * @return			The spawn type of the Tank.
- *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
+ * 					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
  * @error			Invalid client index, client is not in-game, or client is human.
  **/
 native int MT_GetSpawnType(int tank);
@@ -1331,7 +1331,7 @@ native void MT_HideEntity(int entity, bool mode);
  *
  * @return			True if the human survivor is immune, false otherwise.
  * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
- *					invalid Tank index, or Tank is not in-game.
+ * 					invalid Tank index, or Tank is not in-game.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
 
@@ -1408,9 +1408,9 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
- *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
- *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ * 					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
+ * 					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ * 					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
  *
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is dead.
@@ -1482,7 +1482,7 @@ native void MT_SpawnTank(int tank, int type);
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
- *					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
+ * 					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
  * @param newHealth		The Tank's new max health.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
@@ -2171,9 +2171,9 @@ Examples:
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, Shao** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - For suggesting ideas.
 

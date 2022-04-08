@@ -541,6 +541,7 @@ enum struct esGeneral
 	float g_flDifficultyDamage[4];
 	float g_flExtrasDelay;
 	float g_flForceSpawn;
+	float g_flHealPercentMultiplier;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flIdleCheck;
@@ -679,6 +680,7 @@ enum struct esGeneral
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
 	int g_iHumanCooldown;
+	int g_iHumanMultiplierMode;
 	int g_iIdleCheckMode;
 	int g_iIgnoreLevel;
 	int g_iIgnoreLevel2;
@@ -939,6 +941,7 @@ enum struct esPlayer
 	float g_flDamageResistance;
 	float g_flDamageResistanceReward[4];
 	float g_flHealPercent;
+	float g_flHealPercentMultiplier;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flIncapDamageMultiplier;
@@ -1003,6 +1006,7 @@ enum struct esPlayer
 	int g_iClawDamage;
 	int g_iCleanKills;
 	int g_iCleanKillsReward[4];
+	int g_iComboCooldown[10];
 	int g_iCooldown;
 	int g_iCrownColor[4];
 	int g_iDeathDetails;
@@ -1037,6 +1041,7 @@ enum struct esPlayer
 	int g_iHollowpointAmmoReward[4];
 	int g_iHudPanelLevel;
 	int g_iHudPanelPages;
+	int g_iHumanMultiplierMode;
 	int g_iImmunityFlags;
 	int g_iIncapCount;
 	int g_iInextinguishableFire;
@@ -1208,6 +1213,7 @@ enum struct esTank
 	float g_flComboTypeChance[7];
 	float g_flDamageBoostReward[4];
 	float g_flDamageResistanceReward[4];
+	float g_flHealPercentMultiplier;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flIncapDamageMultiplier;
@@ -1255,6 +1261,7 @@ enum struct esTank
 	int g_iBunnyHopReward[4];
 	int g_iCheckAbilities;
 	int g_iCleanKillsReward[4];
+	int g_iComboCooldown[10];
 	int g_iCrownColor[4];
 	int g_iDeathDetails;
 	int g_iDeathMessage;
@@ -1280,6 +1287,7 @@ enum struct esTank
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
+	int g_iHumanMultiplierMode;
 	int g_iHumanSupport;
 	int g_iImmunityFlags;
 	int g_iInextinguishableFireReward[4];
@@ -1407,6 +1415,7 @@ enum struct esCache
 	float g_flComboTypeChance[7];
 	float g_flDamageBoostReward[4];
 	float g_flDamageResistanceReward[4];
+	float g_flHealPercentMultiplier;
 	float g_flHealPercentReward[4];
 	float g_flHittableDamage;
 	float g_flIncapDamageMultiplier;
@@ -1448,6 +1457,7 @@ enum struct esCache
 	int g_iBunnyHopReward[4];
 	int g_iCheckAbilities;
 	int g_iCleanKillsReward[4];
+	int g_iComboCooldown[10];
 	int g_iCrownColor[4];
 	int g_iDeathDetails;
 	int g_iDeathMessage;
@@ -1471,6 +1481,7 @@ enum struct esCache
 	int g_iHealthRegenReward[4];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[4];
+	int g_iHumanMultiplierMode;
 	int g_iInextinguishableFireReward[4];
 	int g_iInfiniteAmmoReward[4];
 	int g_iKillMessage;
@@ -2515,7 +2526,7 @@ any aNative_GetAccessFlags(Handle plugin, int numParams)
 
 any aNative_GetCombinationSetting(Handle plugin, int numParams)
 {
-	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 13), iPos = iClamp(GetNativeCell(3), 0, 9);
+	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 14), iPos = iClamp(GetNativeCell(3), 0, 9);
 	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		switch (iType)
@@ -2533,6 +2544,7 @@ any aNative_GetCombinationSetting(Handle plugin, int numParams)
 			case 11: return g_esCache[iTank].g_flComboDeathRange[iPos];
 			case 12: return g_esCache[iTank].g_flComboRockChance[iPos];
 			case 13: return g_esCache[iTank].g_flComboSpeed[iPos];
+			case 14: return g_esCache[iTank].g_iComboCooldown[iPos];
 		}
 	}
 
@@ -5848,11 +5860,13 @@ void vCombineAbilitiesForward(int tank, int type, int survivor = 0, int weapon =
 {
 	if (bIsTankSupported(tank) && bIsCustomTankSupported(tank) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
 	{
+		char sCombo[320];
+		FormatEx(sCombo, sizeof sCombo, ",%s,", g_esCache[tank].g_sComboSet);
 		Call_StartForward(g_esGeneral.g_gfCombineAbilitiesForward);
 		Call_PushCell(tank);
 		Call_PushCell(type);
 		Call_PushFloat(MT_GetRandomFloat(0.1, 100.0));
-		Call_PushString(g_esCache[tank].g_sComboSet);
+		Call_PushString(sCombo);
 		Call_PushCell(survivor);
 		Call_PushCell(weapon);
 		Call_PushString(classname);
@@ -6842,7 +6856,6 @@ void vRewardLadyKillerMessage(int survivor, int tank, int priority, char[] buffe
 		iNewUses = (iReward + iUses),
 		iFinalUses = iClamp(iNewUses, 0, iLimit),
 		iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : iReward;
-
 	if (g_esPlayer[survivor].g_iNotify >= 2 && iReceivedUses > 0)
 	{
 		char sTemp[64];
@@ -9411,7 +9424,6 @@ void vEvolveBoss(int tank, int limit, int stages, int type, int stage)
 				iLeftover = (iNewHealth - iHealth),
 				iLeftover2 = (iLeftover > MT_MAXHEALTH) ? (iLeftover - MT_MAXHEALTH) : iLeftover,
 				iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-
 			g_esPlayer[tank].g_iTankHealth += (iLeftover > MT_MAXHEALTH) ? iLeftover2 : iLeftover;
 			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
@@ -10114,12 +10126,12 @@ void vSetTankGlow(int tank)
 
 void vSetTankHealth(int tank, bool initial = true)
 {
-	int iHumanCount = iGetHumanCount(),
-		iSpawnHealth = (g_esCache[tank].g_iBaseHealth > 0) ? g_esCache[tank].g_iBaseHealth : GetEntProp(tank, Prop_Data, "m_iHealth"),
-		iExtraHealthNormal = (iSpawnHealth + g_esCache[tank].g_iExtraHealth),
-		iExtraHealthBoost = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? ((iSpawnHealth * iHumanCount) + g_esCache[tank].g_iExtraHealth) : iExtraHealthNormal,
-		iExtraHealthBoost2 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iSpawnHealth + (iHumanCount * g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
-		iExtraHealthBoost3 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iHumanCount * (iSpawnHealth + g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
+	int iHumanCount = iGetHumanCount(), iSpawnHealth = (g_esCache[tank].g_iBaseHealth > 0) ? g_esCache[tank].g_iBaseHealth : GetEntProp(tank, Prop_Data, "m_iHealth");
+	float flMultiplier = (g_esCache[tank].g_iHumanMultiplierMode == 1) ? g_esCache[tank].g_flHealPercentMultiplier : (iHumanCount * g_esCache[tank].g_flHealPercentMultiplier);
+	int iExtraHealthNormal = (iSpawnHealth + g_esCache[tank].g_iExtraHealth),
+		iExtraHealthBoost = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (RoundToNearest(iSpawnHealth * flMultiplier) + g_esCache[tank].g_iExtraHealth) : iExtraHealthNormal,
+		iExtraHealthBoost2 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? (iSpawnHealth + RoundToNearest(flMultiplier * g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
+		iExtraHealthBoost3 = (iHumanCount >= g_esCache[tank].g_iMinimumHumans) ? RoundToNearest(flMultiplier * (iSpawnHealth + g_esCache[tank].g_iExtraHealth)) : iExtraHealthNormal,
 		iNoBoost = (iExtraHealthNormal > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthNormal,
 		iBoost = (iExtraHealthBoost > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost,
 		iBoost2 = (iExtraHealthBoost2 > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealthBoost2,
@@ -10902,6 +10914,8 @@ void vCacheSettings(int tank)
 	g_esCache[tank].g_flBurntSkin = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, 1);
 	g_esCache[tank].g_flClawDamage = flGetSettingValue(bAccess, true, g_esTank[iType].g_flClawDamage, g_esGeneral.g_flClawDamage, 1);
 	g_esCache[tank].g_flClawDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flClawDamage, g_esCache[tank].g_flClawDamage, 1);
+	g_esCache[tank].g_flHealPercentMultiplier = flGetSettingValue(bAccess, true, g_esTank[iType].g_flHealPercentMultiplier, g_esGeneral.g_flHealPercentMultiplier);
+	g_esCache[tank].g_flHealPercentMultiplier = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHealPercentMultiplier, g_esCache[tank].g_flHealPercentMultiplier);
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, true, g_esTank[iType].g_flHittableDamage, g_esGeneral.g_flHittableDamage, 1);
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHittableDamage, g_esCache[tank].g_flHittableDamage, 1);
 	g_esCache[tank].g_flIncapDamageMultiplier = flGetSettingValue(bAccess, true, g_esTank[iType].g_flIncapDamageMultiplier, g_esGeneral.g_flIncapDamageMultiplier);
@@ -10966,6 +10980,8 @@ void vCacheSettings(int tank)
 	g_esCache[tank].g_iGroundPound = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGroundPound, g_esCache[tank].g_iGroundPound);
 	g_esCache[tank].g_iHittableImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iHittableImmunity, g_esGeneral.g_iHittableImmunity);
 	g_esCache[tank].g_iHittableImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iHittableImmunity, g_esCache[tank].g_iHittableImmunity);
+	g_esCache[tank].g_iHumanMultiplierMode = iGetSettingValue(bAccess, true, g_esTank[iType].g_iHumanMultiplierMode, g_esGeneral.g_iHumanMultiplierMode);
+	g_esCache[tank].g_iHumanMultiplierMode = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iHumanMultiplierMode, g_esCache[tank].g_iHumanMultiplierMode);
 	g_esCache[tank].g_iKillMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iKillMessage, g_esGeneral.g_iKillMessage);
 	g_esCache[tank].g_iKillMessage = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iKillMessage, g_esCache[tank].g_iKillMessage);
 	g_esCache[tank].g_iMeleeImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeImmunity, g_esGeneral.g_iMeleeImmunity);
@@ -11190,6 +11206,7 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flComboRangeChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboRangeChance[iPos], g_esTank[iType].g_flComboRangeChance[iPos]);
 			g_esCache[tank].g_flComboRockChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboRockChance[iPos], g_esTank[iType].g_flComboRockChance[iPos]);
 			g_esCache[tank].g_flComboSpeed[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flComboSpeed[iPos], g_esTank[iType].g_flComboSpeed[iPos]);
+			g_esCache[tank].g_iComboCooldown[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iComboCooldown[iPos], g_esTank[iType].g_iComboCooldown[iPos]);
 		}
 
 		if (iPos < sizeof esCache::g_flComboTypeChance)
@@ -11489,6 +11506,8 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		g_esTank[type].g_iDisplayHealth = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[type].g_iDisplayHealth, value, 0, 11);
 		g_esTank[type].g_iDisplayHealthType = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[type].g_iDisplayHealthType, value, 0, 2);
 		g_esTank[type].g_iExtraHealth = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esTank[type].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esTank[type].g_flHealPercentMultiplier = flGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esTank[type].g_flHealPercentMultiplier, value, 1.0, 99999.0);
+		g_esTank[type].g_iHumanMultiplierMode = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esTank[type].g_iHumanMultiplierMode, value, 0, 1);
 		g_esTank[type].g_iMinimumHumans = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[type].g_iMinimumHumans, value, 1, 32);
 		g_esTank[type].g_iMultiplyHealth = iGetKeyValue(sub, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[type].g_iMultiplyHealth, value, 0, 3);
 		g_esTank[type].g_iHumanSupport = iGetKeyValue(sub, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, key, MT_CONFIG_SECTION_HUMAN, MT_CONFIG_SECTION_HUMAN2, MT_CONFIG_SECTION_HUMAN3, MT_CONFIG_SECTION_HUMAN4, g_esTank[type].g_iHumanSupport, value, 0, 2);
@@ -11704,6 +11723,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 						g_esTank[type].g_flComboRangeChance[iPos] = flGetClampedValue(key, "ComboRangeChance", "Combo Range Chance", "Combo_Range_Chance", "rangechance", g_esTank[type].g_flComboRangeChance[iPos], sSet[iPos], 0.0, 100.0);
 						g_esTank[type].g_flComboRockChance[iPos] = flGetClampedValue(key, "ComboRockChance", "Combo Rock Chance", "Combo_Rock_Chance", "rockchance", g_esTank[type].g_flComboRockChance[iPos], sSet[iPos], 0.0, 100.0);
 						g_esTank[type].g_flComboSpeed[iPos] = flGetClampedValue(key, "ComboSpeed", "Combo Speed", "Combo_Speed", "speed", g_esTank[type].g_flComboSpeed[iPos], sSet[iPos], 0.0, 99999.0);
+						g_esTank[type].g_iComboCooldown[iPos] = iGetClampedValue(key, "ComboCooldown", "Combo Cooldown", "Combo_Cooldown", "cooldown", g_esTank[type].g_iComboCooldown[iPos], sSet[iPos], 0, 99999);
 					}
 				}
 			}
@@ -12852,6 +12872,8 @@ public void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iDisplayHealthType = 1;
 		g_esGeneral.g_iExtraHealth = 0;
 		g_esGeneral.g_sHealthCharacters = "|,-";
+		g_esGeneral.g_flHealPercentMultiplier = 1.0;
+		g_esGeneral.g_iHumanMultiplierMode = 0;
 		g_esGeneral.g_iMinimumHumans = 2;
 		g_esGeneral.g_iMultiplyHealth = 0;
 		g_esGeneral.g_flAttackInterval = 0.0;
@@ -13034,6 +13056,8 @@ public void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_iDisplayHealthType = 0;
 			g_esTank[iIndex].g_iExtraHealth = 0;
 			g_esTank[iIndex].g_sHealthCharacters[0] = '\0';
+			g_esTank[iIndex].g_flHealPercentMultiplier = 0.0;
+			g_esTank[iIndex].g_iHumanMultiplierMode = 0;
 			g_esTank[iIndex].g_iMinimumHumans = 0;
 			g_esTank[iIndex].g_iMultiplyHealth = 0;
 			g_esTank[iIndex].g_iHumanSupport = 0;
@@ -13157,6 +13181,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_flComboRangeChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flComboRockChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flComboSpeed[iPos] = 0.0;
+					g_esTank[iIndex].g_iComboCooldown[iPos] = 0;
 				}
 
 				if (iPos < sizeof esTank::g_flComboTypeChance)
@@ -13258,6 +13283,8 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esPlayer[iPlayer].g_iDisplayHealthType = 0;
 				g_esPlayer[iPlayer].g_iExtraHealth = 0;
 				g_esPlayer[iPlayer].g_sHealthCharacters[0] = '\0';
+				g_esPlayer[iPlayer].g_flHealPercentMultiplier = 0.0;
+				g_esPlayer[iPlayer].g_iHumanMultiplierMode = 0;
 				g_esPlayer[iPlayer].g_iMinimumHumans = 0;
 				g_esPlayer[iPlayer].g_iMultiplyHealth = 0;
 				g_esPlayer[iPlayer].g_iGlowEnabled = 0;
@@ -13375,6 +13402,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_flComboRangeChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flComboRockChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flComboSpeed[iPos] = 0.0;
+						g_esPlayer[iPlayer].g_iComboCooldown[iPos] = 0;
 					}
 
 					if (iPos < sizeof esPlayer::g_flComboTypeChance)
@@ -13530,6 +13558,8 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 				g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 				g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
 				g_esGeneral.g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esGeneral.g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+				g_esGeneral.g_flHealPercentMultiplier = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esGeneral.g_flHealPercentMultiplier, value, 1.0, 99999.0);
+				g_esGeneral.g_iHumanMultiplierMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esGeneral.g_iHumanMultiplierMode, value, 0, 1);
 				g_esGeneral.g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esGeneral.g_iMinimumHumans, value, 1, 32);
 				g_esGeneral.g_iMultiplyHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiplyHealth, value, 0, 3);
 				g_esGeneral.g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esGeneral.g_flAttackInterval, value, 0.0, 99999.0);
@@ -13834,6 +13864,8 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 						g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
 						g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
 						g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+						g_esPlayer[iPlayer].g_flHealPercentMultiplier = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HealthPercentageMultiplier", "Health Percentage Multiplier", "Health_Percentage_Multiplier", "hpmulti", g_esPlayer[iPlayer].g_flHealPercentMultiplier, value, 1.0, 99999.0);
+						g_esPlayer[iPlayer].g_iHumanMultiplierMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "HumanMultiplierMode", "Human Multiplier Mode", "Human_Multiplier_Mode", "humanmultimode", g_esPlayer[iPlayer].g_iHumanMultiplierMode, value, 0, 1);
 						g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, 1, 32);
 						g_esPlayer[iPlayer].g_iMultiplyHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, MT_CONFIG_SECTION_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiplyHealth, value, 0, 3);
 						g_esPlayer[iPlayer].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, MT_CONFIG_SECTION_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esPlayer[iPlayer].g_iBossStages, value, 1, 4);
@@ -14044,6 +14076,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 										g_esPlayer[iPlayer].g_flComboRangeChance[iPos] = flGetClampedValue(key, "ComboRangeChance", "Combo Range Chance", "Combo_Range_Chance", "rangechance", g_esPlayer[iPlayer].g_flComboRangeChance[iPos], sSet[iPos], 0.0, 100.0);
 										g_esPlayer[iPlayer].g_flComboRockChance[iPos] = flGetClampedValue(key, "ComboRockChance", "Combo Rock Chance", "Combo_Rock_Chance", "rockchance", g_esPlayer[iPlayer].g_flComboRockChance[iPos], sSet[iPos], 0.0, 100.0);
 										g_esPlayer[iPlayer].g_flComboSpeed[iPos] = flGetClampedValue(key, "ComboSpeed", "Combo Speed", "Combo_Speed", "speed", g_esPlayer[iPlayer].g_flComboSpeed[iPos], sSet[iPos], 0.0, 99999.0);
+										g_esPlayer[iPlayer].g_iComboCooldown[iPos] = iGetClampedValue(key, "ComboCooldown", "Combo Cooldown", "Combo_Cooldown", "cooldown", g_esPlayer[iPlayer].g_iComboCooldown[iPos], sSet[iPos], 0, 99999);
 									}
 								}
 							}
@@ -14892,7 +14925,6 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					bBlockFire = ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1),
 					bBlockHittables = ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1),
 					bBlockMelee = (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1);
-
 				if (bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
 					if (bRewarded)
@@ -18070,7 +18102,6 @@ bool bHasCoreAdminAccess(int admin, int type = 0)
 		iAdminFlags = GetUserFlagBits(admin),
 		iTypeFlags = g_esTank[iType].g_iAccessFlags,
 		iGlobalFlags = g_esGeneral.g_iAccessFlags;
-
 	if ((iTypeFlags != 0 && ((!(iTypeFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iTypeFlags)) || (!(iTypeFlags & iPlayerFlags) && !(iPlayerFlags & iTypeFlags)) || (!(iTypeFlags & iAdminFlags) && !(iAdminFlags & iTypeFlags))))
 		|| (iGlobalFlags != 0 && ((!(iGlobalFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iPlayerFlags) && !(iPlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iAdminFlags) && !(iAdminFlags & iGlobalFlags)))))
 	{
@@ -18183,7 +18214,6 @@ bool bIsCoreAdminImmune(int survivor, int tank)
 		iAdminFlags = GetUserFlagBits(survivor),
 		iTypeFlags = g_esTank[iType].g_iImmunityFlags,
 		iGlobalFlags = g_esGeneral.g_iImmunityFlags;
-
 	return (iTypeFlags != 0 && ((iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags))) || (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags))) || (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))))
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
 }
@@ -18624,7 +18654,6 @@ int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	int iMin = (min >= 0) ? min : g_esGeneral.g_iMinType,
 		iMax = (max >= 0) ? max : g_esGeneral.g_iMaxType,
 		iTankTypes[MT_MAXTYPES + 1];
-
 	if (iMax < iMin || (bIsSurvivalMode() && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;
@@ -19793,7 +19822,6 @@ Action tTimerTankCountCheck(Handle timer, DataPack pack)
 		iAmount = pack.ReadCell(),
 		iCount = iGetTankCount(true),
 		iCount2 = iGetTankCount(false);
-
 	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || iCount2 >= iAmount || (g_esGeneral.g_bNormalMap && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
