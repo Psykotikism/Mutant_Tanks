@@ -7537,7 +7537,7 @@ void vRestorePlayerGlow(int client)
 		switch (bIsDeveloper(client, 0))
 		{
 			case true: vSetSurvivorOutline(client, g_esDeveloper[client].g_sDevGlowOutline, .delimiter = ",");
-			case false: vToggleSurvivorEffects(client, .type = 5);
+			case false: vToggleSurvivorEffects(client, .type = 6);
 		}
 	}
 }
@@ -8467,7 +8467,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			{
 				g_esDeveloper[admin].g_sDevGlowOutline[0] = '\0';
 
-				vToggleSurvivorEffects(admin, true, 5);
+				vToggleSurvivorEffects(admin, true, 6);
 			}
 			case false:
 			{
@@ -8487,7 +8487,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			{
 				g_esDeveloper[admin].g_sDevFlashlight[0] = '\0';
 
-				vToggleSurvivorEffects(admin, true, 3);
+				vToggleSurvivorEffects(admin, true, 4);
 			}
 			case false:
 			{
@@ -8507,7 +8507,7 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 			{
 				g_esDeveloper[admin].g_sDevSkinColor[0] = '\0';
 
-				vToggleSurvivorEffects(admin, true, 4);
+				vToggleSurvivorEffects(admin, true, 5);
 			}
 			case false:
 			{
@@ -9079,7 +9079,7 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		return;
 	}
 
-	if (type == -1 || type == 3)
+	if (type == -1 || type == 4)
 	{
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sLightColor, ';') != -1) ? ";" : ",";
@@ -9091,7 +9091,7 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		}
 	}
 
-	if (type == -1 || type == 4)
+	if (type == -1 || type == 5)
 	{
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
@@ -9107,7 +9107,7 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		}
 	}
 
-	if (type == -1 || type == 5)
+	if (type == -1 || type == 6)
 	{
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
