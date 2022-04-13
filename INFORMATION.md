@@ -1290,7 +1290,7 @@
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"100,100,100,100"
 
-			// Allow survivors to perform a number of midair dashes (extra jumps).
+			// Allow survivors to perform a number of midair dashes (extra jumps) as a reward.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -1610,6 +1610,24 @@
 			// 3rd number = Enable useful rewards for teammates.
 			// 4th number = Enable useful rewards for assistant killers.
 			"Useful Rewards"			"15,15,15,15"
+
+			// Change voice pitch as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 3
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 255 (Highest)
+			// --
+			// 1st number = Voice pitch for killers.
+			// 2nd number = Voice pitch for assistants.
+			// 3rd number = Voice pitch for teammates.
+			// 4th number = Voice pitch for assistant killers.
+			"Voice Pitch Reward"			"100,100,100,100"
 
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: Any value less than "0" will output a random color.
@@ -3606,7 +3624,7 @@
 			// 4th number = Range for assistant killers.
 			"Melee Range Reward"			"0,0,0,0"
 
-			// Allow survivors to perform a number of midair dashes (extra jumps).
+			// Allow survivors to perform a number of midair dashes (extra jumps) as a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -3926,6 +3944,24 @@
 			// 3rd number = Enable useful rewards for teammates.
 			// 4th number = Enable useful rewards for assistant killers.
 			"Useful Rewards"			"0,0,0,0"
+
+			// Change voice pitch as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 3
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 255 (Highest)
+			// --
+			// 1st number = Voice pitch for killers.
+			// 2nd number = Voice pitch for assistants.
+			// 3rd number = Voice pitch for teammates.
+			// 4th number = Voice pitch for assistant killers.
+			"Voice Pitch Reward"			"0,0,0,0"
 
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: Any value less than "0" will output a random color.

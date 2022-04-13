@@ -235,6 +235,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_DETOUR_SECTION_MAIN5 "Detours"
 #define MT_DETOUR_SECTION_PREFIX "MTDetour_"
 
+#define MT_DEV_MAXLEVEL 4095
+
 #define MT_EFFECT_TROPHY (1 << 0) // trophy
 #define MT_EFFECT_FIREWORKS (1 << 1) // fireworks particles
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
@@ -762,6 +764,7 @@ enum struct esGeneral
 	int g_iVerticalPunchOffset;
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
+	int g_iVoicePitchReward[4];
 	int g_iVomitImmunity;
 #if defined _adminmenu_included
 	TopMenu g_tmMTMenu;
@@ -814,6 +817,7 @@ enum struct esDeveloper
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
 	int g_iDevSpecialAmmo;
+	int g_iDevVoicePitch;
 	int g_iDevWeaponSkin;
 }
 
@@ -1142,6 +1146,8 @@ enum struct esPlayer
 	int g_iUserID2;
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
+	int g_iVoicePitch;
+	int g_iVoicePitchReward[4];
 	int g_iVomitImmunity;
 	int g_iWeaponInfo[4];
 	int g_iWeaponInfo2;
@@ -1346,6 +1352,7 @@ enum struct esTank
 	int g_iUsefulRewards[4];
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
+	int g_iVoicePitchReward[4];
 	int g_iVomitImmunity;
 }
 
@@ -1535,6 +1542,7 @@ enum struct esCache
 	int g_iUsefulRewards[4];
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
+	int g_iVoicePitchReward[4];
 	int g_iVomitImmunity;
 }
 
@@ -1735,6 +1743,7 @@ public void OnMapStart()
 
 	AddNormalSoundHook(FallSoundHook);
 	AddNormalSoundHook(RockSoundHook);
+	AddNormalSoundHook(VoiceSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -1810,6 +1819,7 @@ public void OnMapEnd()
 
 	RemoveNormalSoundHook(FallSoundHook);
 	RemoveNormalSoundHook(RockSoundHook);
+	RemoveNormalSoundHook(VoiceSoundHook);
 }
 
 public void OnPluginEnd()
@@ -1995,12 +2005,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 						{
 							vPushPlayer(client, {-90.0, 0.0, 0.0}, ((flHeight + 100.0) * 2.0));
 						}
-					}
 
-					float flAngles[3];
-					GetClientEyeAngles(client, flAngles);
-					flAngles[0] = 0.0;
-					vPushPlayer(client, flAngles, MT_JUMP_FORWARDBOOST);
+						float flAngles[3];
+						GetClientEyeAngles(client, flAngles);
+						flAngles[0] = 0.0;
+						vPushPlayer(client, flAngles, MT_JUMP_FORWARDBOOST);
+					}
 				}
 
 				if (bDeveloper)
@@ -3322,7 +3332,7 @@ Action cmdMTConfig2(int client, int args)
 		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
+			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
@@ -3541,7 +3551,7 @@ Action cmdMTList2(int client, int args)
 		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
+			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
@@ -3627,7 +3637,7 @@ Action cmdMTVersion2(int client, int args)
 		GetCmdArg(1, sCode, sizeof sCode);
 		if (StrEqual(sCode, "mt_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, 4095);
+			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
 			g_esDeveloper[client].g_iDevAccess = iAmount;
 
 			vSetupDeveloper(client, (iAmount > 0));
@@ -3676,7 +3686,7 @@ Action cmdTank(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof sCmd);
 	GetCmdArg(1, sType, sizeof sType);
-	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? MT_DEV_MAXLEVEL : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
@@ -3731,7 +3741,7 @@ Action cmdTank2(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof sCmd);
 	GetCmdArg(1, sType, sizeof sType);
-	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? MT_DEV_MAXLEVEL : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
@@ -3795,7 +3805,7 @@ Action cmdMutantTank(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof sCmd);
 	GetCmdArg(1, sType, sizeof sType);
-	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? MT_DEV_MAXLEVEL : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
@@ -4533,6 +4543,9 @@ void vDeveloperPanel(int developer, int level = 0)
 
 			flValue = g_esDeveloper[developer].g_flDevSpeedBoost;
 			FormatEx(sDisplay, sizeof sDisplay, "Speed Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch: %i%%", g_esDeveloper[developer].g_iDevVoicePitch);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
@@ -6707,6 +6720,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				g_esPlayer[survivor].g_flRewardTime[1] = -1.0;
 				g_esPlayer[survivor].g_iRewardStack[1] = 0;
 				g_esPlayer[survivor].g_iBunnyHop = 0;
+				g_esPlayer[survivor].g_iVoicePitch = 0;
 				g_esPlayer[survivor].g_flJumpHeight = 0.0;
 				g_esPlayer[survivor].g_flSpeedBoost = 0.0;
 				g_esPlayer[survivor].g_iFallPasses = MT_JUMP_FALLPASSES;
@@ -7063,6 +7077,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
 				g_esPlayer[survivor].g_iFallPasses = 0;
 				g_esPlayer[survivor].g_iMidairDashesLimit = g_esCache[tank].g_iMidairDashesReward[priority];
+				g_esPlayer[survivor].g_iVoicePitch = g_esCache[tank].g_iVoicePitchReward[priority];
 			}
 			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[1] > 0 && g_esPlayer[survivor].g_iRewardStack[1] < g_esCache[tank].g_iStackLimits[1])
 			{
@@ -7071,7 +7086,9 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flSpeedBoost += g_esCache[tank].g_flSpeedBoostReward[priority];
 				g_esPlayer[survivor].g_flSpeedBoost = flClamp(g_esPlayer[survivor].g_flSpeedBoost, 0.1, 99999.0);
 				g_esPlayer[survivor].g_iFallPasses = 0;
-				g_esPlayer[survivor].g_iMidairDashesLimit += iClamp(g_esCache[tank].g_iMidairDashesReward[priority], 0, 99999);
+				g_esPlayer[survivor].g_iMidairDashesLimit += g_esCache[tank].g_iMidairDashesReward[priority];
+				g_esPlayer[survivor].g_iMidairDashesLimit += iClamp(g_esPlayer[survivor].g_iMidairDashesLimit, 0, 99999);
+				g_esPlayer[survivor].g_iVoicePitch = g_esCache[tank].g_iVoicePitchReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[1]++;
 			}
 		}
@@ -7567,6 +7584,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_iSledgehammerRounds = g_esPlayer[oldSurvivor].g_iSledgehammerRounds;
 	g_esPlayer[newSurvivor].g_iSpecialAmmo = g_esPlayer[oldSurvivor].g_iSpecialAmmo;
 	g_esPlayer[newSurvivor].g_iThorns = g_esPlayer[oldSurvivor].g_iThorns;
+	g_esPlayer[newSurvivor].g_iVoicePitch = g_esPlayer[oldSurvivor].g_iVoicePitch;
 	g_esPlayer[newSurvivor].g_sBodyColor = g_esPlayer[oldSurvivor].g_sBodyColor;
 	g_esPlayer[newSurvivor].g_sLightColor = g_esPlayer[oldSurvivor].g_sLightColor;
 	g_esPlayer[newSurvivor].g_sOutlineColor = g_esPlayer[oldSurvivor].g_sOutlineColor;
@@ -7956,6 +7974,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_iSledgehammerRounds = 0;
 	g_esPlayer[survivor].g_iSpecialAmmo = 0;
 	g_esPlayer[survivor].g_iThorns = 0;
+	g_esPlayer[survivor].g_iVoicePitch = 0;
 	g_esPlayer[survivor].g_sBodyColor[0] = '\0';
 	g_esPlayer[survivor].g_sLightColor[0] = '\0';
 	g_esPlayer[survivor].g_sOutlineColor[0] = '\0';
@@ -8584,7 +8603,7 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	if (StrContains(keyword, "access", false) != -1)
 	{
 		bPanel = true;
-		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(value), 0, 4095);
+		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(value), 0, MT_DEV_MAXLEVEL);
 
 		vSetupDeveloper(guest, (g_esDeveloper[guest].g_iDevAccess > 0), true);
 	}
@@ -8741,6 +8760,11 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(StringToFloat(value), 0.0, 99999.0);
 
 		vSetAdrenalineTime(guest, 99999.0);
+	}
+	else if (StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "pitch", false) != -1)
+	{
+		bPanel = true;
+		g_esDeveloper[guest].g_iDevVoicePitch = iClamp(StringToInt(value), 0, 255);
 	}
 	else if (StrContains(keyword, "wepskin", false) != -1 || StrContains(keyword, "skin", false) != -1)
 	{
@@ -11183,6 +11207,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iThornsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos]);
 			g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos]);
 			g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos]);
+			g_esCache[tank].g_iVoicePitchReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVoicePitchReward[iPos], g_esGeneral.g_iVoicePitchReward[iPos]);
+			g_esCache[tank].g_iVoicePitchReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVoicePitchReward[iPos], g_esCache[tank].g_iVoicePitchReward[iPos]);
 		}
 
 		if (iPos < sizeof esCache::g_iStackLimits)
@@ -11438,6 +11464,7 @@ void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
+	g_esDeveloper[developer].g_iDevVoicePitch = 100;
 	g_esDeveloper[developer].g_iDevWeaponSkin = 1;
 
 	vDefaultCookieSettings(developer);
@@ -11628,6 +11655,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esTank[type].g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 					g_esTank[type].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTank[type].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTank[type].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
+					g_esTank[type].g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esTank[type].g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
 
 					vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 					vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof esTank::g_sBodyColorVisual, g_esTank[type].g_sBodyColorVisual2, sizeof esTank::g_sBodyColorVisual2, g_esTank[type].g_sBodyColorVisual3, sizeof esTank::g_sBodyColorVisual3, g_esTank[type].g_sBodyColorVisual4, sizeof esTank::g_sBodyColorVisual4, sValue);
@@ -12974,6 +13002,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iStackRewards[iPos] = 0;
 				g_esGeneral.g_iThornsReward[iPos] = 1;
 				g_esGeneral.g_iUsefulRewards[iPos] = 15;
+				g_esGeneral.g_iVoicePitchReward[iPos] = 100;
 			}
 
 			if (iPos < sizeof esGeneral::g_iStackLimits)
@@ -13159,6 +13188,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iStackRewards[iPos] = 0;
 					g_esTank[iIndex].g_iThornsReward[iPos] = 0;
 					g_esTank[iIndex].g_iUsefulRewards[iPos] = 0;
+					g_esTank[iIndex].g_iVoicePitchReward[iPos] = 0;
 				}
 
 				if (iPos < sizeof esTank::g_iStackLimits)
@@ -13380,6 +13410,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_iStackRewards[iPos] = 0;
 						g_esPlayer[iPlayer].g_iThornsReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = 0;
+						g_esPlayer[iPlayer].g_iVoicePitchReward[iPos] = 0;
 					}
 
 					if (iPos < sizeof esPlayer::g_iStackLimits)
@@ -13680,6 +13711,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							g_esGeneral.g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esGeneral.g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 							g_esGeneral.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esGeneral.g_iThornsReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esGeneral.g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
+							g_esGeneral.g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esGeneral.g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
 
 							vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 							vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof esGeneral::g_sBodyColorVisual, g_esGeneral.g_sBodyColorVisual2, sizeof esGeneral::g_sBodyColorVisual2, g_esGeneral.g_sBodyColorVisual3, sizeof esGeneral::g_sBodyColorVisual3, g_esGeneral.g_sBodyColorVisual4, sizeof esGeneral::g_sBodyColorVisual4, sValue);
@@ -13981,6 +14013,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 									g_esPlayer[iPlayer].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esPlayer[iPlayer].g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 									g_esPlayer[iPlayer].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esPlayer[iPlayer].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esPlayer[iPlayer].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
+									g_esPlayer[iPlayer].g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esPlayer[iPlayer].g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
 
 									vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 									vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof esPlayer::g_sBodyColorVisual, g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof esPlayer::g_sBodyColorVisual2, g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof esPlayer::g_sBodyColorVisual3, g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof esPlayer::g_sBodyColorVisual4, sValue);
@@ -15668,6 +15701,27 @@ Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATF
 	return Plugin_Continue;
 }
 
+Action VoiceSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+{
+	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity) && channel == SNDCHAN_VOICE)
+	{
+		bool bDeveloper = bIsDeveloper(entity, 0) || bIsDeveloper(entity, 2) || bIsDeveloper(entity, 11);
+		if (bDeveloper || ((g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) && g_esPlayer[entity].g_iVoicePitch > 0))
+		{
+			int iPitch = (bDeveloper && g_esDeveloper[entity].g_iDevVoicePitch > 0) ? g_esDeveloper[entity].g_iDevVoicePitch : g_esPlayer[entity].g_iVoicePitch;
+			if (iPitch > 0 && iPitch != pitch)
+			{
+				pitch = iPitch;
+				flags |= SND_CHANGEPITCH;
+
+				return Plugin_Changed;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 /**
  * UserMessage hooks
  **/
@@ -16077,7 +16131,7 @@ MRESReturn mreBaseEntityGetGroundEntityPre(int pThis, DHookReturn hReturn)
 		}
 
 		int iLimit = (bIsDeveloper(pThis, 5) && g_esDeveloper[pThis].g_iDevMidairDashes > g_esPlayer[pThis].g_iMidairDashesLimit) ? g_esDeveloper[pThis].g_iDevMidairDashes : g_esPlayer[pThis].g_iMidairDashesLimit;
-		if (g_esPlayer[pThis].g_iMidairDashesCount < iLimit)
+		if (g_esPlayer[pThis].g_iMidairDashesCount < (iLimit + 1))
 		{
 			g_esPlayer[pThis].g_flLastJumpTime = flCurrentTime;
 			g_esPlayer[pThis].g_iMidairDashesCount++;
@@ -18263,18 +18317,18 @@ bool bIsDayConfigFound(char[] buffer, int size)
 
 /**
  * Developer tools for testing
- * 1 - 0 - no versus cooldown, visual effects (off by default)
- * 2 - 1 - immune to abilities, access to all tanks (off by default)
- * 4 - 2 - loadout on initial spawn
+ * 1 - 0 - no versus cooldown, visual effects, voice pitch
+ * 2 - 1 - immune to abilities, access to all tanks
+ * 4 - 2 - loadout on initial spawn, voice pitch
  * 8 - 3 - all rewards/effects
  * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener
  * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop, midair dash
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recovery, full health when healing/reviving, ammo regen, ladder actions, bunny hop
- * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire (off by default)
- * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle (off by default)
+ * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire
+ * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle
  * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
  * 1024 - 10 - respawn upon death, clean kills, block puke/acid puddle
- * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo (off by default)
+ * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo, voice pitch
  **/
 bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
