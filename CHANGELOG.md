@@ -16,6 +16,7 @@
 - Fixed some code for the `Clone` ability being compiled when the `mt_clone.inc` include is not included.
 - Fixed survivors not getting slowed down by common infected and most damage sources. (Thanks to `Shao` for testing and reporting!)
 - Fixed the Tank's glow settings not working when a player passes control to the AI. (Thanks to `yuzumi` for testing and reporting!)
+- Fixed the midair dashes reward counting the initial jump as a midair dash.
 
 #### Config Files
 - Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
@@ -38,6 +39,8 @@
 - Added log messages for tracking custom configs.
 - Changed how the Tank's health is refilled when players switch between different Mutant Tank types. (Thanks to `yuzumi` for suggesting!)
 - Added support for third-party plugins manually setting Tanks in ghost mode. (Requested by `yuzumi`.)
+- The speed boost reward's forward jump boost now only applies to the bunny hop reward.
+- The speed boost reward now allows recipients to change their voice pitch. (Thanks to `Marttt` for the code!)
 
 #### Settings
 - Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
@@ -49,6 +52,7 @@
 - Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
 	- `Human Multiplier Mode`
 	- `Health Percentage Multiplier`
+- Added the `Voice Pitch Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnPluginEnd` forward.
