@@ -313,9 +313,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_VISUAL_SCREEN (1 << 0) // screen color
 #define MT_VISUAL_PARTICLE (1 << 1) // particle effect
 #define MT_VISUAL_VOICELINE (1 << 2) // looping voiceline
-#define MT_VISUAL_LIGHT (1 << 3) // flashlight
-#define MT_VISUAL_BODY (1 << 4) // body color
-#define MT_VISUAL_GLOW (1 << 5) // glow outline
+#define MT_VISUAL_VOICEPITCH (1 << 3) // voice pitch
+#define MT_VISUAL_LIGHT (1 << 4) // flashlight
+#define MT_VISUAL_BODY (1 << 5) // body color
+#define MT_VISUAL_GLOW (1 << 6) // glow outline
 
 #define MT_WATER_NONE 0 // not in water
 #define MT_WATER_FEET 1 // feet in water
@@ -458,7 +459,7 @@ enum struct esGeneral
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
 #if defined _clientprefs_included
-	Cookie g_ckMTAdmin[5];
+	Cookie g_ckMTAdmin[6];
 	Cookie g_ckMTPrefs;
 #endif
 	DataState g_dsState;
@@ -764,7 +765,7 @@ enum struct esGeneral
 	int g_iVerticalPunchOffset;
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
-	int g_iVoicePitchReward[4];
+	int g_iVoicePitchVisual[4];
 	int g_iVomitImmunity;
 #if defined _adminmenu_included
 	TopMenu g_tmMTMenu;
@@ -826,7 +827,7 @@ esDeveloper g_esDeveloper[MAXPLAYERS + 1];
 enum struct esPlayer
 {
 	bool g_bAdminMenu;
-	bool g_bApplyVisuals[6];
+	bool g_bApplyVisuals[7];
 	bool g_bArtificial;
 	bool g_bBlood;
 	bool g_bBlur;
@@ -981,7 +982,7 @@ enum struct esPlayer
 	float g_flThrowInterval;
 	float g_flTransformDelay;
 	float g_flTransformDuration;
-	float g_flVisualTime[6];
+	float g_flVisualTime[7];
 
 	Handle g_hHudTimer;
 
@@ -1147,7 +1148,7 @@ enum struct esPlayer
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
 	int g_iVoicePitch;
-	int g_iVoicePitchReward[4];
+	int g_iVoicePitchVisual[4];
 	int g_iVomitImmunity;
 	int g_iWeaponInfo[4];
 	int g_iWeaponInfo2;
@@ -1352,7 +1353,7 @@ enum struct esTank
 	int g_iUsefulRewards[4];
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
-	int g_iVoicePitchReward[4];
+	int g_iVoicePitchVisual[4];
 	int g_iVomitImmunity;
 }
 
@@ -1542,7 +1543,7 @@ enum struct esCache
 	int g_iUsefulRewards[4];
 	int g_iVocalizeArrival;
 	int g_iVocalizeDeath;
-	int g_iVoicePitchReward[4];
+	int g_iVoicePitchVisual[4];
 	int g_iVomitImmunity;
 }
 
@@ -2969,6 +2970,7 @@ public void OnClientCookiesCached(int client)
 				case 2: strcopy(g_esDeveloper[client].g_sDevGlowOutline, sizeof esDeveloper::g_sDevGlowOutline, sColor);
 				case 3: strcopy(g_esDeveloper[client].g_sDevFlashlight, sizeof esDeveloper::g_sDevFlashlight, sColor);
 				case 4: strcopy(g_esDeveloper[client].g_sDevSkinColor, sizeof esDeveloper::g_sDevSkinColor, sColor);
+				case 5: g_esDeveloper[client].g_iDevVoicePitch = StringToInt(sColor);
 			}
 		}
 	}
@@ -2981,16 +2983,17 @@ public void OnClientCookiesCached(int client)
 		g_esPlayer[client].g_bApplyVisuals[0] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_SCREEN);
 		g_esPlayer[client].g_bApplyVisuals[1] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_PARTICLE);
 		g_esPlayer[client].g_bApplyVisuals[2] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICELINE);
-		g_esPlayer[client].g_bApplyVisuals[3] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_LIGHT);
-		g_esPlayer[client].g_bApplyVisuals[4] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY);
-		g_esPlayer[client].g_bApplyVisuals[5] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW);
+		g_esPlayer[client].g_bApplyVisuals[3] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICEPITCH);
+		g_esPlayer[client].g_bApplyVisuals[4] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_LIGHT);
+		g_esPlayer[client].g_bApplyVisuals[5] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_BODY);
+		g_esPlayer[client].g_bApplyVisuals[6] = !!(g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_GLOW);
 	}
 }
 #endif
 
 void vDefaultCookieSettings(int client)
 {
-	g_esPlayer[client].g_iRewardVisuals = MT_VISUAL_SCREEN|MT_VISUAL_PARTICLE|MT_VISUAL_VOICELINE|MT_VISUAL_LIGHT|MT_VISUAL_BODY|MT_VISUAL_GLOW;
+	g_esPlayer[client].g_iRewardVisuals = MT_VISUAL_SCREEN|MT_VISUAL_PARTICLE|MT_VISUAL_VOICELINE|MT_VISUAL_VOICEPITCH|MT_VISUAL_LIGHT|MT_VISUAL_BODY|MT_VISUAL_GLOW;
 
 	for (int iPos = 0; iPos < (sizeof esPlayer::g_bApplyVisuals); iPos++)
 	{
@@ -4266,6 +4269,9 @@ void vAdminPanel(int admin)
 	FormatEx(sDisplay, sizeof sDisplay, "Skin Color (\"skin\"/\"color\"): %s", g_esDeveloper[admin].g_sDevSkinColor);
 	pAdminPanel.DrawText(sDisplay);
 
+	FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch (\"voice\"/\"pitch\"): %i%%", g_esDeveloper[admin].g_iDevVoicePitch);
+	pAdminPanel.DrawText(sDisplay);
+
 	pAdminPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
 	pAdminPanel.CurrentKey = 10;
 	pAdminPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
@@ -4949,6 +4955,10 @@ void vPrefsMenu(int client, int item = 0)
 	IntToString(MT_VISUAL_VOICELINE, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
 
+	FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_VOICEPITCH) ? "ON" : "OFF"));
+	IntToString(MT_VISUAL_VOICEPITCH, sInfo, sizeof sInfo);
+	mPrefsMenu.AddItem(sInfo, sDisplay);
+
 	FormatEx(sDisplay, sizeof sDisplay, "Light Color Visual: %s", ((g_esPlayer[client].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "ON" : "OFF"));
 	IntToString(MT_VISUAL_LIGHT, sInfo, sizeof sInfo);
 	mPrefsMenu.AddItem(sInfo, sDisplay);
@@ -5023,9 +5033,10 @@ int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 0: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_SCREEN) ? "ScreenVisualOn" : "ScreenVisualOff"), param1);
 					case 1: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_PARTICLE) ? "ParticleVisualOn" : "ParticleVisualOff"), param1);
 					case 2: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_VOICELINE) ? "VoicelineVisualOn" : "VoicelineVisualOff"), param1);
-					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "LightVisualOn" : "LightVisualOff"), param1);
-					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_BODY) ? "BodyVisualOn" : "BodyVisualOff"), param1);
-					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_GLOW) ? "GlowVisualOn" : "GlowVisualOff"), param1);
+					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_VOICEPITCH) ? "PitchVisualOn" : "PitchVisualOff"), param1);
+					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_LIGHT) ? "LightVisualOn" : "LightVisualOff"), param1);
+					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_BODY) ? "BodyVisualOn" : "BodyVisualOff"), param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", ((g_esPlayer[param1].g_iRewardVisuals & MT_VISUAL_GLOW) ? "GlowVisualOn" : "GlowVisualOff"), param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -6007,6 +6018,12 @@ void vEndRewards(int survivor, bool force)
 			if ((g_esPlayer[survivor].g_flVisualTime[3] != -1.0 && g_esPlayer[survivor].g_flVisualTime[3] < flTime) || g_esGeneral.g_bFinaleEnded)
 			{
 				g_esPlayer[survivor].g_flVisualTime[3] = -1.0;
+				g_esPlayer[survivor].g_iVoicePitch = 0;
+			}
+
+			if ((g_esPlayer[survivor].g_flVisualTime[4] != -1.0 && g_esPlayer[survivor].g_flVisualTime[4] < flTime) || g_esGeneral.g_bFinaleEnded)
+			{
+				g_esPlayer[survivor].g_flVisualTime[4] = -1.0;
 				g_esPlayer[survivor].g_sLightColor[0] = '\0';
 
 				if (!bIsDeveloper(survivor, 0))
@@ -6015,9 +6032,9 @@ void vEndRewards(int survivor, bool force)
 				}
 			}
 
-			if ((g_esPlayer[survivor].g_flVisualTime[4] != -1.0 && g_esPlayer[survivor].g_flVisualTime[4] < flTime) || g_esGeneral.g_bFinaleEnded)
+			if ((g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] < flTime) || g_esGeneral.g_bFinaleEnded)
 			{
-				g_esPlayer[survivor].g_flVisualTime[4] = -1.0;
+				g_esPlayer[survivor].g_flVisualTime[5] = -1.0;
 				g_esPlayer[survivor].g_sBodyColor[0] = '\0';
 
 				if (!bIsDeveloper(survivor, 0))
@@ -6027,9 +6044,9 @@ void vEndRewards(int survivor, bool force)
 				}
 			}
 
-			if ((g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] < flTime) || g_esGeneral.g_bFinaleEnded)
+			if ((g_esPlayer[survivor].g_flVisualTime[6] != -1.0 && g_esPlayer[survivor].g_flVisualTime[6] < flTime) || g_esGeneral.g_bFinaleEnded)
 			{
-				g_esPlayer[survivor].g_flVisualTime[5] = -1.0;
+				g_esPlayer[survivor].g_flVisualTime[6] = -1.0;
 				g_esPlayer[survivor].g_sOutlineColor[0] = '\0';
 
 				if (!bIsDeveloper(survivor, 0))
@@ -6720,7 +6737,6 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				g_esPlayer[survivor].g_flRewardTime[1] = -1.0;
 				g_esPlayer[survivor].g_iRewardStack[1] = 0;
 				g_esPlayer[survivor].g_iBunnyHop = 0;
-				g_esPlayer[survivor].g_iVoicePitch = 0;
 				g_esPlayer[survivor].g_flJumpHeight = 0.0;
 				g_esPlayer[survivor].g_flSpeedBoost = 0.0;
 				g_esPlayer[survivor].g_iFallPasses = MT_JUMP_FALLPASSES;
@@ -7077,7 +7093,6 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
 				g_esPlayer[survivor].g_iFallPasses = 0;
 				g_esPlayer[survivor].g_iMidairDashesLimit = g_esCache[tank].g_iMidairDashesReward[priority];
-				g_esPlayer[survivor].g_iVoicePitch = g_esCache[tank].g_iVoicePitchReward[priority];
 			}
 			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[1] > 0 && g_esPlayer[survivor].g_iRewardStack[1] < g_esCache[tank].g_iStackLimits[1])
 			{
@@ -7088,7 +7103,6 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iFallPasses = 0;
 				g_esPlayer[survivor].g_iMidairDashesLimit += g_esCache[tank].g_iMidairDashesReward[priority];
 				g_esPlayer[survivor].g_iMidairDashesLimit += iClamp(g_esPlayer[survivor].g_iMidairDashesLimit, 0, 99999);
-				g_esPlayer[survivor].g_iVoicePitch = g_esCache[tank].g_iVoicePitchReward[priority];
 				g_esPlayer[survivor].g_iRewardStack[1]++;
 			}
 		}
@@ -7343,9 +7357,26 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 			}
 		}
 
-		if (dev || (iVisual & MT_VISUAL_LIGHT))
+		if (dev || (iVisual & MT_VISUAL_VOICEPITCH))
 		{
 			if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[3] - current)))
+			{
+				int iPitch = g_esCache[tank].g_iVoicePitchVisual[priority];
+				if (iPitch > 0 && g_esPlayer[survivor].g_iVoicePitch != iPitch)
+				{
+					g_esPlayer[survivor].g_iVoicePitch = iPitch;
+				}
+
+				if (time > (g_esPlayer[survivor].g_flVisualTime[3] - current))
+				{
+					g_esPlayer[survivor].g_flVisualTime[3] = duration;
+				}
+			}
+		}
+
+		if (dev || (iVisual & MT_VISUAL_LIGHT))
+		{
+			if (g_esPlayer[survivor].g_flVisualTime[4] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[4] - current)))
 			{
 				switch (priority)
 				{
@@ -7359,19 +7390,19 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sLightColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorLight(survivor, g_esPlayer[survivor].g_sLightColor, g_esPlayer[survivor].g_bApplyVisuals[3], sDelimiter, true);
+					vSetSurvivorLight(survivor, g_esPlayer[survivor].g_sLightColor, g_esPlayer[survivor].g_bApplyVisuals[4], sDelimiter, true);
 				}
 
-				if (time > (g_esPlayer[survivor].g_flVisualTime[3] - current))
+				if (time > (g_esPlayer[survivor].g_flVisualTime[4] - current))
 				{
-					g_esPlayer[survivor].g_flVisualTime[3] = duration;
+					g_esPlayer[survivor].g_flVisualTime[4] = duration;
 				}
 			}
 		}
 
 		if (dev || (iVisual & MT_VISUAL_BODY))
 		{
-			if (g_esPlayer[survivor].g_flVisualTime[4] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[4] - current)))
+			if (g_esPlayer[survivor].g_flVisualTime[5] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[5] - current)))
 			{
 				switch (priority)
 				{
@@ -7385,19 +7416,19 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[4], sDelimiter, true);
+					vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
 				}
 
-				if (time > (g_esPlayer[survivor].g_flVisualTime[4] - current))
+				if (time > (g_esPlayer[survivor].g_flVisualTime[5] - current))
 				{
-					g_esPlayer[survivor].g_flVisualTime[4] = duration;
+					g_esPlayer[survivor].g_flVisualTime[5] = duration;
 				}
 			}
 		}
 
 		if (g_bSecondGame && (dev || (iVisual & MT_VISUAL_GLOW)))
 		{
-			if (g_esPlayer[survivor].g_flVisualTime[5] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[5] - current)))
+			if (g_esPlayer[survivor].g_flVisualTime[6] == -1.0 || (time > (g_esPlayer[survivor].g_flVisualTime[6] - current)))
 			{
 				switch (priority)
 				{
@@ -7411,12 +7442,12 @@ void vSetupVisual(int survivor, int recipient, int tank, int priority, int count
 				{
 					char sDelimiter[2];
 					sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
-					vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
+					vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[6], sDelimiter, true);
 				}
 
-				if (time > (g_esPlayer[survivor].g_flVisualTime[5] - current))
+				if (time > (g_esPlayer[survivor].g_flVisualTime[6] - current))
 				{
-					g_esPlayer[survivor].g_flVisualTime[5] = duration;
+					g_esPlayer[survivor].g_flVisualTime[6] = duration;
 				}
 			}
 		}
@@ -8488,6 +8519,13 @@ void vSetupAdmin(int admin, const char[] keyword, const char[] value)
 		g_esGeneral.g_ckMTAdmin[4].Set(admin, value);
 #endif
 	}
+	else if (StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "pitch", false) != -1)
+	{
+		g_esDeveloper[admin].g_iDevVoicePitch = iClamp(StringToInt(value), 0, 255);
+#if defined _clientprefs_included
+		g_esGeneral.g_ckMTAdmin[5].Set(admin, value);
+#endif
+	}
 
 	vAdminPanel(admin);
 }
@@ -9046,9 +9084,9 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sLightColor, ';') != -1) ? ";" : ",";
 
-		switch (toggle && g_esPlayer[survivor].g_flVisualTime[3] != -1.0 && g_esPlayer[survivor].g_flVisualTime[3] > GetGameTime())
+		switch (toggle && g_esPlayer[survivor].g_flVisualTime[4] != -1.0 && g_esPlayer[survivor].g_flVisualTime[4] > GetGameTime())
 		{
-			case true: vSetSurvivorLight(survivor, g_esPlayer[survivor].g_sLightColor, g_esPlayer[survivor].g_bApplyVisuals[3], sDelimiter, true);
+			case true: vSetSurvivorLight(survivor, g_esPlayer[survivor].g_sLightColor, g_esPlayer[survivor].g_bApplyVisuals[4], sDelimiter, true);
 			case false: vRemoveSurvivorLight(survivor);
 		}
 	}
@@ -9058,9 +9096,9 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sBodyColor, ';') != -1) ? ";" : ",";
 
-		switch (toggle && g_esPlayer[survivor].g_flVisualTime[4] != -1.0 && g_esPlayer[survivor].g_flVisualTime[4] > GetGameTime())
+		switch (toggle && g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] > GetGameTime())
 		{
-			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[4], sDelimiter, true);
+			case true: vSetSurvivorColor(survivor, g_esPlayer[survivor].g_sBodyColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
 			case false:
 			{
 				SetEntityRenderMode(survivor, RENDER_NORMAL);
@@ -9074,9 +9112,9 @@ void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, 
 		char sDelimiter[2];
 		sDelimiter = (FindCharInString(g_esPlayer[survivor].g_sOutlineColor, ';') != -1) ? ";" : ",";
 
-		switch (toggle && g_esPlayer[survivor].g_flVisualTime[5] != -1.0 && g_esPlayer[survivor].g_flVisualTime[5] > GetGameTime())
+		switch (toggle && g_esPlayer[survivor].g_flVisualTime[6] != -1.0 && g_esPlayer[survivor].g_flVisualTime[6] > GetGameTime())
 		{
-			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[5], sDelimiter, true);
+			case true: vSetSurvivorOutline(survivor, g_esPlayer[survivor].g_sOutlineColor, g_esPlayer[survivor].g_bApplyVisuals[6], sDelimiter, true);
 			case false: vRemovePlayerGlow(survivor);
 		}
 	}
@@ -11207,8 +11245,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_iThornsReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iThornsReward[iPos], g_esCache[tank].g_iThornsReward[iPos]);
 			g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iUsefulRewards[iPos], g_esGeneral.g_iUsefulRewards[iPos]);
 			g_esCache[tank].g_iUsefulRewards[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iUsefulRewards[iPos], g_esCache[tank].g_iUsefulRewards[iPos]);
-			g_esCache[tank].g_iVoicePitchReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVoicePitchReward[iPos], g_esGeneral.g_iVoicePitchReward[iPos]);
-			g_esCache[tank].g_iVoicePitchReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVoicePitchReward[iPos], g_esCache[tank].g_iVoicePitchReward[iPos]);
+			g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVoicePitchVisual[iPos], g_esGeneral.g_iVoicePitchVisual[iPos]);
+			g_esCache[tank].g_iVoicePitchVisual[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVoicePitchVisual[iPos], g_esCache[tank].g_iVoicePitchVisual[iPos]);
 		}
 
 		if (iPos < sizeof esCache::g_iStackLimits)
@@ -11655,7 +11693,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[type].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esTank[type].g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 					g_esTank[type].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esTank[type].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[type].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esTank[type].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
-					g_esTank[type].g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esTank[type].g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
+					g_esTank[type].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esTank[type].g_iVoicePitchVisual[iPos], sSet[iPos], 0, 255);
 
 					vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 					vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esTank[type].g_sBodyColorVisual, sizeof esTank::g_sBodyColorVisual, g_esTank[type].g_sBodyColorVisual2, sizeof esTank::g_sBodyColorVisual2, g_esTank[type].g_sBodyColorVisual3, sizeof esTank::g_sBodyColorVisual3, g_esTank[type].g_sBodyColorVisual4, sizeof esTank::g_sBodyColorVisual4, sValue);
@@ -13002,7 +13040,7 @@ public void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iStackRewards[iPos] = 0;
 				g_esGeneral.g_iThornsReward[iPos] = 1;
 				g_esGeneral.g_iUsefulRewards[iPos] = 15;
-				g_esGeneral.g_iVoicePitchReward[iPos] = 100;
+				g_esGeneral.g_iVoicePitchVisual[iPos] = 100;
 			}
 
 			if (iPos < sizeof esGeneral::g_iStackLimits)
@@ -13188,7 +13226,7 @@ public void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iStackRewards[iPos] = 0;
 					g_esTank[iIndex].g_iThornsReward[iPos] = 0;
 					g_esTank[iIndex].g_iUsefulRewards[iPos] = 0;
-					g_esTank[iIndex].g_iVoicePitchReward[iPos] = 0;
+					g_esTank[iIndex].g_iVoicePitchVisual[iPos] = 0;
 				}
 
 				if (iPos < sizeof esTank::g_iStackLimits)
@@ -13410,7 +13448,7 @@ public void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_iStackRewards[iPos] = 0;
 						g_esPlayer[iPlayer].g_iThornsReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = 0;
-						g_esPlayer[iPlayer].g_iVoicePitchReward[iPos] = 0;
+						g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos] = 0;
 					}
 
 					if (iPos < sizeof esPlayer::g_iStackLimits)
@@ -13711,7 +13749,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 							g_esGeneral.g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esGeneral.g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 							g_esGeneral.g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esGeneral.g_iThornsReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esGeneral.g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
-							g_esGeneral.g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esGeneral.g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
+							g_esGeneral.g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esGeneral.g_iVoicePitchVisual[iPos], sSet[iPos], 0, 255);
 
 							vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 							vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esGeneral.g_sBodyColorVisual, sizeof esGeneral::g_sBodyColorVisual, g_esGeneral.g_sBodyColorVisual2, sizeof esGeneral::g_sBodyColorVisual2, g_esGeneral.g_sBodyColorVisual3, sizeof esGeneral::g_sBodyColorVisual3, g_esGeneral.g_sBodyColorVisual4, sizeof esGeneral::g_sBodyColorVisual4, sValue);
@@ -14013,7 +14051,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 									g_esPlayer[iPlayer].g_iStackRewards[iPos] = iGetClampedValue(key, "StackRewards", "Stack Rewards", "Stack_Rewards", "stack", g_esPlayer[iPlayer].g_iStackRewards[iPos], sSet[iPos], 0, 2147483647);
 									g_esPlayer[iPlayer].g_iThornsReward[iPos] = iGetClampedValue(key, "ThornsReward", "Thorns Reward", "Thorns_Reward", "thorns", g_esPlayer[iPlayer].g_iThornsReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = iGetClampedValue(key, "UsefulRewards", "Useful Rewards", "Useful_Rewards", "useful", g_esPlayer[iPlayer].g_iUsefulRewards[iPos], sSet[iPos], 0, 15);
-									g_esPlayer[iPlayer].g_iVoicePitchReward[iPos] = iGetClampedValue(key, "VoicePitchReward", "Voice Pitch Reward", "Voice_Pitch_Reward", "voicepitch", g_esPlayer[iPlayer].g_iVoicePitchReward[iPos], sSet[iPos], 0, 255);
+									g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos] = iGetClampedValue(key, "VoicePitchVisual", "Voice Pitch Visual", "Voice_Pitch_Visual", "voicepitch", g_esPlayer[iPlayer].g_iVoicePitchVisual[iPos], sSet[iPos], 0, 255);
 
 									vGetConfigColors(sValue, sizeof sValue, sSet[iPos], ';');
 									vGetStringValue(key, "BodyColorVisual", "Body Color Visual", "Body_Color_Visual", "bodycolor", iPos, g_esPlayer[iPlayer].g_sBodyColorVisual, sizeof esPlayer::g_sBodyColorVisual, g_esPlayer[iPlayer].g_sBodyColorVisual2, sizeof esPlayer::g_sBodyColorVisual2, g_esPlayer[iPlayer].g_sBodyColorVisual3, sizeof esPlayer::g_sBodyColorVisual3, g_esPlayer[iPlayer].g_sBodyColorVisual4, sizeof esPlayer::g_sBodyColorVisual4, sValue);
@@ -14433,22 +14471,22 @@ void vPlayerSpawnFrame(DataPack pack)
 		{
 			char sDelimiter[2];
 			float flTime = GetGameTime();
-			if (g_esPlayer[iPlayer].g_flVisualTime[3] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[3] > flTime)
-			{
-				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sLightColor, ';') != -1) ? ";" : ",";
-				vSetSurvivorLight(iPlayer, g_esPlayer[iPlayer].g_sLightColor, g_esPlayer[iPlayer].g_bApplyVisuals[3], sDelimiter, true);
-			}
-
 			if (g_esPlayer[iPlayer].g_flVisualTime[4] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[4] > flTime)
 			{
-				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sBodyColor, ';') != -1) ? ";" : ",";
-				vSetSurvivorColor(iPlayer, g_esPlayer[iPlayer].g_sBodyColor, g_esPlayer[iPlayer].g_bApplyVisuals[4], sDelimiter, true);
+				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sLightColor, ';') != -1) ? ";" : ",";
+				vSetSurvivorLight(iPlayer, g_esPlayer[iPlayer].g_sLightColor, g_esPlayer[iPlayer].g_bApplyVisuals[4], sDelimiter, true);
 			}
 
 			if (g_esPlayer[iPlayer].g_flVisualTime[5] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[5] > flTime)
 			{
+				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sBodyColor, ';') != -1) ? ";" : ",";
+				vSetSurvivorColor(iPlayer, g_esPlayer[iPlayer].g_sBodyColor, g_esPlayer[iPlayer].g_bApplyVisuals[5], sDelimiter, true);
+			}
+
+			if (g_esPlayer[iPlayer].g_flVisualTime[6] != -1.0 && g_esPlayer[iPlayer].g_flVisualTime[6] > flTime)
+			{
 				sDelimiter = (FindCharInString(g_esPlayer[iPlayer].g_sOutlineColor, ';') != -1) ? ";" : ",";
-				vSetSurvivorOutline(iPlayer, g_esPlayer[iPlayer].g_sOutlineColor, g_esPlayer[iPlayer].g_bApplyVisuals[5], sDelimiter, true);
+				vSetSurvivorOutline(iPlayer, g_esPlayer[iPlayer].g_sOutlineColor, g_esPlayer[iPlayer].g_bApplyVisuals[6], sDelimiter, true);
 			}
 		}
 		else if (g_esDeveloper[iPlayer].g_iDevAccess == 1)
@@ -15273,7 +15311,7 @@ void OnRainbowPreThinkPost(int player)
 			g_esPlayer[player].g_iScreenColorVisual[3] = 50;
 		}
 
-		if ((g_esPlayer[player].g_bApplyVisuals[3] && g_esPlayer[player].g_flVisualTime[3] != -1.0 && g_esPlayer[player].g_flVisualTime[3] > GetGameTime()) || bDeveloper)
+		if ((g_esPlayer[player].g_bApplyVisuals[4] && g_esPlayer[player].g_flVisualTime[4] != -1.0 && g_esPlayer[player].g_flVisualTime[4] > GetGameTime()) || bDeveloper)
 		{
 			switch (bDeveloper)
 			{
@@ -15289,7 +15327,7 @@ void OnRainbowPreThinkPost(int player)
 			}
 		}
 
-		if ((g_esPlayer[player].g_bApplyVisuals[4] && g_esPlayer[player].g_flVisualTime[4] != -1.0 && g_esPlayer[player].g_flVisualTime[4] > GetGameTime()) || bDeveloper)
+		if ((g_esPlayer[player].g_bApplyVisuals[5] && g_esPlayer[player].g_flVisualTime[5] != -1.0 && g_esPlayer[player].g_flVisualTime[5] > GetGameTime()) || bDeveloper)
 		{
 			switch (bDeveloper)
 			{
@@ -15305,7 +15343,7 @@ void OnRainbowPreThinkPost(int player)
 			}
 		}
 
-		if (g_bSecondGame && ((g_esPlayer[player].g_bApplyVisuals[5] && g_esPlayer[player].g_flVisualTime[5] != -1.0 && g_esPlayer[player].g_flVisualTime[5] > GetGameTime()) || bDeveloper) && !g_esPlayer[player].g_bVomited)
+		if (g_bSecondGame && ((g_esPlayer[player].g_bApplyVisuals[6] && g_esPlayer[player].g_flVisualTime[6] != -1.0 && g_esPlayer[player].g_flVisualTime[6] > GetGameTime()) || bDeveloper) && !g_esPlayer[player].g_bVomited)
 		{
 			switch (bDeveloper)
 			{
@@ -15706,7 +15744,7 @@ Action VoiceSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLAT
 	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity) && channel == SNDCHAN_VOICE)
 	{
 		bool bDeveloper = bIsDeveloper(entity, 0) || bIsDeveloper(entity, 2) || bIsDeveloper(entity, 11);
-		if (bDeveloper || ((g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) && g_esPlayer[entity].g_iVoicePitch > 0))
+		if (bDeveloper || (g_esPlayer[entity].g_iRewardVisuals & MT_VISUAL_VOICEPITCH))
 		{
 			int iPitch = (bDeveloper && g_esDeveloper[entity].g_iDevVoicePitch > 0) ? g_esDeveloper[entity].g_iDevVoicePitch : g_esPlayer[entity].g_iVoicePitch;
 			if (iPitch > 0 && iPitch != pitch)

@@ -42,6 +42,10 @@
 - The speed boost reward's forward jump boost now only applies to the bunny hop reward.
 - The speed boost reward now allows recipients to change their voice pitch. (Thanks to `Marttt` for the code!)
 
+#### Commands
+- Added a `Voice Pitch` option to the `sm_mt_admin` command's panel.
+- Added a `Voice Pitch Visual` option to the `sm_mt_prefs` command's menu.
+
 #### Settings
 - Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
 	- `Boss Base Type`
@@ -52,7 +56,13 @@
 - Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
 	- `Human Multiplier Mode`
 	- `Health Percentage Multiplier`
-- Added the `Voice Pitch Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+- Added the `Voice Pitch Visual` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_OnPluginEnd` forward.
@@ -79,6 +89,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
+- Updated translation files.
 - Updated updater file.
 
 ## Version 8.90 (February 1, 2022)

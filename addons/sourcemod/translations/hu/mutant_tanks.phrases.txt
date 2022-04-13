@@ -624,6 +624,16 @@
 		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}){default} leszel miután átveszed a{mint} Tank{default} irányítását."
 	}
 
+	"PitchVisualOn"
+	{
+		"hu"			"Vizuális Hangmagasság: BE"
+	}
+
+	"PitchVisualOff"
+	{
+		"hu"			"Vizuális Hangmagasság: KI"
+	}
+
 	"PluginDisabled"
 	{
 		"hu"			"Mutáns Tankok{default} letiltva."
