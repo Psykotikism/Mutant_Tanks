@@ -2001,7 +2001,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 					if (bDeveloper || bDeveloper2 || g_esPlayer[client].g_iBunnyHop == 1)
 					{
 						float flHeight = (bDeveloper && g_esDeveloper[client].g_flDevJumpHeight > g_esPlayer[client].g_flJumpHeight) ? g_esDeveloper[client].g_flDevJumpHeight : g_esPlayer[client].g_flJumpHeight;
-						flHeight = (!bDeveloper && bDeveloper2) ? MT_JUMP_DEFAULTHEIGHT : flHeight;
+						flHeight = (!bDeveloper && bDeveloper2 && flHeight <= 0.0) ? MT_JUMP_DEFAULTHEIGHT : flHeight;
 						if (flHeight > 0.0)
 						{
 							vPushPlayer(client, {-90.0, 0.0, 0.0}, ((flHeight + 100.0) * 2.0));
@@ -2975,7 +2975,7 @@ public void OnClientCookiesCached(int client)
 		}
 	}
 
-	char sValue[3];
+	char sValue[4];
 	g_esGeneral.g_ckMTPrefs.Get(client, sValue, sizeof sValue);
 	if (sValue[0] != '\0')
 	{
@@ -4992,7 +4992,7 @@ int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				g_esPlayer[param1].g_bApplyVisuals[param2] = false;
 				g_esPlayer[param1].g_iRewardVisuals &= ~iBit;
 #if defined _clientprefs_included
-				char sValue[3];
+				char sValue[4];
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof sValue);
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
@@ -5003,7 +5003,7 @@ int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				g_esPlayer[param1].g_bApplyVisuals[param2] = true;
 				g_esPlayer[param1].g_iRewardVisuals |= iBit;
 #if defined _clientprefs_included
-				char sValue[3];
+				char sValue[4];
 				IntToString(g_esPlayer[param1].g_iRewardVisuals, sValue, sizeof sValue);
 				g_esGeneral.g_ckMTPrefs.Set(param1, sValue);
 #endif
