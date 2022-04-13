@@ -1611,24 +1611,6 @@
 			// 4th number = Enable useful rewards for assistant killers.
 			"Useful Rewards"			"15,15,15,15"
 
-			// Change voice pitch as a reward to survivors.
-			// Note: This setting can be used for standard Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// --
-			// Separate values with commas (",").
-			// --
-			// Values limit: 4
-			// Character limit for each value: 3
-			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 255 (Highest)
-			// --
-			// 1st number = Voice pitch for killers.
-			// 2nd number = Voice pitch for assistants.
-			// 3rd number = Voice pitch for teammates.
-			// 4th number = Voice pitch for assistant killers.
-			"Voice Pitch Reward"			"100,100,100,100"
-
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be used for standard Tanks.
@@ -1798,6 +1780,24 @@
 			// 3rd set = RGBA set for teammates.
 			// 4th set = RGBA set for assistant killers.
 			"Screen Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
+
+			// The pitch of the recipients' voice throughout their reward duration.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 3
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 255 (Highest)
+			// --
+			// 1st number = Voice pitch for killers.
+			// 2nd number = Voice pitch for assistants.
+			// 3rd number = Voice pitch for teammates.
+			// 4th number = Voice pitch for assistant killers.
+			"Voice Pitch Visual"			"100,100,100,100"
 		}
 		"Competitive"
 		{
@@ -3945,24 +3945,6 @@
 			// 4th number = Enable useful rewards for assistant killers.
 			"Useful Rewards"			"0,0,0,0"
 
-			// Change voice pitch as a reward to survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Separate values with commas (",").
-			// --
-			// Values limit: 4
-			// Character limit for each value: 3
-			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 255 (Highest)
-			// --
-			// 1st number = Voice pitch for killers.
-			// 2nd number = Voice pitch for assistants.
-			// 3rd number = Voice pitch for teammates.
-			// 4th number = Voice pitch for assistant killers.
-			"Voice Pitch Reward"			"0,0,0,0"
-
 			// These are the RGBA values of the recipients' body color visual.
 			// Note: Any value less than "0" will output a random color.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -4132,6 +4114,24 @@
 			// 3rd set = RGBA set for teammates.
 			// 4th set = RGBA set for assistant killers.
 			"Screen Color Visual"			""
+
+			// The pitch of the recipients' voice throughout their reward duration.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 3
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 255 (Highest)
+			// --
+			// 1st number = Voice pitch for killers.
+			// 2nd number = Voice pitch for assistants.
+			// 3rd number = Voice pitch for teammates.
+			// 4th number = Voice pitch for assistant killers.
+			"Voice Pitch Visual"			"0,0,0,0"
 		}
 		"Competitive"
 		{

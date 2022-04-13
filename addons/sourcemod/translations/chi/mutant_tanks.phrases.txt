@@ -624,6 +624,16 @@
 		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (Tank #{2}){default} 的身份出现。"
 	}
 
+	"PitchVisualOn"
+	{
+		"chi"			"音高特效： 开"
+	}
+
+	"PitchVisualOff"
+	{
+		"chi"			"音高特效： 关"
+	}
+
 	"PluginDisabled"
 	{
 		"chi"			"突变坦克{default} 已禁用。"
