@@ -242,6 +242,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
 #define MT_EFFECT_THIRDPERSON (1 << 3) // thirdperson view
 
+//#define MT_GAMEDATA_MAXSIGS 3
+//#define MT_GAMEDATA_TEMP "mutant_tanks.temp"
+
 #define MT_INFAMMO_PRIMARY (1 << 0) // primary weapon
 #define MT_INFAMMO_SECONDARY (1 << 1) // secondary weapon
 #define MT_INFAMMO_THROWABLE (1 << 2) // throwable
@@ -2184,7 +2187,7 @@ void vLateLoad()
 		char sModel[64];
 		while ((iEntity = FindEntityByClassname(iEntity, "prop_physics")) != INVALID_ENT_REFERENCE)
 		{
-			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof sModel);
 			if (StrEqual(sModel, MODEL_OXYGENTANK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (g_bSecondGame && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 			{
 				SDKHook(iEntity, SDKHook_OnTakeDamage, OnPropTakeDamage);
@@ -5643,20 +5646,138 @@ void vReadGameData()
 
 			if (g_bSecondGame)
 			{
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+				/*if (g_esGeneral.g_iPlatformType == 0)
+				{
+					Address adPatch = Address_Null, adPatches[MT_GAMEDATA_MAXSIGS];
+					int iOffsetPush = 0;
+
+					adPatches[0] = g_esGeneral.g_gdMutantTanks.GetAddress("IsScavengeModeString");
+					adPatches[1] = g_esGeneral.g_gdMutantTanks.GetAddress("IsSurvivalModeString");
+					adPatches[2] = g_esGeneral.g_gdMutantTanks.GetAddress("IsVersusModeString");
+
+					char sFilePath[PLATFORM_MAX_PATH];
+					BuildPath(Path_SM, sFilePath, sizeof sFilePath, "gamedata/%s.txt", MT_GAMEDATA_TEMP);
+
+					File fTemp = OpenFile(sFilePath, "w", false);
+					if (fTemp != null)
+					{
+						char sAddress[512], sFunction[64], sHexAddress[32];
+
+						fTemp.WriteLine("\"Games\"");
+						fTemp.WriteLine("{");
+						fTemp.WriteLine("	\"left4dead2\"");
+						fTemp.WriteLine("	{");
+						fTemp.WriteLine("		\"Addresses\"");
+						fTemp.WriteLine("		{");
+
+						for (int iPos = 0; iPos < MT_GAMEDATA_MAXSIGS; iPos++)
+						{
+							adPatch = adPatches[iPos];
+							if (adPatch != Address_Null)
+							{
+								switch (iPos)
+								{
+									case 0: sFunction = "CTerrorGameRules::IsScavengeMode";
+									case 1: sFunction = "CTerrorGameRules::IsSurvivalMode";
+									case 2: sFunction = "CTerrorGameRules::IsVersusMode";
+								}
+
+								fTemp.WriteLine("			\"%s\"", sFunction);
+								fTemp.WriteLine("			{");
+								fTemp.WriteLine("				\"windows\"");
+								fTemp.WriteLine("				{");
+								fTemp.WriteLine("					\"signature\"		\"%s\"", sFunction);
+								fTemp.WriteLine("				}");
+								fTemp.WriteLine("			}");
+							}
+						}
+
+						fTemp.WriteLine("		}");
+						fTemp.WriteLine("");
+						fTemp.WriteLine("		\"Signatures\"");
+						fTemp.WriteLine("		{");
+
+						for (int iPos = 0; iPos < MT_GAMEDATA_MAXSIGS; iPos++)
+						{
+							adPatch = adPatches[iPos];
+							if (adPatch != Address_Null)
+							{
+								FormatEx(sAddress, sizeof sAddress, "%X", adPatch);
+								vReverseAddress(sAddress, sHexAddress, sizeof sHexAddress);
+								sAddress = "\\x8B";
+
+								switch (iPos)
+								{
+									case 0:
+									{
+										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsScavengeMode::Push");
+										sFunction = "CTerrorGameRules::IsScavengeMode";
+									}
+									case 1:
+									{
+										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsSurvivalMode::Push");
+										sFunction = "CTerrorGameRules::IsSurvivalMode";
+									}
+									case 2:
+									{
+										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsVersusMode::Push");
+										sFunction = "CTerrorGameRules::IsVersusMode";
+									}
+								}
+
+								for (int iCount = 0; iCount < iOffsetPush; iCount++ )
+								{
+									StrCat(sAddress, sizeof sAddress, "\\x2A");
+								}
+
+								StrCat(sAddress, sizeof sAddress, "\\x68");
+								StrCat(sAddress, sizeof sAddress, sHexAddress);
+								StrCat(sAddress, sizeof sAddress, "\\x68");
+
+								fTemp.WriteLine("			\"%s\"", sFunction);
+								fTemp.WriteLine("			{");
+								fTemp.WriteLine("				\"library\"	\"server\"");
+								fTemp.WriteLine("				\"windows\"	\"%s\"", sAddress);
+								fTemp.WriteLine("			}");
+							}
+						}
+
+						fTemp.WriteLine("		}");
+						fTemp.WriteLine("	}");
+						fTemp.WriteLine("}");
+						fTemp.Flush();
+
+						delete fTemp;
+					}
+				}
+
+				GameData gdTemp = new GameData(MT_GAMEDATA_TEMP);
+				if (gdTemp == null)
+				{
+					LogError("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA_TEMP);
+				}*/
+
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
 
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
+
+				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+
+				//delete gdTemp;
 			}
 			else
 			{
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
+				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
+				//vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
 			}
 
 			g_esGeneral.g_adDirector = g_esGeneral.g_gdMutantTanks.GetAddress("CDirector");
@@ -5667,18 +5788,18 @@ void vReadGameData()
 
 			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress("DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetWeaponID, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
-			vSetupSimpleSDKCall(g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetWeaponID, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
+			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
 
 			StartPrepSDKCall(SDKCall_Static);
 			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
@@ -5793,10 +5914,27 @@ void vReadGameData()
 	}
 }
 
-void vSetupSimpleSDKCall(Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
+/*void vReverseAddress(const char[] bytes, char[] buffer, int size)
+{
+	buffer[0] = 0;
+	char sByte[3];
+	for (int iPos = (strlen(bytes) - 2); iPos >= -1; iPos -= 2)
+	{
+		strcopy(sByte, ((iPos >= 1) ? 3 : (iPos + 3)), bytes[((iPos >= 0) ? iPos : 0)]);
+		StrCat(buffer, size, "\\x");
+		if (strlen(sByte) == 1)
+		{
+			StrCat(buffer, size, "0");
+		}
+
+		StrCat(buffer, size, sByte);
+	}
+}*/
+
+void vSetupSimpleSDKCall(GameData dataHandle, Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
 {
 	StartPrepSDKCall(callType);
-	if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, source, name))
+	if (!PrepSDKCall_SetFromConf(dataHandle, source, name))
 	{
 		LogError("%s Failed to find signature: %s", MT_TAG, name);
 	}
@@ -14731,7 +14869,7 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				if (damagetype == 134217792)
 				{
 					char sClassname[5];
-					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+					GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 					if (StrEqual(sClassname, "pipe"))
 					{
 						return Plugin_Handled;
