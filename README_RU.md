@@ -266,7 +266,9 @@ mt_pluginenabled "1"
 5. Создайте копию `mutant_tanks.cfg` в `addons/sourcemod/data/mutant_tanks`.
 6. Удалите `mutant_tanks_detours.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
 7. Удалите `mutant_tanks_patches.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
-8. Следуйте руководству по установке выше. (Только для обновление до более новых версий.)
+8. Удалите `mutant_tanks_signatures.cfg` из папки `addons/sourcemod/data/mutant_tanks`.
+9. Удалите `mutant_tanks_updater.txt` из папки `addons/sourcemod`.
+10. Следуйте руководству по установке выше. (Только для обновление до более новых версий.)
 
 ## Отключение
 1. Переместите папку `mutant_tanks` (`mutant_tanks.smx` и все его модули) в папку `plugins/disabled`.

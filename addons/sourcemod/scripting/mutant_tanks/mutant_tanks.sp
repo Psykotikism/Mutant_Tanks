@@ -146,6 +146,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_FILE_MAIN "mutant_tanks.cfg"
 #define MT_CONFIG_FILE_DETOURS "mutant_tanks_detours"
 #define MT_CONFIG_FILE_PATCHES "mutant_tanks_patches"
+#define MT_CONFIG_FILE_SIGNATURES "mutant_tanks_signatures"
 #define MT_CONFIG_FILEPATH "data/mutant_tanks/"
 #define MT_CONFIG_PATH_DAY "daily_configs/"
 #define MT_CONFIG_PATH_DIFFICULTY "difficulty_configs/"
@@ -228,12 +229,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_DETOUR_LIMIT 100 // number of detours allowed
 
-#define MT_DETOUR_SECTION_MAIN "Mutant Tanks Detours"
-#define MT_DETOUR_SECTION_MAIN2 "MutantTanksDetours"
-#define MT_DETOUR_SECTION_MAIN3 "Mutant_Tanks_Detours"
-#define MT_DETOUR_SECTION_MAIN4 "MTDetours"
-#define MT_DETOUR_SECTION_MAIN5 "Detours"
-#define MT_DETOUR_SECTION_PREFIX "MTDetour_"
+#define MT_DETOURS_SECTION_MAIN "Mutant Tanks Detours"
+#define MT_DETOURS_SECTION_MAIN2 "MutantTanksDetours"
+#define MT_DETOURS_SECTION_MAIN3 "Mutant_Tanks_Detours"
+#define MT_DETOURS_SECTION_MAIN4 "MTDetours"
+#define MT_DETOURS_SECTION_MAIN5 "Detours"
+#define MT_DETOURS_SECTION_PREFIX "MTDetour_"
 
 #define MT_DEV_MAXLEVEL 4095
 
@@ -242,8 +243,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
 #define MT_EFFECT_THIRDPERSON (1 << 3) // thirdperson view
 
-//#define MT_GAMEDATA_MAXSIGS 3
-//#define MT_GAMEDATA_TEMP "mutant_tanks.temp"
+#define MT_GAMEDATA "mutant_tanks"
+#define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
 #define MT_INFAMMO_PRIMARY (1 << 0) // primary weapon
 #define MT_INFAMMO_SECONDARY (1 << 1) // secondary weapon
@@ -305,6 +306,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ROCK_ELECTRICITY (1 << 1) // electric particle
 #define MT_ROCK_FIRE (1 << 2) // fire particle
 #define MT_ROCK_SPIT (1 << 3) // spit particle
+
+#define MT_SIGNATURE_LIMIT 100 // number of dynamic signatures allowed
+
+#define MT_SIGNATURES_SECTION_MAIN "Mutant Tanks Signatures"
+#define MT_SIGNATURES_SECTION_MAIN2 "MutantTanksSignatures"
+#define MT_SIGNATURES_SECTION_MAIN3 "Mutant_Tanks_Signatures"
+#define MT_SIGNATURES_SECTION_MAIN4 "MTSignatures"
+#define MT_SIGNATURES_SECTION_MAIN5 "Signatures"
+#define MT_SIGNATURES_SECTION_PREFIX "MTSignature_"
 
 #define MT_UPDATE_URL "https://raw.githubusercontent.com/Psykotikism/Mutant_Tanks/master/addons/sourcemod/mutant_tanks_updater.txt"
 
@@ -390,6 +400,7 @@ enum struct esGeneral
 	char g_sCurrentSection[128];
 	char g_sCurrentSection2[128];
 	char g_sCurrentSection3[128];
+	char g_sCurrentSection4[128];
 	char g_sCurrentSubSection[128];
 	char g_sCurrentSubSection2[128];
 	char g_sCurrentSubSection3[128];
@@ -467,6 +478,7 @@ enum struct esGeneral
 #endif
 	DataState g_dsState;
 	DataState g_dsState2;
+	DataState g_dsState3;
 
 	DynamicDetour g_ddActionCompleteDetour;
 	DynamicDetour g_ddBaseEntityCreateDetour;
@@ -692,6 +704,7 @@ enum struct esGeneral
 	int g_iIgnoreLevel2;
 	int g_iIgnoreLevel3;
 	int g_iIgnoreLevel4;
+	int g_iIgnoreLevel5;
 	int g_iImmunityFlags;
 	int g_iInextinguishableFireReward[4];
 	int g_iInfectedHealth[2048];
@@ -744,6 +757,7 @@ enum struct esGeneral
 	int g_iSection;
 	int g_iShareRewards[4];
 	int g_iShovePenaltyReward[4];
+	int g_iSignatureCount;
 	int g_iSkipIncap;
 	int g_iSkipTaunt;
 	int g_iSledgehammerRoundsReward[4];
@@ -1593,6 +1607,20 @@ enum struct esPatch
 
 esPatch g_esPatch[MT_PATCH_LIMIT];
 
+enum struct esSignature
+{
+	bool g_bLog;
+
+	char g_sAfter[192];
+	char g_sBefore[192];
+	char g_sName[128];
+	char g_sOffset[128];
+	char g_sSignature[128];
+	char g_sStart[192];
+}
+
+esSignature g_esSignature[MT_SIGNATURE_LIMIT];
+
 int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
 
 public void OnLibraryAdded(const char[] name)
@@ -1635,6 +1663,10 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	char sDate[32];
+	FormatTime(sDate, sizeof sDate, "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
+
 	for (int iDeveloper = 1; iDeveloper <= MaxClients; iDeveloper++)
 	{
 		vDeveloperSettings(iDeveloper);
@@ -1660,10 +1692,6 @@ public void OnPluginStart()
 
 	g_esGeneral.g_ckMTPrefs = new Cookie("MTPrefs", "Mutant Tanks Preferences", CookieAccess_Private);
 #endif
-	char sDate[32];
-	FormatTime(sDate, sizeof sDate, "%Y-%m-%d", GetTime());
-	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
-
 	char sSMPath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_FILEPATH);
 	CreateDirectory(sSMPath, 511);
@@ -3292,7 +3320,7 @@ Action cmdMTConfig(int client, int args)
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof sFilename);
 
-			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1)
+			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_SIGNATURES, false) != -1)
 			{
 				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 				case false:
@@ -3373,7 +3401,7 @@ Action cmdMTConfig2(int client, int args)
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof sFilename);
 
-			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1)
+			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_SIGNATURES, false) != -1)
 			{
 				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
 				case false:
@@ -5635,149 +5663,60 @@ void vHookGlobalEvents()
 
 void vReadGameData()
 {
-	g_esGeneral.g_gdMutantTanks = new GameData("mutant_tanks");
+	g_esGeneral.g_gdMutantTanks = new GameData(MT_GAMEDATA);
 
 	switch (g_esGeneral.g_gdMutantTanks == null)
 	{
-		case true: SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		case true: SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 		case false:
 		{
+			GameData gdTemp;
 			g_esGeneral.g_iPlatformType = iGetGameDataOffset("OS");
-
-			if (g_bSecondGame)
+			if (g_esGeneral.g_iPlatformType == 0)
 			{
-				/*if (g_esGeneral.g_iPlatformType == 0)
-				{
-					Address adPatch = Address_Null, adPatches[MT_GAMEDATA_MAXSIGS];
-					int iOffsetPush = 0;
+				vRegisterSignatures();
+				vSetupSignatures();
 
-					adPatches[0] = g_esGeneral.g_gdMutantTanks.GetAddress("IsScavengeModeString");
-					adPatches[1] = g_esGeneral.g_gdMutantTanks.GetAddress("IsSurvivalModeString");
-					adPatches[2] = g_esGeneral.g_gdMutantTanks.GetAddress("IsVersusModeString");
-
-					char sFilePath[PLATFORM_MAX_PATH];
-					BuildPath(Path_SM, sFilePath, sizeof sFilePath, "gamedata/%s.txt", MT_GAMEDATA_TEMP);
-
-					File fTemp = OpenFile(sFilePath, "w", false);
-					if (fTemp != null)
-					{
-						char sAddress[512], sFunction[64], sHexAddress[32];
-
-						fTemp.WriteLine("\"Games\"");
-						fTemp.WriteLine("{");
-						fTemp.WriteLine("	\"left4dead2\"");
-						fTemp.WriteLine("	{");
-						fTemp.WriteLine("		\"Addresses\"");
-						fTemp.WriteLine("		{");
-
-						for (int iPos = 0; iPos < MT_GAMEDATA_MAXSIGS; iPos++)
-						{
-							adPatch = adPatches[iPos];
-							if (adPatch != Address_Null)
-							{
-								switch (iPos)
-								{
-									case 0: sFunction = "CTerrorGameRules::IsScavengeMode";
-									case 1: sFunction = "CTerrorGameRules::IsSurvivalMode";
-									case 2: sFunction = "CTerrorGameRules::IsVersusMode";
-								}
-
-								fTemp.WriteLine("			\"%s\"", sFunction);
-								fTemp.WriteLine("			{");
-								fTemp.WriteLine("				\"windows\"");
-								fTemp.WriteLine("				{");
-								fTemp.WriteLine("					\"signature\"		\"%s\"", sFunction);
-								fTemp.WriteLine("				}");
-								fTemp.WriteLine("			}");
-							}
-						}
-
-						fTemp.WriteLine("		}");
-						fTemp.WriteLine("");
-						fTemp.WriteLine("		\"Signatures\"");
-						fTemp.WriteLine("		{");
-
-						for (int iPos = 0; iPos < MT_GAMEDATA_MAXSIGS; iPos++)
-						{
-							adPatch = adPatches[iPos];
-							if (adPatch != Address_Null)
-							{
-								FormatEx(sAddress, sizeof sAddress, "%X", adPatch);
-								vReverseAddress(sAddress, sHexAddress, sizeof sHexAddress);
-								sAddress = "\\x8B";
-
-								switch (iPos)
-								{
-									case 0:
-									{
-										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsScavengeMode::Push");
-										sFunction = "CTerrorGameRules::IsScavengeMode";
-									}
-									case 1:
-									{
-										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsSurvivalMode::Push");
-										sFunction = "CTerrorGameRules::IsSurvivalMode";
-									}
-									case 2:
-									{
-										iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset("CTerrorGameRules::IsVersusMode::Push");
-										sFunction = "CTerrorGameRules::IsVersusMode";
-									}
-								}
-
-								for (int iCount = 0; iCount < iOffsetPush; iCount++ )
-								{
-									StrCat(sAddress, sizeof sAddress, "\\x2A");
-								}
-
-								StrCat(sAddress, sizeof sAddress, "\\x68");
-								StrCat(sAddress, sizeof sAddress, sHexAddress);
-								StrCat(sAddress, sizeof sAddress, "\\x68");
-
-								fTemp.WriteLine("			\"%s\"", sFunction);
-								fTemp.WriteLine("			{");
-								fTemp.WriteLine("				\"library\"	\"server\"");
-								fTemp.WriteLine("				\"windows\"	\"%s\"", sAddress);
-								fTemp.WriteLine("			}");
-							}
-						}
-
-						fTemp.WriteLine("		}");
-						fTemp.WriteLine("	}");
-						fTemp.WriteLine("}");
-						fTemp.Flush();
-
-						delete fTemp;
-					}
-				}
-
-				GameData gdTemp = new GameData(MT_GAMEDATA_TEMP);
+				gdTemp = new GameData(MT_GAMEDATA_TEMP);
 				if (gdTemp == null)
 				{
 					LogError("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA_TEMP);
-				}*/
+				}
+			}
 
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetUseAction, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKHasConfigurableDifficultySetting, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsFirstMapInScenario, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsInStasis, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+			if (g_bSecondGame)
+			{
+				g_esGeneral.g_hSDKGetUseAction = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Entity, SDKConf_Virtual, .name = "CBaseBackpackItem::GetUseAction");
+				g_esGeneral.g_hSDKHasConfigurableDifficultySetting = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::HasConfigurableDifficultySetting");
+				g_esGeneral.g_hSDKIsCoopMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsGenericCooperativeMode");
+				g_esGeneral.g_hSDKIsFirstMapInScenario = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::IsFirstMapInScenario");
+				g_esGeneral.g_hSDKIsInStasis = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Virtual, .returnType = SDKType_Bool, .name = "CBaseEntity::IsInStasis");
+
+				g_esGeneral.g_hSDKIsScavengeMode = hGetSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? gdTemp : g_esGeneral.g_gdMutantTanks), SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = ((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? "MTSignature_IsScavengeMode" : "CTerrorGameRules::IsScavengeMode"));
+				if (g_esGeneral.g_hSDKIsScavengeMode == null)
+				{
+					g_esGeneral.g_hSDKIsScavengeMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
+				}
+
+				g_esGeneral.g_hSDKIsSurvivalMode = hGetSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? gdTemp : g_esGeneral.g_gdMutantTanks), SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = ((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? "MTSignature_IsSurvivalMode" : "CTerrorGameRules::IsSurvivalMode"));
+				if (g_esGeneral.g_hSDKIsSurvivalMode == null)
+				{
+					g_esGeneral.g_hSDKIsSurvivalMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
+				}
+
+				g_esGeneral.g_hSDKIsVersusMode = hGetSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? gdTemp : g_esGeneral.g_gdMutantTanks), SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = ((g_esGeneral.g_iPlatformType == 0 && gdTemp != null) ? "MTSignature_IsVersusMode" : "CTerrorGameRules::IsVersusMode"));
+				if (g_esGeneral.g_hSDKIsVersusMode == null)
+				{
+					g_esGeneral.g_hSDKIsVersusMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+				}
 
 				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
-
-				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsScavengeMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsScavengeMode");
-				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsSurvivalMode");
-				//vSetupSimpleSDKCall(((g_esGeneral.g_iPlatformType == 0) ? gdTemp : g_esGeneral.g_gdMutantTanks), g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
-
-				//delete gdTemp;
 			}
 			else
 			{
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsCoopMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
-				vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsSurvivalMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
-				//vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
+				g_esGeneral.g_hSDKIsCoopMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsCoopMode");
+				g_esGeneral.g_hSDKIsSurvivalMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsHoldoutMode");
+				g_esGeneral.g_hSDKIsVersusMode = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
 			}
 
 			g_esGeneral.g_adDirector = g_esGeneral.g_gdMutantTanks.GetAddress("CDirector");
@@ -5788,18 +5727,17 @@ void vReadGameData()
 
 			g_esGeneral.g_adDoJumpValue = adGetGameDataAddress("DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetRefEHandle, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetWeaponID, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRockDetonate, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKGetMissionInfo, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsMissionFinalMap, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKIsVersusMode, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsVersusMode");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKITExpired, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKMaterializeGhost, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRevive, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKRoundRespawn, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
-			vSetupSimpleSDKCall(g_esGeneral.g_gdMutantTanks, g_esGeneral.g_hSDKLeaveStasis, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
+			g_esGeneral.g_hSDKGetRefEHandle = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
+			g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
+			g_esGeneral.g_hSDKGetWeaponID = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
+			g_esGeneral.g_hSDKRockDetonate = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Entity, SDKConf_Signature, false, .name = "CTankRock::Detonate");
+			g_esGeneral.g_hSDKGetMissionInfo = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .name = "CTerrorGameRules::GetMissionInfo");
+			g_esGeneral.g_hSDKIsMissionFinalMap = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_GameRules, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CTerrorGameRules::IsMissionFinalMap");
+			g_esGeneral.g_hSDKITExpired = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnITExpired");
+			g_esGeneral.g_hSDKMaterializeGhost = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Signature, .name = "CTerrorPlayer::MaterializeFromGhost");
+			g_esGeneral.g_hSDKRevive = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::OnRevived");
+			g_esGeneral.g_hSDKRoundRespawn = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Signature, false, .name = "CTerrorPlayer::RoundRespawn");
+			g_esGeneral.g_hSDKLeaveStasis = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Player, SDKConf_Signature, .name = "Tank::LeaveStasis");
 
 			StartPrepSDKCall(SDKCall_Static);
 			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorGameRules::GetMissionFirstMap"))
@@ -5910,28 +5848,13 @@ void vReadGameData()
 			{
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
+
+			delete gdTemp;
 		}
 	}
 }
 
-/*void vReverseAddress(const char[] bytes, char[] buffer, int size)
-{
-	buffer[0] = 0;
-	char sByte[3];
-	for (int iPos = (strlen(bytes) - 2); iPos >= -1; iPos -= 2)
-	{
-		strcopy(sByte, ((iPos >= 1) ? 3 : (iPos + 3)), bytes[((iPos >= 0) ? iPos : 0)]);
-		StrCat(buffer, size, "\\x");
-		if (strlen(sByte) == 1)
-		{
-			StrCat(buffer, size, "0");
-		}
-
-		StrCat(buffer, size, sByte);
-	}
-}*/
-
-void vSetupSimpleSDKCall(GameData dataHandle, Handle &callHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
+Handle hGetSimpleSDKCall(GameData dataHandle, SDKCallType callType, SDKFuncConfSource source, bool setType = true, SDKType returnType = SDKType_PlainOldData, SDKPassMethod method = SDKPass_Plain, const char[] name)
 {
 	StartPrepSDKCall(callType);
 	if (!PrepSDKCall_SetFromConf(dataHandle, source, name))
@@ -5944,11 +5867,13 @@ void vSetupSimpleSDKCall(GameData dataHandle, Handle &callHandle, SDKCallType ca
 		PrepSDKCall_SetReturnInfo(returnType, method);
 	}
 
-	callHandle = EndPrepSDKCall();
-	if (callHandle == null)
+	Handle hSDKCall = EndPrepSDKCall();
+	if (hSDKCall == null)
 	{
 		LogError("%s Your \"%s\" signature is outdated.", MT_TAG, name);
 	}
+
+	return hSDKCall;
 }
 
 Address adGetGameDataAddress(const char[] name, const char[] backup, const char[] start, const char[] offset1, const char[] offset2, const char[] offset3)
@@ -12272,7 +12197,131 @@ SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_Ne
 	return smcParser;
 }
 
-public void SMCParseStart_Patches(SMCParser smc)
+void SMCParseStart_Signatures(SMCParser smc)
+{
+	g_esGeneral.g_dsState3 = DataState_None;
+	g_esGeneral.g_iIgnoreLevel5 = 0;
+	g_esGeneral.g_sCurrentSection4[0] = '\0';
+	g_esGeneral.g_iSignatureCount = 0;
+
+	for (int iPos = 0; iPos < MT_SIGNATURE_LIMIT; iPos++)
+	{
+		g_esSignature[iPos].g_bLog = false;
+		g_esSignature[iPos].g_sAfter[0] = '\0';
+		g_esSignature[iPos].g_sBefore[0] = '\0';
+		g_esSignature[iPos].g_sName[0] = '\0';
+		g_esSignature[iPos].g_sOffset[0] = '\0';
+		g_esSignature[iPos].g_sSignature[0] = '\0';
+		g_esSignature[iPos].g_sStart[0] = '\0';
+	}
+}
+
+SMCResult SMCNewSection_Signatures(SMCParser smc, const char[] name, bool opt_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel5)
+	{
+		g_esGeneral.g_iIgnoreLevel5++;
+
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState3 == DataState_None)
+	{
+		switch (StrEqual(name, MT_SIGNATURES_SECTION_MAIN, false) || StrEqual(name, MT_SIGNATURES_SECTION_MAIN2, false) || StrEqual(name, MT_SIGNATURES_SECTION_MAIN3, false) || StrEqual(name, MT_SIGNATURES_SECTION_MAIN4, false) || StrEqual(name, MT_SIGNATURES_SECTION_MAIN5, false))
+		{
+			case true: g_esGeneral.g_dsState3 = DataState_Start;
+			case false: g_esGeneral.g_iIgnoreLevel5++;
+		}
+	}
+	else if (g_esGeneral.g_dsState3 == DataState_Start)
+	{
+		if ((!g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE, false) || StrEqual(name, MT_DATA_SECTION_GAME2, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE2, false) || StrEqual(name, MT_DATA_SECTION_GAME3, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE3, false)
+			|| StrEqual(name, MT_DATA_SECTION_GAME4, false) || StrEqual(name, MT_DATA_SECTION_GAME_ONE4, false))) || (g_bSecondGame && (StrEqual(name, MT_DATA_SECTION_GAME_TWO, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO2, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO3, false) || StrEqual(name, MT_DATA_SECTION_GAME_TWO4, false)))
+			|| StrEqual(name, MT_DATA_SECTION_GAME_BOTH, false))
+		{
+			g_esGeneral.g_dsState3 = DataState_Game;
+
+			strcopy(g_esGeneral.g_sCurrentSection4, sizeof esGeneral::g_sCurrentSection4, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel5++;
+		}
+	}
+	else if (g_esGeneral.g_dsState3 == DataState_Game)
+	{
+		if (!strncmp(name, MT_SIGNATURES_SECTION_PREFIX, 12, false))
+		{
+			g_esGeneral.g_dsState3 = DataState_Name;
+
+			strcopy(g_esGeneral.g_sCurrentSection4, sizeof esGeneral::g_sCurrentSection4, name);
+			strcopy(g_esSignature[g_esGeneral.g_iSignatureCount].g_sName, sizeof esSignature::g_sName, name);
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel5++;
+		}
+	}
+	else
+	{
+		g_esGeneral.g_iIgnoreLevel5++;
+	}
+
+	return SMCParse_Continue;
+}
+
+SMCResult SMCKeyValues_Signatures(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+{
+	if (g_esGeneral.g_iIgnoreLevel5)
+	{
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState3 == DataState_Name && !strncmp(g_esGeneral.g_sCurrentSection4, MT_SIGNATURES_SECTION_PREFIX, 12, false))
+	{
+		vReadSignatureSettings(key, value);
+	}
+
+	return SMCParse_Continue;
+}
+
+SMCResult SMCEndSection_Signatures(SMCParser smc)
+{
+	if (g_esGeneral.g_iIgnoreLevel5)
+	{
+		g_esGeneral.g_iIgnoreLevel5--;
+
+		return SMCParse_Continue;
+	}
+
+	if (g_esGeneral.g_dsState3 == DataState_Name)
+	{
+		g_esGeneral.g_dsState3 = DataState_Game;
+
+		vRegisterSignature(g_esSignature[g_esGeneral.g_iSignatureCount].g_sName);
+	}
+	else if (g_esGeneral.g_dsState3 == DataState_Game)
+	{
+		g_esGeneral.g_dsState3 = DataState_Start;
+	}
+	else if (g_esGeneral.g_dsState3 == DataState_Start)
+	{
+		g_esGeneral.g_dsState3 = DataState_None;
+	}
+
+	return SMCParse_Continue;
+}
+
+void SMCParseEnd_Signatures(SMCParser smc, bool halted, bool failed)
+{
+	g_esGeneral.g_dsState3 = DataState_None;
+	g_esGeneral.g_iIgnoreLevel5 = 0;
+	g_esGeneral.g_sCurrentSection4[0] = '\0';
+
+	vLogMessage(-1, _, "%s Registered %i signatures.", MT_TAG, g_esGeneral.g_iSignatureCount);
+}
+
+void SMCParseStart_Patches(SMCParser smc)
 {
 	g_esGeneral.g_bOverridePatch = true;
 	g_esGeneral.g_dsState2 = DataState_None;
@@ -12292,9 +12341,9 @@ public void SMCParseStart_Patches(SMCParser smc)
 		g_esPatch[iPos].g_iType = 0;
 		g_esPatch[iPos].g_sBypass[0] = '\0';
 		g_esPatch[iPos].g_sCvars[0] = '\0';
+		g_esPatch[iPos].g_sName[0] = '\0';
 		g_esPatch[iPos].g_sOffset[0] = '\0';
 		g_esPatch[iPos].g_sPatch[0] = '\0';
-		g_esPatch[iPos].g_sName[0] = '\0';
 		g_esPatch[iPos].g_sSignature[0] = '\0';
 		g_esPatch[iPos].g_sVerify[0] = '\0';
 
@@ -12306,7 +12355,7 @@ public void SMCParseStart_Patches(SMCParser smc)
 	}
 }
 
-public SMCResult SMCNewSection_Patches(SMCParser smc, const char[] name, bool opt_quotes)
+SMCResult SMCNewSection_Patches(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel4)
 	{
@@ -12375,7 +12424,7 @@ public SMCResult SMCNewSection_Patches(SMCParser smc, const char[] name, bool op
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCKeyValues_Patches(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+SMCResult SMCKeyValues_Patches(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel4)
 	{
@@ -12397,7 +12446,7 @@ public SMCResult SMCKeyValues_Patches(SMCParser smc, const char[] key, const cha
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCEndSection_Patches(SMCParser smc)
+SMCResult SMCEndSection_Patches(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel4)
 	{
@@ -12433,7 +12482,7 @@ public SMCResult SMCEndSection_Patches(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-public void SMCParseEnd_Patches(SMCParser smc, bool halted, bool failed)
+void SMCParseEnd_Patches(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_dsState2 = DataState_None;
 	g_esGeneral.g_iIgnoreLevel4 = 0;
@@ -12443,7 +12492,7 @@ public void SMCParseEnd_Patches(SMCParser smc, bool halted, bool failed)
 	vLogMessage(-1, _, "%s Registered %i patches.", MT_TAG, g_esGeneral.g_iPatchCount);
 }
 
-public void SMCParseStart_Detours(SMCParser smc)
+void SMCParseStart_Detours(SMCParser smc)
 {
 	g_esGeneral.g_bOverrideDetour = true;
 	g_esGeneral.g_dsState = DataState_None;
@@ -12465,7 +12514,7 @@ public void SMCParseStart_Detours(SMCParser smc)
 	}
 }
 
-public SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool opt_quotes)
+SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel3)
 	{
@@ -12476,7 +12525,7 @@ public SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool op
 
 	if (g_esGeneral.g_dsState == DataState_None)
 	{
-		switch (StrEqual(name, MT_DETOUR_SECTION_MAIN, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN2, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN3, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN4, false) || StrEqual(name, MT_DETOUR_SECTION_MAIN5, false))
+		switch (StrEqual(name, MT_DETOURS_SECTION_MAIN, false) || StrEqual(name, MT_DETOURS_SECTION_MAIN2, false) || StrEqual(name, MT_DETOURS_SECTION_MAIN3, false) || StrEqual(name, MT_DETOURS_SECTION_MAIN4, false) || StrEqual(name, MT_DETOURS_SECTION_MAIN5, false))
 		{
 			case true: g_esGeneral.g_dsState = DataState_Start;
 			case false: g_esGeneral.g_iIgnoreLevel3++;
@@ -12499,7 +12548,7 @@ public SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool op
 	}
 	else if (g_esGeneral.g_dsState == DataState_Game)
 	{
-		if (!strncmp(name, MT_DETOUR_SECTION_PREFIX, 9, false))
+		if (!strncmp(name, MT_DETOURS_SECTION_PREFIX, 9, false))
 		{
 			g_esGeneral.g_dsState = DataState_Name;
 
@@ -12534,14 +12583,14 @@ public SMCResult SMCNewSection_Detours(SMCParser smc, const char[] name, bool op
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCKeyValues_Detours(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+SMCResult SMCKeyValues_Detours(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel3)
 	{
 		return SMCParse_Continue;
 	}
 
-	if (g_esGeneral.g_dsState == DataState_Name && !strncmp(g_esGeneral.g_sCurrentSection2, MT_DETOUR_SECTION_PREFIX, 9, false))
+	if (g_esGeneral.g_dsState == DataState_Name && !strncmp(g_esGeneral.g_sCurrentSection2, MT_DETOURS_SECTION_PREFIX, 9, false))
 	{
 		vReadDetourSettings(key, value);
 	}
@@ -12556,7 +12605,7 @@ public SMCResult SMCKeyValues_Detours(SMCParser smc, const char[] key, const cha
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCEndSection_Detours(SMCParser smc)
+SMCResult SMCEndSection_Detours(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel3)
 	{
@@ -12592,7 +12641,7 @@ public SMCResult SMCEndSection_Detours(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-public void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
+void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_dsState = DataState_None;
 	g_esGeneral.g_iIgnoreLevel3 = 0;
@@ -12602,12 +12651,12 @@ public void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
 	vLogMessage(-1, _, "%s Registered %i detours.", MT_TAG, g_esGeneral.g_iDetourCount);
 }
 
-public void SMCParseStart_Config(SMCParser smc)
+void SMCParseStart_Config(SMCParser smc)
 {
 	return;
 }
 
-public SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes)
+SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN5, false))
 	{
@@ -12624,17 +12673,17 @@ public SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCKeyValues_Config(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+SMCResult SMCKeyValues_Config(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCEndSection_Config(SMCParser smc)
+SMCResult SMCEndSection_Config(SMCParser smc)
 {
 	return SMCParse_Continue;
 }
 
-public void SMCParseEnd_Config(SMCParser smc, bool halted, bool failed)
+void SMCParseEnd_Config(SMCParser smc, bool halted, bool failed)
 {
 	return;
 }
@@ -12651,7 +12700,7 @@ void vParseConfig(int client)
 	}
 }
 
-public void SMCParseStart_Parser(SMCParser smc)
+void SMCParseStart_Parser(SMCParser smc)
 {
 	g_esGeneral.g_csState2 = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel2 = 0;
@@ -12663,7 +12712,7 @@ public void SMCParseStart_Parser(SMCParser smc)
 	}
 }
 
-public SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes)
+SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -12767,7 +12816,7 @@ public SMCResult SMCNewSection_Parser(SMCParser smc, const char[] name, bool opt
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -12790,7 +12839,7 @@ public SMCResult SMCKeyValues_Parser(SMCParser smc, const char[] key, const char
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCEndSection_Parser(SMCParser smc)
+SMCResult SMCEndSection_Parser(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel2)
 	{
@@ -12867,7 +12916,7 @@ public SMCResult SMCEndSection_Parser(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-public void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
+void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 {
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -12997,7 +13046,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 	}
 }
 
-public void SMCParseStart_Main(SMCParser smc)
+void SMCParseStart_Main(SMCParser smc)
 {
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel = 0;
@@ -13657,7 +13706,7 @@ public void SMCParseStart_Main(SMCParser smc)
 	Call_Finish();
 }
 
-public SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
+SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -13713,7 +13762,7 @@ public SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_q
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -14388,7 +14437,7 @@ public SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[]
 	return SMCParse_Continue;
 }
 
-public SMCResult SMCEndSection_Main(SMCParser smc)
+SMCResult SMCEndSection_Main(SMCParser smc)
 {
 	if (g_esGeneral.g_iIgnoreLevel)
 	{
@@ -14424,7 +14473,7 @@ public SMCResult SMCEndSection_Main(SMCParser smc)
 	return SMCParse_Continue;
 }
 
-public void SMCParseEnd_Main(SMCParser smc, bool halted, bool failed)
+void SMCParseEnd_Main(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel = 0;
@@ -18090,6 +18139,169 @@ int iGetPatchIndex(const char[] name)
 	}
 
 	return -1;
+}
+
+/**
+ * Dynamic signatures functions
+ **/
+
+void vReadSignatureSettings(const char[] key, const char[] value)
+{
+	int iIndex = g_esGeneral.g_iSignatureCount;
+	g_esSignature[iIndex].g_bLog = !!iGetKeyValueEx(key, "Log", "Log", "Log", "Log", g_esSignature[iIndex].g_bLog, value, 0, 1);
+
+	vGetKeyValueEx(key, "Signature", "Signature", "Signature", "Signature", g_esSignature[iIndex].g_sSignature, sizeof esSignature::g_sSignature, value);
+	vGetKeyValueEx(key, "Offset", "Offset", "Offset", "Offset", g_esSignature[iIndex].g_sOffset, sizeof esSignature::g_sOffset, value);
+	vGetKeyValueEx(key, "Start", "Start", "Start", "Start", g_esSignature[iIndex].g_sStart, sizeof esSignature::g_sStart, value);
+	vGetKeyValueEx(key, "Before", "Before", "Before", "Before", g_esSignature[iIndex].g_sBefore, sizeof esSignature::g_sBefore, value);
+	vGetKeyValueEx(key, "After", "After", "After", "After", g_esSignature[iIndex].g_sAfter, sizeof esSignature::g_sAfter, value);
+}
+
+void vRegisterSignature(const char[] name)
+{
+	int iIndex = g_esGeneral.g_iSignatureCount;
+	g_esGeneral.g_iSignatureCount++;
+
+	if (g_esSignature[iIndex].g_bLog)
+	{
+		vLogMessage(-1, _, "%s Registered the \"%s\" signature.", MT_TAG, name);
+	}
+}
+
+void vRegisterSignatures()
+{
+	char sFilePath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "%s%s.cfg", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_SIGNATURES);
+	if (!MT_FileExists(MT_CONFIG_FILEPATH, (MT_CONFIG_FILE_SIGNATURES ... ".cfg"), sFilePath, sFilePath, sizeof sFilePath))
+	{
+		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
+
+		return;
+	}
+
+	SMCParser smcSignatures = smcSetupParser(sFilePath, SMCParseStart_Signatures, SMCNewSection_Signatures, SMCKeyValues_Signatures, SMCEndSection_Signatures, SMCParseEnd_Signatures);
+	if (smcSignatures != null)
+	{
+		delete smcSignatures;
+	}
+}
+
+void vSetupSignatures()
+{
+	Address adPatch = Address_Null, adPatches[MT_SIGNATURE_LIMIT];
+	int iOffsetPush = 0;
+	for (int iPos = 0; iPos < g_esGeneral.g_iSignatureCount; iPos++)
+	{
+		if (g_esSignature[iPos].g_sName[0] == '\0' || g_esSignature[iPos].g_sSignature[0] == '\0' || g_esSignature[iPos].g_sStart[0] == '\0')
+		{
+			LogError("%s Invalid information for %s (Address: %s) [Start: %s]", MT_TAG, g_esSignature[iPos].g_sName, g_esSignature[iPos].g_sSignature, g_esSignature[iPos].g_sStart);
+
+			continue;
+		}
+
+		adPatches[iPos] = g_esGeneral.g_gdMutantTanks.GetAddress(g_esSignature[iPos].g_sSignature);
+	}
+
+	char sFilePath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sFilePath, sizeof sFilePath, "gamedata/%s.txt", MT_GAMEDATA_TEMP);
+	File fTemp = OpenFile(sFilePath, "w", false);
+	if (fTemp != null)
+	{
+		fTemp.WriteLine("\"Games\"");
+		fTemp.WriteLine("{");
+		fTemp.WriteLine("	\"left4dead2\"");
+		fTemp.WriteLine("	{");
+		fTemp.WriteLine("		\"Addresses\"");
+		fTemp.WriteLine("		{");
+
+		for (int iPos = 0; iPos < g_esGeneral.g_iSignatureCount; iPos++)
+		{
+			adPatch = adPatches[iPos];
+			if (adPatch != Address_Null)
+			{
+				fTemp.WriteLine("			\"%s\"", g_esSignature[iPos].g_sName);
+				fTemp.WriteLine("			{");
+				fTemp.WriteLine("				\"windows\"");
+				fTemp.WriteLine("				{");
+				fTemp.WriteLine("					\"signature\"		\"%s\"", g_esSignature[iPos].g_sName);
+				fTemp.WriteLine("				}");
+				fTemp.WriteLine("			}");
+			}
+		}
+
+		fTemp.WriteLine("		}");
+		fTemp.WriteLine("");
+		fTemp.WriteLine("		\"Signatures\"");
+		fTemp.WriteLine("		{");
+
+		char sAddress[512], sHexAddress[32], sHexBytes[32];
+		for (int iPos = 0; iPos < g_esGeneral.g_iSignatureCount; iPos++)
+		{
+			adPatch = adPatches[iPos];
+			if (adPatch != Address_Null)
+			{
+				FormatEx(sAddress, sizeof sAddress, "%X", adPatch);
+				vReverseAddress(sAddress, sHexAddress, sizeof sHexAddress);
+				FormatEx(sAddress, sizeof sAddress, "%s", g_esSignature[iPos].g_sStart);
+
+				iOffsetPush = g_esGeneral.g_gdMutantTanks.GetOffset(g_esSignature[iPos].g_sOffset);
+				for (int iCount = 0; iCount < iOffsetPush; iCount++ )
+				{
+					StrCat(sAddress, sizeof sAddress, "\\x2A");
+				}
+
+				if (g_esSignature[iPos].g_sBefore[0] != '\0')
+				{
+					StrCat(sAddress, sizeof sAddress, g_esSignature[iPos].g_sBefore);
+				}
+
+				StrCat(sAddress, sizeof sAddress, sHexAddress);
+
+				if (g_esSignature[iPos].g_sAfter[0] != '\0')
+				{
+					StrCat(sAddress, sizeof sAddress, g_esSignature[iPos].g_sAfter);
+				}
+
+				fTemp.WriteLine("			\"%s\"", g_esSignature[iPos].g_sName);
+				fTemp.WriteLine("			{");
+				fTemp.WriteLine("				\"library\"	\"server\"");
+				fTemp.WriteLine("				\"windows\"	\"%s\"", sAddress);
+				fTemp.WriteLine("			}");
+
+				if (g_esSignature[iPos].g_bLog)
+				{
+					strcopy(sHexBytes, sizeof sHexBytes, sHexAddress);
+					ReplaceString(sHexBytes, sizeof sHexBytes, "\\x", " ", false);
+					TrimString(sHexBytes);
+					vLogMessage(-1, _, "%s Storing dynamic signature for \"%s\": %s - %s", MT_TAG, g_esSignature[iPos].g_sName, sHexAddress, sHexBytes);
+				}
+			}
+		}
+
+		fTemp.WriteLine("		}");
+		fTemp.WriteLine("	}");
+		fTemp.WriteLine("}");
+		fTemp.Flush();
+
+		delete fTemp;
+	}
+}
+
+void vReverseAddress(const char[] bytes, char[] buffer, int size)
+{
+	buffer[0] = 0;
+	char sByte[3];
+	for (int iPos = (strlen(bytes) - 2); iPos >= -1; iPos -= 2)
+	{
+		strcopy(sByte, ((iPos >= 1) ? 3 : (iPos + 3)), bytes[((iPos >= 0) ? iPos : 0)]);
+		StrCat(buffer, size, "\\x");
+		if (strlen(sByte) == 1)
+		{
+			StrCat(buffer, size, "0");
+		}
+
+		StrCat(buffer, size, sByte);
+	}
 }
 
 /**

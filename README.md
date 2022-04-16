@@ -266,7 +266,9 @@ mt_pluginenabled "1"
 5. Backup `mutant_tanks.cfg` in `addons/sourcemod/data/mutant_tanks` folder.
 6. Delete `mutant_tanks_detours.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
 7. Delete `mutant_tanks_patches.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
-8. Follow the Installation guide above. (Only for upgrading to newer versions.)
+8. Delete `mutant_tanks_signatures.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
+9. Delete `mutant_tanks_updater.txt` from `addons/sourcemod` folder.
+10. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ## Disabling
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
