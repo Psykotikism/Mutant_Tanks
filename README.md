@@ -249,6 +249,8 @@ mt_pluginenabled "1"
 4. Drag the files to `compile.exe` (all at once) or `spcomp.exe` (one by one).
 - If `compile.exe` is used, the plugins will be created inside the `scripting/compiled` folder.
 - If `spcomp.exe` is used, the plugins will be created inside the `scripting` folder.
+5. Move the plugin(s) to the `plugins/mutant_tanks` folder.
+- If the `mutant_tanks` folder isn't in the `plugins` folder, create one.
 
 ## Uninstalling/Upgrading to Newer Versions
 1. Delete `mutant_tanks` folder from:

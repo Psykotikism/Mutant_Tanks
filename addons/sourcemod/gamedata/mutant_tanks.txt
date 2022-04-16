@@ -3493,6 +3493,36 @@
 				}
 				"read"		"0"
 			}
+
+			/**
+			 * CTerrorGameRules::IsScavengeMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsScavengeMode" to find the address.
+			 **/
+			/*"IsScavengeModeString"
+			{
+				"signature"	"CTerrorGameRules::IsScavengeMode::String"
+			}*/
+
+			/**
+			 * CTerrorGameRules::IsSurvivalMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsSurvivalMode" to find the address.
+			 **/
+			/*"IsSurvivalModeString"
+			{
+				"signature"	"CTerrorGameRules::IsSurvivalMode::String"
+			}*/
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsVersusMode" to find the address.
+			 **/
+			/*"IsVersusModeString"
+			{
+				"signature"	"CTerrorGameRules::IsVersusMode::String"
+			}*/
 		}
 
 		"Offsets"
@@ -3635,6 +3665,45 @@
 				"mac"		"212" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"122" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
 			}
+
+			/**
+			 * CTerrorGameRules::IsScavengeMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "scavenge" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			/*"CTerrorGameRules::IsScavengeMode::Push"
+			{
+				"windows"	"60"
+			}*/
+
+			/**
+			 * CTerrorGameRules::IsSurvivalMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "survival" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			/*"CTerrorGameRules::IsSurvivalMode::Push"
+			{
+				"windows"	"60"
+			}*/
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "versus" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			/*"CTerrorGameRules::IsVersusMode::Push"
+			{
+				"windows"	"60"
+			}*/
 
 			/**
 			 * CTerrorGun::EquipSecondWeapon()
@@ -4764,6 +4833,17 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsScavengeMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsScavengeMode" function dynamically.
+			 **/
+			/*"CTerrorGameRules::IsScavengeMode::String"
+			{
+				"library"	"server"
+				"windows"	"scavenge"
+			}*/
+
+			/**
 			 * CTerrorGameRules::IsSurvivalMode()
 			 *
 			 * How to find on Windows:
@@ -4780,6 +4860,17 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsSurvivalMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsSurvivalMode" function dynamically.
+			 **/
+			/*"CTerrorGameRules::IsSurvivalMode::String"
+			{
+				"library"	"server"
+				"windows"	"survival"
+			}*/
+
+			/**
 			 * CTerrorGameRules::IsVersusMode()
 			 *
 			 * How to find on Windows:
@@ -4794,6 +4885,17 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x2A\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x2A\x70"
 						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 ? ? ? ? ? ? ? ? ? 74 ? B8 ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? B8 ? ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? ? 70 */
 			}
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsVersusMode" function dynamically.
+			 **/
+			/*"CTerrorGameRules::IsVersusMode::String"
+			{
+				"library"	"server"
+				"windows"	"versus"
+			}*/
 
 			/**
 			 * CTerrorGun::EquipSecondWeapon()
