@@ -46,13 +46,19 @@
 - Added a `Voice Pitch` option to the `sm_mt_admin` command's panel.
 - Added a `Voice Pitch Visual` option to the `sm_mt_prefs` command's menu.
 
+#### Game Data
+- L4D2: The following functions' signatures are now dynamically generated (Thanks to `Silvers` for the code!):
+	- `CTerrorGameRules::IsScavengeMode`
+	- `CTerrorGameRules::IsSurvivalMode`
+	- `CTerrorGameRules::IsVersusMode`
+
 #### Settings
 - Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
 	- `Boss Base Type`
 	- `Boss Limit`
 - Added more options to the `Item Mode` setting.
 - Added the `Incap Damage Multiplier` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Requested by `Shao`.)
-- Added the `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections.
+- Added the `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections. (Unused for now.)
 - Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
 	- `Human Multiplier Mode`
 	- `Health Percentage Multiplier`
@@ -79,6 +85,12 @@
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.11.0.6806` compiler.
+
+#### Additions
+- A file named `mutant_tanks_temp.txt` will now be automatically created, handled, and maintained by the core plugin.
+
+#### Requirements
+- Windows users: The `mutant_tanks_signatures.cfg` config file is now used by the core plugin.
 
 #### Compilation
 - Added compiler warnings for the following plugin source files that notify users when one or more abilities are disabled/excluded (Thanks to `Marttt` for the idea!):
