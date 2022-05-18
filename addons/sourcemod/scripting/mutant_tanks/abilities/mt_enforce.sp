@@ -63,6 +63,7 @@ enum struct esEnforcePlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flEnforceChance;
 	float g_flEnforceDuration;
 	float g_flEnforceRange;
@@ -74,16 +75,20 @@ enum struct esEnforcePlayer
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iEnforceAbility;
+	int g_iEnforceCooldown;
 	int g_iEnforceEffect;
 	int g_iEnforceHit;
 	int g_iEnforceHitMode;
 	int g_iEnforceMessage;
+	int g_iEnforceRangeCooldown;
 	int g_iEnforceWeaponSlots;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iSlot;
 	int g_iTankType;
@@ -93,6 +98,7 @@ esEnforcePlayer g_esEnforcePlayer[MAXPLAYERS + 1];
 
 enum struct esEnforceAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flEnforceChance;
 	float g_flEnforceDuration;
 	float g_flEnforceRange;
@@ -102,14 +108,17 @@ enum struct esEnforceAbility
 	int g_iAccessFlags;
 	int g_iComboAbility;
 	int g_iEnforceAbility;
+	int g_iEnforceCooldown;
 	int g_iEnforceEffect;
 	int g_iEnforceHit;
 	int g_iEnforceHitMode;
 	int g_iEnforceMessage;
+	int g_iEnforceRangeCooldown;
 	int g_iEnforceWeaponSlots;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -118,6 +127,7 @@ esEnforceAbility g_esEnforceAbility[MT_MAXTYPES + 1];
 
 enum struct esEnforceCache
 {
+	float g_flCloseAreasOnly;
 	float g_flEnforceChance;
 	float g_flEnforceDuration;
 	float g_flEnforceRange;
@@ -126,14 +136,17 @@ enum struct esEnforceCache
 
 	int g_iComboAbility;
 	int g_iEnforceAbility;
+	int g_iEnforceCooldown;
 	int g_iEnforceEffect;
 	int g_iEnforceHit;
 	int g_iEnforceHitMode;
 	int g_iEnforceMessage;
+	int g_iEnforceRangeCooldown;
 	int g_iEnforceWeaponSlots;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -245,6 +258,7 @@ void vEnforceMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -260,10 +274,11 @@ int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esEnforceCache[param1].g_iEnforceAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esEnforceCache[param1].g_iHumanAmmo - g_esEnforcePlayer[param1].g_iAmmoCount), g_esEnforceCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esEnforceCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esEnforceCache[param1].g_iHumanAbility == 1) ? g_esEnforceCache[param1].g_iHumanCooldown : g_esEnforceCache[param1].g_iEnforceCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "EnforceDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esEnforceCache[param1].g_flEnforceDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esEnforceCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esEnforceCache[param1].g_iHumanAbility == 1) ? g_esEnforceCache[param1].g_iHumanRangeCooldown : g_esEnforceCache[param1].g_iEnforceRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -293,6 +308,7 @@ int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -443,11 +459,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ENFORCE_SECTION, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ENFORCE_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -471,7 +489,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -522,21 +540,25 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esEnforceAbility[iIndex].g_iAccessFlags = 0;
 				g_esEnforceAbility[iIndex].g_iImmunityFlags = 0;
+				g_esEnforceAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esEnforceAbility[iIndex].g_iComboAbility = 0;
 				g_esEnforceAbility[iIndex].g_iHumanAbility = 0;
 				g_esEnforceAbility[iIndex].g_iHumanAmmo = 5;
-				g_esEnforceAbility[iIndex].g_iHumanCooldown = 30;
+				g_esEnforceAbility[iIndex].g_iHumanCooldown = 0;
+				g_esEnforceAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esEnforceAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esEnforceAbility[iIndex].g_iRequiresHumans = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceAbility = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceEffect = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceMessage = 0;
 				g_esEnforceAbility[iIndex].g_flEnforceChance = 33.3;
+				g_esEnforceAbility[iIndex].g_iEnforceCooldown = 0;
 				g_esEnforceAbility[iIndex].g_flEnforceDuration = 5.0;
 				g_esEnforceAbility[iIndex].g_iEnforceHit = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceHitMode = 0;
 				g_esEnforceAbility[iIndex].g_flEnforceRange = 150.0;
 				g_esEnforceAbility[iIndex].g_flEnforceRangeChance = 15.0;
+				g_esEnforceAbility[iIndex].g_iEnforceRangeCooldown = 0;
 				g_esEnforceAbility[iIndex].g_iEnforceWeaponSlots = 0;
 			}
 		}
@@ -548,16 +570,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esEnforcePlayer[iPlayer].g_iAccessFlags = 0;
 					g_esEnforcePlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esEnforcePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esEnforcePlayer[iPlayer].g_iComboAbility = 0;
 					g_esEnforcePlayer[iPlayer].g_iHumanAbility = 0;
 					g_esEnforcePlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esEnforcePlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esEnforcePlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esEnforcePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esEnforcePlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceAbility = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceEffect = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceMessage = 0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceChance = 0.0;
+					g_esEnforcePlayer[iPlayer].g_iEnforceCooldown = 0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceDuration = 0.0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceHit = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceHitMode = 0;
@@ -578,21 +603,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esEnforcePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforcePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esEnforcePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforcePlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esEnforcePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforcePlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esEnforcePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforcePlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esEnforcePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforcePlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esEnforcePlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforcePlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esEnforcePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforcePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esEnforcePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforcePlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esEnforcePlayer[admin].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforcePlayer[admin].g_iEnforceAbility, value, 0, 1);
 		g_esEnforcePlayer[admin].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforcePlayer[admin].g_iEnforceEffect, value, 0, 7);
 		g_esEnforcePlayer[admin].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforcePlayer[admin].g_iEnforceMessage, value, 0, 3);
 		g_esEnforcePlayer[admin].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforcePlayer[admin].g_flEnforceChance, value, 0.0, 100.0);
+		g_esEnforcePlayer[admin].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforcePlayer[admin].g_iEnforceCooldown, value, 0, 99999);
 		g_esEnforcePlayer[admin].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforcePlayer[admin].g_flEnforceDuration, value, 0.1, 99999.0);
 		g_esEnforcePlayer[admin].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforcePlayer[admin].g_iEnforceHit, value, 0, 1);
 		g_esEnforcePlayer[admin].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforcePlayer[admin].g_iEnforceHitMode, value, 0, 2);
 		g_esEnforcePlayer[admin].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforcePlayer[admin].g_flEnforceRange, value, 1.0, 99999.0);
 		g_esEnforcePlayer[admin].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforcePlayer[admin].g_flEnforceRangeChance, value, 0.0, 100.0);
+		g_esEnforcePlayer[admin].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforcePlayer[admin].g_iEnforceRangeCooldown, value, 0, 99999);
 		g_esEnforcePlayer[admin].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforcePlayer[admin].g_iEnforceWeaponSlots, value, 0, 31);
 		g_esEnforcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esEnforcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -600,21 +629,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esEnforceAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esEnforceAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esEnforceAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esEnforceAbility[type].g_iComboAbility, value, 0, 1);
 		g_esEnforceAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esEnforceAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esEnforceAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esEnforceAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esEnforceAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esEnforceAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esEnforceAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esEnforceAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esEnforceAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esEnforceAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esEnforceAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esEnforceAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esEnforceAbility[type].g_iEnforceAbility = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esEnforceAbility[type].g_iEnforceAbility, value, 0, 1);
 		g_esEnforceAbility[type].g_iEnforceEffect = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esEnforceAbility[type].g_iEnforceEffect, value, 0, 7);
 		g_esEnforceAbility[type].g_iEnforceMessage = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esEnforceAbility[type].g_iEnforceMessage, value, 0, 3);
 		g_esEnforceAbility[type].g_flEnforceChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esEnforceAbility[type].g_flEnforceChance, value, 0.0, 100.0);
+		g_esEnforceAbility[type].g_iEnforceCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceCooldown", "Enforce Cooldown", "Enforce_Cooldown", "cooldown", g_esEnforceAbility[type].g_iEnforceCooldown, value, 0, 99999);
 		g_esEnforceAbility[type].g_flEnforceDuration = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esEnforceAbility[type].g_flEnforceDuration, value, 0.1, 99999.0);
 		g_esEnforceAbility[type].g_iEnforceHit = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esEnforceAbility[type].g_iEnforceHit, value, 0, 1);
 		g_esEnforceAbility[type].g_iEnforceHitMode = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esEnforceAbility[type].g_iEnforceHitMode, value, 0, 2);
 		g_esEnforceAbility[type].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceAbility[type].g_flEnforceRange, value, 1.0, 99999.0);
 		g_esEnforceAbility[type].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceAbility[type].g_flEnforceRangeChance, value, 0.0, 100.0);
+		g_esEnforceAbility[type].g_iEnforceRangeCooldown = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceRangeCooldown", "Enforce Range Cooldown", "Enforce_Range_Cooldown", "rangecooldown", g_esEnforceAbility[type].g_iEnforceRangeCooldown, value, 0, 99999);
 		g_esEnforceAbility[type].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceAbility[type].g_iEnforceWeaponSlots, value, 0, 31);
 		g_esEnforceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esEnforceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTION, MT_ENFORCE_SECTION2, MT_ENFORCE_SECTION3, MT_ENFORCE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -628,20 +661,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esEnforceCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flCloseAreasOnly, g_esEnforceAbility[type].g_flCloseAreasOnly);
+	g_esEnforceCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iComboAbility, g_esEnforceAbility[type].g_iComboAbility);
 	g_esEnforceCache[tank].g_flEnforceChance = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flEnforceChance, g_esEnforceAbility[type].g_flEnforceChance);
 	g_esEnforceCache[tank].g_flEnforceDuration = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flEnforceDuration, g_esEnforceAbility[type].g_flEnforceDuration);
 	g_esEnforceCache[tank].g_flEnforceRange = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flEnforceRange, g_esEnforceAbility[type].g_flEnforceRange);
 	g_esEnforceCache[tank].g_flEnforceRangeChance = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flEnforceRangeChance, g_esEnforceAbility[type].g_flEnforceRangeChance);
 	g_esEnforceCache[tank].g_iEnforceAbility = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceAbility, g_esEnforceAbility[type].g_iEnforceAbility);
+	g_esEnforceCache[tank].g_iEnforceCooldown = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceCooldown, g_esEnforceAbility[type].g_iEnforceCooldown);
 	g_esEnforceCache[tank].g_iEnforceEffect = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceEffect, g_esEnforceAbility[type].g_iEnforceEffect);
 	g_esEnforceCache[tank].g_iEnforceHit = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceHit, g_esEnforceAbility[type].g_iEnforceHit);
 	g_esEnforceCache[tank].g_iEnforceHitMode = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceHitMode, g_esEnforceAbility[type].g_iEnforceHitMode);
 	g_esEnforceCache[tank].g_iEnforceMessage = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceMessage, g_esEnforceAbility[type].g_iEnforceMessage);
+	g_esEnforceCache[tank].g_iEnforceRangeCooldown = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceRangeCooldown, g_esEnforceAbility[type].g_iEnforceRangeCooldown);
 	g_esEnforceCache[tank].g_iEnforceWeaponSlots = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iEnforceWeaponSlots, g_esEnforceAbility[type].g_iEnforceWeaponSlots);
-	g_esEnforceCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iComboAbility, g_esEnforceAbility[type].g_iComboAbility);
 	g_esEnforceCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iHumanAbility, g_esEnforceAbility[type].g_iHumanAbility);
 	g_esEnforceCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iHumanAmmo, g_esEnforceAbility[type].g_iHumanAmmo);
 	g_esEnforceCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iHumanCooldown, g_esEnforceAbility[type].g_iHumanCooldown);
+	g_esEnforceCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iHumanRangeCooldown, g_esEnforceAbility[type].g_iHumanRangeCooldown);
 	g_esEnforceCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flOpenAreasOnly, g_esEnforceAbility[type].g_flOpenAreasOnly);
 	g_esEnforceCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_iRequiresHumans, g_esEnforceAbility[type].g_iRequiresHumans);
 	g_esEnforcePlayer[tank].g_iTankType = apply ? type : 0;
@@ -733,22 +770,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esEnforceCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esEnforceCache[tank].g_iEnforceAbility == 1 && g_esEnforceCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esEnforceCache[tank].g_iEnforceAbility == 1 && g_esEnforceCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vEnforceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3", (g_esEnforcePlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esEnforcePlayer[tank].g_iRangeCooldown == -1 || g_esEnforcePlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vEnforceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3", (g_esEnforcePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -768,15 +802,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveEnforce(tank);
 }
 
-void vEnforceCopyStats2(int oldTank, int newTank)
-{
-	g_esEnforcePlayer[newTank].g_iAmmoCount = g_esEnforcePlayer[oldTank].g_iAmmoCount;
-	g_esEnforcePlayer[newTank].g_iCooldown = g_esEnforcePlayer[oldTank].g_iCooldown;
-}
-
 void vEnforceAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esEnforceCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -788,8 +816,8 @@ void vEnforceAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esEnforceCache[tank].g_flEnforceRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esEnforceCache[tank].g_flEnforceRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esEnforceCache[tank].g_flEnforceRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esEnforceCache[tank].g_flEnforceRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -821,14 +849,14 @@ void vEnforceAbility(int tank, float random, int pos = -1)
 
 void vEnforceHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esEnforcePlayer[tank].g_iTankType, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iImmunityFlags, g_esEnforcePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esEnforceCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esEnforceCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esEnforcePlayer[tank].g_iTankType) || (g_esEnforceCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esEnforceCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esEnforcePlayer[tank].g_iTankType, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iImmunityFlags, g_esEnforcePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esEnforcePlayer[tank].g_iAmmoCount < g_esEnforceCache[tank].g_iHumanAmmo && g_esEnforceCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esEnforcePlayer[tank].g_iAmmoCount < g_esEnforceCache[tank].g_iHumanAmmo && g_esEnforceCache[tank].g_iHumanAmmo > 0))
 		{
 			int iTime = GetTime();
 			if (random <= chance && !g_esEnforcePlayer[survivor].g_bAffected)
@@ -836,13 +864,29 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 				g_esEnforcePlayer[survivor].g_bAffected = true;
 				g_esEnforcePlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esEnforcePlayer[tank].g_iRangeCooldown == -1 || g_esEnforcePlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esEnforcePlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility == 1)
+					{
+						g_esEnforcePlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman", g_esEnforcePlayer[tank].g_iAmmoCount, g_esEnforceCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman", g_esEnforcePlayer[tank].g_iAmmoCount, g_esEnforceCache[tank].g_iHumanAmmo);
+					}
 
-					g_esEnforcePlayer[tank].g_iCooldown = (g_esEnforcePlayer[tank].g_iAmmoCount < g_esEnforceCache[tank].g_iHumanAmmo && g_esEnforceCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esEnforceCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esEnforceCache[tank].g_iEnforceRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility == 1) ? g_esEnforceCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esEnforcePlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esEnforcePlayer[tank].g_iRangeCooldown != -1 && g_esEnforcePlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman5", (g_esEnforcePlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esEnforceCache[tank].g_iEnforceCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility == 1) ? g_esEnforceCache[tank].g_iHumanCooldown : iCooldown;
+					g_esEnforcePlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esEnforcePlayer[tank].g_iCooldown != -1 && g_esEnforcePlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman5", (g_esEnforcePlayer[tank].g_iCooldown - iTime));
@@ -879,7 +923,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 					}
 				}
 
-				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esEnforceCache[tank].g_flEnforceDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esEnforceCache[tank].g_flEnforceDuration;
 				DataPack dpStopEnforce;
 				CreateDataTimer(flDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopEnforce.WriteCell(GetClientUserId(survivor));
@@ -896,7 +940,7 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, (g_esEnforcePlayer[survivor].g_iSlot + 1));
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esEnforcePlayer[tank].g_iCooldown == -1 || g_esEnforcePlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esEnforcePlayer[tank].g_iRangeCooldown == -1 || g_esEnforcePlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility == 1 && !g_esEnforcePlayer[tank].g_bFailed)
 				{
@@ -913,6 +957,13 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceAmmo");
 		}
 	}
+}
+
+void vEnforceCopyStats2(int oldTank, int newTank)
+{
+	g_esEnforcePlayer[newTank].g_iAmmoCount = g_esEnforcePlayer[oldTank].g_iAmmoCount;
+	g_esEnforcePlayer[newTank].g_iCooldown = g_esEnforcePlayer[oldTank].g_iCooldown;
+	g_esEnforcePlayer[newTank].g_iRangeCooldown = g_esEnforcePlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveEnforce(int tank)
@@ -951,6 +1002,7 @@ void vEnforceReset2(int tank)
 	g_esEnforcePlayer[tank].g_bNoAmmo = false;
 	g_esEnforcePlayer[tank].g_iAmmoCount = 0;
 	g_esEnforcePlayer[tank].g_iCooldown = -1;
+	g_esEnforcePlayer[tank].g_iRangeCooldown = -1;
 }
 
 void vEnforceReset3(int survivor)

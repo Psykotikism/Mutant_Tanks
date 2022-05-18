@@ -69,23 +69,28 @@ enum struct esChokePlayer
 	float g_flChokeDelay;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iChokeAbility;
+	int g_iChokeCooldown;
 	int g_iChokeDuration;
 	int g_iChokeEffect;
 	int g_iChokeHit;
 	int g_iChokeHitMode;
 	int g_iChokeMessage;
+	int g_iChokeRangeCooldown;
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -99,19 +104,23 @@ enum struct esChokeAbility
 	float g_flChokeDelay;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iChokeAbility;
+	int g_iChokeCooldown;
 	int g_iChokeDuration;
 	int g_iChokeEffect;
 	int g_iChokeHit;
 	int g_iChokeHitMode;
 	int g_iChokeMessage;
+	int g_iChokeRangeCooldown;
 	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -125,18 +134,22 @@ enum struct esChokeCache
 	float g_flChokeDelay;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iChokeAbility;
+	int g_iChokeCooldown;
 	int g_iChokeDuration;
 	int g_iChokeEffect;
 	int g_iChokeHit;
 	int g_iChokeHitMode;
 	int g_iChokeMessage;
+	int g_iChokeRangeCooldown;
 	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -248,6 +261,7 @@ void vChokeMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -263,10 +277,11 @@ int iChokeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esChokeCache[param1].g_iChokeAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esChokeCache[param1].g_iHumanAmmo - g_esChokePlayer[param1].g_iAmmoCount), g_esChokeCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esChokeCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esChokeCache[param1].g_iHumanAbility == 1) ? g_esChokeCache[param1].g_iHumanCooldown : g_esChokeCache[param1].g_iChokeCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ChokeDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esChokeCache[param1].g_iChokeDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esChokeCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esChokeCache[param1].g_iHumanAbility == 1) ? g_esChokeCache[param1].g_iHumanRangeCooldown : g_esChokeCache[param1].g_iChokeRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -296,6 +311,7 @@ int iChokeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -448,11 +464,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_CHOKE_SECTION, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION2, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION3, false) || StrEqual(sSubset[iPos], MT_CHOKE_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -476,7 +494,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -527,16 +545,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esChokeAbility[iIndex].g_iAccessFlags = 0;
 				g_esChokeAbility[iIndex].g_iImmunityFlags = 0;
+				g_esChokeAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esChokeAbility[iIndex].g_iComboAbility = 0;
 				g_esChokeAbility[iIndex].g_iHumanAbility = 0;
 				g_esChokeAbility[iIndex].g_iHumanAmmo = 5;
-				g_esChokeAbility[iIndex].g_iHumanCooldown = 30;
+				g_esChokeAbility[iIndex].g_iHumanCooldown = 0;
+				g_esChokeAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esChokeAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esChokeAbility[iIndex].g_iRequiresHumans = 0;
 				g_esChokeAbility[iIndex].g_iChokeAbility = 0;
 				g_esChokeAbility[iIndex].g_iChokeEffect = 0;
 				g_esChokeAbility[iIndex].g_iChokeMessage = 0;
 				g_esChokeAbility[iIndex].g_flChokeChance = 33.3;
+				g_esChokeAbility[iIndex].g_iChokeCooldown = 0;
 				g_esChokeAbility[iIndex].g_flChokeDamage = 5.0;
 				g_esChokeAbility[iIndex].g_flChokeDelay = 1.0;
 				g_esChokeAbility[iIndex].g_iChokeDuration = 5;
@@ -544,6 +565,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esChokeAbility[iIndex].g_iChokeHitMode = 0;
 				g_esChokeAbility[iIndex].g_flChokeRange = 150.0;
 				g_esChokeAbility[iIndex].g_flChokeRangeChance = 15.0;
+				g_esChokeAbility[iIndex].g_iChokeRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -554,16 +576,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esChokePlayer[iPlayer].g_iAccessFlags = 0;
 					g_esChokePlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esChokePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esChokePlayer[iPlayer].g_iComboAbility = 0;
 					g_esChokePlayer[iPlayer].g_iHumanAbility = 0;
 					g_esChokePlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esChokePlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esChokePlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esChokePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esChokePlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esChokePlayer[iPlayer].g_iChokeAbility = 0;
 					g_esChokePlayer[iPlayer].g_iChokeEffect = 0;
 					g_esChokePlayer[iPlayer].g_iChokeMessage = 0;
 					g_esChokePlayer[iPlayer].g_flChokeChance = 0.0;
+					g_esChokePlayer[iPlayer].g_iChokeCooldown = 0;
 					g_esChokePlayer[iPlayer].g_flChokeDamage = 0.0;
 					g_esChokePlayer[iPlayer].g_flChokeDelay = 0.0;
 					g_esChokePlayer[iPlayer].g_iChokeDuration = 0;
@@ -585,16 +610,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esChokePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esChokePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esChokePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esChokePlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esChokePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esChokePlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esChokePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esChokePlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esChokePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esChokePlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esChokePlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esChokePlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esChokePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esChokePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esChokePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esChokePlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esChokePlayer[admin].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokePlayer[admin].g_iChokeAbility, value, 0, 1);
 		g_esChokePlayer[admin].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokePlayer[admin].g_iChokeEffect, value, 0, 7);
 		g_esChokePlayer[admin].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokePlayer[admin].g_iChokeMessage, value, 0, 3);
 		g_esChokePlayer[admin].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokePlayer[admin].g_flChokeChance, value, 0.0, 100.0);
+		g_esChokePlayer[admin].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokePlayer[admin].g_iChokeCooldown, value, 0, 99999);
 		g_esChokePlayer[admin].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokePlayer[admin].g_flChokeDamage, value, 1.0, 99999.0);
 		g_esChokePlayer[admin].g_flChokeDelay = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esChokePlayer[admin].g_flChokeDelay, value, 0.1, 99999.0);
 		g_esChokePlayer[admin].g_iChokeDuration = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esChokePlayer[admin].g_iChokeDuration, value, 1, 99999);
@@ -602,22 +630,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esChokePlayer[admin].g_iChokeHitMode = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esChokePlayer[admin].g_iChokeHitMode, value, 0, 2);
 		g_esChokePlayer[admin].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokePlayer[admin].g_flChokeRange, value, 1.0, 99999.0);
 		g_esChokePlayer[admin].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokePlayer[admin].g_flChokeRangeChance, value, 0.0, 100.0);
+		g_esChokePlayer[admin].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokePlayer[admin].g_iChokeRangeCooldown, value, 0, 99999);
 		g_esChokePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esChokePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esChokeAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esChokeAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esChokeAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esChokeAbility[type].g_iComboAbility, value, 0, 1);
 		g_esChokeAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esChokeAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esChokeAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esChokeAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esChokeAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esChokeAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esChokeAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esChokeAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esChokeAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esChokeAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esChokeAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esChokeAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esChokeAbility[type].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokeAbility[type].g_iChokeAbility, value, 0, 1);
 		g_esChokeAbility[type].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokeAbility[type].g_iChokeEffect, value, 0, 7);
 		g_esChokeAbility[type].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokeAbility[type].g_iChokeMessage, value, 0, 3);
 		g_esChokeAbility[type].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokeAbility[type].g_flChokeChance, value, 0.0, 100.0);
+		g_esChokeAbility[type].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokeAbility[type].g_iChokeCooldown, value, 0, 99999);
 		g_esChokeAbility[type].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokeAbility[type].g_flChokeDamage, value, 1.0, 99999.0);
 		g_esChokeAbility[type].g_flChokeDelay = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esChokeAbility[type].g_flChokeDelay, value, 0.1, 99999.0);
 		g_esChokeAbility[type].g_iChokeDuration = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esChokeAbility[type].g_iChokeDuration, value, 1, 99999);
@@ -625,6 +657,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esChokeAbility[type].g_iChokeHitMode = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esChokeAbility[type].g_iChokeHitMode, value, 0, 2);
 		g_esChokeAbility[type].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokeAbility[type].g_flChokeRange, value, 1.0, 99999.0);
 		g_esChokeAbility[type].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokeAbility[type].g_flChokeRangeChance, value, 0.0, 100.0);
+		g_esChokeAbility[type].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokeAbility[type].g_iChokeRangeCooldown, value, 0, 99999);
 		g_esChokeAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esChokeAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -643,15 +676,19 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esChokeCache[tank].g_flChokeRange = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRange, g_esChokeAbility[type].g_flChokeRange);
 	g_esChokeCache[tank].g_flChokeRangeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeRangeChance, g_esChokeAbility[type].g_flChokeRangeChance);
 	g_esChokeCache[tank].g_iChokeAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeAbility, g_esChokeAbility[type].g_iChokeAbility);
+	g_esChokeCache[tank].g_iChokeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeCooldown, g_esChokeAbility[type].g_iChokeCooldown);
 	g_esChokeCache[tank].g_iChokeDuration = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeDuration, g_esChokeAbility[type].g_iChokeDuration);
 	g_esChokeCache[tank].g_iChokeEffect = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeEffect, g_esChokeAbility[type].g_iChokeEffect);
 	g_esChokeCache[tank].g_iChokeHit = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHit, g_esChokeAbility[type].g_iChokeHit);
 	g_esChokeCache[tank].g_iChokeHitMode = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeHitMode, g_esChokeAbility[type].g_iChokeHitMode);
 	g_esChokeCache[tank].g_iChokeMessage = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeMessage, g_esChokeAbility[type].g_iChokeMessage);
+	g_esChokeCache[tank].g_iChokeRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iChokeRangeCooldown, g_esChokeAbility[type].g_iChokeRangeCooldown);
+	g_esChokeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flCloseAreasOnly, g_esChokeAbility[type].g_flCloseAreasOnly);
 	g_esChokeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iComboAbility, g_esChokeAbility[type].g_iComboAbility);
 	g_esChokeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAbility, g_esChokeAbility[type].g_iHumanAbility);
 	g_esChokeCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanAmmo, g_esChokeAbility[type].g_iHumanAmmo);
 	g_esChokeCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanCooldown, g_esChokeAbility[type].g_iHumanCooldown);
+	g_esChokeCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iHumanRangeCooldown, g_esChokeAbility[type].g_iHumanRangeCooldown);
 	g_esChokeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flOpenAreasOnly, g_esChokeAbility[type].g_flOpenAreasOnly);
 	g_esChokeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_iRequiresHumans, g_esChokeAbility[type].g_iRequiresHumans);
 	g_esChokePlayer[tank].g_iTankType = apply ? type : 0;
@@ -774,22 +811,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esChokeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esChokeCache[tank].g_iChokeAbility == 1 && g_esChokeCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esChokeCache[tank].g_iChokeAbility == 1 && g_esChokeCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman3", (g_esChokePlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esChokePlayer[tank].g_iRangeCooldown == -1 || g_esChokePlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman3", (g_esChokePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -811,7 +845,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vChokeAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esChokeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -823,8 +857,8 @@ void vChokeAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esChokeCache[tank].g_flChokeRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esChokeCache[tank].g_flChokeRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esChokeCache[tank].g_flChokeRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esChokeCache[tank].g_flChokeRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -856,14 +890,14 @@ void vChokeAbility(int tank, float random, int pos = -1)
 
 void vChokeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esChokePlayer[tank].g_iTankType, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esChokeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esChokeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esChokePlayer[tank].g_iTankType) || (g_esChokeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esChokeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esChokePlayer[tank].g_iTankType, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0))
 		{
 			int iTime = GetTime();
 			if (random <= chance && !g_esChokePlayer[survivor].g_bAffected)
@@ -871,13 +905,29 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 				g_esChokePlayer[survivor].g_bAffected = true;
 				g_esChokePlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esChokePlayer[tank].g_iRangeCooldown == -1 || g_esChokePlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esChokePlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1)
+					{
+						g_esChokePlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman", g_esChokePlayer[tank].g_iAmmoCount, g_esChokeCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman", g_esChokePlayer[tank].g_iAmmoCount, g_esChokeCache[tank].g_iHumanAmmo);
+					}
 
-					g_esChokePlayer[tank].g_iCooldown = (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esChokeCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esChokeCache[tank].g_iChokeRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1) ? g_esChokeCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esChokePlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esChokePlayer[tank].g_iRangeCooldown != -1 && g_esChokePlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman5", (g_esChokePlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esChokeCache[tank].g_iChokeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1) ? g_esChokeCache[tank].g_iHumanCooldown : iCooldown;
+					g_esChokePlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esChokePlayer[tank].g_iCooldown != -1 && g_esChokePlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman5", (g_esChokePlayer[tank].g_iCooldown - iTime));
@@ -904,7 +954,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Choke", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esChokePlayer[tank].g_iCooldown == -1 || g_esChokePlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esChokePlayer[tank].g_iRangeCooldown == -1 || g_esChokePlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1 && !g_esChokePlayer[tank].g_bFailed)
 				{
@@ -927,6 +977,7 @@ void vChokeCopyStats2(int oldTank, int newTank)
 {
 	g_esChokePlayer[newTank].g_iAmmoCount = g_esChokePlayer[oldTank].g_iAmmoCount;
 	g_esChokePlayer[newTank].g_iCooldown = g_esChokePlayer[oldTank].g_iCooldown;
+	g_esChokePlayer[newTank].g_iRangeCooldown = g_esChokePlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveChoke(int tank)
@@ -981,6 +1032,7 @@ void vChokeReset3(int tank)
 	g_esChokePlayer[tank].g_bNoAmmo = false;
 	g_esChokePlayer[tank].g_iAmmoCount = 0;
 	g_esChokePlayer[tank].g_iCooldown = -1;
+	g_esChokePlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerChokeLaunch(Handle timer, DataPack pack)
@@ -1047,7 +1099,7 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	}
 
 	int iChokeEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esChokeCache[iTank].g_iChokeDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esChokeCache[iTank].g_iChokeDuration,
 		iTime = pack.ReadCell();
 	if (iChokeEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
@@ -1060,7 +1112,7 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esChokeCache[iTank].g_flChokeDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esChokeCache[iTank].g_flChokeDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
 
 	return Plugin_Continue;

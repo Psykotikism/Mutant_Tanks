@@ -827,6 +827,16 @@
 			}
 
 			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::GetMissionFirstMap" to find the address.
+			 **/
+			"GetMissionFirstMapString"
+			{
+				"signature"	"CTerrorGameRules::GetMissionFirstMap::String"
+			}
+
+			/**
 			 * CTankClaw::GroundPound()
 			 *
 			 * Note: Uses the signature for "CTankClaw::GroundPound" to find the address.
@@ -844,6 +854,56 @@
 			"InitialContainedActionStart"
 			{
 				"signature"	"TankBehavior::InitialContainedAction"
+			}
+
+			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsCoopMode" to find the address.
+			 **/
+			"IsCoopModeString"
+			{
+				"signature"	"CTerrorGameRules::IsCoopMode::String"
+			}
+
+			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsMissionFinalMap" to find the address.
+			 **/
+			"IsMissionFinalMapString"
+			{
+				"signature"	"CTerrorGameRules::IsMissionFinalMap::String"
+			}
+
+			/**
+			 * CTerrorGameRules::IsSurvivalMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsSurvivalMode" to find the address.
+			 **/
+			"IsSurvivalModeString"
+			{
+				"signature"	"CTerrorGameRules::IsSurvivalMode::String"
+			}
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsVersusMode" to find the address.
+			 **/
+			"IsVersusModeString"
+			{
+				"signature"	"CTerrorGameRules::IsVersusMode::String"
+			}
+
+			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * Note: Uses the string found in "CTerrorPlayer::MaterializeFromGhost" to find the address.
+			 **/
+			"MaterializeFromGhostString"
+			{
+				"signature"	"CTerrorPlayer::MaterializeFromGhost::String"
 			}
 
 			/**
@@ -1428,6 +1488,71 @@
 			}
 
 			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * How to find:
+			 * 1. Locate the "Game/chapter" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::GetMissionFirstMap::Push"
+			{
+				"windows"	"65"
+			}
+
+			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "coop" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsCoopMode::Push"
+			{
+				"windows"	"35"
+			}
+
+			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * How to find:
+			 * 1. Locate the "Game/chapter" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsMissionFinalMap::Push"
+			{
+				"windows"	"37"
+			}
+
+			/**
+			 * CTerrorGameRules::IsHoldoutMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "survival" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsSurvivalMode::Push"
+			{
+				"windows"	"35"
+			}
+
+			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "versus" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsVersusMode::Push"
+			{
+				"windows"	"35"
+			}
+
+			/**
 			 * CTerrorGun::EquipSecondWeapon()
 			 *
 			 * Note: Patches the "CTerrorGun::Deploy" function call.
@@ -1652,6 +1777,19 @@
 				"linux"		"310"
 				"mac"		"310"
 				"windows"	"309"
+			}
+
+			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * How to find:
+			 * 1. Locate the "%s materialized from spawn mode as a %s\n" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorPlayer::MaterializeFromGhost::Push"
+			{
+				"windows"	"26"
 			}
 
 			/**
@@ -1964,6 +2102,8 @@
 			/**
 			 * CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -1982,6 +2122,8 @@
 
 			/**
 			 * CBaseCombatWeapon::GetMaxClip1()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -2002,6 +2144,8 @@
 			/**
 			 * CBaseEntity::Create(char const*, Vector const&, QAngle const&, CBaseEntity*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "tank_rock" string.
 			 * 2. One of the functions that references that string is "CTankRock::Create".
@@ -2019,6 +2163,8 @@
 			/**
 			 * CBaseEntity::GetGroundEntity()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTerrorGameMovement::CheckJumpButton" function.
 			 * 2. This function is called in an if-statement by itself without any comparison checks.
@@ -2034,6 +2180,8 @@
 
 			/**
 			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "SurvivorStandingOnCar" string.
@@ -2054,6 +2202,8 @@
 			/**
 			 * Director::HasAnySurvivorLeftSafeArea()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "I've walked out of the checkpoint" string.
 			 * 2. The first function call below the string should be this function.
@@ -2070,6 +2220,8 @@
 			/**
 			 * Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Allowing spawning - %s left safe area\n" string.
 			 * 2. The string can only be found in this function.
@@ -2085,6 +2237,8 @@
 
 			/**
 			 * CEnvRockLauncher::LaunchCurrentDir()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "tank_rock" string.
@@ -2103,6 +2257,8 @@
 			/**
 			 * CFirstAidKit::FinishHealing()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "HealedByFriend" string.
 			 * 2. The string can only be found in this function.
@@ -2118,6 +2274,8 @@
 
 			/**
 			 * CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerHealing" or "PlayerHealingOther" string.
@@ -2135,6 +2293,8 @@
 			/**
 			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
 			 * 2. The string can only be found in this function.
@@ -2150,6 +2310,8 @@
 
 			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -2170,6 +2332,8 @@
 			/**
 			 * CTankClaw::DoSwing()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "rhand" string.
 			 * 2a. The string can only be found in this function.
@@ -2188,6 +2352,8 @@
 			/**
 			 * CTankClaw::GroundPound()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTankClaw::SweepFist" function.
 			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
@@ -2205,6 +2371,8 @@
 
 			/**
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
@@ -2228,6 +2396,8 @@
 			/**
 			 * CTankClaw::PrimaryAttack()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2247,6 +2417,8 @@
 			/**
 			 * CTankClaw::SweepFist(Vector const&, Vector const&)
 			 *
+			 * Note: Used for finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTankClaw::DoSwing" function.
 			 * 2. The last function call should be this function.
@@ -2262,6 +2434,8 @@
 
 			/**
 			 * CTankRock::Detonate()
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
@@ -2285,6 +2459,8 @@
 			/**
 			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2300,6 +2476,8 @@
 
 			/**
 			 * CTerrorGameMovement::CheckJumpButton()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Locate the "CTerrorGameMovement::DoJump" function.
@@ -2322,6 +2500,8 @@
 
 			/**
 			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "player_jump" string.
@@ -2355,6 +2535,8 @@
 			/**
 			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Game/chapter" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2369,7 +2551,20 @@
 			}
 
 			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::GetMissionFirstMap" function dynamically.
+			 **/
+			"CTerrorGameRules::GetMissionFirstMap::String"
+			{
+				"library"	"server"
+				"windows"	"Game/chapter\x00\x00\x00\x00Game/campaign"
+			}
+
+			/**
 			 * CTerrorGameRules::GetMissionInfo()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "%3.2f: Director: Finale state = FINALE_HORDE_ATTACK_1\n" string.
@@ -2388,10 +2583,11 @@
 			/**
 			 * CTerrorGameRules::IsCoopMode()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
-			 * 1. Search for the "Director::StartScenarioExit\n" string.
-			 * 2. One of the functions that references that string should be "outtro_stats_done".
-			 * 3. The second function call in "outtro_stats_done" should be this function.
+			 * 1. Search for the "coop" string.
+			 * 2. One of the functions that references that string should be this function.
 			 **/
 			"CTerrorGameRules::IsCoopMode"
 			{
@@ -2403,13 +2599,26 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsCoopMode" function dynamically.
+			 **/
+			"CTerrorGameRules::IsCoopMode::String"
+			{
+				"library"	"server"
+				"windows"	"coop\x00\x00\x00\x00map_background"
+			}
+
+			/**
 			 * CTerrorGameRules::IsHoldoutMode()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "survival" string.
 			 * 2. One of the functions that references that string should be this function.
 			 **/
-			"CTerrorGameRules::IsHoldoutMode"
+			"CTerrorGameRules::IsSurvivalMode"
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules13IsHoldoutModeEv"
@@ -2419,7 +2628,20 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsHoldoutMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsHoldoutMode" function dynamically.
+			 **/
+			"CTerrorGameRules::IsSurvivalMode::String"
+			{
+				"library"	"server"
+				"windows"	"survival\x00\x00\x00\x00teamversus"
+			}
+
+			/**
 			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Game/chapter" string.
@@ -2436,12 +2658,24 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsMissionFinalMap" function dynamically.
+			 **/
+			"CTerrorGameRules::IsMissionFinalMap::String"
+			{
+				"library"	"server"
+				"windows"	"Game/chapter\x00\x00\x00\x00Game/campaign"
+			}
+
+			/**
 			 * CTerrorGameRules::IsVersusMode()
 			 *
 			 * Note: (Windows) This function is in-lined with the "CTerrorGameRules::HasPlayerControlledZombies" function.
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "teamversus" string.
+			 * 1. Search for the "versus" string.
 			 * 2. One of the functions that references that string should be this function.
 			 **/
 			"CTerrorGameRules::IsVersusMode"
@@ -2454,7 +2688,20 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsVersusMode" function dynamically.
+			 **/
+			"CTerrorGameRules::IsVersusMode::String"
+			{
+				"library"	"server"
+				"windows"	"versus\x00\x00map_name"
+			}
+
+			/**
 			 * CTerrorGun::EquipSecondWeapon()
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "Player.PickupWeapon" string.
@@ -2478,6 +2725,8 @@
 			/**
 			 * CTerrorGun::FireBullet()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
 			 * - "weapon_fire_at_40"
@@ -2500,6 +2749,8 @@
 			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2518,6 +2769,8 @@
 
 			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for any of the following strings (they can each only be found in this function):
@@ -2549,6 +2802,8 @@
 			/**
 			 * CTerrorPlayer::Extinguish()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2568,6 +2823,8 @@
 			/**
 			 * CTerrorPlayer::GoAwayFromKeyboard()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "player_afk" string.
 			 * 2. The string can only be found in this function.
@@ -2584,6 +2841,8 @@
 			/**
 			 * CTerrorPlayer::MaterializeFromGhost()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "%s materialized from spawn mode as a %s\n" string.
 			 * 2. The string can only be found in this function.
@@ -2598,7 +2857,20 @@
 			}
 
 			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * Note: Used for finding the "CTerrorPlayer::MaterializeFromGhost" function dynamically.
+			 **/
+			"CTerrorPlayer::MaterializeFromGhost::String"
+			{
+				"library"	"server"
+				"windows"	"%s materialized from spawn mode"
+			}
+
+			/**
 			 * CTerrorPlayer::OnBeginChangeLevel(char const*, KeyValues *)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
@@ -2621,6 +2893,8 @@
 
 			/**
 			 * CTerrorPlayer::OnEnterGhostState()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "spawnmode_bar" string.
@@ -2645,6 +2919,8 @@
 			/**
 			 * CTerrorPlayer::OnFalling()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerZombie.Fall" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2660,6 +2936,8 @@
 
 			/**
 			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "deathEvent" or "HulkZombie.Die" string.
@@ -2677,6 +2955,8 @@
 			/**
 			 * CTerrorPlayer::OnITExpired()
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerVomitExpired" string.
 			 * 2. The string can only be found in this function.
@@ -2692,6 +2972,8 @@
 
 			/**
 			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "CTerrorPlayer::PlayerRunCommand" string.
@@ -2710,6 +2992,8 @@
 			/**
 			 * CTerrorPlayer::OnLadderMount()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Player.Fall" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2725,6 +3009,8 @@
 
 			/**
 			 * CTerrorPlayer::OnRevived()
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
@@ -2748,6 +3034,8 @@
 			/**
 			 * CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Tongue letting go on getting bashed." string.
 			 * 2. The string can only be found in "CTerrorPlayer::OnStunned".
@@ -2764,6 +3052,8 @@
 
 			/**
 			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Survivor was lunged while %sfacing the hunter and %sbashing\n" string.
@@ -2782,6 +3072,8 @@
 			/**
 			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Player.Shoved" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -2797,6 +3089,8 @@
 
 			/**
 			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -2817,6 +3111,8 @@
 			/**
 			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool)
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
 			 * - "#L4D_NOTIFY_VOMIT_ON"
@@ -2834,6 +3130,8 @@
 
 			/**
 			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "#L4D_idle_spectator" string.
@@ -2857,6 +3155,8 @@
 			/**
 			 * CTerrorPlayer::RoundRespawn()
 			 *
+			 * Note: Used for finding/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2876,6 +3176,8 @@
 			/**
 			 * CTerrorPlayer::SetMainActivity(Activity, bool)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "%f: %s plays %s\n" string.
 			 * 2. The string can only be found in this function.
@@ -2891,6 +3193,8 @@
 
 			/**
 			 * CTerrorPlayer::StartReviving(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
@@ -2917,6 +3221,8 @@
 			/**
 			 * CTerrorWeapon::CanDeploy()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2936,6 +3242,8 @@
 			/**
 			 * CTerrorWeapon::SecondaryAttack()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -2954,6 +3262,8 @@
 
 			/**
 			 * CThrow::ActivateAbility()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "HulkZombie.Throw.Fail" or "HulkZombie.Throw.Pickup" string.
@@ -2977,6 +3287,8 @@
 			/**
 			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "spawner_give_item" string.
 			 * 2a. The string can only be found in this function.
@@ -2999,6 +3311,8 @@
 			/**
 			 * GetWeaponInfo(CSWeaponID)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "weapon_reparse_server" string.
 			 * 2. The string can only be found in one function.
@@ -3016,6 +3330,8 @@
 
 			/**
 			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -3035,6 +3351,8 @@
 
 			/**
 			 * KeyValues::GetString(char const*, char const*)
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "%3.2f: Director: Finale state = FINALE_HORDE_ATTACK_1\n" string.
@@ -3087,6 +3405,8 @@
 			/**
 			 * Tank::EnterStasis()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in one function):
 			 * - "Tank offer: Starting the lottery\n"
@@ -3107,6 +3427,8 @@
 			/**
 			 * Tank::LeaveStasis()
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Tank committing suicide\n" string.
 			 * 2. This function is called above the string.
@@ -3122,6 +3444,8 @@
 
 			/**
 			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -3142,6 +3466,8 @@
 			/**
 			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "TANK OFFER: Looking for players\n" string.
 			 * 2. The last function call in that function should be this function.
@@ -3157,6 +3483,8 @@
 
 			/**
 			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.
@@ -3495,6 +3823,26 @@
 			}
 
 			/**
+			 * CDirector::IsFirstMapInScenario()
+			 *
+			 * Note: Uses the string found in "CDirector::IsFirstMapInScenario" to find the address.
+			 **/
+			"IsFirstMapInScenarioString"
+			{
+				"signature"	"CDirector::IsFirstMapInScenario::String"
+			}
+
+			/**
+			 * CTerrorGameRules::IsRealismMode()
+			 *
+			 * Note: Uses the string found in "CTerrorGameRules::IsRealismMode" to find the address.
+			 **/
+			"IsRealismModeString"
+			{
+				"signature"	"CTerrorGameRules::IsRealismMode::String"
+			}
+
+			/**
 			 * CTerrorGameRules::IsScavengeMode()
 			 *
 			 * Note: Uses the string found in "CTerrorGameRules::IsScavengeMode" to find the address.
@@ -3505,23 +3853,13 @@
 			}
 
 			/**
-			 * CTerrorGameRules::IsSurvivalMode()
+			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
 			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsSurvivalMode" to find the address.
+			 * Note: Uses the string found in "CSpitterProjectile::Create" to find the address.
 			 **/
-			"IsSurvivalModeString"
+			"SpitterProjectileCreateString"
 			{
-				"signature"	"CTerrorGameRules::IsSurvivalMode::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsVersusMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsVersusMode" to find the address.
-			 **/
-			"IsVersusModeString"
-			{
-				"signature"	"CTerrorGameRules::IsVersusMode::String"
+				"signature"	"CSpitterProjectile::Create::String"
 			}
 		}
 
@@ -3567,6 +3905,19 @@
 			}
 
 			/**
+			 * CDirector::IsFirstMapInScenario()
+			 *
+			 * How to find:
+			 * 1. Locate the "map" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CDirector::IsFirstMapInScenario::Push"
+			{
+				"windows"	"38"
+			}
+
+			/**
 			 * CPainPills::GetWeaponID()
 			 *
 			 * How to find:
@@ -3577,6 +3928,19 @@
 				"linux"		"398"
 				"mac"		"398"
 				"windows"	"397"
+			}
+
+			/**
+			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
+			 *
+			 * How to find:
+			 * 1. Locate the "Spitter projectile spawned at %f %f %f, velocity %f %f %f\n" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CSpitterProjectile::Create::Push"
+			{
+				"windows"	"74"
 			}
 
 			/**
@@ -3664,6 +4028,58 @@
 				"linux"		"203" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"212" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"122" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * How to find:
+			 * 1. Locate the "Game/chapter" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::GetMissionFirstMap::Push"
+			{
+				"windows"	"68"
+			}
+
+			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "coop" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsCoopMode::Push"
+			{
+				"windows"	"60"
+			}
+
+			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * How to find:
+			 * 1. Locate the "Game/chapter" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsMissionFinalMap::Push"
+			{
+				"windows"	"37"
+			}
+
+			/**
+			 * CTerrorGameRules::IsRealismMode()
+			 *
+			 * How to find:
+			 * 1. Locate the "realism" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorGameRules::IsRealismMode::Push"
+			{
+				"windows"	"60"
 			}
 
 			/**
@@ -4014,6 +4430,19 @@
 			}
 
 			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * How to find:
+			 * 1. Locate the "%s materialized from spawn mode as a %s\n" string.
+			 * 2. The instruction should be a push instruction.
+			 * 3. The offset will refer to the byte before the start of the string's push instruction.
+			 **/
+			"CTerrorPlayer::MaterializeFromGhost::Push"
+			{
+				"windows"	"35"
+			}
+
+			/**
 			 * CTerrorPlayer::OnFalling()
 			 *
 			 * Note: Patches the "CBaseEntity::EmitTrackedSound" call for "Player.Fall".
@@ -4281,6 +4710,8 @@
 			/**
 			 * CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -4299,6 +4730,8 @@
 
 			/**
 			 * CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -4319,6 +4752,8 @@
 			/**
 			 * CBaseCombatWeapon::GetMaxClip1()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -4338,6 +4773,8 @@
 			/**
 			 * CBaseEntity::GetGroundEntity()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTerrorGameMovement::CheckJumpButton" function.
 			 * 2. This function is called in an if-statement by itself without any comparison checks.
@@ -4353,6 +4790,8 @@
 
 			/**
 			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "SurvivorStandingOnCar" string.
@@ -4373,6 +4812,8 @@
 			/**
 			 * CDirector::HasAnySurvivorLeftSafeArea()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "I've walked out of the checkpoint" string.
 			 * 2. The first function call below the string should be this function.
@@ -4389,6 +4830,8 @@
 			/**
 			 * CDirector::IsFirstMapInScenario()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Game/chapter" string.
 			 * 2. One of the functions that references that string is referenced by this function.
@@ -4404,7 +4847,20 @@
 			}
 
 			/**
+			 * CDirector::IsFirstMapInScenario()
+			 *
+			 * Note: Used for finding the "CDirector::IsFirstMapInScenario" function dynamically.
+			 **/
+			"CDirector::IsFirstMapInScenario::String"
+			{
+				"library"	"server"
+				"windows"	"map\x00randomnum"
+			}
+
+			/**
 			 * CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Allowing spawning - %s left safe area\n" string.
@@ -4444,6 +4900,8 @@
 			/**
 			 * CEnvRockLauncher::LaunchCurrentDir()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "tank_rock" string.
 			 * 2. One of the functions that references that string is "CTankRock::Create".
@@ -4460,6 +4918,8 @@
 
 			/**
 			 * CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "RelaxedSigh" or "HealedByFriend" string.
@@ -4483,6 +4943,8 @@
 			/**
 			 * CPipeBombProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter *, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Pipe bomb projectile spawned at %f %f %f, velocity %f %f %f\n" string.
 			 * 2. The string can only be found in this function.
@@ -4498,6 +4960,8 @@
 
 			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -4518,6 +4982,8 @@
 			/**
 			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Spitter projectile spawned at %f %f %f, velocity %f %f %f\n" string.
 			 * 2. The string can only be found in this function.
@@ -4532,7 +4998,20 @@
 			}
 
 			/**
+			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
+			 *
+			 * Note: Used for finding the "CSpitterProjectile::Create" function dynamically.
+			 **/
+			"CSpitterProjectile::Create::String"
+			{
+				"library"	"server"
+				"windows"	"Spitter projectile"
+			}
+
+			/**
 			 * CTankClaw::DoSwing()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for any of the following strings (they can each only be found in this function):
@@ -4554,6 +5033,8 @@
 			/**
 			 * CTankClaw::GroundPound()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTankClaw::SweepFist" function.
 			 * 2. Click on the second to last function call to go to "CTerrorWeapon::MarkAsHit".
@@ -4571,6 +5052,8 @@
 
 			/**
 			 * CTankClaw::OnPlayerHit(CTerrorPlayer*, bool)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "PlayerGroundPoundedByTank" string.
@@ -4594,6 +5077,8 @@
 			/**
 			 * CTankClaw::PrimaryAttack()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -4613,6 +5098,8 @@
 			/**
 			 * CTankClaw::SweepFist(Vector const&, Vector const&)
 			 *
+			 * Note: Used for finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Locate the "CTankClaw::DoSwing" function.
 			 * 2. The last function call should be this function.
@@ -4629,6 +5116,8 @@
 			/**
 			 * CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "tank_rock" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -4644,6 +5133,8 @@
 
 			/**
 			 * CTankRock::Detonate()
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "tank_rock_throw_impact_stump" string.
@@ -4667,6 +5158,8 @@
 			/**
 			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "HulkZombie.Throw.FlyLoop" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -4682,6 +5175,8 @@
 
 			/**
 			 * CTerrorGameMovement::CheckJumpButton()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Locate the "CTerrorGameMovement::DoJump" function.
@@ -4704,6 +5199,8 @@
 
 			/**
 			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "player_jump" string.
@@ -4737,6 +5234,8 @@
 			/**
 			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Game/chapter" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -4751,7 +5250,20 @@
 			}
 
 			/**
+			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::GetMissionFirstMap" function dynamically.
+			 **/
+			"CTerrorGameRules::GetMissionFirstMap::String"
+			{
+				"library"	"server"
+				"windows"	"Game/chapter\x00\x00\x00\x00Game/campaign"
+			}
+
+			/**
 			 * CTerrorGameRules::GetMissionInfo()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "L4D2C" string.
@@ -4769,6 +5281,8 @@
 			/**
 			 * CTerrorGameRules::HasConfigurableDifficultySetting()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "hasdifficulty" string.
 			 * 2. The string can only be found in this function.
@@ -4783,24 +5297,38 @@
 			}
 
 			/**
-			 * CTerrorGameRules::IsGenericCooperativeMode()
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
-			 * 1. Search for the "realism" string.
-			 * 2. One of the functions that references that string should be "CTerrorGameRules::IsRealismMode".
-			 * 3. One of the functions that calls "CTerrorGameRules::IsRealismMode" should be this function.
+			 * 1. Search for the "coop" string.
+			 * 2. One of the functions that references that string should be this function.
 			 **/
-			"CTerrorGameRules::IsGenericCooperativeMode"
+			"CTerrorGameRules::IsCoopMode"
 			{
 				"library"	"server"
-				"linux"		"@_ZN16CTerrorGameRules24IsGenericCooperativeModeEv"
-				"mac"		"@_ZN16CTerrorGameRules24IsGenericCooperativeModeEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x33\xC0\xC3\xB8\x01\x00\x00\x00\xC3\xCC\xCC\xCC\xCC\xCC\x8B"
-						/* ? ? ? ? ? ? ? 75 ? E8 ? ? ? ? 84 C0 75 ? 33 C0 C3 B8 01 00 00 00 C3 CC CC CC CC CC 8B */
+				"linux"		"@_ZN16CTerrorGameRules10IsCoopModeEv"
+				"mac"		"@_ZN16CTerrorGameRules10IsCoopModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x2A\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x2A\x3C"
+						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 ? ? ? ? ? ? ? ? ? 74 ? B8 ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? B8 ? ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? ? 3C */
+			}
+
+			/**
+			 * CTerrorGameRules::IsCoopMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsCoopMode" function dynamically.
+			 **/
+			"CTerrorGameRules::IsCoopMode::String"
+			{
+				"library"	"server"
+				"windows"	"coop\x00\x00\x00\x00map_background"
 			}
 
 			/**
 			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Game/chapter" string.
@@ -4817,7 +5345,49 @@
 			}
 
 			/**
+			 * CTerrorGameRules::IsMissionFinalMap()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsMissionFinalMap" function dynamically.
+			 **/
+			"CTerrorGameRules::IsMissionFinalMap::String"
+			{
+				"library"	"server"
+				"windows"	"Game/chapter\x00\x00\x00\x00Game/campaign"
+			}
+
+			/**
+			 * CTerrorGameRules::IsRealismMode()
+			 *
+			 * Note: Used for calling the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "realism" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsRealismMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules13IsRealismModeEv"
+				"mac"		"@_ZN16CTerrorGameRules13IsRealismModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x2A\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x2A\x84"
+						/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 ? ? ? ? ? ? ? ? ? 74 ? B8 ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? B8 ? ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? ? 84 */
+			}
+
+			/**
+			 * CTerrorGameRules::IsRealismMode()
+			 *
+			 * Note: Used for finding the "CTerrorGameRules::IsRealismMode" function dynamically.
+			 **/
+			"CTerrorGameRules::IsRealismMode::String"
+			{
+				"library"	"server"
+				"windows"	"realism\x00mutation12"
+			}
+
+			/**
 			 * CTerrorGameRules::IsScavengeMode()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "scavenge" string.
@@ -4846,6 +5416,8 @@
 			/**
 			 * CTerrorGameRules::IsSurvivalMode()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "survival" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -4872,6 +5444,8 @@
 
 			/**
 			 * CTerrorGameRules::IsVersusMode()
+			 *
+			 * Note: Used for calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "versus" string.
@@ -4900,6 +5474,8 @@
 			/**
 			 * CTerrorGun::EquipSecondWeapon()
 			 *
+			 * Note: Used for finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "Player.PickupWeapon" string.
 			 * 2a. One of the functions that references that string should be this function.
@@ -4922,6 +5498,8 @@
 			/**
 			 * CTerrorGun::FireBullet()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
 			 * - "CTerrorGun::FireBullet HorizSpread"
@@ -4942,6 +5520,8 @@
 			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -4961,6 +5541,8 @@
 			/**
 			 * CTerrorMeleeWeapon::SecondaryAttack()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -4979,6 +5561,8 @@
 
 			/**
 			 * CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings:
@@ -5000,6 +5584,8 @@
 			/**
 			 * CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -5018,6 +5604,8 @@
 
 			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for any of the following strings (they can each only be found in this function):
@@ -5055,6 +5643,8 @@
 			/**
 			 * CTerrorPlayer::Extinguish()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -5074,6 +5664,8 @@
 			/**
 			 * CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float)
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "charger_impact" string.
 			 * 2. The string can only be found in "ThrowImpactedSurvivor".
@@ -5091,6 +5683,8 @@
 			/**
 			 * CTerrorPlayer::GoAwayFromKeyboard()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "player_afk" string.
 			 * 2. The string can only be found in this function.
@@ -5107,6 +5701,8 @@
 			/**
 			 * CTerrorPlayer::MaterializeFromGhost()
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "%s materialized from spawn mode as a %s\n" string.
 			 * 2. The string can only be found in this function.
@@ -5121,7 +5717,20 @@
 			}
 
 			/**
+			 * CTerrorPlayer::MaterializeFromGhost()
+			 *
+			 * Note: Used for finding the "CTerrorPlayer::MaterializeFromGhost" function dynamically.
+			 **/
+			"CTerrorPlayer::MaterializeFromGhost::String"
+			{
+				"library"	"server"
+				"windows"	"%s materialized from spawn mode"
+			}
+
+			/**
 			 * CTerrorPlayer::OnBeginChangeLevel(char const*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "Saving %s for transition at %f %f %f\n" string.
@@ -5144,6 +5753,8 @@
 
 			/**
 			 * CTerrorPlayer::OnEnterGhostState()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "spawnmode_bar" string.
@@ -5168,6 +5779,8 @@
 			/**
 			 * CTerrorPlayer::OnFalling()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerZombie.Fall" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -5183,6 +5796,8 @@
 
 			/**
 			 * CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -5203,6 +5818,8 @@
 			/**
 			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "deathEvent" or "HulkZombie.Die" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -5219,6 +5836,8 @@
 			/**
 			 * CTerrorPlayer::OnITExpired()
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerVomitExpired" string.
 			 * 2. The string can only be found in this function.
@@ -5234,6 +5853,8 @@
 
 			/**
 			 * CTerrorPlayer::OnLadderDismount()
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "CTerrorPlayer::PlayerRunCommand" string.
@@ -5252,6 +5873,8 @@
 			/**
 			 * CTerrorPlayer::OnLadderMount()
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Player.Fall" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -5267,6 +5890,8 @@
 
 			/**
 			 * CTerrorPlayer::OnRevived()
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "ReviveType" or "RevivedByFriend" string.
@@ -5290,6 +5915,8 @@
 			/**
 			 * CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Tongue letting go on getting bashed." string.
 			 * 2. The string can only be found in "CTerrorPlayer::OnStunned".
@@ -5306,6 +5933,8 @@
 
 			/**
 			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 *
+			 * Note: Used for detouring/calling the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Survivor was lunged while %sfacing the hunter and %sbashing\n" string.
@@ -5324,6 +5953,8 @@
 			/**
 			 * CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*)
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerShoved" string.
 			 * 2. One of the functions that references that string should be this function.
@@ -5339,6 +5970,8 @@
 
 			/**
 			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
+			 *
+			 * Note: Used for finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -5359,6 +5992,8 @@
 			/**
 			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "PlayerVomitInFace" string.
 			 * 2. The string can only be found in this function.
@@ -5374,6 +6009,8 @@
 
 			/**
 			 * CTerrorPlayer::PreThink()
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "#L4D_idle_spectator" string.
@@ -5397,6 +6034,8 @@
 			/**
 			 * CTerrorPlayer::RoundRespawn()
 			 *
+			 * Note: Used for finding/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -5415,6 +6054,8 @@
 
 			/**
 			 * CTerrorPlayer::SelectWeightedSequence(Activity)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "Hulk_RunAttack1_Gesture" string.
@@ -5437,6 +6078,8 @@
 
 			/**
 			 * CTerrorPlayer::StartReviving(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in this function):
@@ -5461,6 +6104,8 @@
 			/**
 			 * CTerrorWeapon::CanDeployFor(CTerrorPlayer*)
 			 *
+			 * Note: Used for detouring/finding the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -5480,6 +6125,8 @@
 			/**
 			 * CTerrorWeapon::SecondaryAttack()
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
 			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
@@ -5498,6 +6145,8 @@
 
 			/**
 			 * CThrow::ActivateAbility()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "HulkZombie.Throw.Fail" or "HulkZombie.Throw.Pickup" string.
@@ -5521,6 +6170,8 @@
 			/**
 			 * CWeaponSpawn::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1a. Search for the "spawner_give_item" string.
 			 * 2a. The string can only be found in this function.
@@ -5543,6 +6194,8 @@
 			/**
 			 * GetWeaponInfo(CSWeaponID)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "weapon_reparse_server" string.
 			 * 2. The string can only be found in one function.
@@ -5561,6 +6214,8 @@
 			/**
 			 * KeyValues::GetString(char const*, char const*)
 			 *
+			 * Note: Used for calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "L4D2C" string.
 			 * 2. Both functions that reference the string call this function.
@@ -5576,6 +6231,8 @@
 
 			/**
 			 * Tank::EnterStasis()
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for any of the following strings (they can each only be found in one function):
@@ -5597,6 +6254,8 @@
 			/**
 			 * Tank::LeaveStasis()
 			 *
+			 * Note: Used for detouring/calling the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Tank committing suicide at %f %f %f\n" string.
 			 * 2. There should be two function calls above the string.
@@ -5613,6 +6272,8 @@
 
 			/**
 			 * TankBehavior::InitialContainedAction(Tank *)
+			 *
+			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Find the function's offsets with asherkin's VTable dump.
@@ -5633,6 +6294,8 @@
 			/**
 			 * ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*)
 			 *
+			 * Note: Used for detouring the function.
+			 *
 			 * How to find on Windows:
 			 * 1. Search for the "TANK OFFER: Looking for players\n" string.
 			 * 2. The last function call in that function should be this function.
@@ -5648,6 +6311,8 @@
 
 			/**
 			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * Note: Used for detouring the function.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "Failed to find a tank spawn position in area %d\n" string.

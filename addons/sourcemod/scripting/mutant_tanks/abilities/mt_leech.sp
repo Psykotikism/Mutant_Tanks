@@ -63,6 +63,7 @@ enum struct esLeechPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flLeechChance;
 	float g_flLeechInterval;
 	float g_flLeechRange;
@@ -76,14 +77,18 @@ enum struct esLeechPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iLeechAbility;
+	int g_iLeechCooldown;
 	int g_iLeechDuration;
 	int g_iLeechEffect;
 	int g_iLeechHit;
 	int g_iLeechHitMode;
 	int g_iLeechMessage;
+	int g_iLeechRangeCooldown;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -92,6 +97,7 @@ esLeechPlayer g_esLeechPlayer[MAXPLAYERS + 1];
 
 enum struct esLeechAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flLeechChance;
 	float g_flLeechInterval;
 	float g_flLeechRange;
@@ -103,13 +109,16 @@ enum struct esLeechAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iLeechAbility;
+	int g_iLeechCooldown;
 	int g_iLeechDuration;
 	int g_iLeechEffect;
 	int g_iLeechHit;
 	int g_iLeechHitMode;
 	int g_iLeechMessage;
+	int g_iLeechRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -117,6 +126,7 @@ esLeechAbility g_esLeechAbility[MT_MAXTYPES + 1];
 
 enum struct esLeechCache
 {
+	float g_flCloseAreasOnly;
 	float g_flLeechChance;
 	float g_flLeechInterval;
 	float g_flLeechRange;
@@ -127,12 +137,15 @@ enum struct esLeechCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iLeechAbility;
+	int g_iLeechCooldown;
 	int g_iLeechDuration;
 	int g_iLeechEffect;
 	int g_iLeechHit;
 	int g_iLeechHitMode;
 	int g_iLeechMessage;
+	int g_iLeechRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -244,6 +257,7 @@ void vLeechMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -259,10 +273,11 @@ int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLeechCache[param1].g_iLeechAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLeechCache[param1].g_iHumanAmmo - g_esLeechPlayer[param1].g_iAmmoCount), g_esLeechCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLeechCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esLeechCache[param1].g_iHumanAbility == 1) ? g_esLeechCache[param1].g_iHumanCooldown : g_esLeechCache[param1].g_iLeechCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LeechDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLeechCache[param1].g_iLeechDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLeechCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esLeechCache[param1].g_iHumanAbility == 1) ? g_esLeechCache[param1].g_iHumanRangeCooldown : g_esLeechCache[param1].g_iLeechRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -292,6 +307,7 @@ int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -412,11 +428,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_LEECH_SECTION, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION2, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION3, false) || StrEqual(sSubset[iPos], MT_LEECH_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -440,7 +458,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -491,22 +509,26 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esLeechAbility[iIndex].g_iAccessFlags = 0;
 				g_esLeechAbility[iIndex].g_iImmunityFlags = 0;
+				g_esLeechAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esLeechAbility[iIndex].g_iComboAbility = 0;
 				g_esLeechAbility[iIndex].g_iHumanAbility = 0;
 				g_esLeechAbility[iIndex].g_iHumanAmmo = 5;
-				g_esLeechAbility[iIndex].g_iHumanCooldown = 30;
+				g_esLeechAbility[iIndex].g_iHumanCooldown = 0;
+				g_esLeechAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esLeechAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esLeechAbility[iIndex].g_iRequiresHumans = 0;
 				g_esLeechAbility[iIndex].g_iLeechAbility = 0;
 				g_esLeechAbility[iIndex].g_iLeechEffect = 0;
 				g_esLeechAbility[iIndex].g_iLeechMessage = 0;
 				g_esLeechAbility[iIndex].g_flLeechChance = 33.3;
+				g_esLeechAbility[iIndex].g_iLeechCooldown = 0;
 				g_esLeechAbility[iIndex].g_iLeechDuration = 5;
 				g_esLeechAbility[iIndex].g_iLeechHit = 0;
 				g_esLeechAbility[iIndex].g_iLeechHitMode = 0;
 				g_esLeechAbility[iIndex].g_flLeechInterval = 1.0;
 				g_esLeechAbility[iIndex].g_flLeechRange = 150.0;
 				g_esLeechAbility[iIndex].g_flLeechRangeChance = 15.0;
+				g_esLeechAbility[iIndex].g_iLeechRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -517,16 +539,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esLeechPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esLeechPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esLeechPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esLeechPlayer[iPlayer].g_iComboAbility = 0;
 					g_esLeechPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esLeechPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esLeechPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esLeechPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esLeechPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esLeechPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechAbility = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechEffect = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechMessage = 0;
 					g_esLeechPlayer[iPlayer].g_flLeechChance = 0.0;
+					g_esLeechPlayer[iPlayer].g_iLeechCooldown = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechDuration = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechHit = 0;
 					g_esLeechPlayer[iPlayer].g_iLeechHitMode = 0;
@@ -547,44 +572,52 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esLeechPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLeechPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLeechPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esLeechPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esLeechPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esLeechPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esLeechPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esLeechPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esLeechPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esLeechPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esLeechPlayer[admin].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechPlayer[admin].g_iLeechAbility, value, 0, 1);
 		g_esLeechPlayer[admin].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechPlayer[admin].g_iLeechEffect, value, 0, 7);
 		g_esLeechPlayer[admin].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechPlayer[admin].g_iLeechMessage, value, 0, 3);
 		g_esLeechPlayer[admin].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechPlayer[admin].g_flLeechChance, value, 0.0, 100.0);
+		g_esLeechPlayer[admin].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechPlayer[admin].g_iLeechCooldown, value, 0, 99999);
 		g_esLeechPlayer[admin].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechPlayer[admin].g_iLeechDuration, value, 1, 99999);
 		g_esLeechPlayer[admin].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechPlayer[admin].g_iLeechHit, value, 0, 1);
 		g_esLeechPlayer[admin].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechPlayer[admin].g_iLeechHitMode, value, 0, 2);
 		g_esLeechPlayer[admin].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechPlayer[admin].g_flLeechInterval, value, 0.1, 99999.0);
 		g_esLeechPlayer[admin].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechPlayer[admin].g_flLeechRange, value, 1.0, 99999.0);
 		g_esLeechPlayer[admin].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechPlayer[admin].g_flLeechRangeChance, value, 0.0, 100.0);
+		g_esLeechPlayer[admin].g_iLeechRangeCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeCooldown", "Leech Range Cooldown", "Leech_Range_Cooldown", "rangecooldown", g_esLeechPlayer[admin].g_iLeechRangeCooldown, value, 0, 99999);
 		g_esLeechPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esLeechPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esLeechAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLeechAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLeechAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLeechAbility[type].g_iComboAbility, value, 0, 1);
 		g_esLeechAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLeechAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esLeechAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLeechAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esLeechAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLeechAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esLeechAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esLeechAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esLeechAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLeechAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esLeechAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLeechAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esLeechAbility[type].g_iLeechAbility = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLeechAbility[type].g_iLeechAbility, value, 0, 1);
 		g_esLeechAbility[type].g_iLeechEffect = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLeechAbility[type].g_iLeechEffect, value, 0, 7);
 		g_esLeechAbility[type].g_iLeechMessage = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLeechAbility[type].g_iLeechMessage, value, 0, 3);
 		g_esLeechAbility[type].g_flLeechChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechChance", "Leech Chance", "Leech_Chance", "chance", g_esLeechAbility[type].g_flLeechChance, value, 0.0, 100.0);
+		g_esLeechAbility[type].g_iLeechCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechCooldown", "Leech Cooldown", "Leech_Cooldown", "cooldown", g_esLeechAbility[type].g_iLeechCooldown, value, 0, 99999);
 		g_esLeechAbility[type].g_iLeechDuration = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechDuration", "Leech Duration", "Leech_Duration", "duration", g_esLeechAbility[type].g_iLeechDuration, value, 1, 99999);
 		g_esLeechAbility[type].g_iLeechHit = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHit", "Leech Hit", "Leech_Hit", "hit", g_esLeechAbility[type].g_iLeechHit, value, 0, 1);
 		g_esLeechAbility[type].g_iLeechHitMode = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechHitMode", "Leech Hit Mode", "Leech_Hit_Mode", "hitmode", g_esLeechAbility[type].g_iLeechHitMode, value, 0, 2);
 		g_esLeechAbility[type].g_flLeechInterval = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechInterval", "Leech Interval", "Leech_Interval", "interval", g_esLeechAbility[type].g_flLeechInterval, value, 0.1, 99999.0);
 		g_esLeechAbility[type].g_flLeechRange = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRange", "Leech Range", "Leech_Range", "range", g_esLeechAbility[type].g_flLeechRange, value, 1.0, 99999.0);
 		g_esLeechAbility[type].g_flLeechRangeChance = flGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeChance", "Leech Range Chance", "Leech_Range_Chance", "rangechance", g_esLeechAbility[type].g_flLeechRangeChance, value, 0.0, 100.0);
+		g_esLeechAbility[type].g_iLeechRangeCooldown = iGetKeyValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "LeechRangeCooldown", "Leech Range Cooldown", "Leech_Range_Cooldown", "rangecooldown", g_esLeechAbility[type].g_iLeechRangeCooldown, value, 0, 99999);
 		g_esLeechAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esLeechAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LEECH_SECTION, MT_LEECH_SECTION2, MT_LEECH_SECTION3, MT_LEECH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -597,20 +630,24 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esLeechCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flCloseAreasOnly, g_esLeechAbility[type].g_flCloseAreasOnly);
+	g_esLeechCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iComboAbility, g_esLeechAbility[type].g_iComboAbility);
 	g_esLeechCache[tank].g_flLeechChance = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flLeechChance, g_esLeechAbility[type].g_flLeechChance);
 	g_esLeechCache[tank].g_flLeechInterval = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flLeechInterval, g_esLeechAbility[type].g_flLeechInterval);
 	g_esLeechCache[tank].g_flLeechRange = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flLeechRange, g_esLeechAbility[type].g_flLeechRange);
 	g_esLeechCache[tank].g_flLeechRangeChance = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flLeechRangeChance, g_esLeechAbility[type].g_flLeechRangeChance);
-	g_esLeechCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iComboAbility, g_esLeechAbility[type].g_iComboAbility);
 	g_esLeechCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iHumanAbility, g_esLeechAbility[type].g_iHumanAbility);
 	g_esLeechCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iHumanAmmo, g_esLeechAbility[type].g_iHumanAmmo);
 	g_esLeechCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iHumanCooldown, g_esLeechAbility[type].g_iHumanCooldown);
+	g_esLeechCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iHumanRangeCooldown, g_esLeechAbility[type].g_iHumanRangeCooldown);
 	g_esLeechCache[tank].g_iLeechAbility = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechAbility, g_esLeechAbility[type].g_iLeechAbility);
+	g_esLeechCache[tank].g_iLeechCooldown = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechCooldown, g_esLeechAbility[type].g_iLeechCooldown);
 	g_esLeechCache[tank].g_iLeechDuration = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechDuration, g_esLeechAbility[type].g_iLeechDuration);
 	g_esLeechCache[tank].g_iLeechEffect = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechEffect, g_esLeechAbility[type].g_iLeechEffect);
 	g_esLeechCache[tank].g_iLeechHit = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechHit, g_esLeechAbility[type].g_iLeechHit);
 	g_esLeechCache[tank].g_iLeechHitMode = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechHitMode, g_esLeechAbility[type].g_iLeechHitMode);
 	g_esLeechCache[tank].g_iLeechMessage = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechMessage, g_esLeechAbility[type].g_iLeechMessage);
+	g_esLeechCache[tank].g_iLeechRangeCooldown = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iLeechRangeCooldown, g_esLeechAbility[type].g_iLeechRangeCooldown);
 	g_esLeechCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_flOpenAreasOnly, g_esLeechAbility[type].g_flOpenAreasOnly);
 	g_esLeechCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLeechPlayer[tank].g_iRequiresHumans, g_esLeechAbility[type].g_iRequiresHumans);
 	g_esLeechPlayer[tank].g_iTankType = apply ? type : 0;
@@ -702,22 +739,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLeechCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esLeechCache[tank].g_iLeechAbility == 1 && g_esLeechCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esLeechCache[tank].g_iLeechAbility == 1 && g_esLeechCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vLeechAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman3", (g_esLeechPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esLeechPlayer[tank].g_iRangeCooldown == -1 || g_esLeechPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vLeechAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman3", (g_esLeechPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -737,15 +771,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveLeech(tank);
 }
 
-void vLeechCopyStats2(int oldTank, int newTank)
-{
-	g_esLeechPlayer[newTank].g_iAmmoCount = g_esLeechPlayer[oldTank].g_iAmmoCount;
-	g_esLeechPlayer[newTank].g_iCooldown = g_esLeechPlayer[oldTank].g_iCooldown;
-}
-
 void vLeechAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLeechCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -757,8 +785,8 @@ void vLeechAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLeechCache[tank].g_flLeechRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLeechCache[tank].g_flLeechRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLeechCache[tank].g_flLeechRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esLeechCache[tank].g_flLeechRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -790,14 +818,14 @@ void vLeechAbility(int tank, float random, int pos = -1)
 
 void vLeechHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esLeechPlayer[tank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esLeechCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLeechCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[tank].g_iTankType) || (g_esLeechCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esLeechPlayer[tank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLeechPlayer[tank].g_iAmmoCount < g_esLeechCache[tank].g_iHumanAmmo && g_esLeechCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esLeechPlayer[tank].g_iAmmoCount < g_esLeechCache[tank].g_iHumanAmmo && g_esLeechCache[tank].g_iHumanAmmo > 0))
 		{
 			int iTime = GetTime();
 			if (random <= chance && !g_esLeechPlayer[survivor].g_bAffected)
@@ -805,20 +833,36 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 				g_esLeechPlayer[survivor].g_bAffected = true;
 				g_esLeechPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLeechCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esLeechPlayer[tank].g_iRangeCooldown == -1 || g_esLeechPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esLeechPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLeechCache[tank].g_iHumanAbility == 1)
+					{
+						g_esLeechPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman", g_esLeechPlayer[tank].g_iAmmoCount, g_esLeechCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman", g_esLeechPlayer[tank].g_iAmmoCount, g_esLeechCache[tank].g_iHumanAmmo);
+					}
 
-					g_esLeechPlayer[tank].g_iCooldown = (g_esLeechPlayer[tank].g_iAmmoCount < g_esLeechCache[tank].g_iHumanAmmo && g_esLeechCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLeechCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esLeechCache[tank].g_iLeechRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLeechCache[tank].g_iHumanAbility == 1) ? g_esLeechCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esLeechPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esLeechPlayer[tank].g_iRangeCooldown != -1 && g_esLeechPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman5", (g_esLeechPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esLeechCache[tank].g_iLeechCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLeechCache[tank].g_iHumanAbility == 1) ? g_esLeechCache[tank].g_iHumanCooldown : iCooldown;
+					g_esLeechPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esLeechPlayer[tank].g_iCooldown != -1 && g_esLeechPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechHuman5", (g_esLeechPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
-				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLeechCache[tank].g_flLeechInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esLeechCache[tank].g_flLeechInterval;
 				DataPack dpLeech;
 				CreateDataTimer(flInterval, tTimerLeech, dpLeech, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLeech.WriteCell(GetClientUserId(survivor));
@@ -839,7 +883,7 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Leech", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esLeechPlayer[tank].g_iCooldown == -1 || g_esLeechPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esLeechPlayer[tank].g_iRangeCooldown == -1 || g_esLeechPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLeechCache[tank].g_iHumanAbility == 1 && !g_esLeechPlayer[tank].g_bFailed)
 				{
@@ -856,6 +900,13 @@ void vLeechHit(int survivor, int tank, float random, float chance, int enabled, 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "LeechAmmo");
 		}
 	}
+}
+
+void vLeechCopyStats2(int oldTank, int newTank)
+{
+	g_esLeechPlayer[newTank].g_iAmmoCount = g_esLeechPlayer[oldTank].g_iAmmoCount;
+	g_esLeechPlayer[newTank].g_iCooldown = g_esLeechPlayer[oldTank].g_iCooldown;
+	g_esLeechPlayer[newTank].g_iRangeCooldown = g_esLeechPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveLeech(int tank)
@@ -906,6 +957,7 @@ void vLeechReset3(int tank)
 	g_esLeechPlayer[tank].g_bNoAmmo = false;
 	g_esLeechPlayer[tank].g_iAmmoCount = 0;
 	g_esLeechPlayer[tank].g_iCooldown = -1;
+	g_esLeechPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerLeechCombo(Handle timer, DataPack pack)
@@ -971,7 +1023,7 @@ Action tTimerLeech(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esLeechCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[iTank].g_iTankType) || (g_esLeechCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLeechPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLeechPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLeechPlayer[iTank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[iSurvivor].g_iImmunityFlags) || !g_esLeechPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esLeechCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLeechCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLeechPlayer[iTank].g_iTankType) || (g_esLeechCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLeechCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLeechPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLeechPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLeechPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLeechPlayer[iTank].g_iTankType, g_esLeechAbility[g_esLeechPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLeechPlayer[iSurvivor].g_iImmunityFlags) || !g_esLeechPlayer[iSurvivor].g_bAffected)
 	{
 		vLeechReset2(iSurvivor, iTank, iMessage);
 
@@ -979,7 +1031,7 @@ Action tTimerLeech(Handle timer, DataPack pack)
 	}
 
 	int iLeechEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLeechCache[iTank].g_iLeechDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esLeechCache[iTank].g_iLeechDuration,
 		iTime = pack.ReadCell();
 	if (iLeechEnabled == 0 || (iTime + iDuration) < GetTime())
 	{

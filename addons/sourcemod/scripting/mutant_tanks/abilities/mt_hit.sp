@@ -59,7 +59,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esHitPlayer
 {
-
+	float g_flCloseAreasOnly;
 	float g_flHitDamageMultiplier;
 	float g_flOpenAreasOnly;
 
@@ -76,6 +76,7 @@ esHitPlayer g_esHitPlayer[MAXPLAYERS + 1];
 
 enum struct esHitAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flHitDamageMultiplier;
 	float g_flOpenAreasOnly;
 
@@ -91,6 +92,7 @@ esHitAbility g_esHitAbility[MT_MAXTYPES + 1];
 
 enum struct esHitCache
 {
+	float g_flCloseAreasOnly;
 	float g_flHitDamageMultiplier;
 	float g_flOpenAreasOnly;
 
@@ -265,7 +267,7 @@ Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &damage, 
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esHitCache[victim].g_iHitAbility == 1)
 		{
-			if (bIsAreaNarrow(victim, g_esHitCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHitPlayer[victim].g_iTankType) || (g_esHitCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHitCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esHitAbility[g_esHitPlayer[victim].g_iTankType].g_iAccessFlags, g_esHitPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esHitPlayer[victim].g_iTankType, g_esHitAbility[g_esHitPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHitPlayer[attacker].g_iImmunityFlags) || MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST))) || (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esHitCache[victim].g_iHumanAbility == 0))
+			if (bIsAreaNarrow(victim, g_esHitCache[victim].g_flOpenAreasOnly) || bIsAreaWide(victim, g_esHitCache[victim].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHitPlayer[victim].g_iTankType) || (g_esHitCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHitCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esHitAbility[g_esHitPlayer[victim].g_iTankType].g_iAccessFlags, g_esHitPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esHitPlayer[victim].g_iTankType, g_esHitAbility[g_esHitPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHitPlayer[attacker].g_iImmunityFlags) || MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST))) || (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esHitCache[victim].g_iHumanAbility == 0))
 			{
 				return Plugin_Continue;
 			}
@@ -316,6 +318,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esHitAbility[iIndex].g_iAccessFlags = 0;
 				g_esHitAbility[iIndex].g_iImmunityFlags = 0;
+				g_esHitAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esHitAbility[iIndex].g_iHumanAbility = 0;
 				g_esHitAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esHitAbility[iIndex].g_iRequiresHumans = 1;
@@ -332,6 +335,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esHitPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esHitPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esHitPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esHitPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esHitPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esHitPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -352,6 +356,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esHitPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHitPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esHitPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitPlayer[admin].g_iHumanAbility, value, 0, 1);
 		g_esHitPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esHitPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -364,6 +369,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esHitAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHitAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esHitAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHitAbility[type].g_iHumanAbility, value, 0, 1);
 		g_esHitAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHitAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esHitAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HIT_SECTION, MT_HIT_SECTION2, MT_HIT_SECTION3, MT_HIT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHitAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -382,6 +388,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esHitCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flCloseAreasOnly, g_esHitAbility[type].g_flCloseAreasOnly);
 	g_esHitCache[tank].g_flHitDamageMultiplier = flGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_flHitDamageMultiplier, g_esHitAbility[type].g_flHitDamageMultiplier);
 	g_esHitCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitAbility, g_esHitAbility[type].g_iHitAbility);
 	g_esHitCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esHitPlayer[tank].g_iHitGroup, g_esHitAbility[type].g_iHitGroup);

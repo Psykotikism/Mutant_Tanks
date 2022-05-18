@@ -29,6 +29,9 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+#define MT_GAMEDATA "mutant_tanks"
+#define MT_GAMEDATA_TEMP "mutant_tanks_temp"
+
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN
@@ -352,6 +355,25 @@ any aNative_IsTankClone(Handle plugin, int numParams)
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 #endif
+
+public void OnAllPluginsLoaded()
+{
+#if defined MT_MENU_ACID
+	vAcidAllPluginsLoaded();
+#endif
+#if defined MT_MENU_BURY
+	vBuryAllPluginsLoaded();
+#endif
+#if defined MT_MENU_DROP
+	vDropAllPluginsLoaded();
+#endif
+#if defined MT_MENU_FLING
+	vFlingAllPluginsLoaded();
+#endif
+#if defined MT_MENU_IDLE
+	vIdleAllPluginsLoaded();
+#endif
+}
 
 public void OnPluginStart()
 {
@@ -2239,10 +2261,74 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_FAST
 	vFastMenu(client, name, 0);
 #endif
+#if defined MT_MENU_FIRE
+	vFireMenu(client, name, 0);
+#endif
+#if defined MT_MENU_FLING
+	vFlingMenu(client, name, 0);
+#endif
+#if defined MT_MENU_FLY
+	vFlyMenu(client, name, 0);
+#endif
+#if defined MT_MENU_FRAGILE
+	vFragileMenu(client, name, 0);
+#endif
+#if defined MT_MENU_GHOST
+	vGhostMenu(client, name, 0);
+#endif
+#if defined MT_MENU_GOD
+	vGodMenu(client, name, 0);
+#endif
+#if defined MT_MENU_GRAVITY
+	vGravityMenu(client, name, 0);
+#endif
+#if defined MT_MENU_HEAL
+	vHealMenu(client, name, 0);
+#endif
 #if defined MT_MENU_HIT
 	vHitMenu(client, name, 0);
 #endif
-	MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
+#if defined MT_MENU_HURT
+	vHurtMenu(client, name, 0);
+#endif
+#if defined MT_MENU_HYPNO
+	vHypnoMenu(client, name, 0);
+#endif
+#if defined MT_MENU_ICE
+	vIceMenu(client, name, 0);
+#endif
+#if defined MT_MENU_IDLE
+	vIdleMenu(client, name, 0);
+#endif
+#if defined MT_MENU_INVERT
+	vInvertMenu(client, name, 0);
+#endif
+#if defined MT_MENU_ITEM
+	vItemMenu(client, name, 0);
+#endif
+#if defined MT_MENU_JUMP
+	vJumpMenu(client, name, 0);
+#endif
+#if defined MT_MENU_KAMIKAZE
+	vKamikazeMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LAG
+	vLagMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LASER
+	vLaserMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LEECH
+	vLeechMenu(client, name, 0);
+#endif
+#if defined MT_MENU_LIGHTNING
+	vLightningMenu(client, name, 0);
+#endif
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
+	}
 }
 
 void vAbilityPlayer(int type, int client)
@@ -2556,7 +2642,11 @@ void vAbilityPlayer(int type, int client)
 		case 3: vLightningAbilityActivated(client);
 	}
 #endif
-	MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
+	}
 }
 
 void vAbilitySetup(int type)
@@ -2839,5 +2929,9 @@ void vAbilitySetup(int type)
 		case 2: vLightningMapEnd();
 	}
 #endif
-	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+	}
 }

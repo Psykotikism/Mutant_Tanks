@@ -189,6 +189,26 @@
 		"ru"			"Включено:{olive} Да"
 	}
 
+	"RangeCooldown"
+	{
+		"ru"			"Радиус Перезарядка"
+	}
+
+	"AbilityRangeCooldown"
+	{
+		"ru"			"Радиус Перезарядка:{olive} {1} сек."
+	}
+
+	"RockCooldown"
+	{
+		"ru"			"Камень Перезарядка"
+	}
+
+	"AbilityRockCooldown"
+	{
+		"ru"			"Камень Перезарядка:{olive} {1} сек."
+	}
+
 	"Status"
 	{
 		"ru"			"Статус"

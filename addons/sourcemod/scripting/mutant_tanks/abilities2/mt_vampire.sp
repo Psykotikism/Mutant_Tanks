@@ -59,6 +59,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esVampirePlayer
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 	float g_flVampireHealthMultiplier;
@@ -78,6 +79,7 @@ esVampirePlayer g_esVampirePlayer[MAXPLAYERS + 1];
 
 enum struct esVampireAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 	float g_flVampireHealthMultiplier;
@@ -96,6 +98,7 @@ esVampireAbility g_esVampireAbility[MT_MAXTYPES + 1];
 
 enum struct esVampireCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 	float g_flVampireHealthMultiplier;
@@ -277,7 +280,7 @@ Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
 			{
-				if (bIsAreaNarrow(attacker, g_esVampireCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVampirePlayer[attacker].g_iTankType) || (g_esVampireCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVampireCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iAccessFlags, g_esVampirePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVampirePlayer[attacker].g_iTankType, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVampirePlayer[victim].g_iImmunityFlags))
+				if (bIsAreaNarrow(attacker, g_esVampireCache[attacker].g_flOpenAreasOnly) || bIsAreaWide(attacker, g_esVampireCache[attacker].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVampirePlayer[attacker].g_iTankType) || (g_esVampireCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVampireCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iAccessFlags, g_esVampirePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVampirePlayer[attacker].g_iTankType, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVampirePlayer[victim].g_iImmunityFlags))
 				{
 					return Plugin_Continue;
 				}
@@ -348,6 +351,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esVampireAbility[iIndex].g_iAccessFlags = 0;
 				g_esVampireAbility[iIndex].g_iImmunityFlags = 0;
+				g_esVampireAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esVampireAbility[iIndex].g_iHumanAbility = 0;
 				g_esVampireAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esVampireAbility[iIndex].g_iRequiresHumans = 0;
@@ -367,6 +371,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esVampirePlayer[iPlayer].g_iAccessFlags = 0;
 					g_esVampirePlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esVampirePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esVampirePlayer[iPlayer].g_iHumanAbility = 0;
 					g_esVampirePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esVampirePlayer[iPlayer].g_iRequiresHumans = 0;
@@ -390,6 +395,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esVampirePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampirePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esVampirePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampirePlayer[admin].g_iHumanAbility, value, 0, 1);
 		g_esVampirePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampirePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esVampirePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampirePlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -405,6 +411,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esVampireAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVampireAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esVampireAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVampireAbility[type].g_iHumanAbility, value, 0, 1);
 		g_esVampireAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVampireAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esVampireAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_VAMPIRE_SECTION, MT_VAMPIRE_SECTION2, MT_VAMPIRE_SECTION3, MT_VAMPIRE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVampireAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -426,6 +433,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esVampireCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flCloseAreasOnly, g_esVampireAbility[type].g_flCloseAreasOnly);
 	g_esVampireCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireChance, g_esVampireAbility[type].g_flVampireChance);
 	g_esVampireCache[tank].g_flVampireHealthMultiplier = flGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_flVampireHealthMultiplier, g_esVampireAbility[type].g_flVampireHealthMultiplier);
 	g_esVampireCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iHumanAbility, g_esVampireAbility[type].g_iHumanAbility);

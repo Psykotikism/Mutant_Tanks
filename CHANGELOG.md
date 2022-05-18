@@ -1,5 +1,95 @@
 # Changelog
 
+## Version 8.92 (June 1, 2022)
+
+### Bug Fixes
+
+#### Commands
+- Fixed the `sm_mt_ability` and `sm_mt_ability2` commands not displaying a menu for several abilities.
+
+#### Abilities
+- Fixed an issue where several claw/melee abilities will fail to activate when a human-controlled Tank uses up all their ammunition for their range abilities.
+
+### Changes
+
+#### General
+- Improved plugin load speed on server startup.
+
+#### Core Plugin
+- The speed boost reward now allows recipients to burst open doors by running into them. (Thanks to `Silvers` for the code!)
+
+#### Game Data
+- L4D2: Removed signatures for `CTerrorGameRules::IsGenericCooperativeMode`.
+- L4D2: Added signatures for the following functions:
+	- `CTerrorGameRules::IsCoopMode`
+	- `CTerrorGameRules::IsRealismMode`
+- The following functions' signatures are now dynamically generated (Thanks to `Silvers` for the code!):
+	- `CDirector::IsFirstMapInScenario` (L4D2)
+	- `CSpitterProjectile::Create` (L4D2)
+	- `CTerrorGameRules::GetMissionFirstMap`
+	- `CTerrorGameRules::IsCoopMode`
+	- `CTerrorGameRules::IsMissionFinalMap`
+	- `CTerrorGameRules::IsHoldoutMode` (L4D1)
+	- `CTerrorGameRules::IsRealismMode` (L4D2)
+	- `CTerrorGameRules::IsVersusMode` (L4D1)
+	- `CTerrorPlayer::MaterializeFromGhost`
+
+#### Settings
+- Added the `Burst Doors Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+- Added the `Close Areas Only` setting to determine which types or abilities are only for close areas. (Thanks to `Angelace113` for the idea!)
+- Added the following settings under the `Tank #/Combo` and `STEAM_ID/Combo` sections:
+	- `Combo Range Cooldown`
+	- `Combo Rock Cooldown`
+- The `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections is now enabled.
+- Added the following settings for several abilities (Requested by `Shao`.):
+	- `Human Range Cooldown`
+	- `Human Rock Cooldown`
+	- `* Cooldown`
+	- `* Range Cooldown`
+	- `* Rock Cooldown`
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+
+#### Natives & Forwards
+- Updated the documentation for the `MT_GetCombinationSetting` native.
+
+#### Abilities
+- Changed the default value of the `Human Cooldown` setting from `30` to `0`.
+- Improved the code execution of several abilities' `Combo` logic.
+
+- Acid
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Acid Rock Cooldown` setting. (Requested by `Shao`.)
+- Bomb
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Bomb Rock Cooldown` setting. (Requested by `Shao`.)
+- Fast: Changed the default value of the `Open Areas Only` setting from `0.0` to `150.0`.
+- Fire
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Fire Rock Cooldown` setting. (Requested by `Shao`.)
+- Track: Changed the default value of the `Open Areas Only` setting from `0.0` to `500.0`.
+- Warp
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Warp Rock Cooldown` setting. (Requested by `Shao`.)
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6806` compiler.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+
 ## Version 8.91 (April 16, 2022)
 
 ### Bug Fixes
@@ -1181,7 +1271,7 @@
 
 ## Version 8.80 (December 31, 2020)
 
-### Bug fixes
+### Bug Fixes
 
 #### General
 - Fixed some potential errors caused by invalid weapon slots.

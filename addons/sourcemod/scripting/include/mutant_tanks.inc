@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.91"
+#define MT_VERSION "8.92"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -482,8 +482,8 @@ native void MT_DetonateTankRock(int rock);
  * Returns if a certain survivor has a reward type active.
  *
  * @param survivor		Client index of the survivor.
- * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- * 					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill,
+ * 					128 = Respawn, 255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  *
  * @return			True if the survivor has the reward type active, false otherwise.
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
@@ -516,8 +516,8 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * Returns the value of a combination setting based on a position.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius, 8 = Range,
- * 					9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed, 14 = Cooldown
+ * @param type			1 = Chance, 2 = Cooldown, 3 = Damage, 4 = Delay, 5 = Duration, 6 = Interval, 7 = Min radius, 8 = Max radius, 9 = Range, 10 = Range chance,
+ * 					11 = Range cooldown, 12 = Death range, 13 = Death range chance, 14 = Rock chance, 15 = Rock cooldown, 16 = Speed
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
  *
  * @return			The value stored in the setting.
@@ -1967,6 +1967,42 @@ stock bool bIsAreaNarrow(int tank = 0, float range = 150.0, float pos[3] = {0.0,
 	return false;
 }
 
+stock bool bIsAreaWide(int tank = 0, float range = 500.0, float pos[3] = {0.0, 0.0, 0.0})
+{
+	if (range > 0.0)
+	{
+		float flOrigin[3], flAngles[3];
+		flAngles[0] = -89.0;
+
+		switch (tank > 0)
+		{
+			case true: GetClientEyePosition(tank, flOrigin);
+			case false: vCopyVector(pos, flOrigin);
+		}
+
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		if (hTrace != null)
+		{
+			if (TR_DidHit(hTrace))
+			{
+				float flPos[3];
+				TR_GetEndPosition(flPos, hTrace);
+
+				if (GetVectorDistance(flPos, flOrigin) >= range)
+				{
+					delete hTrace;
+
+					return true;
+				}
+			}
+
+			delete hTrace;
+		}
+	}
+
+	return false;
+}
+
 stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(boomer, flags) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
@@ -2661,7 +2697,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 99999.0)
+	else if ((!strncmp(key, "open", 4, false) || !strncmp(key, "close", 5, false)) && min == 0.0 && max == 99999.0)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
