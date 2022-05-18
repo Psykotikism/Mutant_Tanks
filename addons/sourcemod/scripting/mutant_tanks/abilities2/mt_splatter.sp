@@ -87,6 +87,7 @@ enum struct esSplatterPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplatterChance;
 	float g_flSplatterInterval;
@@ -102,6 +103,7 @@ enum struct esSplatterPlayer
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
+	int g_iSplatterCooldown;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 	int g_iTankType;
@@ -111,12 +113,14 @@ esSplatterPlayer g_esSplatterPlayer[MAXPLAYERS + 1];
 
 enum struct esSplatterAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplatterChance;
 	float g_flSplatterInterval;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -124,6 +128,7 @@ enum struct esSplatterAbility
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
+	int g_iSplatterCooldown;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 }
@@ -132,6 +137,7 @@ esSplatterAbility g_esSplatterAbility[MT_MAXTYPES + 1];
 
 enum struct esSplatterCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplatterChance;
 	float g_flSplatterInterval;
@@ -144,6 +150,7 @@ enum struct esSplatterCache
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
+	int g_iSplatterCooldown;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 }
@@ -267,7 +274,7 @@ int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esSplatterCache[param1].g_iHumanAmmo - g_esSplatterPlayer[param1].g_iAmmoCount), g_esSplatterCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esSplatterCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esSplatterCache[param1].g_iHumanAbility == 1) ? g_esSplatterCache[param1].g_iHumanCooldown : g_esSplatterCache[param1].g_iSplatterCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplatterDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esSplatterCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -373,8 +380,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility != 2))
 	{
+		g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION);
@@ -388,13 +399,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLATTER_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLATTER_SECTION4, false))
 				{
+					g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -407,9 +422,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -430,10 +445,12 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esSplatterAbility[iIndex].g_iAccessFlags = 0;
+				g_esSplatterAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esSplatterAbility[iIndex].g_iComboAbility = 0;
+				g_esSplatterAbility[iIndex].g_iComboPosition = -1;
 				g_esSplatterAbility[iIndex].g_iHumanAbility = 0;
 				g_esSplatterAbility[iIndex].g_iHumanAmmo = 5;
-				g_esSplatterAbility[iIndex].g_iHumanCooldown = 30;
+				g_esSplatterAbility[iIndex].g_iHumanCooldown = 0;
 				g_esSplatterAbility[iIndex].g_iHumanDuration = 5;
 				g_esSplatterAbility[iIndex].g_iHumanMode = 1;
 				g_esSplatterAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -441,6 +458,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplatterAbility[iIndex].g_iSplatterAbility = 0;
 				g_esSplatterAbility[iIndex].g_iSplatterMessage = 0;
 				g_esSplatterAbility[iIndex].g_flSplatterChance = 33.3;
+				g_esSplatterAbility[iIndex].g_iSplatterCooldown = 0;
 				g_esSplatterAbility[iIndex].g_flSplatterInterval = 5.0;
 				g_esSplatterAbility[iIndex].g_iSplatterType = 0;
 			}
@@ -452,6 +470,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esSplatterPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esSplatterPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esSplatterPlayer[iPlayer].g_iComboAbility = 0;
 					g_esSplatterPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esSplatterPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -463,6 +482,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSplatterPlayer[iPlayer].g_iSplatterAbility = 0;
 					g_esSplatterPlayer[iPlayer].g_iSplatterMessage = 0;
 					g_esSplatterPlayer[iPlayer].g_flSplatterChance = 0.0;
+					g_esSplatterPlayer[iPlayer].g_iSplatterCooldown = 0;
 					g_esSplatterPlayer[iPlayer].g_flSplatterInterval = 0.0;
 					g_esSplatterPlayer[iPlayer].g_iSplatterType = 0;
 				}
@@ -479,6 +499,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esSplatterPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esSplatterPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esSplatterPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esSplatterPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -490,6 +511,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterPlayer[admin].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterPlayer[admin].g_iSplatterAbility, value, 0, 3);
 		g_esSplatterPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterPlayer[admin].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
+		g_esSplatterPlayer[admin].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterPlayer[admin].g_iSplatterCooldown, value, 0, 99999);
 		g_esSplatterPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterPlayer[admin].g_flSplatterInterval, value, 0.1, 99999.0);
 		g_esSplatterPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterPlayer[admin].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -497,6 +519,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esSplatterAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esSplatterAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterAbility[type].g_iComboAbility, value, 0, 1);
 		g_esSplatterAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esSplatterAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -508,6 +531,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterAbility[type].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterAbility[type].g_iSplatterAbility, value, 0, 3);
 		g_esSplatterAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterAbility[type].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterAbility[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterAbility[type].g_flSplatterChance, value, 0.0, 100.0);
+		g_esSplatterAbility[type].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterAbility[type].g_iSplatterCooldown, value, 0, 99999);
 		g_esSplatterAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterAbility[type].g_flSplatterInterval, value, 0.1, 99999.0);
 		g_esSplatterAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterAbility[type].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -521,9 +545,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esSplatterCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_flCloseAreasOnly, g_esSplatterAbility[type].g_flCloseAreasOnly);
+	g_esSplatterCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iComboAbility, g_esSplatterAbility[type].g_iComboAbility);
 	g_esSplatterCache[tank].g_flSplatterChance = flGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_flSplatterChance, g_esSplatterAbility[type].g_flSplatterChance);
 	g_esSplatterCache[tank].g_flSplatterInterval = flGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_flSplatterInterval, g_esSplatterAbility[type].g_flSplatterInterval);
-	g_esSplatterCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iComboAbility, g_esSplatterAbility[type].g_iComboAbility);
 	g_esSplatterCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iHumanAbility, g_esSplatterAbility[type].g_iHumanAbility);
 	g_esSplatterCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iHumanAmmo, g_esSplatterAbility[type].g_iHumanAmmo);
 	g_esSplatterCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iHumanCooldown, g_esSplatterAbility[type].g_iHumanCooldown);
@@ -532,6 +557,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esSplatterCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_flOpenAreasOnly, g_esSplatterAbility[type].g_flOpenAreasOnly);
 	g_esSplatterCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iRequiresHumans, g_esSplatterAbility[type].g_iRequiresHumans);
 	g_esSplatterCache[tank].g_iSplatterAbility = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterAbility, g_esSplatterAbility[type].g_iSplatterAbility);
+	g_esSplatterCache[tank].g_iSplatterCooldown = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterCooldown, g_esSplatterAbility[type].g_iSplatterCooldown);
 	g_esSplatterCache[tank].g_iSplatterMessage = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterMessage, g_esSplatterAbility[type].g_iSplatterMessage);
 	g_esSplatterCache[tank].g_iSplatterType = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterType, g_esSplatterAbility[type].g_iSplatterType);
 	g_esSplatterPlayer[tank].g_iTankType = apply ? type : 0;
@@ -624,25 +650,45 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esSplatterCache[tank].g_iHumanMode)
+			switch (g_esSplatterCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esSplatterPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vSplatterAbility(tank);
+					}
+					else if (g_esSplatterPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esSplatterPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vSplatterAbility(tank);
+							g_esSplatterPlayer[tank].g_bActivated = true;
+							g_esSplatterPlayer[tank].g_iAmmoCount++;
+
+							vSplatter2(tank);
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman", g_esSplatterPlayer[tank].g_iAmmoCount, g_esSplatterCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esSplatterPlayer[tank].g_bActivated)
 						{
@@ -653,32 +699,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esSplatterPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esSplatterPlayer[tank].g_bActivated = true;
-								g_esSplatterPlayer[tank].g_iAmmoCount++;
-
-								vSplatter2(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman", g_esSplatterPlayer[tank].g_iAmmoCount, g_esSplatterCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esSplatterPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman4", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterAmmo");
 					}
 				}
 			}
@@ -694,12 +717,9 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esSplatterCache[tank].g_iHumanMode == 1 && g_esSplatterPlayer[tank].g_bActivated && (g_esSplatterPlayer[tank].g_iCooldown == -1 || g_esSplatterPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esSplatterCache[tank].g_iHumanMode == 1 && g_esSplatterPlayer[tank].g_bActivated && (g_esSplatterPlayer[tank].g_iCooldown == -1 || g_esSplatterPlayer[tank].g_iCooldown < GetTime()))
-			{
-				vSplatterReset2(tank);
-			}
+			vSplatterReset2(tank);
 		}
 	}
 }
@@ -755,8 +775,9 @@ void vSplatterReset2(int tank)
 {
 	g_esSplatterPlayer[tank].g_bActivated = false;
 
-	int iTime = GetTime();
-	g_esSplatterPlayer[tank].g_iCooldown = (g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esSplatterCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplatterCache[tank].g_iSplatterCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1) ? g_esSplatterCache[tank].g_iHumanCooldown : iCooldown;
+	g_esSplatterPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman5", (g_esSplatterPlayer[tank].g_iCooldown - iTime));
@@ -787,12 +808,12 @@ void vSplatter(int tank, int pos = -1)
 
 void vSplatter2(int tank, int pos = -1)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplatterCache[tank].g_flSplatterInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esSplatterCache[tank].g_flSplatterInterval;
 	DataPack dpSplatter;
 	CreateDataTimer(flInterval, tTimerSplatter, dpSplatter, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSplatter.WriteCell(GetClientUserId(tank));
@@ -802,7 +823,7 @@ void vSplatter2(int tank, int pos = -1)
 
 void vSplatterAbility(int tank)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -828,7 +849,7 @@ void vSplatterRange(int tank, bool idle)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esSplatterCache[tank].g_iSplatterAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esSplatterCache[tank].g_flSplatterChance)
 	{
-		if (!g_bSecondGame || (idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)) || g_esSplatterCache[tank].g_iHumanAbility == 0)))
+		if (!g_bSecondGame || (idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)) || g_esSplatterCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -860,7 +881,7 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplatterCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[iTank].g_iTankType) || (g_esSplatterCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplatterAbility[g_esSplatterPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplatterPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplatterPlayer[iTank].g_iTankType || g_esSplatterCache[iTank].g_iSplatterAbility == 0 || !g_esSplatterPlayer[iTank].g_bActivated)
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplatterCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esSplatterCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[iTank].g_iTankType) || (g_esSplatterCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplatterAbility[g_esSplatterPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplatterPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplatterPlayer[iTank].g_iTankType || g_esSplatterCache[iTank].g_iSplatterAbility == 0 || !g_esSplatterPlayer[iTank].g_bActivated)
 	{
 		g_esSplatterPlayer[iTank].g_bActivated = false;
 
@@ -868,7 +889,7 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[iTank].g_iHumanAbility == 1 && g_esSplatterCache[iTank].g_iHumanMode == 0 && (iTime + g_esSplatterCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplatterPlayer[iTank].g_iCooldown == -1 || g_esSplatterPlayer[iTank].g_iCooldown < iCurrentTime))
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esSplatterCache[iTank].g_iHumanAbility == 1 && g_esSplatterCache[iTank].g_iHumanMode == 0)) && (iTime + g_esSplatterCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplatterPlayer[iTank].g_iCooldown == -1 || g_esSplatterPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplatterReset2(iTank);
 

@@ -65,6 +65,7 @@ enum struct esHypnoPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flHypnoBulletDivisor;
 	float g_flHypnoChance;
 	float g_flHypnoDuration;
@@ -83,14 +84,18 @@ enum struct esHypnoPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iHypnoAbility;
+	int g_iHypnoCooldown;
 	int g_iHypnoEffect;
 	int g_iHypnoHit;
 	int g_iHypnoHitMode;
 	int g_iHypnoMessage;
 	int g_iHypnoMode;
+	int g_iHypnoRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -99,6 +104,7 @@ esHypnoPlayer g_esHypnoPlayer[MAXPLAYERS + 1];
 
 enum struct esHypnoAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flHypnoBulletDivisor;
 	float g_flHypnoChance;
 	float g_flHypnoDuration;
@@ -115,12 +121,15 @@ enum struct esHypnoAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iHypnoAbility;
+	int g_iHypnoCooldown;
 	int g_iHypnoEffect;
 	int g_iHypnoHit;
 	int g_iHypnoHitMode;
 	int g_iHypnoMessage;
 	int g_iHypnoMode;
+	int g_iHypnoRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -129,6 +138,7 @@ esHypnoAbility g_esHypnoAbility[MT_MAXTYPES + 1];
 
 enum struct esHypnoCache
 {
+	float g_flCloseAreasOnly;
 	float g_flHypnoBulletDivisor;
 	float g_flHypnoChance;
 	float g_flHypnoDuration;
@@ -144,12 +154,15 @@ enum struct esHypnoCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iHypnoAbility;
+	int g_iHypnoCooldown;
 	int g_iHypnoEffect;
 	int g_iHypnoHit;
 	int g_iHypnoHitMode;
 	int g_iHypnoMessage;
 	int g_iHypnoMode;
+	int g_iHypnoRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -261,6 +274,7 @@ void vHypnoMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -276,10 +290,11 @@ int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHypnoCache[param1].g_iHypnoAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esHypnoCache[param1].g_iHumanAmmo - g_esHypnoPlayer[param1].g_iAmmoCount), g_esHypnoCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esHypnoCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esHypnoCache[param1].g_iHumanAbility == 1) ? g_esHypnoCache[param1].g_iHumanCooldown : g_esHypnoCache[param1].g_iHypnoCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "HypnoDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esHypnoCache[param1].g_flHypnoDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esHypnoCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esHypnoCache[param1].g_iHumanAbility == 1) ? g_esHypnoCache[param1].g_iHumanRangeCooldown : g_esHypnoCache[param1].g_iHypnoRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -309,6 +324,7 @@ int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -489,11 +505,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_HYPNO_SECTION, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION2, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION3, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -517,7 +535,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -568,10 +586,12 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esHypnoAbility[iIndex].g_iAccessFlags = 0;
 				g_esHypnoAbility[iIndex].g_iImmunityFlags = 0;
+				g_esHypnoAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esHypnoAbility[iIndex].g_iComboAbility = 0;
 				g_esHypnoAbility[iIndex].g_iHumanAbility = 0;
 				g_esHypnoAbility[iIndex].g_iHumanAmmo = 5;
-				g_esHypnoAbility[iIndex].g_iHumanCooldown = 30;
+				g_esHypnoAbility[iIndex].g_iHumanCooldown = 0;
+				g_esHypnoAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esHypnoAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esHypnoAbility[iIndex].g_iRequiresHumans = 0;
 				g_esHypnoAbility[iIndex].g_iHypnoAbility = 0;
@@ -579,6 +599,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHypnoAbility[iIndex].g_iHypnoMessage = 0;
 				g_esHypnoAbility[iIndex].g_flHypnoBulletDivisor = 20.0;
 				g_esHypnoAbility[iIndex].g_flHypnoChance = 33.3;
+				g_esHypnoAbility[iIndex].g_iHypnoCooldown = 0;
 				g_esHypnoAbility[iIndex].g_flHypnoDuration = 5.0;
 				g_esHypnoAbility[iIndex].g_flHypnoExplosiveDivisor = 20.0;
 				g_esHypnoAbility[iIndex].g_flHypnoFireDivisor = 200.0;
@@ -589,6 +610,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHypnoAbility[iIndex].g_iHypnoMode = 0;
 				g_esHypnoAbility[iIndex].g_flHypnoRange = 150.0;
 				g_esHypnoAbility[iIndex].g_flHypnoRangeChance = 15.0;
+				g_esHypnoAbility[iIndex].g_iHypnoRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -599,10 +621,12 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esHypnoPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esHypnoPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esHypnoPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esHypnoPlayer[iPlayer].g_iComboAbility = 0;
 					g_esHypnoPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esHypnoPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esHypnoPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esHypnoPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esHypnoPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esHypnoPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esHypnoPlayer[iPlayer].g_iHypnoAbility = 0;
@@ -610,6 +634,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHypnoPlayer[iPlayer].g_iHypnoMessage = 0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoBulletDivisor = 0.0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoChance = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoCooldown = 0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoDuration = 0.0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoExplosiveDivisor = 0.0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoFireDivisor = 0.0;
@@ -634,10 +659,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esHypnoPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHypnoPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esHypnoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHypnoPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esHypnoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHypnoPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esHypnoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHypnoPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esHypnoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHypnoPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esHypnoPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHypnoPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esHypnoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHypnoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esHypnoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHypnoPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esHypnoPlayer[admin].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoPlayer[admin].g_iHypnoAbility, value, 0, 1);
@@ -645,6 +672,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoPlayer[admin].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoPlayer[admin].g_iHypnoMessage, value, 0, 3);
 		g_esHypnoPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoPlayer[admin].g_flHypnoBulletDivisor, value, 1.0, 99999.0);
 		g_esHypnoPlayer[admin].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoPlayer[admin].g_flHypnoChance, value, 0.0, 100.0);
+		g_esHypnoPlayer[admin].g_iHypnoCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoCooldown", "Hypno Cooldown", "Hypno_Cooldown", "cooldown", g_esHypnoPlayer[admin].g_iHypnoCooldown, value, 0, 99999);
 		g_esHypnoPlayer[admin].g_flHypnoDuration = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esHypnoPlayer[admin].g_flHypnoDuration, value, 0.1, 99999.0);
 		g_esHypnoPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esHypnoPlayer[admin].g_flHypnoExplosiveDivisor, value, 1.0, 99999.0);
 		g_esHypnoPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esHypnoPlayer[admin].g_flHypnoFireDivisor, value, 1.0, 99999.0);
@@ -655,16 +683,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoPlayer[admin].g_iHypnoMode, value, 0, 1);
 		g_esHypnoPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoPlayer[admin].g_flHypnoRange, value, 1.0, 99999.0);
 		g_esHypnoPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
+		g_esHypnoPlayer[admin].g_iHypnoRangeCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeCooldown", "Hypno Range Cooldown", "Hypno_Range_Cooldown", "rangecooldown", g_esHypnoPlayer[admin].g_iHypnoRangeCooldown, value, 0, 99999);
 		g_esHypnoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esHypnoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esHypnoAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHypnoAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esHypnoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHypnoAbility[type].g_iComboAbility, value, 0, 1);
 		g_esHypnoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHypnoAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esHypnoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHypnoAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esHypnoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHypnoAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esHypnoAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHypnoAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esHypnoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHypnoAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esHypnoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHypnoAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esHypnoAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoAbility[type].g_iHypnoAbility, value, 0, 1);
@@ -672,6 +703,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoAbility[type].g_iHypnoMessage, value, 0, 3);
 		g_esHypnoAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoAbility[type].g_flHypnoBulletDivisor, value, 1.0, 99999.0);
 		g_esHypnoAbility[type].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoAbility[type].g_flHypnoChance, value, 0.0, 100.0);
+		g_esHypnoAbility[type].g_iHypnoCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoCooldown", "Hypno Cooldown", "Hypno_Cooldown", "cooldown", g_esHypnoAbility[type].g_iHypnoCooldown, value, 0, 99999);
 		g_esHypnoAbility[type].g_flHypnoDuration = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esHypnoAbility[type].g_flHypnoDuration, value, 0.1, 99999.0);
 		g_esHypnoAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esHypnoAbility[type].g_flHypnoExplosiveDivisor, value, 1.0, 99999.0);
 		g_esHypnoAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esHypnoAbility[type].g_flHypnoFireDivisor, value, 1.0, 99999.0);
@@ -682,6 +714,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoAbility[type].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoAbility[type].g_iHypnoMode, value, 0, 1);
 		g_esHypnoAbility[type].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoAbility[type].g_flHypnoRange, value, 1.0, 99999.0);
 		g_esHypnoAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);
+		g_esHypnoAbility[type].g_iHypnoRangeCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "HypnoRangeCooldown", "Hypno Range Cooldown", "Hypno_Range_Cooldown", "rangecooldown", g_esHypnoAbility[type].g_iHypnoRangeCooldown, value, 0, 99999);
 		g_esHypnoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esHypnoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -694,8 +727,11 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esHypnoCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flCloseAreasOnly, g_esHypnoAbility[type].g_flCloseAreasOnly);
+	g_esHypnoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoAbility[type].g_iComboAbility);
 	g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoAbility[type].g_flHypnoBulletDivisor);
 	g_esHypnoCache[tank].g_flHypnoChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoAbility[type].g_flHypnoChance);
+	g_esHypnoCache[tank].g_iHypnoCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoCooldown, g_esHypnoAbility[type].g_iHypnoCooldown);
 	g_esHypnoCache[tank].g_flHypnoDuration = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoAbility[type].g_flHypnoDuration);
 	g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoAbility[type].g_flHypnoExplosiveDivisor);
 	g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoAbility[type].g_flHypnoFireDivisor);
@@ -703,16 +739,17 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoAbility[type].g_flHypnoMeleeDivisor);
 	g_esHypnoCache[tank].g_flHypnoRange = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoAbility[type].g_flHypnoRange);
 	g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoAbility[type].g_flHypnoRangeChance);
-	g_esHypnoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoAbility[type].g_iComboAbility);
 	g_esHypnoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoAbility[type].g_iHumanAbility);
 	g_esHypnoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoAbility[type].g_iHumanAmmo);
 	g_esHypnoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoAbility[type].g_iHumanCooldown);
+	g_esHypnoCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanRangeCooldown, g_esHypnoAbility[type].g_iHumanRangeCooldown);
 	g_esHypnoCache[tank].g_iHypnoAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoAbility[type].g_iHypnoAbility);
 	g_esHypnoCache[tank].g_iHypnoEffect = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoAbility[type].g_iHypnoEffect);
 	g_esHypnoCache[tank].g_iHypnoHit = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoAbility[type].g_iHypnoHit);
 	g_esHypnoCache[tank].g_iHypnoHitMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoAbility[type].g_iHypnoHitMode);
 	g_esHypnoCache[tank].g_iHypnoMessage = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoAbility[type].g_iHypnoMessage);
 	g_esHypnoCache[tank].g_iHypnoMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoAbility[type].g_iHypnoMode);
+	g_esHypnoCache[tank].g_iHypnoRangeCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoRangeCooldown, g_esHypnoAbility[type].g_iHypnoRangeCooldown);
 	g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoAbility[type].g_flOpenAreasOnly);
 	g_esHypnoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoAbility[type].g_iRequiresHumans);
 	g_esHypnoPlayer[tank].g_iTankType = apply ? type : 0;
@@ -804,22 +841,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman3", (g_esHypnoPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esHypnoPlayer[tank].g_iRangeCooldown == -1 || g_esHypnoPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman3", (g_esHypnoPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -839,15 +873,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveHypno(tank);
 }
 
-void vHypnoCopyStats2(int oldTank, int newTank)
-{
-	g_esHypnoPlayer[newTank].g_iAmmoCount = g_esHypnoPlayer[oldTank].g_iAmmoCount;
-	g_esHypnoPlayer[newTank].g_iCooldown = g_esHypnoPlayer[oldTank].g_iCooldown;
-}
-
 void vHypnoAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -859,8 +887,8 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -892,14 +920,14 @@ void vHypnoAbility(int tank, float random, int pos = -1)
 
 void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esHypnoCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
 		{
 			int iTime = GetTime();
 			if (random <= chance && !g_esHypnoPlayer[survivor].g_bAffected)
@@ -907,20 +935,36 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 				g_esHypnoPlayer[survivor].g_bAffected = true;
 				g_esHypnoPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iRangeCooldown == -1 || g_esHypnoPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esHypnoPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1)
+					{
+						g_esHypnoPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman", g_esHypnoPlayer[tank].g_iAmmoCount, g_esHypnoCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman", g_esHypnoPlayer[tank].g_iAmmoCount, g_esHypnoCache[tank].g_iHumanAmmo);
+					}
 
-					g_esHypnoPlayer[tank].g_iCooldown = (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esHypnoCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esHypnoCache[tank].g_iHypnoRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1) ? g_esHypnoCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esHypnoPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esHypnoPlayer[tank].g_iRangeCooldown != -1 && g_esHypnoPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman5", (g_esHypnoPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esHypnoCache[tank].g_iHypnoCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1) ? g_esHypnoCache[tank].g_iHumanCooldown : iCooldown;
+					g_esHypnoPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esHypnoPlayer[tank].g_iCooldown != -1 && g_esHypnoPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman5", (g_esHypnoPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
-				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
 				DataPack dpStopHypno;
 				CreateDataTimer(flDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopHypno.WriteCell(GetClientUserId(survivor));
@@ -937,7 +981,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iRangeCooldown == -1 || g_esHypnoPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1 && !g_esHypnoPlayer[tank].g_bFailed)
 				{
@@ -954,6 +998,13 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoAmmo");
 		}
 	}
+}
+
+void vHypnoCopyStats2(int oldTank, int newTank)
+{
+	g_esHypnoPlayer[newTank].g_iAmmoCount = g_esHypnoPlayer[oldTank].g_iAmmoCount;
+	g_esHypnoPlayer[newTank].g_iCooldown = g_esHypnoPlayer[oldTank].g_iCooldown;
+	g_esHypnoPlayer[newTank].g_iRangeCooldown = g_esHypnoPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveHypno(int tank)
@@ -990,6 +1041,7 @@ void vHypnoReset2(int tank)
 	g_esHypnoPlayer[tank].g_bNoAmmo = false;
 	g_esHypnoPlayer[tank].g_iAmmoCount = 0;
 	g_esHypnoPlayer[tank].g_iCooldown = -1;
+	g_esHypnoPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerHypnoCombo(Handle timer, DataPack pack)

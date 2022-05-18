@@ -60,6 +60,7 @@ enum struct esSplashPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplashChance;
 	float g_flSplashDamage;
@@ -78,6 +79,7 @@ enum struct esSplashPlayer
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
+	int g_iSplashCooldown;
 	int g_iSplashMessage;
 	int g_iTankType;
 }
@@ -86,6 +88,7 @@ esSplashPlayer g_esSplashPlayer[MAXPLAYERS + 1];
 
 enum struct esSplashAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplashChance;
 	float g_flSplashDamage;
@@ -94,6 +97,7 @@ enum struct esSplashAbility
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -102,6 +106,7 @@ enum struct esSplashAbility
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
+	int g_iSplashCooldown;
 	int g_iSplashMessage;
 }
 
@@ -109,6 +114,7 @@ esSplashAbility g_esSplashAbility[MT_MAXTYPES + 1];
 
 enum struct esSplashCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSplashChance;
 	float g_flSplashDamage;
@@ -123,6 +129,7 @@ enum struct esSplashCache
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
+	int g_iSplashCooldown;
 	int g_iSplashMessage;
 }
 
@@ -237,7 +244,7 @@ int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esSplashCache[param1].g_iHumanAmmo - g_esSplashPlayer[param1].g_iAmmoCount), g_esSplashCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplashCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esSplashCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esSplashCache[param1].g_iHumanAbility == 1) ? g_esSplashCache[param1].g_iHumanCooldown : g_esSplashCache[param1].g_iSplashCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplashDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esSplashCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplashCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -343,8 +350,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility != 2)
 	{
+		g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLASH_SECTION);
@@ -358,13 +369,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_SPLASH_SECTION, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION2, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION3, false) || StrEqual(sSubset[iPos], MT_SPLASH_SECTION4, false))
 				{
+					g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -377,9 +392,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -401,10 +416,12 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esSplashAbility[iIndex].g_iAccessFlags = 0;
 				g_esSplashAbility[iIndex].g_iImmunityFlags = 0;
+				g_esSplashAbility[iIndex].g_flCloseAreasOnly = 150.0;
 				g_esSplashAbility[iIndex].g_iComboAbility = 0;
+				g_esSplashAbility[iIndex].g_iComboPosition = -1;
 				g_esSplashAbility[iIndex].g_iHumanAbility = 0;
 				g_esSplashAbility[iIndex].g_iHumanAmmo = 5;
-				g_esSplashAbility[iIndex].g_iHumanCooldown = 30;
+				g_esSplashAbility[iIndex].g_iHumanCooldown = 0;
 				g_esSplashAbility[iIndex].g_iHumanDuration = 5;
 				g_esSplashAbility[iIndex].g_iHumanMode = 1;
 				g_esSplashAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -412,6 +429,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplashAbility[iIndex].g_iSplashAbility = 0;
 				g_esSplashAbility[iIndex].g_iSplashMessage = 0;
 				g_esSplashAbility[iIndex].g_flSplashChance = 33.3;
+				g_esSplashAbility[iIndex].g_iSplashCooldown = 0;
 				g_esSplashAbility[iIndex].g_flSplashDamage = 5.0;
 				g_esSplashAbility[iIndex].g_flSplashInterval = 5.0;
 				g_esSplashAbility[iIndex].g_flSplashRange = 500.0;
@@ -425,6 +443,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esSplashPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esSplashPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esSplashPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esSplashPlayer[iPlayer].g_iComboAbility = 0;
 					g_esSplashPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esSplashPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -436,6 +455,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSplashPlayer[iPlayer].g_iSplashAbility = 0;
 					g_esSplashPlayer[iPlayer].g_iSplashMessage = 0;
 					g_esSplashPlayer[iPlayer].g_flSplashChance = 0.0;
+					g_esSplashPlayer[iPlayer].g_iSplashCooldown = 0;
 					g_esSplashPlayer[iPlayer].g_flSplashDamage = 0.0;
 					g_esSplashPlayer[iPlayer].g_flSplashInterval = 0.0;
 					g_esSplashPlayer[iPlayer].g_flSplashRange = 0.0;
@@ -453,6 +473,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esSplashPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esSplashPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esSplashPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esSplashPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -464,6 +485,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashPlayer[admin].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashPlayer[admin].g_iSplashAbility, value, 0, 1);
 		g_esSplashPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashPlayer[admin].g_iSplashMessage, value, 0, 1);
 		g_esSplashPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
+		g_esSplashPlayer[admin].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashPlayer[admin].g_iSplashCooldown, value, 0, 99999);
 		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 99999.0);
 		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 99999.0);
@@ -473,6 +495,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esSplashAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplashAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esSplashAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplashAbility[type].g_iComboAbility, value, 0, 1);
 		g_esSplashAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esSplashAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -484,6 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashAbility[type].g_iSplashAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplashAbility[type].g_iSplashAbility, value, 0, 1);
 		g_esSplashAbility[type].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashAbility[type].g_iSplashMessage, value, 0, 1);
 		g_esSplashAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashAbility[type].g_flSplashChance, value, 0.0, 100.0);
+		g_esSplashAbility[type].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashAbility[type].g_iSplashCooldown, value, 0, 99999);
 		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 99999.0);
 		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 99999.0);
@@ -499,11 +523,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esSplashCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flCloseAreasOnly, g_esSplashAbility[type].g_flCloseAreasOnly);
+	g_esSplashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility);
 	g_esSplashCache[tank].g_flSplashChance = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashChance, g_esSplashAbility[type].g_flSplashChance);
 	g_esSplashCache[tank].g_flSplashDamage = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashDamage, g_esSplashAbility[type].g_flSplashDamage);
 	g_esSplashCache[tank].g_flSplashInterval = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashInterval, g_esSplashAbility[type].g_flSplashInterval);
 	g_esSplashCache[tank].g_flSplashRange = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flSplashRange, g_esSplashAbility[type].g_flSplashRange);
-	g_esSplashCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iComboAbility, g_esSplashAbility[type].g_iComboAbility);
 	g_esSplashCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAbility, g_esSplashAbility[type].g_iHumanAbility);
 	g_esSplashCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanAmmo, g_esSplashAbility[type].g_iHumanAmmo);
 	g_esSplashCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iHumanCooldown, g_esSplashAbility[type].g_iHumanCooldown);
@@ -512,6 +537,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esSplashCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_flOpenAreasOnly, g_esSplashAbility[type].g_flOpenAreasOnly);
 	g_esSplashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans);
 	g_esSplashCache[tank].g_iSplashAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility);
+	g_esSplashCache[tank].g_iSplashCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown);
 	g_esSplashCache[tank].g_iSplashMessage = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage);
 	g_esSplashPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -602,25 +628,45 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplashCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esSplashCache[tank].g_iSplashAbility == 1 && g_esSplashCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esSplashCache[tank].g_iHumanMode)
+			switch (g_esSplashCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esSplashPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vSplashAbility(tank);
+					}
+					else if (g_esSplashPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman4", (g_esSplashPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esSplashPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vSplashAbility(tank);
+							g_esSplashPlayer[tank].g_bActivated = true;
+							g_esSplashPlayer[tank].g_iAmmoCount++;
+
+							vSplash2(tank);
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman", g_esSplashPlayer[tank].g_iAmmoCount, g_esSplashCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esSplashPlayer[tank].g_bActivated)
 						{
@@ -631,32 +677,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman4", (g_esSplashPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esSplashPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esSplashPlayer[tank].g_bActivated = true;
-								g_esSplashPlayer[tank].g_iAmmoCount++;
-
-								vSplash2(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman", g_esSplashPlayer[tank].g_iAmmoCount, g_esSplashCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esSplashPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman4", (g_esSplashPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashAmmo");
 					}
 				}
 			}
@@ -672,13 +695,10 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esSplashCache[tank].g_iHumanMode == 1 && g_esSplashPlayer[tank].g_bActivated && (g_esSplashPlayer[tank].g_iCooldown == -1 || g_esSplashPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esSplashCache[tank].g_iHumanMode == 1 && g_esSplashPlayer[tank].g_bActivated && (g_esSplashPlayer[tank].g_iCooldown == -1 || g_esSplashPlayer[tank].g_iCooldown < GetTime()))
-			{
-				vSplashReset2(tank);
-				vSplashReset3(tank);
-			}
+			vSplashReset2(tank);
+			vSplashReset3(tank);
 		}
 	}
 }
@@ -736,8 +756,9 @@ void vSplashReset2(int tank)
 
 void vSplashReset3(int tank)
 {
-	int iTime = GetTime();
-	g_esSplashPlayer[tank].g_iCooldown = (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esSplashCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
+	g_esSplashPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman5", (g_esSplashPlayer[tank].g_iCooldown - iTime));
@@ -768,12 +789,12 @@ void vSplash(int tank, int pos = -1)
 
 void vSplash2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplashCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esSplashCache[tank].g_flSplashInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esSplashCache[tank].g_flSplashInterval;
 	DataPack dpSplash;
 	CreateDataTimer(flInterval, tTimerSplash, dpSplash, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSplash.WriteCell(GetClientUserId(tank));
@@ -784,7 +805,7 @@ void vSplash2(int tank, int pos = -1)
 
 void vSplashAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esSplashCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplashCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[tank].g_iTankType) || (g_esSplashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -827,7 +848,7 @@ Action tTimerSplash(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplashCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[iTank].g_iTankType) || (g_esSplashCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplashPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplashPlayer[iTank].g_iTankType || g_esSplashCache[iTank].g_iSplashAbility == 0 || !g_esSplashPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSplashCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esSplashCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplashPlayer[iTank].g_iTankType) || (g_esSplashCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplashCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplashPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSplashPlayer[iTank].g_iTankType || g_esSplashCache[iTank].g_iSplashAbility == 0 || !g_esSplashPlayer[iTank].g_bActivated)
 	{
 		vSplashReset2(iTank);
 
@@ -835,7 +856,7 @@ Action tTimerSplash(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0 && (iTime + g_esSplashCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0)) && (iTime + g_esSplashCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplashReset2(iTank);
 		vSplashReset3(iTank);
@@ -845,8 +866,8 @@ Action tTimerSplash(Handle timer, DataPack pack)
 
 	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esSplashCache[iTank].g_flSplashDamage,
-		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esSplashCache[iTank].g_flSplashRange;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esSplashCache[iTank].g_flSplashDamage,
+		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esSplashCache[iTank].g_flSplashRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esSplashPlayer[iTank].g_iTankType, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSplashPlayer[iSurvivor].g_iImmunityFlags))

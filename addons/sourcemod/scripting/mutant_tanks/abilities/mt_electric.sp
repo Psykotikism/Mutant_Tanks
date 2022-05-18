@@ -68,6 +68,7 @@ enum struct esElectricPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flElectricChance;
 	float g_flElectricDamage;
 	float g_flElectricInterval;
@@ -80,16 +81,20 @@ enum struct esElectricPlayer
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iElectricAbility;
+	int g_iElectricCooldown;
 	int g_iElectricDuration;
 	int g_iElectricEffect;
 	int g_iElectricHit;
 	int g_iElectricHitMode;
 	int g_iElectricMessage;
+	int g_iElectricRangeCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -98,6 +103,7 @@ esElectricPlayer g_esElectricPlayer[MAXPLAYERS + 1];
 
 enum struct esElectricAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flElectricChance;
 	float g_flElectricDamage;
 	float g_flElectricInterval;
@@ -108,14 +114,17 @@ enum struct esElectricAbility
 	int g_iAccessFlags;
 	int g_iComboAbility;
 	int g_iElectricAbility;
+	int g_iElectricCooldown;
 	int g_iElectricDuration;
 	int g_iElectricEffect;
 	int g_iElectricHit;
 	int g_iElectricHitMode;
 	int g_iElectricMessage;
+	int g_iElectricRangeCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -124,6 +133,7 @@ esElectricAbility g_esElectricAbility[MT_MAXTYPES + 1];
 
 enum struct esElectricCache
 {
+	float g_flCloseAreasOnly;
 	float g_flElectricChance;
 	float g_flElectricDamage;
 	float g_flElectricInterval;
@@ -133,14 +143,17 @@ enum struct esElectricCache
 
 	int g_iComboAbility;
 	int g_iElectricAbility;
+	int g_iElectricCooldown;
 	int g_iElectricDuration;
 	int g_iElectricEffect;
 	int g_iElectricHit;
 	int g_iElectricHitMode;
 	int g_iElectricMessage;
+	int g_iElectricRangeCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -260,6 +273,7 @@ void vElectricMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -275,10 +289,11 @@ int iElectricMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esElectricCache[param1].g_iElectricAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esElectricCache[param1].g_iHumanAmmo - g_esElectricPlayer[param1].g_iAmmoCount), g_esElectricCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esElectricCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esElectricCache[param1].g_iHumanAbility == 1) ? g_esElectricCache[param1].g_iHumanCooldown : g_esElectricCache[param1].g_iElectricCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ElectricDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esElectricCache[param1].g_iElectricDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esElectricCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esElectricCache[param1].g_iHumanAbility == 1) ? g_esElectricCache[param1].g_iHumanRangeCooldown : g_esElectricCache[param1].g_iElectricRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -308,6 +323,7 @@ int iElectricMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -428,11 +444,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION2, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION3, false) || StrEqual(sSubset[iPos], MT_ELECTRIC_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -456,7 +474,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -507,16 +525,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esElectricAbility[iIndex].g_iAccessFlags = 0;
 				g_esElectricAbility[iIndex].g_iImmunityFlags = 0;
+				g_esElectricAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esElectricAbility[iIndex].g_iComboAbility = 0;
 				g_esElectricAbility[iIndex].g_iHumanAbility = 0;
 				g_esElectricAbility[iIndex].g_iHumanAmmo = 5;
-				g_esElectricAbility[iIndex].g_iHumanCooldown = 30;
+				g_esElectricAbility[iIndex].g_iHumanCooldown = 0;
+				g_esElectricAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esElectricAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esElectricAbility[iIndex].g_iRequiresHumans = 0;
 				g_esElectricAbility[iIndex].g_iElectricAbility = 0;
 				g_esElectricAbility[iIndex].g_iElectricEffect = 0;
 				g_esElectricAbility[iIndex].g_iElectricMessage = 0;
 				g_esElectricAbility[iIndex].g_flElectricChance = 33.3;
+				g_esElectricAbility[iIndex].g_iElectricCooldown = 0;
 				g_esElectricAbility[iIndex].g_flElectricDamage = 1.0;
 				g_esElectricAbility[iIndex].g_iElectricDuration = 5;
 				g_esElectricAbility[iIndex].g_iElectricHit = 0;
@@ -524,6 +545,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esElectricAbility[iIndex].g_flElectricInterval = 1.0;
 				g_esElectricAbility[iIndex].g_flElectricRange = 150.0;
 				g_esElectricAbility[iIndex].g_flElectricRangeChance = 15.0;
+				g_esElectricAbility[iIndex].g_iElectricRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -534,16 +556,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esElectricPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esElectricPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esElectricPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esElectricPlayer[iPlayer].g_iComboAbility = 0;
 					g_esElectricPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esElectricPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esElectricPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esElectricPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esElectricPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esElectricPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esElectricPlayer[iPlayer].g_iElectricAbility = 0;
 					g_esElectricPlayer[iPlayer].g_iElectricEffect = 0;
 					g_esElectricPlayer[iPlayer].g_iElectricMessage = 0;
 					g_esElectricPlayer[iPlayer].g_flElectricChance = 0.0;
+					g_esElectricPlayer[iPlayer].g_iElectricCooldown = 0;
 					g_esElectricPlayer[iPlayer].g_flElectricDamage = 0.0;
 					g_esElectricPlayer[iPlayer].g_iElectricDuration = 0;
 					g_esElectricPlayer[iPlayer].g_iElectricHit = 0;
@@ -565,16 +590,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esElectricPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esElectricPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esElectricPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esElectricPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esElectricPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esElectricPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esElectricPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esElectricPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esElectricPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esElectricPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esElectricPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esElectricPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esElectricPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esElectricPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esElectricPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esElectricPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esElectricPlayer[admin].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricPlayer[admin].g_iElectricAbility, value, 0, 1);
 		g_esElectricPlayer[admin].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricPlayer[admin].g_iElectricEffect, value, 0, 7);
 		g_esElectricPlayer[admin].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricPlayer[admin].g_iElectricMessage, value, 0, 3);
 		g_esElectricPlayer[admin].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricPlayer[admin].g_flElectricChance, value, 0.0, 100.0);
+		g_esElectricPlayer[admin].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricPlayer[admin].g_iElectricCooldown, value, 0, 99999);
 		g_esElectricPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricPlayer[admin].g_flElectricDamage, value, 1.0, 99999.0);
 		g_esElectricPlayer[admin].g_iElectricDuration = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esElectricPlayer[admin].g_iElectricDuration, value, 1, 99999);
 		g_esElectricPlayer[admin].g_iElectricHit = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esElectricPlayer[admin].g_iElectricHit, value, 0, 1);
@@ -582,22 +610,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricPlayer[admin].g_flElectricInterval = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esElectricPlayer[admin].g_flElectricInterval, value, 0.1, 99999.0);
 		g_esElectricPlayer[admin].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricPlayer[admin].g_flElectricRange, value, 1.0, 99999.0);
 		g_esElectricPlayer[admin].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricPlayer[admin].g_flElectricRangeChance, value, 0.0, 100.0);
+		g_esElectricPlayer[admin].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricPlayer[admin].g_iElectricRangeCooldown, value, 0, 99999);
 		g_esElectricPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esElectricPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esElectricAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esElectricAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esElectricAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esElectricAbility[type].g_iComboAbility, value, 0, 1);
 		g_esElectricAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esElectricAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esElectricAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esElectricAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esElectricAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esElectricAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esElectricAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esElectricAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esElectricAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esElectricAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esElectricAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esElectricAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esElectricAbility[type].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricAbility[type].g_iElectricAbility, value, 0, 1);
 		g_esElectricAbility[type].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricAbility[type].g_iElectricEffect, value, 0, 7);
 		g_esElectricAbility[type].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricAbility[type].g_iElectricMessage, value, 0, 3);
 		g_esElectricAbility[type].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricAbility[type].g_flElectricChance, value, 0.0, 100.0);
+		g_esElectricAbility[type].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricAbility[type].g_iElectricCooldown, value, 0, 99999);
 		g_esElectricAbility[type].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricAbility[type].g_flElectricDamage, value, 1.0, 99999.0);
 		g_esElectricAbility[type].g_iElectricDuration = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esElectricAbility[type].g_iElectricDuration, value, 1, 99999);
 		g_esElectricAbility[type].g_iElectricHit = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esElectricAbility[type].g_iElectricHit, value, 0, 1);
@@ -605,6 +637,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricAbility[type].g_flElectricInterval = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esElectricAbility[type].g_flElectricInterval, value, 0.1, 99999.0);
 		g_esElectricAbility[type].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricAbility[type].g_flElectricRange, value, 1.0, 99999.0);
 		g_esElectricAbility[type].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricAbility[type].g_flElectricRangeChance, value, 0.0, 100.0);
+		g_esElectricAbility[type].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricAbility[type].g_iElectricRangeCooldown, value, 0, 99999);
 		g_esElectricAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esElectricAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -617,6 +650,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esElectricCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flCloseAreasOnly, g_esElectricAbility[type].g_flCloseAreasOnly);
+	g_esElectricCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricAbility[type].g_iComboAbility);
 	g_esElectricCache[tank].g_flElectricChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricAbility[type].g_flElectricChance);
 	g_esElectricCache[tank].g_flElectricDamage = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricDamage, g_esElectricAbility[type].g_flElectricDamage);
 	g_esElectricCache[tank].g_iElectricDuration = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricDuration, g_esElectricAbility[type].g_iElectricDuration);
@@ -624,14 +659,16 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esElectricCache[tank].g_flElectricRange = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRange, g_esElectricAbility[type].g_flElectricRange);
 	g_esElectricCache[tank].g_flElectricRangeChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricRangeChance, g_esElectricAbility[type].g_flElectricRangeChance);
 	g_esElectricCache[tank].g_iElectricAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricAbility, g_esElectricAbility[type].g_iElectricAbility);
+	g_esElectricCache[tank].g_iElectricCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricCooldown, g_esElectricAbility[type].g_iElectricCooldown);
 	g_esElectricCache[tank].g_iElectricEffect = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricEffect, g_esElectricAbility[type].g_iElectricEffect);
 	g_esElectricCache[tank].g_iElectricHit = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHit, g_esElectricAbility[type].g_iElectricHit);
 	g_esElectricCache[tank].g_iElectricHitMode = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricHitMode, g_esElectricAbility[type].g_iElectricHitMode);
 	g_esElectricCache[tank].g_iElectricMessage = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricMessage, g_esElectricAbility[type].g_iElectricMessage);
-	g_esElectricCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iComboAbility, g_esElectricAbility[type].g_iComboAbility);
+	g_esElectricCache[tank].g_iElectricRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iElectricRangeCooldown, g_esElectricAbility[type].g_iElectricRangeCooldown);
 	g_esElectricCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAbility, g_esElectricAbility[type].g_iHumanAbility);
 	g_esElectricCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanAmmo, g_esElectricAbility[type].g_iHumanAmmo);
 	g_esElectricCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanCooldown, g_esElectricAbility[type].g_iHumanCooldown);
+	g_esElectricCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iHumanRangeCooldown, g_esElectricAbility[type].g_iHumanRangeCooldown);
 	g_esElectricCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flOpenAreasOnly, g_esElectricAbility[type].g_flOpenAreasOnly);
 	g_esElectricCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_iRequiresHumans, g_esElectricAbility[type].g_iRequiresHumans);
 	g_esElectricPlayer[tank].g_iTankType = apply ? type : 0;
@@ -724,22 +761,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esElectricCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esElectricCache[tank].g_iElectricAbility == 1 && g_esElectricCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esElectricCache[tank].g_iElectricAbility == 1 && g_esElectricCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vElectricAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman3", (g_esElectricPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esElectricPlayer[tank].g_iRangeCooldown == -1 || g_esElectricPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vElectricAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman3", (g_esElectricPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -768,15 +802,9 @@ public void MT_OnPostTankSpawn(int tank)
 	vElectricRange(tank);
 }
 
-void vElectricCopyStats2(int oldTank, int newTank)
-{
-	g_esElectricPlayer[newTank].g_iAmmoCount = g_esElectricPlayer[oldTank].g_iAmmoCount;
-	g_esElectricPlayer[newTank].g_iCooldown = g_esElectricPlayer[oldTank].g_iCooldown;
-}
-
 void vElectricAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esElectricCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -788,8 +816,8 @@ void vElectricAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esElectricCache[tank].g_flElectricRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esElectricCache[tank].g_flElectricRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esElectricCache[tank].g_flElectricRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esElectricCache[tank].g_flElectricRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -821,14 +849,14 @@ void vElectricAbility(int tank, float random, int pos = -1)
 
 void vElectricHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esElectricPlayer[tank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esElectricCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esElectricPlayer[tank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esElectricPlayer[tank].g_iAmmoCount < g_esElectricCache[tank].g_iHumanAmmo && g_esElectricCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esElectricPlayer[tank].g_iAmmoCount < g_esElectricCache[tank].g_iHumanAmmo && g_esElectricCache[tank].g_iHumanAmmo > 0))
 		{
 			int iTime = GetTime();
 			if (random <= chance && !g_esElectricPlayer[survivor].g_bAffected)
@@ -836,20 +864,36 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 				g_esElectricPlayer[survivor].g_bAffected = true;
 				g_esElectricPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esElectricPlayer[tank].g_iRangeCooldown == -1 || g_esElectricPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esElectricPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility == 1)
+					{
+						g_esElectricPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman", g_esElectricPlayer[tank].g_iAmmoCount, g_esElectricCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman", g_esElectricPlayer[tank].g_iAmmoCount, g_esElectricCache[tank].g_iHumanAmmo);
+					}
 
-					g_esElectricPlayer[tank].g_iCooldown = (g_esElectricPlayer[tank].g_iAmmoCount < g_esElectricCache[tank].g_iHumanAmmo && g_esElectricCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esElectricCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esElectricCache[tank].g_iElectricRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility == 1) ? g_esElectricCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esElectricPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esElectricPlayer[tank].g_iRangeCooldown != -1 && g_esElectricPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman5", (g_esElectricPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esElectricCache[tank].g_iElectricCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility == 1) ? g_esElectricCache[tank].g_iHumanCooldown : iCooldown;
+					g_esElectricPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esElectricPlayer[tank].g_iCooldown != -1 && g_esElectricPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricHuman5", (g_esElectricPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
-				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esElectricCache[tank].g_flElectricInterval;
+				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esElectricCache[tank].g_flElectricInterval;
 				DataPack dpElectric;
 				CreateDataTimer(flInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpElectric.WriteCell(GetClientUserId(survivor));
@@ -871,7 +915,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Electric", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esElectricPlayer[tank].g_iCooldown == -1 || g_esElectricPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esElectricPlayer[tank].g_iRangeCooldown == -1 || g_esElectricPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility == 1 && !g_esElectricPlayer[tank].g_bFailed)
 				{
@@ -894,13 +938,20 @@ void vElectricRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esElectricCache[tank].g_iElectricAbility == 1)
 	{
-		if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || g_esElectricCache[tank].g_iHumanAbility == 0)))
+		if (bIsAreaNarrow(tank, g_esElectricCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esElectricCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[tank].g_iTankType) || (g_esElectricCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || g_esElectricCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
 
 		vAttachParticle(tank, PARTICLE_ELECTRICITY2, 2.0, 30.0);
 	}
+}
+
+void vElectricCopyStats2(int oldTank, int newTank)
+{
+	g_esElectricPlayer[newTank].g_iAmmoCount = g_esElectricPlayer[oldTank].g_iAmmoCount;
+	g_esElectricPlayer[newTank].g_iCooldown = g_esElectricPlayer[oldTank].g_iCooldown;
+	g_esElectricPlayer[newTank].g_iRangeCooldown = g_esElectricPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveElectric(int tank)
@@ -949,6 +1000,7 @@ void vElectricReset3(int tank)
 	g_esElectricPlayer[tank].g_bNoAmmo = false;
 	g_esElectricPlayer[tank].g_iAmmoCount = 0;
 	g_esElectricPlayer[tank].g_iCooldown = -1;
+	g_esElectricPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerElectricCombo(Handle timer, DataPack pack)
@@ -1014,7 +1066,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esElectricCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[iTank].g_iTankType) || (g_esElectricCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esElectricPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esElectricPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esElectricPlayer[iTank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags) || !g_esElectricPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esElectricCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esElectricCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esElectricPlayer[iTank].g_iTankType) || (g_esElectricCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esElectricCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esElectricPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esElectricPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esElectricPlayer[iTank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iSurvivor].g_iImmunityFlags) || !g_esElectricPlayer[iSurvivor].g_bAffected)
 	{
 		vElectricReset2(iSurvivor, iTank, iMessage);
 
@@ -1022,7 +1074,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 	}
 
 	int iElectricEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esElectricCache[iTank].g_iElectricDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esElectricCache[iTank].g_iElectricDuration,
 		iTime = pack.ReadCell();
 	if (iElectricEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
@@ -1031,7 +1083,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(g_sElectricSounds[MT_GetRandomInt(0, (sizeof g_sElectricSounds - 1))], iSurvivor);

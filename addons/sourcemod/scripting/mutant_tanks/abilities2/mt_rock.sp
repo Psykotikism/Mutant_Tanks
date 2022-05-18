@@ -60,6 +60,7 @@ enum struct esRockPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRockChance;
 	float g_flRockInterval;
@@ -77,6 +78,7 @@ enum struct esRockPlayer
 	int g_iLauncher;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
+	int g_iRockCooldown;
 	int g_iRockDamage;
 	int g_iRockDuration;
 	int g_iRockMessage;
@@ -87,6 +89,7 @@ esRockPlayer g_esRockPlayer[MAXPLAYERS + 1];
 
 enum struct esRockAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRockChance;
 	float g_flRockInterval;
@@ -102,6 +105,7 @@ enum struct esRockAbility
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
+	int g_iRockCooldown;
 	int g_iRockDamage;
 	int g_iRockDuration;
 	int g_iRockMessage;
@@ -111,6 +115,7 @@ esRockAbility g_esRockAbility[MT_MAXTYPES + 1];
 
 enum struct esRockCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRockChance;
 	float g_flRockInterval;
@@ -123,6 +128,7 @@ enum struct esRockCache
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
+	int g_iRockCooldown;
 	int g_iRockDamage;
 	int g_iRockDuration;
 	int g_iRockMessage;
@@ -240,7 +246,7 @@ int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esRockCache[param1].g_iHumanAmmo - g_esRockPlayer[param1].g_iAmmoCount), g_esRockCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esRockCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esRockCache[param1].g_iHumanAbility == 1) ? g_esRockCache[param1].g_iHumanCooldown : g_esRockCache[param1].g_iRockCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RockDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esRockCache[param1].g_iRockDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -337,7 +343,8 @@ Action OnRockTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 						return Plugin_Handled;
 					}
 
-					float flDamage = (g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition) : float(g_esRockCache[iTank].g_iRockDamage);
+					int iPos = g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iComboPosition;
+					float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : float(g_esRockCache[iTank].g_iRockDamage);
 					damage = MT_GetScaledDamage(flDamage);
 
 					return Plugin_Changed;
@@ -397,14 +404,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ROCK_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCK_SECTION4, false))
 				{
+					g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
-						g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -417,9 +427,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -441,17 +451,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esRockAbility[iIndex].g_iAccessFlags = 0;
 				g_esRockAbility[iIndex].g_iImmunityFlags = 0;
+				g_esRockAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esRockAbility[iIndex].g_iComboAbility = 0;
 				g_esRockAbility[iIndex].g_iComboPosition = -1;
 				g_esRockAbility[iIndex].g_iHumanAbility = 0;
 				g_esRockAbility[iIndex].g_iHumanAmmo = 5;
-				g_esRockAbility[iIndex].g_iHumanCooldown = 30;
+				g_esRockAbility[iIndex].g_iHumanCooldown = 0;
 				g_esRockAbility[iIndex].g_iHumanMode = 1;
 				g_esRockAbility[iIndex].g_flOpenAreasOnly = 500.0;
 				g_esRockAbility[iIndex].g_iRequiresHumans = 1;
 				g_esRockAbility[iIndex].g_iRockAbility = 0;
 				g_esRockAbility[iIndex].g_iRockMessage = 0;
 				g_esRockAbility[iIndex].g_flRockChance = 33.3;
+				g_esRockAbility[iIndex].g_iRockCooldown = 0;
 				g_esRockAbility[iIndex].g_iRockDamage = 5;
 				g_esRockAbility[iIndex].g_iRockDuration = 5;
 				g_esRockAbility[iIndex].g_flRockInterval = 0.2;
@@ -467,6 +479,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esRockPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esRockPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esRockPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esRockPlayer[iPlayer].g_iComboAbility = 0;
 					g_esRockPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esRockPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -477,6 +490,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRockPlayer[iPlayer].g_iRockAbility = 0;
 					g_esRockPlayer[iPlayer].g_iRockMessage = 0;
 					g_esRockPlayer[iPlayer].g_flRockChance = 0.0;
+					g_esRockPlayer[iPlayer].g_iRockCooldown = 0;
 					g_esRockPlayer[iPlayer].g_iRockDamage = 0;
 					g_esRockPlayer[iPlayer].g_iRockDuration = 0;
 					g_esRockPlayer[iPlayer].g_flRockInterval = 0.0;
@@ -496,6 +510,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esRockPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRockPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esRockPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esRockPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esRockPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -506,6 +521,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRockPlayer[admin].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockPlayer[admin].g_iRockAbility, value, 0, 1);
 		g_esRockPlayer[admin].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockPlayer[admin].g_iRockMessage, value, 0, 1);
 		g_esRockPlayer[admin].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockPlayer[admin].g_flRockChance, value, 0.0, 100.0);
+		g_esRockPlayer[admin].g_iRockCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockCooldown", "Rock Cooldown", "Rock_Cooldown", "cooldown", g_esRockPlayer[admin].g_iRockCooldown, value, 0, 99999);
 		g_esRockPlayer[admin].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockPlayer[admin].g_iRockDamage, value, 1, 99999);
 		g_esRockPlayer[admin].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockPlayer[admin].g_iRockDuration, value, 1, 99999);
 		g_esRockPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockPlayer[admin].g_flRockInterval, value, 0.1, 1.0);
@@ -529,6 +545,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esRockAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRockAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esRockAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRockAbility[type].g_iComboAbility, value, 0, 1);
 		g_esRockAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esRockAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -539,6 +556,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRockAbility[type].g_iRockAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRockAbility[type].g_iRockAbility, value, 0, 1);
 		g_esRockAbility[type].g_iRockMessage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRockAbility[type].g_iRockMessage, value, 0, 1);
 		g_esRockAbility[type].g_flRockChance = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esRockAbility[type].g_flRockChance, value, 0.0, 100.0);
+		g_esRockAbility[type].g_iRockCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockCooldown", "Rock Cooldown", "Rock_Cooldown", "cooldown", g_esRockAbility[type].g_iRockCooldown, value, 0, 99999);
 		g_esRockAbility[type].g_iRockDamage = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esRockAbility[type].g_iRockDamage, value, 1, 99999);
 		g_esRockAbility[type].g_iRockDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esRockAbility[type].g_iRockDuration, value, 1, 99999);
 		g_esRockAbility[type].g_flRockInterval = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esRockAbility[type].g_flRockInterval, value, 0.1, 1.0);
@@ -568,11 +586,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esRockCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flCloseAreasOnly, g_esRockAbility[type].g_flCloseAreasOnly);
+	g_esRockCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iComboAbility, g_esRockAbility[type].g_iComboAbility);
 	g_esRockCache[tank].g_flRockChance = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockChance, g_esRockAbility[type].g_flRockChance);
 	g_esRockCache[tank].g_flRockInterval = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockInterval, g_esRockAbility[type].g_flRockInterval);
 	g_esRockCache[tank].g_flRockRadius[0] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[0], g_esRockAbility[type].g_flRockRadius[0]);
 	g_esRockCache[tank].g_flRockRadius[1] = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flRockRadius[1], g_esRockAbility[type].g_flRockRadius[1]);
-	g_esRockCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iComboAbility, g_esRockAbility[type].g_iComboAbility);
 	g_esRockCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAbility, g_esRockAbility[type].g_iHumanAbility);
 	g_esRockCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockAbility[type].g_iHumanAmmo);
 	g_esRockCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockAbility[type].g_iHumanCooldown);
@@ -580,6 +599,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRockCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockAbility[type].g_flOpenAreasOnly);
 	g_esRockCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockAbility[type].g_iRequiresHumans);
 	g_esRockCache[tank].g_iRockAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockAbility, g_esRockAbility[type].g_iRockAbility);
+	g_esRockCache[tank].g_iRockCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockCooldown, g_esRockAbility[type].g_iRockCooldown);
 	g_esRockCache[tank].g_iRockDamage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDamage, g_esRockAbility[type].g_iRockDamage);
 	g_esRockCache[tank].g_iRockDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockDuration, g_esRockAbility[type].g_iRockDuration);
 	g_esRockCache[tank].g_iRockMessage = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRockMessage, g_esRockAbility[type].g_iRockMessage);
@@ -672,25 +692,45 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esRockCache[tank].g_iHumanMode)
+			switch (g_esRockCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esRockPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vRockAbility(tank);
+					}
+					else if (g_esRockPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", (g_esRockPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esRockPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vRockAbility(tank);
+							g_esRockPlayer[tank].g_bActivated = true;
+							g_esRockPlayer[tank].g_iAmmoCount++;
+
+							vRock2(tank);
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman", g_esRockPlayer[tank].g_iAmmoCount, g_esRockCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esRockPlayer[tank].g_bActivated)
 						{
@@ -701,32 +741,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", (g_esRockPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esRockPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esRockPlayer[tank].g_bActivated = true;
-								g_esRockPlayer[tank].g_iAmmoCount++;
-
-								vRock2(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman", g_esRockPlayer[tank].g_iAmmoCount, g_esRockCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esRockPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman4", (g_esRockPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockAmmo");
 					}
 				}
 			}
@@ -742,13 +759,10 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esRockCache[tank].g_iHumanMode == 1 && g_esRockPlayer[tank].g_bActivated && (g_esRockPlayer[tank].g_iCooldown == -1 || g_esRockPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esRockCache[tank].g_iHumanMode == 1 && g_esRockPlayer[tank].g_bActivated && (g_esRockPlayer[tank].g_iCooldown == -1 || g_esRockPlayer[tank].g_iCooldown < GetTime()))
-			{
-				vRockReset2(tank);
-				vRockReset3(tank);
-			}
+			vRockReset2(tank);
+			vRockReset3(tank);
 		}
 	}
 }
@@ -824,8 +838,9 @@ void vRockReset2(int tank)
 
 void vRockReset3(int tank)
 {
-	int iTime = GetTime();
-	g_esRockPlayer[tank].g_iCooldown = (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esRockCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRockCache[tank].g_iRockCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
+	g_esRockPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman5", (g_esRockPlayer[tank].g_iCooldown - iTime));
@@ -856,13 +871,13 @@ void vRock(int tank, int pos = -1)
 
 void vRock2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	char sDamage[11];
-	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : float(g_esRockCache[tank].g_iRockDamage);
+	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : float(g_esRockCache[tank].g_iRockDamage);
 	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
 
 	float flPos[3], flAngles[3];
@@ -880,7 +895,7 @@ void vRock2(int tank, int pos = -1)
 		g_esRockPlayer[tank].g_iLauncher = iLauncher;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esRockCache[tank].g_flRockInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esRockCache[tank].g_flRockInterval;
 	DataPack dpRock;
 	CreateDataTimer(flInterval, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRock.WriteCell(iLauncher);
@@ -892,7 +907,7 @@ void vRock2(int tank, int pos = -1)
 
 void vRockAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -943,7 +958,7 @@ Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	int iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRockCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[iTank].g_iTankType) || (g_esRockCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRockPlayer[iTank].g_iTankType || !g_esRockPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRockCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRockCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[iTank].g_iTankType) || (g_esRockCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRockPlayer[iTank].g_iTankType || !g_esRockPlayer[iTank].g_bActivated)
 	{
 		vRockReset2(iTank);
 
@@ -951,13 +966,13 @@ Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esRockCache[iTank].g_iRockDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esRockCache[iTank].g_iRockDuration,
 		iCurrentTime = GetTime();
 	if (g_esRockCache[iTank].g_iRockAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esRockCache[iTank].g_iHumanAbility == 1 && g_esRockCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vRockReset2(iTank);
 
-		if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esRockCache[iTank].g_iHumanAbility == 1 && g_esRockCache[iTank].g_iHumanMode == 0 && (g_esRockPlayer[iTank].g_iCooldown == -1 || g_esRockPlayer[iTank].g_iCooldown < iCurrentTime))
+		if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esRockCache[iTank].g_iHumanMode == 0) && (g_esRockPlayer[iTank].g_iCooldown == -1 || g_esRockPlayer[iTank].g_iCooldown < iCurrentTime))
 		{
 			vRockReset3(iTank);
 		}
@@ -973,8 +988,8 @@ Action tTimerRock(Handle timer, DataPack pack)
 	flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);
 
-	float flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esRockCache[iTank].g_flRockRadius[0],
-		flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esRockCache[iTank].g_flRockRadius[1],
+	float flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esRockCache[iTank].g_flRockRadius[0],
+		flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esRockCache[iTank].g_flRockRadius[1],
 		flHitPos[3];
 	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
 	float flDistance = GetVectorDistance(flPos, flHitPos);

@@ -64,6 +64,7 @@ enum struct esNecroPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flNecroChance;
 	float g_flNecroRange;
 	float g_flOpenAreasOnly;
@@ -79,6 +80,7 @@ enum struct esNecroPlayer
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iNecroAbility;
+	int g_iNecroCooldown;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -88,6 +90,7 @@ esNecroPlayer g_esNecroPlayer[MAXPLAYERS + 1];
 
 enum struct esNecroAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flNecroChance;
 	float g_flNecroRange;
 	float g_flOpenAreasOnly;
@@ -101,6 +104,7 @@ enum struct esNecroAbility
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iNecroAbility;
+	int g_iNecroCooldown;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 }
@@ -109,6 +113,7 @@ esNecroAbility g_esNecroAbility[MT_MAXTYPES + 1];
 
 enum struct esNecroCache
 {
+	float g_flCloseAreasOnly;
 	float g_flNecroChance;
 	float g_flNecroRange;
 	float g_flOpenAreasOnly;
@@ -120,6 +125,7 @@ enum struct esNecroCache
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iNecroAbility;
+	int g_iNecroCooldown;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 }
@@ -235,7 +241,7 @@ int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esNecroCache[param1].g_iHumanAmmo - g_esNecroPlayer[param1].g_iAmmoCount), g_esNecroCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esNecroCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esNecroCache[param1].g_iHumanAbility == 1) ? g_esNecroCache[param1].g_iHumanCooldown : g_esNecroCache[param1].g_iNecroCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "NecroDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esNecroCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -330,7 +336,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	int iTime = GetTime();
 	if (g_esNecroPlayer[client].g_iDuration < iTime)
 	{
-		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esNecroAbility[g_esNecroPlayer[client].g_iTankType].g_iAccessFlags, g_esNecroPlayer[client].g_iAccessFlags)) && g_esNecroCache[client].g_iHumanAbility == 1 && g_esNecroCache[client].g_iHumanMode == 0 && (g_esNecroPlayer[client].g_iCooldown == -1 || g_esNecroPlayer[client].g_iCooldown < iTime))
+		if (g_esNecroPlayer[client].g_iCooldown == -1 || g_esNecroPlayer[client].g_iCooldown < iTime)
 		{
 			vNecroReset2(client);
 		}
@@ -391,23 +397,26 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_NECRO_SECTION, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION2, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION3, false) || StrEqual(sSubset[iPos], MT_NECRO_SECTION4, false))
 				{
+					g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
-						g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
 							case 0.0: g_esNecroPlayer[tank].g_bActivated = true;
 							default: CreateTimer(flDelay, tTimerNecroCombo, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -428,11 +437,12 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esNecroAbility[iIndex].g_iAccessFlags = 0;
+				g_esNecroAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esNecroAbility[iIndex].g_iComboAbility = 0;
 				g_esNecroAbility[iIndex].g_iComboPosition = -1;
 				g_esNecroAbility[iIndex].g_iHumanAbility = 0;
 				g_esNecroAbility[iIndex].g_iHumanAmmo = 5;
-				g_esNecroAbility[iIndex].g_iHumanCooldown = 30;
+				g_esNecroAbility[iIndex].g_iHumanCooldown = 0;
 				g_esNecroAbility[iIndex].g_iHumanDuration = 5;
 				g_esNecroAbility[iIndex].g_iHumanMode = 1;
 				g_esNecroAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -440,6 +450,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNecroAbility[iIndex].g_iNecroAbility = 0;
 				g_esNecroAbility[iIndex].g_iNecroMessage = 0;
 				g_esNecroAbility[iIndex].g_flNecroChance = 33.3;
+				g_esNecroAbility[iIndex].g_iNecroCooldown = 0;
 				g_esNecroAbility[iIndex].g_flNecroRange = 500.0;
 			}
 		}
@@ -450,6 +461,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esNecroPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esNecroPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esNecroPlayer[iPlayer].g_iComboAbility = 0;
 					g_esNecroPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esNecroPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -461,6 +473,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esNecroPlayer[iPlayer].g_iNecroAbility = 0;
 					g_esNecroPlayer[iPlayer].g_iNecroMessage = 0;
 					g_esNecroPlayer[iPlayer].g_flNecroChance = 0.0;
+					g_esNecroPlayer[iPlayer].g_iNecroCooldown = 0;
 					g_esNecroPlayer[iPlayer].g_flNecroRange = 0.0;
 				}
 			}
@@ -476,6 +489,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esNecroPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esNecroPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esNecroPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esNecroPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -487,12 +501,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroPlayer[admin].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroPlayer[admin].g_iNecroAbility, value, 0, 1);
 		g_esNecroPlayer[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroPlayer[admin].g_iNecroMessage, value, 0, 1);
 		g_esNecroPlayer[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroPlayer[admin].g_flNecroChance, value, 0.0, 100.0);
+		g_esNecroPlayer[admin].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroPlayer[admin].g_iNecroCooldown, value, 0, 99999);
 		g_esNecroPlayer[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroPlayer[admin].g_flNecroRange, value, 1.0, 99999.0);
 		g_esNecroPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esNecroAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNecroAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esNecroAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNecroAbility[type].g_iComboAbility, value, 0, 1);
 		g_esNecroAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNecroAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esNecroAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNecroAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -504,6 +520,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroAbility[type].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroAbility[type].g_iNecroAbility, value, 0, 1);
 		g_esNecroAbility[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroAbility[type].g_iNecroMessage, value, 0, 1);
 		g_esNecroAbility[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroAbility[type].g_flNecroChance, value, 0.0, 100.0);
+		g_esNecroAbility[type].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroAbility[type].g_iNecroCooldown, value, 0, 99999);
 		g_esNecroAbility[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroAbility[type].g_flNecroRange, value, 1.0, 99999.0);
 		g_esNecroAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
@@ -516,15 +533,17 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esNecroCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flCloseAreasOnly, g_esNecroAbility[type].g_flCloseAreasOnly);
+	g_esNecroCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility);
 	g_esNecroCache[tank].g_flNecroChance = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance);
 	g_esNecroCache[tank].g_flNecroRange = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroRange, g_esNecroAbility[type].g_flNecroRange);
-	g_esNecroCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iComboAbility, g_esNecroAbility[type].g_iComboAbility);
 	g_esNecroCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAbility, g_esNecroAbility[type].g_iHumanAbility);
 	g_esNecroCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanAmmo, g_esNecroAbility[type].g_iHumanAmmo);
 	g_esNecroCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanCooldown, g_esNecroAbility[type].g_iHumanCooldown);
 	g_esNecroCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanDuration, g_esNecroAbility[type].g_iHumanDuration);
 	g_esNecroCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode);
 	g_esNecroCache[tank].g_iNecroAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility);
+	g_esNecroCache[tank].g_iNecroCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown);
 	g_esNecroCache[tank].g_iNecroMessage = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage);
 	g_esNecroCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly);
 	g_esNecroCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans);
@@ -601,7 +620,8 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 	if (bIsSpecialInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		bool bRandom = false;
-		float flInfectedPos[3];
+		float flInfectedPos[3], flTankPos[3], flRange = 0.0;
+		int iPos = -1, iClass = 0;
 		GetClientAbsOrigin(victim, flInfectedPos);
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
@@ -612,14 +632,15 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 					continue;
 				}
 
-				bRandom = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
+				iPos = g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition;
+				bRandom = (iPos != -1) ? true : MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
 				if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
 				{
-					float flTankPos[3], flRange = (g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition) : g_esNecroCache[iTank].g_flNecroRange;
+					flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esNecroCache[iTank].g_flNecroRange;
 					GetClientAbsOrigin(iTank, flTankPos);
 					if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
 					{
-						int iClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
+						iClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
 
 						switch (iClass)
 						{
@@ -673,25 +694,43 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNecroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esNecroCache[tank].g_iNecroAbility == 1 && g_esNecroCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esNecroCache[tank].g_iNecroAbility == 1 && g_esNecroCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esNecroCache[tank].g_iHumanMode)
+			switch (g_esNecroCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esNecroPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vNecroAbility(tank);
+					}
+					else if (g_esNecroPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", (g_esNecroPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esNecroPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vNecroAbility(tank);
+							g_esNecroPlayer[tank].g_bActivated = true;
+							g_esNecroPlayer[tank].g_iAmmoCount++;
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esNecroPlayer[tank].g_iAmmoCount, g_esNecroCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esNecroPlayer[tank].g_bActivated)
 						{
@@ -702,30 +741,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", (g_esNecroPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esNecroPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esNecroPlayer[tank].g_bActivated = true;
-								g_esNecroPlayer[tank].g_iAmmoCount++;
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esNecroPlayer[tank].g_iAmmoCount, g_esNecroCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esNecroPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4", (g_esNecroPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroAmmo");
 					}
 				}
 			}
@@ -741,14 +759,11 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esNecroCache[tank].g_iHumanMode == 1 && g_esNecroPlayer[tank].g_bActivated && (g_esNecroPlayer[tank].g_iCooldown == -1 || g_esNecroPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esNecroCache[tank].g_iHumanMode == 1 && g_esNecroPlayer[tank].g_bActivated && (g_esNecroPlayer[tank].g_iCooldown == -1 || g_esNecroPlayer[tank].g_iCooldown < GetTime()))
-			{
-				g_esNecroPlayer[tank].g_bActivated = false;
+			g_esNecroPlayer[tank].g_bActivated = false;
 
-				vNecroReset2(tank);
-			}
+			vNecroReset2(tank);
 		}
 	}
 }
@@ -767,15 +782,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveNecro(tank);
 }
 
-void vNecroCopyStats2(int oldTank, int newTank)
-{
-	g_esNecroPlayer[newTank].g_iAmmoCount = g_esNecroPlayer[oldTank].g_iAmmoCount;
-	g_esNecroPlayer[newTank].g_iCooldown = g_esNecroPlayer[oldTank].g_iCooldown;
-}
-
 void vNecro(int tank, float pos[3], const char[] type)
 {
-	if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNecroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -819,7 +828,7 @@ void vNecro(int tank, float pos[3], const char[] type)
 
 void vNecroAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNecroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -849,6 +858,12 @@ void vNecroAbility(int tank)
 	}
 }
 
+void vNecroCopyStats2(int oldTank, int newTank)
+{
+	g_esNecroPlayer[newTank].g_iAmmoCount = g_esNecroPlayer[oldTank].g_iAmmoCount;
+	g_esNecroPlayer[newTank].g_iCooldown = g_esNecroPlayer[oldTank].g_iCooldown;
+}
+
 void vRemoveNecro(int tank)
 {
 	g_esNecroPlayer[tank].g_bActivated = false;
@@ -870,8 +885,9 @@ void vNecroReset()
 
 void vNecroReset2(int tank)
 {
-	int iTime = GetTime();
-	g_esNecroPlayer[tank].g_iCooldown = (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esNecroCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esNecroCache[tank].g_iNecroCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
+	g_esNecroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman5", (g_esNecroPlayer[tank].g_iCooldown - iTime));

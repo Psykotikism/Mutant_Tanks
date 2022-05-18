@@ -65,6 +65,7 @@ enum struct esTrackPlayer
 	bool g_bActivated;
 	bool g_bRainbowColor;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flTrackChance;
 	float g_flTrackSpeed;
@@ -81,6 +82,7 @@ enum struct esTrackPlayer
 	int g_iRock;
 	int g_iTankType;
 	int g_iTrackAbility;
+	int g_iTrackCooldown;
 	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
@@ -90,18 +92,21 @@ esTrackPlayer g_esTrackPlayer[MAXPLAYERS + 1];
 
 enum struct esTrackAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flTrackChance;
 	float g_flTrackSpeed;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iTrackAbility;
+	int g_iTrackCooldown;
 	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
@@ -111,6 +116,7 @@ esTrackAbility g_esTrackAbility[MT_MAXTYPES + 1];
 
 enum struct esTrackCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flTrackChance;
 	float g_flTrackSpeed;
@@ -121,6 +127,7 @@ enum struct esTrackCache
 	int g_iHumanCooldown;
 	int g_iRequiresHumans;
 	int g_iTrackAbility;
+	int g_iTrackCooldown;
 	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
@@ -234,7 +241,7 @@ int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esTrackCache[param1].g_iTrackAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esTrackCache[param1].g_iHumanAmmo - g_esTrackPlayer[param1].g_iAmmoCount), g_esTrackCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esTrackCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esTrackCache[param1].g_iHumanAbility == 1) ? g_esTrackCache[param1].g_iHumanCooldown : g_esTrackCache[param1].g_iTrackCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "TrackDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esTrackCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
@@ -337,8 +344,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esTrackCache[tank].g_iHumanAbility != 2)
 	{
+		g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_TRACK_SECTION);
@@ -356,12 +367,14 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			{
 				if (StrEqual(sSubset[iPos], MT_TRACK_SECTION, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION2, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION3, false) || StrEqual(sSubset[iPos], MT_TRACK_SECTION4, false))
 				{
+					g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
 						vTrack(tank, weapon);
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -383,15 +396,18 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esTrackAbility[iIndex].g_iAccessFlags = 0;
 				g_esTrackAbility[iIndex].g_iImmunityFlags = 0;
+				g_esTrackAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esTrackAbility[iIndex].g_iComboAbility = 0;
+				g_esTrackAbility[iIndex].g_iComboPosition = -1;
 				g_esTrackAbility[iIndex].g_iHumanAbility = 0;
 				g_esTrackAbility[iIndex].g_iHumanAmmo = 5;
-				g_esTrackAbility[iIndex].g_iHumanCooldown = 30;
-				g_esTrackAbility[iIndex].g_flOpenAreasOnly = 0.0;
+				g_esTrackAbility[iIndex].g_iHumanCooldown = 0;
+				g_esTrackAbility[iIndex].g_flOpenAreasOnly = 500.0;
 				g_esTrackAbility[iIndex].g_iRequiresHumans = 1;
 				g_esTrackAbility[iIndex].g_iTrackAbility = 0;
 				g_esTrackAbility[iIndex].g_iTrackMessage = 0;
 				g_esTrackAbility[iIndex].g_flTrackChance = 33.3;
+				g_esTrackAbility[iIndex].g_iTrackCooldown = 0;
 				g_esTrackAbility[iIndex].g_iTrackGlow = 1;
 				g_esTrackAbility[iIndex].g_iTrackMode = 1;
 				g_esTrackAbility[iIndex].g_flTrackSpeed = 500.0;
@@ -405,6 +421,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esTrackPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esTrackPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esTrackPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esTrackPlayer[iPlayer].g_iComboAbility = 0;
 					g_esTrackPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esTrackPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -414,6 +431,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esTrackPlayer[iPlayer].g_iTrackAbility = 0;
 					g_esTrackPlayer[iPlayer].g_iTrackMessage = 0;
 					g_esTrackPlayer[iPlayer].g_flTrackChance = 0.0;
+					g_esTrackPlayer[iPlayer].g_iTrackCooldown = 0;
 					g_esTrackPlayer[iPlayer].g_iTrackGlow = 0;
 					g_esTrackPlayer[iPlayer].g_iTrackMode = 0;
 					g_esTrackPlayer[iPlayer].g_flTrackSpeed = 0.0;
@@ -431,6 +449,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esTrackPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esTrackPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esTrackPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esTrackPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -440,6 +459,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esTrackPlayer[admin].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackPlayer[admin].g_iTrackAbility, value, 0, 1);
 		g_esTrackPlayer[admin].g_iTrackMessage = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esTrackPlayer[admin].g_iTrackMessage, value, 0, 1);
 		g_esTrackPlayer[admin].g_flTrackChance = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esTrackPlayer[admin].g_flTrackChance, value, 0.0, 100.0);
+		g_esTrackPlayer[admin].g_iTrackCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackCooldown", "Track Cooldown", "Track_Cooldown", "cooldown", g_esTrackPlayer[admin].g_iTrackCooldown, value, 0, 99999);
 		g_esTrackPlayer[admin].g_iTrackGlow = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esTrackPlayer[admin].g_iTrackGlow, value, 0, 1);
 		g_esTrackPlayer[admin].g_iTrackMode = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esTrackPlayer[admin].g_iTrackMode, value, 0, 1);
 		g_esTrackPlayer[admin].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackPlayer[admin].g_flTrackSpeed, value, 0.1, 99999.0);
@@ -449,6 +469,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esTrackAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esTrackAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esTrackAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esTrackAbility[type].g_iComboAbility, value, 0, 1);
 		g_esTrackAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esTrackAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esTrackAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esTrackAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -458,6 +479,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esTrackAbility[type].g_iTrackAbility = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esTrackAbility[type].g_iTrackAbility, value, 0, 1);
 		g_esTrackAbility[type].g_iTrackMessage = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esTrackAbility[type].g_iTrackMessage, value, 0, 1);
 		g_esTrackAbility[type].g_flTrackChance = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esTrackAbility[type].g_flTrackChance, value, 0.0, 100.0);
+		g_esTrackAbility[type].g_iTrackCooldown = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackCooldown", "Track Cooldown", "Track_Cooldown", "cooldown", g_esTrackAbility[type].g_iTrackCooldown, value, 0, 99999);
 		g_esTrackAbility[type].g_iTrackGlow = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esTrackAbility[type].g_iTrackGlow, value, 0, 1);
 		g_esTrackAbility[type].g_iTrackMode = iGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esTrackAbility[type].g_iTrackMode, value, 0, 1);
 		g_esTrackAbility[type].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTION, MT_TRACK_SECTION2, MT_TRACK_SECTION3, MT_TRACK_SECTION4, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackAbility[type].g_flTrackSpeed, value, 0.1, 99999.0);
@@ -473,15 +495,17 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esTrackCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flCloseAreasOnly, g_esTrackAbility[type].g_flCloseAreasOnly);
+	g_esTrackCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackAbility[type].g_iComboAbility);
 	g_esTrackCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackAbility[type].g_flTrackChance);
 	g_esTrackCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackSpeed, g_esTrackAbility[type].g_flTrackSpeed);
-	g_esTrackCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iComboAbility, g_esTrackAbility[type].g_iComboAbility);
 	g_esTrackCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAbility, g_esTrackAbility[type].g_iHumanAbility);
 	g_esTrackCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanAmmo, g_esTrackAbility[type].g_iHumanAmmo);
 	g_esTrackCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iHumanCooldown, g_esTrackAbility[type].g_iHumanCooldown);
 	g_esTrackCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flOpenAreasOnly, g_esTrackAbility[type].g_flOpenAreasOnly);
 	g_esTrackCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iRequiresHumans, g_esTrackAbility[type].g_iRequiresHumans);
 	g_esTrackCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackAbility, g_esTrackAbility[type].g_iTrackAbility);
+	g_esTrackCache[tank].g_iTrackCooldown = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackCooldown, g_esTrackAbility[type].g_iTrackCooldown);
 	g_esTrackCache[tank].g_iTrackGlow = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackGlow, g_esTrackAbility[type].g_iTrackGlow);
 	g_esTrackCache[tank].g_iTrackMessage = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMessage, g_esTrackAbility[type].g_iTrackMessage);
 	g_esTrackCache[tank].g_iTrackMode = iGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_iTrackMode, g_esTrackAbility[type].g_iTrackMode);
@@ -557,39 +581,36 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY)
+		if ((button & MT_SPECIAL_KEY) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iHumanAbility == 1)
+			int iTime = GetTime();
+			bool bRecharging = g_esTrackPlayer[tank].g_iCooldown != -1 && g_esTrackPlayer[tank].g_iCooldown > iTime;
+			if (!g_esTrackPlayer[tank].g_bActivated && !bRecharging)
 			{
-				int iTime = GetTime();
-				bool bRecharging = g_esTrackPlayer[tank].g_iCooldown != -1 && g_esTrackPlayer[tank].g_iCooldown > iTime;
-				if (!g_esTrackPlayer[tank].g_bActivated && !bRecharging)
+				switch (g_esTrackPlayer[tank].g_iAmmoCount < g_esTrackCache[tank].g_iHumanAmmo && g_esTrackCache[tank].g_iHumanAmmo > 0)
 				{
-					switch (g_esTrackPlayer[tank].g_iAmmoCount < g_esTrackCache[tank].g_iHumanAmmo && g_esTrackCache[tank].g_iHumanAmmo > 0)
+					case true:
 					{
-						case true:
-						{
-							g_esTrackPlayer[tank].g_bActivated = true;
-							g_esTrackPlayer[tank].g_iAmmoCount++;
+						g_esTrackPlayer[tank].g_bActivated = true;
+						g_esTrackPlayer[tank].g_iAmmoCount++;
 
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esTrackPlayer[tank].g_iAmmoCount, g_esTrackCache[tank].g_iHumanAmmo);
-						}
-						case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackAmmo");
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esTrackPlayer[tank].g_iAmmoCount, g_esTrackCache[tank].g_iHumanAmmo);
 					}
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackAmmo");
 				}
-				else if (g_esTrackPlayer[tank].g_bActivated)
-				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman2");
-				}
-				else if (bRecharging)
-				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3", (g_esTrackPlayer[tank].g_iCooldown - iTime));
-				}
+			}
+			else if (g_esTrackPlayer[tank].g_bActivated)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman2");
+			}
+			else if (bRecharging)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3", (g_esTrackPlayer[tank].g_iCooldown - iTime));
 			}
 		}
 	}
@@ -626,7 +647,7 @@ public void MT_OnRockThrow(int tank, int rock)
 {
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{
-		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -702,7 +723,7 @@ void vTrackThink(int rock)
 	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
 	if (bIsValidClient(iTank))
 	{
-		if (bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)))
+		if (bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -1073,7 +1094,7 @@ Action tTimerTrack(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esTrackPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esTrackPlayer[iTank].g_iTankType || g_esTrackCache[iTank].g_iTrackAbility == 0 || !g_esTrackPlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esTrackCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esTrackCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[iTank].g_iTankType) || (g_esTrackCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esTrackPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esTrackPlayer[iTank].g_iTankType || g_esTrackCache[iTank].g_iTrackAbility == 0 || !g_esTrackPlayer[iTank].g_bActivated)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
@@ -1084,11 +1105,13 @@ Action tTimerTrack(Handle timer, DataPack pack)
 	SDKHook(iRock, SDKHook_Think, OnTrackThink);
 
 	int iTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1 && (g_esTrackPlayer[iTank].g_iCooldown == -1 || g_esTrackPlayer[iTank].g_iCooldown < iTime))
+	if (g_esTrackPlayer[iTank].g_iCooldown == -1 || g_esTrackPlayer[iTank].g_iCooldown < iTime)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
-		g_esTrackPlayer[iTank].g_iCooldown = (g_esTrackPlayer[iTank].g_iAmmoCount < g_esTrackCache[iTank].g_iHumanAmmo && g_esTrackCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esTrackCache[iTank].g_iHumanCooldown) : -1;
+		int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esTrackCache[iTank].g_iTrackCooldown;
+		iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1) ? g_esTrackCache[iTank].g_iHumanCooldown : iCooldown;
+		g_esTrackPlayer[iTank].g_iCooldown = (iTime + iCooldown);
 		if (g_esTrackPlayer[iTank].g_iCooldown != -1 && g_esTrackPlayer[iTank].g_iCooldown > iTime)
 		{
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", (g_esTrackPlayer[iTank].g_iCooldown - iTime));

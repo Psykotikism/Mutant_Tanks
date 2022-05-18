@@ -70,6 +70,7 @@ enum struct esLightningPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flLightningChance;
 	float g_flLightningDamage;
 	float g_flLightningInterval;
@@ -85,6 +86,7 @@ enum struct esLightningPlayer
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iLightningAbility;
+	int g_iLightningCooldown;
 	int g_iLightningDuration;
 	int g_iLightningMessage;
 	int g_iRequiresHumans;
@@ -95,6 +97,7 @@ esLightningPlayer g_esLightningPlayer[MAXPLAYERS + 1];
 
 enum struct esLightningAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flLightningChance;
 	float g_flLightningDamage;
 	float g_flLightningInterval;
@@ -102,12 +105,14 @@ enum struct esLightningAbility
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iLightningAbility;
+	int g_iLightningCooldown;
 	int g_iLightningDuration;
 	int g_iLightningMessage;
 	int g_iRequiresHumans;
@@ -117,6 +122,7 @@ esLightningAbility g_esLightningAbility[MT_MAXTYPES + 1];
 
 enum struct esLightningCache
 {
+	float g_flCloseAreasOnly;
 	float g_flLightningChance;
 	float g_flLightningDamage;
 	float g_flLightningInterval;
@@ -128,6 +134,7 @@ enum struct esLightningCache
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iLightningAbility;
+	int g_iLightningCooldown;
 	int g_iLightningDuration;
 	int g_iLightningMessage;
 	int g_iRequiresHumans;
@@ -255,7 +262,7 @@ int iLightningMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLightningCache[param1].g_iHumanAmmo - g_esLightningPlayer[param1].g_iAmmoCount), g_esLightningCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLightningCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLightningCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esLightningCache[param1].g_iHumanAbility == 1) ? g_esLightningCache[param1].g_iHumanCooldown : g_esLightningCache[param1].g_iLightningCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LightningDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLightningCache[param1].g_iLightningDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLightningCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -361,8 +368,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLightningCache[tank].g_iHumanAbility != 2))
 	{
+		g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION);
@@ -376,13 +387,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION2, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION3, false) || StrEqual(sSubset[iPos], MT_LIGHTNING_SECTION4, false))
 				{
+					g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -395,9 +410,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -419,16 +434,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esLightningAbility[iIndex].g_iAccessFlags = 0;
 				g_esLightningAbility[iIndex].g_iImmunityFlags = 0;
+				g_esLightningAbility[iIndex].g_flCloseAreasOnly = 150.0;
 				g_esLightningAbility[iIndex].g_iComboAbility = 0;
+				g_esLightningAbility[iIndex].g_iComboPosition = -1;
 				g_esLightningAbility[iIndex].g_iHumanAbility = 0;
 				g_esLightningAbility[iIndex].g_iHumanAmmo = 5;
-				g_esLightningAbility[iIndex].g_iHumanCooldown = 30;
+				g_esLightningAbility[iIndex].g_iHumanCooldown = 0;
 				g_esLightningAbility[iIndex].g_iHumanMode = 1;
 				g_esLightningAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esLightningAbility[iIndex].g_iRequiresHumans = 0;
 				g_esLightningAbility[iIndex].g_iLightningAbility = 0;
 				g_esLightningAbility[iIndex].g_iLightningMessage = 0;
 				g_esLightningAbility[iIndex].g_flLightningChance = 33.3;
+				g_esLightningAbility[iIndex].g_iLightningCooldown = 0;
 				g_esLightningAbility[iIndex].g_flLightningDamage = 5.0;
 				g_esLightningAbility[iIndex].g_iLightningDuration = 5;
 				g_esLightningAbility[iIndex].g_flLightningInterval = 1.0;
@@ -442,6 +460,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esLightningPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esLightningPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esLightningPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esLightningPlayer[iPlayer].g_iComboAbility = 0;
 					g_esLightningPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esLightningPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -452,6 +471,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esLightningPlayer[iPlayer].g_iLightningAbility = 0;
 					g_esLightningPlayer[iPlayer].g_iLightningMessage = 0;
 					g_esLightningPlayer[iPlayer].g_flLightningChance = 0.0;
+					g_esLightningPlayer[iPlayer].g_iLightningCooldown = 0;
 					g_esLightningPlayer[iPlayer].g_flLightningDamage = 0.0;
 					g_esLightningPlayer[iPlayer].g_iLightningDuration = 0;
 					g_esLightningPlayer[iPlayer].g_flLightningInterval = 0.0;
@@ -469,6 +489,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esLightningPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLightningPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esLightningPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esLightningPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -479,6 +500,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningPlayer[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningPlayer[admin].g_iLightningAbility, value, 0, 1);
 		g_esLightningPlayer[admin].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningPlayer[admin].g_iLightningMessage, value, 0, 1);
 		g_esLightningPlayer[admin].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningPlayer[admin].g_flLightningChance, value, 0.0, 100.0);
+		g_esLightningPlayer[admin].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningPlayer[admin].g_iLightningCooldown, value, 0, 99999);
 		g_esLightningPlayer[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningPlayer[admin].g_flLightningDamage, value, 1.0, 99999.0);
 		g_esLightningPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningPlayer[admin].g_iLightningDuration, value, 1, 99999);
 		g_esLightningPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningPlayer[admin].g_flLightningInterval, value, 0.1, 99999.0);
@@ -488,6 +510,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esLightningAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLightningAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLightningAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLightningAbility[type].g_iComboAbility, value, 0, 1);
 		g_esLightningAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLightningAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esLightningAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLightningAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -498,6 +521,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningAbility[type].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningAbility[type].g_iLightningAbility, value, 0, 1);
 		g_esLightningAbility[type].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningAbility[type].g_iLightningMessage, value, 0, 1);
 		g_esLightningAbility[type].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningAbility[type].g_flLightningChance, value, 0.0, 100.0);
+		g_esLightningAbility[type].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningAbility[type].g_iLightningCooldown, value, 0, 99999);
 		g_esLightningAbility[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningAbility[type].g_flLightningDamage, value, 1.0, 99999.0);
 		g_esLightningAbility[type].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningAbility[type].g_iLightningDuration, value, 1, 99999);
 		g_esLightningAbility[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningAbility[type].g_flLightningInterval, value, 0.1, 99999.0);
@@ -513,13 +537,15 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esLightningCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flCloseAreasOnly, g_esLightningAbility[type].g_flCloseAreasOnly);
+	g_esLightningCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningAbility[type].g_iComboAbility);
 	g_esLightningCache[tank].g_flLightningChance = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningChance, g_esLightningAbility[type].g_flLightningChance);
+	g_esLightningCache[tank].g_flLightningDamage = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningAbility[type].g_flLightningDamage);
 	g_esLightningCache[tank].g_flLightningInterval = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningInterval, g_esLightningAbility[type].g_flLightningInterval);
 	g_esLightningCache[tank].g_iLightningAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningAbility, g_esLightningAbility[type].g_iLightningAbility);
-	g_esLightningCache[tank].g_flLightningDamage = flGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_flLightningDamage, g_esLightningAbility[type].g_flLightningDamage);
+	g_esLightningCache[tank].g_iLightningCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningCooldown, g_esLightningAbility[type].g_iLightningCooldown);
 	g_esLightningCache[tank].g_iLightningDuration = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningDuration, g_esLightningAbility[type].g_iLightningDuration);
 	g_esLightningCache[tank].g_iLightningMessage = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iLightningMessage, g_esLightningAbility[type].g_iLightningMessage);
-	g_esLightningCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iComboAbility, g_esLightningAbility[type].g_iComboAbility);
 	g_esLightningCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAbility, g_esLightningAbility[type].g_iHumanAbility);
 	g_esLightningCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanAmmo, g_esLightningAbility[type].g_iHumanAmmo);
 	g_esLightningCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLightningPlayer[tank].g_iHumanCooldown, g_esLightningAbility[type].g_iHumanCooldown);
@@ -615,25 +641,45 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esLightningCache[tank].g_iHumanMode)
+			switch (g_esLightningCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esLightningPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vLightningAbility(tank);
+					}
+					else if (g_esLightningPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", (g_esLightningPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esLightningPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vLightningAbility(tank);
+							g_esLightningPlayer[tank].g_bActivated = true;
+							g_esLightningPlayer[tank].g_iAmmoCount++;
+
+							vLightning2(tank);
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman", g_esLightningPlayer[tank].g_iAmmoCount, g_esLightningCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esLightningPlayer[tank].g_bActivated)
 						{
@@ -644,32 +690,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", (g_esLightningPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esLightningPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esLightningPlayer[tank].g_bActivated = true;
-								g_esLightningPlayer[tank].g_iAmmoCount++;
-
-								vLightning2(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman", g_esLightningPlayer[tank].g_iAmmoCount, g_esLightningCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esLightningPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman4", (g_esLightningPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningAmmo");
 					}
 				}
 			}
@@ -685,13 +708,10 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esLightningCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esLightningCache[tank].g_iHumanMode == 1 && g_esLightningPlayer[tank].g_bActivated && (g_esLightningPlayer[tank].g_iCooldown == -1 || g_esLightningPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esLightningCache[tank].g_iHumanMode == 1 && g_esLightningPlayer[tank].g_bActivated && (g_esLightningPlayer[tank].g_iCooldown == -1 || g_esLightningPlayer[tank].g_iCooldown < GetTime()))
-			{
-				vLightningReset2(tank);
-				vLightningReset3(tank);
-			}
+			vLightningReset2(tank);
+			vLightningReset3(tank);
 		}
 	}
 }
@@ -708,12 +728,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveLightning(tank);
-}
-
-void vLightningCopyStats2(int oldTank, int newTank)
-{
-	g_esLightningPlayer[newTank].g_iAmmoCount = g_esLightningPlayer[oldTank].g_iAmmoCount;
-	g_esLightningPlayer[newTank].g_iCooldown = g_esLightningPlayer[oldTank].g_iCooldown;
 }
 
 void vLightning(int tank, int pos = -1)
@@ -740,12 +754,12 @@ void vLightning(int tank, int pos = -1)
 
 void vLightning2(int tank, int pos = -1)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esLightningCache[tank].g_flLightningInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esLightningCache[tank].g_flLightningInterval;
 	DataPack dpLightning;
 	CreateDataTimer(flInterval, tTimerLightning, dpLightning, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpLightning.WriteCell(GetClientUserId(tank));
@@ -756,7 +770,7 @@ void vLightning2(int tank, int pos = -1)
 
 void vLightningAbility(int tank)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esLightningCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLightningCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLightningPlayer[tank].g_iTankType) || (g_esLightningCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLightningCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -776,6 +790,12 @@ void vLightningAbility(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningAmmo");
 	}
+}
+
+void vLightningCopyStats2(int oldTank, int newTank)
+{
+	g_esLightningPlayer[newTank].g_iAmmoCount = g_esLightningPlayer[oldTank].g_iAmmoCount;
+	g_esLightningPlayer[newTank].g_iCooldown = g_esLightningPlayer[oldTank].g_iCooldown;
 }
 
 void vRemoveLightning(int tank)
@@ -811,8 +831,9 @@ void vLightningReset2(int tank)
 
 void vLightningReset3(int tank)
 {
-	int iTime = GetTime();
-	g_esLightningPlayer[tank].g_iCooldown = (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLightningCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLightningCache[tank].g_iLightningCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLightningCache[tank].g_iHumanAbility == 1) ? g_esLightningCache[tank].g_iHumanCooldown : iCooldown;
+	g_esLightningPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esLightningPlayer[tank].g_iCooldown != -1 && g_esLightningPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman5", (g_esLightningPlayer[tank].g_iCooldown - iTime));
@@ -848,13 +869,13 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLightningCache[iTank].g_iLightningDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esLightningCache[iTank].g_iLightningDuration,
 		iCurrentTime = GetTime();
-	if (g_esLightningCache[iTank].g_iLightningAbility == 0 || bIsAreaNarrow(iTank, g_esLightningCache[iTank].g_flOpenAreasOnly) || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esLightningCache[iTank].g_iHumanAbility == 1 && g_esLightningCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
+	if (g_esLightningCache[iTank].g_iLightningAbility == 0 || bIsAreaNarrow(iTank, g_esLightningCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLightningCache[iTank].g_flCloseAreasOnly) || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esLightningCache[iTank].g_iHumanAbility == 1 && g_esLightningCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vLightningReset2(iTank);
 
-		if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esLightningCache[iTank].g_iHumanAbility == 1 && g_esLightningCache[iTank].g_iHumanMode == 0 && (g_esLightningPlayer[iTank].g_iCooldown == -1 || g_esLightningPlayer[iTank].g_iCooldown < iCurrentTime))
+		if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esLightningCache[iTank].g_iHumanMode == 0) && (g_esLightningPlayer[iTank].g_iCooldown == -1 || g_esLightningPlayer[iTank].g_iCooldown < iCurrentTime))
 		{
 			vLightningReset3(iTank);
 		}
@@ -884,7 +905,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	}
 
 	float flSurvivorPos[3],
-		flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
+		flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esLightningPlayer[iTank].g_iTankType, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLightningPlayer[iSurvivor].g_iImmunityFlags))

@@ -72,6 +72,7 @@ enum struct esKamikazePlayer
 {
 	bool g_bFailed;
 
+	float g_flCloseAreasOnly;
 	float g_flKamikazeChance;
 	float g_flKamikazeRange;
 	float g_flKamikazeRangeChance;
@@ -95,6 +96,7 @@ esKamikazePlayer g_esKamikazePlayer[MAXPLAYERS + 1];
 
 enum struct esKamikazeAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flKamikazeChance;
 	float g_flKamikazeRange;
 	float g_flKamikazeRangeChance;
@@ -117,6 +119,7 @@ esKamikazeAbility g_esKamikazeAbility[MT_MAXTYPES + 1];
 
 enum struct esKamikazeCache
 {
+	float g_flCloseAreasOnly;
 	float g_flKamikazeChance;
 	float g_flKamikazeRange;
 	float g_flKamikazeRangeChance;
@@ -448,11 +451,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_KAMIKAZE_SECTION, false) || StrEqual(sSubset[iPos], MT_KAMIKAZE_SECTION2, false) || StrEqual(sSubset[iPos], MT_KAMIKAZE_SECTION3, false) || StrEqual(sSubset[iPos], MT_KAMIKAZE_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -476,7 +481,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -526,14 +531,15 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esKamikazeAbility[iIndex].g_iAccessFlags = 0;
 				g_esKamikazeAbility[iIndex].g_iImmunityFlags = 0;
+				g_esKamikazeAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esKamikazeAbility[iIndex].g_iComboAbility = 0;
 				g_esKamikazeAbility[iIndex].g_iHumanAbility = 0;
 				g_esKamikazeAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esKamikazeAbility[iIndex].g_iRequiresHumans = 0;
 				g_esKamikazeAbility[iIndex].g_iKamikazeAbility = 0;
-				g_esKamikazeAbility[iIndex].g_iKamikazeBody = 1;
 				g_esKamikazeAbility[iIndex].g_iKamikazeEffect = 0;
 				g_esKamikazeAbility[iIndex].g_iKamikazeMessage = 0;
+				g_esKamikazeAbility[iIndex].g_iKamikazeBody = 1;
 				g_esKamikazeAbility[iIndex].g_flKamikazeChance = 33.3;
 				g_esKamikazeAbility[iIndex].g_iKamikazeHit = 0;
 				g_esKamikazeAbility[iIndex].g_iKamikazeHitMode = 0;
@@ -549,14 +555,15 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esKamikazePlayer[iPlayer].g_iAccessFlags = 0;
 					g_esKamikazePlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esKamikazePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esKamikazePlayer[iPlayer].g_iComboAbility = 0;
 					g_esKamikazePlayer[iPlayer].g_iHumanAbility = 0;
 					g_esKamikazePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esKamikazePlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esKamikazePlayer[iPlayer].g_iKamikazeAbility = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeBody = 0;
 					g_esKamikazePlayer[iPlayer].g_iKamikazeEffect = 0;
 					g_esKamikazePlayer[iPlayer].g_iKamikazeMessage = 0;
+					g_esKamikazePlayer[iPlayer].g_iKamikazeBody = 0;
 					g_esKamikazePlayer[iPlayer].g_flKamikazeChance = 0.0;
 					g_esKamikazePlayer[iPlayer].g_iKamikazeHit = 0;
 					g_esKamikazePlayer[iPlayer].g_iKamikazeHitMode = 0;
@@ -576,6 +583,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esKamikazePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esKamikazePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazePlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esKamikazePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazePlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esKamikazePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -595,6 +603,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esKamikazeAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazeAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esKamikazeAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazeAbility[type].g_iComboAbility, value, 0, 1);
 		g_esKamikazeAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazeAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esKamikazeAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazeAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -620,10 +629,11 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly);
+	g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility);
 	g_esKamikazeCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance);
 	g_esKamikazeCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange);
 	g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance);
-	g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility);
 	g_esKamikazeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility);
 	g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility);
 	g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect);
@@ -718,17 +728,14 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iHumanAbility == 1)
-			{
-				vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-			}
+			vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
 		}
 	}
 }
@@ -749,7 +756,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vKamikazeAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -758,8 +765,8 @@ void vKamikazeAbility(int tank, float random, int pos = -1)
 
 	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
-	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esKamikazeCache[tank].g_flKamikazeRange,
-		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esKamikazeCache[tank].g_flKamikazeRangeChance;
+	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esKamikazeCache[tank].g_flKamikazeRange,
+		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esKamikazeCache[tank].g_flKamikazeRangeChance;
 	int iSurvivorCount = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -786,7 +793,7 @@ void vKamikazeAbility(int tank, float random, int pos = -1)
 
 void vKamikazeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
 {
-	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esKamikazePlayer[tank].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esKamikazePlayer[tank].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -806,12 +813,12 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 			}
 
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(survivor);
-			ForcePlayerSuicide(tank);
-			vScreenEffect(survivor, tank, g_esKamikazeCache[tank].g_iKamikazeEffect, flags);
 			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
-			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
+			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+			ForcePlayerSuicide(tank);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, tank);
+			vScreenEffect(survivor, tank, g_esKamikazeCache[tank].g_iKamikazeEffect, flags);
 
 			if (g_esKamikazeCache[tank].g_iKamikazeMessage & messages)
 			{
