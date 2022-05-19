@@ -621,13 +621,13 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 	{
 		bool bRandom = false;
 		float flInfectedPos[3], flTankPos[3], flRange = 0.0;
-		int iPos = -1, iClass = 0;
+		int iPos = -1, iClass = 0, iTime = GetTime();
 		GetClientAbsOrigin(victim, flInfectedPos);
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
 			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esNecroPlayer[iTank].g_bActivated)
 			{
-				if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags))
+				if ((g_esNecroPlayer[iTank].g_iCooldown != -1 && g_esNecroPlayer[iTank].g_iCooldown > iTime) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags)))
 				{
 					continue;
 				}
@@ -828,7 +828,8 @@ void vNecro(int tank, float pos[3], const char[] type)
 
 void vNecroAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNecroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
+	int iTime = GetTime();
+	if ((g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime) || bIsAreaNarrow(tank, g_esNecroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNecroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNecroPlayer[tank].g_iTankType) || (g_esNecroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNecroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -842,7 +843,7 @@ void vNecroAbility(int tank)
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 			{
 				g_esNecroPlayer[tank].g_iAmmoCount++;
-				g_esNecroPlayer[tank].g_iDuration = (GetTime() + g_esNecroCache[tank].g_iHumanDuration);
+				g_esNecroPlayer[tank].g_iDuration = (iTime + g_esNecroCache[tank].g_iHumanDuration);
 
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esNecroPlayer[tank].g_iAmmoCount, g_esNecroCache[tank].g_iHumanAmmo);
 			}
@@ -886,7 +887,7 @@ void vNecroReset()
 void vNecroReset2(int tank)
 {
 	int iTime = GetTime(), iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esNecroCache[tank].g_iNecroCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1 && g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
 	g_esNecroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime)
 	{

@@ -842,11 +842,16 @@ void vQuietHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esQuietPlayer[tank].g_iRangeCooldown != -1 && g_esQuietPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esQuietPlayer[tank].g_iCooldown != -1 && g_esQuietPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esQuietPlayer[tank].g_iAmmoCount < g_esQuietCache[tank].g_iHumanAmmo && g_esQuietCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esQuietPlayer[survivor].g_bAffected)
 			{
 				g_esQuietPlayer[survivor].g_bAffected = true;
@@ -863,7 +868,7 @@ void vQuietHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esQuietCache[tank].g_iQuietRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esQuietCache[tank].g_iHumanAbility == 1) ? g_esQuietCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esQuietCache[tank].g_iHumanAbility == 1 && g_esQuietPlayer[tank].g_iAmmoCount < g_esQuietCache[tank].g_iHumanAmmo && g_esQuietCache[tank].g_iHumanAmmo > 0) ? g_esQuietCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esQuietPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esQuietPlayer[tank].g_iRangeCooldown != -1 && g_esQuietPlayer[tank].g_iRangeCooldown > iTime)
 					{

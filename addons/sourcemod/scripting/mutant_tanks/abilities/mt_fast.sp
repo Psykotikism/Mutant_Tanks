@@ -743,9 +743,15 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vFast(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFastCache[tank].g_iFastDuration;
 	g_esFastPlayer[tank].g_bActivated = true;
-	g_esFastPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esFastPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	float flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 16, pos) : g_esFastCache[tank].g_flFastSpeed;
 	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flSpeed);
@@ -768,7 +774,7 @@ void vFast(int tank, int pos = -1)
 
 void vFastAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esFastCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFastCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFastPlayer[tank].g_iTankType) || (g_esFastCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFastCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFastAbility[g_esFastPlayer[tank].g_iTankType].g_iAccessFlags, g_esFastPlayer[tank].g_iAccessFlags)))
+	if ((g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esFastCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFastCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFastPlayer[tank].g_iTankType) || (g_esFastCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFastCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFastAbility[g_esFastPlayer[tank].g_iTankType].g_iAccessFlags, g_esFastPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -834,7 +840,7 @@ void vFastReset2(int tank)
 void vFastReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFastAbility[g_esFastPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFastCache[tank].g_iFastCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1) ? g_esFastCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1 && g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0) ? g_esFastCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFastPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime)
 	{

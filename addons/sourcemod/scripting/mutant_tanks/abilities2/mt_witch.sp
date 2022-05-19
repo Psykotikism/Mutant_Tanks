@@ -745,6 +745,12 @@ void vWitchReset()
 
 void vWitch(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	bool bConverted = false;
 	float flTankPos[3], flInfectedPos[3], flInfectedAngles[3],
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWitchCache[tank].g_flWitchRange;
@@ -768,7 +774,7 @@ void vWitch(int tank, int pos = -1)
 
 	if (bConverted)
 	{
-		int iTime = GetTime(), iCooldown = -1;
+		int iCooldown = -1;
 		if (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime)
 		{
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
@@ -779,7 +785,7 @@ void vWitch(int tank, int pos = -1)
 			}
 
 			iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esWitchCache[tank].g_iWitchCooldown;
-			iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1) ? g_esWitchCache[tank].g_iHumanCooldown : iCooldown;
+			iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? g_esWitchCache[tank].g_iHumanCooldown : iCooldown;
 			g_esWitchPlayer[tank].g_iCooldown = (iTime + iCooldown);
 			if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 			{
@@ -821,7 +827,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 
 void vWitchAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

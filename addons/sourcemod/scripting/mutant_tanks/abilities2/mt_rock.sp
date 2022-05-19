@@ -839,7 +839,7 @@ void vRockReset2(int tank)
 void vRockReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRockCache[tank].g_iRockCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1 && g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRockPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime)
 	{
@@ -849,6 +849,11 @@ void vRockReset3(int tank)
 
 void vRock(int tank, int pos = -1)
 {
+	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esRockPlayer[tank].g_bActivated = true;
 
 	vRock2(tank, pos);
@@ -907,7 +912,7 @@ void vRock2(int tank, int pos = -1)
 
 void vRockAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+	if ((g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

@@ -706,6 +706,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vCloud(int tank, int pos = -1)
 {
+	if (g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esCloudPlayer[tank].g_bActivated = true;
 
 	vCloud2(tank, pos);
@@ -743,7 +748,7 @@ void vCloud2(int tank, int pos = -1)
 
 void vCloudAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esCloudCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloudCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCloudPlayer[tank].g_iTankType) || (g_esCloudCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloudCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloudAbility[g_esCloudPlayer[tank].g_iTankType].g_iAccessFlags, g_esCloudPlayer[tank].g_iAccessFlags)))
+	if ((g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esCloudCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloudCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCloudPlayer[tank].g_iTankType) || (g_esCloudCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloudCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloudAbility[g_esCloudPlayer[tank].g_iTankType].g_iAccessFlags, g_esCloudPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -805,7 +810,7 @@ void vCloudReset2(int tank)
 void vCloudReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esCloudAbility[g_esCloudPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esCloudCache[tank].g_iCloudCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloudCache[tank].g_iHumanAbility == 1) ? g_esCloudCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloudCache[tank].g_iHumanAbility == 1 && g_esCloudPlayer[tank].g_iAmmoCount < g_esCloudCache[tank].g_iHumanAmmo && g_esCloudCache[tank].g_iHumanAmmo > 0) ? g_esCloudCache[tank].g_iHumanCooldown : iCooldown;
 	g_esCloudPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esCloudPlayer[tank].g_iCooldown != -1 && g_esCloudPlayer[tank].g_iCooldown > iTime)
 	{

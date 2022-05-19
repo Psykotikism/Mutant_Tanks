@@ -710,6 +710,11 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vPanic(int tank, int pos = -1)
 {
+	if (g_esPanicPlayer[tank].g_iCooldown != -1 && g_esPanicPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esPanicPlayer[tank].g_bActivated = true;
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPanicCache[tank].g_iHumanAbility == 1)
@@ -765,7 +770,7 @@ void vPanic3(int tank)
 
 void vPanicAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esPanicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPanicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPanicPlayer[tank].g_iTankType) || (g_esPanicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPanicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPanicAbility[g_esPanicPlayer[tank].g_iTankType].g_iAccessFlags, g_esPanicPlayer[tank].g_iAccessFlags)))
+	if ((g_esPanicPlayer[tank].g_iCooldown != -1 && g_esPanicPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esPanicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPanicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPanicPlayer[tank].g_iTankType) || (g_esPanicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPanicCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPanicAbility[g_esPanicPlayer[tank].g_iTankType].g_iAccessFlags, g_esPanicPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -829,7 +834,7 @@ void vPanicReset2(int tank)
 	g_esPanicPlayer[tank].g_bActivated = false;
 
 	int iTime = GetTime(), iPos = g_esPanicAbility[g_esPanicPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esPanicCache[tank].g_iPanicCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPanicCache[tank].g_iHumanAbility == 1) ? g_esPanicCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPanicCache[tank].g_iHumanAbility == 1 && g_esPanicPlayer[tank].g_iAmmoCount < g_esPanicCache[tank].g_iHumanAmmo && g_esPanicCache[tank].g_iHumanAmmo > 0) ? g_esPanicCache[tank].g_iHumanCooldown : iCooldown;
 	g_esPanicPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esPanicPlayer[tank].g_iCooldown != -1 && g_esPanicPlayer[tank].g_iCooldown > iTime)
 	{

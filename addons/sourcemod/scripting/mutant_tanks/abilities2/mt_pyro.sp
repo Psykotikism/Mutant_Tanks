@@ -860,9 +860,15 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vPyro(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esPyroCache[tank].g_iPyroDuration;
 	g_esPyroPlayer[tank].g_bActivated = true;
-	g_esPyroPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esPyroPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	IgniteEntity(tank, float(iDuration));
 
@@ -884,7 +890,7 @@ void vPyro(int tank, int pos = -1)
 
 void vPyroAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
+	if ((g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esPyroCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPyroCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPyroPlayer[tank].g_iTankType) || (g_esPyroCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPyroCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -963,7 +969,7 @@ void vPyroReset2(int tank)
 void vPyroReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esPyroCache[tank].g_iPyroCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1) ? g_esPyroCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1 && g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0) ? g_esPyroCache[tank].g_iHumanCooldown : iCooldown;
 	g_esPyroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime)
 	{

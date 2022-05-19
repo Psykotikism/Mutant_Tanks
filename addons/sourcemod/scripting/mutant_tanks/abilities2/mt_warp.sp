@@ -129,6 +129,7 @@ enum struct esWarpAbility
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -508,8 +509,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility != 2)
 	{
+		g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WARP_SECTION);
@@ -527,6 +532,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
 			{
+				g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
@@ -625,6 +631,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWarpAbility[iIndex].g_iImmunityFlags = 0;
 				g_esWarpAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esWarpAbility[iIndex].g_iComboAbility = 0;
+				g_esWarpAbility[iIndex].g_iComboPosition = -1;
 				g_esWarpAbility[iIndex].g_iHumanAbility = 0;
 				g_esWarpAbility[iIndex].g_iHumanAmmo = 5;
 				g_esWarpAbility[iIndex].g_iHumanCooldown = 0;
@@ -1047,8 +1054,9 @@ void vWarpReset2(int tank)
 {
 	g_esWarpPlayer[tank].g_bActivated = false;
 
-	int iTime = GetTime();
-	g_esWarpPlayer[tank].g_iCooldown2 = (g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esWarpCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
+	g_esWarpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
 	if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman8", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
@@ -1057,7 +1065,8 @@ void vWarpReset2(int tank)
 
 void vWarp(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esWarpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWarpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWarpPlayer[tank].g_iTankType) || (g_esWarpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWarpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[tank].g_iAccessFlags)))
+	int iTime = GetTime();
+	if ((g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime) || bIsAreaNarrow(tank, g_esWarpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWarpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWarpPlayer[tank].g_iTankType) || (g_esWarpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWarpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1067,7 +1076,7 @@ void vWarp(int tank, int pos = -1)
 	CreateDataTimer(flInterval, tTimerWarp, dpWarp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpWarp.WriteCell(GetClientUserId(tank));
 	dpWarp.WriteCell(g_esWarpPlayer[tank].g_iTankType);
-	dpWarp.WriteCell(GetTime());
+	dpWarp.WriteCell(iTime);
 }
 
 void vWarp2(int tank, int other)
@@ -1180,6 +1189,11 @@ void vWarpAbility(int tank, bool main, float random = 0.0, int pos = -1)
 		}
 		case false:
 		{
+			if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > GetTime())
+			{
+				return;
+			}
+
 			if ((g_esWarpCache[tank].g_iWarpAbility == 2 || g_esWarpCache[tank].g_iWarpAbility == 3) && !g_esWarpPlayer[tank].g_bActivated)
 			{
 				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0))
@@ -1219,11 +1233,16 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esWarpPlayer[tank].g_iRangeCooldown != -1 && g_esWarpPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esWarpPlayer[tank].g_iCooldown != -1 && g_esWarpPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esWarpPlayer[tank].g_iAmmoCount2 < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance)
 			{
 				char sTankName[33];
@@ -1243,7 +1262,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 							}
 
 							iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esWarpCache[tank].g_iWarpRangeCooldown;
-							iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1) ? g_esWarpCache[tank].g_iHumanRangeCooldown : iCooldown;
+							iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount2 < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanRangeCooldown : iCooldown;
 							g_esWarpPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 							if (g_esWarpPlayer[tank].g_iRangeCooldown != -1 && g_esWarpPlayer[tank].g_iRangeCooldown > iTime)
 							{
@@ -1463,7 +1482,7 @@ Action tTimerWarp(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esWarpCache[iTank].g_iHumanAbility == 1 && g_esWarpCache[iTank].g_iHumanMode == 0 && (iTime + g_esWarpCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esWarpPlayer[iTank].g_iCooldown2 == -1 || g_esWarpPlayer[iTank].g_iCooldown2 < iCurrentTime))
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esWarpCache[iTank].g_iHumanAbility == 1 && g_esWarpCache[iTank].g_iHumanMode == 0)) && (iTime + g_esWarpCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esWarpPlayer[iTank].g_iCooldown2 == -1 || g_esWarpPlayer[iTank].g_iCooldown2 < iCurrentTime))
 	{
 		vWarpReset2(iTank);
 

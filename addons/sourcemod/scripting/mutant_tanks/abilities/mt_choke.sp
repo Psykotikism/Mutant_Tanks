@@ -895,11 +895,16 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esChokePlayer[tank].g_iRangeCooldown != -1 && g_esChokePlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esChokePlayer[tank].g_iCooldown != -1 && g_esChokePlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esChokePlayer[survivor].g_bAffected)
 			{
 				g_esChokePlayer[survivor].g_bAffected = true;
@@ -916,7 +921,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esChokeCache[tank].g_iChokeRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1) ? g_esChokeCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility == 1 && g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0) ? g_esChokeCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esChokePlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esChokePlayer[tank].g_iRangeCooldown != -1 && g_esChokePlayer[tank].g_iRangeCooldown > iTime)
 					{

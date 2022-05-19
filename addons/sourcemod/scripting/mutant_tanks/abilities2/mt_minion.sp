@@ -712,6 +712,12 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vMinion(int tank)
 {
+	int iTime = GetTime();
+	if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount)
 	{
 		float flHitPos[3], flPos[3], flAngles[3], flVector[3];
@@ -805,7 +811,6 @@ void vMinion(int tank)
 							CreateTimer(g_esMinionCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						int iTime = GetTime();
 						if (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
 						{
 							if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1)
@@ -816,7 +821,7 @@ void vMinion(int tank)
 							}
 
 							int iPos = g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMinionCache[tank].g_iMinionCooldown;
-							iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1) ? g_esMinionCache[tank].g_iHumanCooldown : iCooldown;
+							iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0) ? g_esMinionCache[tank].g_iHumanCooldown : iCooldown;
 							g_esMinionPlayer[tank].g_iCooldown = (iTime + iCooldown);
 							if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime)
 							{
@@ -842,7 +847,7 @@ void vMinion(int tank)
 
 void vMinionAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esMinionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMinionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMinionPlayer[tank].g_iTankType) || (g_esMinionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMinionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[tank].g_iAccessFlags)))
+	if ((g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esMinionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esMinionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMinionPlayer[tank].g_iTankType) || (g_esMinionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMinionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

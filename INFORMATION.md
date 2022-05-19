@@ -2243,8 +2243,8 @@
 			// Note: Cooldowns are only valid for the current round that they are activated on.
 			// Note: Players with the "mt_adminversus" override will be immune to this cooldown.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -5475,8 +5475,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -5557,15 +5557,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Absorb Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -5709,8 +5708,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their hit ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -5722,8 +5721,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -5735,8 +5734,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their rock ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -5843,15 +5842,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Acid Cooldown"				"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -5941,15 +5939,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Acid Range Cooldown"			"0"
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
@@ -5980,15 +5977,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Acid Rock Cooldown"			"0"
 		}
 	}
@@ -6071,8 +6067,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6084,8 +6080,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6187,15 +6183,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Aimless Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -6263,15 +6258,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Aimless Range Cooldown"		"0"
 		}
 	}
@@ -6354,8 +6348,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6367,8 +6361,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6470,15 +6464,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ammo Cooldown"				"0"
 
 			// The Mutant Tank sets survivors' ammunition to this amount.
@@ -6540,15 +6533,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ammo Range Cooldown"			"0"
 		}
 	}
@@ -6631,8 +6623,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6644,8 +6636,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6747,15 +6739,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Blind Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -6831,15 +6822,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Blind Range Cooldown"			"0"
 		}
 	}
@@ -6928,8 +6918,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their hit ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6941,8 +6931,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -6954,8 +6944,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their rock ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7062,15 +7052,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Bomb Cooldown"				"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -7160,15 +7149,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Bomb Range Cooldown"			"0"
 
 			// The Mutant Tank's rock creates an explosion when it breaks.
@@ -7198,15 +7186,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Bomb Rock Cooldown"			"0"
 		}
 	}
@@ -7289,8 +7276,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7302,8 +7289,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7412,15 +7399,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Bury Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7500,15 +7486,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Bury Range Cooldown"			"0"
 		}
 	}
@@ -7575,8 +7560,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7647,15 +7632,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Car Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7809,8 +7793,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7822,8 +7806,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -7925,15 +7909,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Choke Cooldown"			"0"
 
 			// The Mutant Tank's chokes do this much damage.
@@ -8025,15 +8008,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Choke Range Cooldown"			"0"
 		}
 	}
@@ -8100,8 +8082,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -8172,15 +8154,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Clone Cooldown"			"0"
 
 			// The Mutant Tank's clone's health.
@@ -8324,8 +8305,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -8409,15 +8390,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Cloud Cooldown"			"0"
 
 			// The Mutant Tank's clouds do this much damage.
@@ -8668,8 +8648,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -8681,8 +8661,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -8784,15 +8764,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Drug Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -8874,15 +8853,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Drug Range Cooldown"			"0"
 		}
 	}
@@ -8965,8 +8943,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -8978,8 +8956,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9081,15 +9059,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Drunk Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9156,15 +9133,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Drunk Range Cooldown"			"0"
 
 			// The Mutant Tank causes the survivors' speed to randomly change every time this many seconds passes.
@@ -9273,8 +9249,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9286,8 +9262,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9389,15 +9365,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Electric Cooldown"			"0"
 
 			// The Mutant Tank's electrocutions do this much damage.
@@ -9491,15 +9466,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Electric Range Cooldown"		"0"
 		}
 	}
@@ -9582,8 +9556,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9595,8 +9569,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9698,15 +9672,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Enforce Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9775,15 +9748,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Enforce Range Cooldown"		"0"
 
 			// The Mutant Tank forces survivors to only use one of the following weapon slots.
@@ -9866,8 +9838,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -9938,15 +9910,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fast Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10057,8 +10028,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their hit ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10070,8 +10041,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10083,8 +10054,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their rock ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10191,15 +10162,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fire Cooldown"				"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -10289,15 +10259,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fire Range Cooldown"			"0"
 
 			// The Mutant Tank's rock creates a fire when it breaks.
@@ -10327,15 +10296,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fire Rock Cooldown"			"0"
 		}
 	}
@@ -10422,8 +10390,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10435,8 +10403,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10538,15 +10506,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fling Cooldown"			"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -10644,15 +10611,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fling Range Cooldown"			"0"
 		}
 	}
@@ -10727,8 +10693,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -10799,15 +10765,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fly Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10920,8 +10885,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11002,15 +10967,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Fragile Cooldown"			"0"
 
 			// The Mutant Tank's damage boost value when fragile.
@@ -11180,8 +11144,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11214,8 +11178,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11320,19 +11284,18 @@
 			// "always" - 100% chance
 			"Ghost Chance"				"33.3"
 
-			// The cooldown for the Mutant Tank's hit ability.
+			// The cooldown for the Mutant Tank's main/hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ghost Cooldown"			"0"
 
 			// The amount of alpha to take from the Mutant Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
@@ -11422,15 +11385,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ghost Range Cooldown"			"0"
 
 			// The Mutant Tank can cloak nearby special infected.
@@ -11554,8 +11516,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11626,15 +11588,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"God Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11733,8 +11694,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11754,8 +11715,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -11860,19 +11821,18 @@
 			// "always" - 100% chance
 			"Gravity Chance"			"33.3"
 
-			// The cooldown for the Mutant Tank's hit ability.
+			// The cooldown for the Mutant Tank's main/hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Gravity Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11951,15 +11911,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Gravity Range Cooldown"		"0"
 
 			// The Mutant Tank sets the survivors' gravity to this value.
@@ -12056,8 +12015,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12090,8 +12049,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12215,19 +12174,18 @@
 			// "always" - 100% chance
 			"Heal Chance"				"33.3"
 
-			// The cooldown for the Mutant Tank's hit ability.
+			// The cooldown for the Mutant Tank's main/hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Heal Cooldown"				"0"
 
 			// The Mutant Tank's healing gives it a glow outline when activated.
@@ -12305,15 +12263,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Heal Range Cooldown"			"0"
 
 			// The Mutant Tank receives this much health from nearby common infected.
@@ -12530,8 +12487,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12543,8 +12500,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12646,15 +12603,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Hurt Cooldown"				"0"
 
 			// The Mutant Tank's pain inflictions do this much damage.
@@ -12748,15 +12704,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Hurt Range Cooldown"			"0"
 		}
 	}
@@ -12839,8 +12794,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12852,8 +12807,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -12965,15 +12920,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Hypno Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13089,15 +13043,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Hypno Range Cooldown"			"0"
 		}
 	}
@@ -13180,8 +13133,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13193,8 +13146,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13296,15 +13249,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ice Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13373,15 +13325,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ice Range Cooldown"			"0"
 		}
 	}
@@ -13464,8 +13415,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13477,8 +13428,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13580,15 +13531,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Idle Cooldown"				"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -13643,15 +13593,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Idle Range Cooldown"			"0"
 		}
 	}
@@ -13734,8 +13683,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13747,8 +13696,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -13850,15 +13799,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Invert Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13926,15 +13874,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Invert Range Cooldown"			"0"
 		}
 	}
@@ -14194,8 +14141,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -14215,8 +14162,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -14321,19 +14268,18 @@
 			// "always" - 100% chance
 			"Jump Chance"				"33.3"
 
-			// The cooldown for the Mutant Tank's hit ability.
+			// The cooldown for the Mutant Tank's main/hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Jump Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -14434,15 +14380,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Jump Range Cooldown"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to jump sporadically.
@@ -14761,8 +14706,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -14774,8 +14719,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -14877,15 +14822,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Lag Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -14952,15 +14896,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Lag Range Cooldown"			"0"
 		}
 	}
@@ -15035,8 +14978,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -15107,15 +15050,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Laser Cooldown"			"0"
 
 			// The Mutant Tank's lasers do this much damage.
@@ -15249,8 +15191,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -15262,8 +15204,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -15365,15 +15307,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Leech Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -15455,15 +15396,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Leech Range Cooldown"			"0"
 		}
 	}
@@ -15539,8 +15479,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -15611,15 +15551,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Lightning Cooldown"			"0"
 
 			// The Mutant Tank's lightning storm strikes cause this much damage per hit.
@@ -15727,8 +15666,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -15812,15 +15751,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Medic Cooldown"			"0"
 
 			// The Mutant Tank creates a healing field visual effect around it when healing fellow special infected.
@@ -15971,8 +15909,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16043,15 +15981,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Meteor Cooldown"			"0"
 
 			// The Mutant Tank's meteorites do this much damage.
@@ -16187,8 +16124,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16259,15 +16196,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Minion Cooldown"			"0"
 
 			// Minions spawned by the Mutant Tank die after this many seconds.
@@ -16379,8 +16315,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16464,15 +16400,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Necro Cooldown"			"0"
 
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
@@ -16567,8 +16502,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16580,8 +16515,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16683,15 +16618,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Nullify Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -16759,15 +16693,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Nullify Range Cooldown"		"0"
 		}
 	}
@@ -16834,8 +16767,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -16906,15 +16839,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Omni Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -17013,8 +16945,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17098,15 +17030,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Panic Cooldown"			"0"
 
 			// The Mutant Tank starts a panic event every time this many seconds passes.
@@ -17203,8 +17134,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17216,8 +17147,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17319,15 +17250,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Pimp Cooldown"				"0"
 
 			// The Mutant Tank's pimp slaps do this much damage.
@@ -17421,15 +17351,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Pimp Range Cooldown"			"0"
 		}
 	}
@@ -17515,8 +17444,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17528,8 +17457,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17631,15 +17560,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Puke Cooldown"				"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -17729,15 +17657,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Puke Range Cooldown"			"0"
 		}
 	}
@@ -17804,8 +17731,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -17876,15 +17803,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Pyro Cooldown"				"0"
 
 			// The Mutant Tank's damage boost value when on fire.
@@ -18014,8 +17940,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18027,8 +17953,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18130,15 +18056,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Quiet Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -18207,15 +18132,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Quiet Range Cooldown"			"0"
 		}
 	}
@@ -18298,8 +18222,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18311,8 +18235,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18414,15 +18338,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Recoil Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -18490,15 +18413,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Recoil Range Cooldown"			"0"
 		}
 	}
@@ -18565,8 +18487,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18650,15 +18572,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Regen Cooldown"			"0"
 
 			// The Mutant Tank regenerates this much health each time.
@@ -18917,8 +18838,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -18930,8 +18851,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19033,15 +18954,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Restart Cooldown"			"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -19113,15 +19033,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Restart Range Cooldown"		"0"
 		}
 	}
@@ -19196,8 +19115,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19268,15 +19187,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Rock Cooldown"				"0"
 
 			// The Mutant Tank's rocks do this much damage.
@@ -19406,8 +19324,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19419,8 +19337,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19530,15 +19448,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Rocket Cooldown"			"0"
 
 			// The Mutant Tank sends survivors into space after this many seconds passes upon triggering the ability.
@@ -19605,15 +19522,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Rocket Range Cooldown"			"0"
 		}
 	}
@@ -19699,8 +19615,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19712,8 +19628,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -19815,15 +19731,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Shake Cooldown"			"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -19940,15 +19855,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Shake Range Cooldown"			"0"
 		}
 	}
@@ -20023,8 +19937,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20122,15 +20036,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Shield Cooldown"			"0"
 
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
@@ -20315,8 +20228,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20328,8 +20241,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20431,15 +20344,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Shove Cooldown"			"0"
 
 			// Enable the Mutant Tank's upon-death range ability.
@@ -20556,15 +20468,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Shove Range Cooldown"			"0"
 		}
 	}
@@ -20647,8 +20558,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20660,8 +20571,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20763,15 +20674,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Slow Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -20847,15 +20757,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Slow Range Cooldown"			"0"
 
 			// The Mutant Tank sets the survivors' run speed to this value.
@@ -20946,8 +20855,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -20959,8 +20868,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21070,15 +20979,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Smash Cooldown"			"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -21133,15 +21041,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Smash Range Cooldown"			"0"
 		}
 	}
@@ -21224,8 +21131,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21237,8 +21144,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21348,15 +21255,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Smite Cooldown"			"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -21411,15 +21317,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Smite Range Cooldown"			"0"
 		}
 	}
@@ -21494,8 +21399,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21566,15 +21471,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Spam Cooldown"				"0"
 
 			// The Mutant Tank's rocks do this much damage.
@@ -21683,8 +21587,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21768,15 +21672,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Splash Cooldown"			"0"
 
 			// The Mutant Tank's splashes do this much damage.
@@ -21882,8 +21785,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -21967,15 +21870,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Splatter Cooldown"			"0"
 
 			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
@@ -22089,8 +21991,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -22207,15 +22109,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Throw Cooldown"			"0"
 
 			// The amount of special infected the Mutant Tank can throw at any given time.
@@ -22376,8 +22277,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -22441,15 +22342,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Track Cooldown"			"0"
 
 			// The Mutant Tank's heat-seeking rocks have glow outlines when activated.
@@ -22550,8 +22450,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -22622,15 +22522,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Ultimate Cooldown"			"0"
 
 			// The Mutant Tank's damage boost value during ultimate mode.
@@ -22737,8 +22636,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -22809,15 +22708,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Undead Cooldown"			"0"
 		}
 	}
@@ -23023,8 +22921,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23036,8 +22934,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23139,15 +23037,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Vision Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -23222,15 +23119,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Vision Range Cooldown"			"0"
 		}
 	}
@@ -23319,8 +23215,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their hit ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23353,8 +23249,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23366,8 +23262,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their rock ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23481,19 +23377,18 @@
 			// "always" - 100% chance
 			"Warp Chance"				"33.3"
 
-			// The cooldown for the Mutant Tank's hit ability.
+			// The cooldown for the Mutant Tank's main/hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Warp Cooldown"				"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -23573,15 +23468,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Warp Range Cooldown"			"0"
 
 			// The Mutant Tank's rock switches places with the Mutant Tank when it breaks.
@@ -23612,15 +23506,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Warp Rock Cooldown"			"0"
 		}
 	}
@@ -23703,8 +23596,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23716,8 +23609,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -23833,15 +23726,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Whirl Cooldown"			"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -23909,15 +23801,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Whirl Range Cooldown"			"0"
 
 			// The Mutant Tank makes survivors whirl at this speed.
@@ -24000,8 +23891,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -24072,15 +23963,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Witch Cooldown"			"0"
 
 			// The Mutant Tank's Witch minion causes this much damage per hit.
@@ -24318,8 +24208,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -24390,15 +24280,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Yell Cooldown"				"0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -24490,8 +24379,8 @@
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
 			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
@@ -24582,15 +24471,14 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
-			// "never" - 0% chance
-			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
-			// "maybe" - 50% chance
-			// "often"/"likely"/"frequently" - 66.6% chance
-			// "always" - 100% chance
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
 			"Zombie Cooldown"			"0"
 
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.

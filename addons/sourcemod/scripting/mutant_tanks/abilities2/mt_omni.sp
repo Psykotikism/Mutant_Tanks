@@ -772,9 +772,15 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vOmni(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esOmniCache[tank].g_iOmniDuration;
 	g_esOmniPlayer[tank].g_bActivated = true;
-	g_esOmniPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esOmniPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	vOmni2(tank, pos);
 
@@ -849,7 +855,7 @@ void vOmni2(int tank, int pos = -1)
 
 void vOmniAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+	if ((g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -930,7 +936,7 @@ void vOmniReset2(int tank)
 void vOmniReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esOmni[tank].g_iOmniCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1) ? g_esOmni[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1 && g_esOmniPlayer[tank].g_iAmmoCount < g_esOmni[tank].g_iHumanAmmo && g_esOmni[tank].g_iHumanAmmo > 0) ? g_esOmni[tank].g_iHumanCooldown : iCooldown;
 	g_esOmniPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime)
 	{

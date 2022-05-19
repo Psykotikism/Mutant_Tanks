@@ -890,6 +890,11 @@ void vThrowReset()
 
 void vThrow(int tank, int rock)
 {
+	if (g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esThrowCache[tank].g_iHumanAbility != 1) && !g_esThrowPlayer[tank].g_bActivated)
 	{
 		g_esThrowPlayer[tank].g_bActivated = true;
@@ -1223,7 +1228,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 		if (g_esThrowPlayer[iTank].g_iCooldown == -1 || g_esThrowPlayer[iTank].g_iCooldown < iTime)
 		{
 			int iPos = g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esThrowCache[iTank].g_iThrowCooldown;
-			iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esThrowCache[iTank].g_iHumanAbility == 1) ? g_esThrowCache[iTank].g_iHumanCooldown : iCooldown;
+			iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esThrowCache[iTank].g_iHumanAbility == 1 && g_esThrowPlayer[iTank].g_iAmmoCount < g_esThrowCache[iTank].g_iHumanAmmo && g_esThrowCache[iTank].g_iHumanAmmo > 0) ? g_esThrowCache[iTank].g_iHumanCooldown : iCooldown;
 			g_esThrowPlayer[iTank].g_iCooldown = (iTime + iCooldown);
 			if (g_esThrowPlayer[iTank].g_iCooldown != -1 && g_esThrowPlayer[iTank].g_iCooldown > iTime)
 			{

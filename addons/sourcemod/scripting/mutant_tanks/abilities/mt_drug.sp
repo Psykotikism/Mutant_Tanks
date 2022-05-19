@@ -908,11 +908,16 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esDrugPlayer[tank].g_iRangeCooldown != -1 && g_esDrugPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esDrugPlayer[tank].g_iCooldown != -1 && g_esDrugPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsHumanSurvivor(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esDrugPlayer[tank].g_iAmmoCount < g_esDrugCache[tank].g_iHumanAmmo && g_esDrugCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esDrugPlayer[survivor].g_bAffected)
 			{
 				g_esDrugPlayer[survivor].g_bAffected = true;
@@ -929,7 +934,7 @@ void vDrugHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esDrugCache[tank].g_iDrugRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esDrugCache[tank].g_iHumanAbility == 1) ? g_esDrugCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esDrugCache[tank].g_iHumanAbility == 1 && g_esDrugPlayer[tank].g_iAmmoCount < g_esDrugCache[tank].g_iHumanAmmo && g_esDrugCache[tank].g_iHumanAmmo > 0) ? g_esDrugCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esDrugPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esDrugPlayer[tank].g_iRangeCooldown != -1 && g_esDrugPlayer[tank].g_iRangeCooldown > iTime)
 					{

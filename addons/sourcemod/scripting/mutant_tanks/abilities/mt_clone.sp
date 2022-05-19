@@ -705,7 +705,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 										{
 											iPos = g_esCloneAbility[g_esClonePlayer[iOwner].g_iTankType].g_iComboPosition;
 											iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iOwner, 2, iPos)) : g_esCloneCache[iOwner].g_iCloneCooldown;
-											iCooldown = (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1) ? g_esCloneCache[iOwner].g_iHumanCooldown : iCooldown;
+											iCooldown = (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1 && g_esClonePlayer[iOwner].g_iAmmoCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? g_esCloneCache[iOwner].g_iHumanCooldown : iCooldown;
 											g_esClonePlayer[iOwner].g_iCooldown = (iTime + iCooldown);
 											if (g_esClonePlayer[iOwner].g_iCooldown != -1 && g_esClonePlayer[iOwner].g_iCooldown > iTime)
 											{
@@ -811,6 +811,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vClone(int tank)
 {
+	if (g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	if (!g_esClonePlayer[tank].g_bCloned && g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount)
 	{
 		float flHitPos[3], flPos[3], flAngles[3], flVector[3];
@@ -934,7 +939,7 @@ void vClone2(int tank, int min = 0, int max = 0)
 
 void vCloneAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+	if ((g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
