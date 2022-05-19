@@ -993,11 +993,16 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esAcidPlayer[tank].g_iRangeCooldown != -1 && g_esAcidPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esAcidPlayer[tank].g_iCooldown != -1 && g_esAcidPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esAcidPlayer[tank].g_iAmmoCount < g_esAcidCache[tank].g_iHumanAmmo && g_esAcidCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance)
 			{
 				int iCooldown = -1;
@@ -1011,7 +1016,7 @@ void vAcidHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esAcidCache[tank].g_iAcidRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAcidCache[tank].g_iHumanAbility == 1) ? g_esAcidCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAcidCache[tank].g_iHumanAbility == 1 && g_esAcidPlayer[tank].g_iAmmoCount < g_esAcidCache[tank].g_iHumanAmmo && g_esAcidCache[tank].g_iHumanAmmo > 0) ? g_esAcidCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esAcidPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esAcidPlayer[tank].g_iRangeCooldown != -1 && g_esAcidPlayer[tank].g_iRangeCooldown > iTime)
 					{

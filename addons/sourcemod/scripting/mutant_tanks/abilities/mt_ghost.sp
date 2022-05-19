@@ -133,6 +133,7 @@ enum struct esGhostAbility
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iGhostAbility;
 	int g_iGhostCooldown;
 	int g_iGhostEffect;
@@ -507,8 +508,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility != 2)
 	{
+		g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_GHOST_SECTION);
@@ -526,6 +531,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		{
 			if (StrEqual(sSubset[iPos], MT_GHOST_SECTION, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION2, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION3, false) || StrEqual(sSubset[iPos], MT_GHOST_SECTION4, false))
 			{
+				g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition = iPos;
 				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
@@ -616,6 +622,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGhostAbility[iIndex].g_iImmunityFlags = 0;
 				g_esGhostAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esGhostAbility[iIndex].g_iComboAbility = 0;
+				g_esGhostAbility[iIndex].g_iComboPosition = -1;
 				g_esGhostAbility[iIndex].g_iHumanAbility = 0;
 				g_esGhostAbility[iIndex].g_iHumanAmmo = 5;
 				g_esGhostAbility[iIndex].g_iHumanCooldown = 0;
@@ -1012,7 +1019,8 @@ public void MT_OnRockThrow(int tank, int rock)
 
 void vGhost(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esGhostCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGhostCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGhostPlayer[tank].g_iTankType) || (g_esGhostCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGhostCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[tank].g_iAccessFlags)))
+	int iTime = GetTime();
+	if ((g_esGhostPlayer[tank].g_iCooldown2 != -1 && g_esGhostPlayer[tank].g_iCooldown2 > iTime) || bIsAreaNarrow(tank, g_esGhostCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGhostCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGhostPlayer[tank].g_iTankType) || (g_esGhostCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGhostCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1022,7 +1030,7 @@ void vGhost(int tank, int pos = -1)
 	CreateDataTimer(flInterval, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
 	dpGhost.WriteCell(g_esGhostPlayer[tank].g_iTankType);
-	dpGhost.WriteCell(GetTime());
+	dpGhost.WriteCell(iTime);
 	dpGhost.WriteFloat(MT_GetRandomFloat(0.1, 100.0));
 
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
@@ -1081,6 +1089,11 @@ void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
 		}
 		case false:
 		{
+			if (g_esGhostPlayer[tank].g_iCooldown2 != -1 && g_esGhostPlayer[tank].g_iCooldown2 > GetTime())
+			{
+				return;
+			}
+
 			if ((g_esGhostCache[tank].g_iGhostAbility == 2 || g_esGhostCache[tank].g_iGhostAbility == 3) && !g_esGhostPlayer[tank].g_bActivated)
 			{
 				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0))
@@ -1121,11 +1134,16 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esGhostPlayer[tank].g_iRangeCooldown != -1 && g_esGhostPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esGhostPlayer[tank].g_iCooldown != -1 && g_esGhostPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esGhostPlayer[tank].g_iAmmoCount2 < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance)
 			{
 				int iCooldown = -1;
@@ -1139,7 +1157,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esGhostCache[tank].g_iGhostRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1) ? g_esGhostCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1 && g_esGhostPlayer[tank].g_iAmmoCount2 < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0) ? g_esGhostCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esGhostPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esGhostPlayer[tank].g_iRangeCooldown != -1 && g_esGhostPlayer[tank].g_iRangeCooldown > iTime)
 					{
@@ -1332,8 +1350,9 @@ void vGhostReset2(int tank)
 	g_esGhostPlayer[tank].g_bActivated = false;
 	g_esGhostPlayer[tank].g_iGhostAlpha = 255;
 
-	int iTime = GetTime();
-	g_esGhostPlayer[tank].g_iCooldown2 = (g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esGhostCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGhostCache[tank].g_iGhostCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1 && g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0) ? g_esGhostCache[tank].g_iHumanCooldown : iCooldown;
+	g_esGhostPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
 	if (g_esGhostPlayer[tank].g_iCooldown2 != -1 && g_esGhostPlayer[tank].g_iCooldown2 > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman8", (g_esGhostPlayer[tank].g_iCooldown2 - iTime));
@@ -1429,7 +1448,7 @@ Action tTimerGhost(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esGhostCache[iTank].g_iHumanAbility == 1 && g_esGhostCache[iTank].g_iHumanMode == 0 && (iTime + g_esGhostCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esGhostPlayer[iTank].g_iCooldown2 == -1 || g_esGhostPlayer[iTank].g_iCooldown2 < iCurrentTime))
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esGhostCache[iTank].g_iHumanAbility == 1 && g_esGhostCache[iTank].g_iHumanMode == 0)) && (iTime + g_esGhostCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esGhostPlayer[iTank].g_iCooldown2 == -1 || g_esGhostPlayer[iTank].g_iCooldown2 < iCurrentTime))
 	{
 		vRenderSpecials(iTank, false);
 		vGhostReset2(iTank);

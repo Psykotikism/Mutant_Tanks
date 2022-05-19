@@ -846,7 +846,7 @@ void vYellReset2(int tank)
 void vYellReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esYellCache[tank].g_iYellCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esYellCache[tank].g_iHumanAbility == 1) ? g_esYellCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esYellCache[tank].g_iHumanAbility == 1 && g_esYellPlayer[tank].g_iAmmoCount < g_esYellCache[tank].g_iHumanAmmo && g_esYellCache[tank].g_iHumanAmmo > 0) ? g_esYellCache[tank].g_iHumanCooldown : iCooldown;
 	g_esYellPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > iTime)
 	{
@@ -868,9 +868,15 @@ void vYellReset4(int tank)
 
 void vYell(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esYellCache[tank].g_iYellDuration;
 	g_esYellPlayer[tank].g_bActivated = true;
-	g_esYellPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esYellPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	vYell2(tank, false, pos);
 
@@ -940,7 +946,7 @@ void vYell3(int survivor)
 
 void vYellAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esYellCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esYellCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esYellPlayer[tank].g_iTankType) || (g_esYellCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esYellCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iAccessFlags, g_esYellPlayer[tank].g_iAccessFlags)))
+	if ((g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esYellCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esYellCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esYellPlayer[tank].g_iTankType) || (g_esYellCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esYellCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iAccessFlags, g_esYellPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

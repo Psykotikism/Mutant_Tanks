@@ -911,11 +911,16 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esWhirlPlayer[tank].g_iRangeCooldown != -1 && g_esWhirlPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esWhirlPlayer[tank].g_iCooldown != -1 && g_esWhirlPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esWhirlPlayer[tank].g_iAmmoCount < g_esWhirlCache[tank].g_iHumanAmmo && g_esWhirlCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esWhirlPlayer[survivor].g_bAffected)
 			{
 				int iCamera = CreateEntityByName("env_sprite");
@@ -935,7 +940,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						}
 
 						iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esWhirlCache[tank].g_iWhirlRangeCooldown;
-						iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWhirlCache[tank].g_iHumanAbility == 1) ? g_esWhirlCache[tank].g_iHumanRangeCooldown : iCooldown;
+						iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWhirlCache[tank].g_iHumanAbility == 1 && g_esWhirlPlayer[tank].g_iAmmoCount < g_esWhirlCache[tank].g_iHumanAmmo && g_esWhirlCache[tank].g_iHumanAmmo > 0) ? g_esWhirlCache[tank].g_iHumanRangeCooldown : iCooldown;
 						g_esWhirlPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 						if (g_esWhirlPlayer[tank].g_iRangeCooldown != -1 && g_esWhirlPlayer[tank].g_iRangeCooldown > iTime)
 						{

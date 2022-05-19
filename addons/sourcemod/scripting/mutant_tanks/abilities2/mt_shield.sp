@@ -1207,7 +1207,7 @@ void vShieldReset2(int tank)
 void vShieldReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
 	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
 	{
@@ -1231,7 +1231,7 @@ void vSetShieldGlow(int entity, int color, int flashing, int min, int max, int t
 
 void vShield(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShieldCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
+	if ((g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShieldCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1293,7 +1293,7 @@ void vShieldAbility(int tank, bool shield)
 	{
 		case true:
 		{
-			if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShieldCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)) || ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShieldCache[tank].g_iHumanAbility != 1) && g_esShieldPlayer[tank].g_iCooldown2 != -1 && g_esShieldPlayer[tank].g_iCooldown2 > iTime))
+			if ((g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime) || bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShieldCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)) || ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShieldCache[tank].g_iHumanAbility != 1) && g_esShieldPlayer[tank].g_iCooldown2 != -1 && g_esShieldPlayer[tank].g_iCooldown2 > iTime))
 			{
 				return;
 			}

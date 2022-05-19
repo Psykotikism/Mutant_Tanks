@@ -2193,7 +2193,7 @@ Examples:
 
 **Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
 
-**Oliver, FusionFlarez** - For helping to test the Reward system, Combination feature, and overall support.
+**Oliver, FusionFlarez** - For helping to test the `Reward` system, `Combination` feature, and overall support.
 
 **SourceMod Team** - For continually updating/improving SourceMod.
 

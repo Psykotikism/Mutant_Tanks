@@ -933,11 +933,16 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esRocketPlayer[tank].g_iRangeCooldown != -1 && g_esRocketPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esRocketPlayer[tank].g_iCooldown != -1 && g_esRocketPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esRocketPlayer[tank].g_iAmmoCount < g_esRocketCache[tank].g_iHumanAmmo && g_esRocketCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esRocketPlayer[survivor].g_bAffected)
 			{
 				int iFlame = CreateEntityByName("env_steam");
@@ -957,7 +962,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 						}
 
 						iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esRocketCache[tank].g_iRocketRangeCooldown;
-						iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRocketCache[tank].g_iHumanAbility == 1) ? g_esRocketCache[tank].g_iHumanRangeCooldown : iCooldown;
+						iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRocketCache[tank].g_iHumanAbility == 1 && g_esRocketPlayer[tank].g_iAmmoCount < g_esRocketCache[tank].g_iHumanAmmo && g_esRocketCache[tank].g_iHumanAmmo > 0) ? g_esRocketCache[tank].g_iHumanRangeCooldown : iCooldown;
 						g_esRocketPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 						if (g_esRocketPlayer[tank].g_iRangeCooldown != -1 && g_esRocketPlayer[tank].g_iRangeCooldown > iTime)
 						{

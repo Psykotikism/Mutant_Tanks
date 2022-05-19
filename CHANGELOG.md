@@ -41,12 +41,6 @@
 	- `Combo Range Cooldown`
 	- `Combo Rock Cooldown`
 - The `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections is now enabled.
-- Added the following settings for several abilities (Requested by `Shao`.):
-	- `Human Range Cooldown`
-	- `Human Rock Cooldown`
-	- `* Cooldown`
-	- `* Range Cooldown`
-	- `* Rock Cooldown`
 
 #### Translations
 - Updated English translations.
@@ -60,6 +54,12 @@
 #### Abilities
 - Changed the default value of the `Human Cooldown` setting from `30` to `0`.
 - Improved the code execution of several abilities' `Combo` logic.
+- Added the following settings for several abilities (Requested by `Shao`.):
+	- `Human Range Cooldown`
+	- `Human Rock Cooldown`
+	- `* Cooldown`
+	- `* Range Cooldown`
+	- `* Rock Cooldown`
 
 - Acid
 	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)

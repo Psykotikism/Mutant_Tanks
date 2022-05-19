@@ -777,6 +777,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vCar(int tank, int pos = -1)
 {
+	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esCarPlayer[tank].g_bActivated = true;
 
 	vCar2(tank, pos);
@@ -815,7 +820,7 @@ void vCar2(int tank, int pos = -1)
 
 void vCarAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+	if ((g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -877,7 +882,7 @@ void vCarReset2(int tank)
 void vCarReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esCarCache[tank].g_iCarCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1) ? g_esCarCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1 && g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0) ? g_esCarCache[tank].g_iHumanCooldown : iCooldown;
 	g_esCarPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime)
 	{

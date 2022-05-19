@@ -945,11 +945,16 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esBuryPlayer[tank].g_iRangeCooldown != -1 && g_esBuryPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esBuryPlayer[tank].g_iCooldown != -1 && g_esBuryPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && bIsEntityGrounded(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esBuryPlayer[tank].g_iAmmoCount < g_esBuryCache[tank].g_iHumanAmmo && g_esBuryCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esBuryPlayer[survivor].g_bAffected)
 			{
 				g_esBuryPlayer[survivor].g_bAffected = true;
@@ -966,7 +971,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esBuryCache[tank].g_iBuryRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBuryCache[tank].g_iHumanAbility == 1) ? g_esBuryCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBuryCache[tank].g_iHumanAbility == 1 && g_esBuryPlayer[tank].g_iAmmoCount < g_esBuryCache[tank].g_iHumanAmmo && g_esBuryCache[tank].g_iHumanAmmo > 0) ? g_esBuryCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esBuryPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esBuryPlayer[tank].g_iRangeCooldown != -1 && g_esBuryPlayer[tank].g_iRangeCooldown > iTime)
 					{

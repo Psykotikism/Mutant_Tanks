@@ -742,6 +742,12 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vLaser(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	g_esLaserPlayer[tank].g_bActivated = true;
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility == 1)
@@ -756,7 +762,7 @@ void vLaser(int tank, int pos = -1)
 	CreateDataTimer(flInterval, tTimerLaser, dpLaser, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpLaser.WriteCell(GetClientUserId(tank));
 	dpLaser.WriteCell(g_esLaserPlayer[tank].g_iTankType);
-	dpLaser.WriteCell(GetTime());
+	dpLaser.WriteCell(iTime);
 	dpLaser.WriteCell(pos);
 }
 
@@ -798,7 +804,7 @@ void vLaser2(int tank, int pos = -1)
 
 void vLaserAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
+	if ((g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esLaserCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLaserCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLaserPlayer[tank].g_iTankType) || (g_esLaserCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLaserCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -860,7 +866,7 @@ void vLaserReset2(int tank)
 void vLaserReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esLaserCache[tank].g_iLaserCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility == 1) ? g_esLaserCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility == 1 && g_esLaserPlayer[tank].g_iAmmoCount < g_esLaserCache[tank].g_iHumanAmmo && g_esLaserCache[tank].g_iHumanAmmo > 0) ? g_esLaserCache[tank].g_iHumanCooldown : iCooldown;
 	g_esLaserPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esLaserPlayer[tank].g_iCooldown != -1 && g_esLaserPlayer[tank].g_iCooldown > iTime)
 	{

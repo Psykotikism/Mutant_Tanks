@@ -713,6 +713,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vRegen(int tank, int pos = -1)
 {
+	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esRegenPlayer[tank].g_bActivated = true;
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
@@ -750,7 +755,7 @@ void vRegen2(int tank, int pos = -1)
 
 void vRegenAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
+	if ((g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -812,7 +817,7 @@ void vRegenReset2(int tank)
 void vRegenReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRegenCache[tank].g_iRegenCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1 && g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRegenPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime)
 	{

@@ -698,6 +698,11 @@ void vSetTrackGlow(int rock, int color, int flashing, int min, int max, int type
 
 void vTrack(int tank, int rock)
 {
+	if (g_esTrackPlayer[tank].g_iCooldown != -1 && g_esTrackPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esTrackCache[tank].g_iHumanAbility != 1) && !g_esTrackPlayer[tank].g_bActivated)
 	{
 		g_esTrackPlayer[tank].g_bActivated = true;
@@ -1110,7 +1115,7 @@ Action tTimerTrack(Handle timer, DataPack pack)
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
 		int iPos = g_esTrackAbility[g_esTrackPlayer[iTank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esTrackCache[iTank].g_iTrackCooldown;
-		iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1) ? g_esTrackCache[iTank].g_iHumanCooldown : iCooldown;
+		iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esTrackCache[iTank].g_iHumanAbility == 1 && g_esTrackPlayer[iTank].g_iAmmoCount < g_esTrackCache[iTank].g_iHumanAmmo && g_esTrackCache[iTank].g_iHumanAmmo > 0) ? g_esTrackCache[iTank].g_iHumanCooldown : iCooldown;
 		g_esTrackPlayer[iTank].g_iCooldown = (iTime + iCooldown);
 		if (g_esTrackPlayer[iTank].g_iCooldown != -1 && g_esTrackPlayer[iTank].g_iCooldown > iTime)
 		{

@@ -390,7 +390,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		if (g_esUltimatePlayer[client].g_iCooldown == -1 || g_esUltimatePlayer[client].g_iCooldown < iTime)
 		{
 			int iPos = g_esUltimateAbility[g_esUltimatePlayer[client].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(client, 2, iPos)) : g_esUltimateCache[client].g_iUltimateCooldown;
-			iCooldown = (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esUltimateCache[client].g_iHumanAbility == 1) ? g_esUltimateCache[client].g_iHumanCooldown : iCooldown;
+			iCooldown = (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esUltimateCache[client].g_iHumanAbility == 1 && g_esUltimatePlayer[client].g_iAmmoCount < g_esUltimateCache[client].g_iHumanAmmo && g_esUltimateCache[client].g_iHumanAmmo > 0) ? g_esUltimateCache[client].g_iHumanCooldown : iCooldown;
 			g_esUltimatePlayer[client].g_iCooldown = (iTime + iCooldown);
 			if (g_esUltimatePlayer[client].g_iCooldown != -1 && g_esUltimatePlayer[client].g_iCooldown > iTime)
 			{
@@ -895,6 +895,12 @@ void vUltimateReset()
 
 void vUltimate(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esUltimatePlayer[tank].g_iCooldown != -1 && g_esUltimatePlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iTankHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
 	if (iTankHealth <= g_esUltimateCache[tank].g_iUltimateHealthLimit && !bIsPlayerIncapacitated(tank) && g_esUltimatePlayer[tank].g_bQualified && g_esUltimatePlayer[tank].g_iCount < g_esUltimateCache[tank].g_iUltimateAmount)
 	{
@@ -902,7 +908,7 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_bActivated = true;
 		g_esUltimatePlayer[tank].g_iCount++;
 		g_esUltimatePlayer[tank].g_flDamage = 0.0;
-		g_esUltimatePlayer[tank].g_iDuration = (GetTime() + iDuration);
+		g_esUltimatePlayer[tank].g_iDuration = (iTime + iDuration);
 
 		ExtinguishEntity(tank);
 		vAttachParticle(tank, PARTICLE_ULTIMATE, 2.0, 30.0);
@@ -952,7 +958,7 @@ void vUltimate(int tank, int pos = -1)
 
 void vUltimateAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esUltimateCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUltimateCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUltimatePlayer[tank].g_iTankType) || (g_esUltimateCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUltimateCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankType].g_iAccessFlags, g_esUltimatePlayer[tank].g_iAccessFlags)))
+	if ((g_esUltimatePlayer[tank].g_iCooldown != -1 && g_esUltimatePlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esUltimateCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUltimateCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUltimatePlayer[tank].g_iTankType) || (g_esUltimateCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUltimateCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUltimateAbility[g_esUltimatePlayer[tank].g_iTankType].g_iAccessFlags, g_esUltimatePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

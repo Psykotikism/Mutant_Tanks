@@ -880,10 +880,16 @@ void vFly(int tank, bool announce, int pos = -1)
 		return;
 	}
 
+	int iTime = GetTime();
+	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFlyCache[tank].g_iFlyDuration;
 	g_esFlyPlayer[tank].g_bActivated = true;
 	g_esFlyPlayer[tank].g_iAmmoCount++;
-	g_esFlyPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esFlyPlayer[tank].g_iDuration = (iTime + iDuration);
 	g_esFlyPlayer[tank].g_flLastTime = (GetEngineTime() - 0.01);
 
 	float flOrigin[3], flEyeAngles[3];
@@ -919,7 +925,7 @@ void vFly(int tank, bool announce, int pos = -1)
 
 void vFlyAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+	if ((g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -1414,7 +1420,7 @@ void vFlyReset2(int tank)
 void vFlyReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFlyCache[tank].g_iFlyCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFlyPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
 	{

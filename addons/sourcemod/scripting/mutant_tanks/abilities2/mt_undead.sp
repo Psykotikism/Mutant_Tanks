@@ -341,7 +341,7 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				if (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown < iTime)
 				{
 					int iPos = g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 2, iPos)) : g_esUndeadCache[victim].g_iUndeadCooldown;
-					iCooldown = (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1) ? g_esUndeadCache[victim].g_iHumanCooldown : iCooldown;
+					iCooldown = (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1 && g_esUndeadPlayer[victim].g_iAmmoCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? g_esUndeadCache[victim].g_iHumanCooldown : iCooldown;
 					g_esUndeadPlayer[victim].g_iCooldown = (iTime + iCooldown);
 					if (g_esUndeadPlayer[victim].g_iCooldown != -1 && g_esUndeadPlayer[victim].g_iCooldown > iTime)
 					{
@@ -710,6 +710,11 @@ void vUndeadReset()
 
 void vUndead(int tank)
 {
+	if (g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	if (g_esUndeadPlayer[tank].g_iCount < g_esUndeadCache[tank].g_iUndeadAmount)
 	{
 		g_esUndeadPlayer[tank].g_bActivated = true;
@@ -734,7 +739,7 @@ void vUndead(int tank)
 
 void vUndeadAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUndeadCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
+	if ((g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUndeadCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

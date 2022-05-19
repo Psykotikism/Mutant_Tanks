@@ -776,7 +776,7 @@ void vSplatterReset2(int tank)
 	g_esSplatterPlayer[tank].g_bActivated = false;
 
 	int iTime = GetTime(), iPos = g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplatterCache[tank].g_iSplatterCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1) ? g_esSplatterCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1 && g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0) ? g_esSplatterCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSplatterPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime)
 	{
@@ -786,6 +786,11 @@ void vSplatterReset2(int tank)
 
 void vSplatter(int tank, int pos = -1)
 {
+	if (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esSplatterPlayer[tank].g_bActivated = true;
 
 	vSplatter2(tank, pos);
@@ -823,7 +828,7 @@ void vSplatter2(int tank, int pos = -1)
 
 void vSplatterAbility(int tank)
 {
-	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSplatterCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

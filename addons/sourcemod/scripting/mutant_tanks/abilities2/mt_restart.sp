@@ -991,11 +991,16 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esRestartPlayer[tank].g_iRangeCooldown != -1 && g_esRestartPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esRestartPlayer[tank].g_iCooldown != -1 && g_esRestartPlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esRestartPlayer[tank].g_iAmmoCount < g_esRestartCache[tank].g_iHumanAmmo && g_esRestartCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance)
 			{
 				int iCooldown = -1;
@@ -1009,7 +1014,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esRestartCache[tank].g_iRestartRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRestartCache[tank].g_iHumanAbility == 1) ? g_esRestartCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRestartCache[tank].g_iHumanAbility == 1 && g_esRestartPlayer[tank].g_iAmmoCount < g_esRestartCache[tank].g_iHumanAmmo && g_esRestartCache[tank].g_iHumanAmmo > 0) ? g_esRestartCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esRestartPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esRestartPlayer[tank].g_iRangeCooldown != -1 && g_esRestartPlayer[tank].g_iRangeCooldown > iTime)
 					{

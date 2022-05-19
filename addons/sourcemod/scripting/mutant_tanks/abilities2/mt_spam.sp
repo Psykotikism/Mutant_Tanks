@@ -802,7 +802,7 @@ void vSpamReset2(int tank)
 void vSpamReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSpamCache[tank].g_iSpamCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1) ? g_esSpamCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1 && g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0) ? g_esSpamCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSpamPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > iTime)
 	{
@@ -812,6 +812,11 @@ void vSpamReset3(int tank)
 
 void vSpam(int tank, int pos = -1)
 {
+	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esSpamPlayer[tank].g_bActivated = true;
 
 	vSpam2(tank, pos);
@@ -870,7 +875,7 @@ void vSpam2(int tank, int pos = -1)
 
 void vSpamAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+	if ((g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -951,7 +956,7 @@ Action tTimerSpam(Handle timer, DataPack pack)
 	if (bIsValidEntity(iLauncher))
 	{
 		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
-		AcceptEntityInput(iLauncher, "LaunchRock");
+		AcceptEntityInput(iLauncher, "LaunchSpam");
 	}
 
 	return Plugin_Continue;

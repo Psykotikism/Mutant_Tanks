@@ -834,11 +834,16 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 		return;
 	}
 
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esIcePlayer[tank].g_iRangeCooldown != -1 && g_esIcePlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esIcePlayer[tank].g_iCooldown != -1 && g_esIcePlayer[tank].g_iCooldown > iTime))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorHanging(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esIcePlayer[tank].g_iAmmoCount < g_esIceCache[tank].g_iHumanAmmo && g_esIceCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esIcePlayer[survivor].g_bAffected)
 			{
 				g_esIcePlayer[survivor].g_bAffected = true;
@@ -855,7 +860,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esIceCache[tank].g_iIceRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esIceCache[tank].g_iHumanAbility == 1) ? g_esIceCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esIceCache[tank].g_iHumanAbility == 1 && g_esIcePlayer[tank].g_iAmmoCount < g_esIceCache[tank].g_iHumanAmmo && g_esIceCache[tank].g_iHumanAmmo > 0) ? g_esIceCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esIcePlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
 					if (g_esIcePlayer[tank].g_iRangeCooldown != -1 && g_esIcePlayer[tank].g_iRangeCooldown > iTime)
 					{
