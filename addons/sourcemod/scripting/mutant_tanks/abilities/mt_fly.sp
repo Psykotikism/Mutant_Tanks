@@ -356,8 +356,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	int iTime = GetTime();
-	if (g_esFlyPlayer[client].g_iDuration < iTime)
+	if (g_esFlyPlayer[client].g_iDuration < GetTime())
 	{
 		vStopFly(client);
 	}
@@ -1442,12 +1441,6 @@ void vStopFly(int tank)
 {
 	vFlyReset2(tank);
 
-	int iTime = GetTime();
-	if (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown < iTime)
-	{
-		vFlyReset3(tank);
-	}
-
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
@@ -1455,6 +1448,11 @@ void vStopFly(int tank)
 	{
 		SetEntityMoveType(tank, MOVETYPE_WALK);
 		SetEntityGravity(tank, 1.0);
+
+		if (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown < GetTime())
+		{
+			vFlyReset3(tank);
+		}
 	}
 }
 
