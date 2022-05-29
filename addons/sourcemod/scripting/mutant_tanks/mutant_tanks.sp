@@ -2062,6 +2062,22 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 						float flAngles[3];
 						GetClientEyeAngles(client, flAngles);
 						flAngles[0] = 0.0;
+
+						if (buttons & IN_BACK)
+						{
+							flAngles[1] += 180.0;
+						}
+
+						if (buttons & IN_MOVELEFT)
+						{
+							flAngles[1] += 90.0;
+						}
+
+						if (buttons & IN_MOVERIGHT)
+						{
+							flAngles[1] += -90.0;
+						}
+
 						vPushPlayer(client, flAngles, MT_JUMP_FORWARDBOOST);
 					}
 				}
