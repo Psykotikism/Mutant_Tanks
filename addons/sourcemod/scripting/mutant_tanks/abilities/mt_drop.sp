@@ -119,6 +119,7 @@ enum struct esDropPlayer
 
 	char g_sDropWeaponName[32];
 
+	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -143,6 +144,7 @@ enum struct esDropAbility
 {
 	char g_sDropWeaponName[32];
 
+	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -164,6 +166,7 @@ enum struct esDropCache
 {
 	char g_sDropWeaponName[32];
 
+	float g_flCloseAreasOnly;
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -181,23 +184,15 @@ enum struct esDropCache
 esDropCache g_esDropCache[MAXPLAYERS + 1];
 
 #if defined MT_ABILITIES_MAIN
-void vDropPluginStart()
+void vDropAllPluginsLoaded()
 #else
-public void OnPluginStart()
+public void OnAllPluginsLoaded()
 #endif
 {
-	g_esDropGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
-	g_esDropGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
-	g_esDropGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
-	g_esDropGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
-	g_esDropGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
-	g_esDropGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
-	g_esDropGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
+	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
 
 	int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
@@ -218,6 +213,21 @@ public void OnPluginStart()
 	}
 
 	delete gdMutantTanks;
+}
+
+#if defined MT_ABILITIES_MAIN
+void vDropPluginStart()
+#else
+public void OnPluginStart()
+#endif
+{
+	g_esDropGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
+	g_esDropGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esDropGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
+	g_esDropGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
+	g_esDropGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esDropGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
+	g_esDropGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 #if !defined MT_ABILITIES_MAIN
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
@@ -459,11 +469,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_DROP_SECTION, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION2, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION3, false) || StrEqual(sSubset[iPos], MT_DROP_SECTION4, false))
 				{
-					float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+					flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 					switch (flDelay)
 					{
@@ -499,6 +511,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esDropAbility[iIndex].g_iAccessFlags = 0;
+				g_esDropAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esDropAbility[iIndex].g_iComboAbility = 0;
 				g_esDropAbility[iIndex].g_iHumanAbility = 0;
 				g_esDropAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -520,6 +533,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esDropPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esDropPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esDropPlayer[iPlayer].g_iComboAbility = 0;
 					g_esDropPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esDropPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
@@ -546,6 +560,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esDropPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDropPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esDropPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDropPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esDropPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esDropPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -564,6 +579,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esDropAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esDropAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esDropAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esDropAbility[type].g_iComboAbility, value, 0, 1);
 		g_esDropAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esDropAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esDropAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_DROP_SECTION, MT_DROP_SECTION2, MT_DROP_SECTION3, MT_DROP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esDropAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -588,6 +604,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esDropCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flCloseAreasOnly, g_esDropAbility[type].g_flCloseAreasOnly);
+	g_esDropCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iComboAbility, g_esDropAbility[type].g_iComboAbility);
 	g_esDropCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropChance, g_esDropAbility[type].g_flDropChance);
 	g_esDropCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropClipChance, g_esDropAbility[type].g_flDropClipChance);
 	g_esDropCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropAbility[type].g_flDropWeaponScale);
@@ -595,7 +613,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esDropCache[tank].g_iDropMessage = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMessage, g_esDropAbility[type].g_iDropMessage);
 	g_esDropCache[tank].g_iDropHandPosition = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropHandPosition, g_esDropAbility[type].g_iDropHandPosition);
 	g_esDropCache[tank].g_iDropMode = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iDropMode, g_esDropAbility[type].g_iDropMode);
-	g_esDropCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iComboAbility, g_esDropAbility[type].g_iComboAbility);
 	g_esDropCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iHumanAbility, g_esDropAbility[type].g_iHumanAbility);
 	g_esDropCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropAbility[type].g_flOpenAreasOnly);
 	g_esDropCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropAbility[type].g_iRequiresHumans);
@@ -695,24 +712,21 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankType].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDropCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankType].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY2)
+		if ((button & MT_SPECIAL_KEY2) && g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iHumanAbility == 1)
+			switch (g_esDropPlayer[tank].g_bActivated)
 			{
-				switch (g_esDropPlayer[tank].g_bActivated)
+				case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman2");
+				case false:
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman2");
-					case false:
-					{
-						RequestFrame(vDropFrame, GetClientUserId(tank));
+					RequestFrame(vDropFrame, GetClientUserId(tank));
 
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman");
-					}
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman");
 				}
 			}
 		}
@@ -733,19 +747,12 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vDropWeapon(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
-void vDropCopyStats2(int oldTank, int newTank)
-{
-	g_esDropPlayer[newTank].g_bActivated = g_esDropPlayer[oldTank].g_bActivated;
-	g_esDropPlayer[newTank].g_iWeapon = g_esDropPlayer[oldTank].g_iWeapon;
-	g_esDropPlayer[newTank].g_iWeaponIndex = g_esDropPlayer[oldTank].g_iWeaponIndex;
-}
-
 void vDropWeapon(int tank, int value, float random, int pos = -1)
 {
 	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 1, pos) : g_esDropCache[tank].g_flDropChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esDropCache[tank].g_iDropAbility == 1 && random <= flChance && bIsValidEntRef(g_esDropPlayer[tank].g_iWeapon))
 	{
-		if (g_esDropCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankType].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
+		if (g_esDropCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esDropCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esDropCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[tank].g_iTankType) || (g_esDropCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esDropAbility[g_esDropPlayer[tank].g_iTankType].g_iAccessFlags, g_esDropPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -838,6 +845,13 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 	vRemoveDrop(tank);
 }
 
+void vDropCopyStats2(int oldTank, int newTank)
+{
+	g_esDropPlayer[newTank].g_bActivated = g_esDropPlayer[oldTank].g_bActivated;
+	g_esDropPlayer[newTank].g_iWeapon = g_esDropPlayer[oldTank].g_iWeapon;
+	g_esDropPlayer[newTank].g_iWeaponIndex = g_esDropPlayer[oldTank].g_iWeaponIndex;
+}
+
 void vRemoveDrop(int tank)
 {
 	if (bIsValidEntRef(g_esDropPlayer[tank].g_iWeapon))
@@ -884,14 +898,7 @@ int iGetNamedWeapon(int tank)
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof sName, (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
-		if (!strncmp(sName, "weapon_", 7))
-		{
-			if (StrEqual(sName, g_esDropCache[tank].g_sDropWeaponName, false) || StrEqual(sName[7], g_esDropCache[tank].g_sDropWeaponName, false))
-			{
-				return iPos;
-			}
-		}
-		else if (StrEqual(sName, g_esDropCache[tank].g_sDropWeaponName, false))
+		if (StrEqual(sName, g_esDropCache[tank].g_sDropWeaponName, false) || (!strncmp(sName, "weapon_", 7) && StrEqual(sName[7], g_esDropCache[tank].g_sDropWeaponName, false)))
 		{
 			return iPos;
 		}
@@ -917,7 +924,7 @@ int iGetRandomWeapon(int tank)
 void vDropFrame(int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDropCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[iTank].g_iTankType) || (g_esDropCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esDropCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esDropCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esDropPlayer[iTank].g_iTankType) || (g_esDropCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esDropCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
 	{
 		g_esDropPlayer[iTank].g_bActivated = false;
 

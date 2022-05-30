@@ -63,6 +63,7 @@ enum struct esGodPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flGodChance;
 	float g_flOpenAreasOnly;
 
@@ -72,6 +73,7 @@ enum struct esGodPlayer
 	int g_iCooldown;
 	int g_iDuration;
 	int g_iGodAbility;
+	int g_iGodCooldown;
 	int g_iGodDuration;
 	int g_iGodMessage;
 	int g_iHumanAbility;
@@ -87,12 +89,15 @@ esGodPlayer g_esGodPlayer[MAXPLAYERS + 1];
 
 enum struct esGodAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flGodChance;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iGodAbility;
+	int g_iGodCooldown;
 	int g_iGodDuration;
 	int g_iGodMessage;
 	int g_iHumanAbility;
@@ -107,11 +112,13 @@ esGodAbility g_esGodAbility[MT_MAXTYPES + 1];
 
 enum struct esGodCache
 {
+	float g_flCloseAreasOnly;
 	float g_flGodChance;
 	float g_flOpenAreasOnly;
 
 	int g_iComboAbility;
 	int g_iGodAbility;
+	int g_iGodCooldown;
 	int g_iGodDuration;
 	int g_iGodMessage;
 	int g_iHumanAbility;
@@ -246,7 +253,7 @@ int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esGodCache[param1].g_iHumanAmmo - g_esGodPlayer[param1].g_iAmmoCount), g_esGodCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGodCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esGodCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGodCache[param1].g_iHumanAbility == 1) ? g_esGodCache[param1].g_iHumanCooldown : g_esGodCache[param1].g_iGodCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GodDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esGodCache[param1].g_iGodDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGodCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -341,7 +348,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	int iTime = GetTime();
 	if (g_esGodPlayer[client].g_iDuration < iTime)
 	{
-		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esGodAbility[g_esGodPlayer[client].g_iTankType].g_iAccessFlags, g_esGodPlayer[client].g_iAccessFlags)) && g_esGodCache[client].g_iHumanAbility == 1 && (g_esGodPlayer[client].g_iCooldown == -1 || g_esGodPlayer[client].g_iCooldown < GetTime()))
+		if (g_esGodPlayer[client].g_iCooldown == -1 || g_esGodPlayer[client].g_iCooldown < GetTime())
 		{
 			vGodReset3(client);
 		}
@@ -420,8 +427,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility != 2)
 	{
+		g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_GOD_SECTION);
@@ -435,13 +446,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_GOD_SECTION, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION2, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION3, false) || StrEqual(sSubset[iPos], MT_GOD_SECTION4, false))
 				{
+					g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -478,16 +493,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esGodAbility[iIndex].g_iAccessFlags = 0;
 				g_esGodAbility[iIndex].g_iImmunityFlags = 0;
+				g_esGodAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esGodAbility[iIndex].g_iComboAbility = 0;
+				g_esGodAbility[iIndex].g_iComboPosition = -1;
 				g_esGodAbility[iIndex].g_iHumanAbility = 0;
 				g_esGodAbility[iIndex].g_iHumanAmmo = 5;
-				g_esGodAbility[iIndex].g_iHumanCooldown = 30;
+				g_esGodAbility[iIndex].g_iHumanCooldown = 0;
 				g_esGodAbility[iIndex].g_iHumanMode = 1;
 				g_esGodAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esGodAbility[iIndex].g_iRequiresHumans = 1;
 				g_esGodAbility[iIndex].g_iGodAbility = 0;
 				g_esGodAbility[iIndex].g_iGodMessage = 0;
 				g_esGodAbility[iIndex].g_flGodChance = 33.3;
+				g_esGodAbility[iIndex].g_iGodCooldown = 0;
 				g_esGodAbility[iIndex].g_iGodDuration = 5;
 			}
 		}
@@ -499,6 +517,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esGodPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esGodPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esGodPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esGodPlayer[iPlayer].g_iComboAbility = 0;
 					g_esGodPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esGodPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -509,6 +528,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGodPlayer[iPlayer].g_iGodAbility = 0;
 					g_esGodPlayer[iPlayer].g_iGodMessage = 0;
 					g_esGodPlayer[iPlayer].g_flGodChance = 0.0;
+					g_esGodPlayer[iPlayer].g_iGodCooldown = 0;
 					g_esGodPlayer[iPlayer].g_iGodDuration = 0;
 				}
 			}
@@ -524,6 +544,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esGodPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esGodPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esGodPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esGodPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -534,6 +555,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodPlayer[admin].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodPlayer[admin].g_iGodAbility, value, 0, 1);
 		g_esGodPlayer[admin].g_iGodMessage = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGodPlayer[admin].g_iGodMessage, value, 0, 1);
 		g_esGodPlayer[admin].g_flGodChance = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodChance", "God Chance", "God_Chance", "chance", g_esGodPlayer[admin].g_flGodChance, value, 0.0, 100.0);
+		g_esGodPlayer[admin].g_iGodCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodCooldown", "God Cooldown", "God_Cooldown", "cooldown", g_esGodPlayer[admin].g_iGodCooldown, value, 0, 99999);
 		g_esGodPlayer[admin].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodPlayer[admin].g_iGodDuration, value, 1, 99999);
 		g_esGodPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esGodPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -541,6 +563,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esGodAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esGodAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esGodAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esGodAbility[type].g_iComboAbility, value, 0, 1);
 		g_esGodAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esGodAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -551,6 +574,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodAbility[type].g_iGodAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGodAbility[type].g_iGodAbility, value, 0, 1);
 		g_esGodAbility[type].g_iGodMessage = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGodAbility[type].g_iGodMessage, value, 0, 1);
 		g_esGodAbility[type].g_flGodChance = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodChance", "God Chance", "God_Chance", "chance", g_esGodAbility[type].g_flGodChance, value, 0.0, 100.0);
+		g_esGodAbility[type].g_iGodCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodCooldown", "God Cooldown", "God_Cooldown", "cooldown", g_esGodAbility[type].g_iGodCooldown, value, 0, 99999);
 		g_esGodAbility[type].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodAbility[type].g_iGodDuration, value, 1, 99999);
 		g_esGodAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esGodAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -564,9 +588,11 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esGodCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flCloseAreasOnly, g_esGodAbility[type].g_flCloseAreasOnly);
 	g_esGodCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iComboAbility, g_esGodAbility[type].g_iComboAbility);
 	g_esGodCache[tank].g_flGodChance = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flGodChance, g_esGodAbility[type].g_flGodChance);
 	g_esGodCache[tank].g_iGodAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodAbility, g_esGodAbility[type].g_iGodAbility);
+	g_esGodCache[tank].g_iGodCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodCooldown, g_esGodAbility[type].g_iGodCooldown);
 	g_esGodCache[tank].g_iGodDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodDuration, g_esGodAbility[type].g_iGodDuration);
 	g_esGodCache[tank].g_iGodMessage = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iGodMessage, g_esGodAbility[type].g_iGodMessage);
 	g_esGodCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAbility, g_esGodAbility[type].g_iHumanAbility);
@@ -692,25 +718,43 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esGodCache[tank].g_iGodAbility == 1 && g_esGodCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esGodCache[tank].g_iGodAbility == 1 && g_esGodCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esGodCache[tank].g_iHumanMode)
+			switch (g_esGodCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esGodPlayer[tank].g_bActivated && !bRecharging)
+					{
+						vGodAbility(tank);
+					}
+					else if (g_esGodPlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman4", (g_esGodPlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esGodPlayer[tank].g_bActivated && !bRecharging)
 						{
-							vGodAbility(tank);
+							g_esGodPlayer[tank].g_bActivated = true;
+							g_esGodPlayer[tank].g_iAmmoCount++;
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman", g_esGodPlayer[tank].g_iAmmoCount, g_esGodCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esGodPlayer[tank].g_bActivated)
 						{
@@ -721,30 +765,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman4", (g_esGodPlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esGodPlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esGodPlayer[tank].g_bActivated = true;
-								g_esGodPlayer[tank].g_iAmmoCount++;
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman", g_esGodPlayer[tank].g_iAmmoCount, g_esGodCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esGodPlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman4", (g_esGodPlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodAmmo");
 					}
 				}
 			}
@@ -760,13 +783,10 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esGodCache[tank].g_iHumanMode == 1 && g_esGodPlayer[tank].g_bActivated && (g_esGodPlayer[tank].g_iCooldown == -1 || g_esGodPlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esGodCache[tank].g_iHumanMode == 1 && g_esGodPlayer[tank].g_bActivated && (g_esGodPlayer[tank].g_iCooldown == -1 || g_esGodPlayer[tank].g_iCooldown < GetTime()))
-			{
-				vGodReset2(tank);
-				vGodReset3(tank);
-			}
+			vGodReset2(tank);
+			vGodReset3(tank);
 		}
 	}
 }
@@ -785,17 +805,17 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveGod(tank);
 }
 
-void vGodCopyStats2(int oldTank, int newTank)
-{
-	g_esGodPlayer[newTank].g_iAmmoCount = g_esGodPlayer[oldTank].g_iAmmoCount;
-	g_esGodPlayer[newTank].g_iCooldown = g_esGodPlayer[oldTank].g_iCooldown;
-}
-
 void vGod(int tank, int pos = -1)
 {
-	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esGodCache[tank].g_iGodDuration;
+	int iTime = GetTime();
+	if (g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
+	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esGodCache[tank].g_iGodDuration;
 	g_esGodPlayer[tank].g_bActivated = true;
-	g_esGodPlayer[tank].g_iDuration = (GetTime() + iDuration);
+	g_esGodPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	MT_UnvomitPlayer(tank);
 
@@ -817,7 +837,7 @@ void vGod(int tank, int pos = -1)
 
 void vGodAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
+	if ((g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esGodCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGodCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGodPlayer[tank].g_iTankType) || (g_esGodCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGodCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iAccessFlags, g_esGodPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -837,6 +857,12 @@ void vGodAbility(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodAmmo");
 	}
+}
+
+void vGodCopyStats2(int oldTank, int newTank)
+{
+	g_esGodPlayer[newTank].g_iAmmoCount = g_esGodPlayer[oldTank].g_iAmmoCount;
+	g_esGodPlayer[newTank].g_iCooldown = g_esGodPlayer[oldTank].g_iCooldown;
 }
 
 void vRemoveGod(int tank)
@@ -874,8 +900,9 @@ void vGodReset2(int tank)
 
 void vGodReset3(int tank)
 {
-	int iTime = GetTime();
-	g_esGodPlayer[tank].g_iCooldown = (g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esGodCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGodCache[tank].g_iGodCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1 && g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0) ? g_esGodCache[tank].g_iHumanCooldown : iCooldown;
+	g_esGodPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GodHuman5", (g_esGodPlayer[tank].g_iCooldown - iTime));

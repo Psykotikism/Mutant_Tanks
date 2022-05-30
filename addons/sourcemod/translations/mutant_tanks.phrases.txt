@@ -195,6 +195,28 @@
 		"en"			"Enabled:{olive} Yes"
 	}
 
+	"RangeCooldown"
+	{
+		"en"			"Range Cooldown"
+	}
+
+	"AbilityRangeCooldown"
+	{
+		"#format"		"{1:i}"
+		"en"			"Range Cooldown:{olive} {1} second(s)"
+	}
+
+	"RockCooldown"
+	{
+		"en"			"Rock Cooldown"
+	}
+
+	"AbilityRockCooldown"
+	{
+		"#format"		"{1:i}"
+		"en"			"Rock Cooldown:{olive} {1} second(s)"
+	}
+
 	"Status"
 	{
 		"en"			"Status"
@@ -995,29 +1017,29 @@
 	"AcidHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid ability!"
 	}
 
 	"AcidHuman2"
 	{
-		"en"			"Your acid range ability failed to activate. Try again."
+		"en"			"Your acid ability failed to activate. Try again."
 	}
 
 	"AcidHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your acid ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AcidHuman4"
 	{
-		"en"			"There are no survivors nearby to use your acid range ability on."
+		"en"			"There are no survivors nearby to use your acid ability on."
 	}
 
 	"AcidHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your acid ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AcidMenu"
@@ -1055,29 +1077,29 @@
 	"AimlessHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless ability!"
 	}
 
 	"AimlessHuman2"
 	{
-		"en"			"Your aimless range ability failed to activate. Try again."
+		"en"			"Your aimless ability failed to activate. Try again."
 	}
 
 	"AimlessHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your aimless ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AimlessHuman4"
 	{
-		"en"			"There are no survivors nearby to use your aimless range ability on."
+		"en"			"There are no survivors nearby to use your aimless ability on."
 	}
 
 	"AimlessHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your aimless ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AimlessMenu"
@@ -1109,29 +1131,29 @@
 	"AmmoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo ability!"
 	}
 
 	"AmmoHuman2"
 	{
-		"en"			"Your ammo range ability failed to activate. Try again."
+		"en"			"Your ammo ability failed to activate. Try again."
 	}
 
 	"AmmoHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your ammo ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"AmmoHuman4"
 	{
-		"en"			"There are no survivors nearby to use your ammo range ability on."
+		"en"			"There are no survivors nearby to use your ammo ability on."
 	}
 
 	"AmmoHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your ammo ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"AmmoMenu"
@@ -1169,29 +1191,29 @@
 	"BlindHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind ability!"
 	}
 
 	"BlindHuman2"
 	{
-		"en"			"Your blind range ability failed to activate. Try again."
+		"en"			"Your blind ability failed to activate. Try again."
 	}
 
 	"BlindHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your blind ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"BlindHuman4"
 	{
-		"en"			"There are no survivors nearby to use your blind range ability on."
+		"en"			"There are no survivors nearby to use your blind ability on."
 	}
 
 	"BlindHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your blind ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"BlindMenu"
@@ -1229,29 +1251,29 @@
 	"BombHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb ability!"
 	}
 
 	"BombHuman2"
 	{
-		"en"			"Your bomb range ability failed to activate. Try again."
+		"en"			"Your bomb ability failed to activate. Try again."
 	}
 
 	"BombHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your bomb ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"BombHuman4"
 	{
-		"en"			"There are no survivors nearby to use your bomb range ability on."
+		"en"			"There are no survivors nearby to use your bomb ability on."
 	}
 
 	"BombHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your bomb ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"BombMenu"
@@ -1289,29 +1311,29 @@
 	"BuryHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury ability!"
 	}
 
 	"BuryHuman2"
 	{
-		"en"			"Your bury range ability failed to activate. Try again."
+		"en"			"Your bury ability failed to activate. Try again."
 	}
 
 	"BuryHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your bury ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"BuryHuman4"
 	{
-		"en"			"There are no survivors nearby to use your bury range ability on."
+		"en"			"There are no survivors nearby to use your bury ability on."
 	}
 
 	"BuryHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your bury ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"BuryMenu"
@@ -1409,29 +1431,29 @@
 	"ChokeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke ability!"
 	}
 
 	"ChokeHuman2"
 	{
-		"en"			"Your choke range ability failed to activate. Try again."
+		"en"			"Your choke ability failed to activate. Try again."
 	}
 
 	"ChokeHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your choke ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ChokeHuman4"
 	{
-		"en"			"There are no survivors nearby to use your choke range ability on."
+		"en"			"There are no survivors nearby to use your choke ability on."
 	}
 
 	"ChokeHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your choke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ChokeMenu"
@@ -1625,29 +1647,29 @@
 	"DrugHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug ability!"
 	}
 
 	"DrugHuman2"
 	{
-		"en"			"Your drug range ability failed to activate. Try again."
+		"en"			"Your drug ability failed to activate. Try again."
 	}
 
 	"DrugHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your drug ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"DrugHuman4"
 	{
-		"en"			"There are no survivors nearby to use your drug range ability on."
+		"en"			"There are no survivors nearby to use your drug ability on."
 	}
 
 	"DrugHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your drug ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"DrugMenu"
@@ -1685,29 +1707,29 @@
 	"DrunkHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk ability!"
 	}
 
 	"DrunkHuman2"
 	{
-		"en"			"Your drunk range ability failed to activate. Try again."
+		"en"			"Your drunk ability failed to activate. Try again."
 	}
 
 	"DrunkHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your drunk ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"DrunkHuman4"
 	{
-		"en"			"There are no survivors nearby to use your drunk range ability on."
+		"en"			"There are no survivors nearby to use your drunk ability on."
 	}
 
 	"DrunkHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your drunk ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"DrunkMenu"
@@ -1745,29 +1767,29 @@
 	"ElectricHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric ability!"
 	}
 
 	"ElectricHuman2"
 	{
-		"en"			"Your electric range ability failed to activate. Try again."
+		"en"			"Your electric ability failed to activate. Try again."
 	}
 
 	"ElectricHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your electric ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ElectricHuman4"
 	{
-		"en"			"There are no survivors nearby to use your electric range ability on."
+		"en"			"There are no survivors nearby to use your electric ability on."
 	}
 
 	"ElectricHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your electric ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ElectricMenu"
@@ -1805,29 +1827,29 @@
 	"EnforceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce ability!"
 	}
 
 	"EnforceHuman2"
 	{
-		"en"			"Your enforce range ability failed to activate. Try again."
+		"en"			"Your enforce ability failed to activate. Try again."
 	}
 
 	"EnforceHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your enforce ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"EnforceHuman4"
 	{
-		"en"			"There are no survivors nearby to use your enforce range ability on."
+		"en"			"There are no survivors nearby to use your enforce ability on."
 	}
 
 	"EnforceHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your enforce ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"EnforceMenu"
@@ -1925,29 +1947,29 @@
 	"FireHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire ability!"
 	}
 
 	"FireHuman2"
 	{
-		"en"			"Your fire range ability failed to activate. Try again."
+		"en"			"Your fire ability failed to activate. Try again."
 	}
 
 	"FireHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your fire ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FireHuman4"
 	{
-		"en"			"There are no survivors nearby to use your fire range ability on."
+		"en"			"There are no survivors nearby to use your fire ability on."
 	}
 
 	"FireHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your fire ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FireMenu"
@@ -1979,29 +2001,29 @@
 	"FlingHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling ability!"
 	}
 
 	"FlingHuman2"
 	{
-		"en"			"Your fling range ability failed to activate. Try again."
+		"en"			"Your fling ability failed to activate. Try again."
 	}
 
 	"FlingHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your fling ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"FlingHuman4"
 	{
-		"en"			"There are no survivors nearby to use your fling range ability on."
+		"en"			"There are no survivors nearby to use your fling ability on."
 	}
 
 	"FlingHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your fling ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"FlingMenu"
@@ -2181,12 +2203,12 @@
 	"GhostHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming ability!"
 	}
 
 	"GhostHuman3"
 	{
-		"en"			"Your disarming range ability failed to activate. Try again."
+		"en"			"Your disarming ability failed to activate. Try again."
 	}
 
 	"GhostHuman4"
@@ -2203,12 +2225,12 @@
 	"GhostHuman6"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your disarming ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GhostHuman7"
 	{
-		"en"			"There are no survivors nearby to use your disarming range ability on."
+		"en"			"There are no survivors nearby to use your disarming ability on."
 	}
 
 	"GhostHuman8"
@@ -2220,7 +2242,7 @@
 	"GhostHuman9"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your disarming ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GhostMenu"
@@ -2341,12 +2363,12 @@
 	"GravityHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity ability!"
 	}
 
 	"GravityHuman3"
 	{
-		"en"			"Your low gravity range ability failed to activate. Try again."
+		"en"			"Your low gravity ability failed to activate. Try again."
 	}
 
 	"GravityHuman4"
@@ -2363,12 +2385,12 @@
 	"GravityHuman6"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your low gravity ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"GravityHuman7"
 	{
-		"en"			"There are no survivors nearby to use your low gravity range ability on."
+		"en"			"There are no survivors nearby to use your low gravity ability on."
 	}
 
 	"GravityHuman8"
@@ -2380,7 +2402,7 @@
 	"GravityHuman9"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your low gravity ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"GravityMenu"
@@ -2435,12 +2457,12 @@
 	"HealHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health ability!"
 	}
 
 	"HealHuman3"
 	{
-		"en"			"Your bad-health range ability failed to activate. Try again."
+		"en"			"Your bad-health ability failed to activate. Try again."
 	}
 
 	"HealHuman4"
@@ -2457,12 +2479,12 @@
 	"HealHuman6"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your bad-health ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HealHuman7"
 	{
-		"en"			"There are no survivors nearby to use your bad-health range ability on."
+		"en"			"There are no survivors nearby to use your bad-health ability on."
 	}
 
 	"HealHuman8"
@@ -2474,7 +2496,7 @@
 	"HealHuman9"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your bad-health ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HealMenu"
@@ -2527,29 +2549,29 @@
 	"HurtHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt ability!"
 	}
 
 	"HurtHuman2"
 	{
-		"en"			"Your hurt range ability failed to activate. Try again."
+		"en"			"Your hurt ability failed to activate. Try again."
 	}
 
 	"HurtHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your hurt ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HurtHuman4"
 	{
-		"en"			"There are no survivors nearby to use your hurt range ability on."
+		"en"			"There are no survivors nearby to use your hurt ability on."
 	}
 
 	"HurtHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your hurt ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HurtMenu"
@@ -2587,29 +2609,29 @@
 	"HypnoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno ability!"
 	}
 
 	"HypnoHuman2"
 	{
-		"en"			"Your hypno range ability failed to activate. Try again."
+		"en"			"Your hypno ability failed to activate. Try again."
 	}
 
 	"HypnoHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your hypno ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"HypnoHuman4"
 	{
-		"en"			"There are no survivors nearby to use your hypno range ability on."
+		"en"			"There are no survivors nearby to use your hypno ability on."
 	}
 
 	"HypnoHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your hypno ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"HypnoMenu"
@@ -2647,29 +2669,29 @@
 	"IceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice ability!"
 	}
 
 	"IceHuman2"
 	{
-		"en"			"Your ice range ability failed to activate. Try again."
+		"en"			"Your ice ability failed to activate. Try again."
 	}
 
 	"IceHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your ice ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"IceHuman4"
 	{
-		"en"			"There are no survivors nearby to use your ice range ability on."
+		"en"			"There are no survivors nearby to use your ice ability on."
 	}
 
 	"IceHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your ice ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"IceMenu"
@@ -2701,29 +2723,29 @@
 	"IdleHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle ability!"
 	}
 
 	"IdleHuman2"
 	{
-		"en"			"Your idle range ability failed to activate. Try again."
+		"en"			"Your idle ability failed to activate. Try again."
 	}
 
 	"IdleHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your idle ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"IdleHuman4"
 	{
-		"en"			"There are no survivors nearby to use your idle range ability on."
+		"en"			"There are no survivors nearby to use your idle ability on."
 	}
 
 	"IdleHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your idle ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"IdleMenu"
@@ -2761,29 +2783,29 @@
 	"InvertHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert ability!"
 	}
 
 	"InvertHuman2"
 	{
-		"en"			"Your invert range ability failed to activate. Try again."
+		"en"			"Your invert ability failed to activate. Try again."
 	}
 
 	"InvertHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your invert ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"InvertHuman4"
 	{
-		"en"			"There are no survivors nearby to use your invert range ability on."
+		"en"			"There are no survivors nearby to use your invert ability on."
 	}
 
 	"InvertHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your invert ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"InvertMenu"
@@ -2869,12 +2891,12 @@
 	"JumpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump ability!"
 	}
 
 	"JumpHuman3"
 	{
-		"en"			"Your jump range ability failed to activate. Try again."
+		"en"			"Your jump ability failed to activate. Try again."
 	}
 
 	"JumpHuman4"
@@ -2891,12 +2913,12 @@
 	"JumpHuman6"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your jump ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"JumpHuman7"
 	{
-		"en"			"There are no survivors nearby to use your jump range ability on."
+		"en"			"There are no survivors nearby to use your jump ability on."
 	}
 
 	"JumpHuman8"
@@ -2908,7 +2930,7 @@
 	"JumpHuman9"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your jump ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"JumpMenu"
@@ -2934,17 +2956,17 @@
 
 	"KamikazeHuman"
 	{
-		"en"			"You activated your kamikaze range ability!"
+		"en"			"You activated your kamikaze ability!"
 	}
 
 	"KamikazeHuman2"
 	{
-		"en"			"Your kamikaze range ability failed to activate. Try again."
+		"en"			"Your kamikaze ability failed to activate. Try again."
 	}
 
 	"KamikazeHuman3"
 	{
-		"en"			"There are no survivors nearby to use your kamikaze range ability on."
+		"en"			"There are no survivors nearby to use your kamikaze ability on."
 	}
 
 	"KamikazeMenu"
@@ -2982,29 +3004,29 @@
 	"LagHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag ability!"
 	}
 
 	"LagHuman2"
 	{
-		"en"			"Your lag range ability failed to activate. Try again."
+		"en"			"Your lag ability failed to activate. Try again."
 	}
 
 	"LagHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your lag ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"LagHuman4"
 	{
-		"en"			"There are no survivors nearby to use your lag range ability on."
+		"en"			"There are no survivors nearby to use your lag ability on."
 	}
 
 	"LagHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your lag ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"LagMenu"
@@ -3102,29 +3124,29 @@
 	"LeechHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech ability!"
 	}
 
 	"LeechHuman2"
 	{
-		"en"			"Your leech range ability failed to activate. Try again."
+		"en"			"Your leech ability failed to activate. Try again."
 	}
 
 	"LeechHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your leech range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your leech ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"LeechHuman4"
 	{
-		"en"			"There are no survivors nearby to use your leech range ability on."
+		"en"			"There are no survivors nearby to use your leech ability on."
 	}
 
 	"LeechHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your leech ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"LeechMenu"
@@ -3462,29 +3484,29 @@
 	"NullifyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier ability!"
 	}
 
 	"NullifyHuman2"
 	{
-		"en"			"Your damage nullifier range ability failed to activate. Try again."
+		"en"			"Your damage nullifier ability failed to activate. Try again."
 	}
 
 	"NullifyHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your damage nullifier range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your damage nullifier ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"NullifyHuman4"
 	{
-		"en"			"There are no survivors nearby to use your damage nullifier range ability on."
+		"en"			"There are no survivors nearby to use your damage nullifier ability on."
 	}
 
 	"NullifyHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your damage nullifier ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"NullifyMenu"
@@ -3642,29 +3664,29 @@
 	"PimpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap ability!"
 	}
 
 	"PimpHuman2"
 	{
-		"en"			"Your pimp slap range ability failed to activate. Try again."
+		"en"			"Your pimp slap ability failed to activate. Try again."
 	}
 
 	"PimpHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your pimp slap range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your pimp slap ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"PimpHuman4"
 	{
-		"en"			"There are no survivors nearby to use your pimp slap range ability on."
+		"en"			"There are no survivors nearby to use your pimp slap ability on."
 	}
 
 	"PimpHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your pimp slap ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"PimpMenu"
@@ -3696,29 +3718,29 @@
 	"PukeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke ability!"
 	}
 
 	"PukeHuman2"
 	{
-		"en"			"Your puke range ability failed to activate. Try again."
+		"en"			"Your puke ability failed to activate. Try again."
 	}
 
 	"PukeHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your puke range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your puke ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"PukeHuman4"
 	{
-		"en"			"There are no survivors nearby to use your puke range ability on."
+		"en"			"There are no survivors nearby to use your puke ability on."
 	}
 
 	"PukeHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your puke ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"PukeMenu"
@@ -3822,29 +3844,29 @@
 	"QuietHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet ability!"
 	}
 
 	"QuietHuman2"
 	{
-		"en"			"Your quiet range ability failed to activate. Try again."
+		"en"			"Your quiet ability failed to activate. Try again."
 	}
 
 	"QuietHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your quiet range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your quiet ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"QuietHuman4"
 	{
-		"en"			"There are no survivors nearby to use your quiet range ability on."
+		"en"			"There are no survivors nearby to use your quiet ability on."
 	}
 
 	"QuietHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your quiet ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"QuietMenu"
@@ -3882,29 +3904,29 @@
 	"RecoilHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil ability!"
 	}
 
 	"RecoilHuman2"
 	{
-		"en"			"Your recoil range ability failed to activate. Try again."
+		"en"			"Your recoil ability failed to activate. Try again."
 	}
 
 	"RecoilHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your recoil range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your recoil ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RecoilHuman4"
 	{
-		"en"			"There are no survivors nearby to use your recoil range ability on."
+		"en"			"There are no survivors nearby to use your recoil ability on."
 	}
 
 	"RecoilHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your recoil ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RecoilMenu"
@@ -4038,29 +4060,29 @@
 	"RestartHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart ability!"
 	}
 
 	"RestartHuman2"
 	{
-		"en"			"Your restart range ability failed to activate. Try again."
+		"en"			"Your restart ability failed to activate. Try again."
 	}
 
 	"RestartHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your restart range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your restart ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RestartHuman4"
 	{
-		"en"			"There are no survivors nearby to use your restart range ability on."
+		"en"			"There are no survivors nearby to use your restart ability on."
 	}
 
 	"RestartHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your restart ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RestartMenu"
@@ -4152,29 +4174,29 @@
 	"RocketHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket ability!"
 	}
 
 	"RocketHuman2"
 	{
-		"en"			"Your rocket range ability failed to activate. Try again."
+		"en"			"Your rocket ability failed to activate. Try again."
 	}
 
 	"RocketHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your rocket range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your rocket ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"RocketHuman4"
 	{
-		"en"			"There are no survivors nearby to use your rocket range ability on."
+		"en"			"There are no survivors nearby to use your rocket ability on."
 	}
 
 	"RocketHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your rocket ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"RocketMenu"
@@ -4212,29 +4234,29 @@
 	"ShakeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake ability!"
 	}
 
 	"ShakeHuman2"
 	{
-		"en"			"Your shake range ability failed to activate. Try again."
+		"en"			"Your shake ability failed to activate. Try again."
 	}
 
 	"ShakeHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your shake range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your shake ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ShakeHuman4"
 	{
-		"en"			"There are no survivors nearby to use your shake range ability on."
+		"en"			"There are no survivors nearby to use your shake ability on."
 	}
 
 	"ShakeHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your shake ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ShakeMenu"
@@ -4338,29 +4360,29 @@
 	"ShoveHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove ability!"
 	}
 
 	"ShoveHuman2"
 	{
-		"en"			"Your shove range ability failed to activate. Try again."
+		"en"			"Your shove ability failed to activate. Try again."
 	}
 
 	"ShoveHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your shove range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your shove ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"ShoveHuman4"
 	{
-		"en"			"There are no survivors nearby to use your shove range ability on."
+		"en"			"There are no survivors nearby to use your shove ability on."
 	}
 
 	"ShoveHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your shove ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"ShoveMenu"
@@ -4398,29 +4420,29 @@
 	"SlowHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow ability!"
 	}
 
 	"SlowHuman2"
 	{
-		"en"			"Your slow range ability failed to activate. Try again."
+		"en"			"Your slow ability failed to activate. Try again."
 	}
 
 	"SlowHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your slow range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your slow ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SlowHuman4"
 	{
-		"en"			"There are no survivors nearby to use your slow range ability on."
+		"en"			"There are no survivors nearby to use your slow ability on."
 	}
 
 	"SlowHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your slow ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"SlowMenu"
@@ -4452,29 +4474,29 @@
 	"SmashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash ability!"
 	}
 
 	"SmashHuman2"
 	{
-		"en"			"Your smash range ability failed to activate. Try again."
+		"en"			"Your smash ability failed to activate. Try again."
 	}
 
 	"SmashHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your smash range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your smash ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SmashHuman4"
 	{
-		"en"			"There are no survivors nearby to use your smash range ability on."
+		"en"			"There are no survivors nearby to use your smash ability on."
 	}
 
 	"SmashHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your smash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"SmashMenu"
@@ -4506,29 +4528,29 @@
 	"SmiteHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite ability!"
 	}
 
 	"SmiteHuman2"
 	{
-		"en"			"Your smite range ability failed to activate. Try again."
+		"en"			"Your smite ability failed to activate. Try again."
 	}
 
 	"SmiteHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your smite range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your smite ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SmiteHuman4"
 	{
-		"en"			"There are no survivors nearby to use your smite range ability on."
+		"en"			"There are no survivors nearby to use your smite ability on."
 	}
 
 	"SmiteHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your smite ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"SmiteMenu"
@@ -5014,29 +5036,29 @@
 	"VisionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual ability!"
 	}
 
 	"VisionHuman2"
 	{
-		"en"			"Your visual range ability failed to activate. Try again."
+		"en"			"Your visual ability failed to activate. Try again."
 	}
 
 	"VisionHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your visual range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your visual ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"VisionHuman4"
 	{
-		"en"			"There are no survivors nearby to use your visual range ability on."
+		"en"			"There are no survivors nearby to use your visual ability on."
 	}
 
 	"VisionHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your visual ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"VisionMenu"
@@ -5097,12 +5119,12 @@
 	"WarpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp ability!"
 	}
 
 	"WarpHuman3"
 	{
-		"en"			"Your warp range ability failed to activate. Try again."
+		"en"			"Your warp ability failed to activate. Try again."
 	}
 
 	"WarpHuman4"
@@ -5119,12 +5141,12 @@
 	"WarpHuman6"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your warp range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your warp ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WarpHuman7"
 	{
-		"en"			"There are no survivors nearby to use your warp range ability on."
+		"en"			"There are no survivors nearby to use your warp ability on."
 	}
 
 	"WarpHuman8"
@@ -5136,7 +5158,7 @@
 	"WarpHuman9"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your warp ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WarpMenu"
@@ -5174,29 +5196,29 @@
 	"WhirlHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl ability!"
 	}
 
 	"WhirlHuman2"
 	{
-		"en"			"Your whirl range ability failed to activate. Try again."
+		"en"			"Your whirl ability failed to activate. Try again."
 	}
 
 	"WhirlHuman3"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your whirl range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"Your whirl ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"WhirlHuman4"
 	{
-		"en"			"There are no survivors nearby to use your whirl range ability on."
+		"en"			"There are no survivors nearby to use your whirl ability on."
 	}
 
 	"WhirlHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"en"			"Your whirl ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 
 	"WhirlMenu"

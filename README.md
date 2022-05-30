@@ -5,7 +5,9 @@
 
 ## Languages
 - Click on one of the flags to view in another language.
-<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md"><img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
+</a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -1110,8 +1112,8 @@ native void MT_DetonateTankRock(int rock);
  * Returns if a certain survivor has a reward type active.
  *
  * @param survivor		Client index of the survivor.
- * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- * 					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill,
+ * 					128 = Respawn, 255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  *
  * @return			True if the survivor has the reward type active, false otherwise.
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
@@ -1144,8 +1146,8 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * Returns the value of a combination setting based on a position.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius, 8 = Range,
- * 					9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed, 14 = Cooldown
+ * @param type			1 = Chance, 2 = Cooldown, 3 = Damage, 4 = Delay, 5 = Duration, 6 = Interval, 7 = Min radius, 8 = Max radius, 9 = Range, 10 = Range chance,
+ * 					11 = Range cooldown, 12 = Death range, 13 = Death range chance, 14 = Rock chance, 15 = Rock cooldown, 16 = Speed
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
  *
  * @return			The value stored in the setting.
@@ -2147,6 +2149,8 @@ Examples:
 
 **cravenge** - For the [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) and [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729) plugins.
 
+**Erreur 500** - For the [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz/epzminion** - For helping with gamedata signatures, offsets, addresses, and invaluable input.
@@ -2191,7 +2195,7 @@ Examples:
 
 **Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
 
-**Oliver, FusionFlarez** - For helping to test the Reward system, Combination feature, and overall support.
+**Oliver, FusionFlarez** - For helping to test the `Reward` system, `Combination` feature, and overall support.
 
 **SourceMod Team** - For continually updating/improving SourceMod.
 

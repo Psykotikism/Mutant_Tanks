@@ -189,6 +189,26 @@
 		"hu"			"Engedélyezve:{olive} Igen"
 	}
 
+	"RangeCooldown"
+	{
+		"hu"			"Távolsági Újratöltés"
+	}
+
+	"AbilityRangeCooldown"
+	{
+		"hu"			"Távolsági Újratöltés:{olive} {1} másodperc"
+	}
+
+	"RockCooldown"
+	{
+		"hu"			"Szikla Újratöltés"
+	}
+
+	"AbilityRockCooldown"
+	{
+		"hu"			"Szikla Újratöltés:{olive} {1} másodperc"
+	}
+
 	"Status"
 	{
 		"hu"			"Állapot"
@@ -901,27 +921,27 @@
 
 	"AcidHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sav képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik sav képességedet!"
 	}
 
 	"AcidHuman2"
 	{
-		"hu"			"A távolsági sav képességed aktiválása nem sikerült. Próbáld újra"
+		"hu"			"A sav képességed aktiválása nem sikerült. Próbáld újra"
 	}
 
 	"AcidHuman3"
 	{
-		"hu"			"A távolsági sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"AcidHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági sav képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a sav képességedet."
 	}
 
 	"AcidHuman5"
 	{
-		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"AcidMenu"
@@ -946,7 +966,7 @@
 
 	"AimlessAmmo"
 	{
-		"hu"			"Elhasználtad a céltalan képességed összes lőszerét."
+		"hu"			"Elhasználtad a távolsági céltalan képességed összes lőszerét."
 	}
 
 	"AimlessDetails"
@@ -956,27 +976,27 @@
 
 	"AimlessHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági céltalan képességed!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik céltalan képességed!"
 	}
 
 	"AimlessHuman2"
 	{
-		"hu"			"A távolsági céltalan képességed aktiválása nem sikerült. Próbáld újra."
+		"hu"			"A céltalan képességed aktiválása nem sikerült. Próbáld újra."
 	}
 
 	"AimlessHuman3"
 	{
-		"hu"			"A távolsági céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"AimlessHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a céltalan távolsági képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a céltalan képességedet."
 	}
 
 	"AimlessHuman5"
 	{
-		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"AimlessMenu"
@@ -1006,27 +1026,27 @@
 
 	"AmmoHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lőszer képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lőszer képességedet!"
 	}
 
 	"AmmoHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági lőszer képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a lőszer képességedet. Próbáld újra."
 	}
 
 	"AmmoHuman3"
 	{
-		"hu"			"A távolsági lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"AmmoHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lőszer képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a lőszer képességedet."
 	}
 
 	"AmmoHuman5"
 	{
-		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"AmmoMenu"
@@ -1061,27 +1081,27 @@
 
 	"BlindHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vakító képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik vakító képességedet!"
 	}
 
 	"BlindHuman2"
 	{
-		"hu"			"A távolsági vakító képességed aktiválása nem sikerült. Próbáld újra."
+		"hu"			"A vakító képességed aktiválása nem sikerült. Próbáld újra."
 	}
 
 	"BlindHuman3"
 	{
-		"hu"			"A távolsági vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"BlindHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági vakító képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a vakító képességedet."
 	}
 
 	"BlindHuman5"
 	{
-		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"BlindMenu"
@@ -1116,27 +1136,27 @@
 
 	"BombHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági robbantás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik robbantás képességedet!"
 	}
 
 	"BombHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági bomba képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a bomba képességedet. Próbáld újra."
 	}
 
 	"BombHuman3"
 	{
-		"hu"			"A távolsági bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"BombHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bomba képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a bomba képességedet."
 	}
 
 	"BombHuman5"
 	{
-		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"BombMenu"
@@ -1171,27 +1191,27 @@
 
 	"BuryHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági eltemetés képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik eltemetés képességedet!"
 	}
 
 	"BuryHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági eltemetés képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a eltemetés képességedet. Próbáld újra."
 	}
 
 	"BuryHuman3"
 	{
-		"hu"			"A távolsági eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"BuryHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági eltemetés képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a eltemetés képességedet."
 	}
 
 	"BuryHuman5"
 	{
-		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"BuryMenu"
@@ -1281,27 +1301,27 @@
 
 	"ChokeHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fojtogatás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik fojtogatás képességedet!"
 	}
 
 	"ChokeHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági fojtogatás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a fojtogatás képességedet. Próbáld újra."
 	}
 
 	"ChokeHuman3"
 	{
-		"hu"			"A távolsági fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"ChokeHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fojtogatás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a fojtogatás képességedet."
 	}
 
 	"ChokeHuman5"
 	{
-		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"ChokeMenu"
@@ -1481,27 +1501,27 @@
 
 	"DrugHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bedrogozás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik bedrogozás képességedet!"
 	}
 
 	"DrugHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági bedrogozás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a bedrogozás képességedet. Próbáld újra."
 	}
 
 	"DrugHuman3"
 	{
-		"hu"			"A távolsági bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"DrugHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági bedrogozás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a bedrogozás képességedet."
 	}
 
 	"DrugHuman5"
 	{
-		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"DrugMenu"
@@ -1536,27 +1556,27 @@
 
 	"DrunkHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági részegítő képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik részegítő képességedet!"
 	}
 
 	"DrunkHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági részegítő képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a részegítő képességedet. Próbáld újra."
 	}
 
 	"DrunkHuman3"
 	{
-		"hu"			"A távolsági részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"DrunkHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági részegítő képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a részegítő képességedet."
 	}
 
 	"DrunkHuman5"
 	{
-		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"DrunkMenu"
@@ -1591,27 +1611,27 @@
 
 	"ElectricHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági elektromos képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik elektromos képességedet!"
 	}
 
 	"ElectricHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági elektromos képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a elektromos képességedet. Próbáld újra."
 	}
 
 	"ElectricHuman3"
 	{
-		"hu"			"A távolsági elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"ElectricHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági elektromos képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a elektromos képességedet."
 	}
 
 	"ElectricHuman5"
 	{
-		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"ElectricMenu"
@@ -1646,27 +1666,27 @@
 
 	"EnforceHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági kényszerítő képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik kényszerítő képességedet!"
 	}
 
 	"EnforceHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági kényszerítő képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a kényszerítő képességedet. Próbáld újra."
 	}
 
 	"EnforceHuman3"
 	{
-		"hu"			"A távolsági kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"EnforceHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kényszerítő képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a kényszerítő képességedet."
 	}
 
 	"EnforceHuman5"
 	{
-		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"EnforceMenu"
@@ -1756,27 +1776,27 @@
 
 	"FireHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági tűz képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik tűz képességedet!"
 	}
 
 	"FireHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági tűz képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a tűz képességedet. Próbáld újra."
 	}
 
 	"FireHuman3"
 	{
-		"hu"			"A távolsági tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"FireHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági tűz képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a tűz képességedet."
 	}
 
 	"FireHuman5"
 	{
-		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"FireMenu"
@@ -1806,27 +1826,27 @@
 
 	"FlingHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági dobás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik dobás képességedet!"
 	}
 
 	"FlingHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági dobás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a dobás képességedet. Próbáld újra."
 	}
 
 	"FlingHuman3"
 	{
-		"hu"			"A távolsági dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"FlingHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági dobás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a dobás képességedet."
 	}
 
 	"FlingHuman5"
 	{
-		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"FlingMenu"
@@ -1991,12 +2011,12 @@
 
 	"GhostHuman2"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lefegyverző képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lefegyverző képességedet!"
 	}
 
 	"GhostHuman3"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági lefegyverző képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a lefegyverző képességedet. Próbáld újra."
 	}
 
 	"GhostHuman4"
@@ -2011,12 +2031,12 @@
 
 	"GhostHuman6"
 	{
-		"hu"			"A távolsági lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GhostHuman7"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lefegyverző képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a lefegyverző képességedet."
 	}
 
 	"GhostHuman8"
@@ -2026,7 +2046,7 @@
 
 	"GhostHuman9"
 	{
-		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"GhostMenu"
@@ -2136,12 +2156,12 @@
 
 	"GravityHuman2"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági alacsony gravitáció képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik alacsony gravitáció képességedet!"
 	}
 
 	"GravityHuman3"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági alacsony gravitáció képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a alacsony gravitáció képességedet. Próbáld újra."
 	}
 
 	"GravityHuman4"
@@ -2156,12 +2176,12 @@
 
 	"GravityHuman6"
 	{
-		"hu"			"A távolsági alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GravityHuman7"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági alacsony gravitáció képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a alacsony gravitáció képességedet."
 	}
 
 	"GravityHuman8"
@@ -2221,12 +2241,12 @@
 
 	"HealHuman2"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rossz-életerő képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik rossz-életerő képességedet!"
 	}
 
 	"HealHuman3"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági rossz-életerő képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a rossz-életerő képességedet. Próbáld újra."
 	}
 
 	"HealHuman4"
@@ -2241,12 +2261,12 @@
 
 	"HealHuman6"
 	{
-		"hu"			"A távolsági rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"HealHuman7"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági rossz-életerő képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a rossz-életerő képességedet."
 	}
 
 	"HealHuman8"
@@ -2256,7 +2276,7 @@
 
 	"HealHuman9"
 	{
-		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"HealMenu"
@@ -2306,27 +2326,27 @@
 
 	"HurtHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bántalmazó képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik bántalmazó képességedet!"
 	}
 
 	"HurtHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági bántalmazó képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a bántalmazó képességedet. Próbáld újra."
 	}
 
 	"HurtHuman3"
 	{
-		"hu"			"A távolsági bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"HurtHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bántalmazó képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a bántalmazó képességedet."
 	}
 
 	"HurtHuman5"
 	{
-		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"HurtMenu"
@@ -2361,27 +2381,27 @@
 
 	"HypnoHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hipnotizáló képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik hipnotizáló képességedet!"
 	}
 
 	"HypnoHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági hipnotizálás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a hipnotizálás képességedet. Próbáld újra."
 	}
 
 	"HypnoHuman3"
 	{
-		"hu"			"A távolsági hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"HypnoHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági hipnotizálás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a hipnotizálás képességedet."
 	}
 
 	"HypnoHuman5"
 	{
-		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"HypnoMenu"
@@ -2416,27 +2436,27 @@
 
 	"IceHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fagyasztás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik fagyasztás képességedet!"
 	}
 
 	"IceHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági fagyasztás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a fagyasztás képességedet. Próbáld újra."
 	}
 
 	"IceHuman3"
 	{
-		"hu"			"A távolsági fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"IceHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fagyasztás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a fagyasztás képességedet."
 	}
 
 	"IceHuman5"
 	{
-		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"IceMenu"
@@ -2466,27 +2486,27 @@
 
 	"IdleHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági szüneteltetés képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik szüneteltetés képességedet!"
 	}
 
 	"IdleHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági szüneteltetés képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a szüneteltetés képességedet. Próbáld újra."
 	}
 
 	"IdleHuman3"
 	{
-		"hu"			"A távolsági szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"IdleHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági szüneteltetés képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a szüneteltetés képességedet."
 	}
 
 	"IdleHuman5"
 	{
-		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"IdleMenu"
@@ -2521,27 +2541,27 @@
 
 	"InvertHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági megfordítás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik megfordítás képességedet!"
 	}
 
 	"InvertHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági megfordítás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a megfordítás képességedet. Próbáld újra."
 	}
 
 	"InvertHuman3"
 	{
-		"hu"			"A távolsági megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"InvertHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági megfordítás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a megfordítás képességedet."
 	}
 
 	"InvertHuman5"
 	{
-		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"InvertMenu"
@@ -2621,12 +2641,12 @@
 
 	"JumpHuman2"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági ugrás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik ugrás képességedet!"
 	}
 
 	"JumpHuman3"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági ugrás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a ugrás képességedet. Próbáld újra."
 	}
 
 	"JumpHuman4"
@@ -2641,12 +2661,12 @@
 
 	"JumpHuman6"
 	{
-		"hu"			"A távolsági ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"JumpHuman7"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági ugrás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a ugrás képességedet."
 	}
 
 	"JumpHuman8"
@@ -2656,7 +2676,7 @@
 
 	"JumpHuman9"
 	{
-		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"JumpMenu"
@@ -2681,17 +2701,17 @@
 
 	"KamikazeHuman"
 	{
-		"hu"			"Aktiváltad a távolsági kamikaze képességedet!"
+		"hu"			"Aktiváltad a kamikaze képességedet!"
 	}
 
 	"KamikazeHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági kamikaze képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a kamikaze képességedet. Próbáld újra."
 	}
 
 	"KamikazeHuman3"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kamikaze képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a kamikaze képességedet."
 	}
 
 	"KamikazeMenu"
@@ -2726,27 +2746,27 @@
 
 	"LagHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági késleltetés képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik késleltetés képességedet!"
 	}
 
 	"LagHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági késleltetés képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a késleltetés képességedet. Próbáld újra."
 	}
 
 	"LagHuman3"
 	{
-		"hu"			"A távolsági késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"LagHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági késleltetés képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a késleltetés képességedet."
 	}
 
 	"LagHuman5"
 	{
-		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"LagMenu"
@@ -2836,27 +2856,27 @@
 
 	"LeechHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági pióca képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pióca képességedet!"
 	}
 
 	"LeechHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági pióca képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a pióca képességedet. Próbáld újra."
 	}
 
 	"LeechHuman3"
 	{
-		"hu"			"A távolsági pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"LeechHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági pióca képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a pióca képességedet."
 	}
 
 	"LeechHuman5"
 	{
-		"hu"			"A távolsági pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"LeechMenu"
@@ -3166,27 +3186,27 @@
 
 	"NullifyHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sebzés hatástalanító képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik sebzés hatástalanító képességedet!"
 	}
 
 	"NullifyHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági sebzés hatástalanító képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a sebzés hatástalanító képességedet. Próbáld újra."
 	}
 
 	"NullifyHuman3"
 	{
-		"hu"			"A távolsági hatástalanító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A hatástalanító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"NullifyHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hatástalanító képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a hatástalanító képességedet."
 	}
 
 	"NullifyHuman5"
 	{
-		"hu"			"A távolsági hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"NullifyMenu"
@@ -3331,27 +3351,27 @@
 
 	"PimpHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csapdosó képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik csapdosó képességedet!"
 	}
 
 	"PimpHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a csapdosó képességedet. Próbáld újra."
 	}
 
 	"PimpHuman3"
 	{
-		"hu"			"A távolsági csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"PimpHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csapdosó képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a csapdosó képességedet."
 	}
 
 	"PimpHuman5"
 	{
-		"hu"			"A távolsági csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"PimpMenu"
@@ -3381,27 +3401,27 @@
 
 	"PukeHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hányás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik hányás képességedet!"
 	}
 
 	"PukeHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági hányás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a hányás képességedet. Próbáld újra."
 	}
 
 	"PukeHuman3"
 	{
-		"hu"			"A távolsági hányás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A hányás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"PukeHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hányás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a hányás képességedet."
 	}
 
 	"PukeHuman5"
 	{
-		"hu"			"A távolsági hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"PukeMenu"
@@ -3496,27 +3516,27 @@
 
 	"QuietHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csend képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik csend képességedet!"
 	}
 
 	"QuietHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági csend képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a csend képességedet. Próbáld újra."
 	}
 
 	"QuietHuman3"
 	{
-		"hu"			"A távolsági csend képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A csend képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"QuietHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csend képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a csend képességedet."
 	}
 
 	"QuietHuman5"
 	{
-		"hu"			"A távolsági csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"QuietMenu"
@@ -3551,27 +3571,27 @@
 
 	"RecoilHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági visszarúgás képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik visszarúgás képességedet!"
 	}
 
 	"RecoilHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági visszarúgás képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a visszarúgás képességedet. Próbáld újra."
 	}
 
 	"RecoilHuman3"
 	{
-		"hu"			"A távolsági visszarúgás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A visszarúgás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RecoilHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági visszarúgás képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a visszarúgás képességedet."
 	}
 
 	"RecoilHuman5"
 	{
-		"hu"			"A távolsági visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"RecoilMenu"
@@ -3696,27 +3716,27 @@
 
 	"RestartHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági újrakezdő képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik újrakezdő képességedet!"
 	}
 
 	"RestartHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági újrakezdő képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a újrakezdő képességedet. Próbáld újra."
 	}
 
 	"RestartHuman3"
 	{
-		"hu"			"A távolsági újrakezdő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A újrakezdő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RestartHuman4"
 	{
-		"hu"			"Nincsenek túlélők az közelben ahhoz, hogy használni tudd a távolsági újrakezdő képességedet."
+		"hu"			"Nincsenek túlélők az közelben ahhoz, hogy használni tudd a újrakezdő képességedet."
 	}
 
 	"RestartHuman5"
 	{
-		"hu"			"A távolsági újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"RestartMenu"
@@ -3801,27 +3821,27 @@
 
 	"RocketHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rakéta képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik rakéta képességedet!"
 	}
 
 	"RocketHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági rakéta képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a rakéta képességedet. Próbáld újra."
 	}
 
 	"RocketHuman3"
 	{
-		"hu"			"A távolsági rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RocketHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rakéta képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a rakéta képességedet."
 	}
 
 	"RocketHuman5"
 	{
-		"hu"			"A távolsági rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"RocketMenu"
@@ -3856,27 +3876,27 @@
 
 	"ShakeHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rázó képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik rázó képességedet!"
 	}
 
 	"ShakeHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági rázó képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a rázó képességedet. Próbáld újra."
 	}
 
 	"ShakeHuman3"
 	{
-		"hu"			"A távolsági rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"ShakeHuman4"
 	{
-		"hu"			"nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rázó képességedet."
+		"hu"			"nincsenek túlélők a közelben ahhoz, hogy használni tudd a rázó képességedet."
 	}
 
 	"ShakeHuman5"
 	{
-		"hu"			"A távolsági rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"ShakeMenu"
@@ -3971,27 +3991,27 @@
 
 	"ShoveHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lökés képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lökés képességedet!"
 	}
 
 	"ShoveHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági lökés képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a lökés képességedet. Próbáld újra."
 	}
 
 	"ShoveHuman3"
 	{
-		"hu"			"A távolsági lökés képességednek még kell{yellow} {1} másodperc{mint} sz újratöltéshez."
+		"hu"			"A lökés képességednek még kell{yellow} {1} másodperc{mint} sz újratöltéshez."
 	}
 
 	"ShoveHuman4"
 	{
-		"hu"			"Nincsenek a közelben túlélők ahhoz, hogy használni tudd a távolsági lökés képességedet."
+		"hu"			"Nincsenek a közelben túlélők ahhoz, hogy használni tudd a lökés képességedet."
 	}
 
 	"ShoveHuman5"
 	{
-		"hu"			"A távolsági lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"ShoveMenu"
@@ -4026,27 +4046,27 @@
 
 	"SlowHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lassító képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lassító képességedet!"
 	}
 
 	"SlowHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági lassító képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a lassító képességedet. Próbáld újra."
 	}
 
 	"SlowHuman3"
 	{
-		"hu"			"A távolsági lassító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A lassító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SlowHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lassító képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a lassító képességedet."
 	}
 
 	"SlowHuman5"
 	{
-		"hu"			"A távolsági lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
+		"hu"			"A lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"SlowMenu"
@@ -4081,22 +4101,22 @@
 
 	"SmashHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági zúzó képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a zúzó képességedet. Próbáld újra."
 	}
 
 	"SmashHuman3"
 	{
-		"hu"			"A távolsági zúzó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A zúzó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SmashHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági zúzó képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a zúzó képességedet."
 	}
 
 	"SmashHuman5"
 	{
-		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
+		"hu"			"A zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"SmashMenu"
@@ -4126,27 +4146,27 @@
 
 	"SmiteHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lesújtó képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lesújtó képességedet!"
 	}
 
 	"SmiteHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági lesújtó képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a lesújtó képességedet. Próbáld újra."
 	}
 
 	"SmiteHuman3"
 	{
-		"hu"			"A távolsági lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SmiteHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lesújtó képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a lesújtó képességedet."
 	}
 
 	"SmiteHuman5"
 	{
-		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
+		"hu"			"A zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"SmiteMenu"
@@ -4591,27 +4611,27 @@
 
 	"VisionHuman"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vizuális képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik vizuális képességedet!"
 	}
 
 	"VisionHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági vizuális képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a vizuális képességedet. Próbáld újra."
 	}
 
 	"VisionHuman3"
 	{
-		"hu"			"A távolsági látómező képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A látómező képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"VisionHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági vizuális képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a vizuális képességedet."
 	}
 
 	"VisionHuman5"
 	{
-		"hu"			"A távolsági látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
+		"hu"			"A látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
 	"VisionMenu"
@@ -4666,17 +4686,17 @@
 
 	"WarpHuman2"
 	{
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági teleportáló képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik teleportáló képességedet!"
 	}
 
 	"WarpHuman3"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági teleportáló képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a teleportáló képességedet. Próbáld újra."
 	}
 
 	"WarpHuman4"
 	{
-		"hu"			"Már aktiváltad a távolsági teleportáló képességedet."
+		"hu"			"Már aktiváltad a teleportáló képességedet."
 	}
 
 	"WarpHuman5"
@@ -4686,12 +4706,12 @@
 
 	"WarpHuman6"
 	{
-		"hu"			"A távolsági teleportáló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A teleportáló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"WarpHuman7"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági teleportáló képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a teleportáló képességedet."
 	}
 
 	"WarpHuman8"
@@ -4701,7 +4721,7 @@
 
 	"WarpHuman9"
 	{
-		"hu"			"A távolsági teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
+		"hu"			"A teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"WarpMenu"
@@ -4741,22 +4761,22 @@
 
 	"WhirlHuman2"
 	{
-		"hu"			"Nem sikerült aktiválni a távolsági megpörgető képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a megpörgető képességedet. Próbáld újra."
 	}
 
 	"WhirlHuman3"
 	{
-		"hu"			"A távolsági megpörgető képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A megpörgető képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"WhirlHuman4"
 	{
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tud a távolsági megpörgető képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tud a megpörgető képességedet."
 	}
 
 	"WhirlHuman5"
 	{
-		"hu"			"A távolsági megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
+		"hu"			"A megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"WhirlMenu"

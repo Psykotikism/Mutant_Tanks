@@ -67,6 +67,7 @@ enum struct esItemPlayer
 	char g_sItemLoadout[325];
 	char g_sItemPinata[325];
 
+	float g_flCloseAreasOnly;
 	float g_flItemChance;
 	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
@@ -90,6 +91,7 @@ enum struct esItemAbility
 	char g_sItemLoadout[325];
 	char g_sItemPinata[325];
 
+	float g_flCloseAreasOnly;
 	float g_flItemChance;
 	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
@@ -112,6 +114,7 @@ enum struct esItemCache
 	char g_sItemLoadout[325];
 	char g_sItemPinata[325];
 
+	float g_flCloseAreasOnly;
 	float g_flItemChance;
 	float g_flItemPinataChance;
 	float g_flOpenAreasOnly;
@@ -395,22 +398,24 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ITEM_SECTION, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION2, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION3, false) || StrEqual(sSubset[iPos], MT_ITEM_SECTION4, false))
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
 							case 0.0: g_esItemPlayer[tank].g_bActivated = true;
 							default: CreateTimer(flDelay, tTimerItemCombo, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -432,6 +437,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esItemAbility[iIndex].g_iAccessFlags = 0;
 				g_esItemAbility[iIndex].g_iImmunityFlags = 0;
+				g_esItemAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esItemAbility[iIndex].g_iComboAbility = 0;
 				g_esItemAbility[iIndex].g_iHumanAbility = 0;
 				g_esItemAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -454,6 +460,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esItemPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esItemPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esItemPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esItemPlayer[iPlayer].g_iComboAbility = 0;
 					g_esItemPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esItemPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
@@ -480,6 +487,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esItemPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esItemPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esItemPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esItemPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esItemPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -499,6 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esItemAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esItemAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esItemAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esItemAbility[type].g_iComboAbility, value, 0, 1);
 		g_esItemAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esItemAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esItemAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ITEM_SECTION, MT_ITEM_SECTION2, MT_ITEM_SECTION3, MT_ITEM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esItemAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -524,9 +533,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esItemCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flCloseAreasOnly, g_esItemAbility[type].g_flCloseAreasOnly);
+	g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[type].g_iComboAbility);
 	g_esItemCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemChance, g_esItemAbility[type].g_flItemChance);
 	g_esItemCache[tank].g_flItemPinataChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemPinataChance, g_esItemAbility[type].g_flItemPinataChance);
-	g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[type].g_iComboAbility);
 	g_esItemCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iHumanAbility, g_esItemAbility[type].g_iHumanAbility);
 	g_esItemCache[tank].g_iItemAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemAbility, g_esItemAbility[type].g_iItemAbility);
 	g_esItemCache[tank].g_iItemMessage = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iItemMessage, g_esItemAbility[type].g_iItemMessage);
@@ -546,7 +556,7 @@ void vItemCopyStats(int oldTank, int newTank)
 public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 {
-	vItemCopyStats2(oldTank, newTank);
+	g_esItemPlayer[newTank].g_bActivated = g_esItemPlayer[oldTank].g_bActivated;
 }
 
 #if !defined MT_ABILITIES_MAIN
@@ -568,7 +578,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
-			vItemCopyStats2(iBot, iTank);
+			g_esItemPlayer[iTank].g_bActivated = g_esItemPlayer[iBot].g_bActivated;
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -577,7 +587,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
-			vItemCopyStats2(iTank, iBot);
+			g_esItemPlayer[iBot].g_bActivated = g_esItemPlayer[iTank].g_bActivated;
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -649,24 +659,21 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY2)
+		if ((button & MT_SPECIAL_KEY2) && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iHumanAbility == 1)
+			switch (g_esItemPlayer[tank].g_bActivated)
 			{
-				switch (g_esItemPlayer[tank].g_bActivated)
+				case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ItemHuman2");
+				case false:
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ItemHuman2");
-					case false:
-					{
-						g_esItemPlayer[tank].g_bActivated = true;
+					g_esItemPlayer[tank].g_bActivated = true;
 
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ItemHuman");
-					}
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ItemHuman");
 				}
 			}
 		}
@@ -690,16 +697,11 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 }
 
-void vItemCopyStats2(int oldTank, int newTank)
-{
-	g_esItemPlayer[newTank].g_bActivated = g_esItemPlayer[oldTank].g_bActivated;
-}
-
 void vItemAbility(int tank)
 {
 	g_esItemPlayer[tank].g_bActivated = false;
 
-	if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esItemCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esItemCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esItemPlayer[tank].g_iTankType) || (g_esItemCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esItemCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esItemAbility[g_esItemPlayer[tank].g_iTankType].g_iAccessFlags, g_esItemPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

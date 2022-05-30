@@ -65,6 +65,7 @@ enum struct esNullifyPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flNullifyChance;
 	float g_flNullifyDuration;
 	float g_flNullifyRange;
@@ -78,13 +79,17 @@ enum struct esNullifyPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iNullifyAbility;
+	int g_iNullifyCooldown;
 	int g_iNullifyEffect;
 	int g_iNullifyHit;
 	int g_iNullifyHitMode;
 	int g_iNullifyMessage;
+	int g_iNullifyRangeCooldown;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -93,6 +98,7 @@ esNullifyPlayer g_esNullifyPlayer[MAXPLAYERS + 1];
 
 enum struct esNullifyAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flNullifyChance;
 	float g_flNullifyDuration;
 	float g_flNullifyRange;
@@ -104,12 +110,15 @@ enum struct esNullifyAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iNullifyAbility;
+	int g_iNullifyCooldown;
 	int g_iNullifyEffect;
 	int g_iNullifyHit;
 	int g_iNullifyHitMode;
 	int g_iNullifyMessage;
+	int g_iNullifyRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -117,6 +126,7 @@ esNullifyAbility g_esNullifyAbility[MT_MAXTYPES + 1];
 
 enum struct esNullifyCache
 {
+	float g_flCloseAreasOnly;
 	float g_flNullifyChance;
 	float g_flNullifyDuration;
 	float g_flNullifyRange;
@@ -127,11 +137,14 @@ enum struct esNullifyCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iNullifyAbility;
+	int g_iNullifyCooldown;
 	int g_iNullifyEffect;
 	int g_iNullifyHit;
 	int g_iNullifyHitMode;
 	int g_iNullifyMessage;
+	int g_iNullifyRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -243,6 +256,7 @@ void vNullifyMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -258,10 +272,11 @@ int iNullifyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNullifyCache[param1].g_iNullifyAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esNullifyCache[param1].g_iHumanAmmo - g_esNullifyPlayer[param1].g_iAmmoCount), g_esNullifyCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esNullifyCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esNullifyCache[param1].g_iHumanAbility == 1) ? g_esNullifyCache[param1].g_iHumanCooldown : g_esNullifyCache[param1].g_iNullifyCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "NullifyDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esNullifyCache[param1].g_flNullifyDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNullifyCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esNullifyCache[param1].g_iHumanAbility == 1) ? g_esNullifyCache[param1].g_iHumanRangeCooldown : g_esNullifyCache[param1].g_iNullifyRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -291,6 +306,7 @@ int iNullifyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -432,11 +448,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_NULLIFY_SECTION, false) || StrEqual(sSubset[iPos], MT_NULLIFY_SECTION2, false) || StrEqual(sSubset[iPos], MT_NULLIFY_SECTION3, false) || StrEqual(sSubset[iPos], MT_NULLIFY_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -460,7 +478,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -511,21 +529,25 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esNullifyAbility[iIndex].g_iAccessFlags = 0;
 				g_esNullifyAbility[iIndex].g_iImmunityFlags = 0;
+				g_esNullifyAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esNullifyAbility[iIndex].g_iComboAbility = 0;
 				g_esNullifyAbility[iIndex].g_iHumanAbility = 0;
 				g_esNullifyAbility[iIndex].g_iHumanAmmo = 5;
-				g_esNullifyAbility[iIndex].g_iHumanCooldown = 30;
+				g_esNullifyAbility[iIndex].g_iHumanCooldown = 0;
+				g_esNullifyAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esNullifyAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esNullifyAbility[iIndex].g_iRequiresHumans = 1;
 				g_esNullifyAbility[iIndex].g_iNullifyAbility = 0;
 				g_esNullifyAbility[iIndex].g_iNullifyEffect = 0;
 				g_esNullifyAbility[iIndex].g_iNullifyMessage = 0;
 				g_esNullifyAbility[iIndex].g_flNullifyChance = 33.3;
+				g_esNullifyAbility[iIndex].g_iNullifyCooldown = 0;
 				g_esNullifyAbility[iIndex].g_flNullifyDuration = 5.0;
 				g_esNullifyAbility[iIndex].g_iNullifyHit = 0;
 				g_esNullifyAbility[iIndex].g_iNullifyHitMode = 0;
 				g_esNullifyAbility[iIndex].g_flNullifyRange = 150.0;
 				g_esNullifyAbility[iIndex].g_flNullifyRangeChance = 15.0;
+				g_esNullifyAbility[iIndex].g_iNullifyRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -536,16 +558,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esNullifyPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esNullifyPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esNullifyPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esNullifyPlayer[iPlayer].g_iComboAbility = 0;
 					g_esNullifyPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esNullifyPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esNullifyPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esNullifyPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esNullifyPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esNullifyPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esNullifyPlayer[iPlayer].g_iNullifyAbility = 0;
 					g_esNullifyPlayer[iPlayer].g_iNullifyEffect = 0;
 					g_esNullifyPlayer[iPlayer].g_iNullifyMessage = 0;
 					g_esNullifyPlayer[iPlayer].g_flNullifyChance = 0.0;
+					g_esNullifyPlayer[iPlayer].g_iNullifyCooldown = 0;
 					g_esNullifyPlayer[iPlayer].g_flNullifyDuration = 0.0;
 					g_esNullifyPlayer[iPlayer].g_iNullifyHit = 0;
 					g_esNullifyPlayer[iPlayer].g_iNullifyHitMode = 0;
@@ -565,42 +590,50 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esNullifyPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifyPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esNullifyPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifyPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esNullifyPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifyPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esNullifyPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifyPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esNullifyPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifyPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esNullifyPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifyPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esNullifyPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifyPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esNullifyPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifyPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esNullifyPlayer[admin].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyPlayer[admin].g_iNullifyAbility, value, 0, 1);
 		g_esNullifyPlayer[admin].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyPlayer[admin].g_iNullifyEffect, value, 0, 7);
 		g_esNullifyPlayer[admin].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyPlayer[admin].g_iNullifyMessage, value, 0, 3);
 		g_esNullifyPlayer[admin].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyPlayer[admin].g_flNullifyChance, value, 0.0, 100.0);
+		g_esNullifyPlayer[admin].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyPlayer[admin].g_iNullifyCooldown, value, 0, 99999);
 		g_esNullifyPlayer[admin].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyPlayer[admin].g_flNullifyDuration, value, 0.1, 99999.0);
 		g_esNullifyPlayer[admin].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifyPlayer[admin].g_iNullifyHit, value, 0, 1);
 		g_esNullifyPlayer[admin].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyPlayer[admin].g_iNullifyHitMode, value, 0, 2);
 		g_esNullifyPlayer[admin].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyPlayer[admin].g_flNullifyRange, value, 1.0, 99999.0);
 		g_esNullifyPlayer[admin].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyPlayer[admin].g_flNullifyRangeChance, value, 0.0, 100.0);
+		g_esNullifyPlayer[admin].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifyPlayer[admin].g_iNullifyRangeCooldown, value, 0, 99999);
 		g_esNullifyPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esNullifyPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esNullifyAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esNullifyAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esNullifyAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esNullifyAbility[type].g_iComboAbility, value, 0, 1);
 		g_esNullifyAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esNullifyAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esNullifyAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esNullifyAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esNullifyAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esNullifyAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esNullifyAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esNullifyAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esNullifyAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esNullifyAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esNullifyAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNullifyAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esNullifyAbility[type].g_iNullifyAbility = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNullifyAbility[type].g_iNullifyAbility, value, 0, 1);
 		g_esNullifyAbility[type].g_iNullifyEffect = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esNullifyAbility[type].g_iNullifyEffect, value, 0, 7);
 		g_esNullifyAbility[type].g_iNullifyMessage = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNullifyAbility[type].g_iNullifyMessage, value, 0, 3);
 		g_esNullifyAbility[type].g_flNullifyChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esNullifyAbility[type].g_flNullifyChance, value, 0.0, 100.0);
+		g_esNullifyAbility[type].g_iNullifyCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyCooldown", "Nullify Cooldown", "Nullify_Cooldown", "cooldown", g_esNullifyAbility[type].g_iNullifyCooldown, value, 0, 99999);
 		g_esNullifyAbility[type].g_flNullifyDuration = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esNullifyAbility[type].g_flNullifyDuration, value, 0.1, 99999.0);
 		g_esNullifyAbility[type].g_iNullifyHit = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esNullifyAbility[type].g_iNullifyHit, value, 0, 1);
 		g_esNullifyAbility[type].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyAbility[type].g_iNullifyHitMode, value, 0, 2);
 		g_esNullifyAbility[type].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyAbility[type].g_flNullifyRange, value, 1.0, 99999.0);
 		g_esNullifyAbility[type].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyAbility[type].g_flNullifyRangeChance, value, 0.0, 100.0);
+		g_esNullifyAbility[type].g_iNullifyRangeCooldown = iGetKeyValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "NullifyRangeCooldown", "Nullify Range Cooldown", "Nullify_Range_Cooldown", "rangecooldown", g_esNullifyAbility[type].g_iNullifyRangeCooldown, value, 0, 99999);
 		g_esNullifyAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esNullifyAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTION, MT_NULLIFY_SECTION2, MT_NULLIFY_SECTION3, MT_NULLIFY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -613,19 +646,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esNullifyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flCloseAreasOnly, g_esNullifyAbility[type].g_flCloseAreasOnly);
+	g_esNullifyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility);
 	g_esNullifyCache[tank].g_flNullifyChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyChance, g_esNullifyAbility[type].g_flNullifyChance);
 	g_esNullifyCache[tank].g_flNullifyDuration = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyDuration, g_esNullifyAbility[type].g_flNullifyDuration);
 	g_esNullifyCache[tank].g_flNullifyRange = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRange, g_esNullifyAbility[type].g_flNullifyRange);
 	g_esNullifyCache[tank].g_flNullifyRangeChance = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flNullifyRangeChance, g_esNullifyAbility[type].g_flNullifyRangeChance);
-	g_esNullifyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iComboAbility, g_esNullifyAbility[type].g_iComboAbility);
 	g_esNullifyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAbility, g_esNullifyAbility[type].g_iHumanAbility);
 	g_esNullifyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanAmmo, g_esNullifyAbility[type].g_iHumanAmmo);
 	g_esNullifyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanCooldown, g_esNullifyAbility[type].g_iHumanCooldown);
+	g_esNullifyCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iHumanRangeCooldown, g_esNullifyAbility[type].g_iHumanRangeCooldown);
 	g_esNullifyCache[tank].g_iNullifyAbility = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyAbility, g_esNullifyAbility[type].g_iNullifyAbility);
+	g_esNullifyCache[tank].g_iNullifyCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyCooldown, g_esNullifyAbility[type].g_iNullifyCooldown);
 	g_esNullifyCache[tank].g_iNullifyEffect = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyEffect, g_esNullifyAbility[type].g_iNullifyEffect);
 	g_esNullifyCache[tank].g_iNullifyHit = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHit, g_esNullifyAbility[type].g_iNullifyHit);
 	g_esNullifyCache[tank].g_iNullifyHitMode = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyHitMode, g_esNullifyAbility[type].g_iNullifyHitMode);
 	g_esNullifyCache[tank].g_iNullifyMessage = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyMessage, g_esNullifyAbility[type].g_iNullifyMessage);
+	g_esNullifyCache[tank].g_iNullifyRangeCooldown = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iNullifyRangeCooldown, g_esNullifyAbility[type].g_iNullifyRangeCooldown);
 	g_esNullifyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_flOpenAreasOnly, g_esNullifyAbility[type].g_flOpenAreasOnly);
 	g_esNullifyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNullifyPlayer[tank].g_iRequiresHumans, g_esNullifyAbility[type].g_iRequiresHumans);
 	g_esNullifyPlayer[tank].g_iTankType = apply ? type : 0;
@@ -717,22 +754,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esNullifyCache[tank].g_iNullifyAbility == 1 && g_esNullifyCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esNullifyCache[tank].g_iNullifyAbility == 1 && g_esNullifyCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esNullifyPlayer[tank].g_iCooldown == -1 || g_esNullifyPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman3", (g_esNullifyPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esNullifyPlayer[tank].g_iRangeCooldown == -1 || g_esNullifyPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman3", (g_esNullifyPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -752,15 +786,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveNullify(tank);
 }
 
-void vNullifyCopyStats2(int oldTank, int newTank)
-{
-	g_esNullifyPlayer[newTank].g_iAmmoCount = g_esNullifyPlayer[oldTank].g_iAmmoCount;
-	g_esNullifyPlayer[newTank].g_iCooldown = g_esNullifyPlayer[oldTank].g_iCooldown;
-}
-
 void vNullifyAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -772,8 +800,8 @@ void vNullifyAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esNullifyCache[tank].g_flNullifyRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esNullifyCache[tank].g_flNullifyRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esNullifyCache[tank].g_flNullifyRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esNullifyCache[tank].g_flNullifyRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -805,35 +833,56 @@ void vNullifyAbility(int tank, float random, int pos = -1)
 
 void vNullifyHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esNullifyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esNullifyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esNullifyPlayer[tank].g_iTankType) || (g_esNullifyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esNullifyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esNullifyPlayer[tank].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[tank].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[survivor].g_iImmunityFlags))
+	{
+		return;
+	}
+
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esNullifyPlayer[tank].g_iRangeCooldown != -1 && g_esNullifyPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esNullifyPlayer[tank].g_iCooldown != -1 && g_esNullifyPlayer[tank].g_iCooldown > iTime))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_DAMAGEBOOST))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esNullifyPlayer[tank].g_iAmmoCount < g_esNullifyCache[tank].g_iHumanAmmo && g_esNullifyCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esNullifyPlayer[tank].g_iAmmoCount < g_esNullifyCache[tank].g_iHumanAmmo && g_esNullifyCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esNullifyPlayer[survivor].g_bAffected)
 			{
 				g_esNullifyPlayer[survivor].g_bAffected = true;
 				g_esNullifyPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNullifyCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esNullifyPlayer[tank].g_iCooldown == -1 || g_esNullifyPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esNullifyPlayer[tank].g_iRangeCooldown == -1 || g_esNullifyPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esNullifyPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNullifyCache[tank].g_iHumanAbility == 1)
+					{
+						g_esNullifyPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman", g_esNullifyPlayer[tank].g_iAmmoCount, g_esNullifyCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman", g_esNullifyPlayer[tank].g_iAmmoCount, g_esNullifyCache[tank].g_iHumanAmmo);
+					}
 
-					g_esNullifyPlayer[tank].g_iCooldown = (g_esNullifyPlayer[tank].g_iAmmoCount < g_esNullifyCache[tank].g_iHumanAmmo && g_esNullifyCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esNullifyCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esNullifyCache[tank].g_iNullifyRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNullifyCache[tank].g_iHumanAbility == 1 && g_esNullifyPlayer[tank].g_iAmmoCount < g_esNullifyCache[tank].g_iHumanAmmo && g_esNullifyCache[tank].g_iHumanAmmo > 0) ? g_esNullifyCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esNullifyPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esNullifyPlayer[tank].g_iRangeCooldown != -1 && g_esNullifyPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman5", (g_esNullifyPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esNullifyPlayer[tank].g_iCooldown == -1 || g_esNullifyPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esNullifyCache[tank].g_iNullifyCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNullifyCache[tank].g_iHumanAbility == 1) ? g_esNullifyCache[tank].g_iHumanCooldown : iCooldown;
+					g_esNullifyPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esNullifyPlayer[tank].g_iCooldown != -1 && g_esNullifyPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman5", (g_esNullifyPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
-				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esNullifyCache[tank].g_flNullifyDuration;
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esNullifyCache[tank].g_flNullifyDuration;
 				DataPack dpStopNullify;
 				CreateDataTimer(flDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopNullify.WriteCell(GetClientUserId(survivor));
@@ -850,7 +899,7 @@ void vNullifyHit(int survivor, int tank, float random, float chance, int enabled
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Nullify", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esNullifyPlayer[tank].g_iCooldown == -1 || g_esNullifyPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esNullifyPlayer[tank].g_iRangeCooldown == -1 || g_esNullifyPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNullifyCache[tank].g_iHumanAbility == 1 && !g_esNullifyPlayer[tank].g_bFailed)
 				{
@@ -867,6 +916,13 @@ void vNullifyHit(int survivor, int tank, float random, float chance, int enabled
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyAmmo");
 		}
 	}
+}
+
+void vNullifyCopyStats2(int oldTank, int newTank)
+{
+	g_esNullifyPlayer[newTank].g_iAmmoCount = g_esNullifyPlayer[oldTank].g_iAmmoCount;
+	g_esNullifyPlayer[newTank].g_iCooldown = g_esNullifyPlayer[oldTank].g_iCooldown;
+	g_esNullifyPlayer[newTank].g_iRangeCooldown = g_esNullifyPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveNullify(int tank)
@@ -903,6 +959,7 @@ void vNullifyReset2(int tank)
 	g_esNullifyPlayer[tank].g_bNoAmmo = false;
 	g_esNullifyPlayer[tank].g_iAmmoCount = 0;
 	g_esNullifyPlayer[tank].g_iCooldown = -1;
+	g_esNullifyPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerNullifyCombo(Handle timer, DataPack pack)

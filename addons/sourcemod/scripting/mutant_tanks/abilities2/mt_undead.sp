@@ -61,6 +61,7 @@ enum struct esUndeadPlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flUndeadChance;
 
@@ -76,6 +77,7 @@ enum struct esUndeadPlayer
 	int g_iTankType;
 	int g_iUndeadAbility;
 	int g_iUndeadAmount;
+	int g_iUndeadCooldown;
 	int g_iUndeadMessage;
 }
 
@@ -83,17 +85,20 @@ esUndeadPlayer g_esUndeadPlayer[MAXPLAYERS + 1];
 
 enum struct esUndeadAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flUndeadChance;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iRequiresHumans;
 	int g_iUndeadAbility;
 	int g_iUndeadAmount;
+	int g_iUndeadCooldown;
 	int g_iUndeadMessage;
 }
 
@@ -101,6 +106,7 @@ esUndeadAbility g_esUndeadAbility[MT_MAXTYPES + 1];
 
 enum struct esUndeadCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flUndeadChance;
 
@@ -111,6 +117,7 @@ enum struct esUndeadCache
 	int g_iRequiresHumans;
 	int g_iUndeadAbility;
 	int g_iUndeadAmount;
+	int g_iUndeadCooldown;
 	int g_iUndeadMessage;
 }
 
@@ -236,7 +243,7 @@ int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUndeadCache[param1].g_iUndeadAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esUndeadCache[param1].g_iHumanAmmo - g_esUndeadPlayer[param1].g_iAmmoCount), g_esUndeadCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esUndeadCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esUndeadCache[param1].g_iHumanAbility == 1) ? g_esUndeadCache[param1].g_iHumanCooldown : g_esUndeadCache[param1].g_iUndeadCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "UndeadDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esUndeadCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
@@ -316,7 +323,7 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esUndeadPlayer[victim].g_bActivated)
 		{
-			if (bIsAreaNarrow(victim, g_esUndeadCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[victim].g_iTankType) || (g_esUndeadCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[victim].g_iAccessFlags)))
+			if (bIsAreaNarrow(victim, g_esUndeadCache[victim].g_flOpenAreasOnly) || bIsAreaWide(victim, g_esUndeadCache[victim].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[victim].g_iTankType) || (g_esUndeadCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[victim].g_iAccessFlags)))
 			{
 				return Plugin_Continue;
 			}
@@ -331,9 +338,11 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 
 				int iTime = GetTime();
-				if (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1 && (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown < iTime))
+				if (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown < iTime)
 				{
-					g_esUndeadPlayer[victim].g_iCooldown = (g_esUndeadPlayer[victim].g_iCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? (iTime + g_esUndeadCache[victim].g_iHumanCooldown) : -1;
+					int iPos = g_esUndeadAbility[g_esUndeadPlayer[victim].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 2, iPos)) : g_esUndeadCache[victim].g_iUndeadCooldown;
+					iCooldown = (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esUndeadCache[victim].g_iHumanAbility == 1 && g_esUndeadPlayer[victim].g_iAmmoCount < g_esUndeadCache[victim].g_iHumanAmmo && g_esUndeadCache[victim].g_iHumanAmmo > 0) ? g_esUndeadCache[victim].g_iHumanCooldown : iCooldown;
+					g_esUndeadPlayer[victim].g_iCooldown = (iTime + iCooldown);
 					if (g_esUndeadPlayer[victim].g_iCooldown != -1 && g_esUndeadPlayer[victim].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(victim, "%s %t", MT_TAG3, "UndeadHuman5", (g_esUndeadPlayer[victim].g_iCooldown - iTime));
@@ -385,8 +394,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esUndeadCache[tank].g_iHumanAbility != 2)
 	{
+		g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_UNDEAD_SECTION);
@@ -400,22 +413,26 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_UNDEAD_SECTION, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION2, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION3, false) || StrEqual(sSubset[iPos], MT_UNDEAD_SECTION4, false))
 				{
+					g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
 							case 0.0: vUndead(tank);
 							default: CreateTimer(flDelay, tTimerUndeadCombo, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -436,16 +453,19 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esUndeadAbility[iIndex].g_iAccessFlags = 0;
+				g_esUndeadAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esUndeadAbility[iIndex].g_iComboAbility = 0;
+				g_esUndeadAbility[iIndex].g_iComboPosition = -1;
 				g_esUndeadAbility[iIndex].g_iHumanAbility = 0;
 				g_esUndeadAbility[iIndex].g_iHumanAmmo = 5;
-				g_esUndeadAbility[iIndex].g_iHumanCooldown = 30;
+				g_esUndeadAbility[iIndex].g_iHumanCooldown = 0;
 				g_esUndeadAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esUndeadAbility[iIndex].g_iRequiresHumans = 0;
 				g_esUndeadAbility[iIndex].g_iUndeadAbility = 0;
 				g_esUndeadAbility[iIndex].g_iUndeadMessage = 0;
 				g_esUndeadAbility[iIndex].g_iUndeadAmount = 1;
 				g_esUndeadAbility[iIndex].g_flUndeadChance = 33.3;
+				g_esUndeadAbility[iIndex].g_iUndeadCooldown = 0;
 			}
 		}
 		case 3:
@@ -455,6 +475,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esUndeadPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esUndeadPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esUndeadPlayer[iPlayer].g_iComboAbility = 0;
 					g_esUndeadPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esUndeadPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -465,6 +486,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esUndeadPlayer[iPlayer].g_iUndeadMessage = 0;
 					g_esUndeadPlayer[iPlayer].g_iUndeadAmount = 0;
 					g_esUndeadPlayer[iPlayer].g_flUndeadChance = 0.0;
+					g_esUndeadPlayer[iPlayer].g_iUndeadCooldown = 0;
 				}
 			}
 		}
@@ -479,6 +501,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esUndeadPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esUndeadPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esUndeadPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esUndeadPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -489,11 +512,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esUndeadPlayer[admin].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadPlayer[admin].g_iUndeadMessage, value, 0, 1);
 		g_esUndeadPlayer[admin].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadPlayer[admin].g_iUndeadAmount, value, 1, 99999);
 		g_esUndeadPlayer[admin].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadPlayer[admin].g_flUndeadChance, value, 0.0, 100.0);
+		g_esUndeadPlayer[admin].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadPlayer[admin].g_iUndeadCooldown, value, 0, 99999);
 		g_esUndeadPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esUndeadAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esUndeadAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esUndeadAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esUndeadAbility[type].g_iComboAbility, value, 0, 1);
 		g_esUndeadAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esUndeadAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esUndeadAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esUndeadAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -504,6 +529,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esUndeadAbility[type].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadAbility[type].g_iUndeadMessage, value, 0, 1);
 		g_esUndeadAbility[type].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadAbility[type].g_iUndeadAmount, value, 1, 99999);
 		g_esUndeadAbility[type].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadAbility[type].g_flUndeadChance, value, 0.0, 100.0);
+		g_esUndeadAbility[type].g_iUndeadCooldown = iGetKeyValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "UndeadCooldown", "Undead Cooldown", "Undead_Cooldown", "cooldown", g_esUndeadAbility[type].g_iUndeadCooldown, value, 0, 99999);
 		g_esUndeadAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTION, MT_UNDEAD_SECTION2, MT_UNDEAD_SECTION3, MT_UNDEAD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
@@ -515,8 +541,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esUndeadCache[tank].g_flUndeadChance = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance);
+	g_esUndeadCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flCloseAreasOnly, g_esUndeadAbility[type].g_flCloseAreasOnly);
 	g_esUndeadCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iComboAbility, g_esUndeadAbility[type].g_iComboAbility);
+	g_esUndeadCache[tank].g_flUndeadChance = flGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_flUndeadChance, g_esUndeadAbility[type].g_flUndeadChance);
 	g_esUndeadCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAbility, g_esUndeadAbility[type].g_iHumanAbility);
 	g_esUndeadCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanAmmo, g_esUndeadAbility[type].g_iHumanAmmo);
 	g_esUndeadCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iHumanCooldown, g_esUndeadAbility[type].g_iHumanCooldown);
@@ -524,6 +551,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esUndeadCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iRequiresHumans, g_esUndeadAbility[type].g_iRequiresHumans);
 	g_esUndeadCache[tank].g_iUndeadAbility = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAbility, g_esUndeadAbility[type].g_iUndeadAbility);
 	g_esUndeadCache[tank].g_iUndeadAmount = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadAmount, g_esUndeadAbility[type].g_iUndeadAmount);
+	g_esUndeadCache[tank].g_iUndeadCooldown = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadCooldown, g_esUndeadAbility[type].g_iUndeadCooldown);
 	g_esUndeadCache[tank].g_iUndeadMessage = iGetSettingValue(apply, bHuman, g_esUndeadPlayer[tank].g_iUndeadMessage, g_esUndeadAbility[type].g_iUndeadMessage);
 	g_esUndeadPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -614,29 +642,26 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUndeadCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY)
+		if ((button & MT_SPECIAL_KEY) && g_esUndeadCache[tank].g_iUndeadAbility == 1 && g_esUndeadCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esUndeadCache[tank].g_iUndeadAbility == 1 && g_esUndeadCache[tank].g_iHumanAbility == 1)
+			int iTime = GetTime();
+			bool bRecharging = g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > iTime;
+			if (!g_esUndeadPlayer[tank].g_bActivated && !bRecharging)
 			{
-				int iTime = GetTime();
-				bool bRecharging = g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > iTime;
-				if (!g_esUndeadPlayer[tank].g_bActivated && !bRecharging)
-				{
-					vUndeadAbility(tank);
-				}
-				else if (g_esUndeadPlayer[tank].g_bActivated)
-				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman3");
-				}
-				else if (bRecharging)
-				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman4", (g_esUndeadPlayer[tank].g_iCooldown - iTime));
-				}
+				vUndeadAbility(tank);
+			}
+			else if (g_esUndeadPlayer[tank].g_bActivated)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman3");
+			}
+			else if (bRecharging)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadHuman4", (g_esUndeadPlayer[tank].g_iCooldown - iTime));
 			}
 		}
 	}
@@ -685,6 +710,11 @@ void vUndeadReset()
 
 void vUndead(int tank)
 {
+	if (g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	if (g_esUndeadPlayer[tank].g_iCount < g_esUndeadCache[tank].g_iUndeadAmount)
 	{
 		g_esUndeadPlayer[tank].g_bActivated = true;
@@ -709,7 +739,7 @@ void vUndead(int tank)
 
 void vUndeadAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
+	if ((g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esUndeadCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esUndeadCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esUndeadPlayer[tank].g_iTankType) || (g_esUndeadCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esUndeadCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esUndeadAbility[g_esUndeadPlayer[tank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

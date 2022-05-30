@@ -77,24 +77,32 @@ enum struct esBombPlayer
 	float g_flBombRange;
 	float g_flBombRangeChance;
 	float g_flBombRockChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iBombAbility;
+	int g_iBombCooldown;
 	int g_iBombDeath;
 	int g_iBombEffect;
 	int g_iBombHit;
 	int g_iBombHitMode;
 	int g_iBombMessage;
+	int g_iBombRangeCooldown;
 	int g_iBombRockBreak;
+	int g_iBombRockCooldown;
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
+	int g_iRockCooldown;
 	int g_iTankType;
 }
 
@@ -107,20 +115,26 @@ enum struct esBombAbility
 	float g_flBombRange;
 	float g_flBombRangeChance;
 	float g_flBombRockChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iBombAbility;
+	int g_iBombCooldown;
 	int g_iBombDeath;
 	int g_iBombEffect;
 	int g_iBombHit;
 	int g_iBombHitMode;
 	int g_iBombMessage;
+	int g_iBombRangeCooldown;
 	int g_iBombRockBreak;
+	int g_iBombRockCooldown;
 	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -134,19 +148,25 @@ enum struct esBombCache
 	float g_flBombRange;
 	float g_flBombRangeChance;
 	float g_flBombRockChance;
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 
 	int g_iBombAbility;
+	int g_iBombCooldown;
 	int g_iBombDeath;
 	int g_iBombEffect;
 	int g_iBombHit;
 	int g_iBombHitMode;
 	int g_iBombMessage;
+	int g_iBombRangeCooldown;
 	int g_iBombRockBreak;
+	int g_iBombRockCooldown;
 	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -265,6 +285,8 @@ void vBombMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Cooldown", "Cooldown");
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
+	mAbilityMenu.AddItem("Rock Cooldown", "Rock Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -280,9 +302,11 @@ int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esBombCache[param1].g_iBombAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esBombCache[param1].g_iHumanAmmo - g_esBombPlayer[param1].g_iAmmoCount), g_esBombCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esBombCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esBombCache[param1].g_iHumanAbility == 1) ? g_esBombCache[param1].g_iHumanCooldown : g_esBombCache[param1].g_iBombCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "BombDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esBombCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esBombCache[param1].g_iHumanAbility == 1) ? g_esBombCache[param1].g_iHumanRangeCooldown : g_esBombCache[param1].g_iBombRangeCooldown));
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRockCooldown", ((g_esBombCache[param1].g_iHumanAbility == 1) ? g_esBombCache[param1].g_iHumanRockCooldown : g_esBombCache[param1].g_iBombRockCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -311,6 +335,8 @@ int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 3: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Cooldown", param1);
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RockCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -431,11 +457,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_BOMB_SECTION, false) || StrEqual(sSubset[iPos], MT_BOMB_SECTION2, false) || StrEqual(sSubset[iPos], MT_BOMB_SECTION3, false) || StrEqual(sSubset[iPos], MT_BOMB_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -459,7 +487,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -467,11 +495,11 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							{
 								if ((g_esBombCache[tank].g_iBombHitMode == 0 || g_esBombCache[tank].g_iBombHitMode == 1) && (StrEqual(classname[7], "tank_claw") || StrEqual(classname, "tank_rock")))
 								{
-									vBombHit(survivor, tank, random, flChance, g_esBombCache[tank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+									vBombHit(survivor, tank, random, flChance, g_esBombCache[tank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 								}
 								else if ((g_esBombCache[tank].g_iBombHitMode == 0 || g_esBombCache[tank].g_iBombHitMode == 2) && StrEqual(classname[7], "melee"))
 								{
-									vBombHit(survivor, tank, random, flChance, g_esBombCache[tank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+									vBombHit(survivor, tank, random, flChance, g_esBombCache[tank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 								}
 							}
 							default:
@@ -482,6 +510,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(GetClientUserId(tank));
 								dpCombo.WriteFloat(random);
 								dpCombo.WriteFloat(flChance);
+								dpCombo.WriteCell(iPos);
 								dpCombo.WriteString(classname);
 							}
 						}
@@ -518,24 +547,30 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esBombAbility[iIndex].g_iAccessFlags = 0;
 				g_esBombAbility[iIndex].g_iImmunityFlags = 0;
+				g_esBombAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esBombAbility[iIndex].g_iComboAbility = 0;
 				g_esBombAbility[iIndex].g_iHumanAbility = 0;
 				g_esBombAbility[iIndex].g_iHumanAmmo = 5;
-				g_esBombAbility[iIndex].g_iHumanCooldown = 30;
+				g_esBombAbility[iIndex].g_iHumanCooldown = 0;
+				g_esBombAbility[iIndex].g_iHumanRangeCooldown = 0;
+				g_esBombAbility[iIndex].g_iHumanRockCooldown = 0;
 				g_esBombAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esBombAbility[iIndex].g_iRequiresHumans = 0;
 				g_esBombAbility[iIndex].g_iBombAbility = 0;
 				g_esBombAbility[iIndex].g_iBombEffect = 0;
 				g_esBombAbility[iIndex].g_iBombMessage = 0;
 				g_esBombAbility[iIndex].g_flBombChance = 33.3;
+				g_esBombAbility[iIndex].g_iBombCooldown = 0;
 				g_esBombAbility[iIndex].g_iBombDeath = 0;
 				g_esBombAbility[iIndex].g_flBombDeathChance = 200.0;
 				g_esBombAbility[iIndex].g_iBombHit = 0;
 				g_esBombAbility[iIndex].g_iBombHitMode = 0;
 				g_esBombAbility[iIndex].g_flBombRange = 150.0;
 				g_esBombAbility[iIndex].g_flBombRangeChance = 15.0;
+				g_esBombAbility[iIndex].g_iBombRangeCooldown = 0;
 				g_esBombAbility[iIndex].g_iBombRockBreak = 0;
 				g_esBombAbility[iIndex].g_flBombRockChance = 33.3;
+				g_esBombAbility[iIndex].g_iBombRockCooldown = 0;
 			}
 		}
 		case 3:
@@ -546,24 +581,30 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esBombPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esBombPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esBombPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esBombPlayer[iPlayer].g_iComboAbility = 0;
 					g_esBombPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esBombPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esBombPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esBombPlayer[iPlayer].g_iHumanRangeCooldown = 0;
+					g_esBombPlayer[iPlayer].g_iHumanRockCooldown = 0;
 					g_esBombPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esBombPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esBombPlayer[iPlayer].g_iBombAbility = 0;
 					g_esBombPlayer[iPlayer].g_iBombEffect = 0;
 					g_esBombPlayer[iPlayer].g_iBombMessage = 0;
 					g_esBombPlayer[iPlayer].g_flBombChance = 0.0;
+					g_esBombPlayer[iPlayer].g_iBombCooldown = 0;
 					g_esBombPlayer[iPlayer].g_iBombDeath = 0;
 					g_esBombPlayer[iPlayer].g_flBombDeathChance = 0.0;
 					g_esBombPlayer[iPlayer].g_iBombHit = 0;
 					g_esBombPlayer[iPlayer].g_iBombHitMode = 0;
 					g_esBombPlayer[iPlayer].g_flBombRange = 0.0;
 					g_esBombPlayer[iPlayer].g_flBombRangeChance = 0.0;
+					g_esBombPlayer[iPlayer].g_iBombRangeCooldown = 0;
 					g_esBombPlayer[iPlayer].g_iBombRockBreak = 0;
 					g_esBombPlayer[iPlayer].g_flBombRockChance = 0.0;
+					g_esBombPlayer[iPlayer].g_iBombRockCooldown = 0;
 				}
 			}
 		}
@@ -578,48 +619,60 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esBombPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esBombPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esBombPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esBombPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esBombPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esBombPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
+		g_esBombPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombPlayer[admin].g_iHumanRockCooldown, value, 0, 99999);
 		g_esBombPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esBombPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esBombPlayer[admin].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombPlayer[admin].g_iBombAbility, value, 0, 1);
 		g_esBombPlayer[admin].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombPlayer[admin].g_iBombEffect, value, 0, 7);
 		g_esBombPlayer[admin].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombPlayer[admin].g_iBombMessage, value, 0, 7);
 		g_esBombPlayer[admin].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombPlayer[admin].g_flBombChance, value, 0.0, 100.0);
+		g_esBombPlayer[admin].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombPlayer[admin].g_iBombCooldown, value, 0, 99999);
 		g_esBombPlayer[admin].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombPlayer[admin].g_iBombDeath, value, 0, 1);
 		g_esBombPlayer[admin].g_flBombDeathChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esBombPlayer[admin].g_flBombDeathChance, value, 1.0, 99999.0);
 		g_esBombPlayer[admin].g_iBombHit = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esBombPlayer[admin].g_iBombHit, value, 0, 1);
 		g_esBombPlayer[admin].g_iBombHitMode = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esBombPlayer[admin].g_iBombHitMode, value, 0, 2);
 		g_esBombPlayer[admin].g_flBombRange = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esBombPlayer[admin].g_flBombRange, value, 1.0, 99999.0);
 		g_esBombPlayer[admin].g_flBombRangeChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esBombPlayer[admin].g_flBombRangeChance, value, 0.0, 100.0);
+		g_esBombPlayer[admin].g_iBombRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRangeCooldown", "Bomb Range Cooldown", "Bomb_Range_Cooldown", "rangecooldown", g_esBombPlayer[admin].g_iBombRangeCooldown, value, 0, 99999);
 		g_esBombPlayer[admin].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombPlayer[admin].g_iBombRockBreak, value, 0, 1);
 		g_esBombPlayer[admin].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombPlayer[admin].g_flBombRockChance, value, 0.0, 100.0);
+		g_esBombPlayer[admin].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombPlayer[admin].g_iBombRockCooldown, value, 0, 99999);
 		g_esBombPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esBombPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esBombAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esBombAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esBombAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esBombAbility[type].g_iComboAbility, value, 0, 1);
 		g_esBombAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esBombAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esBombAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esBombAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esBombAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esBombAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esBombAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esBombAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
+		g_esBombAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esBombAbility[type].g_iHumanRockCooldown, value, 0, 99999);
 		g_esBombAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esBombAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esBombAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esBombAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esBombAbility[type].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombAbility[type].g_iBombAbility, value, 0, 1);
 		g_esBombAbility[type].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombAbility[type].g_iBombEffect, value, 0, 7);
 		g_esBombAbility[type].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombAbility[type].g_iBombMessage, value, 0, 7);
 		g_esBombAbility[type].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombAbility[type].g_flBombChance, value, 0.0, 100.0);
+		g_esBombAbility[type].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombAbility[type].g_iBombCooldown, value, 0, 99999);
 		g_esBombAbility[type].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombAbility[type].g_iBombDeath, value, 0, 1);
 		g_esBombAbility[type].g_flBombDeathChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esBombAbility[type].g_flBombDeathChance, value, 1.0, 99999.0);
 		g_esBombAbility[type].g_iBombHit = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esBombAbility[type].g_iBombHit, value, 0, 1);
 		g_esBombAbility[type].g_iBombHitMode = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esBombAbility[type].g_iBombHitMode, value, 0, 2);
 		g_esBombAbility[type].g_flBombRange = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esBombAbility[type].g_flBombRange, value, 1.0, 99999.0);
 		g_esBombAbility[type].g_flBombRangeChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esBombAbility[type].g_flBombRangeChance, value, 0.0, 100.0);
+		g_esBombAbility[type].g_iBombRangeCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRangeCooldown", "Bomb Range Cooldown", "Bomb_Range_Cooldown", "rangecooldown", g_esBombAbility[type].g_iBombRangeCooldown, value, 0, 99999);
 		g_esBombAbility[type].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombAbility[type].g_iBombRockBreak, value, 0, 1);
 		g_esBombAbility[type].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombAbility[type].g_flBombRockChance, value, 0.0, 100.0);
+		g_esBombAbility[type].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombAbility[type].g_iBombRockCooldown, value, 0, 99999);
 		g_esBombAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esBombAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -638,16 +691,22 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esBombCache[tank].g_flBombRangeChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRangeChance, g_esBombAbility[type].g_flBombRangeChance);
 	g_esBombCache[tank].g_flBombRockChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombRockChance, g_esBombAbility[type].g_flBombRockChance);
 	g_esBombCache[tank].g_iBombAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombAbility, g_esBombAbility[type].g_iBombAbility);
+	g_esBombCache[tank].g_iBombCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombCooldown, g_esBombAbility[type].g_iBombCooldown);
 	g_esBombCache[tank].g_iBombDeath = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombDeath, g_esBombAbility[type].g_iBombDeath);
 	g_esBombCache[tank].g_iBombEffect = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombEffect, g_esBombAbility[type].g_iBombEffect);
 	g_esBombCache[tank].g_iBombHit = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHit, g_esBombAbility[type].g_iBombHit);
 	g_esBombCache[tank].g_iBombHitMode = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombHitMode, g_esBombAbility[type].g_iBombHitMode);
 	g_esBombCache[tank].g_iBombMessage = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombMessage, g_esBombAbility[type].g_iBombMessage);
+	g_esBombCache[tank].g_iBombRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRangeCooldown, g_esBombAbility[type].g_iBombRangeCooldown);
 	g_esBombCache[tank].g_iBombRockBreak = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockBreak, g_esBombAbility[type].g_iBombRockBreak);
+	g_esBombCache[tank].g_iBombRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iBombRockCooldown, g_esBombAbility[type].g_iBombRockCooldown);
+	g_esBombCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flCloseAreasOnly, g_esBombAbility[type].g_flCloseAreasOnly);
 	g_esBombCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iComboAbility, g_esBombAbility[type].g_iComboAbility);
 	g_esBombCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAbility, g_esBombAbility[type].g_iHumanAbility);
 	g_esBombCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanAmmo, g_esBombAbility[type].g_iHumanAmmo);
 	g_esBombCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanCooldown, g_esBombAbility[type].g_iHumanCooldown);
+	g_esBombCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRangeCooldown, g_esBombAbility[type].g_iHumanRangeCooldown);
+	g_esBombCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iHumanRockCooldown, g_esBombAbility[type].g_iHumanRockCooldown);
 	g_esBombCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flOpenAreasOnly, g_esBombAbility[type].g_flOpenAreasOnly);
 	g_esBombCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_iRequiresHumans, g_esBombAbility[type].g_iRequiresHumans);
 	g_esBombPlayer[tank].g_iTankType = apply ? type : 0;
@@ -740,22 +799,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esBombCache[tank].g_iBombAbility == 1 && g_esBombCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esBombCache[tank].g_iBombAbility == 1 && g_esBombCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esBombPlayer[tank].g_iCooldown != -1 && g_esBombPlayer[tank].g_iCooldown > iTime)
-				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman3", (g_esBombPlayer[tank].g_iCooldown - iTime));
-					case false: vBombAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-				}
+			switch (g_esBombPlayer[tank].g_iRangeCooldown == -1 || g_esBombPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vBombAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman3", (g_esBombPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -808,7 +864,7 @@ void vBombRockBreak(int tank, int rock)
 public void MT_OnRockBreak(int tank, int rock)
 #endif
 {
-	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0)))
+	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -821,7 +877,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 void vBombAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -833,8 +889,8 @@ void vBombAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esBombCache[tank].g_flBombRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBombCache[tank].g_flBombRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esBombCache[tank].g_flBombRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esBombCache[tank].g_flBombRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -843,7 +899,7 @@ void vBombAbility(int tank, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					vBombHit(iSurvivor, tank, random, flChance, g_esBombCache[tank].g_iBombAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vBombHit(iSurvivor, tank, random, flChance, g_esBombCache[tank].g_iBombAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
 
 					iSurvivorCount++;
 				}
@@ -864,27 +920,48 @@ void vBombAbility(int tank, float random, int pos = -1)
 	}
 }
 
-void vBombHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
+void vBombHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esBombPlayer[tank].g_iTankType, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBombPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esBombPlayer[tank].g_iTankType, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBombPlayer[survivor].g_iImmunityFlags))
+	{
+		return;
+	}
+
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esBombPlayer[tank].g_iRangeCooldown != -1 && g_esBombPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esBombPlayer[tank].g_iCooldown != -1 && g_esBombPlayer[tank].g_iCooldown > iTime))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esBombPlayer[tank].g_iAmmoCount < g_esBombCache[tank].g_iHumanAmmo && g_esBombCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esBombPlayer[tank].g_iAmmoCount < g_esBombCache[tank].g_iHumanAmmo && g_esBombCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance)
 			{
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esBombPlayer[tank].g_iCooldown == -1 || g_esBombPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esBombPlayer[tank].g_iRangeCooldown == -1 || g_esBombPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esBombPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1)
+					{
+						g_esBombPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman", g_esBombPlayer[tank].g_iAmmoCount, g_esBombCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman", g_esBombPlayer[tank].g_iAmmoCount, g_esBombCache[tank].g_iHumanAmmo);
+					}
 
-					g_esBombPlayer[tank].g_iCooldown = (g_esBombPlayer[tank].g_iAmmoCount < g_esBombCache[tank].g_iHumanAmmo && g_esBombCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esBombCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esBombCache[tank].g_iBombRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1 && g_esBombPlayer[tank].g_iAmmoCount < g_esBombCache[tank].g_iHumanAmmo && g_esBombCache[tank].g_iHumanAmmo > 0) ? g_esBombCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esBombPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esBombPlayer[tank].g_iRangeCooldown != -1 && g_esBombPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman5", (g_esBombPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esBombPlayer[tank].g_iCooldown == -1 || g_esBombPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esBombCache[tank].g_iBombCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1) ? g_esBombCache[tank].g_iHumanCooldown : iCooldown;
+					g_esBombPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esBombPlayer[tank].g_iCooldown != -1 && g_esBombPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman5", (g_esBombPlayer[tank].g_iCooldown - iTime));
@@ -905,7 +982,7 @@ void vBombHit(int survivor, int tank, float random, float chance, int enabled, i
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bomb", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esBombPlayer[tank].g_iCooldown == -1 || g_esBombPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esBombPlayer[tank].g_iRangeCooldown == -1 || g_esBombPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1 && !g_esBombPlayer[tank].g_bFailed)
 				{
@@ -926,10 +1003,10 @@ void vBombHit(int survivor, int tank, float random, float chance, int enabled, i
 
 void vBombRange(int tank, int value, float random, int pos = -1)
 {
-	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esBombCache[tank].g_flBombDeathChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esBombCache[tank].g_flBombDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esBombCache[tank].g_iBombDeath == 1 && random <= flChance)
 	{
-		if (g_esBombCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0)))
+		if (g_esBombCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esBombCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -948,9 +1025,26 @@ void vBombRange(int tank, int value, float random, int pos = -1)
 
 void vBombRockBreak2(int tank, int rock, float random, int pos = -1)
 {
-	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esBombCache[tank].g_flBombRockChance;
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esBombCache[tank].g_flBombRockChance;
 	if (random <= flChance)
 	{
+		int iTime = GetTime(), iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility == 1) ? g_esBombCache[tank].g_iHumanRockCooldown : g_esBombCache[tank].g_iBombRockCooldown;
+		iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 15, pos)) : iCooldown;
+		if (g_esBombPlayer[tank].g_iRockCooldown == -1 || g_esBombPlayer[tank].g_iRockCooldown < iTime)
+		{
+			g_esBombPlayer[tank].g_iRockCooldown = (iTime + iCooldown);
+			if (g_esBombPlayer[tank].g_iRockCooldown != -1 && g_esBombPlayer[tank].g_iRockCooldown > iTime)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman5", (g_esBombPlayer[tank].g_iRockCooldown - iTime));
+			}
+		}
+		else if (g_esBombPlayer[tank].g_iRockCooldown != -1 && g_esBombPlayer[tank].g_iRockCooldown > iTime)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "BombHuman3", (g_esBombPlayer[tank].g_iRockCooldown - iTime));
+
+			return;
+		}
+
 		float flPos[3];
 		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
@@ -975,6 +1069,8 @@ void vBombCopyStats2(int oldTank, int newTank)
 {
 	g_esBombPlayer[newTank].g_iAmmoCount = g_esBombPlayer[oldTank].g_iAmmoCount;
 	g_esBombPlayer[newTank].g_iCooldown = g_esBombPlayer[oldTank].g_iCooldown;
+	g_esBombPlayer[newTank].g_iRangeCooldown = g_esBombPlayer[oldTank].g_iRangeCooldown;
+	g_esBombPlayer[newTank].g_iRockCooldown = g_esBombPlayer[oldTank].g_iRockCooldown;
 }
 
 void vRemoveBomb(int tank)
@@ -983,6 +1079,8 @@ void vRemoveBomb(int tank)
 	g_esBombPlayer[tank].g_bNoAmmo = false;
 	g_esBombPlayer[tank].g_iAmmoCount = 0;
 	g_esBombPlayer[tank].g_iCooldown = -1;
+	g_esBombPlayer[tank].g_iRangeCooldown = -1;
+	g_esBombPlayer[tank].g_iRockCooldown = -1;
 }
 
 void vBombReset()
@@ -1030,15 +1128,16 @@ Action tTimerBombCombo2(Handle timer, DataPack pack)
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
 	if ((g_esBombCache[iTank].g_iBombHitMode == 0 || g_esBombCache[iTank].g_iBombHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
-		vBombHit(iSurvivor, iTank, flRandom, flChance, g_esBombCache[iTank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+		vBombHit(iSurvivor, iTank, flRandom, flChance, g_esBombCache[iTank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
 	else if ((g_esBombCache[iTank].g_iBombHitMode == 0 || g_esBombCache[iTank].g_iBombHitMode == 2) && StrEqual(sClassname[7], "melee"))
 	{
-		vBombHit(iSurvivor, iTank, flRandom, flChance, g_esBombCache[iTank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+		vBombHit(iSurvivor, iTank, flRandom, flChance, g_esBombCache[iTank].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
 
 	return Plugin_Continue;

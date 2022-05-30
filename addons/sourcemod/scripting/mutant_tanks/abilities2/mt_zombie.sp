@@ -72,6 +72,7 @@ enum struct esZombiePlayer
 {
 	bool g_bActivated;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flZombieChance;
 	float g_flZombieInterval;
@@ -89,6 +90,7 @@ enum struct esZombiePlayer
 	int g_iTankType;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
+	int g_iZombieCooldown;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -98,12 +100,14 @@ esZombiePlayer g_esZombiePlayer[MAXPLAYERS + 1];
 
 enum struct esZombieAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flZombieChance;
 	float g_flZombieInterval;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -112,6 +116,7 @@ enum struct esZombieAbility
 	int g_iRequiresHumans;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
+	int g_iZombieCooldown;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -121,6 +126,7 @@ esZombieAbility g_esZombieAbility[MT_MAXTYPES + 1];
 
 enum struct esZombieCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flZombieChance;
 	float g_flZombieInterval;
@@ -134,6 +140,7 @@ enum struct esZombieCache
 	int g_iRequiresHumans;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
+	int g_iZombieCooldown;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -258,7 +265,7 @@ int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esZombieCache[param1].g_iHumanAmmo - g_esZombiePlayer[param1].g_iAmmoCount), g_esZombieCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esZombieCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esZombieCache[param1].g_iHumanAbility == 1) ? g_esZombieCache[param1].g_iHumanCooldown : g_esZombieCache[param1].g_iZombieCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ZombieDetails");
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esZombieCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
@@ -364,8 +371,12 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility != 2)
 	{
+		g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION);
@@ -379,13 +390,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION2, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION3, false) || StrEqual(sSubset[iPos], MT_ZOMBIE_SECTION4, false))
 				{
+					g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -398,9 +413,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -421,10 +436,12 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 			{
 				g_esZombieAbility[iIndex].g_iAccessFlags = 0;
+				g_esZombieAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esZombieAbility[iIndex].g_iComboAbility = 0;
+				g_esZombieAbility[iIndex].g_iComboPosition = -1;
 				g_esZombieAbility[iIndex].g_iHumanAbility = 0;
 				g_esZombieAbility[iIndex].g_iHumanAmmo = 5;
-				g_esZombieAbility[iIndex].g_iHumanCooldown = 30;
+				g_esZombieAbility[iIndex].g_iHumanCooldown = 0;
 				g_esZombieAbility[iIndex].g_iHumanDuration = 5;
 				g_esZombieAbility[iIndex].g_iHumanMode = 1;
 				g_esZombieAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -433,6 +450,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esZombieAbility[iIndex].g_iZombieMessage = 0;
 				g_esZombieAbility[iIndex].g_iZombieAmount = 10;
 				g_esZombieAbility[iIndex].g_flZombieChance = 33.3;
+				g_esZombieAbility[iIndex].g_iZombieCooldown = 0;
 				g_esZombieAbility[iIndex].g_flZombieInterval = 5.0;
 				g_esZombieAbility[iIndex].g_iZombieMode = 0;
 				g_esZombieAbility[iIndex].g_iZombieType = 0;
@@ -445,6 +463,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esZombiePlayer[iPlayer].g_iAccessFlags = 0;
+					g_esZombiePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esZombiePlayer[iPlayer].g_iComboAbility = 0;
 					g_esZombiePlayer[iPlayer].g_iHumanAbility = 0;
 					g_esZombiePlayer[iPlayer].g_iHumanAmmo = 0;
@@ -457,6 +476,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esZombiePlayer[iPlayer].g_iZombieMessage = 0;
 					g_esZombiePlayer[iPlayer].g_iZombieAmount = 0;
 					g_esZombiePlayer[iPlayer].g_flZombieChance = 0.0;
+					g_esZombiePlayer[iPlayer].g_iZombieCooldown = 0;
 					g_esZombiePlayer[iPlayer].g_flZombieInterval = 0.0;
 					g_esZombiePlayer[iPlayer].g_iZombieMode = 0;
 					g_esZombiePlayer[iPlayer].g_iZombieType = 0;
@@ -474,6 +494,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esZombiePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esZombiePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esZombiePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esZombiePlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esZombiePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esZombiePlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esZombiePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esZombiePlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -486,6 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombiePlayer[admin].g_iZombieMessage = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esZombiePlayer[admin].g_iZombieMessage, value, 0, 1);
 		g_esZombiePlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esZombiePlayer[admin].g_iZombieAmount, value, 1, 100);
 		g_esZombiePlayer[admin].g_flZombieChance = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esZombiePlayer[admin].g_flZombieChance, value, 0.0, 100.0);
+		g_esZombiePlayer[admin].g_iZombieCooldown = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieCooldown", "Zombie Cooldown", "Zombie_Cooldown", "cooldown", g_esZombiePlayer[admin].g_iZombieCooldown, value, 0, 99999);
 		g_esZombiePlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombiePlayer[admin].g_flZombieInterval, value, 0.1, 99999.0);
 		g_esZombiePlayer[admin].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombiePlayer[admin].g_iZombieMode, value, 0, 2);
 		g_esZombiePlayer[admin].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombiePlayer[admin].g_iZombieType, value, 0, 127);
@@ -494,6 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esZombieAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esZombieAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esZombieAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esZombieAbility[type].g_iComboAbility, value, 0, 1);
 		g_esZombieAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esZombieAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esZombieAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esZombieAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -506,6 +529,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombieAbility[type].g_iZombieMessage = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esZombieAbility[type].g_iZombieMessage, value, 0, 1);
 		g_esZombieAbility[type].g_iZombieAmount = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esZombieAbility[type].g_iZombieAmount, value, 1, 100);
 		g_esZombieAbility[type].g_flZombieChance = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esZombieAbility[type].g_flZombieChance, value, 0.0, 100.0);
+		g_esZombieAbility[type].g_iZombieCooldown = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieCooldown", "Zombie Cooldown", "Zombie_Cooldown", "cooldown", g_esZombieAbility[type].g_iZombieCooldown, value, 0, 99999);
 		g_esZombieAbility[type].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombieAbility[type].g_flZombieInterval, value, 0.1, 99999.0);
 		g_esZombieAbility[type].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombieAbility[type].g_iZombieMode, value, 0, 2);
 		g_esZombieAbility[type].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombieAbility[type].g_iZombieType, value, 0, 127);
@@ -520,9 +544,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esZombieCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_flCloseAreasOnly, g_esZombieAbility[type].g_flCloseAreasOnly);
+	g_esZombieCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iComboAbility, g_esZombieAbility[type].g_iComboAbility);
 	g_esZombieCache[tank].g_flZombieChance = flGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_flZombieChance, g_esZombieAbility[type].g_flZombieChance);
 	g_esZombieCache[tank].g_flZombieInterval = flGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_flZombieInterval, g_esZombieAbility[type].g_flZombieInterval);
-	g_esZombieCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iComboAbility, g_esZombieAbility[type].g_iComboAbility);
 	g_esZombieCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iHumanAbility, g_esZombieAbility[type].g_iHumanAbility);
 	g_esZombieCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iHumanAmmo, g_esZombieAbility[type].g_iHumanAmmo);
 	g_esZombieCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iHumanCooldown, g_esZombieAbility[type].g_iHumanCooldown);
@@ -532,6 +557,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esZombieCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iRequiresHumans, g_esZombieAbility[type].g_iRequiresHumans);
 	g_esZombieCache[tank].g_iZombieAbility = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieAbility, g_esZombieAbility[type].g_iZombieAbility);
 	g_esZombieCache[tank].g_iZombieAmount = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieAmount, g_esZombieAbility[type].g_iZombieAmount);
+	g_esZombieCache[tank].g_iZombieCooldown = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieCooldown, g_esZombieAbility[type].g_iZombieCooldown);
 	g_esZombieCache[tank].g_iZombieMessage = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieMessage, g_esZombieAbility[type].g_iZombieMessage);
 	g_esZombieCache[tank].g_iZombieMode = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieMode, g_esZombieAbility[type].g_iZombieMode);
 	g_esZombieCache[tank].g_iZombieType = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieType, g_esZombieAbility[type].g_iZombieType);
@@ -625,25 +651,45 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
-				bool bRecharging = g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime;
+			int iTime = GetTime();
+			bool bRecharging = g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime;
 
-				switch (g_esZombieCache[tank].g_iHumanMode)
+			switch (g_esZombieCache[tank].g_iHumanMode)
+			{
+				case 0:
 				{
-					case 0:
+					if (!g_esZombiePlayer[tank].g_bActivated && !bRecharging)
+					{
+						vZombieAbility(tank);
+					}
+					else if (g_esZombiePlayer[tank].g_bActivated)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman3");
+					}
+					else if (bRecharging)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", (g_esZombiePlayer[tank].g_iCooldown - iTime));
+					}
+				}
+				case 1:
+				{
+					if (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0)
 					{
 						if (!g_esZombiePlayer[tank].g_bActivated && !bRecharging)
 						{
-							vZombieAbility(tank);
+							g_esZombiePlayer[tank].g_bActivated = true;
+							g_esZombiePlayer[tank].g_iAmmoCount++;
+
+							vZombie2(tank);
+
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman", g_esZombiePlayer[tank].g_iAmmoCount, g_esZombieCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esZombiePlayer[tank].g_bActivated)
 						{
@@ -654,32 +700,9 @@ public void MT_OnButtonPressed(int tank, int button)
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", (g_esZombiePlayer[tank].g_iCooldown - iTime));
 						}
 					}
-					case 1:
+					else
 					{
-						if (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0)
-						{
-							if (!g_esZombiePlayer[tank].g_bActivated && !bRecharging)
-							{
-								g_esZombiePlayer[tank].g_bActivated = true;
-								g_esZombiePlayer[tank].g_iAmmoCount++;
-
-								vZombie2(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman", g_esZombiePlayer[tank].g_iAmmoCount, g_esZombieCache[tank].g_iHumanAmmo);
-							}
-							else if (g_esZombiePlayer[tank].g_bActivated)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman3");
-							}
-							else if (bRecharging)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman4", (g_esZombiePlayer[tank].g_iCooldown - iTime));
-							}
-						}
-						else
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieAmmo");
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieAmmo");
 					}
 				}
 			}
@@ -695,12 +718,9 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1)
 	{
-		if (button & MT_MAIN_KEY)
+		if ((button & MT_MAIN_KEY) && g_esZombieCache[tank].g_iHumanMode == 1 && g_esZombiePlayer[tank].g_bActivated && (g_esZombiePlayer[tank].g_iCooldown == -1 || g_esZombiePlayer[tank].g_iCooldown < GetTime()))
 		{
-			if (g_esZombieCache[tank].g_iHumanMode == 1 && g_esZombiePlayer[tank].g_bActivated && (g_esZombiePlayer[tank].g_iCooldown == -1 || g_esZombiePlayer[tank].g_iCooldown < GetTime()))
-			{
-				vZombieReset2(tank);
-			}
+			vZombieReset2(tank);
 		}
 	}
 }
@@ -756,8 +776,9 @@ void vZombieReset2(int tank)
 {
 	g_esZombiePlayer[tank].g_bActivated = false;
 
-	int iTime = GetTime();
-	g_esZombiePlayer[tank].g_iCooldown = (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esZombieCache[tank].g_iHumanCooldown) : -1;
+	int iTime = GetTime(), iPos = g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esZombieCache[tank].g_iZombieCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1 && g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? g_esZombieCache[tank].g_iHumanCooldown : iCooldown;
+	g_esZombiePlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
@@ -778,30 +799,10 @@ void vSpawnUncommon(int tank, const char[] model)
 		GetClientAbsOrigin(tank, flOrigin);
 		GetClientEyeAngles(tank, flAngles);
 
-		float flTempOrigin[3], flMin[3], flMax[3];
-		GetEntPropVector(iInfected, Prop_Send, "m_vecMins", flMin);
-		GetEntPropVector(iInfected, Prop_Send, "m_vecMaxs", flMax);
-		for (int iIndex = 0; iIndex < 20; iIndex++)
-		{
-			vCopyVector(flOrigin, flTempOrigin);
-			flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flAngles[1]))));
-			flTempOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
-			flTempOrigin[2] += 5.0;
+		flOrigin[0] += (50.0 * (Cosine(DegToRad(flAngles[1]))));
+		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
+		flOrigin[2] += 5.0;
 
-			if (!bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-			{
-				break;
-			}
-		}
-
-		if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-		{
-			RemoveEntity(iInfected);
-
-			return;
-		}
-
-		vCopyVector(flTempOrigin, flOrigin);
 		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
 	}
 }
@@ -868,6 +869,11 @@ void vSpawnZombie(int tank, bool uncommon)
 
 void vZombie(int tank, int pos = -1)
 {
+	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
 	g_esZombiePlayer[tank].g_bActivated = true;
 
 	vZombie2(tank, pos);
@@ -890,12 +896,12 @@ void vZombie(int tank, int pos = -1)
 
 void vZombie2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esZombieCache[tank].g_flZombieInterval;
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esZombieCache[tank].g_flZombieInterval;
 	DataPack dpZombie;
 	CreateDataTimer(flInterval, tTimerZombie, dpZombie, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpZombie.WriteCell(GetClientUserId(tank));
@@ -905,7 +911,7 @@ void vZombie2(int tank, int pos = -1)
 
 void vZombie3(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -923,7 +929,7 @@ void vZombie3(int tank)
 
 void vZombieAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
+	if ((g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -949,7 +955,7 @@ void vZombieRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esZombieCache[tank].g_iZombieAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
 	{
-		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)) || g_esZombieCache[tank].g_iHumanAbility == 0)))
+		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)) || g_esZombieCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -979,7 +985,7 @@ Action tTimerZombie(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esZombieCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[iTank].g_iTankType) || (g_esZombieCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esZombieAbility[g_esZombiePlayer[iTank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esZombiePlayer[iTank].g_iTankType) || !MT_IsCorePluginEnabled() || !MT_IsCustomTankSupported(iTank) || iType != g_esZombiePlayer[iTank].g_iTankType || g_esZombieCache[iTank].g_iZombieAbility == 0 || !g_esZombiePlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esZombieCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esZombieCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[iTank].g_iTankType) || (g_esZombieCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esZombieAbility[g_esZombiePlayer[iTank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esZombiePlayer[iTank].g_iTankType) || !MT_IsCorePluginEnabled() || !MT_IsCustomTankSupported(iTank) || iType != g_esZombiePlayer[iTank].g_iTankType || g_esZombieCache[iTank].g_iZombieAbility == 0 || !g_esZombiePlayer[iTank].g_bActivated)
 	{
 		g_esZombiePlayer[iTank].g_bActivated = false;
 
@@ -987,7 +993,7 @@ Action tTimerZombie(Handle timer, DataPack pack)
 	}
 
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esZombieCache[iTank].g_iHumanAbility == 1 && g_esZombieCache[iTank].g_iHumanMode == 0 && (iTime + g_esZombieCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esZombiePlayer[iTank].g_iCooldown == -1 || g_esZombiePlayer[iTank].g_iCooldown < iCurrentTime))
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esZombieCache[iTank].g_iHumanAbility == 1 && g_esZombieCache[iTank].g_iHumanMode == 0)) && (iTime + g_esZombieCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esZombiePlayer[iTank].g_iCooldown == -1 || g_esZombiePlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vZombieReset2(iTank);
 

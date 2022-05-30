@@ -63,6 +63,7 @@ enum struct esLagPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flLagChance;
 	float g_flLagRange;
 	float g_flLagRangeChance;
@@ -76,14 +77,18 @@ enum struct esLagPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iLagAbility;
+	int g_iLagCooldown;
 	int g_iLagDuration;
 	int g_iLagEffect;
 	int g_iLagHit;
 	int g_iLagMessage;
 	int g_iLagHitMode;
+	int g_iLagRangeCooldown;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -92,6 +97,7 @@ esLagPlayer g_esLagPlayer[MAXPLAYERS + 1];
 
 enum struct esLagAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flLagChance;
 	float g_flLagRange;
 	float g_flLagRangeChance;
@@ -102,13 +108,16 @@ enum struct esLagAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iLagAbility;
+	int g_iLagCooldown;
 	int g_iLagDuration;
 	int g_iLagEffect;
 	int g_iLagHit;
 	int g_iLagMessage;
 	int g_iLagHitMode;
+	int g_iLagRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -116,6 +125,7 @@ esLagAbility g_esLagAbility[MT_MAXTYPES + 1];
 
 enum struct esLagCache
 {
+	float g_flCloseAreasOnly;
 	float g_flLagChance;
 	float g_flLagRange;
 	float g_flLagRangeChance;
@@ -125,12 +135,15 @@ enum struct esLagCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iLagAbility;
+	int g_iLagCooldown;
 	int g_iLagDuration;
 	int g_iLagEffect;
 	int g_iLagHit;
 	int g_iLagMessage;
 	int g_iLagHitMode;
+	int g_iLagRangeCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -242,6 +255,7 @@ void vLagMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -257,10 +271,11 @@ int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLagCache[param1].g_iLagAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esLagCache[param1].g_iHumanAmmo - g_esLagPlayer[param1].g_iAmmoCount), g_esLagCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esLagCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esLagCache[param1].g_iHumanAbility == 1) ? g_esLagCache[param1].g_iHumanCooldown : g_esLagCache[param1].g_iLagCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LagDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esLagCache[param1].g_iLagDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esLagCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esLagCache[param1].g_iHumanAbility == 1) ? g_esLagCache[param1].g_iHumanRangeCooldown : g_esLagCache[param1].g_iLagRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -290,6 +305,7 @@ int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -410,11 +426,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_LAG_SECTION, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION2, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION3, false) || StrEqual(sSubset[iPos], MT_LAG_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -438,7 +456,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -489,21 +507,25 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esLagAbility[iIndex].g_iAccessFlags = 0;
 				g_esLagAbility[iIndex].g_iImmunityFlags = 0;
+				g_esLagAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esLagAbility[iIndex].g_iComboAbility = 0;
 				g_esLagAbility[iIndex].g_iHumanAbility = 0;
 				g_esLagAbility[iIndex].g_iHumanAmmo = 5;
-				g_esLagAbility[iIndex].g_iHumanCooldown = 30;
+				g_esLagAbility[iIndex].g_iHumanCooldown = 0;
+				g_esLagAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esLagAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esLagAbility[iIndex].g_iRequiresHumans = 1;
 				g_esLagAbility[iIndex].g_iLagAbility = 0;
 				g_esLagAbility[iIndex].g_iLagEffect = 0;
 				g_esLagAbility[iIndex].g_iLagMessage = 0;
 				g_esLagAbility[iIndex].g_flLagChance = 33.3;
+				g_esLagAbility[iIndex].g_iLagCooldown = 0;
 				g_esLagAbility[iIndex].g_iLagDuration = 5;
 				g_esLagAbility[iIndex].g_iLagHit = 0;
 				g_esLagAbility[iIndex].g_iLagHitMode = 0;
 				g_esLagAbility[iIndex].g_flLagRange = 150.0;
 				g_esLagAbility[iIndex].g_flLagRangeChance = 15.0;
+				g_esLagAbility[iIndex].g_iLagRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -514,16 +536,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esLagPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esLagPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esLagPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esLagPlayer[iPlayer].g_iComboAbility = 0;
 					g_esLagPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esLagPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esLagPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esLagPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esLagPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esLagPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esLagPlayer[iPlayer].g_iLagAbility = 0;
 					g_esLagPlayer[iPlayer].g_iLagEffect = 0;
 					g_esLagPlayer[iPlayer].g_iLagMessage = 0;
 					g_esLagPlayer[iPlayer].g_flLagChance = 0.0;
+					g_esLagPlayer[iPlayer].g_iLagCooldown = 0;
 					g_esLagPlayer[iPlayer].g_iLagDuration = 0;
 					g_esLagPlayer[iPlayer].g_iLagHit = 0;
 					g_esLagPlayer[iPlayer].g_iLagHitMode = 0;
@@ -543,42 +568,50 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esLagPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLagPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLagPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLagPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esLagPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLagPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esLagPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLagPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esLagPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLagPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esLagPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esLagPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esLagPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLagPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esLagPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLagPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esLagPlayer[admin].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagPlayer[admin].g_iLagAbility, value, 0, 1);
 		g_esLagPlayer[admin].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagPlayer[admin].g_iLagEffect, value, 0, 7);
 		g_esLagPlayer[admin].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagPlayer[admin].g_iLagMessage, value, 0, 3);
 		g_esLagPlayer[admin].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagPlayer[admin].g_flLagChance, value, 0.0, 100.0);
+		g_esLagPlayer[admin].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagPlayer[admin].g_iLagCooldown, value, 0, 99999);
 		g_esLagPlayer[admin].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagPlayer[admin].g_iLagDuration, value, 1, 99999);
 		g_esLagPlayer[admin].g_iLagHit = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esLagPlayer[admin].g_iLagHit, value, 0, 1);
 		g_esLagPlayer[admin].g_iLagHitMode = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esLagPlayer[admin].g_iLagHitMode, value, 0, 2);
 		g_esLagPlayer[admin].g_flLagRange = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esLagPlayer[admin].g_flLagRange, value, 1.0, 99999.0);
 		g_esLagPlayer[admin].g_flLagRangeChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esLagPlayer[admin].g_flLagRangeChance, value, 0.0, 100.0);
+		g_esLagPlayer[admin].g_iLagRangeCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRangeCooldown", "Lag Range Cooldown", "Lag_Range_Cooldown", "rangecooldown", g_esLagPlayer[admin].g_iLagRangeCooldown, value, 0, 99999);
 		g_esLagPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esLagPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esLagAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esLagAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esLagAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esLagAbility[type].g_iComboAbility, value, 0, 1);
 		g_esLagAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esLagAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esLagAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esLagAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esLagAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esLagAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esLagAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esLagAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esLagAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esLagAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esLagAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLagAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esLagAbility[type].g_iLagAbility = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLagAbility[type].g_iLagAbility, value, 0, 1);
 		g_esLagAbility[type].g_iLagEffect = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esLagAbility[type].g_iLagEffect, value, 0, 7);
 		g_esLagAbility[type].g_iLagMessage = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLagAbility[type].g_iLagMessage, value, 0, 3);
 		g_esLagAbility[type].g_flLagChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esLagAbility[type].g_flLagChance, value, 0.0, 100.0);
+		g_esLagAbility[type].g_iLagCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagCooldown", "Lag Cooldown", "Lag_Cooldown", "cooldown", g_esLagAbility[type].g_iLagCooldown, value, 0, 99999);
 		g_esLagAbility[type].g_iLagDuration = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esLagAbility[type].g_iLagDuration, value, 1, 99999);
 		g_esLagAbility[type].g_iLagHit = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esLagAbility[type].g_iLagHit, value, 0, 1);
 		g_esLagAbility[type].g_iLagHitMode = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esLagAbility[type].g_iLagHitMode, value, 0, 2);
 		g_esLagAbility[type].g_flLagRange = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esLagAbility[type].g_flLagRange, value, 1.0, 99999.0);
 		g_esLagAbility[type].g_flLagRangeChance = flGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esLagAbility[type].g_flLagRangeChance, value, 0.0, 100.0);
+		g_esLagAbility[type].g_iLagRangeCooldown = iGetKeyValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "LagRangeCooldown", "Lag Range Cooldown", "Lag_Range_Cooldown", "rangecooldown", g_esLagAbility[type].g_iLagRangeCooldown, value, 0, 99999);
 		g_esLagAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esLagAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTION, MT_LAG_SECTION2, MT_LAG_SECTION3, MT_LAG_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -591,19 +624,23 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esLagCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flCloseAreasOnly, g_esLagAbility[type].g_flCloseAreasOnly);
+	g_esLagCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iComboAbility, g_esLagAbility[type].g_iComboAbility);
 	g_esLagCache[tank].g_flLagChance = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flLagChance, g_esLagAbility[type].g_flLagChance);
 	g_esLagCache[tank].g_flLagRange = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flLagRange, g_esLagAbility[type].g_flLagRange);
 	g_esLagCache[tank].g_flLagRangeChance = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flLagRangeChance, g_esLagAbility[type].g_flLagRangeChance);
-	g_esLagCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iComboAbility, g_esLagAbility[type].g_iComboAbility);
 	g_esLagCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iHumanAbility, g_esLagAbility[type].g_iHumanAbility);
 	g_esLagCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iHumanAmmo, g_esLagAbility[type].g_iHumanAmmo);
 	g_esLagCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iHumanCooldown, g_esLagAbility[type].g_iHumanCooldown);
+	g_esLagCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iHumanRangeCooldown, g_esLagAbility[type].g_iHumanRangeCooldown);
 	g_esLagCache[tank].g_iLagAbility = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagAbility, g_esLagAbility[type].g_iLagAbility);
+	g_esLagCache[tank].g_iLagCooldown = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagCooldown, g_esLagAbility[type].g_iLagCooldown);
 	g_esLagCache[tank].g_iLagDuration = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagDuration, g_esLagAbility[type].g_iLagDuration);
 	g_esLagCache[tank].g_iLagEffect = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagEffect, g_esLagAbility[type].g_iLagEffect);
 	g_esLagCache[tank].g_iLagHit = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagHit, g_esLagAbility[type].g_iLagHit);
 	g_esLagCache[tank].g_iLagMessage = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagMessage, g_esLagAbility[type].g_iLagMessage);
 	g_esLagCache[tank].g_iLagHitMode = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagHitMode, g_esLagAbility[type].g_iLagHitMode);
+	g_esLagCache[tank].g_iLagRangeCooldown = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iLagRangeCooldown, g_esLagAbility[type].g_iLagRangeCooldown);
 	g_esLagCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flOpenAreasOnly, g_esLagAbility[type].g_flOpenAreasOnly);
 	g_esLagCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_iRequiresHumans, g_esLagAbility[type].g_iRequiresHumans);
 	g_esLagPlayer[tank].g_iTankType = apply ? type : 0;
@@ -695,22 +732,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLagCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esLagCache[tank].g_iLagAbility == 1 && g_esLagCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esLagCache[tank].g_iLagAbility == 1 && g_esLagCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vLagAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman3", (g_esLagPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esLagPlayer[tank].g_iRangeCooldown == -1 || g_esLagPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vLagAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman3", (g_esLagPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -730,15 +764,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveLag(tank);
 }
 
-void vLagCopyStats2(int oldTank, int newTank)
-{
-	g_esLagPlayer[newTank].g_iAmmoCount = g_esLagPlayer[oldTank].g_iAmmoCount;
-	g_esLagPlayer[newTank].g_iCooldown = g_esLagPlayer[oldTank].g_iCooldown;
-}
-
 void vLagAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLagCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -750,8 +778,8 @@ void vLagAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esLagCache[tank].g_flLagRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLagCache[tank].g_flLagRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esLagCache[tank].g_flLagRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esLagCache[tank].g_flLagRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -783,28 +811,49 @@ void vLagAbility(int tank, float random, int pos = -1)
 
 void vLagHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esLagPlayer[tank].g_iTankType, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esLagCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esLagCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[tank].g_iTankType) || (g_esLagCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esLagPlayer[tank].g_iTankType, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[survivor].g_iImmunityFlags))
+	{
+		return;
+	}
+
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esLagPlayer[tank].g_iRangeCooldown != -1 && g_esLagPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esLagPlayer[tank].g_iCooldown != -1 && g_esLagPlayer[tank].g_iCooldown > iTime))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esLagPlayer[survivor].g_bAffected)
 			{
 				g_esLagPlayer[survivor].g_bAffected = true;
 				g_esLagPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esLagPlayer[tank].g_iRangeCooldown == -1 || g_esLagPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esLagPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility == 1)
+					{
+						g_esLagPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman", g_esLagPlayer[tank].g_iAmmoCount, g_esLagCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman", g_esLagPlayer[tank].g_iAmmoCount, g_esLagCache[tank].g_iHumanAmmo);
+					}
 
-					g_esLagPlayer[tank].g_iCooldown = (g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esLagCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esLagCache[tank].g_iLagRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility == 1 && g_esLagPlayer[tank].g_iAmmoCount < g_esLagCache[tank].g_iHumanAmmo && g_esLagCache[tank].g_iHumanAmmo > 0) ? g_esLagCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esLagPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esLagPlayer[tank].g_iRangeCooldown != -1 && g_esLagPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman5", (g_esLagPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esLagCache[tank].g_iLagCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility == 1) ? g_esLagCache[tank].g_iHumanCooldown : iCooldown;
+					g_esLagPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esLagPlayer[tank].g_iCooldown != -1 && g_esLagPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman5", (g_esLagPlayer[tank].g_iCooldown - iTime));
@@ -843,7 +892,7 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Lag", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esLagPlayer[tank].g_iCooldown == -1 || g_esLagPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esLagPlayer[tank].g_iRangeCooldown == -1 || g_esLagPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility == 1 && !g_esLagPlayer[tank].g_bFailed)
 				{
@@ -860,6 +909,13 @@ void vLagHit(int survivor, int tank, float random, float chance, int enabled, in
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagAmmo");
 		}
 	}
+}
+
+void vLagCopyStats2(int oldTank, int newTank)
+{
+	g_esLagPlayer[newTank].g_iAmmoCount = g_esLagPlayer[oldTank].g_iAmmoCount;
+	g_esLagPlayer[newTank].g_iCooldown = g_esLagPlayer[oldTank].g_iCooldown;
+	g_esLagPlayer[newTank].g_iRangeCooldown = g_esLagPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveLag(int tank)
@@ -908,6 +964,7 @@ void vLagReset3(int tank)
 	g_esLagPlayer[tank].g_bNoAmmo = false;
 	g_esLagPlayer[tank].g_iAmmoCount = 0;
 	g_esLagPlayer[tank].g_iCooldown = -1;
+	g_esLagPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerLagCombo(Handle timer, DataPack pack)
@@ -973,7 +1030,7 @@ Action tTimerLagTeleport(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags) || !g_esLagPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLagCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags) || !g_esLagPlayer[iSurvivor].g_bAffected)
 	{
 		vLagReset2(iSurvivor, iTank, iMessage);
 
@@ -981,7 +1038,7 @@ Action tTimerLagTeleport(Handle timer, DataPack pack)
 	}
 
 	int iLagEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esLagCache[iTank].g_iLagDuration,
 		iTime = pack.ReadCell();
 	if (iLagEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
@@ -1006,13 +1063,13 @@ Action tTimerLagPosition(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esLagCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esLagCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esLagPlayer[iTank].g_iTankType) || (g_esLagCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esLagCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLagPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLagPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esLagPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esLagPlayer[iTank].g_iTankType, g_esLagAbility[g_esLagPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLagPlayer[iSurvivor].g_iImmunityFlags))
 	{
 		return Plugin_Stop;
 	}
 
 	int iLagEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esLagCache[iTank].g_iLagDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esLagCache[iTank].g_iLagDuration,
 		iTime = pack.ReadCell();
 	if (iLagEnabled == 0 || (iTime + iDuration) < GetTime())
 	{

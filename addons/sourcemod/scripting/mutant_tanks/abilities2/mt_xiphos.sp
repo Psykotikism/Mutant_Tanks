@@ -62,6 +62,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esXiphosPlayer
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flXiphosChance;
 
@@ -80,6 +81,7 @@ esXiphosPlayer g_esXiphosPlayer[MAXPLAYERS + 1];
 
 enum struct esXiphosAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flXiphosChance;
 
@@ -97,6 +99,7 @@ esXiphosAbility g_esXiphosAbility[MT_MAXTYPES + 1];
 
 enum struct esXiphosCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flXiphosChance;
 
@@ -273,7 +276,7 @@ Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 	{
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esXiphosCache[attacker].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim))
 		{
-			if (bIsAreaNarrow(attacker, g_esXiphosCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[attacker].g_iTankType) || (g_esXiphosCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esXiphosPlayer[attacker].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[victim].g_iImmunityFlags))
+			if (bIsAreaNarrow(attacker, g_esXiphosCache[attacker].g_flOpenAreasOnly) || bIsAreaWide(attacker, g_esXiphosCache[attacker].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[attacker].g_iTankType) || (g_esXiphosCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esXiphosPlayer[attacker].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -288,7 +291,7 @@ Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esXiphosCache[victim].g_iXiphosAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esXiphosCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsSurvivorDisabled(attacker))
 		{
-			if (bIsAreaNarrow(victim, g_esXiphosCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[victim].g_iTankType) || (g_esXiphosCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esXiphosPlayer[victim].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[attacker].g_iImmunityFlags))
+			if (bIsAreaNarrow(victim, g_esXiphosCache[victim].g_flOpenAreasOnly) || bIsAreaWide(victim, g_esXiphosCache[victim].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esXiphosPlayer[victim].g_iTankType) || (g_esXiphosCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esXiphosCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iAccessFlags, g_esXiphosPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esXiphosPlayer[victim].g_iTankType, g_esXiphosAbility[g_esXiphosPlayer[victim].g_iTankType].g_iImmunityFlags, g_esXiphosPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -360,6 +363,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esXiphosAbility[iIndex].g_iAccessFlags = 0;
 				g_esXiphosAbility[iIndex].g_iImmunityFlags = 0;
+				g_esXiphosAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esXiphosAbility[iIndex].g_iHumanAbility = 0;
 				g_esXiphosAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esXiphosAbility[iIndex].g_iRequiresHumans = 0;
@@ -378,6 +382,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esXiphosPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esXiphosPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esXiphosPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esXiphosPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esXiphosPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esXiphosPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -400,6 +405,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esXiphosPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esXiphosPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosPlayer[admin].g_iHumanAbility, value, 0, 1);
 		g_esXiphosPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esXiphosPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -414,6 +420,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esXiphosAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esXiphosAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esXiphosAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esXiphosAbility[type].g_iHumanAbility, value, 0, 1);
 		g_esXiphosAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esXiphosAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esXiphosAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_XIPHOS_SECTION, MT_XIPHOS_SECTION2, MT_XIPHOS_SECTION3, MT_XIPHOS_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esXiphosAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -434,6 +441,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esXiphosCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flCloseAreasOnly, g_esXiphosAbility[type].g_flCloseAreasOnly);
 	g_esXiphosCache[tank].g_flXiphosChance = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance);
 	g_esXiphosCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_iHumanAbility, g_esXiphosAbility[type].g_iHumanAbility);
 	g_esXiphosCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flOpenAreasOnly, g_esXiphosAbility[type].g_flOpenAreasOnly);

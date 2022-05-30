@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.91"
+#define MT_VERSION "8.92"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -482,8 +482,8 @@ native void MT_DetonateTankRock(int rock);
  * Returns if a certain survivor has a reward type active.
  *
  * @param survivor		Client index of the survivor.
- * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- * 					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill,
+ * 					128 = Respawn, 255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  *
  * @return			True if the survivor has the reward type active, false otherwise.
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
@@ -516,8 +516,8 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * Returns the value of a combination setting based on a position.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius, 8 = Range,
- * 					9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed, 14 = Cooldown
+ * @param type			1 = Chance, 2 = Cooldown, 3 = Damage, 4 = Delay, 5 = Duration, 6 = Interval, 7 = Min radius, 8 = Max radius, 9 = Range, 10 = Range chance,
+ * 					11 = Range cooldown, 12 = Death range, 13 = Death range chance, 14 = Rock chance, 15 = Rock cooldown, 16 = Speed
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
  *
  * @return			The value stored in the setting.
@@ -1337,50 +1337,6 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angles[3], float pause, float duration, const char[] attachment = "")
-{
-	int iEffect = CreateEntityByName("info_particle_system");
-	if (bIsValidEntity(iEffect))
-	{
-		DispatchKeyValue(iEffect, "effect_name", particlename);
-		vSetEntityParent(iEffect, player);
-		TeleportEntity(iEffect, pos, angles, NULL_VECTOR);
-		DispatchSpawn(iEffect);
-		ActivateEntity(iEffect);
-		AcceptEntityInput(iEffect, "Start");
-
-		if (attachment[0] != '\0')
-		{
-			SetVariantString(attachment);
-			AcceptEntityInput(iEffect, "SetParentAttachment");
-		}
-
-		char sVariant[64];
-		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Stop::%f:-1", pause);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
-
-		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
-		AcceptEntityInput(iEffect, "FireUser1");
-
-		SetVariantString("OnUser2 !self:Start::0:-1");
-		AcceptEntityInput(iEffect, "AddOutput");
-		SetVariantString("OnUser2 !self:FireUser1::0:-1");
-		AcceptEntityInput(iEffect, "AddOutput");
-
-		FormatEx(sVariant, sizeof sVariant, "OnUser3 !self:Kill::%f:-1", duration);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
-		AcceptEntityInput(iEffect, "FireUser3");
-
-		return iEffect;
-	}
-
-	return -1;
-}
-
 stock void vDamagePlayer(int victim, int attacker, float damage, const char[] damagetype = "0")
 {
 	int iPointHurt = CreateEntityByName("point_hurt");
@@ -1421,35 +1377,6 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 	}
 }
 
-stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1, int type1 = MT_FADE_IN, int type2 = MT_FADE_PURGE)
-{
-	if (mode & flags)
-	{
-		int iColor[4];
-		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
-		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
-		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
-		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
-
-		Handle hFadeTarget = StartMessageOne("Fade", survivor);
-		if (hFadeTarget != null)
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-			bfWrite.WriteShort(800);
-			bfWrite.WriteShort(300);
-			bfWrite.WriteShort(type1|type2);
-
-			for (int iPos = 0; iPos < (sizeof iColor); iPos++)
-			{
-				bfWrite.WriteByte(iColor[iPos]);
-			}
-
-			EndMessage();
-		}
-	}
-}
-
 stock void vExternalView(int player, float time)
 {
 	if (bIsSecondGame() && bIsValidClient(player, MT_CHECK_FAKECLIENT) && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
@@ -1458,102 +1385,38 @@ stock void vExternalView(int player, float time)
 	}
 }
 
-stock void vGetDayName(int day, char[] buffer, int size)
+stock void vFixPlayerPosition(int client)
 {
-	switch (day)
+	if (bIsPlayerStuck(client))
 	{
-		case 0: strcopy(buffer, size, "sunday");
-		case 1: strcopy(buffer, size, "monday");
-		case 2: strcopy(buffer, size, "tuesday");
-		case 3: strcopy(buffer, size, "wednesday");
-		case 4: strcopy(buffer, size, "thursday");
-		case 5: strcopy(buffer, size, "friday");
-		case 6: strcopy(buffer, size, "saturday");
-	}
-}
-
-stock void vGetDoubleFromFloat(float value, int save[2])
-{
-	int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
-		iExponent = (((iValue & 0x7F800000) >> 23) - 127) + 1023,
-		iMantissa = (iValue & 0x7FFFFF) << 1;
-
-	save[0] = iSign << 31;
-	save[0] |= iExponent << 20;
-	save[0] |= (iMantissa >> 4) & 0xFFFFF;
-	save[1] = iMantissa << 28;
-}
-
-stock void vGetEntityMidOrigin(int entity, float origin[3])
-{
-	float flMins[3], flMaxes[3];
-	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
-	GetEntPropVector(entity, Prop_Send, "m_vecMins", flMins);
-	GetEntPropVector(entity, Prop_Send, "m_vecMaxs", flMaxes);
-
-	origin[0] += (flMins[0] + flMaxes[0]) * 0.5;
-	origin[1] += (flMins[1] + flMaxes[1]) * 0.5;
-	origin[2] += (flMins[2] + flMaxes[2]) * 0.5;
-}
-
-stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
-{
-	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
-	{
-		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		float flPosZ = 0.1;
+		while (flPosZ <= 200.0 && !bIsPlayerPositionFixed(client, 10.0, flPosZ))
 		{
-			strcopy(buffer, size, value);
-		}
-	}
-}
+			flPosZ = -flPosZ;
 
-stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
-{
-	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
-	{
-		strcopy(buffer, size, value);
-	}
-}
-
-stock void vGetMatchingFilename(const char[] directory, const char[] filename, char[] buffer, int size)
-{
-	DirectoryListing dlList = OpenDirectory(directory);
-	if (dlList != null)
-	{
-		char sFilename[PLATFORM_MAX_PATH];
-		while (dlList.GetNext(sFilename, sizeof sFilename))
-		{
-			if (StrEqual(sFilename, filename, false))
+			if (flPosZ > 0.0)
 			{
-				strcopy(buffer, size, sFilename);
-
-				break;
+				flPosZ += 20.0;
 			}
 		}
-
-		delete dlList;
 	}
-}
-
-stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] playerVal = "", const char[] typeVal = "")
-{
-	switch (apply)
+	else
 	{
-		case true: FormatEx(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
-		case false: buffer[0] = '\0';
-	}
-}
+		float flOrigin[3], flAngles[3];
+		GetClientAbsOrigin(client, flOrigin);
+		flAngles[0] = 90.0;
 
-stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value)
-{
-	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
-	{
-		switch (pos)
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSolid);		
+		if (hTrace != null)
 		{
-			case 0: strcopy(buffer1, size1, value);
-			case 1: strcopy(buffer2, size2, value);
-			case 2: strcopy(buffer3, size3, value);
-			case 3: strcopy(buffer4, size4, value);
+			if (TR_DidHit(hTrace))
+			{
+				TR_GetEndPosition(flOrigin, hTrace);
+				flOrigin[2] += 10.0;
+				TeleportEntity(client, flOrigin, NULL_VECTOR, {0.0, 0.0, -300.0});
+
+				delete hTrace;
+			}
 		}
 	}
 }
@@ -1624,6 +1487,35 @@ stock void vRemoveWeapons(int survivor)
 		{
 			RemovePlayerItem(survivor, iWeapon);
 			RemoveEntity(iWeapon);
+		}
+	}
+}
+
+stock void vScreenEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1, int type1 = MT_FADE_IN, int type2 = MT_FADE_PURGE)
+{
+	if (mode & flags)
+	{
+		int iColor[4];
+		MT_GetTankColors(tank, MT_GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
+		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
+		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
+		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
+
+		Handle hFadeTarget = StartMessageOne("Fade", survivor);
+		if (hFadeTarget != null)
+		{
+			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+			bfWrite.WriteShort(800);
+			bfWrite.WriteShort(300);
+			bfWrite.WriteShort(type1|type2);
+
+			for (int iPos = 0; iPos < (sizeof iColor); iPos++)
+			{
+				bfWrite.WriteByte(iColor[iPos]);
+			}
+
+			EndMessage();
 		}
 	}
 }
@@ -1867,12 +1759,12 @@ stock void MT_UnloadPlugin(Handle plugin = null)
 
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return (GetURandomFloat() * (max - min + 1)) + min;
+	return ((GetURandomFloat() * (max - min + 1)) + min);
 }
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
+	return (RoundToFloor(GetURandomFloat() * (max - min + 1)) + min);
 }
 
 // Checks
@@ -1953,6 +1845,42 @@ stock bool bIsAreaNarrow(int tank = 0, float range = 150.0, float pos[3] = {0.0,
 				TR_GetEndPosition(flPos, hTrace);
 
 				if (GetVectorDistance(flPos, flOrigin) <= range)
+				{
+					delete hTrace;
+
+					return true;
+				}
+			}
+
+			delete hTrace;
+		}
+	}
+
+	return false;
+}
+
+stock bool bIsAreaWide(int tank = 0, float range = 500.0, float pos[3] = {0.0, 0.0, 0.0})
+{
+	if (range > 0.0)
+	{
+		float flOrigin[3], flAngles[3];
+		flAngles[0] = -89.0;
+
+		switch (tank > 0)
+		{
+			case true: GetClientEyePosition(tank, flOrigin);
+			case false: vCopyVector(pos, flOrigin);
+		}
+
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		if (hTrace != null)
+		{
+			if (TR_DidHit(hTrace))
+			{
+				float flPos[3];
+				TR_GetEndPosition(flPos, hTrace);
+
+				if (GetVectorDistance(flPos, flOrigin) >= range)
 				{
 					delete hTrace;
 
@@ -2184,6 +2112,38 @@ stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHEC
 	return bIsPlayerIncapacitated(player) || (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0;
 }
 
+stock bool bIsPlayerPositionFixed(int client, float radius, float z)
+{
+	float flDegreeAngle, flPos[3], flOrigin[3], flAngles[3];
+	GetClientAbsOrigin(client, flOrigin);
+	GetClientEyeAngles(client, flAngles);
+	flPos[2] = flOrigin[2] + z;
+
+	flDegreeAngle = -180.0;
+	while (flDegreeAngle < 180.0)
+	{
+		flPos[0] = (flOrigin[0] + (radius * Cosine(flDegreeAngle * (FLOAT_PI / 180))));
+		flPos[1] = (flOrigin[1] + (radius * Sine(flDegreeAngle * (FLOAT_PI / 180))));
+		TeleportEntity(client, flPos, flAngles, {0.0, 0.0, -300.0});
+
+		if (!bIsPlayerStuck(client))
+		{
+			return true;
+		}
+
+		flDegreeAngle += 10.0;
+	}
+
+	TeleportEntity(client, flOrigin, flAngles, {0.0, 0.0, -300.0});
+
+	if (radius <= 200.0)
+	{
+		return bIsPlayerPositionFixed(client, (radius + 20.0), z);
+	}
+
+	return false;
+}
+
 stock bool bIsPlayerStuck(int client = 0, float min[3] = {0.0, 0.0, 0.0}, float max[3] = {0.0, 0.0, 0.0}, float pos[3] = {0.0, 0.0, 0.0})
 {
 	float flMin[3], flMax[3], flOrigin[3];
@@ -2200,9 +2160,9 @@ stock bool bIsPlayerStuck(int client = 0, float min[3] = {0.0, 0.0, 0.0}, float 
 		vCopyVector(pos, flOrigin);
 	}
 
-	TR_TraceHullFilter(flOrigin, flOrigin, flMin, flMax, MASK_PLAYERSOLID, bTraceRayDontHitSelfAndWorld);
+	TR_TraceHullFilter(flOrigin, flOrigin, flMin, flMax, MASK_PLAYERSOLID, bTraceRayDontHitSelfAndSolid);
 
-	return (TR_GetEntityIndex() == -1);
+	return TR_DidHit();
 }
 
 stock bool bIsSecondGame()
@@ -2488,12 +2448,112 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 	return entity != data && !bIsSurvivor(entity);
 }
 
-public bool bTraceRayDontHitSelfAndWorld(int entity, int mask)
+public bool bTraceRayDontHitSelfAndSolid(int entity, int mask)
 {
-	return entity < 1 || entity > MaxClients;
+	return entity > MaxClients;
 }
 
 // Getters
+stock void vGetDayName(int day, char[] buffer, int size)
+{
+	switch (day)
+	{
+		case 0: strcopy(buffer, size, "sunday");
+		case 1: strcopy(buffer, size, "monday");
+		case 2: strcopy(buffer, size, "tuesday");
+		case 3: strcopy(buffer, size, "wednesday");
+		case 4: strcopy(buffer, size, "thursday");
+		case 5: strcopy(buffer, size, "friday");
+		case 6: strcopy(buffer, size, "saturday");
+	}
+}
+
+stock void vGetDoubleFromFloat(float value, int save[2])
+{
+	int iValue = view_as<int>(value), iSign = (iValue & 0x80000000) ? 1 : 0,
+		iExponent = (((iValue & 0x7F800000) >> 23) - 127) + 1023,
+		iMantissa = (iValue & 0x7FFFFF) << 1;
+
+	save[0] = iSign << 31;
+	save[0] |= iExponent << 20;
+	save[0] |= (iMantissa >> 4) & 0xFFFFF;
+	save[1] = iMantissa << 28;
+}
+
+stock void vGetEntityMidOrigin(int entity, float origin[3])
+{
+	float flMins[3], flMaxes[3];
+	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
+	GetEntPropVector(entity, Prop_Send, "m_vecMins", flMins);
+	GetEntPropVector(entity, Prop_Send, "m_vecMaxs", flMaxes);
+
+	origin[0] += (flMins[0] + flMaxes[0]) * 0.5;
+	origin[1] += (flMins[1] + flMaxes[1]) * 0.5;
+	origin[2] += (flMins[2] + flMaxes[2]) * 0.5;
+}
+
+stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (value[0] != '\0' && (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)))
+	{
+		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		{
+			strcopy(buffer, size, value);
+		}
+	}
+}
+
+stock void vGetKeyValueEx(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (value[0] != '\0' && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		strcopy(buffer, size, value);
+	}
+}
+
+stock void vGetMatchingFilename(const char[] directory, const char[] filename, char[] buffer, int size)
+{
+	DirectoryListing dlList = OpenDirectory(directory);
+	if (dlList != null)
+	{
+		char sFilename[PLATFORM_MAX_PATH];
+		while (dlList.GetNext(sFilename, sizeof sFilename))
+		{
+			if (StrEqual(sFilename, filename, false))
+			{
+				strcopy(buffer, size, sFilename);
+
+				break;
+			}
+		}
+
+		delete dlList;
+	}
+}
+
+stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] playerVal = "", const char[] typeVal = "")
+{
+	switch (apply)
+	{
+		case true: FormatEx(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
+		case false: buffer[0] = '\0';
+	}
+}
+
+stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, char[] buffer4, int size4, const char[] value)
+{
+	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	{
+		switch (pos)
+		{
+			case 0: strcopy(buffer1, size1, value);
+			case 1: strcopy(buffer2, size2, value);
+			case 2: strcopy(buffer3, size3, value);
+			case 3: strcopy(buffer4, size4, value);
+		}
+	}
+}
+
 stock float flGetAdrenalineTime(int survivor)
 {
 	if (!bIsSecondGame())
@@ -2513,7 +2573,7 @@ stock float flGetAdrenalineTime(int survivor)
 		return -1.0;
 	}
 
-	return flDuration - flTime;
+	return (flDuration - flTime);
 }
 
 stock float flGetAngle(float angles1[3], float angles2[3])
@@ -2661,7 +2721,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (!strncmp(key, "open", 4, false) && min == 0.0 && max == 99999.0)
+	else if ((!strncmp(key, "open", 4, false) || !strncmp(key, "close", 5, false)) && min == 0.0 && max == 99999.0)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
@@ -3314,7 +3374,51 @@ stock int iClamp(int value, int min, int max)
 	return value;
 }
 
-// Precachers
+// Particle functions
+stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angles[3], float pause, float duration, const char[] attachment = "")
+{
+	int iEffect = CreateEntityByName("info_particle_system");
+	if (bIsValidEntity(iEffect))
+	{
+		DispatchKeyValue(iEffect, "effect_name", particlename);
+		vSetEntityParent(iEffect, player);
+		TeleportEntity(iEffect, pos, angles, NULL_VECTOR);
+		DispatchSpawn(iEffect);
+		ActivateEntity(iEffect);
+		AcceptEntityInput(iEffect, "Start");
+
+		if (attachment[0] != '\0')
+		{
+			SetVariantString(attachment);
+			AcceptEntityInput(iEffect, "SetParentAttachment");
+		}
+
+		char sVariant[64];
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:Stop::%f:-1", pause);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof sVariant, "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+		AcceptEntityInput(iEffect, "FireUser1");
+
+		SetVariantString("OnUser2 !self:Start::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+		SetVariantString("OnUser2 !self:FireUser1::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof sVariant, "OnUser3 !self:Kill::%f:-1", duration);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+		AcceptEntityInput(iEffect, "FireUser3");
+
+		return iEffect;
+	}
+
+	return -1;
+}
+
 stock int iPrecacheParticle(const char[] particlename)
 {
 	static int iTable = INVALID_STRING_TABLE;

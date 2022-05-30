@@ -16,10 +16,6 @@
 #include <sourcemod>
 #include <mutant_tanks>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <updater>
-#define REQUIRE_PLUGIN
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -31,6 +27,9 @@ public Plugin myinfo =
 	version = MT_VERSION,
 	url = MT_URL
 };
+
+#define MT_GAMEDATA "mutant_tanks"
+#define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
 bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
@@ -330,6 +329,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+#if defined MT_MENU_RESTART
+	vRestartAllPluginsLoaded();
+#endif
+#if defined MT_MENU_SHOVE
+	vShoveAllPluginsLoaded();
+#endif
+#if defined MT_MENU_WARP
+	vWarpAllPluginsLoaded();
+#endif
+#if defined MT_MENU_YELL
+	vYellAllPluginsLoaded();
+#endif
 }
 
 public void OnPluginStart()
@@ -2220,6 +2235,9 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_UNDEAD
 	vUndeadMenu(client, name, 0);
 #endif
+#if defined MT_MENU_VAMPIRE
+	vVampireMenu(client, name, 0);
+#endif
 #if defined MT_MENU_VISION
 	vVisionMenu(client, name, 0);
 #endif
@@ -2232,13 +2250,20 @@ void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_WITCH
 	vWitchMenu(client, name, 0);
 #endif
+#if defined MT_MENU_XIPHOS
+	vXiphosMenu(client, name, 0);
+#endif
 #if defined MT_MENU_YELL
 	vYellMenu(client, name, 0);
 #endif
 #if defined MT_MENU_ZOMBIE
 	vZombieMenu(client, name, 0);
 #endif
-	MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
+	}
 }
 
 void vAbilityPlayer(int type, int client)
@@ -2550,7 +2575,11 @@ void vAbilityPlayer(int type, int client)
 		case 4: vZombiePostTankSpawn(client);
 	}
 #endif
-	MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
+	}
 }
 
 void vAbilitySetup(int type)
@@ -2822,5 +2851,9 @@ void vAbilitySetup(int type)
 		case 2: vZombieMapEnd();
 	}
 #endif
-	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+	bool bLog = false;
+	if (bLog)
+	{
+		MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
+	}
 }

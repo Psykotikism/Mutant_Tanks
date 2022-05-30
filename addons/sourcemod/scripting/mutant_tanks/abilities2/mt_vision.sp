@@ -63,6 +63,7 @@ enum struct esVisionPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVisionChance;
 	float g_flVisionRange;
@@ -75,23 +76,28 @@ enum struct esVisionPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
+	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iVisionAbility;
+	int g_iVisionCooldown;
 	int g_iVisionDuration;
 	int g_iVisionEffect;
 	int g_iVisionFOV;
 	int g_iVisionHit;
 	int g_iVisionHitMode;
 	int g_iVisionMessage;
+	int g_iVisionRangeCooldown;
 }
 
 esVisionPlayer g_esVisionPlayer[MAXPLAYERS + 1];
 
 enum struct esVisionAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVisionChance;
 	float g_flVisionRange;
@@ -102,21 +108,25 @@ enum struct esVisionAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 	int g_iVisionAbility;
+	int g_iVisionCooldown;
 	int g_iVisionDuration;
 	int g_iVisionEffect;
 	int g_iVisionFOV;
 	int g_iVisionHit;
 	int g_iVisionHitMode;
 	int g_iVisionMessage;
+	int g_iVisionRangeCooldown;
 }
 
 esVisionAbility g_esVisionAbility[MT_MAXTYPES + 1];
 
 enum struct esVisionCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flVisionChance;
 	float g_flVisionRange;
@@ -126,14 +136,17 @@ enum struct esVisionCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iVisionAbility;
+	int g_iVisionCooldown;
 	int g_iVisionDuration;
 	int g_iVisionEffect;
 	int g_iVisionFOV;
 	int g_iVisionHit;
 	int g_iVisionHitMode;
 	int g_iVisionMessage;
+	int g_iVisionRangeCooldown;
 }
 
 esVisionCache g_esVisionCache[MAXPLAYERS + 1];
@@ -244,6 +257,7 @@ void vVisionMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -259,10 +273,11 @@ int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVisionCache[param1].g_iVisionAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esVisionCache[param1].g_iHumanAmmo - g_esVisionPlayer[param1].g_iAmmoCount), g_esVisionCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esVisionCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esVisionCache[param1].g_iHumanAbility == 1) ? g_esVisionCache[param1].g_iHumanCooldown : g_esVisionCache[param1].g_iVisionCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "VisionDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esVisionCache[param1].g_iVisionDuration);
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esVisionCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esVisionCache[param1].g_iHumanAbility == 1) ? g_esVisionCache[param1].g_iHumanRangeCooldown : g_esVisionCache[param1].g_iVisionRangeCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -292,6 +307,7 @@ int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 4: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Details", param1);
 					case 5: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
+					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -412,11 +428,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
 		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+		float flChance = 0.0, flDelay = 0.0;
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_VISION_SECTION, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION2, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION3, false) || StrEqual(sSubset[iPos], MT_VISION_SECTION4, false))
 			{
-				float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+				flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 				switch (type)
 				{
@@ -440,7 +458,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 					}
 					case MT_COMBO_MELEEHIT:
 					{
-						float flChance = MT_GetCombinationSetting(tank, 1, iPos);
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
 
 						switch (flDelay)
 						{
@@ -491,22 +509,26 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esVisionAbility[iIndex].g_iAccessFlags = 0;
 				g_esVisionAbility[iIndex].g_iImmunityFlags = 0;
+				g_esVisionAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esVisionAbility[iIndex].g_iComboAbility = 0;
 				g_esVisionAbility[iIndex].g_iHumanAbility = 0;
 				g_esVisionAbility[iIndex].g_iHumanAmmo = 5;
-				g_esVisionAbility[iIndex].g_iHumanCooldown = 30;
+				g_esVisionAbility[iIndex].g_iHumanCooldown = 0;
+				g_esVisionAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esVisionAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esVisionAbility[iIndex].g_iRequiresHumans = 1;
 				g_esVisionAbility[iIndex].g_iVisionAbility = 0;
 				g_esVisionAbility[iIndex].g_iVisionEffect = 0;
 				g_esVisionAbility[iIndex].g_iVisionMessage = 0;
 				g_esVisionAbility[iIndex].g_flVisionChance = 33.3;
+				g_esVisionAbility[iIndex].g_iVisionCooldown = 0;
 				g_esVisionAbility[iIndex].g_iVisionDuration = 5;
 				g_esVisionAbility[iIndex].g_iVisionFOV = 160;
 				g_esVisionAbility[iIndex].g_iVisionHit = 0;
 				g_esVisionAbility[iIndex].g_iVisionHitMode = 0;
 				g_esVisionAbility[iIndex].g_flVisionRange = 150.0;
 				g_esVisionAbility[iIndex].g_flVisionRangeChance = 15.0;
+				g_esVisionAbility[iIndex].g_iVisionRangeCooldown = 0;
 			}
 		}
 		case 3:
@@ -517,16 +539,19 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esVisionPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esVisionPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esVisionPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esVisionPlayer[iPlayer].g_iComboAbility = 0;
 					g_esVisionPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esVisionPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esVisionPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esVisionPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esVisionPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esVisionPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionAbility = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionEffect = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionMessage = 0;
 					g_esVisionPlayer[iPlayer].g_flVisionChance = 0.0;
+					g_esVisionPlayer[iPlayer].g_iVisionCooldown = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionDuration = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionFOV = 0;
 					g_esVisionPlayer[iPlayer].g_iVisionHit = 0;
@@ -547,44 +572,52 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esVisionPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esVisionPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esVisionPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esVisionPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esVisionPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esVisionPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esVisionPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esVisionPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esVisionPlayer[admin].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionPlayer[admin].g_iVisionAbility, value, 0, 1);
 		g_esVisionPlayer[admin].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionPlayer[admin].g_iVisionEffect, value, 0, 7);
 		g_esVisionPlayer[admin].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionPlayer[admin].g_iVisionMessage, value, 0, 3);
 		g_esVisionPlayer[admin].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionPlayer[admin].g_flVisionChance, value, 0.0, 100.0);
+		g_esVisionPlayer[admin].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionPlayer[admin].g_iVisionCooldown, value, 0, 99999);
 		g_esVisionPlayer[admin].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionPlayer[admin].g_iVisionDuration, value, 1, 99999);
 		g_esVisionPlayer[admin].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionPlayer[admin].g_iVisionFOV, value, 1, 160);
 		g_esVisionPlayer[admin].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionPlayer[admin].g_iVisionHit, value, 0, 1);
 		g_esVisionPlayer[admin].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionPlayer[admin].g_iVisionHitMode, value, 0, 2);
 		g_esVisionPlayer[admin].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionPlayer[admin].g_flVisionRange, value, 1.0, 99999.0);
 		g_esVisionPlayer[admin].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionPlayer[admin].g_flVisionRangeChance, value, 0.0, 100.0);
+		g_esVisionPlayer[admin].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionPlayer[admin].g_iVisionRangeCooldown, value, 0, 99999);
 		g_esVisionPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esVisionPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
 	{
+		g_esVisionAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esVisionAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esVisionAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esVisionAbility[type].g_iComboAbility, value, 0, 1);
 		g_esVisionAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esVisionAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esVisionAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esVisionAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esVisionAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esVisionAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esVisionAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esVisionAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esVisionAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esVisionAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esVisionAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esVisionAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esVisionAbility[type].g_iVisionAbility = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esVisionAbility[type].g_iVisionAbility, value, 0, 1);
 		g_esVisionAbility[type].g_iVisionEffect = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVisionAbility[type].g_iVisionEffect, value, 0, 7);
 		g_esVisionAbility[type].g_iVisionMessage = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVisionAbility[type].g_iVisionMessage, value, 0, 3);
 		g_esVisionAbility[type].g_flVisionChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esVisionAbility[type].g_flVisionChance, value, 0.0, 100.0);
+		g_esVisionAbility[type].g_iVisionCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionCooldown", "Vision Cooldown", "Vision_Cooldown", "cooldown", g_esVisionAbility[type].g_iVisionCooldown, value, 0, 99999);
 		g_esVisionAbility[type].g_iVisionDuration = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esVisionAbility[type].g_iVisionDuration, value, 1, 99999);
 		g_esVisionAbility[type].g_iVisionFOV = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esVisionAbility[type].g_iVisionFOV, value, 1, 160);
 		g_esVisionAbility[type].g_iVisionHit = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esVisionAbility[type].g_iVisionHit, value, 0, 1);
 		g_esVisionAbility[type].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionAbility[type].g_iVisionHitMode, value, 0, 2);
 		g_esVisionAbility[type].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionAbility[type].g_flVisionRange, value, 1.0, 99999.0);
 		g_esVisionAbility[type].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionAbility[type].g_flVisionRangeChance, value, 0.0, 100.0);
+		g_esVisionAbility[type].g_iVisionRangeCooldown = iGetKeyValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "VisionRangeCooldown", "Vision Range Cooldown", "Vision_Range_Cooldown", "rangecooldown", g_esVisionAbility[type].g_iVisionRangeCooldown, value, 0, 99999);
 		g_esVisionAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esVisionAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTION, MT_VISION_SECTION2, MT_VISION_SECTION3, MT_VISION_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -597,22 +630,26 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esVisionCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flCloseAreasOnly, g_esVisionAbility[type].g_flCloseAreasOnly);
+	g_esVisionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility);
 	g_esVisionCache[tank].g_flVisionChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance);
 	g_esVisionCache[tank].g_flVisionRange = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRange, g_esVisionAbility[type].g_flVisionRange);
 	g_esVisionCache[tank].g_flVisionRangeChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionRangeChance, g_esVisionAbility[type].g_flVisionRangeChance);
-	g_esVisionCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iComboAbility, g_esVisionAbility[type].g_iComboAbility);
 	g_esVisionCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAbility, g_esVisionAbility[type].g_iHumanAbility);
 	g_esVisionCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanAmmo, g_esVisionAbility[type].g_iHumanAmmo);
 	g_esVisionCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanCooldown, g_esVisionAbility[type].g_iHumanCooldown);
+	g_esVisionCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iHumanRangeCooldown, g_esVisionAbility[type].g_iHumanRangeCooldown);
 	g_esVisionCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flOpenAreasOnly, g_esVisionAbility[type].g_flOpenAreasOnly);
 	g_esVisionCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iRequiresHumans, g_esVisionAbility[type].g_iRequiresHumans);
 	g_esVisionCache[tank].g_iVisionAbility = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionAbility, g_esVisionAbility[type].g_iVisionAbility);
 	g_esVisionCache[tank].g_iVisionDuration = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionDuration, g_esVisionAbility[type].g_iVisionDuration);
+	g_esVisionCache[tank].g_iVisionCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionCooldown, g_esVisionAbility[type].g_iVisionCooldown);
 	g_esVisionCache[tank].g_iVisionEffect = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionEffect, g_esVisionAbility[type].g_iVisionEffect);
 	g_esVisionCache[tank].g_iVisionFOV = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionFOV, g_esVisionAbility[type].g_iVisionFOV);
 	g_esVisionCache[tank].g_iVisionHit = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHit, g_esVisionAbility[type].g_iVisionHit);
 	g_esVisionCache[tank].g_iVisionHitMode = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionHitMode, g_esVisionAbility[type].g_iVisionHitMode);
 	g_esVisionCache[tank].g_iVisionMessage = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionMessage, g_esVisionAbility[type].g_iVisionMessage);
+	g_esVisionCache[tank].g_iVisionRangeCooldown = iGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_iVisionRangeCooldown, g_esVisionAbility[type].g_iVisionRangeCooldown);
 	g_esVisionPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -718,22 +755,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esVisionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY)
+		if ((button & MT_SUB_KEY) && g_esVisionCache[tank].g_iVisionAbility == 1 && g_esVisionCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esVisionCache[tank].g_iVisionAbility == 1 && g_esVisionCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime)
-				{
-					case true: vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
-					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", (g_esVisionPlayer[tank].g_iCooldown - iTime));
-				}
+			switch (g_esVisionPlayer[tank].g_iRangeCooldown == -1 || g_esVisionPlayer[tank].g_iRangeCooldown < iTime)
+			{
+				case true: vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", (g_esVisionPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
 	}
@@ -757,6 +791,7 @@ void vVisionCopyStats2(int oldTank, int newTank)
 {
 	g_esVisionPlayer[newTank].g_iAmmoCount = g_esVisionPlayer[oldTank].g_iAmmoCount;
 	g_esVisionPlayer[newTank].g_iCooldown = g_esVisionPlayer[oldTank].g_iCooldown;
+	g_esVisionPlayer[newTank].g_iRangeCooldown = g_esVisionPlayer[oldTank].g_iRangeCooldown;
 }
 
 void vRemoveVision(int tank)
@@ -808,11 +843,12 @@ void vVisionReset3(int tank)
 	g_esVisionPlayer[tank].g_bNoAmmo = false;
 	g_esVisionPlayer[tank].g_iAmmoCount = 0;
 	g_esVisionPlayer[tank].g_iCooldown = -1;
+	g_esVisionPlayer[tank].g_iRangeCooldown = -1;
 }
 
 void vVisionAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esVisionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -824,8 +860,8 @@ void vVisionAbility(int tank, float random, int pos = -1)
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
-		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esVisionCache[tank].g_flVisionRange,
-			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esVisionCache[tank].g_flVisionRangeChance;
+		float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esVisionCache[tank].g_flVisionRange,
+			flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esVisionCache[tank].g_flVisionRangeChance;
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -857,28 +893,49 @@ void vVisionAbility(int tank, float random, int pos = -1)
 
 void vVisionHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esVisionPlayer[tank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esVisionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esVisionPlayer[tank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[survivor].g_iImmunityFlags))
+	{
+		return;
+	}
+
+	int iTime = GetTime();
+	if (((flags & MT_ATTACK_RANGE) && g_esVisionPlayer[tank].g_iRangeCooldown != -1 && g_esVisionPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esVisionPlayer[tank].g_iCooldown != -1 && g_esVisionPlayer[tank].g_iCooldown > iTime))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0))
 		{
-			int iTime = GetTime();
 			if (random <= chance && !g_esVisionPlayer[survivor].g_bAffected)
 			{
 				g_esVisionPlayer[survivor].g_bAffected = true;
 				g_esVisionPlayer[survivor].g_iOwner = tank;
 
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime))
+				int iCooldown = -1;
+				if ((flags & MT_ATTACK_RANGE) && (g_esVisionPlayer[tank].g_iRangeCooldown == -1 || g_esVisionPlayer[tank].g_iRangeCooldown < iTime))
 				{
-					g_esVisionPlayer[tank].g_iAmmoCount++;
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility == 1)
+					{
+						g_esVisionPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman", g_esVisionPlayer[tank].g_iAmmoCount, g_esVisionCache[tank].g_iHumanAmmo);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman", g_esVisionPlayer[tank].g_iAmmoCount, g_esVisionCache[tank].g_iHumanAmmo);
+					}
 
-					g_esVisionPlayer[tank].g_iCooldown = (g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esVisionCache[tank].g_iHumanCooldown) : -1;
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esVisionCache[tank].g_iVisionRangeCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility == 1 && g_esVisionPlayer[tank].g_iAmmoCount < g_esVisionCache[tank].g_iHumanAmmo && g_esVisionCache[tank].g_iHumanAmmo > 0) ? g_esVisionCache[tank].g_iHumanRangeCooldown : iCooldown;
+					g_esVisionPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
+					if (g_esVisionPlayer[tank].g_iRangeCooldown != -1 && g_esVisionPlayer[tank].g_iRangeCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman5", (g_esVisionPlayer[tank].g_iRangeCooldown - iTime));
+					}
+				}
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime))
+				{
+					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esVisionCache[tank].g_iVisionCooldown;
+					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility == 1) ? g_esVisionCache[tank].g_iHumanCooldown : iCooldown;
+					g_esVisionPlayer[tank].g_iCooldown = (iTime + iCooldown);
 					if (g_esVisionPlayer[tank].g_iCooldown != -1 && g_esVisionPlayer[tank].g_iCooldown > iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman5", (g_esVisionPlayer[tank].g_iCooldown - iTime));
@@ -905,7 +962,7 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision", LANG_SERVER, sTankName, survivor, g_esVisionCache[tank].g_iVisionFOV);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esVisionPlayer[tank].g_iCooldown == -1 || g_esVisionPlayer[tank].g_iCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esVisionPlayer[tank].g_iRangeCooldown == -1 || g_esVisionPlayer[tank].g_iRangeCooldown < iTime))
 			{
 				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility == 1 && !g_esVisionPlayer[tank].g_bFailed)
 				{
@@ -987,7 +1044,7 @@ Action tTimerVision(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esVisionCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[iTank].g_iTankType) || (g_esVisionCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esVisionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esVisionPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esVisionPlayer[iTank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[iSurvivor].g_iImmunityFlags) || !g_esVisionPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esVisionCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esVisionCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[iTank].g_iTankType) || (g_esVisionCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esVisionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esVisionPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esVisionPlayer[iTank].g_iTankType, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esVisionPlayer[iSurvivor].g_iImmunityFlags) || !g_esVisionPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vVisionReset2(iSurvivor, iTank, iMessage);
 
@@ -995,7 +1052,7 @@ Action tTimerVision(Handle timer, DataPack pack)
 	}
 
 	int iVisionEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esVisionCache[iTank].g_iVisionDuration,
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esVisionCache[iTank].g_iVisionDuration,
 		iTime = pack.ReadCell();
 	if (iVisionEnabled == 0 || (iTime + iDuration) < GetTime())
 	{

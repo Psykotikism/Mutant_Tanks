@@ -1,5 +1,98 @@
 # Changelog
 
+## Version 8.92 (June 1, 2022)
+
+### Bug Fixes
+
+#### Commands
+- Fixed the `sm_mt_ability` and `sm_mt_ability2` commands not displaying a menu for several abilities.
+
+#### Abilities
+- Fixed an issue where several claw/melee abilities will fail to activate when a human-controlled Tank uses up all their ammunition for their range abilities.
+- Warp: Fixed the Tank teleporting inside solid objects.
+
+### Changes
+
+#### General
+- Improved plugin load speed on server startup.
+
+#### Core Plugin
+- The speed boost reward now allows recipients to burst open doors by running into them. (Thanks to `Silvers` for the code!)
+- The bunny hop reward now allows better control with movement keys.
+
+#### Game Data
+- L4D2: Removed signatures for `CTerrorGameRules::IsGenericCooperativeMode`.
+- L4D2: Added signatures for the following functions:
+	- `CTerrorGameRules::IsCoopMode`
+	- `CTerrorGameRules::IsRealismMode`
+- The following functions' signatures are now dynamically generated (Thanks to `Silvers` for the code!):
+	- `CDirector::IsFirstMapInScenario` (L4D2)
+	- `CSpitterProjectile::Create` (L4D2)
+	- `CTerrorGameRules::GetMissionFirstMap`
+	- `CTerrorGameRules::IsCoopMode`
+	- `CTerrorGameRules::IsMissionFinalMap`
+	- `CTerrorGameRules::IsHoldoutMode` (L4D1)
+	- `CTerrorGameRules::IsRealismMode` (L4D2)
+	- `CTerrorGameRules::IsVersusMode` (L4D1)
+	- `CTerrorPlayer::MaterializeFromGhost`
+
+#### Settings
+- Added the `Burst Doors Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections.
+- Added the `Close Areas Only` setting to determine which types or abilities are only for close areas. (Thanks to `Angelace113` for the idea!)
+- Added the following settings under the `Tank #->Combo` and `STEAM_ID->Combo` sections:
+	- `Combo Range Cooldown`
+	- `Combo Rock Cooldown`
+- The `Combo Cooldown` setting under the `Tank #->Combo` and `STEAM_ID->Combo` sections is now enabled.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+
+#### Natives & Forwards
+- Updated the documentation for the `MT_GetCombinationSetting` native.
+
+#### Abilities
+- Changed the default value of the `Human Cooldown` setting from `30` to `0`.
+- Improved the code execution of several abilities' `Combo` logic.
+- Added the following settings for several abilities (Requested by `Shao`.):
+	- `Human Range Cooldown`
+	- `Human Rock Cooldown`
+	- `* Cooldown`
+	- `* Range Cooldown`
+	- `* Rock Cooldown`
+- Acid
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Acid Rock Cooldown` setting. (Requested by `Shao`.)
+- Bomb
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Bomb Rock Cooldown` setting. (Requested by `Shao`.)
+- Fast: Changed the default value of the `Open Areas Only` setting from `0.0` to `150.0`.
+- Fire
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Fire Rock Cooldown` setting. (Requested by `Shao`.)
+- Track: Changed the default value of the `Open Areas Only` setting from `0.0` to `500.0`.
+- Warp
+	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
+	- Added the `Warp Rock Cooldown` setting. (Requested by `Shao`.)
+	- Removed non-working code.
+- Zombie: Removed non-working code.
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6806` compiler.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+
 ## Version 8.91 (April 16, 2022)
 
 ### Bug Fixes
@@ -53,16 +146,16 @@
 	- `CTerrorGameRules::IsVersusMode`
 
 #### Settings
-- Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
+- Added the following settings under the `Tank #->Boss` section (Requested by `xcd222`.):
 	- `Boss Base Type`
 	- `Boss Limit`
 - Added more options to the `Item Mode` setting.
-- Added the `Incap Damage Multiplier` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Requested by `Shao`.)
-- Added the `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections. (Unused for now.)
-- Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
+- Added the `Incap Damage Multiplier` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `Shao`.)
+- Added the `Combo Cooldown` setting under the `Tank #->Combo` and `STEAM_ID->Combo` sections. (Unused for now.)
+- Added the following settings under the `Plugin Settings->Health`, `Tank #->Health`, and `STEAM_ID->Health` sections (Requested by `xcd222`.):
 	- `Human Multiplier Mode`
 	- `Health Percentage Multiplier`
-- Added the `Voice Pitch Visual` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+- Added the `Voice Pitch Visual` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections.
 
 #### Translations
 - Updated English translations.
@@ -208,8 +301,8 @@
 - L4D2: Updated several signatures for the `2.2.2.3` update.
 
 #### Settings
-- Added the `Auto Update` setting under the `Plugin Settings/General` section.
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the `Auto Update` setting under the `Plugin Settings->General` section.
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Bunny Hop Reward`
 	- `Friendly Fire Reward`
 	- `Inextinguishable Fire Reward`
@@ -219,9 +312,9 @@
 	- `Recoil Dampener Reward`
 - Added more options to the `Spawn Mode` setting. (Requested by `saberQAQ`.)
 - Changed the default value of the `Aggressive Tanks` setting from `0` to `1`.
-- The `Aggressive Tanks` setting under the `Plugin Settings/Competitive` can now be overridden for each Mutant Tank type.
+- The `Aggressive Tanks` setting under the `Plugin Settings->Competitive` can now be overridden for each Mutant Tank type.
 - Renamed the `Aggressive Tanks` setting to `Auto Aggravate`.
-- Added the `Rock Sound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections.
+- Added the `Rock Sound` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections.
 - Updated the following settings to support the `0th` wave on finale maps (before finale events start):
 	- `Finale Types`
 	- `Finale Waves`
@@ -284,8 +377,7 @@
 #### Abilities
 - Fixed abilities resetting exclusive variables when Tanks spawn. (Thanks to `ddd123` for testing and reporting!)
 - Fixed abilities using the wrong prototype for the `MT_OnChangeType` forward.
-
-- Heal: Fixed the glow outline feature not relying on the settings under the `Tank #/Glow` and `STEAM_ID/Glow` sections. (Thanks to `ddd123` for testing and reporting!)
+- Heal: Fixed the glow outline feature not relying on the settings under the `Tank #->Glow` and `STEAM_ID->Glow` sections. (Thanks to `ddd123` for testing and reporting!)
 - Omni: Fixed settings not caching properly when the Tank spawns. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
@@ -313,8 +405,8 @@
 - Removed some unused offsets.
 
 #### Settings
-- Added the `Ground Pound` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `XYZC` for the idea!)
-- Added the `Execute Config Delay` setting under the `Plugin Settings/Custom` section.
+- Added the `Ground Pound` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `XYZC` for the idea!)
+- Added the `Execute Config Delay` setting under the `Plugin Settings->Custom` section.
 - Removed the `Allow Developer` setting. (No longer used.)
 
 #### Translations
@@ -363,7 +455,7 @@
 - Added detailed documentation for every detour, address, offset, and signature. (Thanks to `epzminion`, `Lux`, `Silvers`, and `Dragokas` for some of their methods included in the documentation!)
 
 #### Settings
-1. Added the `Skip Incap` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to `epzminion` for the help!)
+1. Added the `Skip Incap` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `epzminion` for the help!)
 
 ### Files
 
@@ -397,7 +489,7 @@
 - Changed the logic for stacking rewards.
 
 #### Settings
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Share Rewards` (Thanks to `FusionFlarez` for the idea!)
 	- `Stack Limits`
 
@@ -455,7 +547,7 @@
 - L4D2: Updated several offsets for the `2.2.2.0` update.
 
 #### Settings
-- Added the `Ladder Actions Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+- Added the `Ladder Actions Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections.
 
 #### Translations
 - Updated English translations.
@@ -499,7 +591,7 @@
 - L4D2: Updated some signatures and several offsets for the `2.2.1.3` update. (Thanks to `epzminion` for the help!)
 
 #### Settings
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Prefs Notify` (Requested by `Mi.Cura`.)
 	- `Teammate Limit` (Requested by `Mi.Cura`.)
 	- `Light Color Visual` (Thanks to `DonProof` for the idea!)
@@ -621,7 +713,7 @@
 - Added the `mt_listensupport` convar.
 
 #### Settings
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Reward Notify`
 	- `Reward Priority`
 	- `Reward Visual` (Requested by `3aljiyavslgazana`.)
@@ -632,14 +724,14 @@
 	- `Screen Color Visual` (Requested by `3aljiyavslgazana`.)
 	- `Infinite Ammo Reward`
 	- `Stack Rewards`
-- Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by `Shadowart`.)
-- Added the following settings under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections:
+- Added the `Death Details` setting under the `Plugin Settings->Announcements`, `Tank #->Announcements`, and `STEAM_ID->Announcements` sections. (Requested by `Shadowart`.)
+- Added the following settings under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections:
 	- `Punch Throw` (Thanks to `ConnerRia` for the code!)
 	- `Skip Taunt` (Thanks to `Lux` for the code!)
 	- `Sweep Fist` (Thanks to `HarryPotter` for the idea!)
-- Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
-- Increased the size of buffers for convar changes under the `Plugin Settings/ConVars` section.
-- Added the `Listen Support` setting under the `Plugin Settings/General` section.
+- Renamed the `Detect Plugins` setting under the `Plugin Settings->General`, `Tank #->General`, and `STEAM_ID->General` sections to `Check Abilities`.
+- Increased the size of buffers for convar changes under the `Plugin Settings->ConVars` section.
+- Added the `Listen Support` setting under the `Plugin Settings->General` section.
 
 #### Translations
 - Updated English translations with new phrases.
@@ -775,7 +867,7 @@
 
 #### General
 - Changed the method for checking idle Tanks. (Thanks to `BHaType` for the code and `epzminion` for the help!)
-- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `Plugin Settings/ConVars` section to modify the convar setting instead.)
+- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `Plugin Settings->ConVars` section to modify the convar setting instead.)
 - Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to `yuzumi` for the idea!)
 - Added a command listener to intercept the `vocalize` and `go_away_from_keyboard` commands and block them when the player is no longer on the server.
 - `Left 4 DHooks` is now optional again.
@@ -834,8 +926,8 @@
 - Updated several signatures for detours. (Thanks to `epzminion` for the help!)
 
 #### Settings
-- Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by `3aljiyavslgazana`.)
-- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+- Added the `Log Commands` setting under the `Plugin Settings->General` section. (Requested by `3aljiyavslgazana`.)
+- Added the following settings under the `Plugin Settings->Announcements`, `Tank #->Announcements`, and `STEAM_ID->Announcements` sections:
 	- `Arrival Sound` (Thanks to `Tank Rush` for the idea!)
 	- `Death Sound` (Thanks to `Tank Rush` for the idea!)
 	- `Vocalize Arrival`
@@ -845,14 +937,14 @@
 	- `Type Range`
 	- `Regular Type`
 	- `Finale Types`
-- Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by `Tonblader`.)
-- Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by `Tonblader`.)
+- Added the `Spawn Limit` setting under the `Plugin Settings->General` section. (Requested by `Tonblader`.)
+- Added the `Survival Delay` setting under the `Plugin Settings->Competitive` section. (Requested by `Tonblader`.)
 - Added the following new options for the `Reward Enabled` setting:
 	- `Attack boost reward` (Requested by `3aljiyavslgazana`.) [Requires `WeaponHandling API`.]
 	- `Infinite ammo reward` (Thanks to `epzminion` for helping!)
 - The `Stasis Mode` setting now works in all game mode types. (Requested by `yuzumi`.)
-- Added the `Game Type` setting under the `Tank #/General` sections.
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the `Game Type` setting under the `Tank #->General` sections.
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Reward Bots` (Thanks to `Mi.Cura` for the idea!)
 	- `Reward Effect` (Requested by `3aljiyavslgazana`.) [Thanks to `Silvers` for the code!]
 	- `Attack Boost Reward` (Requested by `3aljiyavslgazana`.) [Requires `WeaponHandling API`.]
@@ -877,24 +969,24 @@
 	- `Sledgehammer Rounds Reward` (Thanks to `epzminion` for the code!)
 	- `Special Ammo Reward` (Exclusive to L4D2.)
 	- `Thorns Reward` (Thanks to `epzminion` for the idea!)
-- Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by `TheStarRocker`.) [Thanks to `Silvers` for the code!]
+- Added the `Burn Duration` setting under the `Plugin Settings->General`, `Tank #->General`, and `STEAM_ID->General` sections. (Requested by `TheStarRocker`.) [Thanks to `Silvers` for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by `TheStarRocker`.)
-- Added the following settings under the `Plugin Settings/General` section for global use (Requested by `Maku`.):
+- Added the following settings under the `Plugin Settings->General` section for global use (Requested by `Maku`.):
 	- `Tank Enabled`
 	- `Spawn Enabled`
-- Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`.
-- Changed the minimum value of the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, `STEAM_ID/Rewards` sections from `1.1` to `0.0`:
+- Changed the minimum value of the `Tank Enabled` setting under the `Tank #->General` section from `0` to `-1`.
+- Changed the minimum value of the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, `STEAM_ID->Rewards` sections from `1.1` to `0.0`:
 	- `Damage Boost Reward`
 	- `Speed Boost Reward`
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
 	- `ignore`/`exclude`/`filter`/`remove` - `-1`
-- Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to `epzminion` for the help, `Marttt` for the idea, and `Silvers` for the signatures!)
-- Added the `Punch Force` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to `3aljiyavslgazana` for the idea and `Silvers` for the code and signatures!)
+- Added the `Vomit Immunity` setting under the `Tank #->Immunities` and `STEAM_ID->Immunities` sections. (Thanks to `epzminion` for the help, `Marttt` for the idea, and `Silvers` for the signatures!)
+- Added the `Punch Force` setting under the `Tank #->Enhancements` and `STEAM_ID->Enhancements` sections. (Thanks to `3aljiyavslgazana` for the idea and `Silvers` for the code and signatures!)
 - Added the following keywords for the `Punch Force` setting:
 	- `nodmg`/`friendly`/`harmless` - `0.0` force
 	- `weakest` - `1.0` force
 	- `strongest` - `999999.0` force
-- Added the `Force Spawn` setting under the `Plugin Settings/Competitive` section. (Requested by `yuzumi`.)
+- Added the `Force Spawn` setting under the `Plugin Settings->Competitive` section. (Requested by `yuzumi`.)
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by `Shadowart`.):
 	- `Finales Only`
 	- `Idle Check`
@@ -1123,7 +1215,7 @@
 - Players will now be informed if they do not do enough damage to Tanks to earn rewards.
 
 #### Settings
-- Added the `Burnt Skin` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to `Marttt` for the code!)
+- Added the `Burnt Skin` setting under the `Plugin Settings->General`, `Tank #->General`, and `STEAM_ID->General` sections. (Thanks to `Marttt` for the code!)
 - Changed the minimum value of the `Attack Interval` setting from `-1.0` to `0.0`.
 - Changed the minimum value of the `Run Speed` setting from `-1.0` to `0.0`.
 - Changed the minimum value of the `Throw Interval` setting from `-1.0` to `0.0`.
@@ -1159,9 +1251,9 @@
 - All admin menu items provided by Mutant Tanks will now return to the admin menu when appropriate. (Thanks to `Marttt` for suggesting!)
 
 #### Settings
-- Added the `Hittable Damage` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to `Marttt` for the code!)
-- Added the `Credit Igniters` setting under the `Plugin Settings/Competitive` section. (Thanks to `axelnieves2012` for the code!)
-- Added the `Hittable Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to `Marttt` for the code!)
+- Added the `Hittable Damage` setting under the `Tank #->Enhancements` and `STEAM_ID->Enhancements` sections. (Thanks to `Marttt` for the code!)
+- Added the `Credit Igniters` setting under the `Plugin Settings->Competitive` section. (Thanks to `axelnieves2012` for the code!)
+- Added the `Hittable Immunity` setting under the `Tank #->Immunities` and `STEAM_ID->Immunities` sections. (Thanks to `Marttt` for the code!)
 
 #### Abilities
 - Absorb: Added a pushback effect when players use their melee weapons against Tanks with melee absorption.
@@ -1181,7 +1273,7 @@
 
 ## Version 8.80 (December 31, 2020)
 
-### Bug fixes
+### Bug Fixes
 
 #### General
 - Fixed some potential errors caused by invalid weapon slots.
@@ -1240,7 +1332,6 @@
 - Fixed all abilities not resetting when the Tank is passed between two players.
 - Fixed some settings of multiple abilities having the wrong limits.
 - Fixed abilities activating when the Tank is dying, which caused the Tank to be stuck in a looped dying animation.
-
 - Absorb: Fixed the ability bypassing damage immunity settings. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 - Blind
 	- Fixed the ability being enabled by default. (Thanks to `Mi.Cura` and `Tank Rush` for reporting!)
@@ -1414,26 +1505,26 @@
 - The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to `3aljiyavslgazana` for testing and reporting!)
 - Added a new option for the `Announce Death` setting.
 - Changed the default value of the `Regular Limit` setting from `2` to `999999`.
-- Changed the default value of the `Death Revert` setting under the `Plugin Settings/General` from `0` to `1`.
-- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to `epzminion` for the code!)
-- Added the `Regular Delay` setting under the `Plugin Settings/Waves` section. (Requested by `Tank Rush`.)
+- Changed the default value of the `Death Revert` setting under the `Plugin Settings->General` from `0` to `1`.
+- Added the `Attack Interval` setting under the `Tank #->Enhancements` and `STEAM_ID->Enhancements` sections. (Thanks to `epzminion` for the code!)
+- Added the `Regular Delay` setting under the `Plugin Settings->Waves` section. (Requested by `Tank Rush`.)
 - Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
-- Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
+- Added the `Extras Delay` settings under `Plugin Settings->Waves` section.
 - Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
 - Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
-- Added the `Flashlight Color` setting under the `Tank #/Props` and `STEAM_ID/Props` sections. (Thanks to `Ernecio` for the code!)
-- Added the `Crown Color` setting under the `Tank #/Props` and `STEAM_ID/Props` sections. (Thanks to `Ernecio` for the code!)
+- Added the `Flashlight Color` setting under the `Tank #->Props` and `STEAM_ID->Props` sections. (Thanks to `Ernecio` for the code!)
+- Added the `Crown Color` setting under the `Tank #->Props` and `STEAM_ID->Props` sections. (Thanks to `Ernecio` for the code!)
 - The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
-- Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
-- Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
-- Moved the following settings to the `Tank #/Glow` and `STEAM_ID/Glow` sections:
+- Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings->Competitive` section.
+- Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings->Difficulty` section.
+- Moved the following settings to the `Tank #->Glow` and `STEAM_ID->Glow` sections:
 	- `Glow Enabled`
 	- `Glow Color`
 	- `Glow Flashing`
 	- `Glow Range`
 	- `Glow Type`
-- Added a new option for the `Spawn Mode` setting under the `Tank #/Spawn` section.
-- Added the following settings under the new `Tank #/Combo` and `STEAM_ID/Combo` sections. (Thanks to `3aljiyavslgazana` for suggesting!)
+- Added a new option for the `Spawn Mode` setting under the `Tank #->Spawn` section.
+- Added the following settings under the new `Tank #->Combo` and `STEAM_ID->Combo` sections. (Thanks to `3aljiyavslgazana` for suggesting!)
 	- `Combo Chance`
 	- `Combo Damage`
 	- `Combo Death Chance`
@@ -1448,22 +1539,22 @@
 	- `Combo Set`
 	- `Combo Speed`
 	- `Combo Type Chance`
-- Moved the following settings to the `Tank #/Boss` and `STEAM_ID/Boss` sections:
+- Moved the following settings to the `Tank #->Boss` and `STEAM_ID->Boss` sections:
 	- `Boss Health Stages`
 	- `Boss Stages`
 	- `Boss Types`
-- Moved the following settings to the `Tank #/Random` and `STEAM_ID/Random` sections:
+- Moved the following settings to the `Tank #->Random` and `STEAM_ID->Random` sections:
 	- `Random Tank`
 	- `Random Interval`
-- Moved the following settings to the `Tank #/Transform` and `STEAM_ID/Transform` sections:
+- Moved the following settings to the `Tank #->Transform` and `STEAM_ID->Transform` sections:
 	- `Transform Delay`
 	- `Transform Duration`
 	- `Transform Types`
-- Added the `Random Duration` setting under the `Tank #/Random` and `STEAM_ID/Random` sections.
-- Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
-- The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
+- Added the `Random Duration` setting under the `Tank #->Random` and `STEAM_ID->Random` sections.
+- Renamed the `Spawn Mode` setting under the `Tank #->Spawn` section to `Spawn Type`.
+- The `Spawn Type` setting under the `Tank #->Spawn` section can now be overridden for each player.
 - Added a `Reward` system for fighting Mutant Tanks.
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Reward Enabled`
 	- `Reward Chance`
 	- `Reward Duration`
@@ -1473,10 +1564,10 @@
 	- `Respawn Loadout Reward`
 	- `Speed Boost Reward`
 	- `Useful Rewards`
-- Moved the following settings to the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+- Moved the following settings to the `Plugin Settings->Announcements`, `Tank #->Announcements`, and `STEAM_ID->Announcements` sections:
 	- `Announce Arrival`
 	- `Announce Death`
-- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+- Added the following settings under the `Plugin Settings->Announcements`, `Tank #->Announcements`, and `STEAM_ID->Announcements` sections:
 	- `Announce Kill`
 	- `Arrival Message`
 	- `Death Message`
@@ -1484,10 +1575,10 @@
 - The `Base Health` setting can now be overridden for each type and player.
 - The `Extra Health` setting can now be used globally for all types.
 - The `Requires Humans` setting can no longer be overridden for each player.
-- Added the `Limit Extras` setting under the `Plugin Settings/Waves` section.
+- Added the `Limit Extras` setting under the `Plugin Settings->Waves` section.
 - Added `Survivor count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 - Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
-- Added the `Tank Model` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to `Marttt` for the code!)
+- Added the `Tank Model` setting under the `Plugin Settings->General`, `Tank #->General`, and `STEAM_ID->General` sections. (Thanks to `Marttt` for the code!)
 - Several color settings' default values have been changed from `-1` to `255`.
 - Added different developer tools for testing.
 - Changed the default value of the `Allow Developer` setting from `1` to `0`.
@@ -1522,7 +1613,6 @@
 - Added the `Lightning` ability which is exclusive to L4D2.
 - None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
 - Added the `Combo Ability` setting for each ability.
-
 - Absorb
 	- Added the `Immunity Flags` setting.
 	- Changed the minimum value of the divisor settings from `0.1` to `1.0`.
@@ -1675,7 +1765,7 @@ Changes:
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
 11. `DHooks` and `Left 4 DHooks` are now mandatory.
 12. The core plugin now constantly checks if Tanks are idle or not moving (no action). Use the `Idle Check` setting to determine the interval between each check.
-13. Added the `Idle Check Mode` setting under the `Plugin Settings/General` section.
+13. Added the `Idle Check Mode` setting under the `Plugin Settings->General` section.
 14. Changed the default value of the `Idle Check` setting from `0.0` to `10.0`.
 15. Changed the default value of the `Props Attached` setting from `126` to `78` for L4D1 to disable huge props.
 16. Changed the default value of the `Detect Plugins` setting from `0` to `1`.
@@ -1720,17 +1810,17 @@ Changes:
 2. The `Drop` ability now supports the two new melee weapons from `The Last Stand` update.
 3. Changed the minimum value of the `Drop` ability's `Drop Weapon Scale` from `1.0` to `0.1`.
 4. Set a fixed default size (`1.5`) for weapons attached to Tanks by the `Drop` ability.
-5. Added the `Idle Check` setting under the `Plugin Settings/General` section.
+5. Added the `Idle Check` setting under the `Plugin Settings->General` section.
 6. Added the `MT_IsTankIdle` native which allows developers to check if a Tank is idle.
 7. Idle Tanks will no longer activate their passive abilities.
-8. Moved the following settings to the `Plugin Settings/Health` section:
+8. Moved the following settings to the `Plugin Settings->Health` section:
 - `Base Health`
 - `Display Health`
 - `Display Health Type`
 - `Health Characters`
 - `Minimum Humans`
 - `Multiply Health`
-9. Moved the following settings to the `Tank #/Health` and `STEAM_ID/Health` sections:
+9. Moved the following settings to the `Tank #->Health` and `STEAM_ID->Health` sections:
 - `Display Health`
 - `Display Health Type`
 - `Extra Health`
@@ -1947,12 +2037,12 @@ Changes:
 13. Added the `Regular Limit` setting under the `Waves` section to limit how many waves of Tanks are spawned on non-finale maps. (Requested by `RDiver`.)
 14. Added extra checks for several abilities to avoid client index errors.
 15. Moved the `Human Support` setting to its own section:
-- `Tank #/General` to `Tank #/Human Support`
-- `STEAM_ID/General` to `STEAM_ID/Human Support`
+- `Tank #->General` to `Tank #->Human Support`
+- `STEAM_ID->General` to `STEAM_ID->Human Support`
 16. Added the `Rename Players` setting under the following sections:
-- `Plugin Settings/Human Support`
-- `Tank #/Human Support`
-- `STEAM_ID/Human Support`
+- `Plugin Settings->Human Support`
+- `Tank #->Human Support`
+- `STEAM_ID->Human Support`
 17. Replaced all cooldown timers by tracking `GetTime` instead.
 18. Replaced all `GetEngineTime` instances with `GetTime` for more accuracy.
 19. `RequestFrame` is now used instead of `0.1`-second timers.
@@ -2039,8 +2129,8 @@ Changes:
 4. Added more `Display Health` options. (Requested by `foxhound27`.)
 5. The `Finale Types` setting now takes in type ranges. Example: `1-10,11-20,21-30` (Requested by `Neptunia`.)
 6. Added the `Rock Model` setting under the following sections (Requested by `Mi.Cura`.):
-- `Tank #/Props`: Determines what model a Tank's rocks should look like.
-- `STEAM_ID/Props`: Overrides the setting under the `Props` for specific players.
+- `Tank #->Props`: Determines what model a Tank's rocks should look like.
+- `STEAM_ID->Props`: Overrides the setting under the `Props` for specific players.
 7. Added more particle and sound effects for the `Electric ability`.
 8. Common infected are now immune to Tank abilities. They should no longer die from running into fires or explosions caused by certain abilities.
 9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to `epzminion` for the detour idea and gamedata info!)
@@ -2175,7 +2265,7 @@ Changes:
 
 1. The administration system now detects SM's admin flags if the plugin's config file does not define specific flags for a user.
 2. The `MT_IsTypeEnabled()` native now checks if abilities for Mutant Tanks are available.
-3. Added the `Regular Mode` setting under the `Plugin Settings/Waves` section.
+3. Added the `Regular Mode` setting under the `Plugin Settings->Waves` section.
 4. The core plugin now detects custom sourcemod directories when checking for the `plugins` folder.
 5. Mutant Tanks no longer have a glow outline when biled. (Thanks to `Marttt` for the pull request!)
 
@@ -2201,11 +2291,11 @@ Changes:
 1. The output of the `sm_st_config` command is now printed in chat instead of console to avoid overloading the buffer.
 2. Added the `Omni`, `Xiphos`, and `Yell` abilities.
 3. The `ST_GetTankName()` native now has a third argument.
-4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings/Waves` section.
-5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
-6. Added the `Display Health Type` setting under the `Plugin Settings/General` section.
-7. Added the `Health Characters` setting under the `Plugin Settings/General` section.
-8. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
+4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings->Waves` section.
+5. Added the `Detect Plugins` setting under the `Plugin Settings->General` section.
+6. Added the `Display Health Type` setting under the `Plugin Settings->General` section.
+7. Added the `Health Characters` setting under the `Plugin Settings->General` section.
+8. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings->Administration` section.
 9. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
 10. All Color settings now accept values below `0` which will generate random colors.
 11. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
@@ -2225,7 +2315,7 @@ Changes:
 14. Added deprecated messages for old/deleted natives/forwards.
 15. Added an administration system designed for the usage and effectiveness of each Super Tank type.
 16. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
-17. Added the `Allow Developer` setting under the `Plugin Settings/Administration`.
+17. Added the `Allow Developer` setting under the `Plugin Settings->Administration`.
 18. Improved health display.
 19. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
 20. Added the `sm_tank2` and `sm_st_list` commands.
@@ -2324,7 +2414,7 @@ Changes:
 
 1. Added the `ST_IsGlowEnabled` native.
 2. Added the `ST_GetRunSpeed` native.
-3. Added the `Death Revert` setting under the `Plugin Settings/General`. (Requested by `Mi.Cura`.)
+3. Added the `Death Revert` setting under the `Plugin Settings->General`. (Requested by `Mi.Cura`.)
 4. Renamed all natives.
 
 Files:
@@ -2347,7 +2437,7 @@ Changes:
 3. Added the `Fling Force` setting for the `Fling` ability.
 4. Added death effects for several abilities.
 5. Added the `sm_supertank` command for players to use in versus game modes.
-6. Added the following settings under the `Plugin Settings/Human Support` section for extended human support.
+6. Added the following settings under the `Plugin Settings->Human Support` section for extended human support.
 - `Human Cooldown`: Determines how long human-controlled Tanks need to wait before using the Super Tanks++ menu to change their type.
 - `Master Control`: Determines whether human-controlled Tanks need to have a cooldown when using the Super Tanks++ menu to change their type.
 - `Spawn Mode`: Determines whether human-controlled Tanks spawn as Super Tanks or as default Tanks with access to the `sm_supertank` command.
@@ -2395,7 +2485,7 @@ Bug fixes:
 Changes:
 
 1. Removed `Human Ammo` and `Human Cooldown` settings for the `Kamikaze` ability.
-2. The `Base Health` setting is now a global setting under the `Plugins Settings/General` section. (Requested by `KasperH`/`Ladis`.)
+2. The `Base Health` setting is now a global setting under the `Plugins Settings->General` section. (Requested by `KasperH`/`Ladis`.)
 3. New ability added: `Hit` Ability - The Super Tank only takes damage in certain parts of its body.
 4. New ability added: `Undead` ability - The Super Tank cannot die.
 5. Renamed the `Human Duration` setting to `Car Duration` for the `Car` ability.

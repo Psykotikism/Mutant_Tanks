@@ -59,6 +59,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esWitchPlayer
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flWitchChance;
 	float g_flWitchDamage;
@@ -77,6 +78,7 @@ enum struct esWitchPlayer
 	int g_iTankType;
 	int g_iWitchAbility;
 	int g_iWitchAmount;
+	int g_iWitchCooldown;
 	int g_iWitchMessage;
 	int g_iWitchRemove;
 }
@@ -85,6 +87,7 @@ esWitchPlayer g_esWitchPlayer[MAXPLAYERS + 1];
 
 enum struct esWitchAbility
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flWitchChance;
 	float g_flWitchDamage;
@@ -101,6 +104,7 @@ enum struct esWitchAbility
 	int g_iRequiresHumans;
 	int g_iWitchAbility;
 	int g_iWitchAmount;
+	int g_iWitchCooldown;
 	int g_iWitchMessage;
 	int g_iWitchRemove;
 }
@@ -109,6 +113,7 @@ esWitchAbility g_esWitchAbility[MT_MAXTYPES + 1];
 
 enum struct esWitchCache
 {
+	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flWitchChance;
 	float g_flWitchDamage;
@@ -122,6 +127,7 @@ enum struct esWitchCache
 	int g_iRequiresHumans;
 	int g_iWitchAbility;
 	int g_iWitchAmount;
+	int g_iWitchCooldown;
 	int g_iWitchMessage;
 	int g_iWitchRemove;
 }
@@ -248,7 +254,7 @@ int iWitchMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWitchCache[param1].g_iWitchAbility == 0) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", (g_esWitchCache[param1].g_iHumanAmmo - g_esWitchPlayer[param1].g_iAmmoCount), g_esWitchCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esWitchCache[param1].g_iHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esWitchCache[param1].g_iHumanAbility == 1) ? g_esWitchCache[param1].g_iHumanCooldown : g_esWitchCache[param1].g_iWitchCooldown));
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "WitchDetails");
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWitchCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
@@ -334,7 +340,8 @@ Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				return Plugin_Handled;
 			}
 
-			float flDamage = (g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition) : g_esWitchCache[iTank].g_flWitchDamage;
+			int iPos = g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iComboPosition;
+			float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esWitchCache[iTank].g_flWitchDamage;
 			damage = MT_GetScaledDamage(flDamage);
 
 			return Plugin_Changed;
@@ -392,14 +399,17 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 			char sAbilities[320], sSubset[10][32];
 			strcopy(sAbilities, sizeof sAbilities, combo);
 			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+
+			float flDelay = 0.0;
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_WITCH_SECTION, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION2, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION3, false) || StrEqual(sSubset[iPos], MT_WITCH_SECTION4, false))
 				{
+					g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
-						float flDelay = MT_GetCombinationSetting(tank, 3, iPos);
-						g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+						flDelay = MT_GetCombinationSetting(tank, 4, iPos);
 
 						switch (flDelay)
 						{
@@ -412,9 +422,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								dpCombo.WriteCell(iPos);
 							}
 						}
-
-						break;
 					}
+
+					break;
 				}
 			}
 		}
@@ -436,17 +446,19 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esWitchAbility[iIndex].g_iAccessFlags = 0;
 				g_esWitchAbility[iIndex].g_iImmunityFlags = 0;
+				g_esWitchAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esWitchAbility[iIndex].g_iComboAbility = 0;
 				g_esWitchAbility[iIndex].g_iComboPosition = -1;
 				g_esWitchAbility[iIndex].g_iHumanAbility = 0;
 				g_esWitchAbility[iIndex].g_iHumanAmmo = 5;
-				g_esWitchAbility[iIndex].g_iHumanCooldown = 30;
+				g_esWitchAbility[iIndex].g_iHumanCooldown = 0;
 				g_esWitchAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esWitchAbility[iIndex].g_iRequiresHumans = 1;
 				g_esWitchAbility[iIndex].g_iWitchAbility = 0;
 				g_esWitchAbility[iIndex].g_iWitchMessage = 0;
 				g_esWitchAbility[iIndex].g_iWitchAmount = 3;
 				g_esWitchAbility[iIndex].g_flWitchChance = 33.3;
+				g_esWitchAbility[iIndex].g_iWitchCooldown = 0;
 				g_esWitchAbility[iIndex].g_flWitchDamage = 5.0;
 				g_esWitchAbility[iIndex].g_flWitchLifetime = 0.0;
 				g_esWitchAbility[iIndex].g_flWitchRange = 500.0;
@@ -461,6 +473,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esWitchPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esWitchPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esWitchPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
 					g_esWitchPlayer[iPlayer].g_iComboAbility = 0;
 					g_esWitchPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esWitchPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -471,6 +484,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esWitchPlayer[iPlayer].g_iWitchMessage = 0;
 					g_esWitchPlayer[iPlayer].g_iWitchAmount = 0;
 					g_esWitchPlayer[iPlayer].g_flWitchChance = 0.0;
+					g_esWitchPlayer[iPlayer].g_iWitchCooldown = 0;
 					g_esWitchPlayer[iPlayer].g_flWitchDamage = 0.0;
 					g_esWitchPlayer[iPlayer].g_flWitchLifetime = 0.0;
 					g_esWitchPlayer[iPlayer].g_flWitchRange = 0.0;
@@ -489,6 +503,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esWitchPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esWitchPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esWitchPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esWitchPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchPlayer[admin].g_iHumanAmmo, value, 0, 99999);
@@ -499,6 +514,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchPlayer[admin].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchPlayer[admin].g_iWitchMessage, value, 0, 1);
 		g_esWitchPlayer[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchPlayer[admin].g_iWitchAmount, value, 1, 25);
 		g_esWitchPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchPlayer[admin].g_flWitchChance, value, 0.0, 100.0);
+		g_esWitchPlayer[admin].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchPlayer[admin].g_iWitchCooldown, value, 0, 99999);
 		g_esWitchPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchPlayer[admin].g_flWitchDamage, value, 1.0, 99999.0);
 		g_esWitchPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchPlayer[admin].g_flWitchLifetime, value, 0.0, 99999.0);
 		g_esWitchPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchPlayer[admin].g_flWitchRange, value, 1.0, 99999.0);
@@ -509,6 +525,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esWitchAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
 		g_esWitchAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchAbility[type].g_iComboAbility, value, 0, 1);
 		g_esWitchAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esWitchAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchAbility[type].g_iHumanAmmo, value, 0, 99999);
@@ -519,6 +536,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchAbility[type].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchAbility[type].g_iWitchMessage, value, 0, 1);
 		g_esWitchAbility[type].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchAbility[type].g_iWitchAmount, value, 1, 25);
 		g_esWitchAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchAbility[type].g_flWitchChance, value, 0.0, 100.0);
+		g_esWitchAbility[type].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchAbility[type].g_iWitchCooldown, value, 0, 99999);
 		g_esWitchAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchAbility[type].g_flWitchDamage, value, 1.0, 99999.0);
 		g_esWitchAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchAbility[type].g_flWitchLifetime, value, 0.0, 99999.0);
 		g_esWitchAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchAbility[type].g_flWitchRange, value, 1.0, 99999.0);
@@ -535,11 +553,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esWitchCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly);
+	g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility);
 	g_esWitchCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance);
 	g_esWitchCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage);
 	g_esWitchCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime);
 	g_esWitchCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange);
-	g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility);
 	g_esWitchCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility);
 	g_esWitchCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo);
 	g_esWitchCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown);
@@ -547,6 +566,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esWitchCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans);
 	g_esWitchCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility);
 	g_esWitchCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount);
+	g_esWitchCache[tank].g_iWitchCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown);
 	g_esWitchCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage);
 	g_esWitchCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove);
 	g_esWitchPlayer[tank].g_iTankType = apply ? type : 0;
@@ -644,22 +664,19 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY)
+		if ((button & MT_SPECIAL_KEY) && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iHumanAbility == 1)
 		{
-			if (g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iHumanAbility == 1)
-			{
-				int iTime = GetTime();
+			int iTime = GetTime();
 
-				switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
-				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman3", (g_esWitchPlayer[tank].g_iCooldown - iTime));
-					case false: vWitchAbility(tank);
-				}
+			switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+			{
+				case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman3", (g_esWitchPlayer[tank].g_iCooldown - iTime));
+				case false: vWitchAbility(tank);
 			}
 		}
 	}
@@ -728,9 +745,15 @@ void vWitchReset()
 
 void vWitch(int tank, int pos = -1)
 {
+	int iTime = GetTime();
+	if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+	{
+		return;
+	}
+
 	bool bConverted = false;
 	float flTankPos[3], flInfectedPos[3], flInfectedAngles[3],
-		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esWitchCache[tank].g_flWitchRange;
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWitchCache[tank].g_flWitchRange;
 	int iInfected = -1;
 	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 	{
@@ -751,14 +774,19 @@ void vWitch(int tank, int pos = -1)
 
 	if (bConverted)
 	{
-		int iTime = GetTime();
-		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime))
+		int iCooldown = -1;
+		if (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime)
 		{
-			g_esWitchPlayer[tank].g_iAmmoCount++;
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
+			{
+				g_esWitchPlayer[tank].g_iAmmoCount++;
 
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman", g_esWitchPlayer[tank].g_iAmmoCount, g_esWitchCache[tank].g_iHumanAmmo);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman", g_esWitchPlayer[tank].g_iAmmoCount, g_esWitchCache[tank].g_iHumanAmmo);
+			}
 
-			g_esWitchPlayer[tank].g_iCooldown = (g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esWitchCache[tank].g_iHumanCooldown) : -1;
+			iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esWitchCache[tank].g_iWitchCooldown;
+			iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? g_esWitchCache[tank].g_iHumanCooldown : iCooldown;
+			g_esWitchPlayer[tank].g_iCooldown = (iTime + iCooldown);
 			if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman4", (g_esWitchPlayer[tank].g_iCooldown - iTime));
@@ -777,7 +805,7 @@ void vWitch(int tank, int pos = -1)
 
 void vWitch2(int tank, float pos[3], float angles[3])
 {
-	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -799,7 +827,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 
 void vWitchAbility(int tank)
 {
-	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -825,7 +853,7 @@ void vWitchRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esWitchCache[tank].g_iWitchAbility == 1)
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
