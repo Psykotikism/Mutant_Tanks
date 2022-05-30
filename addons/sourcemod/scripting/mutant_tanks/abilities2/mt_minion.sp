@@ -359,18 +359,18 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MINION_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MINION_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MINION_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MINION_SECTION4);
-	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iComboAbility == 1)
 		{
-			char sSubset[10][32];
-			ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+			char sAbilities[320], sSubset[10][32];
+			strcopy(sAbilities, sizeof sAbilities, combo);
+			ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 			for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 			{
 				if (StrEqual(sSubset[iPos], MT_MINION_SECTION, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION2, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION3, false) || StrEqual(sSubset[iPos], MT_MINION_SECTION4, false))
@@ -533,6 +533,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
+
 #if defined MT_ABILITIES_MAIN2
 void vMinionPluginEnd()
 #else
@@ -691,8 +698,8 @@ void vMinion(int tank)
 {
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount)
 	{
-		float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
-		GetClientEyePosition(tank, flPosition);
+		float flHitPos[3], flPos[3], flAngles[3], flVector[3];
+		GetClientEyePosition(tank, flPos);
 		GetClientEyeAngles(tank, flAngles);
 		flAngles[0] = -25.0;
 
@@ -702,16 +709,16 @@ void vMinion(int tank)
 		vCopyVector(flAngles, flVector);
 		GetVectorAngles(flAngles, flAngles);
 
-		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		Handle hTrace = TR_TraceRayFilterEx(flPos, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				TR_GetEndPosition(flHitPosition, hTrace);
+				TR_GetEndPosition(flHitPos, hTrace);
 				NormalizeVector(flVector, flVector);
 				ScaleVector(flVector, -40.0);
-				AddVectors(flHitPosition, flVector, flHitPosition);
-				if (40.0 < GetVectorDistance(flHitPosition, flPosition) < 200.0)
+				AddVectors(flHitPos, flVector, flHitPos);
+				if (40.0 < GetVectorDistance(flHitPos, flPos) < 200.0)
 				{
 					bool[] bExists = new bool[MaxClients + 1];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -771,7 +778,7 @@ void vMinion(int tank)
 
 					if (bIsSpecialInfected(iSpecial))
 					{
-						TeleportEntity(iSpecial, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iSpecial, flHitPos, NULL_VECTOR, NULL_VECTOR);
 
 						g_esMinionPlayer[iSpecial].g_bMinion = true;
 						g_esMinionPlayer[iSpecial].g_iOwner = tank;

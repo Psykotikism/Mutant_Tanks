@@ -477,16 +477,16 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WARP_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_WARP_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_WARP_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_WARP_SECTION4);
-	if (g_esWarpCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	if (g_esWarpCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
 	{
-		char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		char sAbilities[320], sSubset[10][32];
+		strcopy(sAbilities, sizeof sAbilities, combo);
+		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_WARP_SECTION, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION2, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION3, false) || StrEqual(sSubset[iPos], MT_WARP_SECTION4, false))
@@ -744,6 +744,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 		vRemoveWarp(oldTank);
 	}
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
 
 #if defined MT_ABILITIES_MAIN2
 void vWarpEventFired(Event event, const char[] name)
@@ -1015,8 +1022,29 @@ void vWarp2(int tank, int other)
 	float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
-	flOtherOrigin[2] += 20.0;
 
+	float flTempOrigin[3], flMin[3], flMax[3];
+	GetClientMins(tank, flMin);
+	GetClientMaxs(tank, flMax);
+	for (int iIndex = 0; iIndex < 20; iIndex++)
+	{
+		vCopyVector(flOtherOrigin, flTempOrigin);
+		flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
+		flTempOrigin[1] += (50.0 * (Sine(DegToRad(flOtherAngles[1]))));
+		flTempOrigin[2] += 5.0;
+
+		if (!bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
+		{
+			break;
+		}
+	}
+
+	if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
+	{
+		return;
+	}
+
+	vCopyVector(flTempOrigin, flOtherOrigin);
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
 	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
@@ -1140,7 +1168,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 				float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !bIsAreaNarrow(iSurvivor, g_esWarpCache[tank].g_flOpenAreasOnly) && iSurvivor != survivor)
 					{
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esWarpPlayer[tank].g_iCooldown2 == -1 || g_esWarpPlayer[tank].g_iCooldown2 < iTime))
 						{
@@ -1227,6 +1255,11 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 		float flRockPos[3], flRockAngles[3];
 		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flRockPos);
 		GetEntPropVector(rock, Prop_Data, "m_angRotation", flRockAngles);
+
+		if (bIsAreaNarrow(.range = g_esWarpCache[tank].g_flOpenAreasOnly, .pos = flRockPos))
+		{
+			return;
+		}
 
 		vAttachParticle(tank, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP, tank);

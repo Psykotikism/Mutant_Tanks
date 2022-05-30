@@ -692,6 +692,16 @@
 		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}){default} when you take control of the{mint} Tank{default}."
 	}
 
+	"PitchVisualOn"
+	{
+		"en"			"Voice Pitch Visual: ON"
+	}
+
+	"PitchVisualOff"
+	{
+		"en"			"Voice Pitch Visual: OFF"
+	}
+
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."

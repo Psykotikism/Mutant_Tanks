@@ -434,16 +434,16 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SMITE_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SMITE_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SMITE_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SMITE_SECTION4);
-	if (g_esSmiteCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	if (g_esSmiteCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
 	{
-		char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		char sAbilities[320], sSubset[10][32];
+		strcopy(sAbilities, sizeof sAbilities, combo);
+		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_SMITE_SECTION, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION2, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION3, false) || StrEqual(sSubset[iPos], MT_SMITE_SECTION4, false))
@@ -656,6 +656,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
+
 #if defined MT_ABILITIES_MAIN2
 void vSmiteEventFired(Event event, const char[] name)
 #else
@@ -783,25 +790,25 @@ void vSmiteReset()
 
 void vSmite(int survivor)
 {
-	float flPosition[3], flStartPosition[3];
+	float flPos[3], flStartPos[3];
 	int iColor[4] = {255, 255, 255, 255};
 
-	GetClientAbsOrigin(survivor, flPosition);
-	flPosition[2] -= 26.0;
-	flStartPosition[0] = (flPosition[0] + MT_GetRandomFloat(-500.0, 500.0));
-	flStartPosition[1] = (flPosition[1] + MT_GetRandomFloat(-500.0, 500.0));
-	flStartPosition[2] = (flPosition[2] + 800.0);
+	GetClientAbsOrigin(survivor, flPos);
+	flPos[2] -= 26.0;
+	flStartPos[0] = (flPos[0] + MT_GetRandomFloat(-500.0, 500.0));
+	flStartPos[1] = (flPos[1] + MT_GetRandomFloat(-500.0, 500.0));
+	flStartPos[2] = (flPos[2] + 800.0);
 
-	TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
+	TE_SetupBeamPoints(flStartPos, flPos, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 	TE_SendToAll();
 
-	TE_SetupSparks(flPosition, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
+	TE_SetupSparks(flPos, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
 	TE_SendToAll();
 
-	TE_SetupEnergySplash(flPosition, view_as<float>({0.0, 0.0, 0.0}), false);
+	TE_SetupEnergySplash(flPos, view_as<float>({0.0, 0.0, 0.0}), false);
 	TE_SendToAll();
 
-	EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
+	EmitAmbientSound(SOUND_EXPLOSION, flStartPos, survivor, SNDLEVEL_RAIDSIREN);
 }
 
 void vSmiteAbility(int tank, float random, int pos = -1)

@@ -437,3 +437,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esVampireCache[tank].g_iVampireMessage = iGetSettingValue(apply, bHuman, g_esVampirePlayer[tank].g_iVampireMessage, g_esVampireAbility[type].g_iVampireMessage);
 	g_esVampirePlayer[tank].g_iTankType = apply ? type : 0;
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif

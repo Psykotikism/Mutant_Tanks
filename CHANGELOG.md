@@ -1,5 +1,109 @@
 # Changelog
 
+## Version 8.91 (April 16, 2022)
+
+### Bug Fixes
+
+#### General
+- Fixed game events not being tracked properly. (Thanks to `Krufftys Killers` for reporting!)
+- Fixed [`Updater`](https://github.com/Teamkiller324/Updater) support.
+
+#### Core Plugin
+- Fixed the screen effect of abilities being fully visible. (Thanks to `ddd123` and `Mi.Cura` for testing and reporting!)
+- Fixed a detour setup that caused Linux users to crash when Tank rocks are thrown.
+- Fixed an issue where certain special infected cannot suicide because of the friendly-fire block.
+- Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
+- Fixed some code for the `Clone` ability being compiled when the `mt_clone.inc` include is not included.
+- Fixed survivors not getting slowed down by common infected and most damage sources. (Thanks to `Shao` for testing and reporting!)
+- Fixed the Tank's glow settings not working when a player passes control to the AI. (Thanks to `yuzumi` for testing and reporting!)
+- Fixed the midair dashes reward counting the initial jump as a midair dash.
+
+#### Config Files
+- Fixed player count configs not updating when more than two players are detected. (Thanks to `Mi.Cura` for testing and reporting!)
+
+#### Settings
+- Fixed the `Skip Taunt` setting not working. (Thanks to `sorallll` for the code!)
+
+#### Abilities
+- Fly: Fixed the `player_jump` game event not being hooked.
+- Recoil: Fixed the `weapon_fire` game event not being hooked.
+- Warp: Fixed the Tank teleporting in narrow areas. (Thanks to `yuzumi` for testing and reporting!)
+
+### Changes
+
+#### General
+- Mutant Tanks and its sub-plugins now properly support `Updater`.
+
+#### Core Plugin
+- Raised the size for Steam ID buffers to support other outputs.
+- Added log messages for tracking custom configs.
+- Changed how the Tank's health is refilled when players switch between different Mutant Tank types. (Thanks to `yuzumi` for suggesting!)
+- Added support for third-party plugins manually setting Tanks in ghost mode. (Requested by `yuzumi`.)
+- The speed boost reward's forward jump boost now only applies to the bunny hop reward.
+- The speed boost reward now allows recipients to change their voice pitch. (Thanks to `Marttt` for the code!)
+
+#### Commands
+- Added a `Voice Pitch` option to the `sm_mt_admin` command's panel.
+- Added a `Voice Pitch Visual` option to the `sm_mt_prefs` command's menu.
+
+#### Game Data
+- L4D2: The following functions' signatures are now dynamically generated (Thanks to `Silvers` for the code!):
+	- `CTerrorGameRules::IsScavengeMode`
+	- `CTerrorGameRules::IsSurvivalMode`
+	- `CTerrorGameRules::IsVersusMode`
+
+#### Settings
+- Added the following settings under the `Tank #/Boss` section (Requested by `xcd222`.):
+	- `Boss Base Type`
+	- `Boss Limit`
+- Added more options to the `Item Mode` setting.
+- Added the `Incap Damage Multiplier` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Requested by `Shao`.)
+- Added the `Combo Cooldown` setting under the `Tank #/Combo` and `STEAM_ID/Combo` sections. (Unused for now.)
+- Added the following settings under the `Plugin Settings/Health`, `Tank #/Health`, and `STEAM_ID/Health` sections (Requested by `xcd222`.):
+	- `Human Multiplier Mode`
+	- `Health Percentage Multiplier`
+- Added the `Voice Pitch Visual` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+
+#### Natives & Forwards
+- Updated the documentation for the `MT_OnPluginEnd` forward.
+- Updated the documentation for the `MT_GetCombinationSetting` native.
+- Added the `MT_OnPluginUpdate` forward. (This forward only fires when `Updater` is installed.)
+
+#### Abilities
+- Warp: Added logic for checking coordinates before teleporting the Tank.
+- Zombie: Added logic for checking coordinates before spawning common infected.
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6806` compiler.
+
+#### Additions
+- A file named `mutant_tanks_temp.txt` will now be automatically created, handled, and maintained by the core plugin.
+
+#### Requirements
+- Windows users: The `mutant_tanks_signatures.cfg` config file is now used by the core plugin.
+
+#### Compilation
+- Added compiler warnings for the following plugin source files that notify users when one or more abilities are disabled/excluded (Thanks to `Marttt` for the idea!):
+	- `mt_abilities.sp`
+	- `mt_abilities2.sp`
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+
 ## Version 8.90 (February 1, 2022)
 
 ### Bug Fixes
@@ -43,12 +147,13 @@
 - All settings in the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files can now be set globally and per platform.
 - The `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files now accept different formats like the main config file.
 - Renamed and added several settings for the `mutant_tanks_detours.cfg` and `mutant_tanks_patches.cfg` files.
-- Added [`Updater`](https://forums.alliedmods.net/showthread.php?t=169095) support.
+- Added [`Updater`](https://github.com/Teamkiller324/Updater) support.
 - Added [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254) support.
 - Added full MacOS support. (Untested)
 - Created macros for several arbitrary values.
 - Improved the RNG logic for all features that are RNG-based.
 - Added developer HUD panel for viewing currently alive Tanks.
+- `SourceMod 1.11.0.6806` or higher is now required.
 
 #### Core Plugin
 - The speed boost reward now does the following:
@@ -73,7 +178,7 @@
 - Improved logging for patching system.
 - Changed the method for aggravating idle Tanks. (Thanks to `cravenge` for the code and gamedata info!)
 - Updated the logic for skipping the Tank's taunt animation. (Thanks to `sorallll` for the code!)
-- Added compatibility for several plugins that detour or patch functions.
+- Added compatibility for several third-party plugins that detour or patch functions.
 
 #### Commands
 - Added the `sm_mtank` alias for the `sm_mutanttank` command.
@@ -99,7 +204,8 @@
 	- `CWeaponSpawn::Use`
 - Added detour setup, signatures, and patch offsets for `TankBehavior::InitialContainedAction`.
 - Updated documentation for finding several signatures and offsets.
-- L4D1: Updated a couple of offsets for the `1.0.4.1` update.
+- L4D1: Updated several offsets for the `1.0.4.1` update.
+- L4D2: Updated several signatures for the `2.2.2.3` update.
 
 #### Settings
 - Added the `Auto Update` setting under the `Plugin Settings/General` section.

@@ -445,16 +445,16 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sAbilities[320], sSet[4][32];
-	FormatEx(sAbilities, sizeof sAbilities, ",%s,", combo);
+	char sSet[4][32];
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCKET_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCKET_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCKET_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCKET_SECTION4);
-	if (g_esRocketCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	if (g_esRocketCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
 	{
-		char sSubset[10][32];
-		ExplodeString(combo, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
+		char sAbilities[320], sSubset[10][32];
+		strcopy(sAbilities, sizeof sAbilities, combo);
+		ExplodeString(sAbilities, ",", sSubset, sizeof sSubset, sizeof sSubset[]);
 		for (int iPos = 0; iPos < (sizeof sSubset); iPos++)
 		{
 			if (StrEqual(sSubset[iPos], MT_ROCKET_SECTION, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION2, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION3, false) || StrEqual(sSubset[iPos], MT_ROCKET_SECTION4, false))
@@ -671,6 +671,13 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 		vRemoveRocket(oldTank);
 	}
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
+}
+#endif
 
 #if defined MT_ABILITIES_MAIN2
 void vRocketPluginEnd()
@@ -915,9 +922,9 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 						}
 					}
 
-					float flPosition[3], flAngles[3];
-					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPosition);
-					flPosition[2] += 30.0;
+					float flPos[3], flAngles[3];
+					GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flPos);
+					flPos[2] += 30.0;
 					flAngles[0] = 90.0;
 					flAngles[1] = 0.0;
 					flAngles[2] = 0.0;
@@ -933,7 +940,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					DispatchKeyValue(iFlame, "JetLength", "400");
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-					TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
+					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iFlame);
 					vSetEntityParent(iFlame, survivor);
 
@@ -1089,10 +1096,10 @@ Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		g_iRocketDeathModelOwner = GetClientUserId(iSurvivor);
 	}
 
-	float flPosition[3];
-	GetClientAbsOrigin(iSurvivor, flPosition);
+	float flPos[3];
+	GetClientAbsOrigin(iSurvivor, flPos);
 
-	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
+	TE_SetupExplosion(flPos, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
 	TE_SendToAll();
 
 	SetEntityGravity(iSurvivor, 1.0);

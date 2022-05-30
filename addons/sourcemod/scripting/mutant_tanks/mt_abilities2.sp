@@ -11,9 +11,14 @@
 
 #define MT_ABILITIES_MAIN2
 #define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_COMPILER_MESSAGE2 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
 #include <mutant_tanks>
+
+#undef REQUIRE_PLUGIN
+#tryinclude <updater>
+#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -73,6 +78,239 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities2/mt_zombie.sp"
 #endif
 #define REQUIRE_PLUGIN
+
+#if MT_ABILITIES_COMPILER_MESSAGE2 == 1
+	#if !defined MT_MENU_MEDIC
+		#warning The "Medic" (mt_medic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_METEOR
+		#warning The "Meteor" (mt_meteor.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_MINION
+		#warning The "Minion" (mt_minion.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_NECRO
+		#warning The "Necro" (mt_necro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_NULLIFY
+		#warning The "Nullify" (mt_nullify.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_OMNI
+		#warning The "Omni" (mt_omni.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PANIC
+		#warning The "Panic" (mt_panic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PIMP
+		#warning The "Pimp" (mt_pimp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PUKE
+		#warning The "Puke" (mt_puke.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PYRO
+		#warning The "Pyro" (mt_pyro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_QUIET
+		#warning The "Quiet" (mt_quiet.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RECOIL
+		#warning The "Recoil" (mt_recoil.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_REGEN
+		#warning The "Regen" (mt_regen.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RESPAWN
+		#warning The "Respawn" (mt_respawn.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RESTART
+		#warning The "Restart" (mt_restart.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ROCK
+		#warning The "Rock" (mt_rock.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ROCKET
+		#warning The "Rocket" (mt_rocket.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHAKE
+		#warning The "Shake" (mt_shake.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHIELD
+		#warning The "Shield" (mt_shield.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHOVE
+		#warning The "Shove" (mt_shove.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SLOW
+		#warning The "Slow" (mt_slow.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SMASH
+		#warning The "Smash" (mt_smash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SMITE
+		#warning The "Smite" (mt_smite.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPAM
+		#warning The "Spam" (mt_spam.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPLASH
+		#warning The "Splash" (mt_splash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPLATTER
+		#warning The "Splatter" (mt_splatter.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_THROW
+		#warning The "Throw" (mt_throw.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_TRACK
+		#warning The "Track" (mt_track.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ULTIMATE
+		#warning The "Ultimate" (mt_ultimate.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_UNDEAD
+		#warning The "Undead" (mt_undead.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_VAMPIRE
+		#warning The "Vampire" (mt_vampire.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_VISION
+		#warning The "Vision" (mt_vision.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WARP
+		#warning The "Warp" (mt_warp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WHIRL
+		#warning The "Whirl" (mt_whirl.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WITCH
+		#warning The "Witch" (mt_witch.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_XIPHOS
+		#warning The "Xiphos" (mt_xiphos.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_YELL
+		#warning The "Yell" (mt_yell.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ZOMBIE
+		#warning The "Zombie" (mt_zombie.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+#endif
+#if MT_ABILITIES_COMPILER_MESSAGE2 == 2
+	#if !defined MT_MENU_MEDIC
+		#error The "Medic" (mt_medic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_METEOR
+		#error The "Meteor" (mt_meteor.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_MINION
+		#error The "Minion" (mt_minion.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_NECRO
+		#error The "Necro" (mt_necro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_NULLIFY
+		#error The "Nullify" (mt_nullify.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_OMNI
+		#error The "Omni" (mt_omni.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PANIC
+		#error The "Panic" (mt_panic.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PIMP
+		#error The "Pimp" (mt_pimp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PUKE
+		#error The "Puke" (mt_puke.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_PYRO
+		#error The "Pyro" (mt_pyro.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_QUIET
+		#error The "Quiet" (mt_quiet.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RECOIL
+		#error The "Recoil" (mt_recoil.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_REGEN
+		#error The "Regen" (mt_regen.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RESPAWN
+		#error The "Respawn" (mt_respawn.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RESTART
+		#error The "Restart" (mt_restart.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ROCK
+		#error The "Rock" (mt_rock.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ROCKET
+		#error The "Rocket" (mt_rocket.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHAKE
+		#error The "Shake" (mt_shake.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHIELD
+		#error The "Shield" (mt_shield.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SHOVE
+		#error The "Shove" (mt_shove.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SLOW
+		#error The "Slow" (mt_slow.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SMASH
+		#error The "Smash" (mt_smash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SMITE
+		#error The "Smite" (mt_smite.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPAM
+		#error The "Spam" (mt_spam.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPLASH
+		#error The "Splash" (mt_splash.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_SPLATTER
+		#error The "Splatter" (mt_splatter.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_THROW
+		#error The "Throw" (mt_throw.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_TRACK
+		#error The "Track" (mt_track.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ULTIMATE
+		#error The "Ultimate" (mt_ultimate.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_UNDEAD
+		#error The "Undead" (mt_undead.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_VAMPIRE
+		#error The "Vampire" (mt_vampire.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_VISION
+		#error The "Vision" (mt_vision.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WARP
+		#error The "Warp" (mt_warp.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WHIRL
+		#error The "Whirl" (mt_whirl.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_WITCH
+		#error The "Witch" (mt_witch.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_XIPHOS
+		#error The "Xiphos" (mt_xiphos.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_YELL
+		#error The "Yell" (mt_yell.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_ZOMBIE
+		#error The "Zombie" (mt_zombie.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+#endif
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -148,6 +386,11 @@ public void OnMapEnd()
 public void MT_OnPluginEnd()
 {
 	vAbilitySetup(3);
+}
+
+public void MT_OnPluginUpdate()
+{
+	MT_ReloadPlugin(null);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -1410,6 +1653,9 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 
 public void MT_OnHookEvent(bool hooked)
 {
+#if defined MT_MENU_RECOIL
+	vRecoilHookEvent(hooked);
+#endif
 #if defined MT_MENU_RESTART
 	vRestartHookEvent(hooked);
 #endif

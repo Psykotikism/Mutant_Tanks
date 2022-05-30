@@ -624,6 +624,16 @@
 		"ru"			"Вы появитесь в качестве:{olive} {1}{yellow} (Танк #{2}){default} когда вы получите контроль над{mint} Танком{default}."
 	}
 
+	"PitchVisualOn"
+	{
+		"ru"			"Высота голоса: ВКЛ"
+	}
+
+	"PitchVisualOff"
+	{
+		"ru"			"Высота голоса: ВЫКЛ"
+	}
+
 	"PluginDisabled"
 	{
 		"ru"			"Танки-мутанты{default} отключены."
