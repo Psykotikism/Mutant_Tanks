@@ -2149,6 +2149,8 @@ Overrides
 
 **cravenge** - За плагин [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) и [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729).
 
+**Erreur 500** - За плагин [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151).
+
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помощь с подписями игровых данных и помощь оптимизировать/исправить различные части кода.
 
 **epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.

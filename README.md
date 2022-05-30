@@ -2149,6 +2149,8 @@ Examples:
 
 **cravenge** - For the [[L4D/L4D2] Vigilant Tank Behavior](https://forums.alliedmods.net/showthread.php?t=334690) and [[L4D/L4D2] MultiTanks - Improved](https://forums.alliedmods.net/showthread.php?t=303729) plugins.
 
+**Erreur 500** - For the [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, helping with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz/epzminion** - For helping with gamedata signatures, offsets, addresses, and invaluable input.

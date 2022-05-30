@@ -1094,37 +1094,47 @@ void vWarp2(int tank, int other)
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
 
-	float flTempOrigin[3], flMin[3], flMax[3];
+	float flTempOrigin[3], flTempAngles[3];
+	vCopyVector(flOtherOrigin, flTempOrigin);
+	vCopyVector(flOtherAngles, flTempAngles);
+	flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flTempAngles[1]))));
+	flTempOrigin[1] += (50.0 * (Sine(DegToRad(flTempAngles[1]))));
+	flTempOrigin[2] += 5.0;
+
+	float flMin[3], flMax[3];
 	GetClientMins(tank, flMin);
 	GetClientMaxs(tank, flMax);
-	for (int iIndex = 0; iIndex < 20; iIndex++)
-	{
-		vCopyVector(flOtherOrigin, flTempOrigin);
-		flTempOrigin[0] += (50.0 * (Cosine(DegToRad(flOtherAngles[1]))));
-		flTempOrigin[1] += (50.0 * (Sine(DegToRad(flOtherAngles[1]))));
-		flTempOrigin[2] += 5.0;
-
-		if (!bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
-		{
-			break;
-		}
-	}
-
 	if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flTempOrigin))
 	{
 		return;
 	}
 
-	vCopyVector(flTempOrigin, flOtherOrigin);
 	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
-	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
+	TeleportEntity(tank, flTempOrigin, flTempAngles, view_as<float>({0.0, 0.0, 0.0}));
+	vFixPlayerPosition(tank);
+
+	if (bIsPlayerStuck(tank))
+	{
+		TeleportEntity(tank, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+
+		return;
+	}
 
 	if (g_esWarpCache[tank].g_iWarpMode == 1 || g_esWarpCache[tank].g_iWarpMode == 3)
 	{
 		vAttachParticle(other, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP2, other);
 		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+		vFixPlayerPosition(other);
+
+		if (bIsPlayerStuck(other))
+		{
+			TeleportEntity(tank, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+			TeleportEntity(other, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
+
+			return;
+		}
 	}
 
 	if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
@@ -1375,9 +1385,25 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 			return;
 		}
 
+		float flMin[3], flMax[3];
+		GetClientMins(tank, flMin);
+		GetClientMaxs(tank, flMax);
+		if (bIsPlayerStuck(.min = flMin, .max = flMax, .pos = flRockPos))
+		{
+			return;
+		}
+
 		vAttachParticle(tank, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP, tank);
 		TeleportEntity(tank, flRockPos, flRockAngles, view_as<float>({0.0, 0.0, 0.0}));
+		vFixPlayerPosition(tank);
+
+		if (bIsPlayerStuck(tank))
+		{
+			TeleportEntity(tank, flTankPos, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+
+			return;
+		}
 
 		if (g_esWarpCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
 		{

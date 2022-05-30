@@ -9,6 +9,7 @@
 
 #### Abilities
 - Fixed an issue where several claw/melee abilities will fail to activate when a human-controlled Tank uses up all their ammunition for their range abilities.
+- Warp: Fixed the Tank teleporting inside solid objects.
 
 ### Changes
 
@@ -75,6 +76,8 @@
 - Warp
 	- Added the `Human Rock Cooldown` setting. (Requested by `Shao`.)
 	- Added the `Warp Rock Cooldown` setting. (Requested by `Shao`.)
+	- Removed non-working code.
+- Zombie: Removed non-working code.
 
 ### Files
 
