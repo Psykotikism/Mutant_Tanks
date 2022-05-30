@@ -4406,7 +4406,7 @@
 
 	"Track"
 	{
-		"ru"			"{mint}Камень брошенный{olive} {1}{yellow} наводится{mint} на выживших!"
+		"ru"			"{mint}Камень, брошенный{olive} {1}{yellow} наводится{mint} на выживших!"
 	}
 
 	"TrackAmmo"
