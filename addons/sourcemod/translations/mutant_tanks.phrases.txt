@@ -4,15 +4,15 @@
 	// --
 	// Note: Not all phrases support these placeholders.
 	// --
-	// "{default}" - Normal - \x01
+	// "{default}" - Normal -> \x01
 	// --
-	// "{mint}" - Sky-green - \x03
+	// "{mint}" - Sky-green -> \x03
 	// --
-	// "{yellow}" - Yellow-orange - \x04
+	// "{yellow}" - Yellow-orange -> \x04
 	// --
-	// "{olive}" - Yellow-green - \x05
+	// "{olive}" - Yellow-green -> \x05
 	// --
-	// "{percent}" - "%"
+	// "{percent}" - "%%" -> %
 
 	"MutantTanks"
 	{

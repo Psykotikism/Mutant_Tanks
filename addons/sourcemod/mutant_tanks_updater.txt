@@ -50,7 +50,7 @@
 		"Notes"		"- Updated English translations."
 		"Notes"		"- Updated Simplified Chinese translations."
 		"Notes"		"- Updated Hungarian translations."
-		"Notes"		"- Updated Russian translations."
+		"Notes"		"- Updated Russian translations. (Thanks to \"Blueberry\"/\"Kleiner\"!)"
 		"Notes"		"Natives & Forwards:"
 		"Notes"		"- Updated the documentation for the \"MT_GetCombinationSetting\" native."
 		"Notes"		"Abilities:"

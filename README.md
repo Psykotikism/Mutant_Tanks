@@ -2197,7 +2197,7 @@ Examples:
 
 **Oliver, FusionFlarez** - For helping to test the `Reward` system, `Combination` feature, and overall support.
 
-**SourceMod Team** - For continually updating/improving SourceMod.
+**SourceMod Team** - For continually updating/improving `SourceMod`.
 
 ## Third-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
