@@ -22833,7 +22833,7 @@
 
 			// The health received by the Mutant Tank is multiplied by this value.
 			// Note: Health = Health x Vampire health multiplier
-			// Example: Health = 100.0 x 5.0 (500.0)
+			// Example: Health = 1000.0 x 5.0 (5000.0)
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be overridden for specific players.
 			// --

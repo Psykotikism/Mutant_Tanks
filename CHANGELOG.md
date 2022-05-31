@@ -48,7 +48,7 @@
 - Updated English translations.
 - Updated Simplified Chinese translations.
 - Updated Hungarian translations.
-- Updated Russian translations.
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
 
 #### Natives & Forwards
 - Updated the documentation for the `MT_GetCombinationSetting` native.
