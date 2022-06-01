@@ -6,11 +6,11 @@
 ## Языки
 - Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32">
-</a>
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32"></a>
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
+
 Танки-мутанты: SourceMod плагин L4D/L4D2
 Все права защищены (C) 2022  Alfred "Psyk0tik" Llagas
 
