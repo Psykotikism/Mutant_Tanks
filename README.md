@@ -6,11 +6,11 @@
 ## Languages
 - Click on one of the flags to view in another language.
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
-</a>
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32"></a>
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
+
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2022  Alfred "Psyk0tik" Llagas
 
@@ -274,7 +274,7 @@ mt_pluginenabled "1"
 
 ## Disabling
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
+2. Unload `Mutant Tanks` by restarting the server. (Using `sm plugins unload` will take too long.)
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
