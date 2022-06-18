@@ -452,12 +452,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_JUMP_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_JUMP_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_JUMP_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_JUMP_SECTION4);
-	if (g_esJumpCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esJumpCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -490,7 +491,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								}
 							}
 						}
-						else if (g_esJumpCache[tank].g_iJumpAbility == 2 || g_esJumpCache[tank].g_iJumpAbility == 3)
+
+						if (g_esJumpCache[tank].g_iJumpAbility == 2 || g_esJumpCache[tank].g_iJumpAbility == 3)
 						{
 							switch (flDelay)
 							{
@@ -852,7 +854,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esJumpPlayer[tank].g_iAmmoCount++;
 
 							vJump2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "JumpHuman", g_esJumpPlayer[tank].g_iAmmoCount, g_esJumpCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esJumpPlayer[tank].g_bActivated)

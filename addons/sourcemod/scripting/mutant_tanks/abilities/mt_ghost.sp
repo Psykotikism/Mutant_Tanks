@@ -515,12 +515,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_GHOST_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_GHOST_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_GHOST_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_GHOST_SECTION4);
-	if (g_esGhostCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esGhostCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -553,7 +554,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								}
 							}
 						}
-						else if (g_esGhostCache[tank].g_iGhostAbility == 2 || g_esGhostCache[tank].g_iGhostAbility == 3)
+
+						if (g_esGhostCache[tank].g_iGhostAbility == 2 || g_esGhostCache[tank].g_iGhostAbility == 3)
 						{
 							switch (flDelay)
 							{
@@ -929,7 +931,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esGhostPlayer[tank].g_iAmmoCount++;
 
 							vGhost(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman", g_esGhostPlayer[tank].g_iAmmoCount, g_esGhostCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esGhostPlayer[tank].g_bActivated)
@@ -1463,8 +1464,9 @@ Action tTimerGhost(Handle timer, DataPack pack)
 		g_esGhostPlayer[iTank].g_iGhostAlpha = g_esGhostCache[iTank].g_iGhostFadeLimit;
 		if (!g_esGhostPlayer[iTank].g_bActivated2)
 		{
+			int iPos = g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esGhostCache[iTank].g_iGhostFadeDelay;
 			g_esGhostPlayer[iTank].g_bActivated2 = true;
-			g_esGhostPlayer[iTank].g_iDuration = (iCurrentTime + g_esGhostCache[iTank].g_iGhostFadeDelay);
+			g_esGhostPlayer[iTank].g_iDuration = (iCurrentTime + iDuration);
 		}
 	}
 

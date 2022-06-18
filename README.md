@@ -26,7 +26,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 ## Requirements
 1. `SourceMod 1.11.0.6806` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended:
+3. Recommended (Optional):
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)

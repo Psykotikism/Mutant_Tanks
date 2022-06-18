@@ -447,12 +447,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_YELL_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_YELL_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_YELL_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_YELL_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esYellCache[tank].g_iYellAbility == 1 && g_esYellCache[tank].g_iComboAbility == 1 && !g_esYellPlayer[tank].g_bActivated)
 		{
@@ -745,7 +746,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esYellPlayer[tank].g_iAmmoCount++;
 
 							vYell2(tank, true);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esYellPlayer[tank].g_iAmmoCount, g_esYellCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esYellPlayer[tank].g_bActivated)

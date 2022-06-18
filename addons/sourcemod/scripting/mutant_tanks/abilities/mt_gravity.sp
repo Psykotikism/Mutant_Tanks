@@ -479,12 +479,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_GRAVITY_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_GRAVITY_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_GRAVITY_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_GRAVITY_SECTION4);
-	if (g_esGravityCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esGravityCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -517,7 +518,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								}
 							}
 						}
-						else if (g_esGravityCache[tank].g_iGravityAbility == 2 || g_esGravityCache[tank].g_iGravityAbility == 3)
+
+						if (g_esGravityCache[tank].g_iGravityAbility == 2 || g_esGravityCache[tank].g_iGravityAbility == 3)
 						{
 							switch (flDelay)
 							{
@@ -585,7 +587,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esGravityAbility[iIndex].g_iAccessFlags = 0;
 				g_esGravityAbility[iIndex].g_iImmunityFlags = 0;
-				g_esGravityAbility[iIndex].g_flCloseAreasOnly = 150.0;
+				g_esGravityAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esGravityAbility[iIndex].g_iComboAbility = 0;
 				g_esGravityAbility[iIndex].g_iComboPosition = -1;
 				g_esGravityAbility[iIndex].g_iHumanAbility = 0;
