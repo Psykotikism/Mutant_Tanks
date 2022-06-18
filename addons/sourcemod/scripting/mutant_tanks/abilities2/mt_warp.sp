@@ -516,12 +516,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WARP_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_WARP_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_WARP_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_WARP_SECTION4);
-	if (g_esWarpCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esWarpCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -554,7 +555,8 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 								}
 							}
 						}
-						else if (g_esWarpCache[tank].g_iWarpAbility == 2 || g_esWarpCache[tank].g_iWarpAbility == 3)
+
+						if (g_esWarpCache[tank].g_iWarpAbility == 2 || g_esWarpCache[tank].g_iWarpAbility == 3)
 						{
 							switch (flDelay)
 							{
@@ -930,7 +932,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esWarpPlayer[tank].g_iAmmoCount++;
 
 							vWarp(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman", g_esWarpPlayer[tank].g_iAmmoCount, g_esWarpCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esWarpPlayer[tank].g_bActivated)
@@ -1415,13 +1416,13 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 	}
 }
 
-bool bIsInsideSaferoom(int survivor)
+bool bIsSurvivorInsideSaferoom(int survivor)
 {
 	int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
 	if (iArea)
 	{
 		int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esWarpGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
-		if ((iAttributeFlags & 2048))
+		if (iAttributeFlags & 2048)
 		{
 			return true;
 		}
@@ -1520,7 +1521,7 @@ Action tTimerWarp(Handle timer, DataPack pack)
 		case 0, 1:
 		{
 			int iSurvivor = iGetRandomSurvivor(iTank);
-			if (bIsSurvivor(iSurvivor) && !bIsSurvivorDisabled(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
+			if (bIsSurvivor(iSurvivor) && !bIsSurvivorDisabled(iSurvivor) && !bIsSurvivorInsideSaferoom(iSurvivor))
 			{
 				vWarp2(iTank, iSurvivor);
 			}

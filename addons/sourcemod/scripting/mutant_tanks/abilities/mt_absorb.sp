@@ -464,12 +464,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ABSORB_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ABSORB_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ABSORB_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ABSORB_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esAbsorbCache[tank].g_iAbsorbAbility == 1 && g_esAbsorbCache[tank].g_iComboAbility == 1 && !g_esAbsorbPlayer[tank].g_bActivated)
 		{

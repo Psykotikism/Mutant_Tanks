@@ -378,12 +378,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ZOMBIE_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esZombieCache[tank].g_iZombieAbility == 1 && g_esZombieCache[tank].g_iComboAbility == 1 && !g_esZombiePlayer[tank].g_bActivated)
 		{
@@ -688,7 +689,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esZombiePlayer[tank].g_iAmmoCount++;
 
 							vZombie2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman", g_esZombiePlayer[tank].g_iAmmoCount, g_esZombieCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esZombiePlayer[tank].g_bActivated)

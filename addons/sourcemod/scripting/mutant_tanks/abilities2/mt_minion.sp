@@ -370,12 +370,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MINION_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MINION_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MINION_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MINION_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMinionCache[tank].g_iMinionAbility == 1 && g_esMinionCache[tank].g_iComboAbility == 1)
 		{
@@ -428,7 +429,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMinionAbility[iIndex].g_iHumanAbility = 0;
 				g_esMinionAbility[iIndex].g_iHumanAmmo = 5;
 				g_esMinionAbility[iIndex].g_iHumanCooldown = 0;
-				g_esMinionAbility[iIndex].g_flOpenAreasOnly = 150.0;
+				g_esMinionAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esMinionAbility[iIndex].g_iRequiresHumans = 0;
 				g_esMinionAbility[iIndex].g_iMinionAbility = 0;
 				g_esMinionAbility[iIndex].g_iMinionMessage = 0;

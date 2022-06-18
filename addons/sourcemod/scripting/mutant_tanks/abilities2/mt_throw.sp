@@ -458,12 +458,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_THROW_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_THROW_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_THROW_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_THROW_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_ROCKTHROW && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 1 && bIsValidEntity(weapon))
 		{
@@ -509,7 +510,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowAbility[iIndex].g_iHumanAbility = 0;
 				g_esThrowAbility[iIndex].g_iHumanAmmo = 5;
 				g_esThrowAbility[iIndex].g_iHumanCooldown = 0;
-				g_esThrowAbility[iIndex].g_flOpenAreasOnly = 500.0;
+				g_esThrowAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esThrowAbility[iIndex].g_iRequiresHumans = 0;
 				g_esThrowAbility[iIndex].g_iThrowAbility = 0;
 				g_esThrowAbility[iIndex].g_iThrowMessage = 0;

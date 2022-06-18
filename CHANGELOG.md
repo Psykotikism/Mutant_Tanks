@@ -1,5 +1,49 @@
 # Changelog
 
+## Version 8.93 (June 20, 2022)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed the refill reward not working properly. (Thanks to `Mi.Cura` for testing and reporting!)
+
+#### Abilities
+- Fixed an issue where the `Combo Set` setting was being formatted incorrectly, resulting in strange behavior. (Thanks to `ddd123` for reporting!)
+- Drop: Fixed an issue where weapons attached to Tanks are not affected by the `Ghost` ability's fade feature.
+- Ghost: Fixed main ability not activating in combinations when secondary ability is enabled.
+- Gravity: Fixed main ability not activating in combinations when secondary ability is enabled.
+- Heal: Fixed main ability not activating in combinations when secondary ability is enabled.
+- Jump: Fixed main ability not activating in combinations when secondary ability is enabled.
+- Warp:
+	- Fixed main ability not activating in combinations when secondary ability is enabled.
+	- Fixed an issue with choosing a random survivor or Tank to warp to.
+
+### Changes
+
+#### General
+- Mutant Tanks and its sub-plugins now check for duplicate plugins and several old versions (including `Super Tanks++`) before loading.
+
+#### Core Plugin
+- Forwards are now registered before the plugin loads.
+
+#### Commands
+- Removed the following commands (No longer used.):
+	- `sm_mt_config2` - Same function as `sm_mt_config`
+	- `sm_mt_list2` - Same function as `sm_mt_list`
+	- `sm_mt_tank2`/`sm_tank2` - Same function as `sm_mt_tank`/`sm_tank`
+	- `sm_mt_version2` - Same function as `sm_mt_version`
+
+#### Abilities
+- Changed the default values of the following settings to `0.0`:
+	- `Close Areas Only`
+	- `Open Areas Only`
+- Ghost: The `Ghost Fade Delay` setting can now be substituted by the `Combo Duration` setting when combined with other abilities.
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated updater file.
+
 ## Version 8.92 (June 1, 2022)
 
 ### Bug Fixes

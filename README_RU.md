@@ -26,7 +26,7 @@
 ## Требования
 1. `SourceMod 1.11.0.6806` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Рекомендуется:
+3. Рекомендуется (Необязательно):
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
 - [`Explosive Chains Credit`](https://forums.alliedmods.net/showthread.php?t=334655)
 - [`ThirdPersonShoulder_Detect`](https://forums.alliedmods.net/showthread.php?t=298649)

@@ -375,12 +375,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esLightningAbility[g_esLightningPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_LIGHTNING_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esLightningCache[tank].g_iLightningAbility == 1 && g_esLightningCache[tank].g_iComboAbility == 1 && !g_esLightningPlayer[tank].g_bActivated)
 		{
@@ -434,7 +435,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esLightningAbility[iIndex].g_iAccessFlags = 0;
 				g_esLightningAbility[iIndex].g_iImmunityFlags = 0;
-				g_esLightningAbility[iIndex].g_flCloseAreasOnly = 150.0;
+				g_esLightningAbility[iIndex].g_flCloseAreasOnly = 0.0;
 				g_esLightningAbility[iIndex].g_iComboAbility = 0;
 				g_esLightningAbility[iIndex].g_iComboPosition = -1;
 				g_esLightningAbility[iIndex].g_iHumanAbility = 0;
@@ -678,7 +679,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esLightningPlayer[tank].g_iAmmoCount++;
 
 							vLightning2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LightningHuman", g_esLightningPlayer[tank].g_iAmmoCount, g_esLightningCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esLightningPlayer[tank].g_bActivated)

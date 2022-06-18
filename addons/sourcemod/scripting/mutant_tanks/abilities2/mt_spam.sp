@@ -389,12 +389,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPAM_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPAM_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPAM_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPAM_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iComboAbility == 1 && !g_esSpamPlayer[tank].g_bActivated)
 		{
@@ -455,7 +456,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSpamAbility[iIndex].g_iHumanAmmo = 5;
 				g_esSpamAbility[iIndex].g_iHumanCooldown = 0;
 				g_esSpamAbility[iIndex].g_iHumanMode = 1;
-				g_esSpamAbility[iIndex].g_flOpenAreasOnly = 150.0;
+				g_esSpamAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esSpamAbility[iIndex].g_iRequiresHumans = 0;
 				g_esSpamAbility[iIndex].g_iSpamAbility = 0;
 				g_esSpamAbility[iIndex].g_iSpamMessage = 0;
@@ -692,7 +693,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esSpamPlayer[tank].g_iAmmoCount++;
 
 							vSpam2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman", g_esSpamPlayer[tank].g_iAmmoCount, g_esSpamCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esSpamPlayer[tank].g_bActivated)

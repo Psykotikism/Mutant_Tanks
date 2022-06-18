@@ -380,12 +380,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_CAR_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_CAR_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_CAR_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_CAR_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iComboAbility == 1 && !g_esCarPlayer[tank].g_bActivated)
 		{
@@ -445,7 +446,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCarAbility[iIndex].g_iHumanAmmo = 5;
 				g_esCarAbility[iIndex].g_iHumanCooldown = 0;
 				g_esCarAbility[iIndex].g_iHumanMode = 1;
-				g_esCarAbility[iIndex].g_flOpenAreasOnly = 500.0;
+				g_esCarAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esCarAbility[iIndex].g_iRequiresHumans = 1;
 				g_esCarAbility[iIndex].g_iCarAbility = 0;
 				g_esCarAbility[iIndex].g_iCarMessage = 0;
@@ -723,7 +724,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esCarPlayer[tank].g_iAmmoCount++;
 
 							vCar2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esCarPlayer[tank].g_iAmmoCount, g_esCarCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esCarPlayer[tank].g_bActivated)

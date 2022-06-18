@@ -392,12 +392,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCK_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCK_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCK_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCK_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esRockCache[tank].g_iRockAbility == 1 && g_esRockCache[tank].g_iComboAbility == 1 && !g_esRockPlayer[tank].g_bActivated)
 		{
@@ -458,7 +459,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRockAbility[iIndex].g_iHumanAmmo = 5;
 				g_esRockAbility[iIndex].g_iHumanCooldown = 0;
 				g_esRockAbility[iIndex].g_iHumanMode = 1;
-				g_esRockAbility[iIndex].g_flOpenAreasOnly = 500.0;
+				g_esRockAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esRockAbility[iIndex].g_iRequiresHumans = 1;
 				g_esRockAbility[iIndex].g_iRockAbility = 0;
 				g_esRockAbility[iIndex].g_iRockMessage = 0;
@@ -729,7 +730,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esRockPlayer[tank].g_iAmmoCount++;
 
 							vRock2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman", g_esRockPlayer[tank].g_iAmmoCount, g_esRockCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esRockPlayer[tank].g_bActivated)

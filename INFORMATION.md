@@ -493,7 +493,8 @@
 		}
 		"Colors"
 		{
-			// You can create color presets here with unique nicknames that you can use in any of the following settings:
+			// Color presets can be created with unique nicknames that can be used in several color settings.
+			// --
 			// - "Body Color Visual"
 			// - "Glow Color Visual"
 			// - "Light Color Visual"
@@ -508,11 +509,13 @@
 			// - "Propane Tank Color"
 			// - "Flashlight Color"
 			// - "Crown Color"
+			// --
 			// Each time the config file is read, the presets in this section will be stored with their associated values.
 			// A nickname must be unique and cannot be used more than once.
-			// Any duplicates will overwrite the previous one.
+			// Any duplicates will overwrite previous entries.
 			// This is just a shortcut method for changing colors.
-			// Here are some examples:
+			// --
+			// Examples:
 
 			// All Tanks will be red.
 			"all_tank_skins"			"255,0,0,255" // See "Skin Color" below.
@@ -7587,7 +7590,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8102,7 +8105,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"150.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8272,7 +8275,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Close Areas Only"			"150.0"
+			"Close Areas Only"			"0.0"
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -9865,7 +9868,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"150.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -9995,7 +9998,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Close Areas Only"			"150.0"
+			"Close Areas Only"			"0.0"
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -10720,7 +10723,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -11307,6 +11310,7 @@
 			"Ghost Fade Alpha"			"2"
 
 			// The Mutant Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11661,7 +11665,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Close Areas Only"			"150.0"
+			"Close Areas Only"			"0.0"
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -15446,7 +15450,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Close Areas Only"			"150.0"
+			"Close Areas Only"			"0.0"
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -15936,7 +15940,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -16144,7 +16148,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"150.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -19142,7 +19146,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -21426,7 +21430,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"150.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -21554,7 +21558,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Close Areas Only"			"150.0"
+			"Close Areas Only"			"0.0"
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -22011,7 +22015,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -22297,7 +22301,7 @@
 			// Keywords:
 			// "disabled"/"false"/"off"/"no" - 0.0 range
 			// "farthest" - 99999.0 range
-			"Open Areas Only"			"500.0"
+			"Open Areas Only"			"0.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.

@@ -457,12 +457,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_DROP_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_DROP_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_DROP_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_DROP_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_UPONDEATH && g_esDropCache[tank].g_iDropAbility == 1 && g_esDropCache[tank].g_iComboAbility == 1 && g_esDropPlayer[tank].g_bActivated)
 		{
@@ -1099,7 +1100,7 @@ Action tTimerDropRenderWeapon(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iAlpha = GetEntData(iWeapon, (GetEntSendPropOffs(iWeapon, "m_clrRender") + 3), 1);
+	int iAlpha = GetEntData(iTank, (GetEntSendPropOffs(iTank, "m_clrRender") + 3), 1);
 	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
 	SetEntData(iWeapon, (GetEntSendPropOffs(iWeapon, "m_clrRender") + 3), iAlpha, 1, true);
 
