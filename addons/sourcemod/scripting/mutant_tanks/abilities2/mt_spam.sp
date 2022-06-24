@@ -961,7 +961,7 @@ Action tTimerSpam(Handle timer, DataPack pack)
 	if (bIsValidEntity(iLauncher))
 	{
 		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
-		AcceptEntityInput(iLauncher, "LaunchSpam");
+		AcceptEntityInput(iLauncher, "LaunchRock");
 	}
 
 	return Plugin_Continue;

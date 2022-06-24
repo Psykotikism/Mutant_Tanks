@@ -15,6 +15,8 @@
 		"Notes"		"Bug Fixes:"
 		"Notes"		"Abilities:"
 		"Notes"		"- Fixed the \"* Cooldown\" setting for several abilities. (Thanks to \"Mi.Cura\" for testing and reporting!)"
+		"Notes"		"- Jump: Fixed the Tank's periodical and sporadic jumping not ending properly. (Thanks to \"Mi.Cura\" for testing and reporting!)"
+		"Notes"		"- Spam: Fixed the ability not shooting any rocks. (Thanks to \"Mi.Cura\" for testing and reporting!)"
 		"Notes"		"Changes:"
 		"Notes"		"Abilities:"
 		"Notes"		"- Absorb: Added the \"Human Duration\" setting."

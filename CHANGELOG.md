@@ -6,6 +6,8 @@
 
 #### Abilities
 - Fixed the `* Cooldown` setting for several abilities. (Thanks to `Mi.Cura` for testing and reporting!)
+- Jump: Fixed the Tank's periodical and sporadic jumping not ending properly. (Thanks to `Mi.Cura` for testing and reporting!)
+- Spam: Fixed the ability not shooting any rocks. (Thanks to `Mi.Cura` for testing and reporting!)
 
 ### Changes
 

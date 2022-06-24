@@ -1196,6 +1196,8 @@ void vJumpReset2(int survivor, int tank, int messages)
 
 void vJumpReset3(int tank)
 {
+	g_esJumpPlayer[tank].g_bActivated = false;
+
 	int iTime = GetTime(), iPos = g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esJumpCache[tank].g_iJumpCooldown;
 	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esJumpCache[tank].g_iHumanAbility == 1 && g_esJumpCache[tank].g_iHumanMode == 0 && g_esJumpPlayer[tank].g_iAmmoCount < g_esJumpCache[tank].g_iHumanAmmo && g_esJumpCache[tank].g_iHumanAmmo > 0) ? g_esJumpCache[tank].g_iHumanCooldown : iCooldown;
 	g_esJumpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
