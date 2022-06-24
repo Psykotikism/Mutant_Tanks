@@ -4541,7 +4541,7 @@ void vHudPanel(int developer, int level = 0)
 
 	g_esPlayer[developer].g_iHudPanelPages = (RoundToNearest(float(iTankCount / 2)) - 1);
 	FormatEx(sDisplay, sizeof sDisplay, "%s HUD Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
-
+	
 	Panel pHudPanel = new Panel();
 	pHudPanel.SetTitle(sDisplay);
 	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);

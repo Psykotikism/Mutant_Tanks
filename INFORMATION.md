@@ -494,6 +494,7 @@
 		"Colors"
 		{
 			// Color presets can be created with unique nicknames that can be used in several color settings.
+			// --
 			// - "Body Color Visual"
 			// - "Glow Color Visual"
 			// - "Light Color Visual"
@@ -5487,19 +5488,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5584,6 +5572,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -7584,19 +7573,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8438,19 +8414,6 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 99999.0 damage
 			"Cloud Damage"				"5.0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Cloud Duration"			"0"
 		}
 	}
 }
@@ -9888,19 +9851,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9975,6 +9925,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10755,19 +10706,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"30"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10842,6 +10780,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10959,19 +10898,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11063,6 +10989,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11144,7 +11071,6 @@
 	{
 		// The Mutant Tank cloaks itself and nearby special infected, and disarms survivors.
 		// "Ability Enabled" - When the Mutant Tank spawns, it becomes invisible.
-		// - "Ghost Duration"
 		// - "Ghost Fade Alpha"
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
@@ -11375,19 +11301,6 @@
 			// "forever" - 99999 seconds
 			"Ghost Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Ghost Duration"			"0"
-
 			// The amount of alpha to take from the Mutant Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
 			// Note: The rate at which the Mutant Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
 			// Note: This setting can be overridden for specific players.
@@ -11397,6 +11310,7 @@
 			"Ghost Fade Alpha"			"2"
 
 			// The Mutant Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11416,6 +11330,7 @@
 			"Ghost Fade Limit"			"0"
 
 			// The rate of the Mutant Tank's ghost fade effect.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1 (Fastest)
@@ -11615,19 +11530,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11702,6 +11604,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11804,19 +11707,6 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
@@ -11951,6 +11841,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -12054,7 +11945,6 @@
 		// The Mutant Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
 		// "Ability Enabled" - Any nearby infected can give the Mutant Tank some health.
 		// - "Heal Absorb Range"
-		// - "Heal Duration"
 		// - "Heal Glow"
 		// - "Heal Interval"
 		// - "Health From Commons"
@@ -12301,19 +12191,6 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Heal Cooldown"				"0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Heal Duration"				"0"
 
 			// The Mutant Tank's healing gives it a glow outline when activated.
 			// Note: Only available in Left 4 Dead 2.
@@ -14278,19 +14155,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
 			// Note: This setting can be overridden for specific players.
@@ -14424,6 +14288,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -15127,19 +14992,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -15641,19 +15493,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -15926,19 +15765,6 @@
 			// "forever" - 99999 seconds
 			"Medic Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Medic Duration"			"0"
-
 			// The Mutant Tank creates a healing field visual effect around it when healing fellow special infected.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -16097,19 +15923,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -16197,6 +16010,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -16600,19 +16414,6 @@
 			// "forever" - 99999 seconds
 			"Necro Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Necro Duration"			"0"
-
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -16980,19 +16781,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -17255,19 +17043,6 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Panic Cooldown"			"0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Panic Duration"			"0"
 
 			// The Mutant Tank starts a panic event every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
@@ -17970,19 +17745,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -18064,6 +17826,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -18823,19 +18586,6 @@
 			// "forever" - 99999 seconds
 			"Regen Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Regen Duration"			"0"
-
 			// The Mutant Tank regenerates this much health each time.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -19379,19 +19129,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -19478,6 +19215,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -20351,19 +20089,6 @@
 			// 1: ON, show in hint text.
 			// 2: ON, show in center text.
 			"Shield Display Health Type"		"2"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Shield Duration"			"0"
 
 			// The Mutant Tank's shield has a glow outline when activated.
 			// Note: Only available in Left 4 Dead 2.
@@ -21688,19 +21413,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -21787,6 +21499,7 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -21985,19 +21698,6 @@
 			// "strongest" - 99999.0 damage
 			"Splash Damage"				"5.0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Splash Duration"			"0"
-
 			// The Mutant Tank deals splash damage to nearby survivors every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -22183,19 +21883,6 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Splatter Cooldown"			"0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Splatter Duration"			"0"
 
 			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
@@ -23708,19 +23395,6 @@
 			// "forever" - 99999 seconds
 			"Warp Cooldown"				"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Warp Duration"				"0"
-
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: The Tank will not teleport in narrow areas.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
@@ -24548,19 +24222,6 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -24823,19 +24484,6 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Zombie Cooldown"			"0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 99999
-			// --
-			// Keywords:
-			// "second" - 1 second
-			// "minute" - 1 minute
-			// "forever" - 99999 seconds
-			"Zombie Duration"			"0"
 
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".

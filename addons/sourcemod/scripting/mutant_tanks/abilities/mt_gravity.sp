@@ -93,7 +93,6 @@ enum struct esGravityPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
@@ -129,7 +128,6 @@ enum struct esGravityAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
@@ -160,7 +158,6 @@ enum struct esGravityCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
 	int g_iRequiresHumans;
@@ -304,7 +301,7 @@ int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanCooldown : g_esGravityCache[param1].g_iGravityCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GravityDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanDuration : g_esGravityCache[param1].g_iGravityDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esGravityCache[param1].g_iGravityDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 				case 8: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanRangeCooldown : g_esGravityCache[param1].g_iGravityRangeCooldown));
 			}
@@ -596,7 +593,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGravityAbility[iIndex].g_iHumanAbility = 0;
 				g_esGravityAbility[iIndex].g_iHumanAmmo = 5;
 				g_esGravityAbility[iIndex].g_iHumanCooldown = 0;
-				g_esGravityAbility[iIndex].g_iHumanDuration = 5;
 				g_esGravityAbility[iIndex].g_iHumanMode = 1;
 				g_esGravityAbility[iIndex].g_iHumanRangeCooldown = 0;
 				g_esGravityAbility[iIndex].g_flOpenAreasOnly = 0.0;
@@ -629,7 +625,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGravityPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esGravityPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanMode = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanRangeCooldown = 0;
 					g_esGravityPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
@@ -666,7 +661,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esGravityPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esGravityPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esGravityPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGravityPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esGravityPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esGravityPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esGravityPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -695,7 +689,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGravityAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esGravityAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGravityAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esGravityAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGravityAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esGravityAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGravityAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esGravityAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityAbility[type].g_iHumanMode, value, 0, 1);
 		g_esGravityAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
 		g_esGravityAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
@@ -742,7 +735,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGravityCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravityAbility[type].g_iHumanAbility);
 	g_esGravityCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravityAbility[type].g_iHumanAmmo);
 	g_esGravityCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravityAbility[type].g_iHumanCooldown);
-	g_esGravityCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravityAbility[type].g_iHumanDuration);
 	g_esGravityCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanMode, g_esGravityAbility[type].g_iHumanMode);
 	g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravityAbility[type].g_iHumanRangeCooldown);
 	g_esGravityCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravityAbility[type].g_flOpenAreasOnly);
@@ -814,15 +806,11 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveGravity(iPlayer);
-			vGravityReset2(iPlayer);
-		}
-		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
-		{
-			vStopGravity(iPlayer);
+			vRemoveGravity(iTank);
+			vGravityReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -1068,7 +1056,6 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					if (bIsValidEntity(g_esGravityPlayer[tank].g_iGravityPointPush))
 					{
 						int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esGravityCache[tank].g_iGravityDuration;
-						iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? g_esGravityCache[tank].g_iHumanDuration : iDuration;
 						g_esGravityPlayer[tank].g_bActivated = true;
 						g_esGravityPlayer[tank].g_iDuration = (iTime + iDuration);
 
@@ -1155,7 +1142,6 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 				EmitSoundToAll(SOUND_BELL, survivor);
 
 				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
-				flDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? float(g_esGravityCache[tank].g_iHumanDuration) : flDuration;
 				DataPack dpStopGravity;
 				CreateDataTimer(flDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopGravity.WriteCell(GetClientUserId(survivor));
@@ -1273,7 +1259,7 @@ void vGravityReset3(int tank)
 void vGravityReset4(int tank)
 {
 	int iTime = GetTime(), iPos = g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGravityCache[tank].g_iGravityCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1 && g_esGravityCache[tank].g_iHumanMode == 0 && g_esGravityPlayer[tank].g_iAmmoCount < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0) ? g_esGravityCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1 && g_esGravityPlayer[tank].g_iAmmoCount < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0) ? g_esGravityCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGravityPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
 	if (g_esGravityPlayer[tank].g_iCooldown2 != -1 && g_esGravityPlayer[tank].g_iCooldown2 > iTime)
 	{

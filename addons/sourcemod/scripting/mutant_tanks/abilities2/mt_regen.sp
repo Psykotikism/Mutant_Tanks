@@ -76,7 +76,6 @@ enum struct esRegenPlayer
 	int g_iHumanMode;
 	int g_iRegenAbility;
 	int g_iRegenCooldown;
-	int g_iRegenDuration;
 	int g_iRegenHealth;
 	int g_iRegenLimit;
 	int g_iRegenMessage;
@@ -103,7 +102,6 @@ enum struct esRegenAbility
 	int g_iHumanMode;
 	int g_iRegenAbility;
 	int g_iRegenCooldown;
-	int g_iRegenDuration;
 	int g_iRegenHealth;
 	int g_iRegenLimit;
 	int g_iRegenMessage;
@@ -127,7 +125,6 @@ enum struct esRegenCache
 	int g_iHumanMode;
 	int g_iRegenAbility;
 	int g_iRegenCooldown;
-	int g_iRegenDuration;
 	int g_iRegenHealth;
 	int g_iRegenLimit;
 	int g_iRegenMessage;
@@ -247,7 +244,7 @@ int iRegenMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRegenCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esRegenCache[param1].g_iHumanAbility == 1) ? g_esRegenCache[param1].g_iHumanCooldown : g_esRegenCache[param1].g_iRegenCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RegenDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esRegenCache[param1].g_iHumanAbility == 1) ? g_esRegenCache[param1].g_iHumanDuration : g_esRegenCache[param1].g_iRegenDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esRegenCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRegenCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -431,7 +428,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRegenAbility[iIndex].g_iRegenMessage = 0;
 				g_esRegenAbility[iIndex].g_flRegenChance = 33.3;
 				g_esRegenAbility[iIndex].g_iRegenCooldown = 0;
-				g_esRegenAbility[iIndex].g_iRegenDuration = 0;
 				g_esRegenAbility[iIndex].g_iRegenHealth = 1;
 				g_esRegenAbility[iIndex].g_flRegenInterval = 1.0;
 				g_esRegenAbility[iIndex].g_iRegenLimit = MT_MAXHEALTH;
@@ -457,7 +453,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRegenPlayer[iPlayer].g_iRegenMessage = 0;
 					g_esRegenPlayer[iPlayer].g_flRegenChance = 0.0;
 					g_esRegenPlayer[iPlayer].g_iRegenCooldown = 0;
-					g_esRegenPlayer[iPlayer].g_iRegenDuration = 0;
 					g_esRegenPlayer[iPlayer].g_iRegenHealth = 0;
 					g_esRegenPlayer[iPlayer].g_flRegenInterval = 0.0;
 					g_esRegenPlayer[iPlayer].g_iRegenLimit = 0;
@@ -488,7 +483,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRegenPlayer[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenPlayer[admin].g_iRegenMessage, value, 0, 1);
 		g_esRegenPlayer[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenPlayer[admin].g_flRegenChance, value, 0.0, 100.0);
 		g_esRegenPlayer[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenPlayer[admin].g_iRegenCooldown, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenPlayer[admin].g_iRegenDuration, value, 1, 99999);
 		g_esRegenPlayer[admin].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenPlayer[admin].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esRegenPlayer[admin].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenPlayer[admin].g_flRegenInterval, value, 0.1, 99999.0);
 		g_esRegenPlayer[admin].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenPlayer[admin].g_iRegenLimit, value, 1, MT_MAXHEALTH);
@@ -510,7 +504,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRegenAbility[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenAbility[type].g_iRegenMessage, value, 0, 1);
 		g_esRegenAbility[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenAbility[type].g_flRegenChance, value, 0.0, 100.0);
 		g_esRegenAbility[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenAbility[type].g_iRegenCooldown, value, 0, 99999);
-		g_esRegenAbility[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenAbility[type].g_iRegenDuration, value, 1, 99999);
 		g_esRegenAbility[type].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenAbility[type].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 		g_esRegenAbility[type].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenAbility[type].g_flRegenInterval, value, 0.1, 99999.0);
 		g_esRegenAbility[type].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenAbility[type].g_iRegenLimit, value, 1, MT_MAXHEALTH);
@@ -536,7 +529,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRegenCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanMode, g_esRegenAbility[type].g_iHumanMode);
 	g_esRegenCache[tank].g_iRegenAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenAbility[type].g_iRegenAbility);
 	g_esRegenCache[tank].g_iRegenCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenAbility[type].g_iRegenCooldown);
-	g_esRegenCache[tank].g_iRegenDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenAbility[type].g_iRegenDuration);
 	g_esRegenCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenAbility[type].g_iRegenHealth, 2);
 	g_esRegenCache[tank].g_iRegenLimit = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenAbility[type].g_iRegenLimit);
 	g_esRegenCache[tank].g_iRegenMessage = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenAbility[type].g_iRegenMessage);
@@ -759,7 +751,6 @@ void vRegen2(int tank, int pos = -1)
 	dpRegen.WriteCell(GetClientUserId(tank));
 	dpRegen.WriteCell(g_esRegenPlayer[tank].g_iTankType);
 	dpRegen.WriteCell(GetTime());
-	dpRegen.WriteCell(pos);
 }
 
 void vRegenAbility(int tank)
@@ -826,7 +817,7 @@ void vRegenReset2(int tank)
 void vRegenReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRegenCache[tank].g_iRegenCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1 && g_esRegenCache[tank].g_iHumanMode == 0 && g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1 && g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRegenPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime)
 	{
@@ -862,11 +853,8 @@ Action tTimerRegen(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esRegenCache[iTank].g_iRegenDuration;
-	iDuration = (bHuman && g_esRegenCache[iTank].g_iHumanAbility == 1) ? g_esRegenCache[iTank].g_iHumanDuration : iDuration;
-	if (iDuration > 0 && (!bHuman || (bHuman && g_esRegenCache[iTank].g_iHumanAbility == 1 && g_esRegenCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esRegenPlayer[iTank].g_iCooldown == -1 || g_esRegenPlayer[iTank].g_iCooldown < iCurrentTime))
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esRegenCache[iTank].g_iHumanAbility == 1 && g_esRegenCache[iTank].g_iHumanMode == 0)) && (iTime + g_esRegenCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esRegenPlayer[iTank].g_iCooldown == -1 || g_esRegenPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vRegenReset2(iTank);
 		vRegenReset3(iTank);

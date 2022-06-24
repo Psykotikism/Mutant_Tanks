@@ -79,7 +79,6 @@ enum struct esGodPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
@@ -104,7 +103,6 @@ enum struct esGodAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
@@ -126,7 +124,6 @@ enum struct esGodCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 }
@@ -258,7 +255,7 @@ int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGodCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGodCache[param1].g_iHumanAbility == 1) ? g_esGodCache[param1].g_iHumanCooldown : g_esGodCache[param1].g_iGodCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GodDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esGodCache[param1].g_iHumanAbility == 1) ? g_esGodCache[param1].g_iHumanDuration : g_esGodCache[param1].g_iGodDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esGodCache[param1].g_iGodDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGodCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -503,7 +500,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGodAbility[iIndex].g_iHumanAbility = 0;
 				g_esGodAbility[iIndex].g_iHumanAmmo = 5;
 				g_esGodAbility[iIndex].g_iHumanCooldown = 0;
-				g_esGodAbility[iIndex].g_iHumanDuration = 5;
 				g_esGodAbility[iIndex].g_iHumanMode = 1;
 				g_esGodAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esGodAbility[iIndex].g_iRequiresHumans = 1;
@@ -527,7 +523,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGodPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esGodPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esGodPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esGodPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esGodPlayer[iPlayer].g_iHumanMode = 0;
 					g_esGodPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esGodPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -555,7 +550,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esGodPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esGodPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esGodPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esGodPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esGodPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esGodPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -575,7 +569,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esGodAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esGodAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esGodAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esGodAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esGodAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esGodAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGodAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esGodAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGodAbility[type].g_iHumanMode, value, 0, 1);
 		g_esGodAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGodAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esGodAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GOD_SECTION, MT_GOD_SECTION2, MT_GOD_SECTION3, MT_GOD_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGodAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -606,7 +599,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGodCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAbility, g_esGodAbility[type].g_iHumanAbility);
 	g_esGodCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanAmmo, g_esGodAbility[type].g_iHumanAmmo);
 	g_esGodCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanCooldown, g_esGodAbility[type].g_iHumanCooldown);
-	g_esGodCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanDuration, g_esGodAbility[type].g_iHumanDuration);
 	g_esGodCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iHumanMode, g_esGodAbility[type].g_iHumanMode);
 	g_esGodCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_flOpenAreasOnly, g_esGodAbility[type].g_flOpenAreasOnly);
 	g_esGodCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGodPlayer[tank].g_iRequiresHumans, g_esGodAbility[type].g_iRequiresHumans);
@@ -823,7 +815,6 @@ void vGod(int tank, int pos = -1)
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esGodCache[tank].g_iGodDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1) ? g_esGodCache[tank].g_iHumanDuration : iDuration;
 	g_esGodPlayer[tank].g_bActivated = true;
 	g_esGodPlayer[tank].g_iDuration = (iTime + iDuration);
 
@@ -911,7 +902,7 @@ void vGodReset2(int tank)
 void vGodReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esGodAbility[g_esGodPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGodCache[tank].g_iGodCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1 && g_esGodCache[tank].g_iHumanMode == 0 && g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0) ? g_esGodCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGodCache[tank].g_iHumanAbility == 1 && g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0) ? g_esGodCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGodPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esGodPlayer[tank].g_iCooldown != -1 && g_esGodPlayer[tank].g_iCooldown > iTime)
 	{

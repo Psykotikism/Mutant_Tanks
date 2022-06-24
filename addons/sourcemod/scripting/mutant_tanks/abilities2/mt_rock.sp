@@ -73,7 +73,6 @@ enum struct esRockPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iLauncher;
@@ -102,7 +101,6 @@ enum struct esRockAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
@@ -127,7 +125,6 @@ enum struct esRockCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
@@ -251,7 +248,7 @@ int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esRockCache[param1].g_iHumanAbility == 1) ? g_esRockCache[param1].g_iHumanCooldown : g_esRockCache[param1].g_iRockCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RockDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esRockCache[param1].g_iHumanAbility == 1) ? g_esRockCache[param1].g_iHumanDuration : g_esRockCache[param1].g_iRockDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esRockCache[param1].g_iRockDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esRockCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -461,7 +458,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRockAbility[iIndex].g_iHumanAbility = 0;
 				g_esRockAbility[iIndex].g_iHumanAmmo = 5;
 				g_esRockAbility[iIndex].g_iHumanCooldown = 0;
-				g_esRockAbility[iIndex].g_iHumanDuration = 5;
 				g_esRockAbility[iIndex].g_iHumanMode = 1;
 				g_esRockAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esRockAbility[iIndex].g_iRequiresHumans = 1;
@@ -489,7 +485,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRockPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esRockPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esRockPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esRockPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esRockPlayer[iPlayer].g_iHumanMode = 0;
 					g_esRockPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esRockPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -521,7 +516,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRockPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esRockPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esRockPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esRockPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRockPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esRockPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esRockPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esRockPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -557,7 +551,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRockAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRockAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esRockAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRockAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esRockAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRockAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esRockAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRockAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esRockAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRockAbility[type].g_iHumanMode, value, 0, 1);
 		g_esRockAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRockAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esRockAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ROCK_SECTION, MT_ROCK_SECTION2, MT_ROCK_SECTION3, MT_ROCK_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRockAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -603,7 +596,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esRockCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAbility, g_esRockAbility[type].g_iHumanAbility);
 	g_esRockCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanAmmo, g_esRockAbility[type].g_iHumanAmmo);
 	g_esRockCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanCooldown, g_esRockAbility[type].g_iHumanCooldown);
-	g_esRockCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanDuration, g_esRockAbility[type].g_iHumanDuration);
 	g_esRockCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iHumanMode, g_esRockAbility[type].g_iHumanMode);
 	g_esRockCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_flOpenAreasOnly, g_esRockAbility[type].g_flOpenAreasOnly);
 	g_esRockCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRockPlayer[tank].g_iRequiresHumans, g_esRockAbility[type].g_iRequiresHumans);
@@ -847,7 +839,7 @@ void vRockReset2(int tank)
 void vRockReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRockCache[tank].g_iRockCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1 && g_esRockCache[tank].g_iHumanMode == 0 && g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1 && g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0) ? g_esRockCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRockPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > iTime)
 	{
@@ -971,21 +963,24 @@ Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	int iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRockCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRockCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[iTank].g_iTankType) || (g_esRockCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRockPlayer[iTank].g_iTankType || g_esRockCache[iTank].g_iRockAbility == 0 || !g_esRockPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRockCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRockCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[iTank].g_iTankType) || (g_esRockCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRockPlayer[iTank].g_iTankType || !g_esRockPlayer[iTank].g_bActivated)
 	{
 		vRockReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esRockCache[iTank].g_iRockDuration;
-	iDuration = (bHuman && g_esRockCache[iTank].g_iHumanAbility == 1) ? g_esRockCache[iTank].g_iHumanDuration : iDuration;
-	if (iDuration > 0 && (!bHuman || (bHuman && g_esRockCache[iTank].g_iHumanAbility == 1 && g_esRockCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime)
+	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esRockCache[iTank].g_iRockDuration,
+		iCurrentTime = GetTime();
+	if (g_esRockCache[iTank].g_iRockAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esRockCache[iTank].g_iHumanAbility == 1 && g_esRockCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vRockReset2(iTank);
-		vRockReset3(iTank);
+
+		if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esRockCache[iTank].g_iHumanMode == 0) && (g_esRockPlayer[iTank].g_iCooldown == -1 || g_esRockPlayer[iTank].g_iCooldown < iCurrentTime))
+		{
+			vRockReset3(iTank);
+		}
 
 		return Plugin_Stop;
 	}

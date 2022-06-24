@@ -81,7 +81,6 @@ enum struct esNecroPlayer
 	int g_iHumanMode;
 	int g_iNecroAbility;
 	int g_iNecroCooldown;
-	int g_iNecroDuration;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -106,7 +105,6 @@ enum struct esNecroAbility
 	int g_iHumanMode;
 	int g_iNecroAbility;
 	int g_iNecroCooldown;
-	int g_iNecroDuration;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 }
@@ -128,7 +126,6 @@ enum struct esNecroCache
 	int g_iHumanMode;
 	int g_iNecroAbility;
 	int g_iNecroCooldown;
-	int g_iNecroDuration;
 	int g_iNecroMessage;
 	int g_iRequiresHumans;
 }
@@ -246,7 +243,7 @@ int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esNecroCache[param1].g_iHumanAbility == 1) ? g_esNecroCache[param1].g_iHumanCooldown : g_esNecroCache[param1].g_iNecroCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "NecroDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esNecroCache[param1].g_iHumanAbility == 1) ? g_esNecroCache[param1].g_iHumanDuration : g_esNecroCache[param1].g_iNecroDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esNecroCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esNecroCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -455,7 +452,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esNecroAbility[iIndex].g_iNecroMessage = 0;
 				g_esNecroAbility[iIndex].g_flNecroChance = 33.3;
 				g_esNecroAbility[iIndex].g_iNecroCooldown = 0;
-				g_esNecroAbility[iIndex].g_iNecroDuration = 0;
 				g_esNecroAbility[iIndex].g_flNecroRange = 500.0;
 			}
 		}
@@ -479,7 +475,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esNecroPlayer[iPlayer].g_iNecroMessage = 0;
 					g_esNecroPlayer[iPlayer].g_flNecroChance = 0.0;
 					g_esNecroPlayer[iPlayer].g_iNecroCooldown = 0;
-					g_esNecroPlayer[iPlayer].g_iNecroDuration = 0;
 					g_esNecroPlayer[iPlayer].g_flNecroRange = 0.0;
 				}
 			}
@@ -508,7 +503,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroPlayer[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroPlayer[admin].g_iNecroMessage, value, 0, 1);
 		g_esNecroPlayer[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroPlayer[admin].g_flNecroChance, value, 0.0, 100.0);
 		g_esNecroPlayer[admin].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroPlayer[admin].g_iNecroCooldown, value, 0, 99999);
-		g_esNecroPlayer[admin].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroPlayer[admin].g_iNecroDuration, value, 1, 99999);
 		g_esNecroPlayer[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroPlayer[admin].g_flNecroRange, value, 1.0, 99999.0);
 		g_esNecroPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
@@ -528,7 +522,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroAbility[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroAbility[type].g_iNecroMessage, value, 0, 1);
 		g_esNecroAbility[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroAbility[type].g_flNecroChance, value, 0.0, 100.0);
 		g_esNecroAbility[type].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroAbility[type].g_iNecroCooldown, value, 0, 99999);
-		g_esNecroAbility[type].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroAbility[type].g_iNecroDuration, value, 1, 99999);
 		g_esNecroAbility[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroAbility[type].g_flNecroRange, value, 1.0, 99999.0);
 		g_esNecroAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
@@ -552,7 +545,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esNecroCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iHumanMode, g_esNecroAbility[type].g_iHumanMode);
 	g_esNecroCache[tank].g_iNecroAbility = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroAbility, g_esNecroAbility[type].g_iNecroAbility);
 	g_esNecroCache[tank].g_iNecroCooldown = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroCooldown, g_esNecroAbility[type].g_iNecroCooldown);
-	g_esNecroCache[tank].g_iNecroDuration = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroDuration, g_esNecroAbility[type].g_iNecroDuration);
 	g_esNecroCache[tank].g_iNecroMessage = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iNecroMessage, g_esNecroAbility[type].g_iNecroMessage);
 	g_esNecroCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flOpenAreasOnly, g_esNecroAbility[type].g_flOpenAreasOnly);
 	g_esNecroCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_iRequiresHumans, g_esNecroAbility[type].g_iRequiresHumans);
@@ -851,10 +843,8 @@ void vNecroAbility(int tank)
 
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 			{
-				int iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esNecroCache[tank].g_iNecroDuration;
-				iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1) ? g_esNecroCache[tank].g_iHumanDuration : iDuration;
 				g_esNecroPlayer[tank].g_iAmmoCount++;
-				g_esNecroPlayer[tank].g_iDuration = (iTime + iDuration);
+				g_esNecroPlayer[tank].g_iDuration = (iTime + g_esNecroCache[tank].g_iHumanDuration);
 
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esNecroPlayer[tank].g_iAmmoCount, g_esNecroCache[tank].g_iHumanAmmo);
 			}
@@ -898,7 +888,7 @@ void vNecroReset()
 void vNecroReset2(int tank)
 {
 	int iTime = GetTime(), iPos = g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esNecroCache[tank].g_iNecroCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1 && g_esNecroCache[tank].g_iHumanMode == 0 && g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1 && g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0) ? g_esNecroCache[tank].g_iHumanCooldown : iCooldown;
 	g_esNecroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esNecroPlayer[tank].g_iCooldown != -1 && g_esNecroPlayer[tank].g_iCooldown > iTime)
 	{

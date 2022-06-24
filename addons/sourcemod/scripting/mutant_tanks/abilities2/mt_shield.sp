@@ -107,7 +107,6 @@ enum struct esShieldPlayer
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
-	int g_iShieldDuration;
 	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
@@ -143,7 +142,6 @@ enum struct esShieldAbility
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
-	int g_iShieldDuration;
 	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
@@ -175,7 +173,6 @@ enum struct esShieldCache
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
-	int g_iShieldDuration;
 	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
@@ -343,7 +340,7 @@ int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esShieldCache[param1].g_iHumanAbility == 1) ? g_esShieldCache[param1].g_iHumanCooldown : g_esShieldCache[param1].g_iShieldCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ShieldDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esShieldCache[param1].g_iHumanAbility == 1) ? g_esShieldCache[param1].g_iHumanDuration : g_esShieldCache[param1].g_iShieldDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esShieldCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esShieldCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -715,7 +712,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esShieldAbility[iIndex].g_iShieldDelay = 5;
 				g_esShieldAbility[iIndex].g_iShieldDisplayHP = 11;
 				g_esShieldAbility[iIndex].g_iShieldDisplayHPType = 2;
-				g_esShieldAbility[iIndex].g_iShieldDuration = 0;
 				g_esShieldAbility[iIndex].g_iShieldGlow = 1;
 				g_esShieldAbility[iIndex].g_flShieldHealth = 0.0;
 				g_esShieldAbility[iIndex].g_sShieldHealthChars = "],=";
@@ -753,7 +749,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShieldPlayer[iPlayer].g_iShieldDelay = 0;
 					g_esShieldPlayer[iPlayer].g_iShieldDisplayHP = 0;
 					g_esShieldPlayer[iPlayer].g_iShieldDisplayHPType = 0;
-					g_esShieldPlayer[iPlayer].g_iShieldDuration = 0;
 					g_esShieldPlayer[iPlayer].g_iShieldGlow = 0;
 					g_esShieldPlayer[iPlayer].g_flShieldHealth = 0.0;
 					g_esShieldPlayer[iPlayer].g_sShieldHealthChars[0] = '\0';
@@ -794,7 +789,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldPlayer[admin].g_iShieldDelay = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esShieldPlayer[admin].g_iShieldDelay, value, 1, 99999);
 		g_esShieldPlayer[admin].g_iShieldDisplayHP = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esShieldPlayer[admin].g_iShieldDisplayHP, value, 0, 11);
 		g_esShieldPlayer[admin].g_iShieldDisplayHPType = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esShieldPlayer[admin].g_iShieldDisplayHPType, value, 0, 2);
-		g_esShieldPlayer[admin].g_iShieldDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "duration", g_esShieldPlayer[admin].g_iShieldDuration, value, 1, 99999);
 		g_esShieldPlayer[admin].g_iShieldGlow = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esShieldPlayer[admin].g_iShieldGlow, value, 0, 1);
 		g_esShieldPlayer[admin].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldPlayer[admin].g_flShieldHealth, value, 0.0, 99999.0);
 		g_esShieldPlayer[admin].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldPlayer[admin].g_flShieldThrowChance, value, 0.0, 100.0);
@@ -839,7 +833,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldAbility[type].g_iShieldDelay = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esShieldAbility[type].g_iShieldDelay, value, 1, 99999);
 		g_esShieldAbility[type].g_iShieldDisplayHP = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esShieldAbility[type].g_iShieldDisplayHP, value, 0, 11);
 		g_esShieldAbility[type].g_iShieldDisplayHPType = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esShieldAbility[type].g_iShieldDisplayHPType, value, 0, 2);
-		g_esShieldAbility[type].g_iShieldDuration = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldDuration", "Shield Duration", "Shield_Duration", "duration", g_esShieldAbility[type].g_iShieldDuration, value, 1, 99999);
 		g_esShieldAbility[type].g_iShieldGlow = iGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esShieldAbility[type].g_iShieldGlow, value, 0, 1);
 		g_esShieldAbility[type].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldAbility[type].g_flShieldHealth, value, 0.0, 99999.0);
 		g_esShieldAbility[type].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldAbility[type].g_flShieldThrowChance, value, 0.0, 100.0);
@@ -891,7 +884,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esShieldCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldAbility[type].g_iShieldDelay);
 	g_esShieldCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldAbility[type].g_iShieldDisplayHP);
 	g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldAbility[type].g_iShieldDisplayHPType);
-	g_esShieldCache[tank].g_iShieldDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDuration, g_esShieldAbility[type].g_iShieldDuration);
 	g_esShieldCache[tank].g_iShieldGlow = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldAbility[type].g_iShieldGlow);
 	g_esShieldCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldAbility[type].g_iShieldMessage);
 	g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[type].g_iShieldType);
@@ -1216,7 +1208,7 @@ void vShieldReset2(int tank)
 void vShieldReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
 	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
 	{
@@ -1323,10 +1315,8 @@ void vShieldAbility(int tank, bool shield)
 
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 						{
-							int iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, iPos)) : g_esShieldCache[tank].g_iShieldDuration;
-							iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1) ? g_esShieldCache[tank].g_iHumanDuration : iDuration;
 							g_esShieldPlayer[tank].g_iAmmoCount++;
-							g_esShieldPlayer[tank].g_iDuration = (iTime + iDuration);
+							g_esShieldPlayer[tank].g_iDuration = (iTime + g_esShieldPlayer[tank].g_iHumanDuration);
 
 							vExternalView(tank, 1.5);
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);

@@ -86,7 +86,6 @@ enum struct esFlyPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
@@ -113,7 +112,6 @@ enum struct esFlyAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
@@ -137,7 +135,6 @@ enum struct esFlyCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
-	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 }
@@ -269,7 +266,7 @@ int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlyCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esFlyCache[param1].g_iHumanAbility == 1) ? g_esFlyCache[param1].g_iHumanCooldown : g_esFlyCache[param1].g_iFlyCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FlyDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esFlyCache[param1].g_iHumanAbility == 1) ? g_esFlyCache[param1].g_iHumanDuration : g_esFlyCache[param1].g_iFlyDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esFlyCache[param1].g_iFlyDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFlyCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -538,7 +535,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFlyAbility[iIndex].g_iHumanAbility = 0;
 				g_esFlyAbility[iIndex].g_iHumanAmmo = 5;
 				g_esFlyAbility[iIndex].g_iHumanCooldown = 0;
-				g_esFlyAbility[iIndex].g_iHumanDuration = 30;
 				g_esFlyAbility[iIndex].g_iHumanMode = 1;
 				g_esFlyAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esFlyAbility[iIndex].g_iRequiresHumans = 0;
@@ -564,7 +560,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esFlyPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esFlyPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esFlyPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esFlyPlayer[iPlayer].g_iHumanMode = 0;
 					g_esFlyPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esFlyPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -594,7 +589,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlyPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esFlyPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esFlyPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esFlyPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esFlyPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esFlyPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esFlyPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -616,7 +610,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlyAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esFlyAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esFlyAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esFlyAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esFlyAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyAbility[type].g_iHumanMode, value, 0, 1);
 		g_esFlyAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esFlyAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -650,7 +643,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility);
 	g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo);
 	g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown);
-	g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration);
 	g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode);
 	g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly);
 	g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans);
@@ -895,7 +887,6 @@ void vFly(int tank, bool announce, int pos = -1)
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFlyCache[tank].g_iFlyDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1) ? g_esFlyCache[tank].g_iHumanDuration : iDuration;
 	g_esFlyPlayer[tank].g_bActivated = true;
 	g_esFlyPlayer[tank].g_iAmmoCount++;
 	g_esFlyPlayer[tank].g_iDuration = (iTime + iDuration);
@@ -1429,7 +1420,7 @@ void vFlyReset2(int tank)
 void vFlyReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFlyCache[tank].g_iFlyCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyCache[tank].g_iHumanMode == 0 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFlyPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
 	{

@@ -91,7 +91,6 @@ enum struct esZombiePlayer
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieCooldown;
-	int g_iZombieDuration;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -118,7 +117,6 @@ enum struct esZombieAbility
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieCooldown;
-	int g_iZombieDuration;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -143,7 +141,6 @@ enum struct esZombieCache
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieCooldown;
-	int g_iZombieDuration;
 	int g_iZombieMessage;
 	int g_iZombieMode;
 	int g_iZombieType;
@@ -270,7 +267,7 @@ int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esZombieCache[param1].g_iHumanAbility == 1) ? g_esZombieCache[param1].g_iHumanCooldown : g_esZombieCache[param1].g_iZombieCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ZombieDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esZombieCache[param1].g_iHumanAbility == 1) ? g_esZombieCache[param1].g_iHumanDuration : g_esZombieCache[param1].g_iZombieDuration));
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esZombieCache[param1].g_iHumanDuration);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esZombieCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -455,7 +452,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esZombieAbility[iIndex].g_iZombieAmount = 10;
 				g_esZombieAbility[iIndex].g_flZombieChance = 33.3;
 				g_esZombieAbility[iIndex].g_iZombieCooldown = 0;
-				g_esZombieAbility[iIndex].g_iZombieDuration = 0;
 				g_esZombieAbility[iIndex].g_flZombieInterval = 5.0;
 				g_esZombieAbility[iIndex].g_iZombieMode = 0;
 				g_esZombieAbility[iIndex].g_iZombieType = 0;
@@ -482,7 +478,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esZombiePlayer[iPlayer].g_iZombieAmount = 0;
 					g_esZombiePlayer[iPlayer].g_flZombieChance = 0.0;
 					g_esZombiePlayer[iPlayer].g_iZombieCooldown = 0;
-					g_esZombiePlayer[iPlayer].g_iZombieDuration = 0;
 					g_esZombiePlayer[iPlayer].g_flZombieInterval = 0.0;
 					g_esZombiePlayer[iPlayer].g_iZombieMode = 0;
 					g_esZombiePlayer[iPlayer].g_iZombieType = 0;
@@ -514,7 +509,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombiePlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esZombiePlayer[admin].g_iZombieAmount, value, 1, 100);
 		g_esZombiePlayer[admin].g_flZombieChance = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esZombiePlayer[admin].g_flZombieChance, value, 0.0, 100.0);
 		g_esZombiePlayer[admin].g_iZombieCooldown = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieCooldown", "Zombie Cooldown", "Zombie_Cooldown", "cooldown", g_esZombiePlayer[admin].g_iZombieCooldown, value, 0, 99999);
-		g_esZombiePlayer[admin].g_iZombieDuration = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieDuration", "Zombie Duration", "Zombie_Duration", "duration", g_esZombiePlayer[admin].g_iZombieDuration, value, 1, 99999);
 		g_esZombiePlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombiePlayer[admin].g_flZombieInterval, value, 0.1, 99999.0);
 		g_esZombiePlayer[admin].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombiePlayer[admin].g_iZombieMode, value, 0, 2);
 		g_esZombiePlayer[admin].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombiePlayer[admin].g_iZombieType, value, 0, 127);
@@ -537,7 +531,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombieAbility[type].g_iZombieAmount = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esZombieAbility[type].g_iZombieAmount, value, 1, 100);
 		g_esZombieAbility[type].g_flZombieChance = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esZombieAbility[type].g_flZombieChance, value, 0.0, 100.0);
 		g_esZombieAbility[type].g_iZombieCooldown = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieCooldown", "Zombie Cooldown", "Zombie_Cooldown", "cooldown", g_esZombieAbility[type].g_iZombieCooldown, value, 0, 99999);
-		g_esZombieAbility[type].g_iZombieDuration = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieDuration", "Zombie Duration", "Zombie_Duration", "duration", g_esZombieAbility[type].g_iZombieDuration, value, 1, 99999);
 		g_esZombieAbility[type].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombieAbility[type].g_flZombieInterval, value, 0.1, 99999.0);
 		g_esZombieAbility[type].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombieAbility[type].g_iZombieMode, value, 0, 2);
 		g_esZombieAbility[type].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTION, MT_ZOMBIE_SECTION2, MT_ZOMBIE_SECTION3, MT_ZOMBIE_SECTION4, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombieAbility[type].g_iZombieType, value, 0, 127);
@@ -566,7 +559,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esZombieCache[tank].g_iZombieAbility = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieAbility, g_esZombieAbility[type].g_iZombieAbility);
 	g_esZombieCache[tank].g_iZombieAmount = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieAmount, g_esZombieAbility[type].g_iZombieAmount);
 	g_esZombieCache[tank].g_iZombieCooldown = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieCooldown, g_esZombieAbility[type].g_iZombieCooldown);
-	g_esZombieCache[tank].g_iZombieDuration = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieDuration, g_esZombieAbility[type].g_iZombieDuration);
 	g_esZombieCache[tank].g_iZombieMessage = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieMessage, g_esZombieAbility[type].g_iZombieMessage);
 	g_esZombieCache[tank].g_iZombieMode = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieMode, g_esZombieAbility[type].g_iZombieMode);
 	g_esZombieCache[tank].g_iZombieType = iGetSettingValue(apply, bHuman, g_esZombiePlayer[tank].g_iZombieType, g_esZombieAbility[type].g_iZombieType);
@@ -915,7 +907,6 @@ void vZombie2(int tank, int pos = -1)
 	dpZombie.WriteCell(GetClientUserId(tank));
 	dpZombie.WriteCell(g_esZombiePlayer[tank].g_iTankType);
 	dpZombie.WriteCell(GetTime());
-	dpZombie.WriteCell(pos);
 }
 
 void vZombie3(int tank)
@@ -1001,11 +992,8 @@ Action tTimerZombie(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esZombieCache[iTank].g_iZombieDuration;
-	iDuration = (bHuman && g_esZombieCache[iTank].g_iHumanAbility == 1) ? g_esZombieCache[iTank].g_iHumanDuration : iDuration;
-	if (iDuration > 0 && (!bHuman || (bHuman && g_esZombieCache[iTank].g_iHumanAbility == 1 && g_esZombieCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esZombiePlayer[iTank].g_iCooldown == -1 || g_esZombiePlayer[iTank].g_iCooldown < iCurrentTime))
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
+	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esZombieCache[iTank].g_iHumanAbility == 1 && g_esZombieCache[iTank].g_iHumanMode == 0)) && (iTime + g_esZombieCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esZombiePlayer[iTank].g_iCooldown == -1 || g_esZombiePlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vZombieReset2(iTank);
 
