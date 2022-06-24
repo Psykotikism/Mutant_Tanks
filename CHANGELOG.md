@@ -12,37 +12,70 @@
 ### Changes
 
 #### Abilities
-- Absorb: Added the `Human Duration` setting.
-- Car: Added the `Human Duration` setting.
+- Changed the minimum value of the `Human Duration` setting for several abilities from `1` to `0`.
+- Absorb
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Absorb Duration` setting from `1` to `0`.
+- Car
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Car Duration` setting from `1` to `0`.
 - Cloud: Added the `Cloud Duration` setting.
-- Fast: Added the `Human Duration` setting.
-- Fly: Added the `Human Duration` setting.
-- Fragile: Added the `Human Duration` setting.
+- Fast
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Fast Duration` setting from `1` to `0`.
+- Fly
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Fly Duration` setting from `1` to `0`.
+- Fragile
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Fragile Duration` setting from `1` to `0`.
 - Ghost
 	- Added the `Ghost Duration` setting.
 	- The `Ghost Duration` setting can be substituted by the `Combo Duration` setting when combined with other abilities.
 	- The `Ghost Fade Delay` setting can no longer be substituted by the `Combo Duration` setting when combined with other abilities.
 	- The `Ghost Fade Rate` setting can no longer be substituted by the `Combo Interval` setting when combined with other abilities.
-- God: Added the `Human Duration` setting.
-- Gravity: Added the `Human Duration` setting.
+- God
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `God Duration` setting from `1` to `0`.
+- Gravity
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Gravity Duration` setting from `1` to `0`.
 - Heal: Added the `Heal Duration` setting.
-- Jump: Added the `Human Duration` setting.
-- Laser: Added the `Human Duration` setting.
-- Lightning: Added the `Human Duration` setting.
+- Jump
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Jump Duration` setting from `1` to `0`.
+- Laser
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Laser Duration` setting from `1` to `0`.
+- Lightning
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Lightning Duration` setting from `1` to `0`.
 - Medic: Added the `Medic Duration` setting.
-- Meteor: Added the `Human Duration` setting.
+- Meteor
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Meteor Duration` setting from `1` to `0`.
 - Necro: Added the `Necro Duration` setting.
-- Omni: Added the `Human Duration` setting.
+- Omni
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Omni Duration` setting from `1` to `0`.
 - Panic: Added the `Panic Duration` setting.
-- Pyro: Added the `Human Duration` setting.
+- Pyro
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Pyro Duration` setting from `1` to `0`.
 - Regen: Added the `Regen Duration` setting.
-- Rock: Added the `Human Duration` setting.
+- Rock
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Rock Duration` setting from `1` to `0`.
 - Shield: Added the `Shield Duration` setting.
-- Spam: Added the `Human Duration` setting.
+- Spam
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Spam Duration` setting from `1` to `0`.
 - Splash: Added the `Splash Duration` setting.
 - Splatter: Added the `Splatter Duration` setting.
 - Warp: Added the `Warp Duration` setting.
-- Yell: Added the `Human Duration` setting.
+- Yell
+	- Added the `Human Duration` setting.
+	- Changed the minimum value of the `Yell Duration` setting from `1` to `0`.
 - Zombie: Added the `Zombie Duration` setting.
 
 #### Updates

@@ -5491,7 +5491,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -5586,7 +5586,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -7588,7 +7588,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -7673,7 +7673,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -8346,7 +8346,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -8443,7 +8443,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -9892,7 +9892,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -9977,7 +9977,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -10759,7 +10759,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -10844,7 +10844,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -10963,7 +10963,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11065,7 +11065,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11235,7 +11235,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11379,7 +11379,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11619,7 +11619,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11704,7 +11704,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11809,7 +11809,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11953,7 +11953,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -12143,7 +12143,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -12306,7 +12306,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -14282,7 +14282,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -14426,7 +14426,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15131,7 +15131,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15228,7 +15228,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15645,7 +15645,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15742,7 +15742,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15845,7 +15845,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15930,7 +15930,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16101,7 +16101,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16199,7 +16199,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16519,7 +16519,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16604,7 +16604,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16984,7 +16984,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17069,7 +17069,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17175,7 +17175,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17260,7 +17260,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17974,7 +17974,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -18066,7 +18066,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -18742,7 +18742,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -18827,7 +18827,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -19383,7 +19383,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -19480,7 +19480,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -20217,7 +20217,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -20356,7 +20356,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21692,7 +21692,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21789,7 +21789,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21892,7 +21892,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21989,7 +21989,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -22103,7 +22103,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -22188,7 +22188,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -23546,7 +23546,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -23712,7 +23712,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24552,7 +24552,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24637,7 +24637,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24736,7 +24736,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24828,7 +24828,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
