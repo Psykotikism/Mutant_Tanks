@@ -76,6 +76,7 @@ enum struct esPyroPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iPyroAbility;
 	int g_iPyroCooldown;
@@ -103,6 +104,7 @@ enum struct esPyroAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iPyroAbility;
 	int g_iPyroCooldown;
@@ -127,6 +129,7 @@ enum struct esPyroCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iPyroAbility;
 	int g_iPyroCooldown;
@@ -264,7 +267,7 @@ int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPyroCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esPyroCache[param1].g_iHumanAbility == 1) ? g_esPyroCache[param1].g_iHumanCooldown : g_esPyroCache[param1].g_iPyroCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "PyroDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esPyroCache[param1].g_iPyroDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esPyroCache[param1].g_iHumanAbility == 1) ? g_esPyroCache[param1].g_iHumanDuration : g_esPyroCache[param1].g_iPyroDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPyroCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -363,6 +366,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			{
 				int iPos = g_esPyroAbility[g_esPyroPlayer[client].g_iTankType].g_iComboPosition;
 				float flDuration = (iPos != -1) ? MT_GetCombinationSetting(client, 5, iPos) : float(g_esPyroCache[client].g_iPyroDuration);
+				flDuration = (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esPyroCache[client].g_iHumanAbility == 1) ? float(g_esPyroCache[client].g_iHumanDuration) : flDuration;
 				IgniteEntity(client, flDuration);
 			}
 		}
@@ -393,6 +397,7 @@ Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				if (!g_esPyroPlayer[victim].g_bActivated)
 				{
 					int iPos = g_esPyroAbility[g_esPyroPlayer[victim].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 5, iPos)) : g_esPyroCache[victim].g_iPyroDuration;
+					iDuration = (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esPyroCache[victim].g_iHumanAbility == 1) ? g_esPyroCache[victim].g_iHumanDuration : iDuration;
 					g_esPyroPlayer[victim].g_bActivated = true;
 					g_esPyroPlayer[victim].g_iDuration = (GetTime() + iDuration);
 				}
@@ -547,6 +552,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esPyroAbility[iIndex].g_iHumanAbility = 0;
 				g_esPyroAbility[iIndex].g_iHumanAmmo = 5;
 				g_esPyroAbility[iIndex].g_iHumanCooldown = 0;
+				g_esPyroAbility[iIndex].g_iHumanDuration = 5;
 				g_esPyroAbility[iIndex].g_iHumanMode = 1;
 				g_esPyroAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esPyroAbility[iIndex].g_iRequiresHumans = 0;
@@ -573,6 +579,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPyroPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPyroPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPyroPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPyroPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esPyroPlayer[iPlayer].g_iHumanMode = 0;
 					g_esPyroPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esPyroPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -604,6 +611,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPyroPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPyroPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPyroPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPyroPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esPyroPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPyroPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esPyroPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPyroPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esPyroPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPyroPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esPyroPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPyroPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esPyroPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPyroPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -626,6 +634,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPyroAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPyroAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esPyroAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPyroAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esPyroAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPyroAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esPyroAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPyroAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esPyroAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPyroAbility[type].g_iHumanMode, value, 0, 1);
 		g_esPyroAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPyroAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esPyroAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PYRO_SECTION, MT_PYRO_SECTION2, MT_PYRO_SECTION3, MT_PYRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPyroAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -657,6 +666,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPyroCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iHumanAbility, g_esPyroAbility[type].g_iHumanAbility);
 	g_esPyroCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iHumanAmmo, g_esPyroAbility[type].g_iHumanAmmo);
 	g_esPyroCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iHumanCooldown, g_esPyroAbility[type].g_iHumanCooldown);
+	g_esPyroCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iHumanDuration, g_esPyroAbility[type].g_iHumanDuration);
 	g_esPyroCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iHumanMode, g_esPyroAbility[type].g_iHumanMode);
 	g_esPyroCache[tank].g_iPyroAbility = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iPyroAbility, g_esPyroAbility[type].g_iPyroAbility);
 	g_esPyroCache[tank].g_iPyroCooldown = iGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_iPyroCooldown, g_esPyroAbility[type].g_iPyroCooldown);
@@ -808,6 +818,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 							int iPos = g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition;
 							float flDuration = (iPos != -1) ? MT_GetCombinationSetting(tank, 5, iPos) : float(g_esPyroCache[tank].g_iPyroDuration);
+							flDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1) ? float(g_esPyroCache[tank].g_iHumanDuration) : flDuration;
 							IgniteEntity(tank, flDuration);
 						}
 						else if (g_esPyroPlayer[tank].g_bActivated)
@@ -868,6 +879,7 @@ void vPyro(int tank, int pos = -1)
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esPyroCache[tank].g_iPyroDuration;
+	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1) ? g_esPyroCache[tank].g_iHumanDuration : iDuration;
 	g_esPyroPlayer[tank].g_bActivated = true;
 	g_esPyroPlayer[tank].g_iDuration = (iTime + iDuration);
 
@@ -970,7 +982,7 @@ void vPyroReset2(int tank)
 void vPyroReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esPyroCache[tank].g_iPyroCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1 && g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0) ? g_esPyroCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1 && g_esPyroCache[tank].g_iHumanMode == 0 && g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0) ? g_esPyroCache[tank].g_iHumanCooldown : iCooldown;
 	g_esPyroPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esPyroPlayer[tank].g_iCooldown != -1 && g_esPyroPlayer[tank].g_iCooldown > iTime)
 	{

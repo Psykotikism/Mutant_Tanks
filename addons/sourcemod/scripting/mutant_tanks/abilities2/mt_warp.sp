@@ -105,6 +105,7 @@ enum struct esWarpPlayer
 	int g_iTankType;
 	int g_iWarpAbility;
 	int g_iWarpCooldown;
+	int g_iWarpDuration;
 	int g_iWarpEffect;
 	int g_iWarpHit;
 	int g_iWarpHitMode;
@@ -141,6 +142,7 @@ enum struct esWarpAbility
 	int g_iRequiresHumans;
 	int g_iWarpAbility;
 	int g_iWarpCooldown;
+	int g_iWarpDuration;
 	int g_iWarpEffect;
 	int g_iWarpHit;
 	int g_iWarpHitMode;
@@ -174,6 +176,7 @@ enum struct esWarpCache
 	int g_iRequiresHumans;
 	int g_iWarpAbility;
 	int g_iWarpCooldown;
+	int g_iWarpDuration;
 	int g_iWarpEffect;
 	int g_iWarpHit;
 	int g_iWarpHitMode;
@@ -366,7 +369,7 @@ int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWarpCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esWarpCache[param1].g_iHumanAbility == 1) ? g_esWarpCache[param1].g_iHumanCooldown : g_esWarpCache[param1].g_iWarpCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "WarpDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esWarpCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esWarpCache[param1].g_iHumanAbility == 1) ? g_esWarpCache[param1].g_iHumanDuration : g_esWarpCache[param1].g_iWarpDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esWarpCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 				case 8: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esWarpCache[param1].g_iHumanAbility == 1) ? g_esWarpCache[param1].g_iHumanRangeCooldown : g_esWarpCache[param1].g_iWarpRangeCooldown));
 				case 9: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRockCooldown", ((g_esWarpCache[param1].g_iHumanAbility == 1) ? g_esWarpCache[param1].g_iHumanRockCooldown : g_esWarpCache[param1].g_iWarpRockCooldown));
@@ -648,6 +651,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWarpAbility[iIndex].g_iWarpMessage = 0;
 				g_esWarpAbility[iIndex].g_flWarpChance = 33.3;
 				g_esWarpAbility[iIndex].g_iWarpCooldown = 0;
+				g_esWarpAbility[iIndex].g_iWarpDuration = 0;
 				g_esWarpAbility[iIndex].g_iWarpHit = 0;
 				g_esWarpAbility[iIndex].g_iWarpHitMode = 0;
 				g_esWarpAbility[iIndex].g_flWarpInterval = 5.0;
@@ -684,6 +688,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esWarpPlayer[iPlayer].g_iWarpMessage = 0;
 					g_esWarpPlayer[iPlayer].g_flWarpChance = 0.0;
 					g_esWarpPlayer[iPlayer].g_iWarpCooldown = 0;
+					g_esWarpPlayer[iPlayer].g_iWarpDuration = 0;
 					g_esWarpPlayer[iPlayer].g_iWarpHit = 0;
 					g_esWarpPlayer[iPlayer].g_iWarpHitMode = 0;
 					g_esWarpPlayer[iPlayer].g_flWarpInterval = 0.0;
@@ -724,6 +729,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWarpPlayer[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpPlayer[admin].g_iWarpMessage, value, 0, 7);
 		g_esWarpPlayer[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpPlayer[admin].g_flWarpChance, value, 0.0, 100.0);
 		g_esWarpPlayer[admin].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpPlayer[admin].g_iWarpCooldown, value, 0, 99999);
+		g_esWarpPlayer[admin].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpPlayer[admin].g_iWarpDuration, value, 1, 99999);
 		g_esWarpPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpPlayer[admin].g_iWarpHit, value, 0, 1);
 		g_esWarpPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpPlayer[admin].g_iWarpHitMode, value, 0, 2);
 		g_esWarpPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpPlayer[admin].g_flWarpInterval, value, 0.1, 99999.0);
@@ -756,6 +762,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWarpAbility[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpAbility[type].g_iWarpMessage, value, 0, 7);
 		g_esWarpAbility[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpAbility[type].g_flWarpChance, value, 0.0, 100.0);
 		g_esWarpAbility[type].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpAbility[type].g_iWarpCooldown, value, 0, 99999);
+		g_esWarpAbility[type].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpAbility[type].g_iWarpDuration, value, 1, 99999);
 		g_esWarpAbility[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpAbility[type].g_iWarpHit, value, 0, 1);
 		g_esWarpAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpAbility[type].g_iWarpHitMode, value, 0, 2);
 		g_esWarpAbility[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpAbility[type].g_flWarpInterval, value, 0.1, 99999.0);
@@ -796,6 +803,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esWarpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpAbility[type].g_iRequiresHumans);
 	g_esWarpCache[tank].g_iWarpAbility = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpAbility[type].g_iWarpAbility);
 	g_esWarpCache[tank].g_iWarpCooldown = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpAbility[type].g_iWarpCooldown);
+	g_esWarpCache[tank].g_iWarpDuration = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpAbility[type].g_iWarpDuration);
 	g_esWarpCache[tank].g_iWarpEffect = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpAbility[type].g_iWarpEffect);
 	g_esWarpCache[tank].g_iWarpHit = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpAbility[type].g_iWarpHit);
 	g_esWarpCache[tank].g_iWarpHitMode = iGetSettingValue(apply, bHuman, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode);
@@ -1078,6 +1086,7 @@ void vWarp(int tank, int pos = -1)
 	dpWarp.WriteCell(GetClientUserId(tank));
 	dpWarp.WriteCell(g_esWarpPlayer[tank].g_iTankType);
 	dpWarp.WriteCell(iTime);
+	dpWarp.WriteCell(pos);
 }
 
 void vWarp2(int tank, int other)
@@ -1508,8 +1517,11 @@ Action tTimerWarp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esWarpCache[iTank].g_iHumanAbility == 1 && g_esWarpCache[iTank].g_iHumanMode == 0)) && (iTime + g_esWarpCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esWarpPlayer[iTank].g_iCooldown2 == -1 || g_esWarpPlayer[iTank].g_iCooldown2 < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esWarpCache[iTank].g_iWarpDuration;
+	iDuration = (bHuman && g_esWarpCache[iTank].g_iHumanAbility == 1) ? g_esWarpCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esWarpCache[iTank].g_iHumanAbility == 1 && g_esWarpCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esWarpPlayer[iTank].g_iCooldown2 == -1 || g_esWarpPlayer[iTank].g_iCooldown2 < iCurrentTime))
 	{
 		vWarpReset2(iTank);
 

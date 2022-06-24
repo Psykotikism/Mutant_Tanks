@@ -96,6 +96,7 @@ enum struct esGhostPlayer
 	int g_iGhostAbility;
 	int g_iGhostAlpha;
 	int g_iGhostCooldown;
+	int g_iGhostDuration;
 	int g_iGhostEffect;
 	int g_iGhostFadeAlpha;
 	int g_iGhostFadeDelay;
@@ -136,6 +137,7 @@ enum struct esGhostAbility
 	int g_iComboPosition;
 	int g_iGhostAbility;
 	int g_iGhostCooldown;
+	int g_iGhostDuration;
 	int g_iGhostEffect;
 	int g_iGhostFadeAlpha;
 	int g_iGhostFadeDelay;
@@ -172,6 +174,7 @@ enum struct esGhostCache
 	int g_iComboAbility;
 	int g_iGhostAbility;
 	int g_iGhostCooldown;
+	int g_iGhostDuration;
 	int g_iGhostEffect;
 	int g_iGhostFadeAlpha;
 	int g_iGhostFadeDelay;
@@ -330,7 +333,7 @@ int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGhostCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esGhostCache[param1].g_iHumanAbility == 1) ? g_esGhostCache[param1].g_iHumanCooldown : g_esGhostCache[param1].g_iGhostCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GhostDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esGhostCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esGhostCache[param1].g_iHumanAbility == 1) ? g_esGhostCache[param1].g_iHumanDuration : g_esGhostCache[param1].g_iGhostDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGhostCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 				case 8: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esGhostCache[param1].g_iHumanAbility == 1) ? g_esGhostCache[param1].g_iHumanRangeCooldown : g_esGhostCache[param1].g_iGhostRangeCooldown));
 			}
@@ -638,6 +641,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGhostAbility[iIndex].g_iGhostMessage = 0;
 				g_esGhostAbility[iIndex].g_flGhostChance = 33.3;
 				g_esGhostAbility[iIndex].g_iGhostCooldown = 0;
+				g_esGhostAbility[iIndex].g_iGhostDuration = 0;
 				g_esGhostAbility[iIndex].g_iGhostFadeAlpha = 2;
 				g_esGhostAbility[iIndex].g_iGhostFadeDelay = 5;
 				g_esGhostAbility[iIndex].g_iGhostFadeLimit = 0;
@@ -676,6 +680,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGhostPlayer[iPlayer].g_iGhostMessage = 0;
 					g_esGhostPlayer[iPlayer].g_flGhostChance = 0.0;
 					g_esGhostPlayer[iPlayer].g_iGhostCooldown = 0;
+					g_esGhostPlayer[iPlayer].g_iGhostDuration = 0;
 					g_esGhostPlayer[iPlayer].g_iGhostFadeAlpha = 0;
 					g_esGhostPlayer[iPlayer].g_iGhostFadeDelay = 0;
 					g_esGhostPlayer[iPlayer].g_iGhostFadeLimit = 0;
@@ -718,6 +723,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGhostPlayer[admin].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostPlayer[admin].g_iGhostMessage, value, 0, 7);
 		g_esGhostPlayer[admin].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostPlayer[admin].g_flGhostChance, value, 0.0, 100.0);
 		g_esGhostPlayer[admin].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostPlayer[admin].g_iGhostCooldown, value, 0, 99999);
+		g_esGhostPlayer[admin].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostPlayer[admin].g_iGhostDuration, value, 1, 99999);
 		g_esGhostPlayer[admin].g_iGhostFadeAlpha = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esGhostPlayer[admin].g_iGhostFadeAlpha, value, 0, 255);
 		g_esGhostPlayer[admin].g_iGhostFadeDelay = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esGhostPlayer[admin].g_iGhostFadeDelay, value, 1, 99999);
 		g_esGhostPlayer[admin].g_iGhostFadeLimit = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esGhostPlayer[admin].g_iGhostFadeLimit, value, 0, 255);
@@ -752,6 +758,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGhostAbility[type].g_iGhostMessage = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGhostAbility[type].g_iGhostMessage, value, 0, 7);
 		g_esGhostAbility[type].g_flGhostChance = flGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esGhostAbility[type].g_flGhostChance, value, 0.0, 100.0);
 		g_esGhostAbility[type].g_iGhostCooldown = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostCooldown", "Ghost Cooldown", "Ghost_Cooldown", "cooldown", g_esGhostAbility[type].g_iGhostCooldown, value, 0, 99999);
+		g_esGhostAbility[type].g_iGhostDuration = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostDuration", "Ghost Duration", "Ghost_Duration", "duration", g_esGhostAbility[type].g_iGhostDuration, value, 1, 99999);
 		g_esGhostAbility[type].g_iGhostFadeAlpha = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esGhostAbility[type].g_iGhostFadeAlpha, value, 0, 255);
 		g_esGhostAbility[type].g_iGhostFadeDelay = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esGhostAbility[type].g_iGhostFadeDelay, value, 1, 99999);
 		g_esGhostAbility[type].g_iGhostFadeLimit = iGetKeyValue(subsection, MT_GHOST_SECTION, MT_GHOST_SECTION2, MT_GHOST_SECTION3, MT_GHOST_SECTION4, key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esGhostAbility[type].g_iGhostFadeLimit, value, 0, 255);
@@ -787,6 +794,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGhostCache[tank].g_flGhostSpecialsRange = flGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_flGhostSpecialsRange, g_esGhostAbility[type].g_flGhostSpecialsRange);
 	g_esGhostCache[tank].g_iGhostAbility = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostAbility, g_esGhostAbility[type].g_iGhostAbility);
 	g_esGhostCache[tank].g_iGhostCooldown = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostCooldown, g_esGhostAbility[type].g_iGhostCooldown);
+	g_esGhostCache[tank].g_iGhostDuration = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostDuration, g_esGhostAbility[type].g_iGhostDuration);
 	g_esGhostCache[tank].g_iGhostEffect = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostEffect, g_esGhostAbility[type].g_iGhostEffect);
 	g_esGhostCache[tank].g_iGhostFadeAlpha = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostFadeAlpha, g_esGhostAbility[type].g_iGhostFadeAlpha);
 	g_esGhostCache[tank].g_iGhostFadeDelay = iGetSettingValue(apply, bHuman, g_esGhostPlayer[tank].g_iGhostFadeDelay, g_esGhostAbility[type].g_iGhostFadeDelay);
@@ -1026,15 +1034,13 @@ void vGhost(int tank, int pos = -1)
 		return;
 	}
 
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esGhostCache[tank].g_flGhostFadeRate;
 	DataPack dpGhost;
-	CreateDataTimer(flInterval, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esGhostCache[tank].g_flGhostFadeRate, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
 	dpGhost.WriteCell(g_esGhostPlayer[tank].g_iTankType);
 	dpGhost.WriteCell(iTime);
+	dpGhost.WriteCell(pos);
 	dpGhost.WriteFloat(MT_GetRandomFloat(0.1, 100.0));
-
-	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 }
 
 void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
@@ -1262,11 +1268,8 @@ void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 			iTank = GetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity");
 			if (iTank == tank)
 			{
-				if (StrEqual(sModel, MODEL_OXYGENTANK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK_MAIN, false) || StrEqual(sModel, MODEL_TANK_DLC, false) || StrEqual(sModel, MODEL_TANK_L4D1, false))
-				{
-					SetEntityRenderMode(iProp, mode);
-					SetEntData(iProp, (GetEntSendPropOffs(iProp, "m_clrRender") + 3), alpha, 1, true);
-				}
+				SetEntityRenderMode(iProp, mode);
+				SetEntData(iProp, (GetEntSendPropOffs(iProp, "m_clrRender") + 3), alpha, 1, true);
 			}
 		}
 	}
@@ -1352,7 +1355,7 @@ void vGhostReset2(int tank)
 	g_esGhostPlayer[tank].g_iGhostAlpha = 255;
 
 	int iTime = GetTime(), iPos = g_esGhostAbility[g_esGhostPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esGhostCache[tank].g_iGhostCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1 && g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0) ? g_esGhostCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGhostCache[tank].g_iHumanAbility == 1 && g_esGhostCache[tank].g_iHumanMode == 0 && g_esGhostPlayer[tank].g_iAmmoCount < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0) ? g_esGhostCache[tank].g_iHumanCooldown : iCooldown;
 	g_esGhostPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
 	if (g_esGhostPlayer[tank].g_iCooldown2 != -1 && g_esGhostPlayer[tank].g_iCooldown2 > iTime)
 	{
@@ -1448,8 +1451,11 @@ Action tTimerGhost(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esGhostCache[iTank].g_iHumanAbility == 1 && g_esGhostCache[iTank].g_iHumanMode == 0)) && (iTime + g_esGhostCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esGhostPlayer[iTank].g_iCooldown2 == -1 || g_esGhostPlayer[iTank].g_iCooldown2 < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esGhostCache[iTank].g_iGhostDuration;
+	iDuration = (bHuman && g_esGhostCache[iTank].g_iHumanAbility == 1) ? g_esGhostCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esGhostCache[iTank].g_iHumanAbility == 1 && g_esGhostCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esGhostPlayer[iTank].g_iCooldown2 == -1 || g_esGhostPlayer[iTank].g_iCooldown2 < iCurrentTime))
 	{
 		vRenderSpecials(iTank, false);
 		vGhostReset2(iTank);
@@ -1462,11 +1468,11 @@ Action tTimerGhost(Handle timer, DataPack pack)
 	if (g_esGhostPlayer[iTank].g_iGhostAlpha <= g_esGhostCache[iTank].g_iGhostFadeLimit)
 	{
 		g_esGhostPlayer[iTank].g_iGhostAlpha = g_esGhostCache[iTank].g_iGhostFadeLimit;
+
 		if (!g_esGhostPlayer[iTank].g_bActivated2)
 		{
-			int iPos = g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iComboPosition, iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esGhostCache[iTank].g_iGhostFadeDelay;
 			g_esGhostPlayer[iTank].g_bActivated2 = true;
-			g_esGhostPlayer[iTank].g_iDuration = (iCurrentTime + iDuration);
+			g_esGhostPlayer[iTank].g_iDuration = (iCurrentTime + g_esGhostCache[iTank].g_iGhostFadeDelay);
 		}
 	}
 

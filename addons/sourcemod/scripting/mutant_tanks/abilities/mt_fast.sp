@@ -77,6 +77,7 @@ enum struct esFastPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -101,6 +102,7 @@ enum struct esFastAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 }
@@ -122,6 +124,7 @@ enum struct esFastCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iRequiresHumans;
 }
@@ -239,7 +242,7 @@ int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFastCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esFastCache[param1].g_iHumanAbility == 1) ? g_esFastCache[param1].g_iHumanCooldown : g_esFastCache[param1].g_iFastCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FastDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esFastCache[param1].g_iFastDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esFastCache[param1].g_iHumanAbility == 1) ? g_esFastCache[param1].g_iHumanDuration : g_esFastCache[param1].g_iFastDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esFastCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -445,6 +448,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFastAbility[iIndex].g_iHumanAbility = 0;
 				g_esFastAbility[iIndex].g_iHumanAmmo = 5;
 				g_esFastAbility[iIndex].g_iHumanCooldown = 0;
+				g_esFastAbility[iIndex].g_iHumanDuration = 5;
 				g_esFastAbility[iIndex].g_iHumanMode = 1;
 				g_esFastAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esFastAbility[iIndex].g_iRequiresHumans = 0;
@@ -468,6 +472,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esFastPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esFastPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esFastPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esFastPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esFastPlayer[iPlayer].g_iHumanMode = 0;
 					g_esFastPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esFastPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -496,6 +501,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFastPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esFastPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esFastPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esFastPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastPlayer[admin].g_iHumanDuration, value, 1, 99999);
 		g_esFastPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esFastPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esFastPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -515,6 +521,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFastAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFastAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esFastAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFastAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esFastAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFastAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esFastAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFastAbility[type].g_iHumanDuration, value, 1, 99999);
 		g_esFastAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFastAbility[type].g_iHumanMode, value, 0, 1);
 		g_esFastAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFastAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esFastAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FAST_SECTION, MT_FAST_SECTION2, MT_FAST_SECTION3, MT_FAST_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFastAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -546,6 +553,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esFastCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iHumanAbility, g_esFastAbility[type].g_iHumanAbility);
 	g_esFastCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iHumanAmmo, g_esFastAbility[type].g_iHumanAmmo);
 	g_esFastCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iHumanCooldown, g_esFastAbility[type].g_iHumanCooldown);
+	g_esFastCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iHumanDuration, g_esFastAbility[type].g_iHumanDuration);
 	g_esFastCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iHumanMode, g_esFastAbility[type].g_iHumanMode);
 	g_esFastCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_flOpenAreasOnly, g_esFastAbility[type].g_flOpenAreasOnly);
 	g_esFastCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFastPlayer[tank].g_iRequiresHumans, g_esFastAbility[type].g_iRequiresHumans);
@@ -750,6 +758,7 @@ void vFast(int tank, int pos = -1)
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFastCache[tank].g_iFastDuration;
+	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1) ? g_esFastCache[tank].g_iHumanDuration : iDuration;
 	g_esFastPlayer[tank].g_bActivated = true;
 	g_esFastPlayer[tank].g_iDuration = (iTime + iDuration);
 
@@ -840,7 +849,7 @@ void vFastReset2(int tank)
 void vFastReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFastAbility[g_esFastPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFastCache[tank].g_iFastCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1 && g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0) ? g_esFastCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1 && g_esFastCache[tank].g_iHumanMode == 0 && g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0) ? g_esFastCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFastPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esFastPlayer[tank].g_iCooldown != -1 && g_esFastPlayer[tank].g_iCooldown > iTime)
 	{

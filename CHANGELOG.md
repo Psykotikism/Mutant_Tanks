@@ -1,5 +1,53 @@
 # Changelog
 
+## Version 8.94 (July 1, 2022)
+
+### Bug Fixes
+
+#### Abilities
+- Fixed the `* Cooldown` setting for several abilities. (Thanks to `Mi.Cura` for testing and reporting!)
+
+### Changes
+
+#### Abilities
+- Absorb: Added the `Human Duration` setting.
+- Car: Added the `Human Duration` setting.
+- Cloud: Added the `Cloud Duration` setting.
+- Fast: Added the `Human Duration` setting.
+- Fly: Added the `Human Duration` setting.
+- Fragile: Added the `Human Duration` setting.
+- Ghost
+	- Added the `Ghost Duration` setting.
+	- The `Ghost Duration` setting can be substituted by the `Combo Duration` setting when combined with other abilities.
+	- The `Ghost Fade Delay` setting can no longer be substituted by the `Combo Duration` setting when combined with other abilities.
+	- The `Ghost Fade Rate` setting can no longer be substituted by the `Combo Interval` setting when combined with other abilities.
+- God: Added the `Human Duration` setting.
+- Gravity: Added the `Human Duration` setting.
+- Heal: Added the `Heal Duration` setting.
+- Jump: Added the `Human Duration` setting.
+- Laser: Added the `Human Duration` setting.
+- Lightning: Added the `Human Duration` setting.
+- Medic: Added the `Medic Duration` setting.
+- Meteor: Added the `Human Duration` setting.
+- Necro: Added the `Necro Duration` setting.
+- Omni: Added the `Human Duration` setting.
+- Panic: Added the `Panic Duration` setting.
+- Pyro: Added the `Human Duration` setting.
+- Regen: Added the `Regen Duration` setting.
+- Rock: Added the `Human Duration` setting.
+- Shield: Added the `Shield Duration` setting.
+- Spam: Added the `Human Duration` setting.
+- Splash: Added the `Splash Duration` setting.
+- Splatter: Added the `Splatter Duration` setting.
+- Warp: Added the `Warp Duration` setting.
+- Yell: Added the `Human Duration` setting.
+- Zombie: Added the `Zombie Duration` setting.
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated updater file.
+
 ## Version 8.93 (June 20, 2022)
 
 ### Bug Fixes
