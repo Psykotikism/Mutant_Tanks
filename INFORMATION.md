@@ -8,7 +8,7 @@
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
 
-## Sections
+## List of Contents
 
 <details>
 	<summary>Plugin Settings</summary>
@@ -150,6 +150,8 @@
 	- Tank Settings
 	- Abilities
 </details>
+
+## Sections
 
 ### Plugin Settings
 <details>

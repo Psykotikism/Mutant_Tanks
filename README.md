@@ -473,7 +473,9 @@ Here's our final entry:
 }
 ```
 </details>
+
 To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
+
 <details>
 	<summary>Click to expand!</summary>
 
@@ -490,6 +492,7 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 }
 ```
 </details>
+
 Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
 <details>
@@ -703,7 +706,7 @@ Set the value in `Display Health`.
 
 9. Why do some Tanks spawn with different props?
 
-Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
+Each prop has X out of `100.0%` chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 </details>
 <details>
 	<summary>Question 10</summary>
@@ -2298,7 +2301,7 @@ Yes, just set the `Human Cooldown` setting for each ability to whatever value yo
 
 8. What is the `Human Duration` setting for in some of the abilities?
 
-That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to 0.
+That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to `0`.
 
 Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` file for more details.
 </details>
@@ -2325,7 +2328,7 @@ The information displayed in chat will be more detailed and accurate when the pl
 
 11. Is there any way players can change their current Mutant Tank type in the middle of a fight?
 
-Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to `0`. There will be a cooldown though to prevent abuse.
 </details>
 <details>
 	<summary>Question 12</summary>
