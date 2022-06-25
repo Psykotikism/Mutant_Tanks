@@ -10,6 +10,8 @@
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
+<details>
+	<summary>Click to expand!</summary>
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2022  Alfred "Psyk0tik" Llagas
@@ -19,11 +21,15 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</details>
 
 ## About
 Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
 ## Requirements
+<details>
+	<summary>Click to expand!</summary>
+
 1. `SourceMod 1.11.0.6806` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended (Optional):
@@ -33,14 +39,22 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 - [`Updater`](https://github.com/Teamkiller324/Updater)
 - [`WeaponHandling_API`](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
+</details>
 
 ## Notes
+<details>
+	<summary>Click to expand!</summary>
+
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
 2. I will not help you with installing or troubleshooting problems on your part.
 3. If you get errors from SourceMod itself, that is your problem, not mine.
 4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
+</details>
 
 ## Features
+<details>
+	<summary>Click to expand!</summary>
+
 1. Fully compatible with all game modes.
 2. Fully customizable Mutant Tanks.
 3. Flexible config file.
@@ -59,8 +73,12 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 16. Detects idle or bugged Tanks.
 17. Toggle damage scaling based on difficulty.
 18. Fully customizable reward system.
+</details>
 
 ## Commands
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 // Accessible by admins with "z" (Root) flag only.
 sm_mt_admin - View the Mutant Tanks admin panel.
@@ -166,8 +184,12 @@ sm_mt_xiphos - View information about the Xiphos ability.
 sm_mt_yell - View information about the Yell ability.
 sm_mt_zombie - View information about the Zombie ability.
 ```
+</details>
 
 ## ConVar Settings
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 // Automatically update Mutant Tanks.
 // Requires "Updater": https://github.com/Teamkiller324/Updater
@@ -225,19 +247,27 @@ mt_listensupport "0"
 // Maximum: "1.000000"
 mt_pluginenabled "1"
 ```
+</details>
 
 ## KeyValues Settings
 > View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,500 customization options!)
 
 ## Installation
+<details>
+	<summary>Click to expand!</summary>
+
 1. Delete files from old versions of the plugin.
 2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click `Yes`.
 5. Load up Mutant Tanks by restarting the server.
 6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+</details>
 
 ## Compiling
+<details>
+	<summary>Click to expand!</summary>
+
 1. Make sure all the ability plugin source files are in their respective folders.
 - `scripting/mutant_tanks/abilities`
 - `scripting/mutant_tanks/abilities2`
@@ -253,8 +283,12 @@ mt_pluginenabled "1"
 - If `spcomp.exe` is used, the plugins will be created inside the `scripting` folder.
 5. Move the plugin(s) to the `plugins/mutant_tanks` folder.
 - If the `mutant_tanks` folder isn't in the `plugins` folder, create one.
+</details>
 
 ## Uninstalling/Upgrading to Newer Versions
+<details>
+	<summary>Click to expand!</summary>
+
 1. Delete `mutant_tanks` folder from:
 - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
 - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
@@ -271,13 +305,20 @@ mt_pluginenabled "1"
 8. Delete `mutant_tanks_signatures.cfg` from `addons/sourcemod/data/mutant_tanks` folder.
 9. Delete `mutant_tanks_updater.txt` from `addons/sourcemod` folder.
 10. Follow the Installation guide above. (Only for upgrading to newer versions.)
+</details>
 
 ## Disabling
+<details>
+	<summary>Click to expand!</summary>
+
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload `Mutant Tanks` by restarting the server. (Using `sm plugins unload` will take too long.)
+2. Disable the plugin by restarting the server. (Using `sm plugins unload` will take too long.)
+</details>
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
+<details>
+	<summary>Click to expand!</summary>
 
 By default, Mutant Tanks can create and execute the following types of configurations:
 1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `Impossible.cfg` is executed (or created if it doesn't exist already).
@@ -286,22 +327,37 @@ By default, Mutant Tanks can create and execute the following types of configura
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
 5. Player (survivor/infected/all) count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
 6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
+</details>
 
 ### Features
+<details>
+	<summary>Click to expand!</summary>
+
 1. Create custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 2. Execute custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
+</details>
 
 ## Questions You May Have
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Read the INFORMATION.md file to learn about every setting/feature available. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+<details>
+	<summary>Click to expand!</summary>
 
 ### Main Features
+<details>
+	<summary>Click to expand!</summary>
+
+<details>
+	<summary>Question 1</summary>
+
 1. How do I make my own Mutant Tank?
 - Create an entry.
+<details>
+	<summary>Examples</summary>
 
-Examples:
+<details>
+	<summary>This is okay</summary>
 
-This is okay:
 ```
 "Mutant Tanks"
 {
@@ -320,7 +376,10 @@ This is okay:
 	}
 }
 ```
-This is not okay:
+</details>
+<details>
+	<summary>This is not okay</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -339,7 +398,10 @@ This is not okay:
 	}
 }
 ```
-This is okay:
+</details>
+<details>
+	<summary>This is okay</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -358,7 +420,10 @@ This is okay:
 	}
 }
 ```
-This is not okay:
+</details>
+<details>
+	<summary>This is not okay</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -377,9 +442,14 @@ This is not okay:
 	}
 }
 ```
+</details>
+</details>
 - Adding the entry to the roster.
 
 Here's our final entry:
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -402,7 +472,11 @@ Here's our final entry:
 	}
 }
 ```
+</details>
 To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -415,9 +489,12 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	}
 }
 ```
+</details>
 Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
-- Advanced Entry Examples
+<details>
+	<summary>Advanced Entry Examples</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -504,10 +581,17 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 2</summary>
 
 2. Can you add more abilities or features?
 
 - Mutant Tanks already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
+</details>
+<details>
+	<summary>Question 3</summary>
 
 3. How do I enable/disable the plugin in certain game modes?
 
@@ -517,7 +601,9 @@ You have 2 options:
 
 Here are some scenarios and their outcomes:
 
-Scenario 1:
+<details>
+	<summary>Scenario 1</summary>
+
 ```
 "Game Mode Types" "0" // The plugin is enabled in all game mode types.
 "Enabled Game Modes" "" // The plugin is enabled in all game modes.
@@ -525,7 +611,10 @@ Scenario 1:
 
 Outcome: The plugin works in every game mode except "coop" mode.
 ```
-Scenario 2:
+</details>
+<details>
+	<summary>Scenario 2</summary>
+
 ```
 "Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
 "Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
@@ -533,7 +622,10 @@ Scenario 2:
 
 Outcome: The plugin works only in "coop" mode.
 ```
-Scenario 3:
+</details>
+<details>
+	<summary>Scenario 3</summary>
+
 ```
 "Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
@@ -541,6 +633,10 @@ Scenario 3:
 
 Outcome: The plugin works only in "coop" mode.
 ```
+</details>
+</details>
+<details>
+	<summary>Question 4</summary>
 
 4. How come some Mutant Tanks aren't showing up?
 
@@ -560,6 +656,9 @@ It may be due to one or more of the following:
 - The number of Mutant Tanks currently alive with the same type has reached or exceeded the limit set by the `Type Limit`.
 - The Mutant Tank can only spawn on regular maps.
 - The Mutant Tank can only spawn on finale maps.
+</details>
+<details>
+	<summary>Question 5</summary>
 
 5. How do I kill the Tanks depending on what abilities they have?
 
@@ -574,6 +673,9 @@ The following abilities require different strategies:
 - Shield Ability: If set to be weak to explosives, wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield. If set to be weak to fire, wait for the Tank to throw gascans at you and then throw it back at the Tank. Then shoot the gascan to deactivate the Tank's shield. If set to be weak to bullets, just keep shooting the Tank. If set to be weak to melee hits, just keep slashing at the Tank.
 
 Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information on each ability's strengths and weaknesses.
+</details>
+<details>
+	<summary>Question 6</summary>
 
 6. How can I change the amount of Tanks that spawn on each finale wave?
 
@@ -581,28 +683,45 @@ Here's an example:
 ```
 "Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
 ```
+</details>
+<details>
+	<summary>Question 7</summary>
 
 7. How can I change the amount of Tanks that can spawn on finale maps?
 
 Set the value in `Finale Amount`.
+</details>
+<details>
+	<summary>Question 8</summary>
 
 8. How can I decide whether to display each Tank's health?
 
 Set the value in `Display Health`.
+</details>
+<details>
+	<summary>Question 9</summary>
 
 9. Why do some Tanks spawn with different props?
 
 Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
+</details>
+<details>
+	<summary>Question 10</summary>
 
 10. Why are the Tanks spawning with more than the extra health given to them?
 
 Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+</details>
+<details>
+	<summary>Question 11</summary>
 
 11. How do I add more Mutant Tanks?
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -622,12 +741,18 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 12</summary>
 
 12. How do I filter out certain Mutant Tanks that I made without deleting them?
 
 Enable/disable them with the `Tank Enabled` setting.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -665,12 +790,18 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 13</summary>
 
 13. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 // Settings for addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
 "Mutant Tanks"
@@ -736,12 +867,18 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
+</details>
+</details>
+<details>
+	<summary>Question 14</summary>
 
 14. How can I move the Mutant Tanks category around on the admin menu?
 - You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
 - This also allows you to sort each item in the category.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Menu"
 {
@@ -786,16 +923,25 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 15</summary>
 
 15. How can I disable the `MutantTanks` category for some admins?
 
 You can use the `mt_adminmenu` override to restrict the category to certain admin flags/groups.
+</details>
+<details>
+	<summary>Question 16</summary>
 
 16. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
-Forwards:
+<details>
+	<summary>Forwards</summary>
+
 ```
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -1085,9 +1231,13 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
-Natives:
+</details>
+<details>
+	<summary>Natives</summary>
 
-- Core plugin
+<details>
+	<summary>Core Plugin</summary>
+
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -1512,7 +1662,10 @@ native void MT_UnvomitPlayer(int player);
  **/
 native void MT_VomitPlayer(int player);
 ```
-- Clone ability
+</details>
+<details>
+	<summary>Clone Ability</summary>
+
 ```
 /**
  * Returns if the clone can use abilities.
@@ -1534,7 +1687,11 @@ native bool MT_IsCloneSupported(int tank);
  **/
 native bool MT_IsTankClone(int tank);
 ```
-Stocks:
+</details>
+</details>
+<details>
+	<summary>Stocks</summary>
+
 ```
 stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
 {
@@ -1669,7 +1826,10 @@ stock int MT_GetRandomInt(int min, int max)
 	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
 }
 ```
-Target filters:
+</details>
+<details>
+	<summary>Target Filters</summary>
+
 ```
 @smokers
 @boomers
@@ -1685,7 +1845,10 @@ Target filters:
 @mtanks
 @psytanks
 ```
-Commands:
+</details>
+<details>
+	<summary>Commands</summary>
+
 ```
 // Requires "z" (Root) flag.
 sm_tank - Spawn a Mutant Tank.
@@ -1708,21 +1871,38 @@ If you are a Tank:
 1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
 2. When not holding down the +speed (default: LSHIFT) button, you will transform into the chosen type.
 ```
+</details>
+</details>
+</details>
 
 ### Configuration Formatting
+<details>
+	<summary>Click to expand!</summary>
+
+<details>
+	<summary>Question 1</summary>
+
 1. How many config formats are there?
 
 At the moment, there are 4 different formats.
+</details>
+<details>
+	<summary>Question 2</summary>
 
-2. Do I need to edit my current config file from version 8.57 and below?
+2. Do I need to edit my current config file from version `8.57` and below?
 
 No, all plugins still read the original format properly.
+</details>
+<details>
+	<summary>Question 3</summary>
 
 3. Which config format should I use?
 
 Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other file with config examples will use the original format.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 // Original format
 "Mutant Tanks"
@@ -1748,12 +1928,18 @@ mutant_tanks // 3rd format
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 4</summary>
 
 4. Is it possible to configure more than one type in one section?
 
 Yes, you can either apply global settings for all types to use or specify certain types to use them.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -1791,12 +1977,18 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 5</summary>
 
 5. Is it possible to configure more than one ability in one section?
 
 Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -1815,17 +2007,31 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+</details>
 
 ### Administration System
+<details>
+	<summary>Click to expand!</summary>
+
+<details>
+	<summary>Question 1</summary>
+
 1. How does the system work?
 
 The administration system is designed for the usage and effectiveness of each Mutant Tank type. Basically, it controls and determines what kind of Mutant Tanks players can use or be immune from.
+</details>
+<details>
+	<summary>Question 2</summary>
 
 2. Why create an entirely new administration system instead of using SourceMod's own system?
 
 At first, using SM's own system was the goal, but that system has certain limitations that I wanted to get rid of for this project. For example, in SM's system, assigning multiple flags to an override command requires admins to have all of those flags. In this system, admins only need one of those flags, which makes the system flexible for filtering multiple admin flags.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 // SM's system
 "sm_tank"			"abc" // Admins need all three flags to use the command.
@@ -1833,12 +2039,19 @@ Example:
 // MT's system
 "Access Flags"			"abc" // Admins only need one of these flags to access a Mutant Tank type.
 ```
+</details>
+</details>
+<details>
+	<summary>Question 3</summary>
 
 3. What are the admin flags used for?
 
 The flags are used for two things:
 - Accessibility - What Mutant Tank types admins can access.
 - Immunity - What Mutant Tank types admins are immune to.
+</details>
+<details>
+	<summary>Question 4</summary>
 
 4. What other features does the system have?
 
@@ -1846,7 +2059,9 @@ Currently, the system allows admins to each have a favorite/custom/personalized 
 
 Each custom admin setting will override its corresponding Mutant Tank type-specific setting or general setting. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the Mutant Tank type settings or general settings.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -1866,12 +2081,18 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 5</summary>
 
 5. How does the override feature work?
 
 It will sound complicated but here is the simplest way to explain it:
 
-Ability Overrides
+<details>
+	<summary>Ability Overrides</summary>
+
 ```
 If a player's ability flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
 If a player's ability flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
@@ -1893,7 +2114,10 @@ If a player's SM flags have one of the immunity flags required for an ability or
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that ability.
 ```
-Type Overrides
+</details>
+<details>
+	<summary>Type Overrides</summary>
+
 ```
 If a player's ability flags have one of the access flags required for a type or vice-versa, the player will have access to the ability of the type.
 If a player's ability flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the ability of the type.
@@ -1915,7 +2139,10 @@ If a player's SM flags have one of the immunity flags required for a type or vic
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from that type.
 ```
-Global Overrides
+</details>
+<details>
+	<summary>Global Overrides</summary>
+
 ```
 If a player's ability flags have one of the access flags required globally or vice-versa, the player will have access to all abilities that require those flags.
 If a player's ability flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all abilities that require those flags.
@@ -1937,6 +2164,10 @@ If a player's SM flags have one of the immunity flags required globally or vice-
 
 Note: If all 4 of these return false, the player will not have access to nor immunity from anything.
 ```
+</details>
+</details>
+<details>
+	<summary>Question 6</summary>
 
 6. What is the `sm_mt_dev` command for?
 
@@ -1947,17 +2178,30 @@ The command allows the developer (`Psyk0tik`) to access certain features of the 
 - Check which abilities are installed. (Allows the developer to check which abilities to test for.)
 
 In short, this command does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the command if you are not confident with trusting the developer. This command was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
+</details>
+</details>
 
 ### Human Support
+<details>
+	<summary>Click to expand!</summary>
+
+<details>
+	<summary>Question 1</summary>
+
 1. How do I enable human support?
 
 Set `Human Support` to `1` or `2`.
+</details>
+<details>
+	<summary>Question 2</summary>
 
 2. Can players use the abilities automatically/manually?
 
 Yes, just set `Human Ability` to 1 or 2 for EACH ability.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -1970,6 +2214,10 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 3</summary>
 
 3. How can players use the abilities manually?
 
@@ -1982,20 +2230,31 @@ There are 4 buttons that players can use when they spawn as Mutant Tanks.
 ```
 
 Whatever each button activates is entirely up to your configuration settings.
+</details>
+<details>
+	<summary>Question 4</summary>
 
 4. How do I change the buttons or add extra buttons?
 
 Edit lines `101-104` of the `mutant_tanks.inc` file and recompile each ability plugin.
+</details>
+<details>
+	<summary>Question 5</summary>
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
 All related abilities may or may not activate at the same time, depending on your configuration settings. It is recommended to not stack many abilities for human-controlled Mutant Tanks.
+</details>
+<details>
+	<summary>Question 6</summary>
 
 6. How do I limit the usage of abilities for each player?
 
 Set the `Human Ammo` setting for each ability to whatever value you want.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -2008,12 +2267,18 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 7</summary>
 
 7. Can I add a cooldown to the usage of abilities for each player?
 
 Yes, just set the `Human Cooldown` setting for each ability to whatever value you want.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -2026,16 +2291,26 @@ Example:
 	}
 }
 ```
+</details>
+</details>
+<details>
+	<summary>Question 8</summary>
 
 8. What is the `Human Duration` setting for in some of the abilities?
 
 That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to 0.
 
 Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` file for more details.
+</details>
+<details>
+	<summary>Question 9</summary>
 
 9. What is the `Human Mode` setting for in some of the abilities?
 
 That setting is a special mode setting for players, which can determine how some abilities are activated. Read the `INFORMATION.md` file for more details.
+</details>
+<details>
+	<summary>Question 10</summary>
 
 10. Is there any way players can view information about this feature in-game?
 
@@ -2044,53 +2319,88 @@ Yes, use the `sm_mt_ability`/`sm_mt_ability2` commands.
 The commands will each provide a menu that players can use to display certain information in chat.
 
 The information displayed in chat will be more detailed and accurate when the player is playing as a Mutant Tank.
+</details>
+<details>
+	<summary>Question 11</summary>
 
 11. Is there any way players can change their current Mutant Tank type in the middle of a fight?
 
 Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+</details>
+<details>
+	<summary>Question 12</summary>
 
 12. Is there any way to exempt admins from the cooldown mentioned in question `#11`?
 
 Yes, assign admins the `mt_adminversus` override.
 
-Example:
+<details>
+	<summary>Example</summary>
+
 ```
 Overrides
 {
 	"mt_adminversus"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
 }
 ```
+</details>
+</details>
+</details>
 
 ### Configuration
+<details>
+	<summary>Click to expand!</summary>
+
+<details>
+	<summary>Question 1</summary>
+
 1. How do I enable the custom configurations features?
 
 Set `Enable Custom Configs` to `1`.
+</details>
+<details>
+	<summary>Question 2</summary>
 
 2. How do I tell the plugin to only create certain custom config files?
 
 Set the values in `Create Config Types`.
 
-Examples:
+<details>
+	<summary>Examples</summary>
+
 ```
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
 "Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
 "Create Config Types" "255" // Creates the folders and config files for each difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
+</details>
+</details>
+<details>
+	<summary>Question 3</summary>
 
 3. How do I tell the plugin to only execute certain custom config files?
 
 Set the values in `Execute Config Types`.
 
-Examples:
+<details>
+	<summary>Examples</summary>
+
 ```
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
 "Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 "Execute Config Types" "255" // Executes the config file for the current difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
+</details>
+</details>
+</details>
+</details>
 
 ## Credits
+<details>
+	<summary>Click to expand!</summary>
+
 **Machine** - For the [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
 
 **NgBUCKWANGS** - For the mapname.cfg code in his [[L4D2] ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
@@ -2198,6 +2508,7 @@ Examples:
 **Oliver, FusionFlarez** - For helping to test the `Reward` system, `Combination` feature, and overall support.
 
 **SourceMod Team** - For continually updating/improving `SourceMod`.
+</details>
 
 ## Third-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
