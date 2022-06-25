@@ -1765,6 +1765,7 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(SPRITE_EXPLODE, true);
+	PrecacheModel(SPRITE_LASER, true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
@@ -9012,11 +9013,10 @@ void vSurvivorReactions(int tank)
 		}
 	}
 
-	vPushNearbyEntities(tank, flTankPos);
-
 	flTankPos[2] += 40.0;
 	TE_SetupBeamRingPoint(flTankPos, 10.0, 2000.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 50, 1.0, 88.0, 3.0, {255, 255, 255, 50}, 1000, 0);
 	TE_SendToAll();
+	vPushNearbyEntities(tank, flTankPos);
 }
 
 void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, bool toggle = true)

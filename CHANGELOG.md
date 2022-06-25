@@ -76,10 +76,15 @@
 - Yell
 	- Added the `Human Duration` setting.
 	- Changed the minimum value of the `Yell Duration` setting from `1` to `0`.
+	- Added the `Yell Damage` setting.
+	- Added the `Yell Interval` setting.
+	- Added the `Yell Pitch` setting.
+	- Removed the deafen feature.
 - Zombie: Added the `Zombie Duration` setting.
 
 #### Updates
 - Updated config files.
+- Updated gamedata file.
 - Updated include file.
 - Updated updater file.
 

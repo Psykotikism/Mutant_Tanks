@@ -494,6 +494,7 @@
 		"Colors"
 		{
 			// Color presets can be created with unique nicknames that can be used in several color settings.
+			// --
 			// - "Body Color Visual"
 			// - "Glow Color Visual"
 			// - "Light Color Visual"
@@ -24633,6 +24634,18 @@
 			// "forever" - 99999 seconds
 			"Yell Cooldown"				"0"
 
+			// The Mutant Tank's yells do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Yell Damage"				"5.0"
+
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -24645,6 +24658,27 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Yell Duration"				"5"
+
+			// The Mutant Tank yells at nearby survivors every time this many seconds passes.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Yell Interval"				"5.0"
+
+			// The Mutant Tank's yell pitch.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 255 (Highest)
+			"Yell Pitch"				"100"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".

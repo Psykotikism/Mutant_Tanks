@@ -61,6 +61,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_YELL10 "player/tank/voice/yell/tank_yell_10.wav"
 #define SOUND_YELL11 "player/tank/voice/yell/tank_yell_12.wav"
 
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+
 #define MT_YELL_SECTION "yellability"
 #define MT_YELL_SECTION2 "yell ability"
 #define MT_YELL_SECTION3 "yell_ability"
@@ -71,31 +74,31 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esYellPlayer
 {
 	bool g_bActivated;
-	bool g_bAffected;
 
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flYellChance;
+	float g_flYellDamage;
+	float g_flYellInterval;
 	float g_flYellRange;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iComboAbility;
 	int g_iCooldown;
-	int g_iDuration;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
-	int g_iOwner;
 	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iYellAbility;
 	int g_iYellCooldown;
 	int g_iYellDuration;
 	int g_iYellMessage;
+	int g_iYellPitch;
 }
 
 esYellPlayer g_esYellPlayer[MAXPLAYERS + 1];
@@ -105,6 +108,8 @@ enum struct esYellAbility
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flYellChance;
+	float g_flYellDamage;
+	float g_flYellInterval;
 	float g_flYellRange;
 
 	int g_iAccessFlags;
@@ -121,6 +126,7 @@ enum struct esYellAbility
 	int g_iYellCooldown;
 	int g_iYellDuration;
 	int g_iYellMessage;
+	int g_iYellPitch;
 }
 
 esYellAbility g_esYellAbility[MT_MAXTYPES + 1];
@@ -130,6 +136,8 @@ enum struct esYellCache
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flYellChance;
+	float g_flYellDamage;
+	float g_flYellInterval;
 	float g_flYellRange;
 
 	int g_iComboAbility;
@@ -143,44 +151,12 @@ enum struct esYellCache
 	int g_iYellCooldown;
 	int g_iYellDuration;
 	int g_iYellMessage;
+	int g_iYellPitch;
 }
 
 esYellCache g_esYellCache[MAXPLAYERS + 1];
 
-Handle g_hSDKDeafen;
-
-#if defined MT_ABILITIES_MAIN2
-void vYellAllPluginsLoaded()
-#else
-public void OnAllPluginsLoaded()
-#endif
-{
-	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::Deafen"))
-	{
-		delete gdMutantTanks;
-
-		SetFailState("Failed to load offset: CTerrorPlayer::Deafen");
-	}
-
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-
-	g_hSDKDeafen = EndPrepSDKCall();
-	if (g_hSDKDeafen == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
-}
+int g_iBeamSprite = -1, g_iHaloSprite = -1;
 
 #if defined MT_ABILITIES_MAIN2
 void vYellPluginStart()
@@ -203,6 +179,9 @@ void vYellMapStart()
 public void OnMapStart()
 #endif
 {
+	g_iBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
+	g_iHaloSprite = PrecacheModel(SPRITE_GLOW, true);
+
 	PrecacheSound(SOUND_YELL, true);
 	PrecacheSound(SOUND_YELL2, true);
 	PrecacheSound(SOUND_YELL3, true);
@@ -385,36 +364,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vYellPlayerRunCmd(int client)
-#else
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-#endif
-{
-	if (!MT_IsTankSupported(client) || !g_esYellPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esYellCache[client].g_iHumanMode == 1) || g_esYellPlayer[client].g_iDuration == -1)
-	{
-#if defined MT_ABILITIES_MAIN2
-		return;
-#else
-		return Plugin_Continue;
-#endif
-	}
-
-	int iTime = GetTime();
-	if (g_esYellPlayer[client].g_iDuration < iTime)
-	{
-		if (g_esYellPlayer[client].g_iCooldown == -1 || g_esYellPlayer[client].g_iCooldown < iTime)
-		{
-			vYellReset3(client);
-		}
-
-		vYellReset2(client);
-	}
-#if !defined MT_ABILITIES_MAIN2
-	return Plugin_Continue;
-#endif
-}
-
-#if defined MT_ABILITIES_MAIN2
 void vYellPluginCheck(ArrayList list)
 #else
 public void MT_OnPluginCheck(ArrayList list)
@@ -524,7 +473,10 @@ public void MT_OnConfigsLoad(int mode)
 				g_esYellAbility[iIndex].g_iYellMessage = 0;
 				g_esYellAbility[iIndex].g_flYellChance = 33.3;
 				g_esYellAbility[iIndex].g_iYellCooldown = 0;
+				g_esYellAbility[iIndex].g_flYellDamage = 5.0;
 				g_esYellAbility[iIndex].g_iYellDuration = 5;
+				g_esYellAbility[iIndex].g_flYellInterval = 5.0;
+				g_esYellAbility[iIndex].g_iYellPitch = 100;
 				g_esYellAbility[iIndex].g_flYellRange = 500.0;
 			}
 		}
@@ -549,7 +501,10 @@ public void MT_OnConfigsLoad(int mode)
 					g_esYellPlayer[iPlayer].g_iYellMessage = 0;
 					g_esYellPlayer[iPlayer].g_flYellChance = 0.0;
 					g_esYellPlayer[iPlayer].g_iYellCooldown = 0;
+					g_esYellPlayer[iPlayer].g_flYellDamage = 0.0;
 					g_esYellPlayer[iPlayer].g_iYellDuration = 0;
+					g_esYellPlayer[iPlayer].g_flYellInterval = 0.0;
+					g_esYellPlayer[iPlayer].g_iYellPitch = 0;
 					g_esYellPlayer[iPlayer].g_flYellRange = 0.0;
 				}
 			}
@@ -578,7 +533,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esYellPlayer[admin].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellPlayer[admin].g_iYellMessage, value, 0, 1);
 		g_esYellPlayer[admin].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellPlayer[admin].g_flYellChance, value, 0.0, 100.0);
 		g_esYellPlayer[admin].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellPlayer[admin].g_iYellCooldown, value, 0, 99999);
+		g_esYellPlayer[admin].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellPlayer[admin].g_flYellDamage, value, 1.0, 99999.0);
 		g_esYellPlayer[admin].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellPlayer[admin].g_iYellDuration, value, 0, 99999);
+		g_esYellPlayer[admin].g_flYellInterval = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellInterval", "Yell Interval", "Yell_Interval", "interval", g_esYellPlayer[admin].g_flYellInterval, value, 0.1, 99999.0);
+		g_esYellPlayer[admin].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellPlayer[admin].g_iYellPitch, value, 0, 255);
 		g_esYellPlayer[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellPlayer[admin].g_flYellRange, value, 0.1, 99999.0);
 		g_esYellPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esYellPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -599,7 +557,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esYellAbility[type].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellAbility[type].g_iYellMessage, value, 0, 1);
 		g_esYellAbility[type].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellAbility[type].g_flYellChance, value, 0.0, 100.0);
 		g_esYellAbility[type].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellAbility[type].g_iYellCooldown, value, 0, 99999);
+		g_esYellAbility[type].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellAbility[type].g_flYellDamage, value, 1.0, 99999.0);
 		g_esYellAbility[type].g_iYellDuration = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esYellAbility[type].g_iYellDuration, value, 0, 99999);
+		g_esYellAbility[type].g_flYellInterval = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellInterval", "Yell Interval", "Yell_Interval", "interval", g_esYellAbility[type].g_flYellInterval, value, 0.1, 99999.0);
+		g_esYellAbility[type].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellAbility[type].g_iYellPitch, value, 0, 255);
 		g_esYellAbility[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellAbility[type].g_flYellRange, value, 0.1, 99999.0);
 		g_esYellAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esYellAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -616,6 +577,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esYellCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flCloseAreasOnly, g_esYellAbility[type].g_flCloseAreasOnly);
 	g_esYellCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iComboAbility, g_esYellAbility[type].g_iComboAbility);
 	g_esYellCache[tank].g_flYellChance = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellChance, g_esYellAbility[type].g_flYellChance);
+	g_esYellCache[tank].g_flYellDamage = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellDamage, g_esYellAbility[type].g_flYellDamage);
+	g_esYellCache[tank].g_flYellInterval = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellInterval, g_esYellAbility[type].g_flYellInterval);
 	g_esYellCache[tank].g_flYellRange = flGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_flYellRange, g_esYellAbility[type].g_flYellRange);
 	g_esYellCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanAbility, g_esYellAbility[type].g_iHumanAbility);
 	g_esYellCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iHumanAmmo, g_esYellAbility[type].g_iHumanAmmo);
@@ -628,6 +591,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esYellCache[tank].g_iYellCooldown = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iYellCooldown, g_esYellAbility[type].g_iYellCooldown);
 	g_esYellCache[tank].g_iYellDuration = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iYellDuration, g_esYellAbility[type].g_iYellDuration);
 	g_esYellCache[tank].g_iYellMessage = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iYellMessage, g_esYellAbility[type].g_iYellMessage);
+	g_esYellCache[tank].g_iYellPitch = iGetSettingValue(apply, bHuman, g_esYellPlayer[tank].g_iYellPitch, g_esYellAbility[type].g_iYellPitch);
 	g_esYellPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -753,7 +717,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esYellPlayer[tank].g_bActivated = true;
 							g_esYellPlayer[tank].g_iAmmoCount++;
 
-							vYell2(tank, true);
+							vYell2(tank);
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esYellPlayer[tank].g_iAmmoCount, g_esYellCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esYellPlayer[tank].g_bActivated)
@@ -813,13 +777,9 @@ void vYellCopyStats2(int oldTank, int newTank)
 
 void vRemoveYell(int tank)
 {
-	vYellReset4(tank);
-
 	g_esYellPlayer[tank].g_bActivated = false;
-	g_esYellPlayer[tank].g_bAffected = false;
 	g_esYellPlayer[tank].g_iAmmoCount = 0;
 	g_esYellPlayer[tank].g_iCooldown = -1;
-	g_esYellPlayer[tank].g_iDuration = -1;
 }
 
 void vYellReset()
@@ -829,8 +789,6 @@ void vYellReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vRemoveYell(iPlayer);
-
-			g_esYellPlayer[iPlayer].g_iOwner = 0;
 		}
 	}
 }
@@ -838,9 +796,6 @@ void vYellReset()
 void vYellReset2(int tank)
 {
 	g_esYellPlayer[tank].g_bActivated = false;
-	g_esYellPlayer[tank].g_iDuration = -1;
-
-	vYellReset4(tank);
 
 	if (g_esYellCache[tank].g_iYellMessage == 1)
 	{
@@ -862,32 +817,16 @@ void vYellReset3(int tank)
 	}
 }
 
-void vYellReset4(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esYellPlayer[iSurvivor].g_bAffected && g_esYellPlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esYellPlayer[iSurvivor].g_bAffected = false;
-			g_esYellPlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-}
-
 void vYell(int tank, int pos = -1)
 {
-	int iTime = GetTime();
-	if (g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > iTime)
+	if (g_esYellPlayer[tank].g_iCooldown != -1 && g_esYellPlayer[tank].g_iCooldown > GetTime())
 	{
 		return;
 	}
 
-	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esYellCache[tank].g_iYellDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esYellCache[tank].g_iHumanAbility == 1) ? g_esYellCache[tank].g_iHumanDuration : iDuration;
 	g_esYellPlayer[tank].g_bActivated = true;
-	g_esYellPlayer[tank].g_iDuration = (iTime + iDuration);
 
-	vYell2(tank, false, pos);
+	vYell2(tank, pos);
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esYellCache[tank].g_iHumanAbility == 1)
 	{
@@ -905,52 +844,15 @@ void vYell(int tank, int pos = -1)
 	}
 }
 
-void vYell2(int tank, bool repeat, int pos = -1)
+void vYell2(int tank, int pos = -1)
 {
-	float flTankPos[3], flSurvivorPos[3];
-	GetClientAbsOrigin(tank, flTankPos);
-	float flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esYellCache[tank].g_flYellRange;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esYellPlayer[tank].g_iTankType, g_esYellAbility[g_esYellPlayer[tank].g_iTankType].g_iImmunityFlags, g_esYellPlayer[iSurvivor].g_iImmunityFlags) && !g_esYellPlayer[iSurvivor].g_bAffected && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
-		{
-			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
-			{
-				g_esYellPlayer[iSurvivor].g_bAffected = true;
-				g_esYellPlayer[iSurvivor].g_iOwner = tank;
-
-				vYell3(iSurvivor);
-
-				if (repeat)
-				{
-					DataPack dpYell;
-					CreateDataTimer(1.0, tTimerYell, dpYell, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-					dpYell.WriteCell(GetClientUserId(iSurvivor));
-					dpYell.WriteCell(GetClientUserId(tank));
-					dpYell.WriteCell(g_esYellPlayer[tank].g_iTankType);
-					dpYell.WriteCell(pos);
-				}
-			}
-		}
-	}
-}
-
-void vYell3(int survivor)
-{
-	EmitSoundToClient(survivor, SOUND_YELL);
-	EmitSoundToClient(survivor, SOUND_YELL2);
-	EmitSoundToClient(survivor, SOUND_YELL3);
-	EmitSoundToClient(survivor, SOUND_YELL4);
-	EmitSoundToClient(survivor, SOUND_YELL5);
-	EmitSoundToClient(survivor, SOUND_YELL6);
-	EmitSoundToClient(survivor, SOUND_YELL7);
-	EmitSoundToClient(survivor, SOUND_YELL8);
-	EmitSoundToClient(survivor, SOUND_YELL9);
-	EmitSoundToClient(survivor, SOUND_YELL10);
-	EmitSoundToClient(survivor, SOUND_YELL11);
-
-	SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esYellCache[tank].g_flYellInterval;
+	DataPack dpYell;
+	CreateDataTimer(flInterval, tTimerYell, dpYell, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpYell.WriteCell(GetClientUserId(tank));
+	dpYell.WriteCell(g_esYellPlayer[tank].g_iTankType);
+	dpYell.WriteCell(GetTime());
+	dpYell.WriteCell(pos);
 }
 
 void vYellAbility(int tank)
@@ -997,41 +899,62 @@ Action tTimerYell(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_esYellPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
-	{
-		g_esYellPlayer[iSurvivor].g_bAffected = false;
-		g_esYellPlayer[iSurvivor].g_iOwner = 0;
-
-		return Plugin_Stop;
-	}
-
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iPos = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esYellCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esYellCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esYellPlayer[iTank].g_iTankType) || (g_esYellCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esYellCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esYellAbility[g_esYellPlayer[iTank].g_iTankType].g_iAccessFlags, g_esYellPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(g_esYellPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esYellPlayer[iTank].g_iTankType || !g_esYellPlayer[iTank].g_bActivated || g_esYellCache[iTank].g_iYellAbility == 0)
 	{
 		g_esYellPlayer[iTank].g_bActivated = false;
-		g_esYellPlayer[iSurvivor].g_bAffected = false;
-		g_esYellPlayer[iSurvivor].g_iOwner = 0;
 
 		return Plugin_Stop;
 	}
 
-	if (MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esYellPlayer[iTank].g_iTankType, g_esYellAbility[g_esYellPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esYellPlayer[iSurvivor].g_iImmunityFlags))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esYellCache[iTank].g_iYellDuration;
+	iDuration = (bHuman && g_esYellCache[iTank].g_iHumanAbility == 1) ? g_esYellCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esYellCache[iTank].g_iHumanAbility == 1 && g_esYellCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esYellPlayer[iTank].g_iCooldown == -1 || g_esYellPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
-		g_esYellPlayer[iSurvivor].g_bAffected = false;
-		g_esYellPlayer[iSurvivor].g_iOwner = 0;
+		vYellReset2(iTank);
+		vYellReset3(iTank);
 
 		return Plugin_Stop;
 	}
+
+	int iBeamColor[4];
+	MT_GetTankColors(iTank, 2, iBeamColor[0], iBeamColor[1], iBeamColor[2], iBeamColor[3]);
+	iBeamColor[3] = 50;
 
 	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
-	GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-	float flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esYellCache[iTank].g_flYellRange;
-	if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+	flTankPos[2] -= 30.0;
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esYellCache[iTank].g_flYellDamage,
+		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esYellCache[iTank].g_flYellRange;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		vYell3(iSurvivor);
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esYellPlayer[iTank].g_iTankType, g_esYellAbility[g_esYellPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esYellPlayer[iSurvivor].g_iImmunityFlags) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+		{
+			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+			{
+				EmitSoundToClient(iSurvivor, SOUND_YELL, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL2, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL3, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL4, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL5, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL6, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL7, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL8, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL9, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL10, .pitch = g_esYellCache[iTank].g_iYellPitch);
+				EmitSoundToClient(iSurvivor, SOUND_YELL11, .pitch = g_esYellCache[iTank].g_iYellPitch);
+
+				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				vShakePlayerScreen(iSurvivor, 2.0);
+			}
+		}
 	}
+
+	TE_SetupBeamRingPoint(flTankPos, 10.0, (flRange * 2.0), g_iBeamSprite, g_iHaloSprite, 0, 50, 1.0, 88.0, 3.0, iBeamColor, 1000, 0);
+	TE_SendToAll();
 
 	return Plugin_Continue;
 }

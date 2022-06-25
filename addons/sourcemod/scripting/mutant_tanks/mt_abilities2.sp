@@ -342,9 +342,6 @@ public void OnAllPluginsLoaded()
 #if defined MT_MENU_WARP
 	vWarpAllPluginsLoaded();
 #endif
-#if defined MT_MENU_YELL
-	vYellAllPluginsLoaded();
-#endif
 }
 
 public void OnPluginStart()
@@ -845,9 +842,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 #if defined MT_MENU_ULTIMATE
 	vUltimatePlayerRunCmd(client);
-#endif
-#if defined MT_MENU_YELL
-	vYellPlayerRunCmd(client);
 #endif
 	return Plugin_Continue;
 }
