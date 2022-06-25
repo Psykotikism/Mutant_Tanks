@@ -88,6 +88,7 @@
 		"Notes"		"	- Added the \"Yell Pitch\" setting."
 		"Notes"		"	- Removed the deafen feature."
 		"Notes"		"- Zombie: Added the \"Zombie Duration\" setting."
+		"Notes"		"Files:"
 		"Notes"		"Updates:"
 		"Notes"		"- Updated config files."
 		"Notes"		"- Updated gamedata file."
