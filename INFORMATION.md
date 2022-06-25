@@ -10,7 +10,10 @@
 
 ## Sections
 
-- Plugin Settings
+<details>
+	<summary>Plugin Settings</summary>
+
+- [Plugin Settings](#plugin-settings)
 	- General
 	- Announcements
 	- Colors
@@ -26,8 +29,12 @@
 	- ConVars
 	- Game Modes
 	- Custom
+</details>
 
-- Tank Settings
+<details>
+	<summary>Tank Settings</summary>
+
+- [Tank Settings](#tank-settings)
 	- General
 	- Announcements
 	- Rewards
@@ -45,95 +52,109 @@
 	- Health
 	- Enhancements
 	- Immunities
+</details>
 
-- Abilities Set #1 (A-L)
-	- Absorb
-	- Acid
-	- Aimless
-	- Ammo
-	- Blind
-	- Bomb
-	- Bury
-	- Car
-	- Choke
-	- Clone
-	- Cloud
-	- Drop
-	- Drug
-	- Drunk
-	- Electric
-	- Enforce
-	- Fast
-	- Fire
-	- Fling
-	- Fly
-	- Fragile
-	- Ghost
-	- God
-	- Gravity
-	- Heal
-	- Hit
-	- Hurt
-	- Hypno
-	- Ice
-	- Idle
-	- Invert
-	- Item
-	- Jump
-	- Kamikaze
-	- Lag
-	- Laser
-	- Leech
-	- Lightning
+<details>
+	<summary>Abilities Set #1 (A-L)</summary>
 
-- Abilities Set #2 (M-Z)
-	- Medic
-	- Meteor
-	- Minion
-	- Necro
-	- Nullify
-	- Omni
-	- Panic
-	- Pimp
-	- Puke
-	- Pyro
-	- Quiet
-	- Recoil
-	- Regen
-	- Respawn
-	- Restart
-	- Rock
-	- Rocket
-	- Shake
-	- Shield
-	- Shove
-	- Slow
-	- Smash
-	- Smite
-	- Spam
-	- Splash
-	- Splatter
-	- Throw
-	- Track
-	- Ultimate
-	- Undead
-	- Vampire
-	- Vision
-	- Warp
-	- Whirl
-	- Witch
-	- Xiphos
-	- Yell
-	- Zombie
+- [Abilities Set #1 (A-L)](#abilities-set-1-a-l)
+	- [Absorb](#absorb-ability)
+	- [Acid](#acid-ability)
+	- [Aimless](#aimless-ability)
+	- [Ammo](#ammo-ability)
+	- [Blind](#blind-ability)
+	- [Bomb](#bomb-ability)
+	- [Bury](#bury-ability)
+	- [Car](#car-ability)
+	- [Choke](#choke-ability)
+	- [Clone](#clone-ability)
+	- [Cloud](#cloud-ability)
+	- [Drop](#drop-ability)
+	- [Drug](#drug-ability)
+	- [Drunk](#drunk-ability)
+	- [Electric](#electric-ability)
+	- [Enforce](#enforce-ability)
+	- [Fast](#fast-ability)
+	- [Fire](#fire-ability)
+	- [Fling](#fling-ability)
+	- [Fly](#fly-ability)
+	- [Fragile](#fragile-ability)
+	- [Ghost](#ghost-ability)
+	- [God](#god-ability)
+	- [Gravity](#gravity-ability)
+	- [Heal](#heal-ability)
+	- [Hit](#hit-ability)
+	- [Hurt](#hurt-ability)
+	- [Hypno](#hypno-ability)
+	- [Ice](#ice-ability)
+	- [Idle](#idle-ability)
+	- [Invert](#invert-ability)
+	- [Item](#item-ability)
+	- [Jump](#jump-ability)
+	- [Kamikaze](#kamikaze-ability)
+	- [Lag](#lag-ability)
+	- [Laser](#laser-ability)
+	- [Leech](#leech-ability)
+	- [Lightning](#lightning-ability)
+</details>
 
-- Administration System
+<details>
+	<summary>Abilities Set #2 (M-Z)</summary>
+
+- [Abilities Set #2 (M-Z)](#abilities-set-2-m-z)
+	- [Medic](#medic-ability)
+	- [Meteor](#meteor-ability)
+	- [Minion](#minion-ability)
+	- [Necro](#necro-ability)
+	- [Nullify](#nullify-ability)
+	- [Omni](#omni-ability)
+	- [Panic](#panic-ability)
+	- [Pimp](#pimp-ability)
+	- [Puke](#puke-ability)
+	- [Pyro](#pyro-ability)
+	- [Quiet](#quiet-ability)
+	- [Recoil](#recoil-ability)
+	- [Regen](#regen-ability)
+	- [Respawn](#respawn-ability)
+	- [Restart](#restart-ability)
+	- [Rock](#rock-ability)
+	- [Rocket](#rocket-ability)
+	- [Shake](#shake-ability)
+	- [Shield](#shield-ability)
+	- [Shove](#shove-ability)
+	- [Slow](#slow-ability)
+	- [Smash](#smash-ability)
+	- [Smite](#smite-ability)
+	- [Spam](#spam-ability)
+	- [Splash](#splash-ability)
+	- [Splatter](#splatter-ability)
+	- [Throw](#throw-ability)
+	- [Track](#track-ability)
+	- [Ultimate](#ultimate-ability)
+	- [Undead](#undead-ability)
+	- [Vampire](#vampire-ability)
+	- [Vision](#vision-ability)
+	- [Warp](#warp-ability)
+	- [Whirl](#whirl-ability)
+	- [Witch](#witch-ability)
+	- [Xiphos](#xiphos-ability)
+	- [Yell](#yell-ability)
+	- [Zombie](#zombie-ability)
+</details>
+
+<details>
+	<summary>Administration System</summary>
+
+- [Administration System](#administration-system)
 	- Administration
 	- Tank Settings
 	- Abilities
+</details>
 
 ### Plugin Settings
+<details>
+	<summary>General, Announcements, Colors, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom</summary>
 
-#### General, Announcements, Colors, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -2576,10 +2597,12 @@
 	}
 }
 ```
+</details>
 
 ### Tank Settings
+<details>
+	<summary>General, Announcements, Rewards, Competitive, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities</summary>
 
-#### General, Announcements, Rewards, Competitive, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {
@@ -5407,10 +5430,14 @@
 	}
 }
 ```
+</details>
 
 #### Abilities Set #1 (A-L)
 
 ##### Absorb Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -5639,8 +5666,12 @@
 	}
 }
 ```
+</details>
 
 ##### Acid Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6005,8 +6036,12 @@
 	}
 }
 ```
+</details>
 
 ##### Aimless Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6286,8 +6321,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ammo Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6561,8 +6600,12 @@
 	}
 }
 ```
+</details>
 
 ##### Blind Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6850,8 +6893,12 @@
 	}
 }
 ```
+</details>
 
 ##### Bomb Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7214,8 +7261,12 @@
 	}
 }
 ```
+</details>
 
 ##### Bury Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7514,8 +7565,12 @@
 	}
 }
 ```
+</details>
 
 ##### Car Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7744,8 +7799,12 @@
 	}
 }
 ```
+</details>
 
 ##### Choke Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8049,8 +8108,12 @@
 	}
 }
 ```
+</details>
 
 ##### Clone Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8264,8 +8327,12 @@
 	}
 }
 ```
+</details>
 
 ##### Cloud Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8456,8 +8523,12 @@
 	}
 }
 ```
+</details>
 
 ##### Drop Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8612,8 +8683,12 @@
 	}
 }
 ```
+</details>
 
 ##### Drug Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8907,8 +8982,12 @@
 	}
 }
 ```
+</details>
 
 ##### Drunk Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9213,8 +9292,12 @@
 	}
 }
 ```
+</details>
 
 ##### Electric Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9520,8 +9603,12 @@
 	}
 }
 ```
+</details>
 
 ##### Enforce Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9818,8 +9905,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fast Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9998,8 +10089,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fire Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10362,8 +10457,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fling Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10677,8 +10776,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fly Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10881,8 +10984,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fragile Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11136,8 +11243,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ghost Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11537,8 +11648,12 @@
 	}
 }
 ```
+</details>
 
 ##### God Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11717,8 +11832,12 @@
 	}
 }
 ```
+</details>
 
 ##### Gravity Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12045,8 +12164,12 @@
 	}
 }
 ```
+</details>
 
 ##### Heal Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12434,8 +12557,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hit Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12538,8 +12665,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hurt Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12845,8 +12976,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hypno Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13184,8 +13319,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ice Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13466,8 +13605,12 @@
 	}
 }
 ```
+</details>
 
 ##### Idle Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13734,8 +13877,12 @@
 	}
 }
 ```
+</details>
 
 ##### Invert Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14015,8 +14162,12 @@
 	}
 }
 ```
+</details>
 
 ##### Item Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14187,8 +14338,12 @@
 	}
 }
 ```
+</details>
 
 ##### Jump Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14560,8 +14715,12 @@
 	}
 }
 ```
+</details>
 
 ##### Kamikaze Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14769,8 +14928,12 @@
 	}
 }
 ```
+</details>
 
 ##### Lag Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15049,8 +15212,12 @@
 	}
 }
 ```
+</details>
 
 ##### Laser Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15267,8 +15434,12 @@
 	}
 }
 ```
+</details>
 
 ##### Leech Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15562,8 +15733,12 @@
 	}
 }
 ```
+</details>
 
 ##### Lightning Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15769,10 +15944,14 @@
 	}
 }
 ```
+</details>
 
 #### Abilities Set #2 (M-Z)
 
 ##### Medic Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16019,8 +16198,12 @@
 	}
 }
 ```
+</details>
 
 ##### Meteor Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16254,8 +16437,12 @@
 	}
 }
 ```
+</details>
 
 ##### Minion Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16445,8 +16632,12 @@
 	}
 }
 ```
+</details>
 
 ##### Necro Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16629,8 +16820,12 @@
 	}
 }
 ```
+</details>
 
 ##### Nullify Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16910,8 +17105,12 @@
 	}
 }
 ```
+</details>
 
 ##### Omni Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17101,8 +17300,12 @@
 	}
 }
 ```
+</details>
 
 ##### Panic Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17287,8 +17490,12 @@
 	}
 }
 ```
+</details>
 
 ##### Pimp Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17594,8 +17801,12 @@
 	}
 }
 ```
+</details>
 
 ##### Puke Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17900,8 +18111,12 @@
 	}
 }
 ```
+</details>
 
 ##### Pyro Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18105,8 +18320,12 @@
 	}
 }
 ```
+</details>
 
 ##### Quiet Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18387,8 +18606,12 @@
 	}
 }
 ```
+</details>
 
 ##### Recoil Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18668,8 +18891,12 @@
 	}
 }
 ```
+</details>
 
 ##### Regen Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18871,8 +19098,12 @@
 	}
 }
 ```
+</details>
 
 ##### Respawn Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19016,8 +19247,12 @@
 	}
 }
 ```
+</details>
 
 ##### Restart Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19301,8 +19536,12 @@
 	}
 }
 ```
+</details>
 
 ##### Rock Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19514,8 +19753,12 @@
 	}
 }
 ```
+</details>
 
 ##### Rocket Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19802,8 +20045,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shake Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -20135,8 +20382,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shield Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -20428,8 +20679,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shove Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -20761,8 +21016,12 @@
 	}
 }
 ```
+</details>
 
 ##### Slow Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21058,8 +21317,12 @@
 	}
 }
 ```
+</details>
 
 ##### Smash Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21334,8 +21597,12 @@
 	}
 }
 ```
+</details>
 
 ##### Smite Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21610,8 +21877,12 @@
 	}
 }
 ```
+</details>
 
 ##### Spam Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21810,8 +22081,12 @@
 	}
 }
 ```
+</details>
 
 ##### Splash Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22028,8 +22303,12 @@
 	}
 }
 ```
+</details>
 
 ##### Splatter Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22240,8 +22519,12 @@
 	}
 }
 ```
+</details>
 
 ##### Throw Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22526,8 +22809,12 @@
 	}
 }
 ```
+</details>
 
 ##### Track Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22699,8 +22986,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ultimate Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22893,8 +23184,12 @@
 	}
 }
 ```
+</details>
 
 ##### Undead Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23039,8 +23334,12 @@
 	}
 }
 ```
+</details>
 
 ##### Vampire Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23162,8 +23461,12 @@
 	}
 }
 ```
+</details>
 
 ##### Vision Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23450,8 +23753,12 @@
 	}
 }
 ```
+</details>
 
 ##### Warp Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23850,8 +24157,12 @@
 	}
 }
 ```
+</details>
 
 ##### Whirl Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24153,8 +24464,12 @@
 	}
 }
 ```
+</details>
 
 ##### Witch Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24353,8 +24668,12 @@
 	}
 }
 ```
+</details>
 
 ##### Xiphos Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24470,8 +24789,12 @@
 	}
 }
 ```
+</details>
 
 ##### Yell Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24695,8 +25018,12 @@
 	}
 }
 ```
+</details>
 
 ##### Zombie Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24915,10 +25242,12 @@
 	}
 }
 ```
+</details>
 
 ### Administration System
+<details>
+	<summary>Administration, Tank Settings, Abilities</summary>
 
-#### Administration, Tank Settings, Abilities
 ```
 "Mutant Tanks"
 {
@@ -24986,3 +25315,4 @@
 	}
 }
 ```
+</details>
