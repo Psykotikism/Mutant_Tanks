@@ -69,6 +69,7 @@
 		"Notes"		"- Pyro"
 		"Notes"		"	- Added the \"Human Duration\" setting."
 		"Notes"		"	- Changed the minimum value of the \"Pyro Duration\" setting from \"1\" to \"0\"."
+		"Notes"		"- Quiet: Added the \"Quiet Filter\" setting."
 		"Notes"		"- Regen: Added the \"Regen Duration\" setting."
 		"Notes"		"- Rock"
 		"Notes"		"	- Added the \"Human Duration\" setting."

@@ -18543,6 +18543,26 @@
 			// "forever" - 99999 seconds
 			"Quiet Duration"			"5.0"
 
+			// The filter for the Mutant Tank's quiet effect.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 511
+			// --
+			// 0 OR 511: All filters.
+			// 1: Common infected
+			// 2: Smoker
+			// 4: Boomer
+			// 8: Hunter
+			// 16: Spitter (Only available in Left 4 Dead 2.)
+			// 32: Jockey (Only available in Left 4 Dead 2.)
+			// 64: Charger (Only available in Left 4 Dead 2.)
+			// 128: Witch
+			// 256: Tank
+			"Quiet Filter"				"0"
+
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.

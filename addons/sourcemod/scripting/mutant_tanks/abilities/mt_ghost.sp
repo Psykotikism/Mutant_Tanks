@@ -1186,7 +1186,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 				for (int iBit = iStart; iBit < 5; iBit++)
 				{
 					iSlot = GetPlayerWeaponSlot(survivor, iBit);
-					if (((g_esGhostCache[tank].g_iGhostWeaponSlots & (1 << iBit)) || g_esGhostCache[tank].g_iGhostWeaponSlots == 0) && iSlot > MaxClients)
+					if ((g_esGhostCache[tank].g_iGhostWeaponSlots == 0 || (g_esGhostCache[tank].g_iGhostWeaponSlots & (1 << iBit))) && iSlot > MaxClients)
 					{
 						SDKHooks_DropWeapon(survivor, iSlot, NULL_VECTOR, NULL_VECTOR);
 					}

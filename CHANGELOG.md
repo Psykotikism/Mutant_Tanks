@@ -62,6 +62,7 @@
 - Pyro
 	- Added the `Human Duration` setting.
 	- Changed the minimum value of the `Pyro Duration` setting from `1` to `0`.
+- Quiet: Added the `Quiet Filter` setting.
 - Regen: Added the `Regen Duration` setting.
 - Rock
 	- Added the `Human Duration` setting.
