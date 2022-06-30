@@ -155,7 +155,7 @@
 
 ### Plugin Settings
 <details>
-	<summary>General, Announcements, Colors, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom</summary>
+	<summary>Click to expand!</summary>
 
 ```
 "Mutant Tanks"
@@ -2603,7 +2603,7 @@
 
 ### Tank Settings
 <details>
-	<summary>General, Announcements, Rewards, Competitive, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities</summary>
+	<summary>Click to expand!</summary>
 
 ```
 "Mutant Tanks"
@@ -25268,7 +25268,7 @@
 
 ### Administration System
 <details>
-	<summary>Administration, Tank Settings, Abilities</summary>
+	<summary>Click to expand!</summary>
 
 ```
 "Mutant Tanks"

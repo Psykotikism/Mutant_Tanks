@@ -340,8 +340,6 @@ By default, Mutant Tanks can create and execute the following types of configura
 
 ## Questions You May Have
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Read the INFORMATION.md file to learn about every setting/feature available. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-<details>
-	<summary>Click to expand!</summary>
 
 ### Main Features
 <details>
@@ -2395,7 +2393,6 @@ Set the values in `Execute Config Types`.
 "Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 "Execute Config Types" "255" // Executes the config file for the current difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
-</details>
 </details>
 </details>
 </details>

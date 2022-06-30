@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.94 (July 1, 2022)
+## Version 8.94 (July 4, 2022)
 
 ### Bug Fixes
 
