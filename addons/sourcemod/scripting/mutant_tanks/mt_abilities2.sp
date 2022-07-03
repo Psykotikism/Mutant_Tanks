@@ -2681,7 +2681,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_RESTART
 	switch (type)
 	{
-		case 0: vRestartPluginStart();
 		case 1: vRestartMapStart();
 		case 2: vRestartMapEnd();
 	}
@@ -2720,7 +2719,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_SHOVE
 	switch (type)
 	{
-		case 0: vShovePluginStart();
 		case 1: vShoveMapStart();
 		case 2: vShoveMapEnd();
 	}
@@ -2810,7 +2808,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_WARP
 	switch (type)
 	{
-		case 0: vWarpPluginStart();
 		case 1: vWarpMapStart();
 		case 2: vWarpMapEnd();
 	}
@@ -2833,7 +2830,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_YELL
 	switch (type)
 	{
-		case 0: vYellPluginStart();
 		case 1: vYellMapStart();
 		case 2: vYellMapEnd();
 	}

@@ -30,7 +30,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 <details>
 	<summary>Click to expand!</summary>
 
-1. `SourceMod 1.11.0.6806` or higher
+1. `SourceMod 1.11.0.6880` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended (Optional):
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
@@ -2507,7 +2507,7 @@ Set the values in `Execute Config Types`.
 
 **Oliver, FusionFlarez** - For helping to test the `Reward` system, `Combination` feature, and overall support.
 
-**SourceMod Team** - For continually updating/improving `SourceMod`.
+**SourceMod Team** - For continually updating/improving SourceMod.
 </details>
 
 ## Third-Party Revisions Notice

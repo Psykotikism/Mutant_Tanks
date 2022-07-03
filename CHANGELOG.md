@@ -11,6 +11,9 @@
 
 ### Changes
 
+#### General
+- `SourceMod 1.11.0.6880` or higher is now required.
+
 #### Abilities
 - Changed the minimum value of the `Human Duration` setting for several abilities from `1` to `0`.
 - Absorb
@@ -84,6 +87,11 @@
 - Zombie: Added the `Zombie Duration` setting.
 
 ### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6880` compiler.
 
 #### Updates
 - Updated config files.

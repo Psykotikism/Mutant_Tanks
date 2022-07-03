@@ -227,13 +227,9 @@ public void OnAllPluginsLoaded()
 	delete gdMutantTanks;
 }
 
-#if defined MT_ABILITIES_MAIN2
-void vWarpPluginStart()
-#else
-public void OnPluginStart()
-#endif
-{
 #if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
@@ -252,8 +248,8 @@ public void OnPluginStart()
 
 		g_bLateLoad = false;
 	}
-#endif
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN2
 void vWarpMapStart()

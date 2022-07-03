@@ -988,15 +988,15 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					flAngles[1] = 0.0;
 					flAngles[2] = 0.0;
 
-					DispatchKeyValue(iFlame, "spawnflags", "1");
-					DispatchKeyValue(iFlame, "Type", "0");
-					DispatchKeyValue(iFlame, "InitialState", "1");
-					DispatchKeyValue(iFlame, "Spreadspeed", "10");
-					DispatchKeyValue(iFlame, "Speed", "800");
-					DispatchKeyValue(iFlame, "Startsize", "10");
-					DispatchKeyValue(iFlame, "EndSize", "250");
-					DispatchKeyValue(iFlame, "Rate", "15");
-					DispatchKeyValue(iFlame, "JetLength", "400");
+					DispatchKeyValueInt(iFlame, "spawnflags", 1);
+					DispatchKeyValueInt(iFlame, "Type", 0);
+					DispatchKeyValueInt(iFlame, "InitialState", 1);
+					DispatchKeyValueInt(iFlame, "Spreadspeed", 10);
+					DispatchKeyValueInt(iFlame, "Speed", 800);
+					DispatchKeyValueInt(iFlame, "Startsize", 10);
+					DispatchKeyValueInt(iFlame, "EndSize", 250);
+					DispatchKeyValueInt(iFlame, "Rate", 15);
+					DispatchKeyValueInt(iFlame, "JetLength", 400);
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
 					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);

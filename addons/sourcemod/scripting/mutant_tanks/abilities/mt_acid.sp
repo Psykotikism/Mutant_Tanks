@@ -54,8 +54,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
-#define PARTICLE_BLOOD "boomer_explode_D"
-
 #define MT_ACID_SECTION "acidability"
 #define MT_ACID_SECTION2 "acid ability"
 #define MT_ACID_SECTION3 "acid_ability"
@@ -231,13 +229,9 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-#if defined MT_ABILITIES_MAIN
-void vAcidPluginStart()
-#else
-public void OnPluginStart()
-#endif
-{
 #if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
@@ -256,8 +250,8 @@ public void OnPluginStart()
 
 		g_bLateLoad = false;
 	}
-#endif
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN
 void vAcidMapStart()
@@ -265,7 +259,6 @@ void vAcidMapStart()
 public void OnMapStart()
 #endif
 {
-	iPrecacheParticle(PARTICLE_BLOOD);
 	vAcidReset();
 }
 

@@ -158,20 +158,16 @@ esYellCache g_esYellCache[MAXPLAYERS + 1];
 
 int g_iBeamSprite = -1, g_iHaloSprite = -1;
 
-#if defined MT_ABILITIES_MAIN2
-void vYellPluginStart()
-#else
-public void OnPluginStart()
-#endif
-{
 #if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_yell", cmdYellInfo, "View information about the Yell ability.");
-#endif
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN2
 void vYellMapStart()

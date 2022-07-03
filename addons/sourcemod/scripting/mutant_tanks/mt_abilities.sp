@@ -2661,7 +2661,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_ACID
 	switch (type)
 	{
-		case 0: vAcidPluginStart();
 		case 1: vAcidMapStart();
 		case 2: vAcidMapEnd();
 	}
@@ -2699,7 +2698,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_BURY
 	switch (type)
 	{
-		case 0: vBuryPluginStart();
 		case 1: vBuryMapStart();
 		case 2: vBuryMapEnd();
 		case 3: vBuryPluginEnd();
@@ -2792,7 +2790,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_FLING
 	switch (type)
 	{
-		case 0: vFlingPluginStart();
 		case 1: vFlingMapStart();
 		case 2: vFlingMapEnd();
 	}
@@ -2868,7 +2865,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_IDLE
 	switch (type)
 	{
-		case 0: vIdlePluginStart();
 		case 1: vIdleMapStart();
 		case 2: vIdleMapEnd();
 	}

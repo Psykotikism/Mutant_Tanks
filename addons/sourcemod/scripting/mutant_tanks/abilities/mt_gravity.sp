@@ -993,9 +993,9 @@ void vGravity(int tank)
 
 	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "origin", flOrigin);
 	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "angles", flAngles);
-	DispatchKeyValue(g_esGravityPlayer[tank].g_iGravityPointPush, "radius", "750");
+	DispatchKeyValueInt(g_esGravityPlayer[tank].g_iGravityPointPush, "radius", 750);
 	DispatchKeyValueFloat(g_esGravityPlayer[tank].g_iGravityPointPush, "magnitude", g_esGravityCache[tank].g_flGravityForce);
-	DispatchKeyValue(g_esGravityPlayer[tank].g_iGravityPointPush, "spawnflags", "8");
+	DispatchKeyValueInt(g_esGravityPlayer[tank].g_iGravityPointPush, "spawnflags", 8);
 	vSetEntityParent(g_esGravityPlayer[tank].g_iGravityPointPush, tank, true);
 	AcceptEntityInput(g_esGravityPlayer[tank].g_iGravityPointPush, "Enable");
 	g_esGravityPlayer[tank].g_iGravityPointPush = EntIndexToEntRef(g_esGravityPlayer[tank].g_iGravityPointPush);
