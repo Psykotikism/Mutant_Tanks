@@ -2,15 +2,21 @@
 
 ## Notes
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
+<details>
+	<summary>Click to expand!</summary>
 
 - Visit the [`Wiki`](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: `1,000,000` (Increase/decrease the value in the `mutant_tanks.inc` file on lines `97-98` and recompile all the plugins, but expect game-breaking bugs with higher values.) [Default: `65,535`]
 - Maximum types: `500` (Increase/decrease the value in the `mutant_tanks.inc` file on line `96` and recompile all the plugins, but expect server lag with higher values.)
 - Most of these settings can be overridden for each player via their Steam IDs.
+</details>
 
-## Sections
+## List of Contents
 
-- Plugin Settings
+<details>
+	<summary>Plugin Settings</summary>
+
+- [Plugin Settings](#plugin-settings)
 	- General
 	- Announcements
 	- Colors
@@ -26,8 +32,12 @@
 	- ConVars
 	- Game Modes
 	- Custom
+</details>
 
-- Tank Settings
+<details>
+	<summary>Tank Settings</summary>
+
+- [Tank Settings](#tank-settings)
 	- General
 	- Announcements
 	- Rewards
@@ -45,95 +55,111 @@
 	- Health
 	- Enhancements
 	- Immunities
+</details>
 
-- Abilities Set #1 (A-L)
-	- Absorb
-	- Acid
-	- Aimless
-	- Ammo
-	- Blind
-	- Bomb
-	- Bury
-	- Car
-	- Choke
-	- Clone
-	- Cloud
-	- Drop
-	- Drug
-	- Drunk
-	- Electric
-	- Enforce
-	- Fast
-	- Fire
-	- Fling
-	- Fly
-	- Fragile
-	- Ghost
-	- God
-	- Gravity
-	- Heal
-	- Hit
-	- Hurt
-	- Hypno
-	- Ice
-	- Idle
-	- Invert
-	- Item
-	- Jump
-	- Kamikaze
-	- Lag
-	- Laser
-	- Leech
-	- Lightning
+<details>
+	<summary>Abilities Set #1 (A-L)</summary>
 
-- Abilities Set #2 (M-Z)
-	- Medic
-	- Meteor
-	- Minion
-	- Necro
-	- Nullify
-	- Omni
-	- Panic
-	- Pimp
-	- Puke
-	- Pyro
-	- Quiet
-	- Recoil
-	- Regen
-	- Respawn
-	- Restart
-	- Rock
-	- Rocket
-	- Shake
-	- Shield
-	- Shove
-	- Slow
-	- Smash
-	- Smite
-	- Spam
-	- Splash
-	- Splatter
-	- Throw
-	- Track
-	- Ultimate
-	- Undead
-	- Vampire
-	- Vision
-	- Warp
-	- Whirl
-	- Witch
-	- Xiphos
-	- Yell
-	- Zombie
+- [Abilities Set #1 (A-L)](#abilities-set-1-a-l)
+	- [Absorb](#absorb-ability)
+	- [Acid](#acid-ability)
+	- [Aimless](#aimless-ability)
+	- [Ammo](#ammo-ability)
+	- [Blind](#blind-ability)
+	- [Bomb](#bomb-ability)
+	- [Bury](#bury-ability)
+	- [Car](#car-ability)
+	- [Choke](#choke-ability)
+	- [Clone](#clone-ability)
+	- [Cloud](#cloud-ability)
+	- [Drop](#drop-ability)
+	- [Drug](#drug-ability)
+	- [Drunk](#drunk-ability)
+	- [Electric](#electric-ability)
+	- [Enforce](#enforce-ability)
+	- [Fast](#fast-ability)
+	- [Fire](#fire-ability)
+	- [Fling](#fling-ability)
+	- [Fly](#fly-ability)
+	- [Fragile](#fragile-ability)
+	- [Ghost](#ghost-ability)
+	- [God](#god-ability)
+	- [Gravity](#gravity-ability)
+	- [Heal](#heal-ability)
+	- [Hit](#hit-ability)
+	- [Hurt](#hurt-ability)
+	- [Hypno](#hypno-ability)
+	- [Ice](#ice-ability)
+	- [Idle](#idle-ability)
+	- [Invert](#invert-ability)
+	- [Item](#item-ability)
+	- [Jump](#jump-ability)
+	- [Kamikaze](#kamikaze-ability)
+	- [Lag](#lag-ability)
+	- [Laser](#laser-ability)
+	- [Leech](#leech-ability)
+	- [Lightning](#lightning-ability)
+</details>
 
-- Administration System
+<details>
+	<summary>Abilities Set #2 (M-Z)</summary>
+
+- [Abilities Set #2 (M-Z)](#abilities-set-2-m-z)
+	- [Medic](#medic-ability)
+	- [Meteor](#meteor-ability)
+	- [Minion](#minion-ability)
+	- [Necro](#necro-ability)
+	- [Nullify](#nullify-ability)
+	- [Omni](#omni-ability)
+	- [Panic](#panic-ability)
+	- [Pimp](#pimp-ability)
+	- [Puke](#puke-ability)
+	- [Pyro](#pyro-ability)
+	- [Quiet](#quiet-ability)
+	- [Recoil](#recoil-ability)
+	- [Regen](#regen-ability)
+	- [Respawn](#respawn-ability)
+	- [Restart](#restart-ability)
+	- [Rock](#rock-ability)
+	- [Rocket](#rocket-ability)
+	- [Shake](#shake-ability)
+	- [Shield](#shield-ability)
+	- [Shove](#shove-ability)
+	- [Slow](#slow-ability)
+	- [Smash](#smash-ability)
+	- [Smite](#smite-ability)
+	- [Spam](#spam-ability)
+	- [Splash](#splash-ability)
+	- [Splatter](#splatter-ability)
+	- [Throw](#throw-ability)
+	- [Track](#track-ability)
+	- [Ultimate](#ultimate-ability)
+	- [Undead](#undead-ability)
+	- [Vampire](#vampire-ability)
+	- [Vision](#vision-ability)
+	- [Warp](#warp-ability)
+	- [Whirl](#whirl-ability)
+	- [Witch](#witch-ability)
+	- [Xiphos](#xiphos-ability)
+	- [Yell](#yell-ability)
+	- [Zombie](#zombie-ability)
+</details>
+
+<details>
+	<summary>Administration System</summary>
+
+- [Administration System](#administration-system)
 	- Administration
 	- Tank Settings
 	- Abilities
+</details>
+
+## Sections
 
 ### Plugin Settings
+<details>
+	<summary>Click to expand!</summary>
 
-#### General, Announcements, Colors, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -2576,10 +2602,12 @@
 	}
 }
 ```
+</details>
 
 ### Tank Settings
+<details>
+	<summary>Click to expand!</summary>
 
-#### General, Announcements, Rewards, Competitive, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {
@@ -5407,10 +5435,14 @@
 	}
 }
 ```
+</details>
 
 #### Abilities Set #1 (A-L)
 
 ##### Absorb Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -5487,6 +5519,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -5572,10 +5617,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -5627,8 +5671,12 @@
 	}
 }
 ```
+</details>
 
 ##### Acid Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -5993,8 +6041,12 @@
 	}
 }
 ```
+</details>
 
 ##### Aimless Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6274,8 +6326,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ammo Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6549,8 +6605,12 @@
 	}
 }
 ```
+</details>
 
 ##### Blind Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -6838,8 +6898,12 @@
 	}
 }
 ```
+</details>
 
 ##### Bomb Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7202,8 +7266,12 @@
 	}
 }
 ```
+</details>
 
 ##### Bury Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7502,8 +7570,12 @@
 	}
 }
 ```
+</details>
 
 ##### Car Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -7572,6 +7644,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -7649,7 +7734,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -7719,8 +7804,12 @@
 	}
 }
 ```
+</details>
 
 ##### Choke Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8024,8 +8113,12 @@
 	}
 }
 ```
+</details>
 
 ##### Clone Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8239,8 +8332,12 @@
 	}
 }
 ```
+</details>
 
 ##### Cloud Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8322,7 +8419,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -8414,12 +8511,29 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 99999.0 damage
 			"Cloud Damage"				"5.0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Cloud Duration"			"0"
 		}
 	}
 }
 ```
+</details>
 
 ##### Drop Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8574,8 +8688,12 @@
 	}
 }
 ```
+</details>
 
 ##### Drug Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -8869,8 +8987,12 @@
 	}
 }
 ```
+</details>
 
 ##### Drunk Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9175,8 +9297,12 @@
 	}
 }
 ```
+</details>
 
 ##### Electric Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9482,8 +9608,12 @@
 	}
 }
 ```
+</details>
 
 ##### Enforce Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9780,8 +9910,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fast Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -9850,6 +9984,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -9925,10 +10072,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -9948,8 +10094,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fire Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10312,8 +10462,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fling Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10627,8 +10781,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fly Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10706,6 +10864,19 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"30"
+
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10780,10 +10951,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -10819,8 +10989,12 @@
 	}
 }
 ```
+</details>
 
 ##### Fragile Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -10897,6 +11071,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -10989,10 +11176,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11062,8 +11248,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ghost Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11071,6 +11261,7 @@
 	{
 		// The Mutant Tank cloaks itself and nearby special infected, and disarms survivors.
 		// "Ability Enabled" - When the Mutant Tank spawns, it becomes invisible.
+		// - "Ghost Duration"
 		// - "Ghost Fade Alpha"
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
@@ -11161,7 +11352,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11301,6 +11492,19 @@
 			// "forever" - 99999 seconds
 			"Ghost Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Ghost Duration"			"0"
+
 			// The amount of alpha to take from the Mutant Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
 			// Note: The rate at which the Mutant Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
 			// Note: This setting can be overridden for specific players.
@@ -11310,7 +11514,6 @@
 			"Ghost Fade Alpha"			"2"
 
 			// The Mutant Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11330,7 +11533,6 @@
 			"Ghost Fade Limit"			"0"
 
 			// The rate of the Mutant Tank's ghost fade effect.
-			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1 (Fastest)
@@ -11451,8 +11653,12 @@
 	}
 }
 ```
+</details>
 
 ##### God Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11530,6 +11736,19 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
+
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11604,10 +11823,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11619,8 +11837,12 @@
 	}
 }
 ```
+</details>
 
 ##### Gravity Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11707,6 +11929,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
@@ -11841,10 +12076,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -11935,8 +12169,12 @@
 	}
 }
 ```
+</details>
 
 ##### Heal Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -11945,6 +12183,7 @@
 		// The Mutant Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
 		// "Ability Enabled" - Any nearby infected can give the Mutant Tank some health.
 		// - "Heal Absorb Range"
+		// - "Heal Duration"
 		// - "Heal Glow"
 		// - "Heal Interval"
 		// - "Health From Commons"
@@ -12033,7 +12272,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -12192,6 +12431,19 @@
 			// "forever" - 99999 seconds
 			"Heal Cooldown"				"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Heal Duration"				"0"
+
 			// The Mutant Tank's healing gives it a glow outline when activated.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
@@ -12310,8 +12562,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hit Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12414,8 +12670,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hurt Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -12721,8 +12981,12 @@
 	}
 }
 ```
+</details>
 
 ##### Hypno Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13060,8 +13324,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ice Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13342,8 +13610,12 @@
 	}
 }
 ```
+</details>
 
 ##### Idle Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13610,8 +13882,12 @@
 	}
 }
 ```
+</details>
 
 ##### Invert Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -13891,8 +14167,12 @@
 	}
 }
 ```
+</details>
 
 ##### Item Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14063,8 +14343,12 @@
 	}
 }
 ```
+</details>
 
 ##### Jump Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14154,6 +14438,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
@@ -14288,10 +14585,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -14424,8 +14720,12 @@
 	}
 }
 ```
+</details>
 
 ##### Kamikaze Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14633,8 +14933,12 @@
 	}
 }
 ```
+</details>
 
 ##### Lag Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14913,8 +15217,12 @@
 	}
 }
 ```
+</details>
 
 ##### Laser Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -14991,6 +15299,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -15080,7 +15401,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15118,8 +15439,12 @@
 	}
 }
 ```
+</details>
 
 ##### Leech Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15413,8 +15738,12 @@
 	}
 }
 ```
+</details>
 
 ##### Lightning Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15492,6 +15821,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -15581,7 +15923,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15607,10 +15949,14 @@
 	}
 }
 ```
+</details>
 
 #### Abilities Set #2 (M-Z)
 
 ##### Medic Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15684,7 +16030,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -15765,6 +16111,19 @@
 			// "forever" - 99999 seconds
 			"Medic Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Medic Duration"			"0"
+
 			// The Mutant Tank creates a healing field visual effect around it when healing fellow special infected.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -15844,8 +16203,12 @@
 	}
 }
 ```
+</details>
 
 ##### Meteor Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -15922,6 +16285,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -16010,10 +16386,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16067,8 +16442,12 @@
 	}
 }
 ```
+</details>
 
 ##### Minion Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16258,8 +16637,12 @@
 	}
 }
 ```
+</details>
 
 ##### Necro Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16333,7 +16716,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16414,6 +16797,19 @@
 			// "forever" - 99999 seconds
 			"Necro Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Necro Duration"			"0"
+
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -16429,8 +16825,12 @@
 	}
 }
 ```
+</details>
 
 ##### Nullify Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16710,8 +17110,12 @@
 	}
 }
 ```
+</details>
 
 ##### Omni Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16780,6 +17184,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -16857,7 +17274,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -16888,8 +17305,12 @@
 	}
 }
 ```
+</details>
 
 ##### Panic Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -16963,7 +17384,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17044,6 +17465,19 @@
 			// "forever" - 99999 seconds
 			"Panic Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Panic Duration"			"0"
+
 			// The Mutant Tank starts a panic event every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -17061,8 +17495,12 @@
 	}
 }
 ```
+</details>
 
 ##### Pimp Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17368,8 +17806,12 @@
 	}
 }
 ```
+</details>
 
 ##### Puke Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17674,8 +18116,12 @@
 	}
 }
 ```
+</details>
 
 ##### Pyro Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -17744,6 +18190,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -17826,10 +18285,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -17867,8 +18325,12 @@
 	}
 }
 ```
+</details>
 
 ##### Quiet Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18084,6 +18546,26 @@
 			// "forever" - 99999 seconds
 			"Quiet Duration"			"5.0"
 
+			// The filter for the Mutant Tank's quiet effect.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 511
+			// --
+			// 0 OR 511: All filters.
+			// 1: Common infected
+			// 2: Smoker
+			// 4: Boomer
+			// 8: Hunter
+			// 16: Spitter (Only available in Left 4 Dead 2.)
+			// 32: Jockey (Only available in Left 4 Dead 2.)
+			// 64: Charger (Only available in Left 4 Dead 2.)
+			// 128: Witch
+			// 256: Tank
+			"Quiet Filter"				"0"
+
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -18149,8 +18631,12 @@
 	}
 }
 ```
+</details>
 
 ##### Recoil Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18430,8 +18916,12 @@
 	}
 }
 ```
+</details>
 
 ##### Regen Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18505,7 +18995,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -18586,6 +19076,19 @@
 			// "forever" - 99999 seconds
 			"Regen Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Regen Duration"			"0"
+
 			// The Mutant Tank regenerates this much health each time.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -18620,8 +19123,12 @@
 	}
 }
 ```
+</details>
 
 ##### Respawn Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -18765,8 +19272,12 @@
 	}
 }
 ```
+</details>
 
 ##### Restart Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19050,8 +19561,12 @@
 	}
 }
 ```
+</details>
 
 ##### Rock Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19128,6 +19643,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -19215,10 +19743,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -19251,8 +19778,12 @@
 	}
 }
 ```
+</details>
 
 ##### Rocket Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19539,8 +20070,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shake Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19872,8 +20407,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shield Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -19955,7 +20494,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -20090,6 +20629,19 @@
 			// 2: ON, show in center text.
 			"Shield Display Health Type"		"2"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Shield Duration"			"0"
+
 			// The Mutant Tank's shield has a glow outline when activated.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
@@ -20152,8 +20704,12 @@
 	}
 }
 ```
+</details>
 
 ##### Shove Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -20485,8 +21041,12 @@
 	}
 }
 ```
+</details>
 
 ##### Slow Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -20782,8 +21342,12 @@
 	}
 }
 ```
+</details>
 
 ##### Smash Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21058,8 +21622,12 @@
 	}
 }
 ```
+</details>
 
 ##### Smite Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21334,8 +21902,12 @@
 	}
 }
 ```
+</details>
 
 ##### Spam Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21412,6 +21984,19 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
@@ -21499,10 +22084,9 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21522,8 +22106,12 @@
 	}
 }
 ```
+</details>
 
 ##### Splash Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21605,7 +22193,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21698,6 +22286,19 @@
 			// "strongest" - 99999.0 damage
 			"Splash Damage"				"5.0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Splash Duration"			"0"
+
 			// The Mutant Tank deals splash damage to nearby survivors every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -21727,8 +22328,12 @@
 	}
 }
 ```
+</details>
 
 ##### Splatter Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -21803,7 +22408,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -21884,6 +22489,19 @@
 			// "forever" - 99999 seconds
 			"Splatter Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Splatter Duration"			"0"
+
 			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -21926,8 +22544,12 @@
 	}
 }
 ```
+</details>
 
 ##### Throw Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22212,8 +22834,12 @@
 	}
 }
 ```
+</details>
 
 ##### Track Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22385,8 +23011,12 @@
 	}
 }
 ```
+</details>
 
 ##### Ultimate Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22579,8 +23209,12 @@
 	}
 }
 ```
+</details>
 
 ##### Undead Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22725,8 +23359,12 @@
 	}
 }
 ```
+</details>
 
 ##### Vampire Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -22848,8 +23486,12 @@
 	}
 }
 ```
+</details>
 
 ##### Vision Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23136,8 +23778,12 @@
 	}
 }
 ```
+</details>
 
 ##### Warp Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23233,7 +23879,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -23395,6 +24041,19 @@
 			// "forever" - 99999 seconds
 			"Warp Cooldown"				"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Warp Duration"				"0"
+
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: The Tank will not teleport in narrow areas.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
@@ -23523,8 +24182,12 @@
 	}
 }
 ```
+</details>
 
 ##### Whirl Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -23826,8 +24489,12 @@
 	}
 }
 ```
+</details>
 
 ##### Witch Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24026,8 +24693,12 @@
 	}
 }
 ```
+</details>
 
 ##### Xiphos Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24143,8 +24814,12 @@
 	}
 }
 ```
+</details>
 
 ##### Yell Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24222,6 +24897,19 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Duration"			"5"
+
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -24294,11 +24982,23 @@
 			// "forever" - 99999 seconds
 			"Yell Cooldown"				"0"
 
+			// The Mutant Tank's yells do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Yell Damage"				"5.0"
+
 			// The Mutant Tank's ability effects last this long.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24306,6 +25006,27 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Yell Duration"				"5"
+
+			// The Mutant Tank yells at nearby survivors every time this many seconds passes.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Yell Interval"				"5.0"
+
+			// The Mutant Tank's yell pitch.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 255 (Highest)
+			"Yell Pitch"				"100"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
@@ -24322,8 +25043,12 @@
 	}
 }
 ```
+</details>
 
 ##### Zombie Ability
+<details>
+	<summary>Click to expand!</summary>
+
 ```
 "Mutant Tanks"
 {
@@ -24397,7 +25122,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -24485,6 +25210,19 @@
 			// "forever" - 99999 seconds
 			"Zombie Cooldown"			"0"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Zombie Duration"			"0"
+
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -24529,10 +25267,12 @@
 	}
 }
 ```
+</details>
 
 ### Administration System
+<details>
+	<summary>Click to expand!</summary>
 
-#### Administration, Tank Settings, Abilities
 ```
 "Mutant Tanks"
 {
@@ -24600,3 +25340,4 @@
 	}
 }
 ```
+</details>

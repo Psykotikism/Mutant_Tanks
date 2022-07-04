@@ -79,6 +79,7 @@ enum struct esMeteorPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iMeteorAbility;
@@ -108,6 +109,7 @@ enum struct esMeteorAbility
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
 	int g_iMeteorAbility;
@@ -134,6 +136,7 @@ enum struct esMeteorCache
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iMeteorAbility;
 	int g_iMeteorCooldown;
@@ -272,7 +275,7 @@ int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMeteorCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esMeteorCache[param1].g_iHumanAbility == 1) ? g_esMeteorCache[param1].g_iHumanCooldown : g_esMeteorCache[param1].g_iMeteorCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "MeteorDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esMeteorCache[param1].g_iMeteorDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esMeteorCache[param1].g_iHumanAbility == 1) ? g_esMeteorCache[param1].g_iHumanDuration : g_esMeteorCache[param1].g_iMeteorDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMeteorCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -491,6 +494,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMeteorAbility[iIndex].g_iHumanAbility = 0;
 				g_esMeteorAbility[iIndex].g_iHumanAmmo = 5;
 				g_esMeteorAbility[iIndex].g_iHumanCooldown = 0;
+				g_esMeteorAbility[iIndex].g_iHumanDuration = 5;
 				g_esMeteorAbility[iIndex].g_iHumanMode = 1;
 				g_esMeteorAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esMeteorAbility[iIndex].g_iRequiresHumans = 0;
@@ -520,6 +524,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esMeteorPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esMeteorPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esMeteorPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esMeteorPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esMeteorPlayer[iPlayer].g_iHumanMode = 0;
 					g_esMeteorPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esMeteorPlayer[iPlayer].g_iRequiresHumans = 0;
@@ -553,6 +558,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esMeteorPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esMeteorPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorPlayer[admin].g_iHumanCooldown, value, 0, 99999);
+		g_esMeteorPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esMeteorPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esMeteorPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esMeteorPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -561,7 +567,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorPlayer[admin].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorPlayer[admin].g_flMeteorChance, value, 0.0, 100.0);
 		g_esMeteorPlayer[admin].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorPlayer[admin].g_iMeteorCooldown, value, 0, 99999);
 		g_esMeteorPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorPlayer[admin].g_flMeteorDamage, value, 1.0, 99999.0);
-		g_esMeteorPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorPlayer[admin].g_iMeteorDuration, value, 1, 99999);
+		g_esMeteorPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorPlayer[admin].g_iMeteorDuration, value, 0, 99999);
 		g_esMeteorPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorPlayer[admin].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorPlayer[admin].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorPlayer[admin].g_flMeteorLifetime, value, 0.1, 99999.0);
 		g_esMeteorPlayer[admin].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorPlayer[admin].g_iMeteorMode, value, 0, 1);
@@ -590,6 +596,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMeteorAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esMeteorAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMeteorAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esMeteorAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMeteorAbility[type].g_iHumanCooldown, value, 0, 99999);
+		g_esMeteorAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMeteorAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esMeteorAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMeteorAbility[type].g_iHumanMode, value, 0, 1);
 		g_esMeteorAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMeteorAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esMeteorAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMeteorAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -598,7 +605,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorAbility[type].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorAbility[type].g_flMeteorChance, value, 0.0, 100.0);
 		g_esMeteorAbility[type].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorAbility[type].g_iMeteorCooldown, value, 0, 99999);
 		g_esMeteorAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorAbility[type].g_flMeteorDamage, value, 1.0, 99999.0);
-		g_esMeteorAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorAbility[type].g_iMeteorDuration, value, 1, 99999);
+		g_esMeteorAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorAbility[type].g_iMeteorDuration, value, 0, 99999);
 		g_esMeteorAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorAbility[type].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorAbility[type].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorAbility[type].g_flMeteorLifetime, value, 0.1, 99999.0);
 		g_esMeteorAbility[type].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorAbility[type].g_iMeteorMode, value, 0, 1);
@@ -639,6 +646,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMeteorCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iHumanAbility, g_esMeteorAbility[type].g_iHumanAbility);
 	g_esMeteorCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iHumanAmmo, g_esMeteorAbility[type].g_iHumanAmmo);
 	g_esMeteorCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iHumanCooldown, g_esMeteorAbility[type].g_iHumanCooldown);
+	g_esMeteorCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iHumanDuration, g_esMeteorAbility[type].g_iHumanDuration);
 	g_esMeteorCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iHumanMode, g_esMeteorAbility[type].g_iHumanMode);
 	g_esMeteorCache[tank].g_iMeteorAbility = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iMeteorAbility, g_esMeteorAbility[type].g_iMeteorAbility);
 	g_esMeteorCache[tank].g_iMeteorCooldown = iGetSettingValue(apply, bHuman, g_esMeteorPlayer[tank].g_iMeteorCooldown, g_esMeteorAbility[type].g_iMeteorCooldown);
@@ -975,7 +983,7 @@ void vMeteorReset2(int tank)
 void vMeteorReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMeteorCache[tank].g_iMeteorCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMeteorCache[tank].g_iHumanAbility == 1 && g_esMeteorPlayer[tank].g_iAmmoCount < g_esMeteorCache[tank].g_iHumanAmmo && g_esMeteorCache[tank].g_iHumanAmmo > 0) ? g_esMeteorCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMeteorCache[tank].g_iHumanAbility == 1 && g_esMeteorCache[tank].g_iHumanMode == 0 && g_esMeteorPlayer[tank].g_iAmmoCount < g_esMeteorCache[tank].g_iHumanAmmo && g_esMeteorCache[tank].g_iHumanAmmo > 0) ? g_esMeteorCache[tank].g_iHumanCooldown : iCooldown;
 	g_esMeteorPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esMeteorPlayer[tank].g_iCooldown != -1 && g_esMeteorPlayer[tank].g_iCooldown > iTime)
 	{
@@ -1020,24 +1028,28 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esMeteorCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esMeteorCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[iTank].g_iTankType) || (g_esMeteorCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esMeteorPlayer[iTank].g_iTankType || !g_esMeteorPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esMeteorPlayer[iTank].g_iTankType) || (g_esMeteorCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esMeteorCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esMeteorPlayer[iTank].g_iTankType || !g_esMeteorPlayer[iTank].g_bActivated)
 	{
 		g_esMeteorPlayer[iTank].g_bActivated = false;
 
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iPos = pack.ReadCell(),
-		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esMeteorCache[iTank].g_iMeteorDuration,
-		iCurrentTime = GetTime();
-	if (g_esMeteorCache[iTank].g_iMeteorAbility == 0 || ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esMeteorCache[iTank].g_iHumanAbility == 1 && g_esMeteorCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
+	if (g_esMeteorCache[iTank].g_iMeteorAbility == 0 || bIsAreaNarrow(iTank, g_esMeteorCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esMeteorCache[iTank].g_flCloseAreasOnly))
 	{
 		vMeteorReset2(iTank);
 
-		if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esMeteorCache[iTank].g_iHumanMode == 0) && (g_esMeteorPlayer[iTank].g_iCooldown == -1 || g_esMeteorPlayer[iTank].g_iCooldown < iCurrentTime))
-		{
-			vMeteorReset3(iTank);
-		}
+		return Plugin_Stop;
+	}
+
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esMeteorCache[iTank].g_iMeteorDuration;
+	iDuration = (bHuman && g_esMeteorCache[iTank].g_iHumanAbility == 1) ? g_esMeteorCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esMeteorCache[iTank].g_iHumanAbility == 1 && g_esMeteorCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime)
+	{
+		vMeteorReset2(iTank);
+		vMeteorReset3(iTank);
 
 		return Plugin_Stop;
 	}

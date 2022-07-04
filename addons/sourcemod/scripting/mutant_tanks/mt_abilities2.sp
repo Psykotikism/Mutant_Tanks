@@ -342,9 +342,6 @@ public void OnAllPluginsLoaded()
 #if defined MT_MENU_WARP
 	vWarpAllPluginsLoaded();
 #endif
-#if defined MT_MENU_YELL
-	vYellAllPluginsLoaded();
-#endif
 }
 
 public void OnPluginStart()
@@ -845,9 +842,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 #if defined MT_MENU_ULTIMATE
 	vUltimatePlayerRunCmd(client);
-#endif
-#if defined MT_MENU_YELL
-	vYellPlayerRunCmd(client);
 #endif
 	return Plugin_Continue;
 }
@@ -2687,7 +2681,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_RESTART
 	switch (type)
 	{
-		case 0: vRestartPluginStart();
 		case 1: vRestartMapStart();
 		case 2: vRestartMapEnd();
 	}
@@ -2726,7 +2719,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_SHOVE
 	switch (type)
 	{
-		case 0: vShovePluginStart();
 		case 1: vShoveMapStart();
 		case 2: vShoveMapEnd();
 	}
@@ -2816,7 +2808,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_WARP
 	switch (type)
 	{
-		case 0: vWarpPluginStart();
 		case 1: vWarpMapStart();
 		case 2: vWarpMapEnd();
 	}
@@ -2839,7 +2830,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_YELL
 	switch (type)
 	{
-		case 0: vYellPluginStart();
 		case 1: vYellMapStart();
 		case 2: vYellMapEnd();
 	}

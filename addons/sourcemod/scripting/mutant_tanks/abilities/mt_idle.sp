@@ -175,13 +175,9 @@ public void OnAllPluginsLoaded()
 	delete gdMutantTanks;
 }
 
-#if defined MT_ABILITIES_MAIN
-void vIdlePluginStart()
-#else
-public void OnPluginStart()
-#endif
-{
 #if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
@@ -200,8 +196,8 @@ public void OnPluginStart()
 
 		g_bLateLoad = false;
 	}
-#endif
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN
 void vIdleMapStart()

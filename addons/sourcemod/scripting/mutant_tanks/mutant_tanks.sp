@@ -1765,6 +1765,7 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(SPRITE_EXPLODE, true);
+	PrecacheModel(SPRITE_LASER, true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
@@ -4541,7 +4542,7 @@ void vHudPanel(int developer, int level = 0)
 
 	g_esPlayer[developer].g_iHudPanelPages = (RoundToNearest(float(iTankCount / 2)) - 1);
 	FormatEx(sDisplay, sizeof sDisplay, "%s HUD Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
-	
+
 	Panel pHudPanel = new Panel();
 	pHudPanel.SetTitle(sDisplay);
 	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
@@ -8978,9 +8979,9 @@ void vSurvivorReactions(int tank)
 	if (bIsValidEntity(iExplosion))
 	{
 		DispatchKeyValue(iExplosion, "fireballsprite", SPRITE_EXPLODE);
-		DispatchKeyValue(iExplosion, "iMagnitude", "50");
-		DispatchKeyValue(iExplosion, "rendermode", "5");
-		DispatchKeyValue(iExplosion, "spawnflags", "1");
+		DispatchKeyValueInt(iExplosion, "iMagnitude", 50);
+		DispatchKeyValueInt(iExplosion, "rendermode", 5);
+		DispatchKeyValueInt(iExplosion, "spawnflags", 1);
 
 		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iExplosion);
@@ -9012,11 +9013,10 @@ void vSurvivorReactions(int tank)
 		}
 	}
 
-	vPushNearbyEntities(tank, flTankPos);
-
 	flTankPos[2] += 40.0;
 	TE_SetupBeamRingPoint(flTankPos, 10.0, 2000.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 50, 1.0, 88.0, 3.0, {255, 255, 255, 50}, 1000, 0);
 	TE_SendToAll();
+	vPushNearbyEntities(tank, flTankPos);
 }
 
 void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, bool toggle = true)
@@ -9450,13 +9450,13 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 		FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
 		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "_light", sColor);
 
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "inner_cone", "0");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "cone", "80");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "brightness", "1");
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "inner_cone", 0);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "cone", 80);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "brightness", 1);
 		DispatchKeyValueFloat(g_esPlayer[player].g_iFlashlight, "spotlight_radius", 240.0);
 		DispatchKeyValueFloat(g_esPlayer[player].g_iFlashlight, "distance", 255.0);
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "pitch", "-90");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "style", "5");
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "pitch", -90);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "style", 5);
 
 		float flOrigin[3], flAngles[3], flForward[3];
 		GetClientEyePosition(player, origin);
@@ -9559,21 +9559,21 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
 			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "angles", angles);
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "fadescale", 1);
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "fademindist", -1);
 
 			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 		}
 		else
 		{
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "haloscale", "100");
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "haloscale", 100);
 			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iCrownColor[0]), iGetRandomColor(g_esCache[tank].g_iCrownColor[1]), iGetRandomColor(g_esCache[tank].g_iCrownColor[2]), iGetRandomColor(g_esCache[tank].g_iCrownColor[3]));
 		}
 
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightwidth", "10");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "50");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spawnflags", "3");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spotlightwidth", 10);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spotlightlength", 50);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spawnflags", 3);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "maxspeed", 100);
 		DispatchKeyValueFloat(g_esPlayer[tank].g_iLight[light], "HDRColorScale", 0.7);
 
 		float flOrigin[3] = {0.0, 0.0, 70.0}, flAngles[3] = {-45.0, 0.0, 0.0};
@@ -10395,15 +10395,15 @@ void vSetTankProps(int tank)
 							DispatchKeyValueVector(g_esPlayer[tank].g_iFlame[iOzTank], "origin", flOrigin);
 							vSetEntityParent(g_esPlayer[tank].g_iFlame[iOzTank], g_esPlayer[tank].g_iOzTank[iOzTank], true);
 
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Type", "0");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "InitialState", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Spreadspeed", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Speed", "250");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Startsize", "6");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "EndSize", "8");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", "555");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", "40");
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Type", 0);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "InitialState", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Spreadspeed", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Speed", 250);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Startsize", 6);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "EndSize", 8);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", 555);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", 40);
 
 							float flOrigin3[3] = {-2.0, 0.0, 28.0}, flAngles3[3] = {-90.0, 0.0, -90.0};
 							AcceptEntityInput(g_esPlayer[tank].g_iFlame[iOzTank], "TurnOn");

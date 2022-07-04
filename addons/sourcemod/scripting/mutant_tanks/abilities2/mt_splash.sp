@@ -80,6 +80,7 @@ enum struct esSplashPlayer
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
 	int g_iSplashCooldown;
+	int g_iSplashDuration;
 	int g_iSplashMessage;
 	int g_iTankType;
 }
@@ -107,6 +108,7 @@ enum struct esSplashAbility
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
 	int g_iSplashCooldown;
+	int g_iSplashDuration;
 	int g_iSplashMessage;
 }
 
@@ -130,6 +132,7 @@ enum struct esSplashCache
 	int g_iRequiresHumans;
 	int g_iSplashAbility;
 	int g_iSplashCooldown;
+	int g_iSplashDuration;
 	int g_iSplashMessage;
 }
 
@@ -246,7 +249,7 @@ int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplashCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esSplashCache[param1].g_iHumanAbility == 1) ? g_esSplashCache[param1].g_iHumanCooldown : g_esSplashCache[param1].g_iSplashCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplashDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esSplashCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esSplashCache[param1].g_iHumanAbility == 1) ? g_esSplashCache[param1].g_iHumanDuration : g_esSplashCache[param1].g_iSplashDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplashCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -432,6 +435,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplashAbility[iIndex].g_flSplashChance = 33.3;
 				g_esSplashAbility[iIndex].g_iSplashCooldown = 0;
 				g_esSplashAbility[iIndex].g_flSplashDamage = 5.0;
+				g_esSplashAbility[iIndex].g_iSplashDuration = 0;
 				g_esSplashAbility[iIndex].g_flSplashInterval = 5.0;
 				g_esSplashAbility[iIndex].g_flSplashRange = 500.0;
 			}
@@ -458,6 +462,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSplashPlayer[iPlayer].g_flSplashChance = 0.0;
 					g_esSplashPlayer[iPlayer].g_iSplashCooldown = 0;
 					g_esSplashPlayer[iPlayer].g_flSplashDamage = 0.0;
+					g_esSplashPlayer[iPlayer].g_iSplashDuration = 0;
 					g_esSplashPlayer[iPlayer].g_flSplashInterval = 0.0;
 					g_esSplashPlayer[iPlayer].g_flSplashRange = 0.0;
 				}
@@ -479,7 +484,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esSplashPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esSplashPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esSplashPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esSplashPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esSplashPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esSplashPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esSplashPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -488,6 +493,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
 		g_esSplashPlayer[admin].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashPlayer[admin].g_iSplashCooldown, value, 0, 99999);
 		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashPlayer[admin].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashPlayer[admin].g_iSplashDuration, value, 0, 99999);
 		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 99999.0);
 		g_esSplashPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -501,7 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplashAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esSplashAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplashAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esSplashAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplashAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esSplashAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esSplashAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplashAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esSplashAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplashAbility[type].g_iHumanMode, value, 0, 1);
 		g_esSplashAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplashAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esSplashAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplashAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -510,6 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashAbility[type].g_flSplashChance, value, 0.0, 100.0);
 		g_esSplashAbility[type].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashAbility[type].g_iSplashCooldown, value, 0, 99999);
 		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashAbility[type].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashAbility[type].g_iSplashDuration, value, 0, 99999);
 		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 99999.0);
 		g_esSplashAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -539,6 +546,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esSplashCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iRequiresHumans, g_esSplashAbility[type].g_iRequiresHumans);
 	g_esSplashCache[tank].g_iSplashAbility = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashAbility, g_esSplashAbility[type].g_iSplashAbility);
 	g_esSplashCache[tank].g_iSplashCooldown = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashCooldown, g_esSplashAbility[type].g_iSplashCooldown);
+	g_esSplashCache[tank].g_iSplashDuration = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashDuration, g_esSplashAbility[type].g_iSplashDuration);
 	g_esSplashCache[tank].g_iSplashMessage = iGetSettingValue(apply, bHuman, g_esSplashPlayer[tank].g_iSplashMessage, g_esSplashAbility[type].g_iSplashMessage);
 	g_esSplashPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -757,7 +765,7 @@ void vSplashReset2(int tank)
 void vSplashReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1 && g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1 && g_esSplashCache[tank].g_iHumanMode == 0 && g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSplashPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime)
 	{
@@ -860,8 +868,11 @@ Action tTimerSplash(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0)) && (iTime + g_esSplashCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esSplashCache[iTank].g_iSplashDuration;
+	iDuration = (bHuman && g_esSplashCache[iTank].g_iHumanAbility == 1) ? g_esSplashCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esSplashCache[iTank].g_iHumanAbility == 1 && g_esSplashCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esSplashPlayer[iTank].g_iCooldown == -1 || g_esSplashPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplashReset2(iTank);
 		vSplashReset3(iTank);
