@@ -57,7 +57,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_QUIET "Quiet Ability"
 
-char g_sSoundFolders[][] =
+char g_sFootstepsFolders[][] =
+{
+	"player/footsteps/infected/", "player/footsteps/smoker/", "player/footsteps/boomer/", "player/footsteps/hunter/", "player/footsteps/spitter/", "player/footsteps/jockey/", "player/footsteps/charger/", "player/footsteps/witch/", "player/footsteps/tank/"
+};
+
+char g_sInfectedFolders[][] =
 {
 	"npc/infected/", "player/smoker/", "player/boomer/", "player/hunter/", "player/spitter/", "player/jockey/", "player/charger/", "npc/witch/", "player/tank/"
 };
@@ -188,6 +193,7 @@ public void OnMapStart()
 #endif
 {
 	vQuietReset();
+
 	AddNormalSoundHook(QuietSoundHook);
 }
 
@@ -400,11 +406,11 @@ Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLAT
 	if (MT_IsCorePluginEnabled())
 	{
 		bool bChanged = false;
-		for (int iPos = 0; iPos < (sizeof g_sSoundFolders); iPos++)
+		for (int iPos = 0; iPos < (sizeof g_sInfectedFolders); iPos++)
 		{
 			for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 			{
-				if (bIsHumanSurvivor(clients[iSurvivor]) && g_esQuietPlayer[clients[iSurvivor]].g_bAffected && StrContains(sample, g_sSoundFolders[iPos], false) != -1 && (g_esQuietPlayer[clients[iSurvivor]].g_iFilter == 0 || (g_esQuietPlayer[clients[iSurvivor]].g_iFilter & (1 << iPos))))
+				if (bIsHumanSurvivor(clients[iSurvivor]) && g_esQuietPlayer[clients[iSurvivor]].g_bAffected && (StrContains(sample, g_sFootstepsFolders[iPos], false) != -1 || StrContains(sample, g_sInfectedFolders[iPos], false) != -1) && (g_esQuietPlayer[clients[iSurvivor]].g_iFilter == 0 || (g_esQuietPlayer[clients[iSurvivor]].g_iFilter & (1 << iPos))))
 				{
 					for (int iPlayer = iSurvivor; iPlayer < (numClients - 1); iPlayer++)
 					{

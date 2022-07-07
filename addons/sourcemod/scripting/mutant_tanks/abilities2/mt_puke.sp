@@ -187,6 +187,7 @@ public void OnMapStart()
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
 	iPrecacheParticle(PARTICLE_FOUNTAIN);
+
 	vPukeReset();
 }
 

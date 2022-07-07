@@ -342,6 +342,9 @@ public void OnAllPluginsLoaded()
 #if defined MT_MENU_WARP
 	vWarpAllPluginsLoaded();
 #endif
+#if defined MT_MENU_YELL
+	vYellAllPluginsLoaded();
+#endif
 }
 
 public void OnPluginStart()

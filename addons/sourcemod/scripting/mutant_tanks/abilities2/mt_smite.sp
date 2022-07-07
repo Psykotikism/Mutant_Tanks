@@ -184,6 +184,7 @@ public void OnMapStart()
 {
 	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
+
 	vSmiteReset();
 }
 

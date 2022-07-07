@@ -173,6 +173,7 @@ public void OnMapStart()
 {
 	g_iMedicBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
 	g_iMedicHaloSprite = PrecacheModel(SPRITE_GLOW, true);
+
 	vMedicReset();
 }
 

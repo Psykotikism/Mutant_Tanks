@@ -188,6 +188,7 @@ public void OnMapStart()
 #endif
 {
 	iPrecacheParticle(PARTICLE_ULTIMATE);
+
 	PrecacheSound(SOUND_ULTIMATE, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
 
