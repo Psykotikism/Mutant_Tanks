@@ -260,8 +260,8 @@ mt_pluginenabled "1"
 2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click `Yes`.
-5. Load up Mutant Tanks by restarting the server.
-6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+5. Load the plugin by restarting the server.
+6. Customize the plugin in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 </details>
 
 ## Compiling
@@ -320,7 +320,7 @@ mt_pluginenabled "1"
 <details>
 	<summary>Click to expand!</summary>
 
-By default, Mutant Tanks can create and execute the following types of configurations:
+By default, `Mutant Tanks` can create and execute the following types of configurations:
 1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `Impossible.cfg` is executed (or created if it doesn't exist already).
 2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
@@ -589,7 +589,7 @@ Now, assuming that `Tank #15` is our highest entry, we just raise the maximum va
 
 2. Can you add more abilities or features?
 
-- Mutant Tanks already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
+- `Mutant Tanks` already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
 </details>
 <details>
 	<summary>Question 3</summary>

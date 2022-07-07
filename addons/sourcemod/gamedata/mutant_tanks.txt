@@ -1616,6 +1616,19 @@
 			}
 
 			/**
+			 * CTerrorPlayer::Deafen(float, float, float)
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
+			"CTerrorPlayer::Deafen"
+			{
+				"linux"		"494"
+				"mac"		"494"
+				"windows"	"491"
+			}
+
+			/**
 			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
 			 *
 			 * Note: This is the offset for the "m_hAttacker" member variable in the "CTakeDamageInfo" class.
@@ -4169,6 +4182,19 @@
 				"linux"		"313" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"463" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"384" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorPlayer::Deafen(float, float, float)
+			 *
+			 * How to find:
+			 * 1. Use asherkin's VTable dump.
+			 **/
+			"CTerrorPlayer::Deafen"
+			{
+				"linux"		"518"
+				"mac"		"518"
+				"windows"	"517"
 			}
 
 			/**

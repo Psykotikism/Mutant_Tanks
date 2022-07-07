@@ -175,6 +175,8 @@ public void OnMapStart()
 		case false: g_iLaserSprite = PrecacheModel(SPRITE_LASER, true);
 	}
 
+	iPrecacheParticle(PARTICLE_LASER);
+
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_ELECTRICITY2, true);
 

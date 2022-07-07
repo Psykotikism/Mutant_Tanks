@@ -25021,6 +25021,14 @@
 			// "forever" - 99999 seconds
 			"Yell Interval"				"5.0"
 
+			// The mode of the Mutant Tank's yell ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Both
+			// 1: Deafen only.
+			// 2: Roar only.
+			"Yell Mode"				"0"
+
 			// The Mutant Tank's yell pitch.
 			// Note: This setting can be overridden for specific players.
 			// --

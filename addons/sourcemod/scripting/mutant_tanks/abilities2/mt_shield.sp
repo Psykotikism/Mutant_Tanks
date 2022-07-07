@@ -248,6 +248,7 @@ public void OnMapStart()
 #endif
 {
 	PrecacheModel(MODEL_SHIELD, true);
+
 	vShieldReset();
 }
 

@@ -1,18 +1,51 @@
 # Changelog
 
+## Version 8.95 (2022)
+
+### Changes
+
+#### Abilities
+- Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
+- Yell
+	- Added the `Yell Mode` setting.
+	- Re-added the deafen feature. (Requested by `ddd123`.)
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated updater file.
+
 ## Version 8.94 (July 4, 2022)
+<details>
+	<summary>Click to expand!</summary>
 
 ### Bug Fixes
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Fixed the `* Cooldown` setting for several abilities. (Thanks to `Mi.Cura` for testing and reporting!)
 - Jump: Fixed the Tank's periodical and sporadic jumping not ending properly. (Thanks to `Mi.Cura` for testing and reporting!)
 - Spam: Fixed the ability not shooting any rocks. (Thanks to `Mi.Cura` for testing and reporting!)
+</details>
 
 ### Changes
+<details>
+	<summary>General</summary>
 
 #### General
 - `SourceMod 1.11.0.6880` or higher is now required.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Changed the minimum value of the `Human Duration` setting for several abilities from `1` to `0`.
@@ -85,19 +118,27 @@
 	- Added the `Yell Pitch` setting.
 	- Removed the deafen feature.
 - Zombie: Added the `Zombie Duration` setting.
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 8.93 (June 20, 2022)
 <details>

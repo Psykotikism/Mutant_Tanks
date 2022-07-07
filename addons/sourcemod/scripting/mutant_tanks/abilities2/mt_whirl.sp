@@ -187,6 +187,7 @@ public void OnMapStart()
 #endif
 {
 	PrecacheModel(SPRITE_DOT, true);
+
 	vWhirlReset();
 }
 
