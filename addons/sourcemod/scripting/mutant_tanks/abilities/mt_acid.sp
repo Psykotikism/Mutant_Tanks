@@ -174,19 +174,20 @@ esAcidCache g_esAcidCache[MAXPLAYERS + 1];
 Handle g_hSDKSpitterProjectileCreate;
 
 #if defined MT_ABILITIES_MAIN
-void vAcidAllPluginsLoaded()
+void vAcidAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
 	if (g_bSecondGame)
 	{
+#if !defined MT_ABILITIES_MAIN
 		GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 		if (gdMutantTanks == null)
 		{
 			SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 		}
-
+#endif
 		GameData gdTemp;
 		int iPlatformType = gdMutantTanks.GetOffset("OS");
 		if (iPlatformType == 0)
@@ -201,13 +202,20 @@ public void OnAllPluginsLoaded()
 		StartPrepSDKCall(SDKCall_Static);
 		if (!PrepSDKCall_SetFromConf(((iPlatformType == 0 && gdTemp != null) ? gdTemp : gdMutantTanks), SDKConf_Signature, ((iPlatformType == 0 && gdTemp != null) ? "MTSignature_SpitterProjectileCreate" : "CSpitterProjectile::Create")))
 		{
+#if defined MT_ABILITIES_MAIN
 			LogError("%s Failed to find signature: CSpitterProjectile::Create", MT_TAG);
-
+#else
+			SetFailState("Failed to find signature: CSpitterProjectile::Create");
+#endif
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
 			{
+#if defined MT_ABILITIES_MAIN
 				delete gdMutantTanks;
 
+				LogError("%s Failed to find signature: CSpitterProjectile::Create", MT_TAG);
+#else
 				SetFailState("Failed to find signature: CSpitterProjectile::Create");
+#endif
 			}
 		}
 
@@ -221,11 +229,17 @@ public void OnAllPluginsLoaded()
 		g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
 		if (g_hSDKSpitterProjectileCreate == null)
 		{
+#if defined MT_ABILITIES_MAIN
 			LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
+#else
+			SetFailState("Your \"CSpitterProjectile::Create\" signature is outdated.");
+#endif
 		}
 
 		delete gdTemp;
+#if !defined MT_ABILITIES_MAIN
 		delete gdMutantTanks;
+#endif
 	}
 }
 

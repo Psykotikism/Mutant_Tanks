@@ -358,21 +358,29 @@ any aNative_IsTankClone(Handle plugin, int numParams)
 
 public void OnAllPluginsLoaded()
 {
+	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
+	if (gdMutantTanks == null)
+	{
+		LogError("%s Unable to load the \"%s\" gamedata file.", MT_TAG, MT_GAMEDATA);
+
+		return;
+	}
 #if defined MT_MENU_ACID
-	vAcidAllPluginsLoaded();
+	vAcidAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_BURY
-	vBuryAllPluginsLoaded();
+	vBuryAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_DROP
-	vDropAllPluginsLoaded();
+	vDropAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_FLING
-	vFlingAllPluginsLoaded();
+	vFlingAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_IDLE
-	vIdleAllPluginsLoaded();
+	vIdleAllPluginsLoaded(gdMutantTanks);
 #endif
+	delete gdMutantTanks;
 }
 
 public void OnPluginStart()

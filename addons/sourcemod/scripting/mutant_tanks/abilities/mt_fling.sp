@@ -164,25 +164,30 @@ esFlingCache g_esFlingCache[MAXPLAYERS + 1];
 Handle g_hSDKFling;
 
 #if defined MT_ABILITIES_MAIN
-void vFlingAllPluginsLoaded()
+void vFlingAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
 	if (g_bSecondGame)
 	{
+#if !defined MT_ABILITIES_MAIN
 		GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 		if (gdMutantTanks == null)
 		{
 			SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 		}
-
+#endif
 		StartPrepSDKCall(SDKCall_Player);
 		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
 		{
+#if defined MT_ABILITIES_MAIN
 			delete gdMutantTanks;
 
+			LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
+#else
 			SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+#endif
 		}
 
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -193,10 +198,15 @@ public void OnAllPluginsLoaded()
 		g_hSDKFling = EndPrepSDKCall();
 		if (g_hSDKFling == null)
 		{
+#if defined MT_ABILITIES_MAIN
 			LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
+#else
+			SetFailState("Your \"CTerrorPlayer::Fling\" signature is outdated.");
+#endif
 		}
-
+#if !defined MT_ABILITIES_MAIN
 		delete gdMutantTanks;
+#endif
 	}
 }
 

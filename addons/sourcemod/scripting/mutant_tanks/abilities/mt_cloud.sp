@@ -485,7 +485,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esCloudPlayer[admin].g_iCloudMessage = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloudPlayer[admin].g_iCloudMessage, value, 0, 1);
 		g_esCloudPlayer[admin].g_flCloudChance = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudChance", "Cloud Chance", "Cloud_Chance", "chance", g_esCloudPlayer[admin].g_flCloudChance, value, 0.0, 100.0);
 		g_esCloudPlayer[admin].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudPlayer[admin].g_iCloudCooldown, value, 0, 99999);
-		g_esCloudPlayer[admin].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudPlayer[admin].g_flCloudDamage, value, 1.0, 99999.0);
+		g_esCloudPlayer[admin].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudPlayer[admin].g_flCloudDamage, value, 0.0, 99999.0);
 		g_esCloudPlayer[admin].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudPlayer[admin].g_iCloudDuration, value, 0, 99999);
 		g_esCloudPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esCloudPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -506,7 +506,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esCloudAbility[type].g_iCloudMessage = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloudAbility[type].g_iCloudMessage, value, 0, 1);
 		g_esCloudAbility[type].g_flCloudChance = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudChance", "Cloud Chance", "Cloud_Chance", "chance", g_esCloudAbility[type].g_flCloudChance, value, 0.0, 100.0);
 		g_esCloudAbility[type].g_iCloudCooldown = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudCooldown", "Cloud Cooldown", "Cloud_Cooldown", "cooldown", g_esCloudAbility[type].g_iCloudCooldown, value, 0, 99999);
-		g_esCloudAbility[type].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudAbility[type].g_flCloudDamage, value, 1.0, 99999.0);
+		g_esCloudAbility[type].g_flCloudDamage = flGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_esCloudAbility[type].g_flCloudDamage, value, 0.0, 99999.0);
 		g_esCloudAbility[type].g_iCloudDuration = iGetKeyValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "CloudDuration", "Cloud Duration", "Cloud_Duration", "duration", g_esCloudAbility[type].g_iCloudDuration, value, 0, 99999);
 		g_esCloudAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esCloudAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CLOUD_SECTION, MT_CLOUD_SECTION2, MT_CLOUD_SECTION3, MT_CLOUD_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -862,14 +862,17 @@ Action tTimerCloud(Handle timer, DataPack pack)
 	float flTankPos[3], flSurvivorPos[3];
 	GetClientAbsOrigin(iTank, flTankPos);
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esCloudCache[iTank].g_flCloudDamage;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (flDamage > 0.0)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esCloudPlayer[iTank].g_iTankType, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esCloudPlayer[iSurvivor].g_iImmunityFlags))
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esCloudPlayer[iTank].g_iTankType, g_esCloudAbility[g_esCloudPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esCloudPlayer[iSurvivor].g_iImmunityFlags))
 			{
-				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
+				{
+					vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				}
 			}
 		}
 	}

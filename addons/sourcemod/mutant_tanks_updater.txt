@@ -14,6 +14,7 @@
 		"Notes"		"Changes in v8.95:"
 		"Notes"		"Changes:"
 		"Notes"		"Abilities:"
+		"Notes"		"- Changed the minimum value of the \"* Damage\" setting for several abilities from \"1\"/\"1.0\" to \"0\"/\"0.0\"."
 		"Notes"		"- Quiet: The ability now silences footsteps. (Requested by \"ddd123\".)"
 		"Notes"		"- Yell"
 		"Notes"		"	- Added the \"Yell Mode\" setting."

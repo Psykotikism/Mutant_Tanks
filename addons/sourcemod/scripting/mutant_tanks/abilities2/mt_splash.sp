@@ -492,7 +492,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashPlayer[admin].g_iSplashMessage, value, 0, 1);
 		g_esSplashPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
 		g_esSplashPlayer[admin].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashPlayer[admin].g_iSplashCooldown, value, 0, 99999);
-		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 0.0, 99999.0);
 		g_esSplashPlayer[admin].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashPlayer[admin].g_iSplashDuration, value, 0, 99999);
 		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 99999.0);
@@ -515,7 +515,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashAbility[type].g_iSplashMessage = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplashAbility[type].g_iSplashMessage, value, 0, 1);
 		g_esSplashAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esSplashAbility[type].g_flSplashChance, value, 0.0, 100.0);
 		g_esSplashAbility[type].g_iSplashCooldown = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashCooldown", "Splash Cooldown", "Splash_Cooldown", "cooldown", g_esSplashAbility[type].g_iSplashCooldown, value, 0, 99999);
-		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 99999.0);
+		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 0.0, 99999.0);
 		g_esSplashAbility[type].g_iSplashDuration = iGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashDuration", "Splash Duration", "Splash_Duration", "duration", g_esSplashAbility[type].g_iSplashDuration, value, 0, 99999);
 		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 99999.0);
 		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTION, MT_SPLASH_SECTION2, MT_SPLASH_SECTION3, MT_SPLASH_SECTION4, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 99999.0);
@@ -884,14 +884,17 @@ Action tTimerSplash(Handle timer, DataPack pack)
 	GetClientAbsOrigin(iTank, flTankPos);
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esSplashCache[iTank].g_flSplashDamage,
 		flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esSplashCache[iTank].g_flSplashRange;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (flDamage > 0.0)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esSplashPlayer[iTank].g_iTankType, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSplashPlayer[iSurvivor].g_iImmunityFlags))
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esSplashPlayer[iTank].g_iTankType, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esSplashPlayer[iSurvivor].g_iImmunityFlags))
 			{
-				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+				{
+					vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				}
 			}
 		}
 	}

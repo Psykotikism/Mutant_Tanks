@@ -604,7 +604,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricPlayer[admin].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricPlayer[admin].g_iElectricMessage, value, 0, 3);
 		g_esElectricPlayer[admin].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricPlayer[admin].g_flElectricChance, value, 0.0, 100.0);
 		g_esElectricPlayer[admin].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricPlayer[admin].g_iElectricCooldown, value, 0, 99999);
-		g_esElectricPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricPlayer[admin].g_flElectricDamage, value, 1.0, 99999.0);
+		g_esElectricPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricPlayer[admin].g_flElectricDamage, value, 0.0, 99999.0);
 		g_esElectricPlayer[admin].g_iElectricDuration = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esElectricPlayer[admin].g_iElectricDuration, value, 1, 99999);
 		g_esElectricPlayer[admin].g_iElectricHit = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esElectricPlayer[admin].g_iElectricHit, value, 0, 1);
 		g_esElectricPlayer[admin].g_iElectricHitMode = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esElectricPlayer[admin].g_iElectricHitMode, value, 0, 2);
@@ -631,7 +631,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricAbility[type].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricAbility[type].g_iElectricMessage, value, 0, 3);
 		g_esElectricAbility[type].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricAbility[type].g_flElectricChance, value, 0.0, 100.0);
 		g_esElectricAbility[type].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricAbility[type].g_iElectricCooldown, value, 0, 99999);
-		g_esElectricAbility[type].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricAbility[type].g_flElectricDamage, value, 1.0, 99999.0);
+		g_esElectricAbility[type].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricAbility[type].g_flElectricDamage, value, 0.0, 99999.0);
 		g_esElectricAbility[type].g_iElectricDuration = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esElectricAbility[type].g_iElectricDuration, value, 1, 99999);
 		g_esElectricAbility[type].g_iElectricHit = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esElectricAbility[type].g_iElectricHit, value, 0, 1);
 		g_esElectricAbility[type].g_iElectricHitMode = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esElectricAbility[type].g_iElectricHitMode, value, 0, 2);
@@ -1089,10 +1089,14 @@ Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
-	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(g_sElectricSounds[MT_GetRandomInt(0, (sizeof g_sElectricSounds - 1))], iSurvivor);
+
+	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
+	if (flDamage > 0.0)
+	{
+		vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
+	}
 
 	return Plugin_Continue;
 }

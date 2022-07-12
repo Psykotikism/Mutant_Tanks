@@ -5,6 +5,7 @@
 ### Changes
 
 #### Abilities
+- Changed the minimum value of the `* Damage` setting for several abilities from `1`/`1.0` to `0`/`0.0`.
 - Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
 - Yell
 	- Added the `Yell Mode` setting.
