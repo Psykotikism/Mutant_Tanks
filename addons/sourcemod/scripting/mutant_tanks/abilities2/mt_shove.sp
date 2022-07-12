@@ -163,23 +163,28 @@ esShoveCache g_esShoveCache[MAXPLAYERS + 1];
 Handle g_hSDKStagger;
 
 #if defined MT_ABILITIES_MAIN2
-void vShoveAllPluginsLoaded()
+void vShoveAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN2
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
 	{
+#if defined MT_ABILITIES_MAIN2
 		delete gdMutantTanks;
 
+		LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
+#else
 		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
+#endif
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
@@ -187,10 +192,15 @@ public void OnAllPluginsLoaded()
 	g_hSDKStagger = EndPrepSDKCall();
 	if (g_hSDKStagger == null)
 	{
+#if defined MT_ABILITIES_MAIN2
 		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CTerrorPlayer::OnStaggered\" signature is outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN2
 	delete gdMutantTanks;
+#endif
 }
 
 #if !defined MT_ABILITIES_MAIN2

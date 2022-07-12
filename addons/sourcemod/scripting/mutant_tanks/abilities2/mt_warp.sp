@@ -190,41 +190,54 @@ enum struct esWarpCache
 esWarpCache g_esWarpCache[MAXPLAYERS + 1];
 
 #if defined MT_ABILITIES_MAIN2
-void vWarpAllPluginsLoaded()
+void vWarpAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN2
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	g_esWarpGeneral.g_iAttributeFlagsOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_attributeFlags");
 	if (g_esWarpGeneral.g_iAttributeFlagsOffset == -1)
 	{
+#if defined MT_ABILITIES_MAIN2
 		delete gdMutantTanks;
 
+		LogError("%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags", MT_TAG);
+#else
 		SetFailState("Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags");
+#endif
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
 	{
 		delete gdMutantTanks;
-
+#if defined MT_ABILITIES_MAIN2
+		LogError("%s Failed to load offset: CTerrorPlayer::GetLastKnownArea", MT_TAG);
+#else
 		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
+#endif
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	g_esWarpGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
 	if (g_esWarpGeneral.g_hSDKGetLastKnownArea == null)
 	{
+#if defined MT_ABILITIES_MAIN2
 		LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN2
 	delete gdMutantTanks;
+#endif
 }
 
 #if !defined MT_ABILITIES_MAIN2

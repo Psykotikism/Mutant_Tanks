@@ -169,41 +169,54 @@ enum struct esRestartCache
 esRestartCache g_esRestartCache[MAXPLAYERS + 1];
 
 #if defined MT_ABILITIES_MAIN2
-void vRestartAllPluginsLoaded()
+void vRestartAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN2
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	g_esRestartGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("CTerrorPlayer::GetFlowDistance::m_flow");
 	if (g_esRestartGeneral.g_iFlowOffset == -1)
 	{
+#if defined MT_ABILITIES_MAIN2
 		delete gdMutantTanks;
 
+		LogError("%s Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow", MT_TAG);
+#else
 		SetFailState("Failed to load offset: CTerrorPlayer::GetFlowDistance::m_flow");
+#endif
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
 	{
 		delete gdMutantTanks;
-
+#if defined MT_ABILITIES_MAIN2
+		LogError("%s Failed to load offset: CTerrorPlayer::GetLastKnownArea", MT_TAG);
+#else
 		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
+#endif
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	g_esRestartGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
 	if (g_esRestartGeneral.g_hSDKGetLastKnownArea == null)
 	{
+#if defined MT_ABILITIES_MAIN2
 		LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN2
 	delete gdMutantTanks;
+#endif
 }
 
 #if !defined MT_ABILITIES_MAIN2

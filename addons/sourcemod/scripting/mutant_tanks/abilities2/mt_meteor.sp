@@ -566,7 +566,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorPlayer[admin].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorPlayer[admin].g_iMeteorMessage, value, 0, 1);
 		g_esMeteorPlayer[admin].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorPlayer[admin].g_flMeteorChance, value, 0.0, 100.0);
 		g_esMeteorPlayer[admin].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorPlayer[admin].g_iMeteorCooldown, value, 0, 99999);
-		g_esMeteorPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorPlayer[admin].g_flMeteorDamage, value, 1.0, 99999.0);
+		g_esMeteorPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorPlayer[admin].g_flMeteorDamage, value, 0.0, 99999.0);
 		g_esMeteorPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorPlayer[admin].g_iMeteorDuration, value, 0, 99999);
 		g_esMeteorPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorPlayer[admin].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorPlayer[admin].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorPlayer[admin].g_flMeteorLifetime, value, 0.1, 99999.0);
@@ -604,7 +604,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorAbility[type].g_iMeteorMessage = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMeteorAbility[type].g_iMeteorMessage, value, 0, 1);
 		g_esMeteorAbility[type].g_flMeteorChance = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esMeteorAbility[type].g_flMeteorChance, value, 0.0, 100.0);
 		g_esMeteorAbility[type].g_iMeteorCooldown = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorCooldown", "Meteor Cooldown", "Meteor_Cooldown", "cooldown", g_esMeteorAbility[type].g_iMeteorCooldown, value, 0, 99999);
-		g_esMeteorAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorAbility[type].g_flMeteorDamage, value, 1.0, 99999.0);
+		g_esMeteorAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esMeteorAbility[type].g_flMeteorDamage, value, 0.0, 99999.0);
 		g_esMeteorAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esMeteorAbility[type].g_iMeteorDuration, value, 0, 99999);
 		g_esMeteorAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorAbility[type].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorAbility[type].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTION, MT_METEOR_SECTION2, MT_METEOR_SECTION3, MT_METEOR_SECTION4, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorAbility[type].g_flMeteorLifetime, value, 0.1, 99999.0);
@@ -902,14 +902,17 @@ void vMeteor3(int tank, int rock, int pos = -1)
 			float flTankPos[3], flSurvivorPos[3];
 			GetClientAbsOrigin(tank, flTankPos);
 			float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : g_esMeteorCache[tank].g_flMeteorDamage;
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			if (flDamage > 0.0)
 			{
-				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esMeteorPlayer[tank].g_iTankType, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iImmunityFlags, g_esMeteorPlayer[iSurvivor].g_iImmunityFlags))
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-					if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esMeteorPlayer[tank].g_iTankType, g_esMeteorAbility[g_esMeteorPlayer[tank].g_iTankType].g_iImmunityFlags, g_esMeteorPlayer[iSurvivor].g_iImmunityFlags))
 					{
-						vDamagePlayer(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+						if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
+						{
+							vDamagePlayer(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
+						}
 					}
 				}
 			}

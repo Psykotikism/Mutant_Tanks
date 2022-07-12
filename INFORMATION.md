@@ -8015,7 +8015,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -8504,7 +8504,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -9508,7 +9508,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -12881,7 +12881,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -15389,7 +15389,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -15911,7 +15911,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -16376,7 +16376,7 @@
 			// Note: This setting only applies if the "Meteor Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -17706,7 +17706,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0 (OFF)
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -19733,7 +19733,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0 (OFF)
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -22074,7 +22074,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0 (OFF)
 			// Maximum: 99999
 			// --
 			// Keywords:
@@ -22278,7 +22278,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -22802,7 +22802,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -24648,7 +24648,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:
@@ -24986,7 +24986,7 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			// --
 			// Keywords:

@@ -159,32 +159,42 @@ esBuryCache g_esBuryCache[MAXPLAYERS + 1];
 Handle g_hSDKRevive;
 
 #if defined MT_ABILITIES_MAIN
-void vBuryAllPluginsLoaded()
+void vBuryAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnRevived"))
 	{
+#if defined MT_ABILITIES_MAIN
 		delete gdMutantTanks;
 
+		LogError("%s Failed to find signature: CTerrorPlayer::OnRevived", MT_TAG);
+#else
 		SetFailState("Failed to find signature: CTerrorPlayer::OnRevived");
+#endif
 	}
 
 	g_hSDKRevive = EndPrepSDKCall();
 	if (g_hSDKRevive == null)
 	{
+#if defined MT_ABILITIES_MAIN
 		LogError("%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CTerrorPlayer::OnRevived\" signature is outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN
 	delete gdMutantTanks;
+#endif
 }
 
 #if !defined MT_ABILITIES_MAIN

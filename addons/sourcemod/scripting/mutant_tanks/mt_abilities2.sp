@@ -333,18 +333,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
+	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
+	if (gdMutantTanks == null)
+	{
+		LogError("%s Unable to load the \"%s\" gamedata file.", MT_TAG, MT_GAMEDATA);
+
+		return;
+	}
 #if defined MT_MENU_RESTART
-	vRestartAllPluginsLoaded();
+	vRestartAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_SHOVE
-	vShoveAllPluginsLoaded();
+	vShoveAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_WARP
-	vWarpAllPluginsLoaded();
+	vWarpAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_YELL
-	vYellAllPluginsLoaded();
+	vYellAllPluginsLoaded(gdMutantTanks);
 #endif
+	delete gdMutantTanks;
 }
 
 public void OnPluginStart()

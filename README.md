@@ -1890,7 +1890,7 @@ At the moment, there are 4 different formats.
 <details>
 	<summary>Question 2</summary>
 
-2. Do I need to edit my current config file from version `8.57` and below?
+2. Do I need to edit my current config file from version `v8.57` and below?
 
 No, all plugins still read the original format properly.
 </details>

@@ -184,23 +184,28 @@ enum struct esDropCache
 esDropCache g_esDropCache[MAXPLAYERS + 1];
 
 #if defined MT_ABILITIES_MAIN
-void vDropAllPluginsLoaded()
+void vDropAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
 	if (iOffset == -1)
 	{
+#if defined MT_ABILITIES_MAIN
 		delete gdMutantTanks;
 
+		LogError("%s Failed to load offset: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
+#else
 		SetFailState("Failed to load offset: CBaseCombatWeapon::GetMaxClip1");
+#endif
 	}
 
 	StartPrepSDKCall(SDKCall_Entity);
@@ -209,10 +214,15 @@ public void OnAllPluginsLoaded()
 	g_esDropGeneral.g_hSDKGetMaxClip1 = EndPrepSDKCall();
 	if (g_esDropGeneral.g_hSDKGetMaxClip1 == null)
 	{
+#if defined MT_ABILITIES_MAIN
 		LogError("%s Your \"CBaseCombatWeapon::GetMaxClip1\" offsets are outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CBaseCombatWeapon::GetMaxClip1\" offsets are outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN
 	delete gdMutantTanks;
+#endif
 }
 
 #if defined MT_ABILITIES_MAIN

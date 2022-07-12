@@ -508,7 +508,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningPlayer[admin].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningPlayer[admin].g_iLightningMessage, value, 0, 1);
 		g_esLightningPlayer[admin].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningPlayer[admin].g_flLightningChance, value, 0.0, 100.0);
 		g_esLightningPlayer[admin].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningPlayer[admin].g_iLightningCooldown, value, 0, 99999);
-		g_esLightningPlayer[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningPlayer[admin].g_flLightningDamage, value, 1.0, 99999.0);
+		g_esLightningPlayer[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningPlayer[admin].g_flLightningDamage, value, 0.0, 99999.0);
 		g_esLightningPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningPlayer[admin].g_iLightningDuration, value, 0, 99999);
 		g_esLightningPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningPlayer[admin].g_flLightningInterval, value, 0.1, 99999.0);
 		g_esLightningPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -530,7 +530,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningAbility[type].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningAbility[type].g_iLightningMessage, value, 0, 1);
 		g_esLightningAbility[type].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningAbility[type].g_flLightningChance, value, 0.0, 100.0);
 		g_esLightningAbility[type].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningAbility[type].g_iLightningCooldown, value, 0, 99999);
-		g_esLightningAbility[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningAbility[type].g_flLightningDamage, value, 1.0, 99999.0);
+		g_esLightningAbility[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningAbility[type].g_flLightningDamage, value, 0.0, 99999.0);
 		g_esLightningAbility[type].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningAbility[type].g_iLightningDuration, value, 0, 99999);
 		g_esLightningAbility[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningAbility[type].g_flLightningInterval, value, 0.1, 99999.0);
 		g_esLightningAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -921,8 +921,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 		AcceptEntityInput(iTarget, "FireUser2");
 	}
 
-	float flSurvivorPos[3],
-		flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
+	float flSurvivorPos[3], flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esLightningCache[iTank].g_flLightningDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esLightningPlayer[iTank].g_iTankType, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esLightningPlayer[iSurvivor].g_iImmunityFlags))
@@ -930,7 +929,11 @@ Action tTimerLightning(Handle timer, DataPack pack)
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
-				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
+				if (flDamage > 0.0)
+				{
+					vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
+				}
+
 				EmitSoundToAll(g_sLightningSounds[MT_GetRandomInt(0, (sizeof g_sLightningSounds - 1))], iSurvivor);
 			}
 		}
