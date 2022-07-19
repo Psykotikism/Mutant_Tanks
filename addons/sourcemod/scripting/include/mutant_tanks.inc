@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.92"
+#define MT_VERSION "8.95"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -1268,6 +1268,7 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");
+			vSetEdictFlags(iParticle, true);
 
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, duration);
@@ -1285,6 +1286,7 @@ stock void vAttachParticle2(float pos[3], float angles[3], const char[] particle
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "Start");
+		vSetEdictFlags(iParticle, true);
 
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle, duration);
@@ -1536,6 +1538,19 @@ stock void vSetAdrenalineTime(int survivor, float duration)
 	SetEntDataFloat(survivor, (iTimerAddress + 4), duration);
 	SetEntDataFloat(survivor, (iTimerAddress + 8), (GetGameTime() + duration));
 	SetEntProp(survivor, Prop_Send, "m_bAdrenalineActive", (duration <= 0.0 ? 0 : 1), 1);
+}
+
+stock void vSetEdictFlags(int edict, bool mode)
+{
+	int iFlags = GetEdictFlags(edict);
+	if (mode && (iFlags & FL_EDICT_ALWAYS))
+	{
+		SetEdictFlags(edict, (iFlags ^ FL_EDICT_ALWAYS));
+	}
+	else if (!mode && !(iFlags & FL_EDICT_ALWAYS))
+	{
+		SetEdictFlags(edict, (iFlags & FL_EDICT_ALWAYS));
+	}
 }
 
 stock void vSetEntityParent(int entity, int parent, bool owner = false)
@@ -3197,7 +3212,8 @@ stock int iGetRandomSurvivor(int tank)
 			continue;
 		}
 
-		iSurvivors[iSurvivorCount++] = iSurvivor;
+		iSurvivors[iSurvivorCount] = iSurvivor;
+		iSurvivorCount++;
 	}
 
 	return iSurvivors[MT_GetRandomInt(0, iSurvivorCount - 1)];
@@ -3210,7 +3226,8 @@ stock int iGetRandomTank(int tank)
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && iTank != tank)
 		{
-			iTanks[iTankCount++] = iTank;
+			iTanks[iTankCount] = iTank;
+			iTankCount++;
 		}
 	}
 
@@ -3386,6 +3403,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");
+		vSetEdictFlags(iEffect, true);
 
 		if (attachment[0] != '\0')
 		{
@@ -3416,7 +3434,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		return iEffect;
 	}
 
-	return -1;
+	return INVALID_ENT_REFERENCE;
 }
 
 stock int iPrecacheParticle(const char[] particlename)

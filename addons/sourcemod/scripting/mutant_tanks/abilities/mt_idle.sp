@@ -147,41 +147,47 @@ esIdleCache g_esIdleCache[MAXPLAYERS + 1];
 Handle g_hSDKGoAFK;
 
 #if defined MT_ABILITIES_MAIN
-void vIdleAllPluginsLoaded()
+void vIdleAllPluginsLoaded(GameData gdMutantTanks)
 #else
 public void OnAllPluginsLoaded()
 #endif
 {
+#if !defined MT_ABILITIES_MAIN
 	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
 	}
-
+#endif
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard"))
 	{
+#if defined MT_ABILITIES_MAIN
 		delete gdMutantTanks;
 
+		LogError("%s Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard", MT_TAG);
+#else
 		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
+#endif
 	}
 
 	g_hSDKGoAFK = EndPrepSDKCall();
 	if (g_hSDKGoAFK == null)
 	{
+#if defined MT_ABILITIES_MAIN
 		LogError("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
+#else
+		SetFailState("Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.");
+#endif
 	}
-
+#if !defined MT_ABILITIES_MAIN
 	delete gdMutantTanks;
+#endif
 }
 
-#if defined MT_ABILITIES_MAIN
-void vIdlePluginStart()
-#else
-public void OnPluginStart()
-#endif
-{
 #if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 	LoadTranslations("mutant_tanks_names.phrases");
@@ -200,8 +206,8 @@ public void OnPluginStart()
 
 		g_bLateLoad = false;
 	}
-#endif
 }
+#endif
 
 #if defined MT_ABILITIES_MAIN
 void vIdleMapStart()
@@ -443,12 +449,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_IDLE_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_IDLE_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_IDLE_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_IDLE_SECTION4);
-	if (g_esIdleCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esIdleCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);

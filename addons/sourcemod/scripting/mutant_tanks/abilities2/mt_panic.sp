@@ -80,6 +80,7 @@ enum struct esPanicPlayer
 	int g_iHumanMode;
 	int g_iPanicAbility;
 	int g_iPanicCooldown;
+	int g_iPanicDuration;
 	int g_iPanicMessage;
 	int g_iRequiresHumans;
 	int g_iTankType;
@@ -104,6 +105,7 @@ enum struct esPanicAbility
 	int g_iHumanMode;
 	int g_iPanicAbility;
 	int g_iPanicCooldown;
+	int g_iPanicDuration;
 	int g_iPanicMessage;
 	int g_iRequiresHumans;
 }
@@ -125,6 +127,7 @@ enum struct esPanicCache
 	int g_iHumanMode;
 	int g_iPanicAbility;
 	int g_iPanicCooldown;
+	int g_iPanicDuration;
 	int g_iPanicMessage;
 	int g_iRequiresHumans;
 }
@@ -242,7 +245,7 @@ int iPanicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPanicCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esPanicCache[param1].g_iHumanAbility == 1) ? g_esPanicCache[param1].g_iHumanCooldown : g_esPanicCache[param1].g_iPanicCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "PanicDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esPanicCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esPanicCache[param1].g_iHumanAbility == 1) ? g_esPanicCache[param1].g_iHumanDuration : g_esPanicCache[param1].g_iPanicDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esPanicCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -353,12 +356,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esPanicAbility[g_esPanicPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_PANIC_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_PANIC_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_PANIC_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_PANIC_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esPanicCache[tank].g_iPanicAbility == 1 && g_esPanicCache[tank].g_iComboAbility == 1 && !g_esPanicPlayer[tank].g_bActivated)
 		{
@@ -425,6 +429,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esPanicAbility[iIndex].g_iPanicMessage = 0;
 				g_esPanicAbility[iIndex].g_flPanicChance = 33.3;
 				g_esPanicAbility[iIndex].g_iPanicCooldown = 0;
+				g_esPanicAbility[iIndex].g_iPanicDuration = 0;
 				g_esPanicAbility[iIndex].g_flPanicInterval = 5.0;
 			}
 		}
@@ -448,6 +453,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPanicPlayer[iPlayer].g_iPanicMessage = 0;
 					g_esPanicPlayer[iPlayer].g_flPanicChance = 0.0;
 					g_esPanicPlayer[iPlayer].g_iPanicCooldown = 0;
+					g_esPanicPlayer[iPlayer].g_iPanicDuration = 0;
 					g_esPanicPlayer[iPlayer].g_flPanicInterval = 0.0;
 				}
 			}
@@ -468,7 +474,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPanicPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPanicPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esPanicPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esPanicPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esPanicPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esPanicPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esPanicPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esPanicPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -476,6 +482,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPanicPlayer[admin].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicPlayer[admin].g_iPanicMessage, value, 0, 1);
 		g_esPanicPlayer[admin].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicPlayer[admin].g_flPanicChance, value, 0.0, 100.0);
 		g_esPanicPlayer[admin].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicPlayer[admin].g_iPanicCooldown, value, 0, 99999);
+		g_esPanicPlayer[admin].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicPlayer[admin].g_iPanicDuration, value, 0, 99999);
 		g_esPanicPlayer[admin].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicPlayer[admin].g_flPanicInterval, value, 0.1, 99999.0);
 		g_esPanicPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
@@ -487,7 +494,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPanicAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPanicAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esPanicAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPanicAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esPanicAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPanicAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esPanicAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esPanicAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPanicAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esPanicAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPanicAbility[type].g_iHumanMode, value, 0, 1);
 		g_esPanicAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPanicAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esPanicAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPanicAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -495,6 +502,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPanicAbility[type].g_iPanicMessage = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPanicAbility[type].g_iPanicMessage, value, 0, 1);
 		g_esPanicAbility[type].g_flPanicChance = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_esPanicAbility[type].g_flPanicChance, value, 0.0, 100.0);
 		g_esPanicAbility[type].g_iPanicCooldown = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicCooldown", "Panic Cooldown", "Panic_Cooldown", "cooldown", g_esPanicAbility[type].g_iPanicCooldown, value, 0, 99999);
+		g_esPanicAbility[type].g_iPanicDuration = iGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicDuration", "Panic Duration", "Panic_Duration", "duration", g_esPanicAbility[type].g_iPanicDuration, value, 0, 99999);
 		g_esPanicAbility[type].g_flPanicInterval = flGetKeyValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_esPanicAbility[type].g_flPanicInterval, value, 0.1, 99999.0);
 		g_esPanicAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PANIC_SECTION, MT_PANIC_SECTION2, MT_PANIC_SECTION3, MT_PANIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
@@ -518,6 +526,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPanicCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iHumanMode, g_esPanicAbility[type].g_iHumanMode);
 	g_esPanicCache[tank].g_iPanicAbility = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iPanicAbility, g_esPanicAbility[type].g_iPanicAbility);
 	g_esPanicCache[tank].g_iPanicCooldown = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iPanicCooldown, g_esPanicAbility[type].g_iPanicCooldown);
+	g_esPanicCache[tank].g_iPanicDuration = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iPanicDuration, g_esPanicAbility[type].g_iPanicDuration);
 	g_esPanicCache[tank].g_iPanicMessage = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iPanicMessage, g_esPanicAbility[type].g_iPanicMessage);
 	g_esPanicCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_flOpenAreasOnly, g_esPanicAbility[type].g_flOpenAreasOnly);
 	g_esPanicCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPanicPlayer[tank].g_iRequiresHumans, g_esPanicAbility[type].g_iRequiresHumans);
@@ -648,7 +657,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esPanicPlayer[tank].g_iAmmoCount++;
 
 							vPanic2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "PanicHuman", g_esPanicPlayer[tank].g_iAmmoCount, g_esPanicCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esPanicPlayer[tank].g_bActivated)
@@ -748,6 +756,7 @@ void vPanic2(int tank, int pos = -1)
 	dpPanic.WriteCell(GetClientUserId(tank));
 	dpPanic.WriteCell(g_esPanicPlayer[tank].g_iTankType);
 	dpPanic.WriteCell(GetTime());
+	dpPanic.WriteCell(pos);
 }
 
 void vPanic3(int tank)
@@ -870,8 +879,11 @@ Action tTimerPanic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esPanicCache[iTank].g_iHumanAbility == 1 && g_esPanicCache[iTank].g_iHumanMode == 0)) && (iTime + g_esPanicCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPanicPlayer[iTank].g_iCooldown == -1 || g_esPanicPlayer[iTank].g_iCooldown < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esPanicCache[iTank].g_iPanicDuration;
+	iDuration = (bHuman && g_esPanicCache[iTank].g_iHumanAbility == 1) ? g_esPanicCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esPanicCache[iTank].g_iHumanAbility == 1 && g_esPanicCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esPanicPlayer[iTank].g_iCooldown == -1 || g_esPanicPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vPanicReset2(iTank);
 

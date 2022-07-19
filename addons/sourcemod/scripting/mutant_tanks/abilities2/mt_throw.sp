@@ -403,7 +403,7 @@ Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esThrowCache[iTank].g_flThrowWitchDamage;
 				damage = MT_GetScaledDamage(flDamage);
 
-				return Plugin_Changed;
+				return (damage > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 		}
 	}
@@ -458,12 +458,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_THROW_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_THROW_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_THROW_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_THROW_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_ROCKTHROW && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 1 && bIsValidEntity(weapon))
 		{
@@ -509,7 +510,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowAbility[iIndex].g_iHumanAbility = 0;
 				g_esThrowAbility[iIndex].g_iHumanAmmo = 5;
 				g_esThrowAbility[iIndex].g_iHumanCooldown = 0;
-				g_esThrowAbility[iIndex].g_flOpenAreasOnly = 500.0;
+				g_esThrowAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esThrowAbility[iIndex].g_iRequiresHumans = 0;
 				g_esThrowAbility[iIndex].g_iThrowAbility = 0;
 				g_esThrowAbility[iIndex].g_iThrowMessage = 0;
@@ -591,7 +592,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esThrowPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
 		g_esThrowPlayer[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowPlayer[admin].g_iThrowInfectedRemove, value, 0, 1);
 		g_esThrowPlayer[admin].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowPlayer[admin].g_iThrowWitchAmount, value, 1, 25);
-		g_esThrowPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowPlayer[admin].g_flThrowWitchDamage, value, 1.0, 99999.0);
+		g_esThrowPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowPlayer[admin].g_flThrowWitchDamage, value, 0.0, 99999.0);
 		g_esThrowPlayer[admin].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowPlayer[admin].g_flThrowWitchLifetime, value, 0.0, 99999.0);
 		g_esThrowPlayer[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowPlayer[admin].g_iThrowWitchRemove, value, 0, 1);
 		g_esThrowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -619,7 +620,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esThrowAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowAbility[type].g_iThrowInfectedOptions, value, 0, 127);
 		g_esThrowAbility[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowAbility[type].g_iThrowInfectedRemove, value, 0, 1);
 		g_esThrowAbility[type].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowAbility[type].g_iThrowWitchAmount, value, 1, 25);
-		g_esThrowAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowAbility[type].g_flThrowWitchDamage, value, 1.0, 99999.0);
+		g_esThrowAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowAbility[type].g_flThrowWitchDamage, value, 0.0, 99999.0);
 		g_esThrowAbility[type].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowAbility[type].g_flThrowWitchLifetime, value, 0.0, 99999.0);
 		g_esThrowAbility[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowAbility[type].g_iThrowWitchRemove, value, 0, 1);
 		g_esThrowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);

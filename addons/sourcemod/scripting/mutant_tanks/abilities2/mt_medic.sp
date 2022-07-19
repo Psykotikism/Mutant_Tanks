@@ -84,6 +84,7 @@ enum struct esMedicPlayer
 	int g_iHumanMode;
 	int g_iMedicAbility;
 	int g_iMedicCooldown;
+	int g_iMedicDuration;
 	int g_iMedicField;
 	int g_iMedicFieldColor[4];
 	int g_iMedicHealth[7];
@@ -113,6 +114,7 @@ enum struct esMedicAbility
 	int g_iHumanMode;
 	int g_iMedicAbility;
 	int g_iMedicCooldown;
+	int g_iMedicDuration;
 	int g_iMedicField;
 	int g_iMedicFieldColor[4];
 	int g_iMedicHealth[7];
@@ -139,6 +141,7 @@ enum struct esMedicCache
 	int g_iHumanMode;
 	int g_iMedicAbility;
 	int g_iMedicCooldown;
+	int g_iMedicDuration;
 	int g_iMedicField;
 	int g_iMedicFieldColor[4];
 	int g_iMedicHealth[7];
@@ -170,6 +173,7 @@ public void OnMapStart()
 {
 	g_iMedicBeamSprite = PrecacheModel(SPRITE_LASERBEAM, true);
 	g_iMedicHaloSprite = PrecacheModel(SPRITE_GLOW, true);
+
 	vMedicReset();
 }
 
@@ -268,7 +272,7 @@ int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMedicCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esMedicCache[param1].g_iHumanAbility == 1) ? g_esMedicCache[param1].g_iHumanCooldown : g_esMedicCache[param1].g_iMedicCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "MedicDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esMedicCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esMedicCache[param1].g_iHumanAbility == 1) ? g_esMedicCache[param1].g_iHumanDuration : g_esMedicCache[param1].g_iMedicDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esMedicCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -379,12 +383,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_MEDIC_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_MEDIC_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_MEDIC_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_MEDIC_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esMedicCache[tank].g_iMedicAbility == 1 && g_esMedicCache[tank].g_iComboAbility == 1 && !g_esMedicPlayer[tank].g_bActivated)
 		{
@@ -451,6 +456,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esMedicAbility[iIndex].g_iMedicMessage = 0;
 				g_esMedicAbility[iIndex].g_flMedicChance = 33.3;
 				g_esMedicAbility[iIndex].g_iMedicCooldown = 0;
+				g_esMedicAbility[iIndex].g_iMedicDuration = 0;
 				g_esMedicAbility[iIndex].g_iMedicField = 1;
 				g_esMedicAbility[iIndex].g_iMedicFieldColor[0] = 0;
 				g_esMedicAbility[iIndex].g_iMedicFieldColor[1] = 255;
@@ -492,6 +498,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esMedicPlayer[iPlayer].g_iMedicMessage = 0;
 					g_esMedicPlayer[iPlayer].g_flMedicChance = 0.0;
 					g_esMedicPlayer[iPlayer].g_iMedicCooldown = 0;
+					g_esMedicPlayer[iPlayer].g_iMedicDuration = 0;
 					g_esMedicPlayer[iPlayer].g_iMedicField = 0;
 					g_esMedicPlayer[iPlayer].g_iMedicFieldColor[3] = 255;
 					g_esMedicPlayer[iPlayer].g_flMedicInterval = 0.0;
@@ -526,7 +533,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMedicPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esMedicPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esMedicPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esMedicPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esMedicPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esMedicPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esMedicPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esMedicPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -534,6 +541,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMedicPlayer[admin].g_iMedicMessage = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMedicPlayer[admin].g_iMedicMessage, value, 0, 1);
 		g_esMedicPlayer[admin].g_flMedicChance = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicChance", "Medic Chance", "Medic_Chance", "chance", g_esMedicPlayer[admin].g_flMedicChance, value, 0.0, 100.0);
 		g_esMedicPlayer[admin].g_iMedicCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicCooldown", "Medic Cooldown", "Medic_Cooldown", "cooldown", g_esMedicPlayer[admin].g_iMedicCooldown, value, 0, 99999);
+		g_esMedicPlayer[admin].g_iMedicDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicDuration", "Medic Duration", "Medic_Duration", "duration", g_esMedicPlayer[admin].g_iMedicDuration, value, 0, 99999);
 		g_esMedicPlayer[admin].g_iMedicField = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicField", "Medic Field", "Medic_Field", "field", g_esMedicPlayer[admin].g_iMedicField, value, 0, 1);
 		g_esMedicPlayer[admin].g_flMedicInterval = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicInterval", "Medic Interval", "Medic_Interval", "interval", g_esMedicPlayer[admin].g_flMedicInterval, value, 0.1, 99999.0);
 		g_esMedicPlayer[admin].g_flMedicRange = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicRange", "Medic Range", "Medic_Range", "range", g_esMedicPlayer[admin].g_flMedicRange, value, 1.0, 99999.0);
@@ -576,7 +584,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMedicAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esMedicAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esMedicAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esMedicAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esMedicAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esMedicAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esMedicAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esMedicAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esMedicAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esMedicAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esMedicAbility[type].g_iHumanMode, value, 0, 1);
 		g_esMedicAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esMedicAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esMedicAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esMedicAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -584,6 +592,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMedicAbility[type].g_iMedicMessage = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esMedicAbility[type].g_iMedicMessage, value, 0, 1);
 		g_esMedicAbility[type].g_flMedicChance = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicChance", "Medic Chance", "Medic_Chance", "chance", g_esMedicAbility[type].g_flMedicChance, value, 0.0, 100.0);
 		g_esMedicAbility[type].g_iMedicCooldown = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicCooldown", "Medic Cooldown", "Medic_Cooldown", "cooldown", g_esMedicAbility[type].g_iMedicCooldown, value, 0, 99999);
+		g_esMedicAbility[type].g_iMedicDuration = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicDuration", "Medic Duration", "Medic_Duration", "duration", g_esMedicAbility[type].g_iMedicDuration, value, 0, 99999);
 		g_esMedicAbility[type].g_iMedicField = iGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicField", "Medic Field", "Medic_Field", "field", g_esMedicAbility[type].g_iMedicField, value, 0, 1);
 		g_esMedicAbility[type].g_flMedicInterval = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicInterval", "Medic Interval", "Medic_Interval", "interval", g_esMedicAbility[type].g_flMedicInterval, value, 0.1, 99999.0);
 		g_esMedicAbility[type].g_flMedicRange = flGetKeyValue(subsection, MT_MEDIC_SECTION, MT_MEDIC_SECTION2, MT_MEDIC_SECTION3, MT_MEDIC_SECTION4, key, "MedicRange", "Medic Range", "Medic_Range", "range", g_esMedicAbility[type].g_flMedicRange, value, 1.0, 99999.0);
@@ -639,6 +648,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esMedicCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iHumanMode, g_esMedicAbility[type].g_iHumanMode);
 	g_esMedicCache[tank].g_iMedicAbility = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicAbility, g_esMedicAbility[type].g_iMedicAbility);
 	g_esMedicCache[tank].g_iMedicCooldown = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicCooldown, g_esMedicAbility[type].g_iMedicCooldown);
+	g_esMedicCache[tank].g_iMedicDuration = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicDuration, g_esMedicAbility[type].g_iMedicDuration);
 	g_esMedicCache[tank].g_iMedicField = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicField, g_esMedicAbility[type].g_iMedicField);
 	g_esMedicCache[tank].g_iMedicMessage = iGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_iMedicMessage, g_esMedicAbility[type].g_iMedicMessage);
 	g_esMedicCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esMedicPlayer[tank].g_flOpenAreasOnly, g_esMedicAbility[type].g_flOpenAreasOnly);
@@ -780,7 +790,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esMedicPlayer[tank].g_iAmmoCount++;
 
 							vMedic2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman", g_esMedicPlayer[tank].g_iAmmoCount, g_esMedicCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esMedicPlayer[tank].g_bActivated)
@@ -939,7 +948,7 @@ void vMedicReset2(int tank)
 void vMedicReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esMedicAbility[g_esMedicPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMedicCache[tank].g_iMedicCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMedicCache[tank].g_iHumanAbility == 1 && g_esMedicPlayer[tank].g_iAmmoCount < g_esMedicCache[tank].g_iHumanAmmo && g_esMedicCache[tank].g_iHumanAmmo > 0) ? g_esMedicCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMedicCache[tank].g_iHumanAbility == 1 && g_esMedicCache[tank].g_iHumanMode == 0 && g_esMedicPlayer[tank].g_iAmmoCount < g_esMedicCache[tank].g_iHumanAmmo && g_esMedicCache[tank].g_iHumanAmmo > 0) ? g_esMedicCache[tank].g_iHumanCooldown : iCooldown;
 	g_esMedicPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esMedicPlayer[tank].g_iCooldown != -1 && g_esMedicPlayer[tank].g_iCooldown > iTime)
 	{
@@ -1023,8 +1032,11 @@ Action tTimerMedic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iPos = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esMedicCache[iTank].g_iHumanAbility == 1 && g_esMedicCache[iTank].g_iHumanMode == 0)) && (iTime + g_esMedicCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esMedicPlayer[iTank].g_iCooldown == -1 || g_esMedicPlayer[iTank].g_iCooldown < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esMedicCache[iTank].g_iMedicDuration;
+	iDuration = (bHuman && g_esMedicCache[iTank].g_iHumanAbility == 1) ? g_esMedicCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esMedicCache[iTank].g_iHumanAbility == 1 && g_esMedicCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esMedicPlayer[iTank].g_iCooldown == -1 || g_esMedicPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vMedicReset2(iTank);
 		vMedicReset3(iTank);

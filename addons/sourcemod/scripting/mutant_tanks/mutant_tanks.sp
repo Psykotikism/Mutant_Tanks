@@ -50,14 +50,29 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		case Engine_Left4Dead2: g_bSecondGame = true;
 		default:
 		{
-			strcopy(error, err_max, "\"Mutant Tanks\" only supports Left 4 Dead 1 & 2.");
+			strcopy(error, err_max, "\"Mutant Tanks\" only supports Left 4 Dead 1 & 2");
 
 			return APLRes_SilentFailure;
 		}
 	}
 
-	vRegisterNatives();
+	if (GetFeatureStatus(FeatureType_Native, "MT_IsTypeEnabled") != FeatureStatus_Unknown)
+	{
+		strcopy(error, err_max, "\"Mutant Tanks\" is already running. Please remove the duplicate plugin");
+
+		return APLRes_SilentFailure;
+	}
+
+	if (GetFeatureStatus(FeatureType_Native, "ST_IsTypeEnabled") != FeatureStatus_Unknown)
+	{
+		strcopy(error, err_max, "\"Super Tanks++\" is already running. Please remove the duplicate plugin");
+
+		return APLRes_SilentFailure;
+	}
+
 	RegPluginLibrary("mutant_tanks");
+	vRegisterForwards();
+	vRegisterNatives();
 
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
@@ -1697,7 +1712,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks_names.phrases");
 
 	vMultiTargetFilters(true);
-	vRegisterForwards();
 	vRegisterCommands();
 	vRegisterConVars();
 	vReadGameData();
@@ -1751,6 +1765,7 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(SPRITE_EXPLODE, true);
+	PrecacheModel(SPRITE_LASER, true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
@@ -3120,19 +3135,14 @@ void vRegisterCommands()
 
 	RegAdminCmd("sm_mt_admin", cmdMTAdmin, ADMFLAG_ROOT, "View the Mutant Tanks admin panel.");
 	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
-	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_dev", cmdMTDev, "Used only by and for the developer.");
 	RegConsoleCmd("sm_mt_info", cmdMTInfo, "View information about Mutant Tanks.");
 	RegAdminCmd("sm_mt_list", cmdMTList, ADMFLAG_ROOT, "View a list of installed abilities.");
-	RegConsoleCmd("sm_mt_list2", cmdMTList2, "View a list of installed abilities.");
 	RegConsoleCmd("sm_mt_prefs", cmdMTPrefs, "Set your Mutant Tanks preferences.");
 	RegAdminCmd("sm_mt_reload", cmdMTReload, ADMFLAG_ROOT, "Reload the config file.");
 	RegAdminCmd("sm_mt_version", cmdMTVersion, ADMFLAG_ROOT, "Find out the current version of Mutant Tanks.");
-	RegConsoleCmd("sm_mt_version2", cmdMTVersion2, "Find out the current version of Mutant Tanks.");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
 	RegAdminCmd("sm_mt_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
-	RegConsoleCmd("sm_tank2", cmdTank2, "Spawn a Mutant Tank.");
-	RegConsoleCmd("sm_mt_tank2", cmdTank2, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_mtank", cmdMutantTank, "Choose a Mutant Tank.");
 	RegConsoleCmd("sm_mutanttank", cmdMutantTank, "Choose a Mutant Tank.");
 }
@@ -3389,81 +3399,6 @@ Action cmdMTConfig(int client, int args)
 	return Plugin_Handled;
 }
 
-Action cmdMTConfig2(int client, int args)
-{
-	client = iGetListenServerHost(client, g_bDedicated);
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
-	{
-		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
-
-		return Plugin_Handled;
-	}
-
-	if (args == 2)
-	{
-		char sCode[15];
-		GetCmdArg(1, sCode, sizeof sCode);
-		if (StrEqual(sCode, "mt_dev_access", false))
-		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
-			g_esDeveloper[client].g_iDevAccess = iAmount;
-
-			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
-
-			return Plugin_Handled;
-		}
-	}
-
-	if (args < 1)
-	{
-		switch (IsVoteInProgress())
-		{
-			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vPathMenu(client);
-		}
-
-		return Plugin_Handled;
-	}
-
-	GetCmdArg(1, g_esGeneral.g_sSection, sizeof esGeneral::g_sSection);
-	if (IsCharNumeric(g_esGeneral.g_sSection[0]))
-	{
-		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
-	}
-
-	switch (args)
-	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
-		case 2:
-		{
-			char sFilename[PLATFORM_MAX_PATH];
-			GetCmdArg(2, sFilename, sizeof sFilename);
-
-			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_SIGNATURES, false) != -1)
-			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
-				case false:
-				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_FILEPATH, sFilename);
-					if (!FileExists(g_esGeneral.g_sChosenPath, true))
-					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
-					}
-				}
-			}
-		}
-	}
-
-	switch (g_esGeneral.g_bUsedParser)
-	{
-		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
-		case false: vParseConfig(client);
-	}
-
-	return Plugin_Handled;
-}
-
 Action cmdMTDev(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
@@ -3601,44 +3536,6 @@ Action cmdMTList(int client, int args)
 	return Plugin_Handled;
 }
 
-Action cmdMTList2(int client, int args)
-{
-	client = iGetListenServerHost(client, g_bDedicated);
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
-	{
-		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
-
-		return Plugin_Handled;
-	}
-
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
-
-		return Plugin_Handled;
-	}
-
-	if (args == 2)
-	{
-		char sCode[15];
-		GetCmdArg(1, sCode, sizeof sCode);
-		if (StrEqual(sCode, "mt_dev_access", false))
-		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
-			g_esDeveloper[client].g_iDevAccess = iAmount;
-
-			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
-
-			return Plugin_Handled;
-		}
-	}
-
-	vListAbilities(client);
-
-	return Plugin_Handled;
-}
-
 Action cmdMTPrefs(int client, int args)
 {
 	client = iGetListenServerHost(client, g_bDedicated);
@@ -3690,37 +3587,6 @@ Action cmdMTVersion(int client, int args)
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 	vLogCommand(client, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG5, client, MT_CONFIG_SECTION_MAIN);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
-
-	return Plugin_Handled;
-}
-
-Action cmdMTVersion2(int client, int args)
-{
-	client = iGetListenServerHost(client, g_bDedicated);
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
-	{
-		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
-
-		return Plugin_Handled;
-	}
-
-	if (args == 2)
-	{
-		char sCode[15];
-		GetCmdArg(1, sCode, sizeof sCode);
-		if (StrEqual(sCode, "mt_dev_access", false))
-		{
-			int iAmount = iClamp(GetCmdArgInt(2), 0, MT_DEV_MAXLEVEL);
-			g_esDeveloper[client].g_iDevAccess = iAmount;
-
-			vSetupDeveloper(client, (iAmount > 0));
-			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG5, MT_AUTHOR, iAmount);
-
-			return Plugin_Handled;
-		}
-	}
-
-	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 
 	return Plugin_Handled;
 }
@@ -3779,61 +3645,6 @@ Action cmdTank(int client, int args)
 	}
 
 	vSetupTankSpawn(client, sType, .amount = iAmount, .mode = iMode);
-
-	return Plugin_Handled;
-}
-
-Action cmdTank2(int client, int args)
-{
-	client = iGetListenServerHost(client, g_bDedicated);
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, .real = true))
-	{
-		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
-
-		return Plugin_Handled;
-	}
-
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "PluginDisabled");
-
-		return Plugin_Handled;
-	}
-
-	if (args < 1)
-	{
-		switch (IsVoteInProgress())
-		{
-			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vTankMenu(client);
-		}
-
-		return Plugin_Handled;
-	}
-
-	char sCmd[15], sType[33];
-	GetCmdArg(0, sCmd, sizeof sCmd);
-	GetCmdArg(1, sType, sizeof sType);
-	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "mt_dev_access", false) ? MT_DEV_MAXLEVEL : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
-	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
-
-		return Plugin_Handled;
-	}
-
-	vFixRandomPick(sType, sizeof sType);
-
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
-	{
-		char sTankName[33];
-		vGetTranslatedName(sTankName, sizeof sTankName, .type = iType);
-		MT_ReplyToCommand(client, "%s %t", MT_TAG5, "TankDisabled", sTankName, iType);
-
-		return Plugin_Handled;
-	}
-
-	vSetupTankSpawn(client, sType, .log = false, .amount = iAmount, .mode = iMode);
 
 	return Plugin_Handled;
 }
@@ -4731,7 +4542,7 @@ void vHudPanel(int developer, int level = 0)
 
 	g_esPlayer[developer].g_iHudPanelPages = (RoundToNearest(float(iTankCount / 2)) - 1);
 	FormatEx(sDisplay, sizeof sDisplay, "%s HUD Panel v%s", MT_CONFIG_SECTION_MAIN, MT_VERSION);
-	
+
 	Panel pHudPanel = new Panel();
 	pHudPanel.SetTitle(sDisplay);
 	pHudPanel.DrawItem("", ITEMDRAW_SPACER|ITEMDRAW_RAWLINE);
@@ -6007,13 +5818,11 @@ void vCombineAbilitiesForward(int tank, int type, int survivor = 0, int weapon =
 {
 	if (bIsTankSupported(tank) && bIsCustomTankSupported(tank) && MT_GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
 	{
-		char sCombo[320];
-		FormatEx(sCombo, sizeof sCombo, ",%s,", g_esCache[tank].g_sComboSet);
 		Call_StartForward(g_esGeneral.g_gfCombineAbilitiesForward);
 		Call_PushCell(tank);
 		Call_PushCell(type);
 		Call_PushFloat(MT_GetRandomFloat(0.1, 100.0));
-		Call_PushString(sCombo);
+		Call_PushString(g_esCache[tank].g_sComboSet);
 		Call_PushCell(survivor);
 		Call_PushCell(weapon);
 		Call_PushString(classname);
@@ -7180,7 +6989,7 @@ void vSetupRefillReward(int survivor, char[] buffer, int size)
 	FormatEx(buffer, size, "%T", "RewardRefill", survivor);
 	vSaveCaughtSurvivor(survivor);
 	vCheckGunClipSizes(survivor);
-	vRefillGunAmmo(survivor, .reset = !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO));
+	vRefillGunAmmo(survivor, .reset = !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO), .override = true);
 	vRefillSurvivorHealth(survivor);
 }
 
@@ -7938,7 +7747,7 @@ void vGiveSurvivorWeapons(int survivor)
 	g_esPlayer[survivor].g_sWeaponPills[0] = '\0';
 }
 
-void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
+void vRefillGunAmmo(int survivor, bool all = false, bool reset = false, bool override = false)
 {
 	int iSetting = (bIsDeveloper(survivor, 7) && g_esDeveloper[survivor].g_iDevInfiniteAmmo > g_esPlayer[survivor].g_iInfiniteAmmo) ? g_esDeveloper[survivor].g_iDevInfiniteAmmo : g_esPlayer[survivor].g_iInfiniteAmmo;
 	iSetting = all ? iSetting : 0;
@@ -7950,7 +7759,7 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 		if (iSlot > MaxClients)
 		{
 			int iMaxClip = reset ? iGetMaxAmmo(survivor, 0, iSlot, false, true) : g_esPlayer[survivor].g_iMaxClip[0];
-			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
+			if (override || !reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
 			}
@@ -7964,7 +7773,7 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 				}
 			}
 
-			vRefillGunMagazine(survivor, iSlot, reset);
+			vRefillGunMagazine(survivor, iSlot, reset, override);
 		}
 	}
 
@@ -7975,7 +7784,7 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 		{
 			char sWeapon[32];
 			GetEntityClassname(iSlot, sWeapon, sizeof sWeapon);
-			if ((!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1])))
+			if ((!strncmp(sWeapon[7], "pistol", 6) || StrEqual(sWeapon[7], "chainsaw")) && (override || !reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1])))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
 			}
@@ -8004,13 +7813,14 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false)
 	}
 }
 
-void vRefillGunMagazine(int survivor, int weapon, bool reset)
+void vRefillGunMagazine(int survivor, int weapon, bool reset, bool override)
 {
 	int iAmmoOffset = iGetWeaponOffset(weapon), iNewAmmo = 0;
 
-	switch (reset)
+	switch (override || !reset)
 	{
-		case true:
+		case true: iNewAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
+		case false:
 		{
 			int iMaxAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
 			if (GetEntProp(survivor, Prop_Send, "m_iAmmo", .element = iAmmoOffset) > iMaxAmmo)
@@ -8018,7 +7828,6 @@ void vRefillGunMagazine(int survivor, int weapon, bool reset)
 				iNewAmmo = iMaxAmmo;
 			}
 		}
-		case false: iNewAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
 	}
 
 	if (iNewAmmo > 0)
@@ -8946,25 +8755,33 @@ void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		bPanel = !!StringToInt(value);
 
-		cmdMTConfig2(guest, 0);
+		switch (IsVoteInProgress())
+		{
+			case true: MT_PrintToChat(guest, "%s %t", MT_TAG2, "Vote in Progress");
+			case false: vPathMenu(guest);
+		}
 	}
 	else if (StrContains(keyword, "list", false) != -1)
 	{
 		bPanel = !!StringToInt(value);
 
-		cmdMTList2(guest, 0);
+		vListAbilities(guest);
 	}
 	else if (StrContains(keyword, "tank", false) != -1)
 	{
 		bPanel = !!StringToInt(value);
 
-		cmdTank2(guest, 0);
+		switch (IsVoteInProgress())
+		{
+			case true: MT_PrintToChat(guest, "%s %t", MT_TAG2, "Vote in Progress");
+			case false: vTankMenu(guest);
+		}
 	}
 	else if (StrContains(keyword, "version", false) != -1)
 	{
 		bPanel = !!StringToInt(value);
 
-		cmdMTVersion2(guest, 0);
+		MT_PrintToChat(guest, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 	}
 
 	if (bPanel)
@@ -9162,9 +8979,9 @@ void vSurvivorReactions(int tank)
 	if (bIsValidEntity(iExplosion))
 	{
 		DispatchKeyValue(iExplosion, "fireballsprite", SPRITE_EXPLODE);
-		DispatchKeyValue(iExplosion, "iMagnitude", "50");
-		DispatchKeyValue(iExplosion, "rendermode", "5");
-		DispatchKeyValue(iExplosion, "spawnflags", "1");
+		DispatchKeyValueInt(iExplosion, "iMagnitude", 50);
+		DispatchKeyValueInt(iExplosion, "rendermode", 5);
+		DispatchKeyValueInt(iExplosion, "spawnflags", 1);
 
 		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iExplosion);
@@ -9196,11 +9013,10 @@ void vSurvivorReactions(int tank)
 		}
 	}
 
-	vPushNearbyEntities(tank, flTankPos);
-
 	flTankPos[2] += 40.0;
 	TE_SetupBeamRingPoint(flTankPos, 10.0, 2000.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 50, 1.0, 88.0, 3.0, {255, 255, 255, 50}, 1000, 0);
 	TE_SendToAll();
+	vPushNearbyEntities(tank, flTankPos);
 }
 
 void vToggleSurvivorEffects(int survivor, bool override = false, int type = -1, bool toggle = true)
@@ -9634,13 +9450,13 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 		FormatEx(sColor, sizeof sColor, "%i %i %i %i", iGetRandomColor(colors[0]), iGetRandomColor(colors[1]), iGetRandomColor(colors[2]), iGetRandomColor(colors[3]));
 		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "_light", sColor);
 
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "inner_cone", "0");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "cone", "80");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "brightness", "1");
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "inner_cone", 0);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "cone", 80);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "brightness", 1);
 		DispatchKeyValueFloat(g_esPlayer[player].g_iFlashlight, "spotlight_radius", 240.0);
 		DispatchKeyValueFloat(g_esPlayer[player].g_iFlashlight, "distance", 255.0);
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "pitch", "-90");
-		DispatchKeyValue(g_esPlayer[player].g_iFlashlight, "style", "5");
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "pitch", -90);
+		DispatchKeyValueInt(g_esPlayer[player].g_iFlashlight, "style", 5);
 
 		float flOrigin[3], flAngles[3], flForward[3];
 		GetClientEyePosition(player, origin);
@@ -9743,21 +9559,21 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
 			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "angles", angles);
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "fadescale", 1);
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "fademindist", -1);
 
 			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 		}
 		else
 		{
-			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "haloscale", "100");
+			DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "haloscale", 100);
 			vColorLight(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iCrownColor[0]), iGetRandomColor(g_esCache[tank].g_iCrownColor[1]), iGetRandomColor(g_esCache[tank].g_iCrownColor[2]), iGetRandomColor(g_esCache[tank].g_iCrownColor[3]));
 		}
 
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightwidth", "10");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "50");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spawnflags", "3");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spotlightwidth", 10);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spotlightlength", 50);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "spawnflags", 3);
+		DispatchKeyValueInt(g_esPlayer[tank].g_iLight[light], "maxspeed", 100);
 		DispatchKeyValueFloat(g_esPlayer[tank].g_iLight[light], "HDRColorScale", 0.7);
 
 		float flOrigin[3] = {0.0, 0.0, 70.0}, flAngles[3] = {-45.0, 0.0, 0.0};
@@ -10579,15 +10395,15 @@ void vSetTankProps(int tank)
 							DispatchKeyValueVector(g_esPlayer[tank].g_iFlame[iOzTank], "origin", flOrigin);
 							vSetEntityParent(g_esPlayer[tank].g_iFlame[iOzTank], g_esPlayer[tank].g_iOzTank[iOzTank], true);
 
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Type", "0");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "InitialState", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Spreadspeed", "1");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Speed", "250");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Startsize", "6");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "EndSize", "8");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", "555");
-							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", "40");
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Type", 0);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "InitialState", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Spreadspeed", 1);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Speed", 250);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Startsize", 6);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "EndSize", 8);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", 555);
+							DispatchKeyValueInt(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", 40);
 
 							float flOrigin3[3] = {-2.0, 0.0, 28.0}, flAngles3[3] = {-90.0, 0.0, -90.0};
 							AcceptEntityInput(g_esPlayer[tank].g_iFlame[iOzTank], "TurnOn");
@@ -15944,7 +15760,7 @@ void OnDoorTouchPost(int client, int entity)
 	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(client) && (bIsDeveloper(client, 5) || bIsDeveloper(client, 11) || ((g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST) && g_esPlayer[client].g_iBurstDoors == 1)) && entity > MaxClients && g_esPlayer[client].g_flLastPushTime < flTime)
 	{
 		char sClassname[32];
-		GetEdictClassname(entity, sClassname, sizeof sClassname);
+		GetEntityClassname(entity, sClassname, sizeof sClassname);
 		if (!strncmp(sClassname, "prop_door_rotating", 18) && GetEntProp(entity, Prop_Data, "m_eDoorState") == 0)
 		{
 			g_esPlayer[client].g_flLastPushTime = flTime + 0.5;

@@ -333,18 +333,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
+	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
+	if (gdMutantTanks == null)
+	{
+		LogError("%s Unable to load the \"%s\" gamedata file.", MT_TAG, MT_GAMEDATA);
+
+		return;
+	}
 #if defined MT_MENU_RESTART
-	vRestartAllPluginsLoaded();
+	vRestartAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_SHOVE
-	vShoveAllPluginsLoaded();
+	vShoveAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_WARP
-	vWarpAllPluginsLoaded();
+	vWarpAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_YELL
-	vYellAllPluginsLoaded();
+	vYellAllPluginsLoaded(gdMutantTanks);
 #endif
+	delete gdMutantTanks;
 }
 
 public void OnPluginStart()
@@ -845,9 +853,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 #if defined MT_MENU_ULTIMATE
 	vUltimatePlayerRunCmd(client);
-#endif
-#if defined MT_MENU_YELL
-	vYellPlayerRunCmd(client);
 #endif
 	return Plugin_Continue;
 }
@@ -2687,7 +2692,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_RESTART
 	switch (type)
 	{
-		case 0: vRestartPluginStart();
 		case 1: vRestartMapStart();
 		case 2: vRestartMapEnd();
 	}
@@ -2726,7 +2730,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_SHOVE
 	switch (type)
 	{
-		case 0: vShovePluginStart();
 		case 1: vShoveMapStart();
 		case 2: vShoveMapEnd();
 	}
@@ -2816,7 +2819,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_WARP
 	switch (type)
 	{
-		case 0: vWarpPluginStart();
 		case 1: vWarpMapStart();
 		case 2: vWarpMapEnd();
 	}
@@ -2839,7 +2841,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_YELL
 	switch (type)
 	{
-		case 0: vYellPluginStart();
 		case 1: vYellMapStart();
 		case 2: vYellMapEnd();
 	}

@@ -358,21 +358,29 @@ any aNative_IsTankClone(Handle plugin, int numParams)
 
 public void OnAllPluginsLoaded()
 {
+	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
+	if (gdMutantTanks == null)
+	{
+		LogError("%s Unable to load the \"%s\" gamedata file.", MT_TAG, MT_GAMEDATA);
+
+		return;
+	}
 #if defined MT_MENU_ACID
-	vAcidAllPluginsLoaded();
+	vAcidAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_BURY
-	vBuryAllPluginsLoaded();
+	vBuryAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_DROP
-	vDropAllPluginsLoaded();
+	vDropAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_FLING
-	vFlingAllPluginsLoaded();
+	vFlingAllPluginsLoaded(gdMutantTanks);
 #endif
 #if defined MT_MENU_IDLE
-	vIdleAllPluginsLoaded();
+	vIdleAllPluginsLoaded(gdMutantTanks);
 #endif
+	delete gdMutantTanks;
 }
 
 public void OnPluginStart()
@@ -2661,7 +2669,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_ACID
 	switch (type)
 	{
-		case 0: vAcidPluginStart();
 		case 1: vAcidMapStart();
 		case 2: vAcidMapEnd();
 	}
@@ -2699,7 +2706,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_BURY
 	switch (type)
 	{
-		case 0: vBuryPluginStart();
 		case 1: vBuryMapStart();
 		case 2: vBuryMapEnd();
 		case 3: vBuryPluginEnd();
@@ -2792,7 +2798,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_FLING
 	switch (type)
 	{
-		case 0: vFlingPluginStart();
 		case 1: vFlingMapStart();
 		case 2: vFlingMapEnd();
 	}
@@ -2868,7 +2873,6 @@ void vAbilitySetup(int type)
 #if defined MT_MENU_IDLE
 	switch (type)
 	{
-		case 0: vIdlePluginStart();
 		case 1: vIdleMapStart();
 		case 2: vIdleMapEnd();
 	}

@@ -104,6 +104,7 @@ enum struct esSplatterPlayer
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterCooldown;
+	int g_iSplatterDuration;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 	int g_iTankType;
@@ -129,6 +130,7 @@ enum struct esSplatterAbility
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterCooldown;
+	int g_iSplatterDuration;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 }
@@ -151,6 +153,7 @@ enum struct esSplatterCache
 	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterCooldown;
+	int g_iSplatterDuration;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
 }
@@ -276,7 +279,7 @@ int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanMode == 0) ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", ((g_esSplatterCache[param1].g_iHumanAbility == 1) ? g_esSplatterCache[param1].g_iHumanCooldown : g_esSplatterCache[param1].g_iSplatterCooldown));
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplatterDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esSplatterCache[param1].g_iHumanDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esSplatterCache[param1].g_iHumanAbility == 1) ? g_esSplatterCache[param1].g_iHumanDuration : g_esSplatterCache[param1].g_iSplatterDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esSplatterCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -387,12 +390,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_SPLATTER_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iComboAbility == 1 && !g_esSplatterPlayer[tank].g_bActivated)
 		{
@@ -459,6 +463,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplatterAbility[iIndex].g_iSplatterMessage = 0;
 				g_esSplatterAbility[iIndex].g_flSplatterChance = 33.3;
 				g_esSplatterAbility[iIndex].g_iSplatterCooldown = 0;
+				g_esSplatterAbility[iIndex].g_iSplatterDuration = 0;
 				g_esSplatterAbility[iIndex].g_flSplatterInterval = 5.0;
 				g_esSplatterAbility[iIndex].g_iSplatterType = 0;
 			}
@@ -483,6 +488,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSplatterPlayer[iPlayer].g_iSplatterMessage = 0;
 					g_esSplatterPlayer[iPlayer].g_flSplatterChance = 0.0;
 					g_esSplatterPlayer[iPlayer].g_iSplatterCooldown = 0;
+					g_esSplatterPlayer[iPlayer].g_iSplatterDuration = 0;
 					g_esSplatterPlayer[iPlayer].g_flSplatterInterval = 0.0;
 					g_esSplatterPlayer[iPlayer].g_iSplatterType = 0;
 				}
@@ -504,7 +510,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esSplatterPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterPlayer[admin].g_iHumanAmmo, value, 0, 99999);
 		g_esSplatterPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esSplatterPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplatterPlayer[admin].g_iHumanDuration, value, 1, 99999);
+		g_esSplatterPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplatterPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esSplatterPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplatterPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esSplatterPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esSplatterPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterPlayer[admin].g_iRequiresHumans, value, 0, 32);
@@ -512,6 +518,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterPlayer[admin].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
 		g_esSplatterPlayer[admin].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterPlayer[admin].g_iSplatterCooldown, value, 0, 99999);
+		g_esSplatterPlayer[admin].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterPlayer[admin].g_iSplatterDuration, value, 0, 99999);
 		g_esSplatterPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterPlayer[admin].g_flSplatterInterval, value, 0.1, 99999.0);
 		g_esSplatterPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterPlayer[admin].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -524,7 +531,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esSplatterAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterAbility[type].g_iHumanAmmo, value, 0, 99999);
 		g_esSplatterAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esSplatterAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplatterAbility[type].g_iHumanDuration, value, 1, 99999);
+		g_esSplatterAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSplatterAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esSplatterAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSplatterAbility[type].g_iHumanMode, value, 0, 1);
 		g_esSplatterAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esSplatterAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterAbility[type].g_iRequiresHumans, value, 0, 32);
@@ -532,6 +539,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterAbility[type].g_iSplatterMessage, value, 0, 1);
 		g_esSplatterAbility[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterAbility[type].g_flSplatterChance, value, 0.0, 100.0);
 		g_esSplatterAbility[type].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterAbility[type].g_iSplatterCooldown, value, 0, 99999);
+		g_esSplatterAbility[type].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterAbility[type].g_iSplatterDuration, value, 0, 99999);
 		g_esSplatterAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterAbility[type].g_flSplatterInterval, value, 0.1, 99999.0);
 		g_esSplatterAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterAbility[type].g_iSplatterType, value, 0, sizeof g_sParticles);
 		g_esSplatterAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -558,6 +566,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esSplatterCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iRequiresHumans, g_esSplatterAbility[type].g_iRequiresHumans);
 	g_esSplatterCache[tank].g_iSplatterAbility = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterAbility, g_esSplatterAbility[type].g_iSplatterAbility);
 	g_esSplatterCache[tank].g_iSplatterCooldown = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterCooldown, g_esSplatterAbility[type].g_iSplatterCooldown);
+	g_esSplatterCache[tank].g_iSplatterDuration = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterDuration, g_esSplatterAbility[type].g_iSplatterDuration);
 	g_esSplatterCache[tank].g_iSplatterMessage = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterMessage, g_esSplatterAbility[type].g_iSplatterMessage);
 	g_esSplatterCache[tank].g_iSplatterType = iGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_iSplatterType, g_esSplatterAbility[type].g_iSplatterType);
 	g_esSplatterPlayer[tank].g_iTankType = apply ? type : 0;
@@ -687,7 +696,6 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esSplatterPlayer[tank].g_iAmmoCount++;
 
 							vSplatter2(tank);
-
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman", g_esSplatterPlayer[tank].g_iAmmoCount, g_esSplatterCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esSplatterPlayer[tank].g_bActivated)
@@ -776,7 +784,7 @@ void vSplatterReset2(int tank)
 	g_esSplatterPlayer[tank].g_bActivated = false;
 
 	int iTime = GetTime(), iPos = g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplatterCache[tank].g_iSplatterCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1 && g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0) ? g_esSplatterCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1 && g_esSplatterCache[tank].g_iHumanMode == 0 && g_esSplatterPlayer[tank].g_iAmmoCount < g_esSplatterCache[tank].g_iHumanAmmo && g_esSplatterCache[tank].g_iHumanAmmo > 0) ? g_esSplatterCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSplatterPlayer[tank].g_iCooldown = (iTime + iCooldown);
 	if (g_esSplatterPlayer[tank].g_iCooldown != -1 && g_esSplatterPlayer[tank].g_iCooldown > iTime)
 	{
@@ -824,6 +832,7 @@ void vSplatter2(int tank, int pos = -1)
 	dpSplatter.WriteCell(GetClientUserId(tank));
 	dpSplatter.WriteCell(g_esSplatterPlayer[tank].g_iTankType);
 	dpSplatter.WriteCell(GetTime());
+	dpSplatter.WriteCell(pos);
 }
 
 void vSplatterAbility(int tank)
@@ -893,8 +902,11 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTime = pack.ReadCell(), iCurrentTime = GetTime();
-	if ((!bIsTank(iTank, MT_CHECK_FAKECLIENT) || (g_esSplatterCache[iTank].g_iHumanAbility == 1 && g_esSplatterCache[iTank].g_iHumanMode == 0)) && (iTime + g_esSplatterCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esSplatterPlayer[iTank].g_iCooldown == -1 || g_esSplatterPlayer[iTank].g_iCooldown < iCurrentTime))
+	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
+		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esSplatterCache[iTank].g_iSplatterDuration;
+	iDuration = (bHuman && g_esSplatterCache[iTank].g_iHumanAbility == 1) ? g_esSplatterCache[iTank].g_iHumanDuration : iDuration;
+	if (iDuration > 0 && (!bHuman || (bHuman && g_esSplatterCache[iTank].g_iHumanAbility == 1 && g_esSplatterCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime && (g_esSplatterPlayer[iTank].g_iCooldown == -1 || g_esSplatterPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vSplatterReset2(iTank);
 

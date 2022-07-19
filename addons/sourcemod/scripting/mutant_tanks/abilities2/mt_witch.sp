@@ -344,7 +344,7 @@ Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 			float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esWitchCache[iTank].g_flWitchDamage;
 			damage = MT_GetScaledDamage(flDamage);
 
-			return Plugin_Changed;
+			return (damage > 0.0) ? Plugin_Changed : Plugin_Handled;
 		}
 	}
 
@@ -387,12 +387,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 
 	g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_WITCH_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_WITCH_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_WITCH_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_WITCH_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_MAINRANGE && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iComboAbility == 1)
 		{
@@ -515,7 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchPlayer[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchPlayer[admin].g_iWitchAmount, value, 1, 25);
 		g_esWitchPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchPlayer[admin].g_flWitchChance, value, 0.0, 100.0);
 		g_esWitchPlayer[admin].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchPlayer[admin].g_iWitchCooldown, value, 0, 99999);
-		g_esWitchPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchPlayer[admin].g_flWitchDamage, value, 1.0, 99999.0);
+		g_esWitchPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchPlayer[admin].g_flWitchDamage, value, 0.0, 99999.0);
 		g_esWitchPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchPlayer[admin].g_flWitchLifetime, value, 0.0, 99999.0);
 		g_esWitchPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchPlayer[admin].g_flWitchRange, value, 1.0, 99999.0);
 		g_esWitchPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchPlayer[admin].g_iWitchRemove, value, 0, 1);
@@ -537,7 +538,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchAbility[type].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchAbility[type].g_iWitchAmount, value, 1, 25);
 		g_esWitchAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchAbility[type].g_flWitchChance, value, 0.0, 100.0);
 		g_esWitchAbility[type].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchAbility[type].g_iWitchCooldown, value, 0, 99999);
-		g_esWitchAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchAbility[type].g_flWitchDamage, value, 1.0, 99999.0);
+		g_esWitchAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchAbility[type].g_flWitchDamage, value, 0.0, 99999.0);
 		g_esWitchAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchAbility[type].g_flWitchLifetime, value, 0.0, 99999.0);
 		g_esWitchAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchAbility[type].g_flWitchRange, value, 1.0, 99999.0);
 		g_esWitchAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchAbility[type].g_iWitchRemove, value, 0, 1);

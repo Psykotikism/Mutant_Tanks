@@ -437,12 +437,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_HURT_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_HURT_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_HURT_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_HURT_SECTION4);
-	if (g_esHurtCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esHurtCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -606,7 +607,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHurtPlayer[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtPlayer[admin].g_iHurtMessage, value, 0, 3);
 		g_esHurtPlayer[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtPlayer[admin].g_flHurtChance, value, 0.0, 100.0);
 		g_esHurtPlayer[admin].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtPlayer[admin].g_iHurtCooldown, value, 0, 99999);
-		g_esHurtPlayer[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtPlayer[admin].g_flHurtDamage, value, 1.0, 99999.0);
+		g_esHurtPlayer[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtPlayer[admin].g_flHurtDamage, value, 0.0, 99999.0);
 		g_esHurtPlayer[admin].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtPlayer[admin].g_iHurtDuration, value, 1, 99999);
 		g_esHurtPlayer[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtPlayer[admin].g_iHurtHit, value, 0, 1);
 		g_esHurtPlayer[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtPlayer[admin].g_iHurtHitMode, value, 0, 2);
@@ -633,7 +634,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHurtAbility[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtAbility[type].g_iHurtMessage, value, 0, 3);
 		g_esHurtAbility[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtAbility[type].g_flHurtChance, value, 0.0, 100.0);
 		g_esHurtAbility[type].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtAbility[type].g_iHurtCooldown, value, 0, 99999);
-		g_esHurtAbility[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtAbility[type].g_flHurtDamage, value, 1.0, 99999.0);
+		g_esHurtAbility[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtAbility[type].g_flHurtDamage, value, 0.0, 99999.0);
 		g_esHurtAbility[type].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtAbility[type].g_iHurtDuration, value, 1, 99999);
 		g_esHurtAbility[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtAbility[type].g_iHurtHit, value, 0, 1);
 		g_esHurtAbility[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtAbility[type].g_iHurtHitMode, value, 0, 2);
@@ -1074,7 +1075,11 @@ Action tTimerHurt(Handle timer, DataPack pack)
 	}
 
 	float flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 3, iPos) : g_esHurtCache[iTank].g_flHurtDamage;
-	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
+	if (flDamage > 0.0)
+	{
+		vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
+	}
+
 	EmitSoundToAll(SOUND_ATTACK, iSurvivor);
 
 	return Plugin_Continue;

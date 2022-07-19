@@ -461,12 +461,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_ROCKET_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_ROCKET_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_ROCKET_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_ROCKET_SECTION4);
-	if (g_esRocketCache[tank].g_iComboAbility == 1 && (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1))
+	if (g_esRocketCache[tank].g_iComboAbility == 1 && (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1))
 	{
 		char sAbilities[320], sSubset[10][32];
 		strcopy(sAbilities, sizeof sAbilities, combo);
@@ -987,15 +988,15 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					flAngles[1] = 0.0;
 					flAngles[2] = 0.0;
 
-					DispatchKeyValue(iFlame, "spawnflags", "1");
-					DispatchKeyValue(iFlame, "Type", "0");
-					DispatchKeyValue(iFlame, "InitialState", "1");
-					DispatchKeyValue(iFlame, "Spreadspeed", "10");
-					DispatchKeyValue(iFlame, "Speed", "800");
-					DispatchKeyValue(iFlame, "Startsize", "10");
-					DispatchKeyValue(iFlame, "EndSize", "250");
-					DispatchKeyValue(iFlame, "Rate", "15");
-					DispatchKeyValue(iFlame, "JetLength", "400");
+					DispatchKeyValueInt(iFlame, "spawnflags", 1);
+					DispatchKeyValueInt(iFlame, "Type", 0);
+					DispatchKeyValueInt(iFlame, "InitialState", 1);
+					DispatchKeyValueInt(iFlame, "Spreadspeed", 10);
+					DispatchKeyValueInt(iFlame, "Speed", 800);
+					DispatchKeyValueInt(iFlame, "Startsize", 10);
+					DispatchKeyValueInt(iFlame, "EndSize", 250);
+					DispatchKeyValueInt(iFlame, "Rate", 15);
+					DispatchKeyValueInt(iFlame, "JetLength", 400);
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
 					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);

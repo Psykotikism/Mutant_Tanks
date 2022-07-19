@@ -330,12 +330,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 		return;
 	}
 
-	char sSet[4][32];
+	char sCombo[320], sSet[4][32];
+	FormatEx(sCombo, sizeof sCombo, ",%s,", combo);
 	FormatEx(sSet[0], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION);
 	FormatEx(sSet[1], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION2);
 	FormatEx(sSet[2], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION3);
 	FormatEx(sSet[3], sizeof sSet[], ",%s,", MT_RESPAWN_SECTION4);
-	if (StrContains(combo, sSet[0], false) != -1 || StrContains(combo, sSet[1], false) != -1 || StrContains(combo, sSet[2], false) != -1 || StrContains(combo, sSet[3], false) != -1)
+	if (StrContains(sCombo, sSet[0], false) != -1 || StrContains(sCombo, sSet[1], false) != -1 || StrContains(sCombo, sSet[2], false) != -1 || StrContains(sCombo, sSet[3], false) != -1)
 	{
 		if (type == MT_COMBO_UPONDEATH && g_esRespawnCache[tank].g_iRespawnAbility == 1 && g_esRespawnCache[tank].g_iComboAbility == 1)
 		{
