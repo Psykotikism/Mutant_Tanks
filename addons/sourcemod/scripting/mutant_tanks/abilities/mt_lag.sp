@@ -555,6 +555,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esLagPlayer[iPlayer].g_iLagHitMode = 0;
 					g_esLagPlayer[iPlayer].g_flLagRange = 0.0;
 					g_esLagPlayer[iPlayer].g_flLagRangeChance = 0.0;
+					g_esLagPlayer[iPlayer].g_iLagRangeCooldown = 0;
 				}
 			}
 		}
@@ -1048,7 +1049,7 @@ Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	TeleportEntity(iSurvivor, g_esLagPlayer[iSurvivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+	TeleportEntity(iSurvivor, g_esLagPlayer[iSurvivor].g_flPosition);
 
 	return Plugin_Continue;
 }

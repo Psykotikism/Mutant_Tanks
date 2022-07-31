@@ -913,7 +913,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	{
 		Format(sTargetName, sizeof sTargetName, "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
 		DispatchKeyValue(iTarget, "targetname", sTargetName);
-		TeleportEntity(iTarget, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iTarget, flOrigin);
 		DispatchSpawn(iTarget);
 		ActivateEntity(iTarget);
 		SetVariantString("OnUser2 !self:Kill::2.0:1");
@@ -947,7 +947,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 		DispatchKeyValue(iLightning, "effect_name", PARTICLE_LIGHTNING);
 		DispatchKeyValue(iLightning, "cpoint1", sTargetName);
 
-		TeleportEntity(iLightning, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iLightning, flOrigin);
 		DispatchSpawn(iLightning);
 		ActivateEntity(iLightning);
 		AcceptEntityInput(iLightning, "Start");

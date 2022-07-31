@@ -589,6 +589,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esEnforcePlayer[iPlayer].g_iEnforceHitMode = 0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceRange = 0.0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceRangeChance = 0.0;
+					g_esEnforcePlayer[iPlayer].g_iEnforceRangeCooldown = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceWeaponSlots = 0;
 				}
 			}

@@ -646,6 +646,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHypnoPlayer[iPlayer].g_iHypnoMode = 0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoRange = 0.0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoRangeChance = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoRangeCooldown = 0;
 				}
 			}
 		}

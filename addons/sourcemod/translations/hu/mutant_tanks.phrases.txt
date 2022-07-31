@@ -4291,12 +4291,12 @@
 
 	"Splatter"
 	{
-		"hu"			"{olive}{1}{mint} időszakosan mindenki képernyőjét befröcsköli!"
+		"hu"			"{olive}{1}{mint} épp összefröcsköli{olive} {2}{mint} képernyőjét!"
 	}
 
 	"Splatter2"
 	{
-		"hu"			"{olive}{1}{mint} mindenki képernyőjét{yellow} befröcskölte{mint}!"
+		"hu"			"{olive}{1}képernyője{mint} többé már nincs összefröcskölve{mint}!"
 	}
 
 	"SplatterAmmo"
@@ -4306,7 +4306,7 @@
 
 	"SplatterDetails"
 	{
-		"hu"			"Mindenki képernyőjét befröcskölöd."
+		"hu"			"Összefröcskölöd a túlélők képernyőjét."
 	}
 
 	"SplatterHuman"
@@ -4321,12 +4321,12 @@
 
 	"SplatterHuman3"
 	{
-		"hu"			"Már aktiváltad a fröcskölő képességedet."
+		"hu"			"A fröccsenő képességednek még kell{yellow} {1} másodperc(ek){mint} az újratöltéshez.."
 	}
 
 	"SplatterHuman4"
 	{
-		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"Nincsenek túlélők a közeledben akiken használhatnád a fröccsenő képességedet."
 	}
 
 	"SplatterHuman5"

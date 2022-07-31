@@ -870,7 +870,7 @@ void vClone(int tank)
 
 					if (bIsTank(iTank))
 					{
-						TeleportEntity(iTank, flHitPos, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iTank, flHitPos);
 
 						g_esClonePlayer[iTank].g_bCloned = true;
 						g_esClonePlayer[iTank].g_iOwner = tank;

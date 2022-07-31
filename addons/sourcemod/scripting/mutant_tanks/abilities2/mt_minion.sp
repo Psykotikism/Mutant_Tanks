@@ -801,7 +801,7 @@ void vMinion(int tank)
 
 					if (bIsSpecialInfected(iSpecial))
 					{
-						TeleportEntity(iSpecial, flHitPos, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iSpecial, flHitPos);
 
 						g_esMinionPlayer[iSpecial].g_bMinion = true;
 						g_esMinionPlayer[iSpecial].g_iOwner = tank;

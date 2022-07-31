@@ -931,7 +931,7 @@ void vJump(int survivor, int tank)
 	float flVelocity[3];
 	GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += g_esJumpCache[tank].g_flJumpHeight;
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(survivor, .velocity = flVelocity);
 }
 
 void vJump2(int tank, int pos = -1)
@@ -1392,7 +1392,7 @@ Action tTimerJump2(Handle timer, DataPack pack)
 		}
 
 		flVelocity[2] += g_esJumpCache[iTank].g_flJumpSporadicHeight;
-		TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		TeleportEntity(iTank, .velocity = flVelocity);
 	}
 
 	return Plugin_Continue;

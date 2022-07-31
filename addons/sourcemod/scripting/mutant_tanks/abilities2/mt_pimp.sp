@@ -564,6 +564,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPimpPlayer[iPlayer].g_flPimpInterval = 0.0;
 					g_esPimpPlayer[iPlayer].g_flPimpRange = 0.0;
 					g_esPimpPlayer[iPlayer].g_flPimpRangeChance = 0.0;
+					g_esPimpPlayer[iPlayer].g_iPimpRangeCooldown = 0;
 				}
 			}
 		}

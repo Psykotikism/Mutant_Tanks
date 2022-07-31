@@ -567,6 +567,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPukePlayer[iPlayer].g_iPukeHitMode = 0;
 					g_esPukePlayer[iPlayer].g_flPukeRange = 0.0;
 					g_esPukePlayer[iPlayer].g_flPukeRangeChance = 0.0;
+					g_esPukePlayer[iPlayer].g_iPukeRangeCooldown = 0;
 				}
 			}
 		}

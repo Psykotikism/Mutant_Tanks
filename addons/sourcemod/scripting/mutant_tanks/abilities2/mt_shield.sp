@@ -1158,73 +1158,6 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
-void vShieldCopyStats2(int oldTank, int newTank)
-{
-	g_esShieldPlayer[newTank].g_iAmmoCount = g_esShieldPlayer[oldTank].g_iAmmoCount;
-	g_esShieldPlayer[newTank].g_iCooldown = g_esShieldPlayer[oldTank].g_iCooldown;
-	g_esShieldPlayer[newTank].g_iCooldown2 = g_esShieldPlayer[oldTank].g_iCooldown2;
-}
-
-void vRemoveShield(int tank)
-{
-	if (bIsValidEntRef(g_esShieldPlayer[tank].g_iShield))
-	{
-		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
-		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
-		{
-			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
-
-			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
-			{
-				int iGlowColor[4];
-				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
-			}
-
-			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);
-			RemoveEntity(g_esShieldPlayer[tank].g_iShield);
-		}
-	}
-
-	g_esShieldPlayer[tank].g_bActivated = false;
-	g_esShieldPlayer[tank].g_bRainbowColor = false;
-	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
-}
-
-void vShieldReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShieldAbility(iPlayer, false);
-			vShieldReset2(iPlayer);
-		}
-	}
-}
-
-void vShieldReset2(int tank)
-{
-	g_esShieldPlayer[tank].g_bRainbowColor = false;
-	g_esShieldPlayer[tank].g_flHealth = 0.0;
-	g_esShieldPlayer[tank].g_iAmmoCount = 0;
-	g_esShieldPlayer[tank].g_iCooldown = -1;
-	g_esShieldPlayer[tank].g_iCooldown2 = -1;
-	g_esShieldPlayer[tank].g_iDuration = -1;
-	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
-}
-
-void vShieldReset3(int tank)
-{
-	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
-	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", (g_esShieldPlayer[tank].g_iCooldown - iTime));
-	}
-}
-
 void vSetShieldGlow(int entity, int color, int flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
@@ -1435,6 +1368,73 @@ void OnShieldPreThinkPost(int tank)
 	}
 }
 
+void vShieldCopyStats2(int oldTank, int newTank)
+{
+	g_esShieldPlayer[newTank].g_iAmmoCount = g_esShieldPlayer[oldTank].g_iAmmoCount;
+	g_esShieldPlayer[newTank].g_iCooldown = g_esShieldPlayer[oldTank].g_iCooldown;
+	g_esShieldPlayer[newTank].g_iCooldown2 = g_esShieldPlayer[oldTank].g_iCooldown2;
+}
+
+void vRemoveShield(int tank)
+{
+	if (bIsValidEntRef(g_esShieldPlayer[tank].g_iShield))
+	{
+		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
+		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+		{
+			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
+
+			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
+			{
+				int iGlowColor[4];
+				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+			}
+
+			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);
+			RemoveEntity(g_esShieldPlayer[tank].g_iShield);
+		}
+	}
+
+	g_esShieldPlayer[tank].g_bActivated = false;
+	g_esShieldPlayer[tank].g_bRainbowColor = false;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShieldAbility(iPlayer, false);
+			vShieldReset2(iPlayer);
+		}
+	}
+}
+
+void vShieldReset2(int tank)
+{
+	g_esShieldPlayer[tank].g_bRainbowColor = false;
+	g_esShieldPlayer[tank].g_flHealth = 0.0;
+	g_esShieldPlayer[tank].g_iAmmoCount = 0;
+	g_esShieldPlayer[tank].g_iCooldown = -1;
+	g_esShieldPlayer[tank].g_iCooldown2 = -1;
+	g_esShieldPlayer[tank].g_iDuration = -1;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset3(int tank)
+{
+	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
+	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
+	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", (g_esShieldPlayer[tank].g_iCooldown - iTime));
+	}
+}
+
 Action tTimerShieldCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -1507,9 +1507,9 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 				NormalizeVector(flVelocity, flVelocity);
 				ScaleVector(flVelocity, (g_cvMTShieldTankThrowForce.FloatValue * 1.4));
 
-				TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(iThrowable, flPos);
 				DispatchSpawn(iThrowable);
-				TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
+				TeleportEntity(iThrowable, .velocity = flVelocity);
 			}
 		}
 

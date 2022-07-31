@@ -910,7 +910,7 @@ void vFly(int tank, bool announce, int pos = -1)
 	GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 	NormalizeVector(flEyeAngles, flEyeAngles);
 	ScaleVector(flEyeAngles, 55.0);
-	TeleportEntity(tank, flOrigin, NULL_VECTOR, flEyeAngles);
+	TeleportEntity(tank, flOrigin, .velocity = flEyeAngles);
 	vCopyVector(flEyeAngles, g_esFlyPlayer[tank].g_flCurrentVelocity);
 
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
@@ -1008,7 +1008,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1024,7 +1024,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1039,7 +1039,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1093,7 +1093,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			{
 				NormalizeVector(flSpeed2, flSpeed2);
 				ScaleVector(flSpeed2, flSpeed);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flSpeed2);
+				TeleportEntity(tank, .velocity = flSpeed2);
 				flGravity = flGravity2;
 			}
 
@@ -1384,7 +1384,7 @@ void vFlyThink(int tank, int buttons, float duration)
 		ScaleVector(flVelocity3, flSpeed);
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esFlyPlayer[tank].g_flCurrentVelocity);
-		TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+		TeleportEntity(tank, .velocity = flVelocity3);
 	}
 }
 

@@ -638,35 +638,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveRespawn(tank, revert);
 }
 
-void vRespawnCopyStats2(int oldTank, int newTank)
-{
-	g_esRespawnPlayer[newTank].g_bActivated = g_esRespawnPlayer[oldTank].g_bActivated;
-	g_esRespawnPlayer[newTank].g_iAmmoCount = g_esRespawnPlayer[oldTank].g_iAmmoCount;
-	g_esRespawnPlayer[newTank].g_iCount = g_esRespawnPlayer[oldTank].g_iCount;
-}
-
-void vRemoveRespawn(int tank, bool revert = true)
-{
-	g_esRespawnPlayer[tank].g_bActivated = false;
-
-	if (revert)
-	{
-		g_esRespawnPlayer[tank].g_iAmmoCount = 0;
-		g_esRespawnPlayer[tank].g_iCount = 0;
-	}
-}
-
-void vRespawnReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveRespawn(iPlayer);
-		}
-	}
-}
-
 void vRespawn(int tank)
 {
 	if (bIsAreaNarrow(tank, g_esRespawnCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRespawnCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRespawnPlayer[tank].g_iTankType) || (g_esRespawnCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRespawnCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRespawnAbility[g_esRespawnPlayer[tank].g_iTankType].g_iAccessFlags, g_esRespawnPlayer[tank].g_iAccessFlags)))
@@ -735,7 +706,7 @@ void vRespawn(int tank)
 			float flPos[3], flAngles[3];
 			GetClientAbsOrigin(tank, flPos);
 			GetClientEyeAngles(tank, flAngles);
-			TeleportEntity(iTank, flPos, flAngles, NULL_VECTOR);
+			TeleportEntity(iTank, flPos, flAngles);
 
 			if (g_esRespawnCache[tank].g_iRespawnMessage == 1)
 			{
@@ -779,6 +750,35 @@ void vRespawn2(int tank, int min = 0, int max = 0)
 
 	int iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
+}
+
+void vRespawnCopyStats2(int oldTank, int newTank)
+{
+	g_esRespawnPlayer[newTank].g_bActivated = g_esRespawnPlayer[oldTank].g_bActivated;
+	g_esRespawnPlayer[newTank].g_iAmmoCount = g_esRespawnPlayer[oldTank].g_iAmmoCount;
+	g_esRespawnPlayer[newTank].g_iCount = g_esRespawnPlayer[oldTank].g_iCount;
+}
+
+void vRemoveRespawn(int tank, bool revert = true)
+{
+	g_esRespawnPlayer[tank].g_bActivated = false;
+
+	if (revert)
+	{
+		g_esRespawnPlayer[tank].g_iAmmoCount = 0;
+		g_esRespawnPlayer[tank].g_iCount = 0;
+	}
+}
+
+void vRespawnReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveRespawn(iPlayer);
+		}
+	}
 }
 
 Action tTimerRespawnCombo(Handle timer, int userid)

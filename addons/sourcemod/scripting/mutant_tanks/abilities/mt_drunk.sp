@@ -562,6 +562,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esDrunkPlayer[iPlayer].g_iDrunkHitMode = 0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkRange = 0.0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkRangeChance = 0.0;
+					g_esDrunkPlayer[iPlayer].g_iDrunkRangeCooldown = 0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkSpeedInterval = 0.0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkTurnInterval = 0.0;
 				}
@@ -1118,7 +1119,7 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	flEyeAngles[1] -= flAngle;
 	flPunchAngles[1] += flAngle;
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
+	TeleportEntity(iSurvivor, .angles = flEyeAngles);
 	SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flPunchAngles);
 
 	return Plugin_Continue;

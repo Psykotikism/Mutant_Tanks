@@ -340,7 +340,7 @@ Action OnCarStartTouch(int car, int other)
 {
 	if (bIsValidEntity(car) && bIsValidEntity(other))
 	{
-		TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		TeleportEntity(car, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 		SDKUnhook(car, SDKHook_StartTouch, OnCarStartTouch);
 	}
 
@@ -1006,9 +1006,9 @@ Action tTimerCar(Handle timer, DataPack pack)
 			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iCar, flHitpos, flAngles2, NULL_VECTOR);
+			TeleportEntity(iCar, flHitpos, flAngles2);
 			DispatchSpawn(iCar);
-			TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			TeleportEntity(iCar, .velocity = flVelocity);
 
 			SDKHook(iCar, SDKHook_StartTouch, OnCarStartTouch);
 

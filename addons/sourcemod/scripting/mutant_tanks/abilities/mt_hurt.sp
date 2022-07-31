@@ -580,6 +580,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHurtPlayer[iPlayer].g_flHurtInterval = 0.0;
 					g_esHurtPlayer[iPlayer].g_flHurtRange = 0.0;
 					g_esHurtPlayer[iPlayer].g_flHurtRangeChance = 0.0;
+					g_esHurtPlayer[iPlayer].g_iHurtRangeCooldown = 0;
 				}
 			}
 		}

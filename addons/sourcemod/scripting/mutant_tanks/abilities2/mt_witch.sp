@@ -706,44 +706,6 @@ public void MT_OnPostTankSpawn(int tank)
 	vWitchRange(tank);
 }
 
-void vWitchCopyStats2(int oldTank, int newTank)
-{
-	g_esWitchPlayer[newTank].g_iAmmoCount = g_esWitchPlayer[oldTank].g_iAmmoCount;
-	g_esWitchPlayer[newTank].g_iCooldown = g_esWitchPlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveWitch(int tank)
-{
-	g_esWitchPlayer[tank].g_iAmmoCount = 0;
-	g_esWitchPlayer[tank].g_iCooldown = -1;
-}
-
-void vRemoveWitches(int tank)
-{
-	if (g_esWitchCache[tank].g_iWitchRemove)
-	{
-		int iWitch = -1;
-		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-		{
-			if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") == tank)
-			{
-				RemoveEntity(iWitch);
-			}
-		}
-	}
-}
-
-void vWitchReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveWitch(iPlayer);
-		}
-	}
-}
-
 void vWitch(int tank, int pos = -1)
 {
 	int iTime = GetTime();
@@ -815,7 +777,7 @@ void vWitch2(int tank, float pos[3], float angles[3])
 	if (bIsValidEntity(iWitch))
 	{
 		SetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity", tank);
-		TeleportEntity(iWitch, pos, angles, NULL_VECTOR);
+		TeleportEntity(iWitch, pos, angles);
 		DispatchSpawn(iWitch);
 		ActivateEntity(iWitch);
 
@@ -863,6 +825,44 @@ void vWitchRange(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 		GetClientAbsAngles(tank, flTankAngles);
 		vWitch2(tank, flTankPos, flTankAngles);
+	}
+}
+
+void vWitchCopyStats2(int oldTank, int newTank)
+{
+	g_esWitchPlayer[newTank].g_iAmmoCount = g_esWitchPlayer[oldTank].g_iAmmoCount;
+	g_esWitchPlayer[newTank].g_iCooldown = g_esWitchPlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveWitch(int tank)
+{
+	g_esWitchPlayer[tank].g_iAmmoCount = 0;
+	g_esWitchPlayer[tank].g_iCooldown = -1;
+}
+
+void vRemoveWitches(int tank)
+{
+	if (g_esWitchCache[tank].g_iWitchRemove)
+	{
+		int iWitch = -1;
+		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+		{
+			if (GetEntPropEnt(iWitch, Prop_Data, "m_hOwnerEntity") == tank)
+			{
+				RemoveEntity(iWitch);
+			}
+		}
+	}
+}
+
+void vWitchReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveWitch(iPlayer);
+		}
 	}
 }
 

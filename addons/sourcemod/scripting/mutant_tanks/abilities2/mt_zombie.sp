@@ -756,43 +756,6 @@ public void MT_OnPostTankSpawn(int tank)
 	vZombieRange(tank);
 }
 
-void vZombieCopyStats2(int oldTank, int newTank)
-{
-	g_esZombiePlayer[newTank].g_iAmmoCount = g_esZombiePlayer[oldTank].g_iAmmoCount;
-	g_esZombiePlayer[newTank].g_iCooldown = g_esZombiePlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveZombie(int tank)
-{
-	g_esZombiePlayer[tank].g_bActivated = false;
-	g_esZombiePlayer[tank].g_iAmmoCount = 0;
-	g_esZombiePlayer[tank].g_iCooldown = -1;
-}
-
-void vZombieReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveZombie(iPlayer);
-		}
-	}
-}
-
-void vZombieReset2(int tank)
-{
-	g_esZombiePlayer[tank].g_bActivated = false;
-
-	int iTime = GetTime(), iPos = g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esZombieCache[tank].g_iZombieCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1 && g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? g_esZombieCache[tank].g_iHumanCooldown : iCooldown;
-	g_esZombiePlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
-	}
-}
-
 void vSpawnUncommon(int tank, const char[] model)
 {
 	int iInfected = CreateEntityByName("infected");
@@ -811,7 +774,7 @@ void vSpawnUncommon(int tank, const char[] model)
 		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
 		flOrigin[2] += 5.0;
 
-		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iInfected, flOrigin);
 	}
 }
 
@@ -969,6 +932,43 @@ void vZombieRange(int tank)
 		}
 
 		vZombie3(tank);
+	}
+}
+
+void vZombieCopyStats2(int oldTank, int newTank)
+{
+	g_esZombiePlayer[newTank].g_iAmmoCount = g_esZombiePlayer[oldTank].g_iAmmoCount;
+	g_esZombiePlayer[newTank].g_iCooldown = g_esZombiePlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveZombie(int tank)
+{
+	g_esZombiePlayer[tank].g_bActivated = false;
+	g_esZombiePlayer[tank].g_iAmmoCount = 0;
+	g_esZombiePlayer[tank].g_iCooldown = -1;
+}
+
+void vZombieReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveZombie(iPlayer);
+		}
+	}
+}
+
+void vZombieReset2(int tank)
+{
+	g_esZombiePlayer[tank].g_bActivated = false;
+
+	int iTime = GetTime(), iPos = g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esZombieCache[tank].g_iZombieCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1 && g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? g_esZombieCache[tank].g_iHumanCooldown : iCooldown;
+	g_esZombiePlayer[tank].g_iCooldown = (iTime + iCooldown);
+	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
 	}
 }
 

@@ -624,6 +624,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRestartPlayer[iPlayer].g_iRestartMode = 0;
 					g_esRestartPlayer[iPlayer].g_flRestartRange = 0.0;
 					g_esRestartPlayer[iPlayer].g_flRestartRangeChance = 0.0;
+					g_esRestartPlayer[iPlayer].g_iRestartRangeCooldown = 0;
 				}
 			}
 		}
@@ -921,34 +922,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveRestart(tank);
 }
 
-void vRestartCopyStats2(int oldTank, int newTank)
-{
-	g_esRestartPlayer[newTank].g_iAmmoCount = g_esRestartPlayer[oldTank].g_iAmmoCount;
-	g_esRestartPlayer[newTank].g_iCooldown = g_esRestartPlayer[oldTank].g_iCooldown;
-	g_esRestartPlayer[newTank].g_iRangeCooldown = g_esRestartPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveRestart(int tank)
-{
-	g_esRestartPlayer[tank].g_bFailed = false;
-	g_esRestartPlayer[tank].g_bNoAmmo = false;
-	g_esRestartPlayer[tank].g_bRecorded = false;
-	g_esRestartPlayer[tank].g_iAmmoCount = 0;
-	g_esRestartPlayer[tank].g_iCooldown = -1;
-	g_esRestartPlayer[tank].g_iRangeCooldown = -1;
-}
-
-void vRestartReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveRestart(iPlayer);
-		}
-	}
-}
-
 void vRestartAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esRestartCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRestartCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRestartPlayer[tank].g_iTankType) || (g_esRestartCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRestartCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRestartAbility[g_esRestartPlayer[tank].g_iTankType].g_iAccessFlags, g_esRestartPlayer[tank].g_iAccessFlags)))
@@ -1065,7 +1038,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 						{
 							bTeleport = false;
 
-							TeleportEntity(survivor, g_esRestartPlayer[iSurvivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(survivor, g_esRestartPlayer[iSurvivor].g_flPosition);
 
 							break;
 						}
@@ -1073,7 +1046,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 					if (bTeleport)
 					{
-						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition);
 					}
 				}
 				else
@@ -1087,7 +1060,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 							GetClientAbsOrigin(iSurvivor, flOrigin);
 							GetClientEyeAngles(iSurvivor, flAngles);
-							TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+							TeleportEntity(survivor, flOrigin, flAngles);
 
 							break;
 						}
@@ -1095,7 +1068,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 
 					if (bTeleport)
 					{
-						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(survivor, g_esRestartPlayer[survivor].g_flPosition);
 					}
 				}
 
@@ -1124,6 +1097,34 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 			g_esRestartPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartAmmo");
+		}
+	}
+}
+
+void vRestartCopyStats2(int oldTank, int newTank)
+{
+	g_esRestartPlayer[newTank].g_iAmmoCount = g_esRestartPlayer[oldTank].g_iAmmoCount;
+	g_esRestartPlayer[newTank].g_iCooldown = g_esRestartPlayer[oldTank].g_iCooldown;
+	g_esRestartPlayer[newTank].g_iRangeCooldown = g_esRestartPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveRestart(int tank)
+{
+	g_esRestartPlayer[tank].g_bFailed = false;
+	g_esRestartPlayer[tank].g_bNoAmmo = false;
+	g_esRestartPlayer[tank].g_bRecorded = false;
+	g_esRestartPlayer[tank].g_iAmmoCount = 0;
+	g_esRestartPlayer[tank].g_iCooldown = -1;
+	g_esRestartPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vRestartReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveRestart(iPlayer);
 		}
 	}
 }

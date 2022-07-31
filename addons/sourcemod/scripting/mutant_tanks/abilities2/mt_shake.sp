@@ -585,6 +585,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShakePlayer[iPlayer].g_flShakeInterval = 0.0;
 					g_esShakePlayer[iPlayer].g_flShakeRange = 0.0;
 					g_esShakePlayer[iPlayer].g_flShakeRangeChance = 0.0;
+					g_esShakePlayer[iPlayer].g_iShakeRangeCooldown = 0;
 				}
 			}
 		}
@@ -817,62 +818,6 @@ public void MT_OnPostTankSpawn(int tank)
 	vShakeRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
-void vShakeCopyStats2(int oldTank, int newTank)
-{
-	g_esShakePlayer[newTank].g_iAmmoCount = g_esShakePlayer[oldTank].g_iAmmoCount;
-	g_esShakePlayer[newTank].g_iCooldown = g_esShakePlayer[oldTank].g_iCooldown;
-	g_esShakePlayer[newTank].g_iRangeCooldown = g_esShakePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveShake(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShakePlayer[iSurvivor].g_bAffected && g_esShakePlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esShakePlayer[iSurvivor].g_bAffected = false;
-			g_esShakePlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vShakeReset3(tank);
-}
-
-void vShakeReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShakeReset3(iPlayer);
-
-			g_esShakePlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vShakeReset2(int survivor, int tank, int messages)
-{
-	g_esShakePlayer[survivor].g_bAffected = false;
-	g_esShakePlayer[survivor].g_iOwner = 0;
-
-	if (g_esShakeCache[tank].g_iShakeMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Shake2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shake2", LANG_SERVER, survivor);
-	}
-}
-
-void vShakeReset3(int tank)
-{
-	g_esShakePlayer[tank].g_bAffected = false;
-	g_esShakePlayer[tank].g_bFailed = false;
-	g_esShakePlayer[tank].g_bNoAmmo = false;
-	g_esShakePlayer[tank].g_iAmmoCount = 0;
-	g_esShakePlayer[tank].g_iCooldown = -1;
-	g_esShakePlayer[tank].g_iRangeCooldown = -1;
-}
-
 void vShakeAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esShakeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShakeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShakePlayer[tank].g_iTankType) || (g_esShakeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShakeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShakeAbility[g_esShakePlayer[tank].g_iTankType].g_iAccessFlags, g_esShakePlayer[tank].g_iAccessFlags)))
@@ -1035,6 +980,62 @@ void vShakeRange(int tank, int value, float random, int pos = -1)
 			}
 		}
 	}
+}
+
+void vShakeCopyStats2(int oldTank, int newTank)
+{
+	g_esShakePlayer[newTank].g_iAmmoCount = g_esShakePlayer[oldTank].g_iAmmoCount;
+	g_esShakePlayer[newTank].g_iCooldown = g_esShakePlayer[oldTank].g_iCooldown;
+	g_esShakePlayer[newTank].g_iRangeCooldown = g_esShakePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveShake(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShakePlayer[iSurvivor].g_bAffected && g_esShakePlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esShakePlayer[iSurvivor].g_bAffected = false;
+			g_esShakePlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vShakeReset3(tank);
+}
+
+void vShakeReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShakeReset3(iPlayer);
+
+			g_esShakePlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vShakeReset2(int survivor, int tank, int messages)
+{
+	g_esShakePlayer[survivor].g_bAffected = false;
+	g_esShakePlayer[survivor].g_iOwner = 0;
+
+	if (g_esShakeCache[tank].g_iShakeMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Shake2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shake2", LANG_SERVER, survivor);
+	}
+}
+
+void vShakeReset3(int tank)
+{
+	g_esShakePlayer[tank].g_bAffected = false;
+	g_esShakePlayer[tank].g_bFailed = false;
+	g_esShakePlayer[tank].g_bNoAmmo = false;
+	g_esShakePlayer[tank].g_iAmmoCount = 0;
+	g_esShakePlayer[tank].g_iCooldown = -1;
+	g_esShakePlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerShakeCombo(Handle timer, DataPack pack)
