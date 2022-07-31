@@ -780,7 +780,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 			int iDrop = CreateEntityByName(sWeapon);
 			if (bIsValidEntity(iDrop))
 			{
-				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				TeleportEntity(iDrop, flPos, flAngles);
 				DispatchSpawn(iDrop);
 
 				int iAmmo = 0, iClip = 0, iType = GetEntProp(iDrop, Prop_Send, "m_iPrimaryAmmoType");
@@ -839,7 +839,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 			if (bIsValidEntity(iDrop))
 			{
 				DispatchKeyValue(iDrop, "melee_script_name", sWeapon);
-				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				TeleportEntity(iDrop, flPos, flAngles);
 				DispatchSpawn(iDrop);
 
 				if (g_esDropCache[tank].g_iDropMessage == 1)
@@ -1063,7 +1063,7 @@ void vDropFrame(int userid)
 		}
 
 		SetEntProp(g_esDropPlayer[iTank].g_iWeapon, Prop_Send, "m_CollisionGroup", 2);
-		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);
+		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles);
 		DispatchSpawn(g_esDropPlayer[iTank].g_iWeapon);
 
 		if (g_bSecondGame)

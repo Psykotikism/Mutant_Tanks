@@ -559,6 +559,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esVisionPlayer[iPlayer].g_iVisionHitMode = 0;
 					g_esVisionPlayer[iPlayer].g_flVisionRange = 0.0;
 					g_esVisionPlayer[iPlayer].g_flVisionRangeChance = 0.0;
+					g_esVisionPlayer[iPlayer].g_iVisionRangeCooldown = 0;
 				}
 			}
 		}
@@ -788,65 +789,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveVision(tank);
 }
 
-void vVisionCopyStats2(int oldTank, int newTank)
-{
-	g_esVisionPlayer[newTank].g_iAmmoCount = g_esVisionPlayer[oldTank].g_iAmmoCount;
-	g_esVisionPlayer[newTank].g_iCooldown = g_esVisionPlayer[oldTank].g_iCooldown;
-	g_esVisionPlayer[newTank].g_iRangeCooldown = g_esVisionPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveVision(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esVisionPlayer[iSurvivor].g_bAffected && g_esVisionPlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esVisionPlayer[iSurvivor].g_bAffected = false;
-			g_esVisionPlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vVisionReset3(tank);
-}
-
-void vVisionReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vVisionReset3(iPlayer);
-
-			g_esVisionPlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vVisionReset2(int survivor, int tank, int messages)
-{
-	g_esVisionPlayer[survivor].g_bAffected = false;
-	g_esVisionPlayer[survivor].g_iOwner = 0;
-
-	SetEntProp(survivor, Prop_Send, "m_iFOV", 90);
-	SetEntProp(survivor, Prop_Send, "m_iDefaultFOV", 90);
-
-	if (g_esVisionCache[tank].g_iVisionMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Vision2", survivor, 90);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision2", LANG_SERVER, survivor, 90);
-	}
-}
-
-void vVisionReset3(int tank)
-{
-	g_esVisionPlayer[tank].g_bAffected = false;
-	g_esVisionPlayer[tank].g_bFailed = false;
-	g_esVisionPlayer[tank].g_bNoAmmo = false;
-	g_esVisionPlayer[tank].g_iAmmoCount = 0;
-	g_esVisionPlayer[tank].g_iCooldown = -1;
-	g_esVisionPlayer[tank].g_iRangeCooldown = -1;
-}
-
 void vVisionAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esVisionCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esVisionCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVisionPlayer[tank].g_iTankType) || (g_esVisionCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVisionCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)))
@@ -980,6 +922,65 @@ void vVisionHit(int survivor, int tank, float random, float chance, int enabled,
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionAmmo");
 		}
 	}
+}
+
+void vVisionCopyStats2(int oldTank, int newTank)
+{
+	g_esVisionPlayer[newTank].g_iAmmoCount = g_esVisionPlayer[oldTank].g_iAmmoCount;
+	g_esVisionPlayer[newTank].g_iCooldown = g_esVisionPlayer[oldTank].g_iCooldown;
+	g_esVisionPlayer[newTank].g_iRangeCooldown = g_esVisionPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveVision(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esVisionPlayer[iSurvivor].g_bAffected && g_esVisionPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esVisionPlayer[iSurvivor].g_bAffected = false;
+			g_esVisionPlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vVisionReset3(tank);
+}
+
+void vVisionReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vVisionReset3(iPlayer);
+
+			g_esVisionPlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vVisionReset2(int survivor, int tank, int messages)
+{
+	g_esVisionPlayer[survivor].g_bAffected = false;
+	g_esVisionPlayer[survivor].g_iOwner = 0;
+
+	SetEntProp(survivor, Prop_Send, "m_iFOV", 90);
+	SetEntProp(survivor, Prop_Send, "m_iDefaultFOV", 90);
+
+	if (g_esVisionCache[tank].g_iVisionMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Vision2", survivor, 90);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision2", LANG_SERVER, survivor, 90);
+	}
+}
+
+void vVisionReset3(int tank)
+{
+	g_esVisionPlayer[tank].g_bAffected = false;
+	g_esVisionPlayer[tank].g_bFailed = false;
+	g_esVisionPlayer[tank].g_bNoAmmo = false;
+	g_esVisionPlayer[tank].g_iAmmoCount = 0;
+	g_esVisionPlayer[tank].g_iCooldown = -1;
+	g_esVisionPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerVisionCombo(Handle timer, DataPack pack)

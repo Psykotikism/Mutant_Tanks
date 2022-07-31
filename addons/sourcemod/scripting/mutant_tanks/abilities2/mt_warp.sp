@@ -1034,53 +1034,6 @@ public void MT_OnRockBreak(int tank, int rock)
 	}
 }
 
-void vWarpCopyStats2(int oldTank, int newTank)
-{
-	g_esWarpPlayer[newTank].g_iAmmoCount = g_esWarpPlayer[oldTank].g_iAmmoCount;
-	g_esWarpPlayer[newTank].g_iAmmoCount2 = g_esWarpPlayer[oldTank].g_iAmmoCount2;
-	g_esWarpPlayer[newTank].g_iCooldown = g_esWarpPlayer[oldTank].g_iCooldown;
-	g_esWarpPlayer[newTank].g_iCooldown2 = g_esWarpPlayer[oldTank].g_iCooldown2;
-	g_esWarpPlayer[newTank].g_iRangeCooldown = g_esWarpPlayer[oldTank].g_iRangeCooldown;
-	g_esWarpPlayer[newTank].g_iRockCooldown = g_esWarpPlayer[oldTank].g_iRockCooldown;
-}
-
-void vRemoveWarp(int tank)
-{
-	g_esWarpPlayer[tank].g_bActivated = false;
-	g_esWarpPlayer[tank].g_bFailed = false;
-	g_esWarpPlayer[tank].g_bNoAmmo = false;
-	g_esWarpPlayer[tank].g_iAmmoCount = 0;
-	g_esWarpPlayer[tank].g_iAmmoCount2 = 0;
-	g_esWarpPlayer[tank].g_iCooldown = -1;
-	g_esWarpPlayer[tank].g_iCooldown2 = -1;
-	g_esWarpPlayer[tank].g_iRangeCooldown = -1;
-	g_esWarpPlayer[tank].g_iRockCooldown = -1;
-}
-
-void vWarpReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveWarp(iPlayer);
-		}
-	}
-}
-
-void vWarpReset2(int tank)
-{
-	g_esWarpPlayer[tank].g_bActivated = false;
-
-	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
-	g_esWarpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
-	if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman8", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
-	}
-}
-
 void vWarp(int tank, int pos = -1)
 {
 	int iTime = GetTime();
@@ -1431,6 +1384,53 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Warp4", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp4", LANG_SERVER, sTankName);
 		}
+	}
+}
+
+void vWarpCopyStats2(int oldTank, int newTank)
+{
+	g_esWarpPlayer[newTank].g_iAmmoCount = g_esWarpPlayer[oldTank].g_iAmmoCount;
+	g_esWarpPlayer[newTank].g_iAmmoCount2 = g_esWarpPlayer[oldTank].g_iAmmoCount2;
+	g_esWarpPlayer[newTank].g_iCooldown = g_esWarpPlayer[oldTank].g_iCooldown;
+	g_esWarpPlayer[newTank].g_iCooldown2 = g_esWarpPlayer[oldTank].g_iCooldown2;
+	g_esWarpPlayer[newTank].g_iRangeCooldown = g_esWarpPlayer[oldTank].g_iRangeCooldown;
+	g_esWarpPlayer[newTank].g_iRockCooldown = g_esWarpPlayer[oldTank].g_iRockCooldown;
+}
+
+void vRemoveWarp(int tank)
+{
+	g_esWarpPlayer[tank].g_bActivated = false;
+	g_esWarpPlayer[tank].g_bFailed = false;
+	g_esWarpPlayer[tank].g_bNoAmmo = false;
+	g_esWarpPlayer[tank].g_iAmmoCount = 0;
+	g_esWarpPlayer[tank].g_iAmmoCount2 = 0;
+	g_esWarpPlayer[tank].g_iCooldown = -1;
+	g_esWarpPlayer[tank].g_iCooldown2 = -1;
+	g_esWarpPlayer[tank].g_iRangeCooldown = -1;
+	g_esWarpPlayer[tank].g_iRockCooldown = -1;
+}
+
+void vWarpReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveWarp(iPlayer);
+		}
+	}
+}
+
+void vWarpReset2(int tank)
+{
+	g_esWarpPlayer[tank].g_bActivated = false;
+
+	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
+	g_esWarpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
+	if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman8", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
 	}
 }
 

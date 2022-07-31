@@ -603,6 +603,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esQuietPlayer[iPlayer].g_iQuietHitMode = 0;
 					g_esQuietPlayer[iPlayer].g_flQuietRange = 0.0;
 					g_esQuietPlayer[iPlayer].g_flQuietRangeChance = 0.0;
+					g_esQuietPlayer[iPlayer].g_iQuietRangeCooldown = 0;
 				}
 			}
 		}

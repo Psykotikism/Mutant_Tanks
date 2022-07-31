@@ -682,33 +682,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveUndead(tank);
 }
 
-void vUndeadCopyStats2(int oldTank, int newTank)
-{
-	g_esUndeadPlayer[newTank].g_bActivated = g_esUndeadPlayer[oldTank].g_bActivated;
-	g_esUndeadPlayer[newTank].g_iAmmoCount = g_esUndeadPlayer[oldTank].g_iAmmoCount;
-	g_esUndeadPlayer[newTank].g_iCooldown = g_esUndeadPlayer[oldTank].g_iCooldown;
-	g_esUndeadPlayer[newTank].g_iCount = g_esUndeadPlayer[oldTank].g_iCount;
-}
-
-void vRemoveUndead(int tank)
-{
-	g_esUndeadPlayer[tank].g_bActivated = false;
-	g_esUndeadPlayer[tank].g_iAmmoCount = 0;
-	g_esUndeadPlayer[tank].g_iCooldown = -1;
-	g_esUndeadPlayer[tank].g_iCount = 0;
-}
-
-void vUndeadReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveUndead(iPlayer);
-		}
-	}
-}
-
 void vUndead(int tank)
 {
 	if (g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime())
@@ -759,6 +732,33 @@ void vUndeadAbility(int tank)
 	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esUndeadCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "UndeadAmmo");
+	}
+}
+
+void vUndeadCopyStats2(int oldTank, int newTank)
+{
+	g_esUndeadPlayer[newTank].g_bActivated = g_esUndeadPlayer[oldTank].g_bActivated;
+	g_esUndeadPlayer[newTank].g_iAmmoCount = g_esUndeadPlayer[oldTank].g_iAmmoCount;
+	g_esUndeadPlayer[newTank].g_iCooldown = g_esUndeadPlayer[oldTank].g_iCooldown;
+	g_esUndeadPlayer[newTank].g_iCount = g_esUndeadPlayer[oldTank].g_iCount;
+}
+
+void vRemoveUndead(int tank)
+{
+	g_esUndeadPlayer[tank].g_bActivated = false;
+	g_esUndeadPlayer[tank].g_iAmmoCount = 0;
+	g_esUndeadPlayer[tank].g_iCooldown = -1;
+	g_esUndeadPlayer[tank].g_iCount = 0;
+}
+
+void vUndeadReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveUndead(iPlayer);
+		}
 	}
 }
 

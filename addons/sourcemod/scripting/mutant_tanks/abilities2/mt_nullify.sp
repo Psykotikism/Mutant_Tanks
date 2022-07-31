@@ -577,6 +577,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esNullifyPlayer[iPlayer].g_iNullifyHitMode = 0;
 					g_esNullifyPlayer[iPlayer].g_flNullifyRange = 0.0;
 					g_esNullifyPlayer[iPlayer].g_flNullifyRangeChance = 0.0;
+					g_esNullifyPlayer[iPlayer].g_iNullifyRangeCooldown = 0;
 				}
 			}
 		}

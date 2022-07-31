@@ -623,6 +623,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esFlingPlayer[iPlayer].g_iFlingHitMode = 0;
 					g_esFlingPlayer[iPlayer].g_flFlingRange = 0.0;
 					g_esFlingPlayer[iPlayer].g_flFlingRangeChance = 0.0;
+					g_esFlingPlayer[iPlayer].g_iFlingRangeCooldown = 0;
 				}
 			}
 		}

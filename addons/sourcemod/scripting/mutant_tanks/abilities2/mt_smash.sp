@@ -607,6 +607,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSmashPlayer[iPlayer].g_iSmashHitMode = 0;
 					g_esSmashPlayer[iPlayer].g_flSmashRange = 0.0;
 					g_esSmashPlayer[iPlayer].g_flSmashRangeChance = 0.0;
+					g_esSmashPlayer[iPlayer].g_iSmashRangeCooldown = 0;
 				}
 			}
 		}
@@ -817,33 +818,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveSmash(tank);
 }
 
-void vSmashCopyStats2(int oldTank, int newTank)
-{
-	g_esSmashPlayer[newTank].g_iAmmoCount = g_esSmashPlayer[oldTank].g_iAmmoCount;
-	g_esSmashPlayer[newTank].g_iCooldown = g_esSmashPlayer[oldTank].g_iCooldown;
-	g_esSmashPlayer[newTank].g_iRangeCooldown = g_esSmashPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveSmash(int tank)
-{
-	g_esSmashPlayer[tank].g_bFailed = false;
-	g_esSmashPlayer[tank].g_bNoAmmo = false;
-	g_esSmashPlayer[tank].g_iAmmoCount = 0;
-	g_esSmashPlayer[tank].g_iCooldown = -1;
-	g_esSmashPlayer[tank].g_iRangeCooldown = -1;
-}
-
-void vSmashReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveSmash(iPlayer);
-		}
-	}
-}
-
 void vSmash(int survivor, int tank)
 {
 	if (bIsAreaNarrow(tank, g_esSmashCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSmashCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSmashPlayer[tank].g_iTankType) || (g_esSmashCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSmashCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmashAbility[g_esSmashPlayer[tank].g_iTankType].g_iAccessFlags, g_esSmashPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esSmashPlayer[tank].g_iTankType, g_esSmashAbility[g_esSmashPlayer[tank].g_iTankType].g_iImmunityFlags, g_esSmashPlayer[survivor].g_iImmunityFlags))
@@ -993,6 +967,33 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 			g_esSmashPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmashAmmo");
+		}
+	}
+}
+
+void vSmashCopyStats2(int oldTank, int newTank)
+{
+	g_esSmashPlayer[newTank].g_iAmmoCount = g_esSmashPlayer[oldTank].g_iAmmoCount;
+	g_esSmashPlayer[newTank].g_iCooldown = g_esSmashPlayer[oldTank].g_iCooldown;
+	g_esSmashPlayer[newTank].g_iRangeCooldown = g_esSmashPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveSmash(int tank)
+{
+	g_esSmashPlayer[tank].g_bFailed = false;
+	g_esSmashPlayer[tank].g_bNoAmmo = false;
+	g_esSmashPlayer[tank].g_iAmmoCount = 0;
+	g_esSmashPlayer[tank].g_iCooldown = -1;
+	g_esSmashPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vSmashReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveSmash(iPlayer);
 		}
 	}
 }

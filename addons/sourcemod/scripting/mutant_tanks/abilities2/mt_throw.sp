@@ -415,7 +415,7 @@ Action OnThrowStartTouch(int thrown, int other)
 {
 	if (bIsValidEntity(thrown) && bIsValidEntity(other))
 	{
-		TeleportEntity(thrown, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		TeleportEntity(thrown, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 		SDKUnhook(thrown, SDKHook_StartTouch, OnThrowStartTouch);
 	}
 
@@ -826,6 +826,25 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
+void vThrow(int tank, int rock)
+{
+	if (g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
+	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esThrowCache[tank].g_iHumanAbility != 1) && !g_esThrowPlayer[tank].g_bActivated)
+	{
+		g_esThrowPlayer[tank].g_bActivated = true;
+	}
+
+	DataPack dpThrow;
+	CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpThrow.WriteCell(EntIndexToEntRef(rock));
+	dpThrow.WriteCell(GetClientUserId(tank));
+	dpThrow.WriteCell(g_esThrowPlayer[tank].g_iTankType);
+}
+
 void vThrowCopyStats2(int oldTank, int newTank)
 {
 	g_esThrowPlayer[newTank].g_iAmmoCount = g_esThrowPlayer[oldTank].g_iAmmoCount;
@@ -887,25 +906,6 @@ void vThrowReset()
 			vRemoveThrow(iPlayer);
 		}
 	}
-}
-
-void vThrow(int tank, int rock)
-{
-	if (g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown > GetTime())
-	{
-		return;
-	}
-
-	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esThrowCache[tank].g_iHumanAbility != 1) && !g_esThrowPlayer[tank].g_bActivated)
-	{
-		g_esThrowPlayer[tank].g_bActivated = true;
-	}
-
-	DataPack dpThrow;
-	CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpThrow.WriteCell(EntIndexToEntRef(rock));
-	dpThrow.WriteCell(GetClientUserId(tank));
-	dpThrow.WriteCell(g_esThrowPlayer[tank].g_iTankType);
 }
 
 int iGetThrownInfectedCount(int tank)
@@ -1057,9 +1057,9 @@ Action tTimerThrow(Handle timer, DataPack pack)
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 
-						TeleportEntity(iCar, flPos, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iCar, flPos);
 						DispatchSpawn(iCar);
-						TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
+						TeleportEntity(iCar, .velocity = flVelocity);
 
 						SDKHook(iCar, SDKHook_StartTouch, OnThrowStartTouch);
 
@@ -1153,7 +1153,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 							NormalizeVector(flVelocity, flVelocity);
 							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
-							TeleportEntity(iSpecial, flPos, NULL_VECTOR, flVelocity);
+							TeleportEntity(iSpecial, flPos, .velocity = flVelocity);
 
 							if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
 							{
@@ -1173,7 +1173,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 
 					NormalizeVector(flVelocity, flVelocity);
 					ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
-					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
+					TeleportEntity(iTank, flPos, .velocity = flVelocity);
 
 					if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL)
 					{
@@ -1198,9 +1198,9 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 
 							SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
-							TeleportEntity(iWitch, flPos, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(iWitch, flPos);
 							DispatchSpawn(iWitch);
-							TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
+							TeleportEntity(iWitch, .velocity = flVelocity);
 							ActivateEntity(iWitch);
 
 							SDKHook(iWitch, SDKHook_StartTouch, OnThrowStartTouch);

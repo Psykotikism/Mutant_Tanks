@@ -577,6 +577,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esElectricPlayer[iPlayer].g_flElectricInterval = 0.0;
 					g_esElectricPlayer[iPlayer].g_flElectricRange = 0.0;
 					g_esElectricPlayer[iPlayer].g_flElectricRangeChance = 0.0;
+					g_esElectricPlayer[iPlayer].g_iElectricRangeCooldown = 0;
 				}
 			}
 		}

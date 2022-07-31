@@ -1095,9 +1095,9 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iMeteor, flHitpos, flAngles2, NULL_VECTOR);
+			TeleportEntity(iMeteor, flHitpos, flAngles2);
 			DispatchSpawn(iMeteor);
-			TeleportEntity(iMeteor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			TeleportEntity(iMeteor, .velocity = flVelocity);
 			ActivateEntity(iMeteor);
 			AcceptEntityInput(iMeteor, "Ignite");
 

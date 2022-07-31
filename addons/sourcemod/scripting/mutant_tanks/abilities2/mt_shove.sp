@@ -160,49 +160,6 @@ enum struct esShoveCache
 
 esShoveCache g_esShoveCache[MAXPLAYERS + 1];
 
-Handle g_hSDKStagger;
-
-#if defined MT_ABILITIES_MAIN2
-void vShoveAllPluginsLoaded(GameData gdMutantTanks)
-#else
-public void OnAllPluginsLoaded()
-#endif
-{
-#if !defined MT_ABILITIES_MAIN2
-	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
-	}
-#endif
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
-	{
-#if defined MT_ABILITIES_MAIN2
-		delete gdMutantTanks;
-
-		LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
-#else
-		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
-#endif
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
-	g_hSDKStagger = EndPrepSDKCall();
-	if (g_hSDKStagger == null)
-	{
-#if defined MT_ABILITIES_MAIN2
-		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
-#else
-		SetFailState("Your \"CTerrorPlayer::OnStaggered\" signature is outdated.");
-#endif
-	}
-#if !defined MT_ABILITIES_MAIN2
-	delete gdMutantTanks;
-#endif
-}
-
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
 {
@@ -619,6 +576,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShovePlayer[iPlayer].g_flShoveInterval = 0.0;
 					g_esShovePlayer[iPlayer].g_flShoveRange = 0.0;
 					g_esShovePlayer[iPlayer].g_flShoveRangeChance = 0.0;
+					g_esShovePlayer[iPlayer].g_iShoveRangeCooldown = 0;
 				}
 			}
 		}
@@ -851,62 +809,6 @@ public void MT_OnPostTankSpawn(int tank)
 	vShoveRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
 }
 
-void vShoveCopyStats2(int oldTank, int newTank)
-{
-	g_esShovePlayer[newTank].g_iAmmoCount = g_esShovePlayer[oldTank].g_iAmmoCount;
-	g_esShovePlayer[newTank].g_iCooldown = g_esShovePlayer[oldTank].g_iCooldown;
-	g_esShovePlayer[newTank].g_iRangeCooldown = g_esShovePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveShove(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShovePlayer[iSurvivor].g_bAffected && g_esShovePlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esShovePlayer[iSurvivor].g_bAffected = false;
-			g_esShovePlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vShoveReset3(tank);
-}
-
-void vShoveReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShoveReset3(iPlayer);
-
-			g_esShovePlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vShoveReset2(int survivor, int tank, int messages)
-{
-	g_esShovePlayer[survivor].g_bAffected = false;
-	g_esShovePlayer[survivor].g_iOwner = 0;
-
-	if (g_esShoveCache[tank].g_iShoveMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Shove2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shove2", LANG_SERVER, survivor);
-	}
-}
-
-void vShoveReset3(int tank)
-{
-	g_esShovePlayer[tank].g_bAffected = false;
-	g_esShovePlayer[tank].g_bFailed = false;
-	g_esShovePlayer[tank].g_bNoAmmo = false;
-	g_esShovePlayer[tank].g_iAmmoCount = 0;
-	g_esShovePlayer[tank].g_iCooldown = -1;
-	g_esShovePlayer[tank].g_iRangeCooldown = -1;
-}
-
 void vShoveAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esShoveCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShoveCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShovePlayer[tank].g_iTankType) || (g_esShoveCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShoveCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)))
@@ -1063,11 +965,67 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
+					MT_StaggerPlayer(iSurvivor, tank, flTankPos);
 				}
 			}
 		}
 	}
+}
+
+void vShoveCopyStats2(int oldTank, int newTank)
+{
+	g_esShovePlayer[newTank].g_iAmmoCount = g_esShovePlayer[oldTank].g_iAmmoCount;
+	g_esShovePlayer[newTank].g_iCooldown = g_esShovePlayer[oldTank].g_iCooldown;
+	g_esShovePlayer[newTank].g_iRangeCooldown = g_esShovePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveShove(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShovePlayer[iSurvivor].g_bAffected && g_esShovePlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esShovePlayer[iSurvivor].g_bAffected = false;
+			g_esShovePlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vShoveReset3(tank);
+}
+
+void vShoveReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShoveReset3(iPlayer);
+
+			g_esShovePlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vShoveReset2(int survivor, int tank, int messages)
+{
+	g_esShovePlayer[survivor].g_bAffected = false;
+	g_esShovePlayer[survivor].g_iOwner = 0;
+
+	if (g_esShoveCache[tank].g_iShoveMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Shove2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shove2", LANG_SERVER, survivor);
+	}
+}
+
+void vShoveReset3(int tank)
+{
+	g_esShovePlayer[tank].g_bAffected = false;
+	g_esShovePlayer[tank].g_bFailed = false;
+	g_esShovePlayer[tank].g_bNoAmmo = false;
+	g_esShovePlayer[tank].g_iAmmoCount = 0;
+	g_esShovePlayer[tank].g_iCooldown = -1;
+	g_esShovePlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerShoveCombo(Handle timer, DataPack pack)
@@ -1152,7 +1110,7 @@ Action tTimerShove(Handle timer, DataPack pack)
 
 	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
+	MT_StaggerPlayer(iSurvivor, iTank, flOrigin);
 
 	return Plugin_Continue;
 }

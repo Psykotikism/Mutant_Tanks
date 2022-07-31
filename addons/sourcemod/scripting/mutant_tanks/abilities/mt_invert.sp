@@ -597,6 +597,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esInvertPlayer[iPlayer].g_iInvertHitMode = 0;
 					g_esInvertPlayer[iPlayer].g_flInvertRange = 0.0;
 					g_esInvertPlayer[iPlayer].g_flInvertRangeChance = 0.0;
+					g_esInvertPlayer[iPlayer].g_iInvertRangeCooldown = 0;
 				}
 			}
 		}

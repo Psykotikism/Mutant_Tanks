@@ -559,6 +559,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esLeechPlayer[iPlayer].g_flLeechInterval = 0.0;
 					g_esLeechPlayer[iPlayer].g_flLeechRange = 0.0;
 					g_esLeechPlayer[iPlayer].g_flLeechRangeChance = 0.0;
+					g_esLeechPlayer[iPlayer].g_iLeechRangeCooldown = 0;
 				}
 			}
 		}

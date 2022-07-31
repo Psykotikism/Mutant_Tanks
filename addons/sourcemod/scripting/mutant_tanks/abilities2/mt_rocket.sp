@@ -602,6 +602,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRocketPlayer[iPlayer].g_iRocketHitMode = 0;
 					g_esRocketPlayer[iPlayer].g_flRocketRange = 0.0;
 					g_esRocketPlayer[iPlayer].g_flRocketRangeChance = 0.0;
+					g_esRocketPlayer[iPlayer].g_iRocketRangeCooldown = 0;
 				}
 			}
 		}
@@ -830,58 +831,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveRocket(tank);
 }
 
-void vRocketCopyStats2(int oldTank, int newTank)
-{
-	g_esRocketPlayer[newTank].g_iAmmoCount = g_esRocketPlayer[oldTank].g_iAmmoCount;
-	g_esRocketPlayer[newTank].g_iCooldown = g_esRocketPlayer[oldTank].g_iCooldown;
-	g_esRocketPlayer[newTank].g_iRangeCooldown = g_esRocketPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveRocket(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRocketPlayer[iSurvivor].g_bAffected && g_esRocketPlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esRocketPlayer[iSurvivor].g_bAffected = false;
-			g_esRocketPlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vRocketReset3(tank);
-}
-
-void vRocketReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRocketReset3(iPlayer);
-
-			g_esRocketPlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vRocketReset2(int survivor)
-{
-	g_esRocketPlayer[survivor].g_bAffected = false;
-	g_esRocketPlayer[survivor].g_iOwner = 0;
-
-	SetEntityGravity(survivor, 1.0);
-}
-
-void vRocketReset3(int tank)
-{
-	g_esRocketPlayer[tank].g_bAffected = false;
-	g_esRocketPlayer[tank].g_bFailed = false;
-	g_esRocketPlayer[tank].g_bNoAmmo = false;
-	g_esRocketPlayer[tank].g_iAmmoCount = 0;
-	g_esRocketPlayer[tank].g_iCooldown = -1;
-	g_esRocketPlayer[tank].g_iRangeCooldown = -1;
-}
-
 void vRocketAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esRocketCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRocketCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[tank].g_iTankType) || (g_esRocketCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRocketAbility[g_esRocketPlayer[tank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[tank].g_iAccessFlags)))
@@ -999,7 +948,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					DispatchKeyValueInt(iFlame, "JetLength", 400);
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);
+					TeleportEntity(iFlame, flPos, flAngles);
 					DispatchSpawn(iFlame);
 					vSetEntityParent(iFlame, survivor);
 
@@ -1043,6 +992,58 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketAmmo");
 		}
 	}
+}
+
+void vRocketCopyStats2(int oldTank, int newTank)
+{
+	g_esRocketPlayer[newTank].g_iAmmoCount = g_esRocketPlayer[oldTank].g_iAmmoCount;
+	g_esRocketPlayer[newTank].g_iCooldown = g_esRocketPlayer[oldTank].g_iCooldown;
+	g_esRocketPlayer[newTank].g_iRangeCooldown = g_esRocketPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveRocket(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRocketPlayer[iSurvivor].g_bAffected && g_esRocketPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esRocketPlayer[iSurvivor].g_bAffected = false;
+			g_esRocketPlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vRocketReset3(tank);
+}
+
+void vRocketReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRocketReset3(iPlayer);
+
+			g_esRocketPlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vRocketReset2(int survivor)
+{
+	g_esRocketPlayer[survivor].g_bAffected = false;
+	g_esRocketPlayer[survivor].g_iOwner = 0;
+
+	SetEntityGravity(survivor, 1.0);
+}
+
+void vRocketReset3(int tank)
+{
+	g_esRocketPlayer[tank].g_bAffected = false;
+	g_esRocketPlayer[tank].g_bFailed = false;
+	g_esRocketPlayer[tank].g_bNoAmmo = false;
+	g_esRocketPlayer[tank].g_iAmmoCount = 0;
+	g_esRocketPlayer[tank].g_iCooldown = -1;
+	g_esRocketPlayer[tank].g_iRangeCooldown = -1;
 }
 
 Action tTimerRocketCombo(Handle timer, DataPack pack)
@@ -1123,7 +1124,7 @@ Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	EmitSoundToAll(SOUND_EXPLOSION, iSurvivor);
 	EmitSoundToAll(SOUND_LAUNCH, iSurvivor);
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iSurvivor, .velocity = flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
 
 	return Plugin_Continue;

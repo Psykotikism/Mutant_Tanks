@@ -590,6 +590,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSmitePlayer[iPlayer].g_iSmiteHitMode = 0;
 					g_esSmitePlayer[iPlayer].g_flSmiteRange = 0.0;
 					g_esSmitePlayer[iPlayer].g_flSmiteRangeChance = 0.0;
+					g_esSmitePlayer[iPlayer].g_iSmiteRangeCooldown = 0;
 				}
 			}
 		}
@@ -800,33 +801,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveSmite(tank);
 }
 
-void vSmiteCopyStats2(int oldTank, int newTank)
-{
-	g_esSmitePlayer[newTank].g_iAmmoCount = g_esSmitePlayer[oldTank].g_iAmmoCount;
-	g_esSmitePlayer[newTank].g_iCooldown = g_esSmitePlayer[oldTank].g_iCooldown;
-	g_esSmitePlayer[newTank].g_iRangeCooldown = g_esSmitePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveSmite(int tank)
-{
-	g_esSmitePlayer[tank].g_bFailed = false;
-	g_esSmitePlayer[tank].g_bNoAmmo = false;
-	g_esSmitePlayer[tank].g_iAmmoCount = 0;
-	g_esSmitePlayer[tank].g_iCooldown = -1;
-	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
-}
-
-void vSmiteReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveSmite(iPlayer);
-		}
-	}
-}
-
 void vSmite(int survivor)
 {
 	float flPos[3], flStartPos[3];
@@ -975,6 +949,33 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 			g_esSmitePlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteAmmo");
+		}
+	}
+}
+
+void vSmiteCopyStats2(int oldTank, int newTank)
+{
+	g_esSmitePlayer[newTank].g_iAmmoCount = g_esSmitePlayer[oldTank].g_iAmmoCount;
+	g_esSmitePlayer[newTank].g_iCooldown = g_esSmitePlayer[oldTank].g_iCooldown;
+	g_esSmitePlayer[newTank].g_iRangeCooldown = g_esSmitePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveSmite(int tank)
+{
+	g_esSmitePlayer[tank].g_bFailed = false;
+	g_esSmitePlayer[tank].g_bNoAmmo = false;
+	g_esSmitePlayer[tank].g_iAmmoCount = 0;
+	g_esSmitePlayer[tank].g_iCooldown = -1;
+	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vSmiteReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveSmite(iPlayer);
 		}
 	}
 }

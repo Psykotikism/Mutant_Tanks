@@ -4,9 +4,39 @@
 
 ### Changes
 
+#### Game Data
+- Removed unnecessary/unused sections.
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
+#### Natives & Forwards
+- Added the `MT_DeafenPlayer` native.
+- Added the `MT_StaggerPlayer` native.
+
 #### Abilities
 - Changed the minimum value of the `* Damage` setting for several abilities from `1`/`1.0` to `0`/`0.0`.
+- Blind
+	- Added a flashbang option. (Thanks to `Silvers` for the code!)
+	- Added the `Blind Mode` setting.
+	- Added the `Blind Stagger` setting.
 - Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
+- Splatter
+	- Changed how splatters are displayed. (Thanks to `Lux` and `Silvers` for the code!)
+	- Removed the `Human Duration` setting.
+	- Removed the `Human Mode` setting.
+	- Added the `Immunity Flags` setting.
+	- Added the `Ability Effect` setting.
+	- Added the `Splatter Hit` setting.
+	- Added the `Splatter Hit Mode` setting.
+	- Added the `Splatter Range` setting.
+	- Added the `Splatter Range Chance` setting.
+	- Added the `Splatter Range Cooldown` setting.
+	- Changed the default value of the `Splatter Duration` setting from `0` to `5`.
+	- Changed the default value of the `Splatter Interval` setting from `5.0` to `1.0`.
 - Yell
 	- Added the `Yell Mode` setting.
 	- Re-added the deafen feature. (Requested by `ddd123`.)
@@ -22,6 +52,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
+- Updated translation files.
 - Updated updater file.
 
 ## Version 8.94 (July 4, 2022)

@@ -343,14 +343,8 @@ public void OnAllPluginsLoaded()
 #if defined MT_MENU_RESTART
 	vRestartAllPluginsLoaded(gdMutantTanks);
 #endif
-#if defined MT_MENU_SHOVE
-	vShoveAllPluginsLoaded(gdMutantTanks);
-#endif
 #if defined MT_MENU_WARP
 	vWarpAllPluginsLoaded(gdMutantTanks);
-#endif
-#if defined MT_MENU_YELL
-	vYellAllPluginsLoaded(gdMutantTanks);
 #endif
 	delete gdMutantTanks;
 }
@@ -1171,7 +1165,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	vSplashCombineAbilities(tank, type, random, combo);
 #endif
 #if defined MT_MENU_SPLATTER
-	vSplatterCombineAbilities(tank, type, random, combo);
+	vSplatterCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_THROW
 	vThrowCombineAbilities(tank, type, random, combo, weapon);
@@ -1945,9 +1939,6 @@ public void MT_OnButtonReleased(int tank, int button)
 #if defined MT_MENU_SPLASH
 	vSplashButtonReleased(tank, button);
 #endif
-#if defined MT_MENU_SPLATTER
-	vSplatterButtonReleased(tank, button);
-#endif
 #if defined MT_MENU_WARP
 	vWarpButtonReleased(tank, button);
 #endif
@@ -2484,7 +2475,6 @@ void vAbilityPlayer(int type, int client)
 		case 0: vSplatterClientPutInServer(client);
 		case 2: vSplatterClientDisconnect_Post(client);
 		case 3: vSplatterAbilityActivated(client);
-		case 4: vSplatterPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_THROW

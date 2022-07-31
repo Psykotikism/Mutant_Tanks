@@ -568,6 +568,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esDrugPlayer[iPlayer].g_flDrugInterval = 0.0;
 					g_esDrugPlayer[iPlayer].g_flDrugRange = 0.0;
 					g_esDrugPlayer[iPlayer].g_flDrugRangeChance = 0.0;
+					g_esDrugPlayer[iPlayer].g_iDrugRangeCooldown = 0;
 				}
 			}
 		}
@@ -813,10 +814,10 @@ void vDrug(int survivor, bool toggle, float angles[20])
 	float flAngles[3];
 	GetClientEyeAngles(survivor, flAngles);
 	flAngles[2] = toggle ? angles[MT_GetRandomInt(0, 100) % 20] : 0.0;
-	TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
+	TeleportEntity(survivor, .angles = flAngles);
 
-	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? MT_FADE_OUT : (MT_FADE_IN|MT_FADE_PURGE);
-	iClients[0] = survivor;
+	int iTargets[1], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? MT_FADE_OUT : (MT_FADE_IN|MT_FADE_PURGE);
+	iTargets[0] = survivor;
 
 	if (toggle)
 	{
@@ -826,31 +827,17 @@ void vDrug(int survivor, bool toggle, float angles[20])
 		}
 	}
 
-	Handle hTarget = StartMessageEx(g_umDrugFade, iClients, 1);
-	if (hTarget != null)
+	Handle hMessage = StartMessageEx(g_umDrugFade, iTargets, 1);
+	if (hMessage != null)
 	{
-		switch (GetUserMessageType() == UM_Protobuf)
-		{
-			case true:
-			{
-				Protobuf pbSet = UserMessageToProtobuf(hTarget);
-				pbSet.SetInt("duration", (toggle ? 255: 1536));
-				pbSet.SetInt("hold_time", (toggle ? 255 : 1536));
-				pbSet.SetInt("flags", iFlags);
-				pbSet.SetColor("clr", (toggle ? iColor : iColor2));
-			}
-			case false:
-			{
-				BfWrite bfWrite = UserMessageToBfWrite(hTarget);
-				bfWrite.WriteShort(toggle ? 255 : 1536);
-				bfWrite.WriteShort(toggle ? 255 : 1536);
-				bfWrite.WriteShort(iFlags);
+		BfWrite bfWrite = UserMessageToBfWrite(hMessage);
+		bfWrite.WriteShort(toggle ? 255 : 1536);
+		bfWrite.WriteShort(toggle ? 255 : 1536);
+		bfWrite.WriteShort(iFlags);
 
-				for (int iPos = 0; iPos < (sizeof iColor); iPos++)
-				{
-					bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
-				}
-			}
+		for (int iPos = 0; iPos < (sizeof iColor); iPos++)
+		{
+			bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
 		}
 
 		EndMessage();

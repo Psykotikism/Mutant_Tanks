@@ -554,6 +554,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRecoilPlayer[iPlayer].g_iRecoilHitMode = 0;
 					g_esRecoilPlayer[iPlayer].g_flRecoilRange = 0.0;
 					g_esRecoilPlayer[iPlayer].g_flRecoilRangeChance = 0.0;
+					g_esRecoilPlayer[iPlayer].g_iRecoilRangeCooldown = 0;
 				}
 			}
 		}

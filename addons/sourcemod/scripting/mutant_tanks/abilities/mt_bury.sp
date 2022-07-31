@@ -639,6 +639,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esBuryPlayer[iPlayer].g_iBuryHitMode = 0;
 					g_esBuryPlayer[iPlayer].g_flBuryRange = 0.0;
 					g_esBuryPlayer[iPlayer].g_flBuryRangeChance = 0.0;
+					g_esBuryPlayer[iPlayer].g_iBuryRangeCooldown = 0;
 				}
 			}
 		}
@@ -1143,7 +1144,7 @@ void vStopBury(int survivor, int tank)
 	{
 		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight;
 
-		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	}
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)

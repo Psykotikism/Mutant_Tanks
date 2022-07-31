@@ -657,32 +657,6 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
-void vTrackCopyStats2(int oldTank, int newTank)
-{
-	g_esTrackPlayer[newTank].g_iAmmoCount = g_esTrackPlayer[oldTank].g_iAmmoCount;
-	g_esTrackPlayer[newTank].g_iCooldown = g_esTrackPlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveTrack(int tank)
-{
-	g_esTrackPlayer[tank].g_bActivated = false;
-	g_esTrackPlayer[tank].g_bRainbowColor = false;
-	g_esTrackPlayer[tank].g_iAmmoCount = 0;
-	g_esTrackPlayer[tank].g_iCooldown = -1;
-	g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
-}
-
-void vTrackReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveTrack(iPlayer);
-		}
-	}
-}
-
 void vSetTrackGlow(int rock, int color, int flashing, int min, int max, int type)
 {
 	if (!g_bSecondGame)
@@ -773,7 +747,7 @@ void vTrackThink(int rock)
 					NormalizeVector(flVelocity3, flVelocity3);
 					ScaleVector(flVelocity3, flVector);
 
-					TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+					TeleportEntity(rock, .velocity = flVelocity3);
 				}
 			}
 			case 1:
@@ -982,7 +956,7 @@ void vTrackThink(int rock)
 				ScaleVector(flVelocity3, g_esTrackCache[iTank].g_flTrackSpeed);
 
 				SetEntityGravity(rock, 0.01);
-				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+				TeleportEntity(rock, .velocity = flVelocity3);
 
 				if (g_esTrackCache[iTank].g_iTrackGlow == 1)
 				{
@@ -1006,33 +980,6 @@ void vTrackThink(int rock)
 			}
 		}
 	}
-}
-
-int iGetRockTarget(float pos[3], float angles[3], int tank)
-{
-	float flMin = 4.0, flPos[3], flAngle;
-	int iTarget = 0;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-		{
-			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
-			{
-				continue;
-			}
-
-			GetClientEyePosition(iSurvivor, flPos);
-			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angles, flPos);
-			if (flAngle <= flMin)
-			{
-				flMin = flAngle;
-				iTarget = iSurvivor;
-			}
-		}
-	}
-
-	return iTarget;
 }
 
 void OnTrackPreThinkPost(int tank)
@@ -1087,6 +1034,59 @@ void OnTrackThink(int rock)
 		case true: vTrackThink(rock);
 		case false: SDKUnhook(rock, SDKHook_Think, OnTrackThink);
 	}
+}
+
+void vTrackCopyStats2(int oldTank, int newTank)
+{
+	g_esTrackPlayer[newTank].g_iAmmoCount = g_esTrackPlayer[oldTank].g_iAmmoCount;
+	g_esTrackPlayer[newTank].g_iCooldown = g_esTrackPlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveTrack(int tank)
+{
+	g_esTrackPlayer[tank].g_bActivated = false;
+	g_esTrackPlayer[tank].g_bRainbowColor = false;
+	g_esTrackPlayer[tank].g_iAmmoCount = 0;
+	g_esTrackPlayer[tank].g_iCooldown = -1;
+	g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
+}
+
+void vTrackReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveTrack(iPlayer);
+		}
+	}
+}
+
+int iGetRockTarget(float pos[3], float angles[3], int tank)
+{
+	float flMin = 4.0, flPos[3], flAngle;
+	int iTarget = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		{
+			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
+			{
+				continue;
+			}
+
+			GetClientEyePosition(iSurvivor, flPos);
+			MakeVectorFromPoints(pos, flPos, flPos);
+			flAngle = flGetAngle(angles, flPos);
+			if (flAngle <= flMin)
+			{
+				flMin = flAngle;
+				iTarget = iSurvivor;
+			}
+		}
+	}
+
+	return iTarget;
 }
 
 Action tTimerTrack(Handle timer, DataPack pack)

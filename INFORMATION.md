@@ -6263,6 +6263,7 @@
 			"Aimless Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -6854,6 +6855,13 @@
 			// Maximum: 255 (Fully blind)
 			"Blind Intensity"			"255"
 
+			// The mode of the Mutant Tank's blind ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Survivors get a black screen
+			// 1: Survivors suffer from a flashbang.
+			"Blind Mode"				"0"
+
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -6894,6 +6902,17 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Blind Range Cooldown"			"0"
+
+			// The Mutant Tank is staggered along with survivors when a flashbang is triggered.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting only applies if the "Blind Mode" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: Stagger survivors only.
+			// 2: Stagger the Mutant Tank only.
+			// 3: Stagger both.
+			"Blind Stagger"				"3"
 		}
 	}
 }
@@ -8050,6 +8069,7 @@
 			"Choke Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -9208,6 +9228,7 @@
 			"Drunk Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -14104,6 +14125,7 @@
 			"Invert Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -15154,6 +15176,7 @@
 			"Lag Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -17047,6 +17070,7 @@
 			"Nullify Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -18853,6 +18877,7 @@
 			"Recoil Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -19480,6 +19505,7 @@
 			"Restart Cooldown"			"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -20007,6 +20033,7 @@
 			"Rocket Delay"				"1.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -22339,7 +22366,15 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank covers everyone's screens with splatters.
+		// The Mutant Tank splatters the survivors' screens.
+		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor's screen is splattered.
+		// - "Splatter Range"
+		// - "Splatter Range Chance"
+		// - "Splatter Range Cooldown"
+		// "Splatter Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen is splattered.
+		// - "Splatter Chance"
+		// - "Splatter Cooldown"
+		// - "Splatter Hit Mode"
 		// Requires "mt_abilities2.smx" to be compiled with "mt_splatter.sp" to work.
 		// Note: Only available in Left 4 Dead 2.
 		"Splatter Ability"
@@ -22350,6 +22385,14 @@
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 
 			// The ability can only activate in close areas.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -22404,25 +22447,18 @@
 			// "forever" - 99999 seconds
 			"Human Cooldown"			"0"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
+			// Human-controlled Mutant Tanks must wait this long before using their range ability again.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0
-			// Maximum: 99999
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
 			// --
 			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
-			"Human Duration"			"5"
-
-			// The mode of how human-controlled Mutant Tanks activate their abilities.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
-			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
-			"Human Mode"				"1"
+			"Human Range Cooldown"			"0"
 
 			// The ability can only activate in open areas.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -22447,17 +22483,55 @@
 			"Requires Humans"			"1"
 
 			// Enable this ability.
+			// Note: This setting does not affect the "Splatter Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
+			// Show a screen fade effect when the Mutant Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
+			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
+			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
+			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
+			"Ability Effect"			"0"
+
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Display message only when "Splatter Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -22475,7 +22549,7 @@
 			// "always" - 100% chance
 			"Splatter Chance"			"33.3"
 
-			// The cooldown for the Mutant Tank's ability.
+			// The cooldown for the Mutant Tank's hit ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -22500,9 +22574,30 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
-			"Splatter Duration"			"0"
+			"Splatter Duration"			"5"
 
-			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
+			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Splatter Hit"				"0"
+
+			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Mutant Tank hits a survivor.
+			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
+			"Splatter Hit Mode"				"0"
+
+			// The Mutant Tank splatters survivors' screens every time this many seconds passes.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -22514,7 +22609,48 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
-			"Splatter Interval"			"5.0"
+			"Splatter Interval"			"1.0"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 99999.0 range
+			"Splatter Range"			"150.0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Splatter Range Chance"			"15.0"
+
+			// The cooldown for the Mutant Tank's range ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Splatter Range Cooldown"		"0"
 
 			// The type of the Mutant Tank's splatter.
 			// Note: This setting can be overridden for specific players.
@@ -23475,7 +23611,7 @@
 
 			// The health received by the Mutant Tank is multiplied by this value.
 			// Note: Health = Health x Vampire health multiplier
-			// Example: Health = 1000.0 x 5.0 (5000.0)
+			// Example: Health = 10000.0 x 5.0 (50000.0)
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be overridden for specific players.
 			// --

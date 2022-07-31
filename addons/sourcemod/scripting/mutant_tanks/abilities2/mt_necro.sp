@@ -823,7 +823,7 @@ void vNecro(int tank, float pos[3], const char[] type)
 
 	if (bIsSpecialInfected(iInfected))
 	{
-		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iInfected, pos);
 
 		if (g_esNecroCache[tank].g_iNecroMessage == 1)
 		{

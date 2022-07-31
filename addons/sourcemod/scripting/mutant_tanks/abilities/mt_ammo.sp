@@ -549,6 +549,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esAmmoPlayer[iPlayer].g_iAmmoHitMode = 0;
 					g_esAmmoPlayer[iPlayer].g_flAmmoRange = 0.0;
 					g_esAmmoPlayer[iPlayer].g_flAmmoRangeChance = 0.0;
+					g_esAmmoPlayer[iPlayer].g_iAmmoRangeCooldown = 0;
 				}
 			}
 		}

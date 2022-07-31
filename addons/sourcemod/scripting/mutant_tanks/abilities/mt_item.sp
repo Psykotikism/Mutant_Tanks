@@ -839,7 +839,7 @@ void vSpawnItem(const char[] name, float pos[3])
 
 	if (bIsValidEntity(iItem))
 	{
-		TeleportEntity(iItem, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iItem, pos);
 		DispatchSpawn(iItem);
 		ActivateEntity(iItem);
 

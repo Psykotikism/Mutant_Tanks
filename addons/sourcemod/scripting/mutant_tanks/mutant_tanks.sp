@@ -633,6 +633,7 @@ enum struct esGeneral
 	GlobalForward g_gfPluginUpdateForward;
 #endif
 	Handle g_hRegularWavesTimer;
+	Handle g_hSDKDeafen;
 	Handle g_hSDKFirstContainedResponder;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetMissionFirstMap;
@@ -660,6 +661,7 @@ enum struct esGeneral
 	Handle g_hSDKRockDetonate;
 	Handle g_hSDKRoundRespawn;
 	Handle g_hSDKShovedBySurvivor;
+	Handle g_hSDKStagger;
 	Handle g_hSDKVomitedUpon;
 	Handle g_hSurvivalTimer;
 	Handle g_hTankWaveTimer;
@@ -1967,7 +1969,8 @@ public void OnGameFrame()
 {
 	if (g_esGeneral.g_bPluginEnabled)
 	{
-		char sHealthBar[51], sSet[2][2];
+		bool bHuman = false;
+		char sHealthBar[51], sHumanTag[128], sSet[2][2], sTankName[33];
 		float flPercentage = 0.0;
 		int iTarget = 0, iHealth = 0, iMaxHealth = 0, iTotalHealth = 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -2001,8 +2004,7 @@ public void OnGameFrame()
 						StrCat(sHealthBar, sizeof sHealthBar, sSet[1]);
 					}
 
-					bool bHuman = bIsValidClient(iTarget, MT_CHECK_FAKECLIENT);
-					char sHumanTag[128], sTankName[33];
+					bHuman = bIsValidClient(iTarget, MT_CHECK_FAKECLIENT);
 					FormatEx(sHumanTag, sizeof sHumanTag, "%T", "HumanTag", iPlayer);
 					vGetTranslatedName(sTankName, sizeof sTankName, iTarget);
 
@@ -2484,6 +2486,7 @@ void vRegisterForwards()
 void vRegisterNatives()
 {
 	CreateNative("MT_CanTypeSpawn", aNative_CanTypeSpawn);
+	CreateNative("MT_DeafenPlayer", aNative_DeafenPlayer);
 	CreateNative("MT_DetonateTankRock", aNative_DetonateTankRock);
 	CreateNative("MT_DoesSurvivorHaveRewardType", aNative_DoesSurvivorHaveRewardType);
 	CreateNative("MT_DoesTypeRequireHumans", aNative_DoesTypeRequireHumans);
@@ -2521,6 +2524,7 @@ void vRegisterNatives()
 	CreateNative("MT_SetTankType", aNative_SetTankType);
 	CreateNative("MT_ShoveBySurvivor", aNative_ShoveBySurvivor);
 	CreateNative("MT_SpawnTank", aNative_SpawnTank);
+	CreateNative("MT_StaggerPlayer", aNative_StaggerPlayer);
 	CreateNative("MT_TankMaxHealth", aNative_TankMaxHealth);
 	CreateNative("MT_UnvomitPlayer", aNative_UnvomitPlayer);
 	CreateNative("MT_VomitPlayer", aNative_VomitPlayer);
@@ -2534,6 +2538,17 @@ any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
 	int iType = iClamp(GetNativeCell(1), 1, MT_MAXTYPES);
 	return (g_esGeneral.g_iSpawnEnabled == 1 || g_esTank[iType].g_iSpawnEnabled == 1) && bCanTypeSpawn(iType) && bIsRightGame(iType);
+}
+
+any aNative_DeafenPlayer(Handle plugin, int numParams)
+{
+	int iPlayer = GetNativeCell(1);
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esGeneral.g_hSDKDeafen != null)
+	{
+		SDKCall(g_esGeneral.g_hSDKDeafen, iPlayer, 1.0, 0.0, 0.01);
+	}
+
+	return 0;
 }
 
 any aNative_DetonateTankRock(Handle plugin, int numParams)
@@ -2979,6 +2994,24 @@ any aNative_SpawnTank(Handle plugin, int numParams)
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		vQueueTank(iTank, iType, .log = false);
+	}
+
+	return 0;
+}
+
+any aNative_StaggerPlayer(Handle plugin, int numParams)
+{
+	int iPlayer = GetNativeCell(1), iPusher = GetNativeCell(2);
+	float flDirection[3];
+	GetNativeArray(3, flDirection, sizeof flDirection);
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidClient(iPusher, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esGeneral.g_hSDKStagger != null)
+	{
+		if (IsNativeParamNullVector(3))
+		{
+			GetClientAbsOrigin(iPusher, flDirection);
+		}
+
+		SDKCall(g_esGeneral.g_hSDKStagger, iPlayer, iPusher, flDirection);
 	}
 
 	return 0;
@@ -4429,7 +4462,7 @@ void vDeveloperPanel(int developer, int level = 0)
 			}
 
 			flValue = g_esDeveloper[developer].g_flDevSpeedBoost;
-			FormatEx(sDisplay, sizeof sDisplay, "Speed Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
+			FormatEx(sDisplay, sizeof sDisplay, "Speed Boost: x%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof sDisplay, "Voice Pitch: %i%%", g_esDeveloper[developer].g_iDevVoicePitch);
@@ -4576,14 +4609,17 @@ void vHudPanel(int developer, int level = 0)
 				case false: sStatus = "DEAD";
 			}
 
-			FormatEx(sFrustration, sizeof sFrustration, "%i%%", (100 - GetEntProp(iTank, Prop_Send, "m_frustration")));
 			FormatEx(sDisplay, sizeof sDisplay, "%i. %s - %s [%s]", (iPos + 1), sRealName, sStatus, (bIsCustomTank(iTank) ? "Clone" : "Original"));
 			pHudPanel.DrawText(sDisplay);
-			FormatEx(sDisplay2, sizeof sDisplay2, "- Punches: %i (%i) | Rocks: %i (%i) | Props: %i (%i)", g_esPlayer[iTank].g_iClawDamage, g_esPlayer[iTank].g_iClawCount, g_esPlayer[iTank].g_iRockDamage, g_esPlayer[iTank].g_iRockCount, g_esPlayer[iTank].g_iPropDamage, g_esPlayer[iTank].g_iPropCount);
+
+			FormatEx(sDisplay2, sizeof sDisplay2, "- Punches: %i HP (%ix) | Rocks: %i HP (%ix) | Props: %i HP (%ix)", g_esPlayer[iTank].g_iClawDamage, g_esPlayer[iTank].g_iClawCount, g_esPlayer[iTank].g_iRockDamage, g_esPlayer[iTank].g_iRockCount, g_esPlayer[iTank].g_iPropDamage, g_esPlayer[iTank].g_iPropCount);
 			pHudPanel.DrawText(sDisplay2);
-			FormatEx(sDisplay3, sizeof sDisplay3, "- Misc: %i (%i) | Incaps: %i | Kills: %i", g_esPlayer[iTank].g_iMiscCount, g_esPlayer[iTank].g_iMiscDamage, g_esPlayer[iTank].g_iIncapCount, g_esPlayer[iTank].g_iKillCount);
+
+			FormatEx(sDisplay3, sizeof sDisplay3, "- Misc: %i HP (%ix) | Incaps: %ix | Kills: %ix", g_esPlayer[iTank].g_iMiscDamage, g_esPlayer[iTank].g_iMiscCount, g_esPlayer[iTank].g_iIncapCount, g_esPlayer[iTank].g_iKillCount);
 			pHudPanel.DrawText(sDisplay3);
-			FormatEx(sDisplay4, sizeof sDisplay4, "- Control: %N | Frustration: %s | Total Damage: %i", iTank, (bHuman ? sFrustration : "AI"), g_esPlayer[iTank].g_iSurvivorDamage);
+
+			FormatEx(sFrustration, sizeof sFrustration, "%i%%", (100 - GetEntProp(iTank, Prop_Send, "m_frustration")));
+			FormatEx(sDisplay4, sizeof sDisplay4, "- Control: %N | Frustration: %s | Total Damage: %i HP", iTank, (bHuman ? sFrustration : "AI"), g_esPlayer[iTank].g_iSurvivorDamage);
 			pHudPanel.DrawText(sDisplay4);
 		}
 	}
@@ -5540,7 +5576,7 @@ void vReadGameData()
 			}
 
 			g_esGeneral.g_adDirector = adGetGameDataAddress("CDirector");
-			g_esGeneral.g_adDoJumpValue = adGetCombinedGameDataAddress("DoJumpValueBytes", "DoJumpValueRead", "GetMaxJumpHeightStart", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
+			g_esGeneral.g_adDoJumpValue = adGetCombinedGameDataAddress("CTerrorGameMovement::DoJump::Value", "DoJumpValueRead", "PlayerLocomotion::GetMaxJumpHeight", "PlayerLocomotion::GetMaxJumpHeight::Call", "PlayerLocomotion::GetMaxJumpHeight::Add", "PlayerLocomotion::GetMaxJumpHeight::Value");
 			g_esGeneral.g_hSDKGetRefEHandle = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Raw, SDKConf_Virtual, .name = "CBaseEntity::GetRefEHandle");
 			g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Raw, SDKConf_Signature, .returnType = SDKType_Bool, .name = "CDirector::HasAnySurvivorLeftSafeArea");
 			g_esGeneral.g_hSDKGetWeaponID = hGetSimpleSDKCall(g_esGeneral.g_gdMutantTanks, SDKCall_Entity, SDKConf_Virtual, .name = "CPainPills::GetWeaponID");
@@ -5594,6 +5630,22 @@ void vReadGameData()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::Deafen"))
+			{
+				LogError("%s Failed to load offset: CTerrorPlayer::Deafen", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+
+			g_esGeneral.g_hSDKDeafen = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKDeafen == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
@@ -5605,6 +5657,20 @@ void vReadGameData()
 			if (g_esGeneral.g_hSDKShovedBySurvivor == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::OnShovedBySurvivor\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(g_esGeneral.g_gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
+			g_esGeneral.g_hSDKStagger = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKStagger == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -5738,7 +5804,7 @@ Handle hGetSimpleSDKCall(GameData dataHandle, SDKCallType callType, SDKFuncConfS
 
 Address adGetCombinedGameDataAddress(const char[] name, const char[] backup, const char[] start, const char[] offset1, const char[] offset2, const char[] offset3)
 {
-	Address adResult = g_esGeneral.g_gdMutantTanks.GetAddress(name);
+	Address adResult = g_esGeneral.g_gdMutantTanks.GetMemSig(name);
 	if (adResult == Address_Null)
 	{
 		LogError("%s Failed to find address from \"%s\". Retrieving from \"%s\" instead.", MT_TAG, name, backup);
@@ -5754,7 +5820,7 @@ Address adGetCombinedGameDataAddress(const char[] name, const char[] backup, con
 		else
 		{
 			Address adValue[4] = {Address_Null, Address_Null, Address_Null, Address_Null};
-			adValue[0] = g_esGeneral.g_gdMutantTanks.GetAddress(start);
+			adValue[0] = g_esGeneral.g_gdMutantTanks.GetMemSig(start);
 
 			int iOffset[3] = {-1, -1, -1};
 			iOffset[0] = iGetGameDataOffset(offset1);
@@ -8983,7 +9049,7 @@ void vSurvivorReactions(int tank)
 		DispatchKeyValueInt(iExplosion, "rendermode", 5);
 		DispatchKeyValueInt(iExplosion, "spawnflags", 1);
 
-		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iExplosion, flTankPos);
 		DispatchSpawn(iExplosion);
 
 		SetEntPropEnt(iExplosion, Prop_Data, "m_hOwnerEntity", tank);
@@ -9474,7 +9540,7 @@ void vFlashlightProp(int player, float origin[3], float angles[3], int colors[4]
 		angles[0] += 90.0;
 		flOrigin[2] -= 120.0;
 		AcceptEntityInput(g_esPlayer[player].g_iFlashlight, "TurnOn");
-		TeleportEntity(g_esPlayer[player].g_iFlashlight, flOrigin, angles, NULL_VECTOR);
+		TeleportEntity(g_esPlayer[player].g_iFlashlight, flOrigin, angles);
 		DispatchSpawn(g_esPlayer[player].g_iFlashlight);
 		vSetEntityParent(g_esPlayer[player].g_iFlashlight, player, true);
 
@@ -9631,8 +9697,8 @@ void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 		switch (light)
 		{
-			case 0, 1, 2: TeleportEntity(g_esPlayer[tank].g_iLight[light], NULL_VECTOR, angles, NULL_VECTOR);
-			case 3, 4, 5, 6, 7, 8: TeleportEntity(g_esPlayer[tank].g_iLight[light], flOrigin, flAngles, NULL_VECTOR);
+			case 0, 1, 2: TeleportEntity(g_esPlayer[tank].g_iLight[light], .angles = angles);
+			case 3, 4, 5, 6, 7, 8: TeleportEntity(g_esPlayer[tank].g_iLight[light], flOrigin, flAngles);
 		}
 
 		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
@@ -10298,7 +10364,7 @@ void vSetTankProps(int tank)
 
 				SetEntPropEnt(g_esPlayer[tank].g_iBlur, Prop_Data, "m_hOwnerEntity", tank);
 
-				TeleportEntity(g_esPlayer[tank].g_iBlur, flTankPos, flTankAngles, NULL_VECTOR);
+				TeleportEntity(g_esPlayer[tank].g_iBlur, flTankPos, flTankAngles);
 				DispatchSpawn(g_esPlayer[tank].g_iBlur);
 
 				AcceptEntityInput(g_esPlayer[tank].g_iBlur, "DisableCollision");
@@ -10379,7 +10445,7 @@ void vSetTankProps(int tank)
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "SetParentAttachment");
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "Enable");
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "DisableCollision");
-					TeleportEntity(g_esPlayer[tank].g_iOzTank[iOzTank], flOrigin2, flAngles2, NULL_VECTOR);
+					TeleportEntity(g_esPlayer[tank].g_iOzTank[iOzTank], flOrigin2, flAngles2);
 					DispatchSpawn(g_esPlayer[tank].g_iOzTank[iOzTank]);
 
 					SDKHook(g_esPlayer[tank].g_iOzTank[iOzTank], SDKHook_SetTransmit, OnPropSetTransmit);
@@ -10407,7 +10473,7 @@ void vSetTankProps(int tank)
 
 							float flOrigin3[3] = {-2.0, 0.0, 28.0}, flAngles3[3] = {-90.0, 0.0, -90.0};
 							AcceptEntityInput(g_esPlayer[tank].g_iFlame[iOzTank], "TurnOn");
-							TeleportEntity(g_esPlayer[tank].g_iFlame[iOzTank], flOrigin3, flAngles3, NULL_VECTOR);
+							TeleportEntity(g_esPlayer[tank].g_iFlame[iOzTank], flOrigin3, flAngles3);
 							DispatchSpawn(g_esPlayer[tank].g_iFlame[iOzTank]);
 
 							SDKHook(g_esPlayer[tank].g_iFlame[iOzTank], SDKHook_SetTransmit, OnPropSetTransmit);
@@ -10497,7 +10563,7 @@ void vSetTankProps(int tank)
 					flAngles[1] += MT_GetRandomFloat(-90.0, 90.0);
 					flAngles[2] += MT_GetRandomFloat(-90.0, 90.0);
 
-					TeleportEntity(g_esPlayer[tank].g_iRock[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
+					TeleportEntity(g_esPlayer[tank].g_iRock[iRock], .angles = flAngles);
 					DispatchSpawn(g_esPlayer[tank].g_iRock[iRock]);
 
 					SDKHook(g_esPlayer[tank].g_iRock[iRock], SDKHook_SetTransmit, OnPropSetTransmit);
@@ -10558,7 +10624,7 @@ void vSetTankProps(int tank)
 						SetEntPropFloat(g_esPlayer[tank].g_iTire[iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
 
-					TeleportEntity(g_esPlayer[tank].g_iTire[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
+					TeleportEntity(g_esPlayer[tank].g_iTire[iTire], .angles = flAngles);
 					DispatchSpawn(g_esPlayer[tank].g_iTire[iTire]);
 
 					SDKHook(g_esPlayer[tank].g_iTire[iTire], SDKHook_SetTransmit, OnPropSetTransmit);
@@ -10612,7 +10678,7 @@ void vSetTankProps(int tank)
 					SetEntPropFloat(g_esPlayer[tank].g_iPropaneTank, Prop_Data, "m_flModelScale", 1.1);
 				}
 
-				TeleportEntity(g_esPlayer[tank].g_iPropaneTank, flOrigin, flAngles, NULL_VECTOR);
+				TeleportEntity(g_esPlayer[tank].g_iPropaneTank, flOrigin, flAngles);
 				DispatchSpawn(g_esPlayer[tank].g_iPropaneTank);
 
 				SDKHook(g_esPlayer[tank].g_iPropaneTank, SDKHook_SetTransmit, OnPropSetTransmit);
@@ -12245,10 +12311,10 @@ void SMCParseStart_Patches(SMCParser smc)
 		g_esPatch[iPos].g_sSignature[0] = '\0';
 		g_esPatch[iPos].g_sVerify[0] = '\0';
 
-		for (int iPos2 = 0; iPos2 < MT_PATCH_MAXLEN; iPos2++)
+		for (int iIndex = 0; iIndex < MT_PATCH_MAXLEN; iIndex++)
 		{
-			g_esPatch[iPos].g_iOriginalBytes[iPos2] = 0;
-			g_esPatch[iPos].g_iPatchBytes[iPos2] = 0;
+			g_esPatch[iPos].g_iOriginalBytes[iIndex] = 0;
+			g_esPatch[iPos].g_iPatchBytes[iIndex] = 0;
 		}
 	}
 }
@@ -17501,7 +17567,7 @@ MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 			{
 				GetEntPropVector(iSurvivor, Prop_Data, "m_vecVelocity", flVelocity);
 				ScaleVector(flVelocity, flForce);
-				TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+				TeleportEntity(iSurvivor, .velocity = flVelocity);
 			}
 		}
 	}
@@ -17881,7 +17947,7 @@ void vRegisterPatch(const char[] name, bool reg)
 		}
 	}
 
-	Address adPatch = adGetGameDataAddress(g_esPatch[iIndex].g_sSignature);
+	Address adPatch = g_esGeneral.g_gdMutantTanks.GetMemSig(g_esPatch[iIndex].g_sSignature);
 	if (adPatch == Address_Null)
 	{
 		vResetPatchInfo(iIndex);
@@ -18144,49 +18210,29 @@ void vSetupSignatureAddresses()
 		fTemp.WriteLine("{");
 		fTemp.WriteLine("	\"%s\"", (g_bSecondGame ? "left4dead2" : "left4dead"));
 		fTemp.WriteLine("	{");
-		fTemp.WriteLine("		\"Addresses\"");
+		fTemp.WriteLine("		\"Signatures\"");
 		fTemp.WriteLine("		{");
 
 		for (int iPos = 0; iPos < g_esGeneral.g_iSignatureCount; iPos++)
 		{
 			if (g_esSignature[iPos].g_sName[0] == '\0' || g_esSignature[iPos].g_sSignature[0] == '\0')
 			{
-				LogError("%s Invalid information for signature #%i - %s (Address: %s)", MT_TAG, iPos, g_esSignature[iPos].g_sName, g_esSignature[iPos].g_sSignature);
+				LogError("%s Invalid information for signature #%i - %s (Address: %s)", MT_TAG, (iPos + 1), g_esSignature[iPos].g_sName, g_esSignature[iPos].g_sSignature);
 
 				continue;
 			}
 
-			g_esSignature[iPos].g_adString = g_esGeneral.g_gdMutantTanks.GetAddress(g_esSignature[iPos].g_sSignature);
+			g_esSignature[iPos].g_adString = g_esGeneral.g_gdMutantTanks.GetMemSig(g_esSignature[iPos].g_sSignature);
 			if (g_esSignature[iPos].g_adString == Address_Null)
 			{
 				fTemp.WriteLine("			\"%sRef\"", g_esSignature[iPos].g_sName[12]);
 				fTemp.WriteLine("			{");
-				fTemp.WriteLine("				\"windows\"");
-				fTemp.WriteLine("				{");
-				fTemp.WriteLine("					\"signature\"	\"%sRef\"", g_esSignature[iPos].g_sName[12]);
-				fTemp.WriteLine("				}");
+				fTemp.WriteLine("				\"library\"	\"%s\"", g_esSignature[iPos].g_sLibrary);
+				fTemp.WriteLine("				\"windows\"	\"%s\"", g_esSignature[iPos].g_sSignature);
 				fTemp.WriteLine("			}");
 
 				iCount++;
 			}
-		}
-
-		fTemp.WriteLine("		}");
-		fTemp.WriteLine("		\"Signatures\"");
-		fTemp.WriteLine("		{");
-
-		for (int iPos = 0; iPos < g_esGeneral.g_iSignatureCount; iPos++)
-		{
-			if (iCount == 0 || g_esSignature[iPos].g_adString != Address_Null)
-			{
-				continue;
-			}
-
-			fTemp.WriteLine("			\"%sRef\"", g_esSignature[iPos].g_sName[12]);
-			fTemp.WriteLine("			{");
-			fTemp.WriteLine("				\"library\"	\"%s\"", g_esSignature[iPos].g_sLibrary);
-			fTemp.WriteLine("				\"windows\"	\"%s\"", g_esSignature[iPos].g_sSignature);
-			fTemp.WriteLine("			}");
 		}
 
 		fTemp.WriteLine("		}");
@@ -18216,7 +18262,7 @@ void vSetupSignatureAddresses()
 			}
 
 			FormatEx(sSignature, sizeof sSignature, "%sRef", g_esSignature[iPos].g_sName[12]);
-			g_esSignature[iPos].g_adString = gdTemp.GetAddress(sSignature);
+			g_esSignature[iPos].g_adString = gdTemp.GetMemSig(sSignature);
 		}
 
 		delete gdTemp;
@@ -18284,6 +18330,7 @@ void vSetupSignatures()
 				strcopy(sTemp, sizeof sTemp, g_esSignature[iPos].g_sDynamicSig);
 				ReplaceString(sTemp, sizeof sTemp, "\\x", " ", false);
 				ReplaceString(sTemp, sizeof sTemp, "2A", "?", false);
+
 				fTemp.WriteLine("			\"%s\"", g_esSignature[iPos].g_sName);
 				fTemp.WriteLine("			{");
 				fTemp.WriteLine("				\"library\"	\"%s\"", g_esSignature[iPos].g_sLibrary);
@@ -18512,7 +18559,7 @@ void vPushPlayer(int player, float angles[3], float force)
 	flVelocity[0] += flForward[0];
 	flVelocity[1] += flForward[1];
 	flVelocity[2] += flForward[2];
-	TeleportEntity(player, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(player, .velocity = flVelocity);
 }
 
 bool bAreHumansRequired(int type)
@@ -19069,7 +19116,7 @@ bool bRespawnSurvivor(int survivor, bool restore)
 		if (bTeleport)
 		{
 			vRespawnSurvivor(survivor);
-			TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+			TeleportEntity(survivor, flOrigin, flAngles);
 
 			if (restore)
 			{
@@ -19764,7 +19811,7 @@ Action tTimerBlurEffect(Handle timer, int userid)
 	GetClientAbsAngles(iTank, flTankAngles);
 	if (bIsValidEntity(iTankModel))
 	{
-		TeleportEntity(iTankModel, flTankPos, flTankAngles, NULL_VECTOR);
+		TeleportEntity(iTankModel, flTankPos, flTankAngles);
 		SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 	}
 

@@ -4685,14 +4685,14 @@
 
 	"Splatter"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will cover everyone's screens with splatters periodically!"
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
 	}
 
 	"Splatter2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} covered everyone's screens with{yellow} splatters{mint}!"
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
 	}
 
 	"SplatterAmmo"
@@ -4702,7 +4702,7 @@
 
 	"SplatterDetails"
 	{
-		"en"			"You cover everyone's screens with splatters."
+		"en"			"You splatter the survivors' screens."
 	}
 
 	"SplatterHuman"
@@ -4718,13 +4718,13 @@
 
 	"SplatterHuman3"
 	{
-		"en"			"You already activated your splatter ability."
+		"#format"		"{1:i}"
+		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SplatterHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"There are no survivors nearby to use your splatter ability on."
 	}
 
 	"SplatterHuman5"

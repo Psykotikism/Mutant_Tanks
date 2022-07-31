@@ -357,7 +357,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if (g_esAimlessPlayer[client].g_bAffected && !MT_DoesSurvivorHaveRewardType(client, MT_REWARD_GODMODE))
 	{
-		TeleportEntity(client, NULL_VECTOR, g_esAimlessPlayer[client].g_flAngle, NULL_VECTOR);
+		TeleportEntity(client, .angles = g_esAimlessPlayer[client].g_flAngle);
 	}
 #if !defined MT_ABILITIES_MAIN
 	return Plugin_Continue;
@@ -570,6 +570,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esAimlessPlayer[iPlayer].g_iAimlessHitMode = 0;
 					g_esAimlessPlayer[iPlayer].g_flAimlessRange = 0.0;
 					g_esAimlessPlayer[iPlayer].g_flAimlessRangeChance = 0.0;
+					g_esAimlessPlayer[iPlayer].g_iAimlessRangeCooldown = 0;
 				}
 			}
 		}

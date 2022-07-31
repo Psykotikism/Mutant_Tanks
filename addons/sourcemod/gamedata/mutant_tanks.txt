@@ -775,218 +775,6 @@
 			}
 		}
 
-		"Addresses"
-		{
-			/**
-			 * CTerrorWeapon::CanDeployFor(CTerrorPlayer*)
-			 *
-			 * Note: Uses the signature for "CTerrorWeapon::CanDeployFor" to find the address.
-			 **/
-			"CanDeployForStart"
-			{
-				"signature"	"CTerrorWeapon::CanDeployFor"
-			}
-
-			/**
-			 * This is the initial method for finding the default jump height (57.0) using its byte signature.
-			 * If this method fails, the plugin will rely on the "DoJumpValueRead" method instead.
-			 **/
-			"DoJumpValueBytes"
-			{
-				"signature"	"CTerrorGameMovement::DoJump::Value"
-			}
-
-			/**
-			 * CTerrorGun::EquipSecondWeapon()
-			 *
-			 * Note: Uses the signature for "CTerrorGun::EquipSecondWeapon" to find the address.
-			 **/
-			"EquipSecondWeaponStart"
-			{
-				"signature"	"CTerrorGun::EquipSecondWeapon"
-			}
-
-			/**
-			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::Event_Killed" to find the address.
-			 **/
-			"Event_KilledStart"
-			{
-				"signature"	"CTerrorPlayer::Event_Killed"
-			}
-
-			/**
-			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
-			 *
-			 * Note: Uses the signature for "CSmokeCloudSystem::FireGameEvent" to find the address.
-			 **/
-			"FireSmokerCloud"
-			{
-				"signature"	"CSmokeCloudSystem::FireGameEvent"
-			}
-
-			/**
-			 * CTerrorGameRules::GetMissionFirstMap(KeyValues**)
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::GetMissionFirstMap" to find the address.
-			 **/
-			"GetMissionFirstMapString"
-			{
-				"signature"	"CTerrorGameRules::GetMissionFirstMap::String"
-			}
-
-			/**
-			 * CTankClaw::GroundPound()
-			 *
-			 * Note: Uses the signature for "CTankClaw::GroundPound" to find the address.
-			 **/
-			"GroundPoundStart"
-			{
-				"signature"	"CTankClaw::GroundPound"
-			}
-
-			/**
-			 * TankBehavior::InitialContainedAction(Tank *)
-			 *
-			 * Note: Uses the signature for "TankBehavior::InitialContainedAction" to find the address.
-			 **/
-			"InitialContainedActionStart"
-			{
-				"signature"	"TankBehavior::InitialContainedAction"
-			}
-
-			/**
-			 * CTerrorGameRules::IsCoopMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsCoopMode" to find the address.
-			 **/
-			"IsCoopModeString"
-			{
-				"signature"	"CTerrorGameRules::IsCoopMode::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsMissionFinalMap()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsMissionFinalMap" to find the address.
-			 **/
-			"IsMissionFinalMapString"
-			{
-				"signature"	"CTerrorGameRules::IsMissionFinalMap::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsSurvivalMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsSurvivalMode" to find the address.
-			 **/
-			"IsSurvivalModeString"
-			{
-				"signature"	"CTerrorGameRules::IsSurvivalMode::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsVersusMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsVersusMode" to find the address.
-			 **/
-			"IsVersusModeString"
-			{
-				"signature"	"CTerrorGameRules::IsVersusMode::String"
-			}
-
-			/**
-			 * CTerrorPlayer::MaterializeFromGhost()
-			 *
-			 * Note: Uses the string found in "CTerrorPlayer::MaterializeFromGhost" to find the address.
-			 **/
-			"MaterializeFromGhostString"
-			{
-				"signature"	"CTerrorPlayer::MaterializeFromGhost::String"
-			}
-
-			/**
-			 * CTerrorPlayer::OnFalling()
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::OnFalling" to find the address.
-			 **/
-			"OnFallingStart"
-			{
-				"signature"	"CTerrorPlayer::OnFalling"
-			}
-
-			/**
-			 * CTerrorPlayer::OnLadderDismount()
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::OnLadderDismount" to find the address.
-			 **/
-			"OnLadderDismountStart"
-			{
-				"signature"	"CTerrorPlayer::OnLadderDismount"
-			}
-
-			/**
-			 * CTerrorPlayer::OnLadderMount()
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::OnLadderMount" to find the address.
-			 **/
-			"OnLadderMountStart"
-			{
-				"signature"	"CTerrorPlayer::OnLadderMount"
-			}
-
-			/**
-			 * CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&)
-			 *
-			 * Note: Uses the signature for "CTankRock::OnRelease" to find the address.
-			 **/
-			"OnReleaseStart"
-			{
-				"signature"	"CTankRock::OnRelease"
-			}
-
-			/**
-			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::OnTakeDamage_Alive" to find the address.
-			 **/
-			"OnTakeDamageAliveStart"
-			{
-				"signature"	"CTerrorPlayer::OnTakeDamage_Alive"
-			}
-
-			/**
-			 * CTerrorPlayer::PreThink()
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::PreThink" to find the address.
-			 **/
-			"PreThinkStart"
-			{
-				"signature"	"CTerrorPlayer::PreThink"
-			}
-
-			/**
-			 * CTerrorPlayer::RoundRespawn()
-			 *
-			 * Note: Uses the signature for "CTerrorPlayer::RoundRespawn" to find the address.
-			 **/
-			"RoundRespawnStart"
-			{
-				"signature"	"CTerrorPlayer::RoundRespawn"
-			}
-
-			/**
-			 * CTankClaw::SweepFist(Vector const&, Vector const&)
-			 *
-			 * Note: Uses the signature for "CTankClaw::SweepFist" to find the address.
-			 **/
-			"SweepFistStart"
-			{
-				"signature"	"CTankClaw::SweepFist"
-			}
-		}
-
 		"Offsets"
 		{
 			/**
@@ -1330,7 +1118,7 @@
 
 			/**
 			 * This is the failsafe method for finding the default jump height (57.0) by jumping to its location.
-			 * If the "DoJumpValueBytes" method fails, the plugin will rely on this method instead.
+			 * If the initial method fails, the plugin will rely on this method instead.
 			 *
 			 * Note: This method only works on Mac/Windows, since on Linux, it just points to the offset's address not the value's actual address.
 			 **/
@@ -1346,33 +1134,6 @@
 					"read"		"174"
 				}
 				"read"		"0"
-			}
-
-			/**
-			 * InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&)
-			 *
-			 * Note: Uses the signature for "InfectedExecAction::OnInjured" to find the address.
-			 **/
-			"OnInjuredStart"
-			{
-				"signature"	"InfectedExecAction::OnInjured"
-			}
-
-			/**
-			 * PlayerLocomotion::GetMaxJumpHeight()
-			 *
-			 * Note: Uses the signature for "PlayerLocomotion::GetMaxJumpHeight" to find the address.
-			 **/
-			"GetMaxJumpHeightStart"
-			{
-				"linux"
-				{
-					"signature"	"PlayerLocomotion::GetMaxJumpHeight"
-				}
-				"mac"
-				{
-					"signature"	"PlayerLocomotion::GetMaxJumpHeight"
-				}
 			}
 		}
 
@@ -2518,6 +2279,8 @@
 
 			/**
 			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: This is the initial method for finding the default jump height (57.0) using its byte signature. If this method fails, the plugin will rely on the "DoJumpValueRead" method instead.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "57.0" value in the "CTerrorGameMovement::DoJump" function.
@@ -3802,7 +3565,7 @@
 
 			/**
 			 * This is the failsafe method for finding the default jump height (57.0) by jumping to its location.
-			 * If the "DoJumpValueBytes" method fails, the plugin will rely on this method instead.
+			 * If the initial method fails, the plugin will rely on this method instead.
 			 **/
 			"DoJumpValueRead"
 			{
@@ -3820,46 +3583,6 @@
 					"read"		"86"
 				}
 				"read"		"0"
-			}
-
-			/**
-			 * CDirector::IsFirstMapInScenario()
-			 *
-			 * Note: Uses the string found in "CDirector::IsFirstMapInScenario" to find the address.
-			 **/
-			"IsFirstMapInScenarioString"
-			{
-				"signature"	"CDirector::IsFirstMapInScenario::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsRealismMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsRealismMode" to find the address.
-			 **/
-			"IsRealismModeString"
-			{
-				"signature"	"CTerrorGameRules::IsRealismMode::String"
-			}
-
-			/**
-			 * CTerrorGameRules::IsScavengeMode()
-			 *
-			 * Note: Uses the string found in "CTerrorGameRules::IsScavengeMode" to find the address.
-			 **/
-			"IsScavengeModeString"
-			{
-				"signature"	"CTerrorGameRules::IsScavengeMode::String"
-			}
-
-			/**
-			 * CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*)
-			 *
-			 * Note: Uses the string found in "CSpitterProjectile::Create" to find the address.
-			 **/
-			"SpitterProjectileCreateString"
-			{
-				"signature"	"CSpitterProjectile::Create::String"
 			}
 		}
 
@@ -5217,6 +4940,8 @@
 
 			/**
 			 * CTerrorGameMovement::DoJump(Vector*)
+			 *
+			 * Note: This is the initial method for finding the default jump height (57.0) using its byte signature. If this method fails, the plugin will rely on the "DoJumpValueRead" method instead.
 			 *
 			 * How to find on Windows:
 			 * 1. Search for the "57.0" value in the "CTerrorGameMovement::DoJump" function.

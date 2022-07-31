@@ -586,6 +586,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esIdlePlayer[iPlayer].g_iIdleHitMode = 0;
 					g_esIdlePlayer[iPlayer].g_flIdleRange = 0.0;
 					g_esIdlePlayer[iPlayer].g_flIdleRangeChance = 0.0;
+					g_esIdlePlayer[iPlayer].g_iIdleRangeCooldown = 0;
 				}
 			}
 		}

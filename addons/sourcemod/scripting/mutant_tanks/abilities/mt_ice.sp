@@ -558,6 +558,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esIcePlayer[iPlayer].g_iIceHitMode = 0;
 					g_esIcePlayer[iPlayer].g_flIceRange = 0.0;
 					g_esIcePlayer[iPlayer].g_flIceRangeChance = 0.0;
+					g_esIcePlayer[iPlayer].g_iIceRangeCooldown = 0;
 				}
 			}
 		}
@@ -982,7 +983,7 @@ void vStopIce(int survivor)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityRenderColor(survivor, 255, 255, 255, 255);
 	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 }
