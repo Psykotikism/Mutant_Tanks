@@ -389,7 +389,7 @@ Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBlindCache[attacker].g_iBlindHitMode == 0 || g_esBlindCache[attacker].g_iBlindHitMode == 1) && bIsHumanSurvivor(victim) && g_esBlindCache[attacker].g_iComboAbility == 0)
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esBlindCache[attacker].g_iBlindHitMode == 0 || g_esBlindCache[attacker].g_iBlindHitMode == 1) && bIsSurvivor(victim) && g_esBlindCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esBlindAbility[g_esBlindPlayer[attacker].g_iTankType].g_iAccessFlags, g_esBlindPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esBlindPlayer[attacker].g_iTankType, g_esBlindAbility[g_esBlindPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[victim].g_iImmunityFlags))
 			{
@@ -401,7 +401,7 @@ Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 				vBlindHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBlindCache[attacker].g_flBlindChance, g_esBlindCache[attacker].g_iBlindHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBlindCache[victim].g_iBlindHitMode == 0 || g_esBlindCache[victim].g_iBlindHitMode == 2) && bIsHumanSurvivor(attacker) && g_esBlindCache[victim].g_iComboAbility == 0)
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBlindCache[victim].g_iBlindHitMode == 0 || g_esBlindCache[victim].g_iBlindHitMode == 2) && bIsSurvivor(attacker) && g_esBlindCache[victim].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esBlindAbility[g_esBlindPlayer[victim].g_iTankType].g_iAccessFlags, g_esBlindPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esBlindPlayer[victim].g_iTankType, g_esBlindAbility[g_esBlindPlayer[victim].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[attacker].g_iImmunityFlags))
 			{
@@ -908,7 +908,7 @@ void vBlindAbility(int tank, float random, int pos = -1)
 		int iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esBlindPlayer[tank].g_iTankType, g_esBlindAbility[g_esBlindPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esBlindPlayer[tank].g_iTankType, g_esBlindAbility[g_esBlindPlayer[tank].g_iTankType].g_iImmunityFlags, g_esBlindPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
@@ -947,7 +947,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsHumanSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esBlindPlayer[tank].g_iAmmoCount < g_esBlindCache[tank].g_iHumanAmmo && g_esBlindCache[tank].g_iHumanAmmo > 0))
 		{
@@ -985,32 +985,7 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				if (g_esBlindCache[tank].g_iBlindMode == 0)
-				{
-					int iSurvivorId = GetClientUserId(survivor), iTankId = GetClientUserId(tank);
-					DataPack dpBlind;
-					CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
-					dpBlind.WriteCell(iSurvivorId);
-					dpBlind.WriteCell(iTankId);
-					dpBlind.WriteCell(g_esBlindPlayer[tank].g_iTankType);
-					dpBlind.WriteCell(enabled);
-
-					float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esBlindCache[tank].g_flBlindDuration;
-					DataPack dpStopBlind;
-					CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
-					dpStopBlind.WriteCell(iSurvivorId);
-					dpStopBlind.WriteCell(iTankId);
-					dpStopBlind.WriteCell(messages);
-
-					vScreenEffect(survivor, tank, g_esBlindCache[tank].g_iBlindEffect, flags);
-
-					switch (g_bSecondGame)
-					{
-						case true: EmitSoundToAll(SOUND_GROAN2, survivor);
-						case false: EmitSoundToAll(SOUND_GROAN1, survivor);
-					}
-				}
-				else
+				if (g_esBlindCache[tank].g_iBlindMode == 1)
 				{
 					g_esBlindPlayer[survivor].g_bAffected = false;
 					g_esBlindPlayer[survivor].g_iOwner = 0;
@@ -1038,6 +1013,31 @@ void vBlindHit(int survivor, int tank, float random, float chance, int enabled, 
 							MT_ShoveBySurvivor(tank, survivor, flDirection);
 							SetEntPropFloat(tank, Prop_Send, "m_flVelocityModifier", 0.4);
 						}
+					}
+				}
+				else if (g_esBlindCache[tank].g_iBlindMode == 0 && bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
+				{
+					int iSurvivorId = GetClientUserId(survivor), iTankId = GetClientUserId(tank);
+					DataPack dpBlind;
+					CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
+					dpBlind.WriteCell(iSurvivorId);
+					dpBlind.WriteCell(iTankId);
+					dpBlind.WriteCell(g_esBlindPlayer[tank].g_iTankType);
+					dpBlind.WriteCell(enabled);
+
+					float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esBlindCache[tank].g_flBlindDuration;
+					DataPack dpStopBlind;
+					CreateDataTimer((flDuration + 1.0), tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
+					dpStopBlind.WriteCell(iSurvivorId);
+					dpStopBlind.WriteCell(iTankId);
+					dpStopBlind.WriteCell(messages);
+
+					vScreenEffect(survivor, tank, g_esBlindCache[tank].g_iBlindEffect, flags);
+
+					switch (g_bSecondGame)
+					{
+						case true: EmitSoundToAll(SOUND_GROAN2, survivor);
+						case false: EmitSoundToAll(SOUND_GROAN1, survivor);
 					}
 				}
 
@@ -1079,7 +1079,7 @@ void vRemoveBlind(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esBlindPlayer[iSurvivor].g_bAffected && g_esBlindPlayer[iSurvivor].g_iOwner == tank)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esBlindPlayer[iSurvivor].g_bAffected && g_esBlindPlayer[iSurvivor].g_iOwner == tank)
 		{
 			vBlind(iSurvivor, 0);
 

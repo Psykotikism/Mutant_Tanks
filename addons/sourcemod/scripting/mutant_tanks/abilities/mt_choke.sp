@@ -368,6 +368,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (g_esChokePlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
 	{
+		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 99999.0);
+			SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 99999.0);
+		}
+
 		buttons &= IN_ATTACK;
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
@@ -1023,6 +1030,18 @@ void vChokeReset2(int survivor, int tank, int messages)
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 	SetEntityGravity(survivor, 1.0);
+
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
+		}
+	}
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 
 	if (g_esChokeCache[tank].g_iChokeMessage & messages)
 	{

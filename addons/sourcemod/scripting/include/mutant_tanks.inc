@@ -1637,7 +1637,22 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(iProp, 0, 0, 0, 0);
 
-		AcceptEntityInput(iProp, "Break", tank);
+		DataPack dpProp = new DataPack();
+		dpProp.WriteCell(EntIndexToEntRef(iProp));
+		dpProp.WriteCell(GetClientUserId(tank));
+		RequestFrame(vBreakProp, dpProp);
+	}
+}
+
+void vBreakProp(DataPack pack)
+{
+	pack.Reset();
+	int iProp = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	delete pack;
+
+	if (bIsValidEntity(iProp) && bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		AcceptEntityInput(iProp, "Break", iTank);
 	}
 }
 
@@ -1769,11 +1784,10 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entity, bool follow = false)
 {
-	float flDummy[3] = {0.0, 0.0, 0.0};
-	bool bSecondGame = bIsSecondGame();
-
 	TE_Start("EffectDispatch");
 
+	float flDummy[3] = {0.0, 0.0, 0.0};
+	bool bSecondGame = bIsSecondGame();
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
 	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);

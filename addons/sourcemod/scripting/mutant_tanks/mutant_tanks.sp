@@ -5352,9 +5352,9 @@ void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				int iType = (g_esPlayer[iPlayer].g_iPersonalType > 0) ? g_esPlayer[iPlayer].g_iPersonalType : g_esGeneral.g_iChosenType;
 				DataPack dpPlayerSpawn = new DataPack();
-				RequestFrame(vPlayerSpawnFrame, dpPlayerSpawn);
 				dpPlayerSpawn.WriteCell(iPlayerId);
 				dpPlayerSpawn.WriteCell(iType);
+				RequestFrame(vPlayerSpawnFrame, dpPlayerSpawn);
 			}
 		}
 		else if (StrEqual(name, "player_team"))
@@ -7828,14 +7828,14 @@ void vRefillGunAmmo(int survivor, bool all = false, bool reset = false, bool ove
 			if (override || !reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
-			}
 
-			if (g_bSecondGame)
-			{
-				int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
-				if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
+				if (g_bSecondGame)
 				{
-					SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iMaxClip);
+					int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
+					if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
+					{
+						SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iMaxClip);
+					}
 				}
 			}
 
@@ -10968,9 +10968,9 @@ void vSpawnTank(int admin, bool log = true, int amount, int mode)
 void vTankSpawn(int tank, int mode = 0)
 {
 	DataPack dpTankSpawn = new DataPack();
-	RequestFrame(vTankSpawnFrame, dpTankSpawn);
 	dpTankSpawn.WriteCell(GetClientUserId(tank));
 	dpTankSpawn.WriteCell(mode);
+	RequestFrame(vTankSpawnFrame, dpTankSpawn);
 }
 
 /**
@@ -15038,8 +15038,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			}
 		}
 
-		bool bDeveloper, bRewarded;
-		float flResistance;
+		bool bDeveloper = false, bRewarded = false;
+		float flResistance = 0.0;
 		if (bIsSurvivor(victim))
 		{
 			bDeveloper = bIsDeveloper(victim, 4);
@@ -15145,7 +15145,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			g_esGeneral.g_iInfectedHealth[victim] = GetEntProp(victim, Prop_Data, "m_iHealth");
 
 			bool bPlayer = bIsValidClient(attacker), bSurvivor = bIsSurvivor(attacker);
-			float flDamage;
+			float flDamage = 0.0;
 			bDeveloper = bSurvivor && bIsDeveloper(attacker, 4), bRewarded = bDeveloper || (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST));
 			if (bIsTank(victim))
 			{
@@ -16360,6 +16360,7 @@ MRESReturn mreBaseEntityGetGroundEntityPre(int pThis, DHookReturn hReturn)
 		{
 			g_esPlayer[pThis].g_flLastJumpTime = flCurrentTime;
 			g_esPlayer[pThis].g_iMidairDashesCount++;
+
 			hReturn.Value = pThis;
 
 			return MRES_Override;

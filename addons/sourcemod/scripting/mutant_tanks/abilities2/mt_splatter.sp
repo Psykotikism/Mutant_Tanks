@@ -396,7 +396,7 @@ Action OnSplatterTakeDamage(int victim, int &attacker, int &inflictor, float &da
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esSplatterCache[attacker].g_iSplatterHitMode == 0 || g_esSplatterCache[attacker].g_iSplatterHitMode == 1) && bIsSurvivor(victim) && g_esSplatterCache[attacker].g_iComboAbility == 0)
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esSplatterCache[attacker].g_iSplatterHitMode == 0 || g_esSplatterCache[attacker].g_iSplatterHitMode == 1) && bIsHumanSurvivor(victim) && g_esSplatterCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esSplatterAbility[g_esSplatterPlayer[attacker].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esSplatterPlayer[attacker].g_iTankType, g_esSplatterAbility[g_esSplatterPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esSplatterPlayer[victim].g_iImmunityFlags))
 			{
@@ -408,7 +408,7 @@ Action OnSplatterTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				vSplatterHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSplatterCache[attacker].g_flSplatterChance, g_esSplatterCache[attacker].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSplatterCache[victim].g_iSplatterHitMode == 0 || g_esSplatterCache[victim].g_iSplatterHitMode == 2) && bIsSurvivor(attacker) && g_esSplatterCache[victim].g_iComboAbility == 0)
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSplatterCache[victim].g_iSplatterHitMode == 0 || g_esSplatterCache[victim].g_iSplatterHitMode == 2) && bIsHumanSurvivor(attacker) && g_esSplatterCache[victim].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esSplatterAbility[g_esSplatterPlayer[victim].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esSplatterPlayer[victim].g_iTankType, g_esSplatterAbility[g_esSplatterPlayer[victim].g_iTankType].g_iImmunityFlags, g_esSplatterPlayer[attacker].g_iImmunityFlags))
 			{
@@ -1035,7 +1035,7 @@ Action tTimerSplatterCombo2(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!g_bSecondGame || !bIsSurvivor(iSurvivor) || g_esSplatterPlayer[iSurvivor].g_bAffected)
+	if (!g_bSecondGame || !bIsHumanSurvivor(iSurvivor) || g_esSplatterPlayer[iSurvivor].g_bAffected)
 	{
 		return Plugin_Stop;
 	}
@@ -1067,7 +1067,7 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_esSplatterPlayer[iSurvivor].g_bAffected = false;
 		g_esSplatterPlayer[iSurvivor].g_iOwner = 0;
