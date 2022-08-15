@@ -463,7 +463,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esYellAbility[iIndex].g_iHumanDuration = 5;
 				g_esYellAbility[iIndex].g_iHumanMode = 1;
 				g_esYellAbility[iIndex].g_flOpenAreasOnly = 0.0;
-				g_esYellAbility[iIndex].g_iRequiresHumans = 1;
+				g_esYellAbility[iIndex].g_iRequiresHumans = 0;
 				g_esYellAbility[iIndex].g_iYellAbility = 0;
 				g_esYellAbility[iIndex].g_iYellMessage = 0;
 				g_esYellAbility[iIndex].g_flYellChance = 33.3;

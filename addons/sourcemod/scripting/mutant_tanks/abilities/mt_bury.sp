@@ -410,6 +410,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (g_esBuryPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
 	{
+		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 99999.0);
+			SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 99999.0);
+		}
+
 		buttons &= IN_ATTACK;
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
@@ -1146,6 +1153,18 @@ void vStopBury(int survivor, int tank)
 
 		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	}
+
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
+		}
+	}
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
 	{

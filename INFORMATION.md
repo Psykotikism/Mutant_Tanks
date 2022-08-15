@@ -16105,6 +16105,27 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
+			// The damage buff multiplier given to nearby special infected. 
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0 (Strongest)
+			"Medic Buff Damage"			"1.25"
+
+			// The resistance buff multiplier given to nearby special infected. 
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 1.0 (None)
+			"Medic Buff Resistance"			"0.75"
+
+			// The speed buff multiplier given to nearby special infected. 
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 10.0 (Fastest)
+			"Medic Buff Speed"			"1.25"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -16222,6 +16243,13 @@
 			// "closest" - 1.0 range
 			// "farthest" - 99999.0 range
 			"Medic Range"				"500.0"
+
+			// The Mutant Tank heals itself when healing nearby special infected.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Medic Symbiosis"			"1"
 		}
 	}
 }
@@ -23611,7 +23639,7 @@
 
 			// The health received by the Mutant Tank is multiplied by this value.
 			// Note: Health = Health x Vampire health multiplier
-			// Example: Health = 10000.0 x 5.0 (50000.0)
+			// Example: Health = 1000.0 x 5.0 (5000.0)
 			// Note: Use the value "1.0" to disable this setting. (Health x 1.0 = Health)
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -25073,7 +25101,7 @@
 			// --
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
-			"Requires Humans"			"1"
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.

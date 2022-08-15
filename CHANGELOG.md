@@ -2,6 +2,17 @@
 
 ## Version 8.95 (2022)
 
+### Bug Fixes
+
+#### General
+- Fixed a rare crash caused when the Tank's rock explodes. (Thanks to `thewintersoldier97`, `zaviier`, and `ddd123` for testing and reporting!)
+- Fixed an issue where players are given the incorrect amount of special ammo when taking over a bot. (Thanks to `Slaven555` for testing and reporting!)
+
+#### Abilities
+- Bury: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
+- Choke: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
+- Splatter: Fixed survivor bots getting affected by the ability.
+
 ### Changes
 
 #### Game Data
@@ -23,6 +34,12 @@
 	- Added a flashbang option. (Thanks to `Silvers` for the code!)
 	- Added the `Blind Mode` setting.
 	- Added the `Blind Stagger` setting.
+	- The ability can now affect bots.
+- Medic
+	- Added the `Medic Buff Damage` setting.
+	- Added the `Medic Buff Resistance` setting.
+	- Added the `Medic Buff Speed` setting.
+	- Added the `Medic Symbiosis` setting.
 - Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
 - Splatter
 	- Changed how splatters are displayed. (Thanks to `Lux` and `Silvers` for the code!)
@@ -40,6 +57,7 @@
 - Yell
 	- Added the `Yell Mode` setting.
 	- Re-added the deafen feature. (Requested by `ddd123`.)
+	- Changed the default value of the `Requires Humans` setting from `1` to `0`.
 
 ### Files
 
