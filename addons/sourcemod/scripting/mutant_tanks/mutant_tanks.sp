@@ -13290,7 +13290,7 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_flOpenAreasOnly = 0.0;
 			g_esTank[iIndex].g_iAccessFlags = 0;
 			g_esTank[iIndex].g_iImmunityFlags = 0;
-			g_esTank[iIndex].g_iTypeLimit = 32;
+			g_esTank[iIndex].g_iTypeLimit = 0;
 			g_esTank[iIndex].g_iFinaleTank = 0;
 			g_esTank[iIndex].g_iBossBaseType = 0;
 			g_esTank[iIndex].g_iBossLimit = 32;
@@ -20543,11 +20543,12 @@ Action tTimerUpdateBoss(Handle timer, DataPack pack)
 		return Plugin_Continue;
 	}
 
-	int iBossStageCount = g_esPlayer[iTank].g_iBossStageCount, iBossStages = pack.ReadCell(), iBossHealths[4], iTypes[4];
+	int iBossStageCount = g_esPlayer[iTank].g_iBossStageCount, iBossStages = pack.ReadCell(), iBossHealths[5], iTypes[5];
 	iBossHealths[0] = pack.ReadCell(), iTypes[0] = pack.ReadCell(),
 	iBossHealths[1] = pack.ReadCell(), iTypes[1] = pack.ReadCell(),
 	iBossHealths[2] = pack.ReadCell(), iTypes[2] = pack.ReadCell(),
-	iBossHealths[3] = pack.ReadCell(), iTypes[3] = pack.ReadCell();
+	iBossHealths[3] = pack.ReadCell(), iTypes[3] = pack.ReadCell(),
+	iBossHealths[4] = -1, iTypes[4] = 0;
 
 	vEvolveBoss(iTank, iBossHealths[iBossStageCount], iBossStages, iTypes[iBossStageCount], (iBossStageCount + 1));
 

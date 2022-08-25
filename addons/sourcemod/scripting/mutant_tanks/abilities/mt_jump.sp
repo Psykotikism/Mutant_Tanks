@@ -1222,7 +1222,6 @@ void vJumpReset4(int tank)
 
 float flGetNearestSurvivor(int tank)
 {
-	float flDistance;
 	if (bIsTank(tank))
 	{
 		float flTankPos[3], flSurvivorPos[3];
@@ -1232,14 +1231,13 @@ float flGetNearestSurvivor(int tank)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esJumpPlayer[tank].g_iTankType, g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esJumpPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 
-				break;
+				return GetVectorDistance(flTankPos, flSurvivorPos);
 			}
 		}
 	}
 
-	return flDistance;
+	return 0.0;
 }
 
 Action tTimerJumpCombo(Handle timer, DataPack pack)

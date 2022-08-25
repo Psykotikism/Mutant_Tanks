@@ -16,6 +16,7 @@
 		"Notes"		"General:"
 		"Notes"		"- Fixed rare crash when the Tank's rock breaks. (Thanks to \"thewintersoldier97\", \"zaviier\", and \"ddd123\" for testing and reporting!)"
 		"Notes"		"- Fixed an issue where players are given the incorrect amount of special ammo when taking over a bot. (Thanks to \"Slaven555\" for testing and reporting!)"
+		"Notes"		"- Fixed error regarding the \"Boss\" feature. (Thanks to \"yuzumi\" for testing and reporting!)"
 		"Notes"		"Abilities:"
 		"Notes"		"- Bury: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to \"ddd123\" for reporting!)"
 		"Notes"		"- Choke: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to \"ddd123\" for reporting!)"
