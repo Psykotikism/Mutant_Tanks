@@ -783,7 +783,7 @@ void vLaser2(int tank, int pos = -1)
 	GetClientAbsAngles(tank, flTankAngles);
 	flTankPos[2] += 65.0;
 
-	int iSurvivor = iGetNearestSurvivor(tank, flTankPos);
+	int iSurvivor = iGetNearestSurvivor(tank, flTankPos, g_esLaserCache[tank].g_flLaserRange);
 	if (bIsSurvivor(iSurvivor))
 	{
 		float flSurvivorPos[3];
@@ -885,27 +885,6 @@ void vLaserReset3(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman5", (g_esLaserPlayer[tank].g_iCooldown - iTime));
 	}
-}
-
-int iGetNearestSurvivor(int tank, float pos[3])
-{
-	float flSurvivorPos[3];
-	int iSurvivorCount = 0;
-	int[] iSurvivors = new int[MaxClients + 1];
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esLaserPlayer[tank].g_iTankType, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iImmunityFlags, g_esLaserPlayer[iSurvivor].g_iImmunityFlags))
-		{
-			GetClientEyePosition(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(pos, flSurvivorPos) <= g_esLaserCache[tank].g_flLaserRange && bIsVisiblePosition(pos, flSurvivorPos, tank, 1))
-			{
-				iSurvivors[iSurvivorCount] = iSurvivor;
-				iSurvivorCount++;
-			}
-		}
-	}
-
-	return iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))];
 }
 
 Action tTimerLaserCombo(Handle timer, DataPack pack)

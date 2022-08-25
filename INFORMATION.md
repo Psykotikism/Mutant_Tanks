@@ -15457,7 +15457,7 @@
 			// Keywords:
 			// "closest" - 1.0 range
 			// "farthest" - 99999.0 range
-			"Laser Range"				"150.0"
+			"Laser Range"				"500.0"
 		}
 	}
 }

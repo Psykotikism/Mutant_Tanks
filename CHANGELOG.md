@@ -1,12 +1,13 @@
 # Changelog
 
-## Version 8.95 (2022)
+## Version 8.95 (August 25, 2022)
 
 ### Bug Fixes
 
 #### General
 - Fixed a rare crash caused when the Tank's rock explodes. (Thanks to `thewintersoldier97`, `zaviier`, and `ddd123` for testing and reporting!)
 - Fixed an issue where players are given the incorrect amount of special ammo when taking over a bot. (Thanks to `Slaven555` for testing and reporting!)
+- Fixed error regarding the `Boss` feature. (Thanks to `yuzumi` for testing and reporting!)
 
 #### Abilities
 - Bury: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)

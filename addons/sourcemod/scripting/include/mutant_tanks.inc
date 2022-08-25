@@ -2484,9 +2484,9 @@ stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsInfected(spitter, flags) && bIsSecondGame() && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
+stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE, bool both = false)
 {
-	return bIsValidClient(survivor, flags) && GetClientTeam(survivor) == 2;
+	return bIsValidClient(survivor, flags) && (GetClientTeam(survivor) == 2 || (both && GetClientTeam(survivor) == 4));
 }
 
 stock bool bIsSurvivorCaught(int survivor)
@@ -2554,7 +2554,9 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndInfected, entity);
+		case 3: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndCommons, entity);
+		case 4: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
 	}
 
 	if (hTrace != null)
@@ -2738,7 +2740,7 @@ public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 
 public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 {
-	return entity != data && !bIsSurvivor(entity);
+	return entity != data && !bIsSurvivor(entity, .both = true);
 }
 
 public bool bTraceRayDontHitSelfAndSolid(int entity, int mask)
@@ -2892,9 +2894,8 @@ stock float flGetDistance(float pos[3], float angles[3], float offset1, float of
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-	float flDistance = flGetRayDistance(pos, flAngle, entity, type);
 
-	return flDistance;
+	return flGetRayDistance(pos, flAngle, entity, type);
 }
 
 stock float flGetGroundUnits(int entity)
@@ -2909,13 +2910,12 @@ stock float flGetGroundUnits(int entity)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				float flPos[3], flUnits = 0.0;
+				float flPos[3];
 				TR_GetEndPosition(flPos, hTrace);
-				flUnits = flOrigin[2] - flPos[2];
 
 				delete hTrace;
 
-				return flUnits;
+				return (flOrigin[2] - flPos[2]);
 			}
 
 			delete hTrace;
@@ -3454,6 +3454,66 @@ stock int iGetListenServerHost(int client, bool dedicated)
 	}
 
 	return client;
+}
+
+stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
+{
+	float flCommonPos[3];
+	int iCommonCount = 0, iCommon = -1;
+	int[] iCommons = new int[MaxClients + 1];
+	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
+	{
+		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
+		if (GetVectorDistance(pos, flCommonPos) <= range && bIsVisiblePosition(pos, flCommonPos, tank, 3))
+		{
+			iCommons[iCommonCount] = iCommon;
+			iCommonCount++;
+		}
+	}
+
+	return iCommons[MT_GetRandomInt(0, (iCommonCount - 1))];
+}
+
+stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
+{
+	float flInfectedPos[3];
+	int iInfectedCount = 0;
+	int[] iSpecials = new int[MaxClients + 1];
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+	{
+		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && tank != iSpecial)
+		{
+			GetClientEyePosition(iSpecial, flInfectedPos);
+			if (GetVectorDistance(pos, flInfectedPos) <= range && bIsVisiblePosition(pos, flInfectedPos, tank, 2))
+			{
+				iSpecials[iInfectedCount] = iSpecial;
+				iInfectedCount++;
+			}
+		}
+	}
+
+	return iSpecials[MT_GetRandomInt(0, (iInfectedCount - 1))];
+}
+
+stock int iGetNearestSurvivor(int tank, float pos[3], float range)
+{
+	float flSurvivorPos[3];
+	int iSurvivorCount = 0;
+	int[] iSurvivors = new int[MaxClients + 1];
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank))
+		{
+			GetClientEyePosition(iSurvivor, flSurvivorPos);
+			if (GetVectorDistance(pos, flSurvivorPos) <= range && bIsVisiblePosition(pos, flSurvivorPos, tank, 1))
+			{
+				iSurvivors[iSurvivorCount] = iSurvivor;
+				iSurvivorCount++;
+			}
+		}
+	}
+
+	return iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))];
 }
 
 stock int iGetPlayerCount()
