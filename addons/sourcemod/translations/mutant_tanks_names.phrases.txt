@@ -1106,150 +1106,170 @@
 
 	"Tank #110 Name"
 	{
-		"en"			"Grim Reaper Tank"
+		"en"			"Godspeed Tank"
 	}
 
 	"Tank #110"
 	{
-		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #111 Name"
 	{
-		"en"			"Horde Tank"
+		"en"			"Grim Reaper Tank"
 	}
 
 	"Tank #111"
 	{
-		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
+		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #112 Name"
 	{
-		"en"			"Hulk Tank"
+		"en"			"Horde Tank"
 	}
 
 	"Tank #112"
 	{
-		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
 	}
 
 	"Tank #113 Name"
 	{
-		"en"			"Ninja Tank"
+		"en"			"Hulk Tank"
 	}
 
 	"Tank #113"
 	{
-		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 	}
 
 	"Tank #114 Name"
 	{
-		"en"			"Zen Tank"
+		"en"			"Ninja Tank"
 	}
 
 	"Tank #114"
 	{
-		"en"			"{mint}This Tank is too busy meditating to care about you."
+		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 	}
 
 	"Tank #115 Name"
 	{
-		"en"			"The Boss (1st Form)"
+		"en"			"Zen Tank"
 	}
 
 	"Tank #115"
 	{
-		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
+		"en"			"{mint}This Tank is too busy meditating to care about you."
 	}
 
 	"Tank #116 Name"
 	{
-		"en"			"Steel Overlord (2nd Form)"
+		"en"			"The Boss (1st Form)"
 	}
 
 	"Tank #116"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 	}
 
 	"Tank #117 Name"
 	{
-		"en"			"Night Stalker (3rd Form)"
+		"en"			"Steel Overlord (2nd Form)"
 	}
 
 	"Tank #117"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 	}
 
 	"Tank #118 Name"
 	{
-		"en"			"Spirit of Fire (4th Form)"
+		"en"			"Night Stalker (3rd Form)"
 	}
 
 	"Tank #118"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 	}
 
 	"Tank #119 Name"
 	{
-		"en"			"Randomizer Tank"
+		"en"			"Spirit of Fire (4th Form)"
 	}
 
 	"Tank #119"
 	{
-		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 	}
 
 	"Tank #120 Name"
 	{
-		"en"			"Shapeshifter Tank"
+		"en"			"Randomizer Tank"
 	}
 
 	"Tank #120"
 	{
-		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
+		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 	}
 
 	"Tank #121 Name"
 	{
-		"en"			"Mudman Tank"
+		"en"			"Shapeshifter Tank"
 	}
 
 	"Tank #121"
 	{
-		"en"			"{mint}This Tank is as annoying as any mudman."
+		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 	}
 
 	"Tank #122 Name"
 	{
-		"en"			"Endgame Tank"
+		"en"			"Flashbanger Tank"
 	}
 
 	"Tank #122"
 	{
-		"en"			"{mint}Goodbye everyone!"
+		"en"			"{mint}This Tank causes flashbangs which staggers it and anyone affected by its attacks."
 	}
 
 	"Tank #123 Name"
 	{
-		"en"			"Playful Tank"
+		"en"			"Mudman Tank"
 	}
 
 	"Tank #123"
 	{
-		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+		"en"			"{mint}This Tank is as annoying as any mudman."
 	}
 
 	"Tank #124 Name"
 	{
-		"en"			"Annoying Tank"
+		"en"			"Endgame Tank"
 	}
 
 	"Tank #124"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Tank #125 Name"
+	{
+		"en"			"Playful Tank"
+	}
+
+	"Tank #125"
+	{
+		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+	}
+
+	"Tank #126 Name"
+	{
+		"en"			"Annoying Tank"
+	}
+
+	"Tank #126"
 	{
 		"en"			"{mint}This Tank just won't go away."
 	}

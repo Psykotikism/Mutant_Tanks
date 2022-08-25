@@ -1106,150 +1106,170 @@
 
 	"Tank #110 Name"
 	{
-		"hu"			"Zord Kaszás Tank"
+		"hu"			"SokSzerencsét Tank"
 	}
 
 	"Tank #110"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+		"hu"			"{mint}Ez a tank immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
 	}
 
 	"Tank #111 Name"
 	{
-		"hu"			"Horda Tank"
+		"hu"			"Zord Kaszás Tank"
 	}
 
 	"Tank #111"
 	{
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 	}
 
 	"Tank #112 Name"
 	{
-		"hu"			"Hulk Tank"
+		"hu"			"Horda Tank"
 	}
 
 	"Tank #112"
 	{
-		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
+		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
 	}
 
 	"Tank #113 Name"
 	{
-		"hu"			"Nindzsa Tank"
+		"hu"			"Hulk Tank"
 	}
 
 	"Tank #113"
 	{
-		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
 	}
 
 	"Tank #114 Name"
 	{
-		"hu"			"Zen Tank"
+		"hu"			"Nindzsa Tank"
 	}
 
 	"Tank #114"
 	{
-		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 	}
 
 	"Tank #115 Name"
 	{
-		"hu"			"A Főnök (1. Alak)"
+		"hu"			"Zen Tank"
 	}
 
 	"Tank #115"
 	{
-		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
+		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 	}
 
 	"Tank #116 Name"
 	{
-		"hu"			"Acél Hűbérúr (2. Alak)"
+		"hu"			"A Főnök (1. Alak)"
 	}
 
 	"Tank #116"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
 	}
 
 	"Tank #117 Name"
 	{
-		"hu"			"Éjjeli Orvvadász (3. Alak)"
+		"hu"			"Acél Hűbérúr (2. Alak)"
 	}
 
 	"Tank #117"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #118 Name"
 	{
-		"hu"			"Tűz Szelleme (4. Alak)"
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
 	}
 
 	"Tank #118"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #119 Name"
 	{
-		"hu"			"Randomizáló Tank"
+		"hu"			"Tűz Szelleme (4. Alak)"
 	}
 
 	"Tank #119"
 	{
-		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #120 Name"
 	{
-		"hu"			"Alakváltó Tank"
+		"hu"			"Randomizáló Tank"
 	}
 
 	"Tank #120"
 	{
-		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
+		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
 	}
 
 	"Tank #121 Name"
 	{
-		"hu"			"Mocsárember Tank"
+		"hu"			"Alakváltó Tank"
 	}
 
 	"Tank #121"
 	{
-		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
+		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
 	}
 
 	"Tank #122 Name"
 	{
-		"hu"			"Végjáték Tank"
+		"hu"			"Villanó Tank"
 	}
 
 	"Tank #122"
 	{
-		"hu"			"{mint}Viszlát mindenki!"
+		"hu"			"{mint}Ez a tank villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
 	}
 
 	"Tank #123 Name"
 	{
-		"hu"			"Játékos Tank"
+		"hu"			"Mocsárember Tank"
 	}
 
 	"Tank #123"
 	{
-		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
+		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
 	}
 
 	"Tank #124 Name"
 	{
-		"hu"			"Bosszantó Tank"
+		"hu"			"Végjáték Tank"
 	}
 
 	"Tank #124"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Tank #125 Name"
+	{
+		"hu"			"Játékos Tank"
+	}
+
+	"Tank #125"
+	{
+		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Tank #126 Name"
+	{
+		"hu"			"Bosszantó Tank"
+	}
+
+	"Tank #126"
 	{
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el."
 	}
