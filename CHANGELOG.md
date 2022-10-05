@@ -1,33 +1,88 @@
 # Changelog
 
-## Version 8.95 (August 25, 2022)
+## Version 8.96 (December 25, 2022)
 
 ### Bug Fixes
+
+#### General
+- Fixed a potential memory leak caused by fixing the Tank's position when stuck.
+
+#### Abilities
+- Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to `zaviier` for reporting!)
+- Drug: Fixed affected survivors remaining drugged after dying and respawning.
+- Ice: Fixed affected survivors remaining immobile after dying and respawning.
+- Laser: Fixed the incorrect minimum value of the `Laser Range` setting.
+- Slow: Fixed affected survivors remaining slow after dying and respawning.
+- Splatter
+	- Fixed the incorrect minimum value of the `Splatter Range` setting.
+	- Fixed splatter effects not stopping after the ability ends and causing lag. (Thanks to `zaviier` for reporting!)
+- Yell: Fixed the incorrect minimum value of the `Yell Range` setting.
+
+### Changes
+
+#### Abilities
+- Added the `Gunner` ability. (Thanks to `panxiaohai` for the code!)
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+
+## Version 8.95 (August 25, 2022)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
 
 #### General
 - Fixed a rare crash caused when the Tank's rock explodes. (Thanks to `thewintersoldier97`, `zaviier`, and `ddd123` for testing and reporting!)
 - Fixed an issue where players are given the incorrect amount of special ammo when taking over a bot. (Thanks to `Slaven555` for testing and reporting!)
 - Fixed error regarding the `Boss` feature. (Thanks to `yuzumi` for testing and reporting!)
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Bury: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
 - Choke: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
 - Splatter: Fixed survivor bots getting affected by the ability.
+</details>
 
 ### Changes
+<details>
+	<summary>Game Data</summary>
 
 #### Game Data
 - Removed unnecessary/unused sections.
+</details>
+<details>
+	<summary>Translations</summary>
 
 #### Translations
 - Updated English translations.
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
 
 #### Natives & Forwards
 - Added the `MT_DeafenPlayer` native.
 - Added the `MT_StaggerPlayer` native.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Changed the minimum value of the `* Damage` setting for several abilities from `1`/`1.0` to `0`/`0.0`.
@@ -59,13 +114,19 @@
 	- Added the `Yell Mode` setting.
 	- Re-added the deafen feature. (Requested by `ddd123`.)
 	- Changed the default value of the `Requires Humans` setting from `1` to `0`.
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
@@ -73,6 +134,8 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 8.94 (July 4, 2022)
 <details>

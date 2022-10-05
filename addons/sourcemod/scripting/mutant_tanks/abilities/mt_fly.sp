@@ -1075,7 +1075,7 @@ void vFlyThink(int tank, int buttons, float duration)
 
 			switch (FloatAbs(flSpeed2[2]) > 40.0)
 			{
-				case true: flGravity = flSpeed2[2] * duration;
+				case true: flGravity = (flSpeed2[2] * duration);
 				case false: flGravity = flGravity2;
 			}
 

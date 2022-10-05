@@ -715,10 +715,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveIce(iTank);
+			vRemoveIce(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopIce(iPlayer, false);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -970,7 +974,7 @@ void vIceReset2(int tank)
 	g_esIcePlayer[tank].g_iRangeCooldown = -1;
 }
 
-void vStopIce(int survivor)
+void vStopIce(int survivor, bool all = true)
 {
 	g_esIcePlayer[survivor].g_bAffected = false;
 	g_esIcePlayer[survivor].g_iOwner = 0;
@@ -983,9 +987,13 @@ void vStopIce(int survivor)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityRenderColor(survivor, 255, 255, 255, 255);
-	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+
+	if (all)
+	{
+		TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
+		EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+	}
 }
 
 Action tTimerIceCombo(Handle timer, DataPack pack)

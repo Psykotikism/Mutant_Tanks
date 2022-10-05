@@ -151,7 +151,29 @@ enum struct esDrugCache
 
 esDrugCache g_esDrugCache[MAXPLAYERS + 1];
 
-float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
+float g_flDrugAngles[20] =
+{
+	0.0,
+	5.0,
+	10.0,
+	15.0,
+	20.0,
+	25.0,
+	20.0,
+	15.0,
+	10.0,
+	5.0,
+	0.0,
+	-5.0,
+	-10.0,
+	-15.0,
+	-20.0,
+	-25.0,
+	-20.0,
+	-15.0,
+	-10.0,
+	-5.0
+};
 
 UserMsg g_umDrugFade;
 
@@ -726,22 +748,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveDrug(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
-		{
-			vRemoveDrug(iTank);
-		}
-	}
-	else if (StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemoveDrug(iPlayer);
 		}
-		else if (bIsHumanSurvivor(iPlayer))
+		else if (bIsHumanSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vDrug(iPlayer, false, g_flDrugAngles);
 		}

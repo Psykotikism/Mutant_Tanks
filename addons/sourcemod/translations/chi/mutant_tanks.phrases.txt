@@ -2204,6 +2204,61 @@
 		"chi"			"重力能力"
 	}
 
+	"Gunner"
+	{
+		"chi"			"{olive}{1}{mint} 正在向{olive} {2}{mint} 开枪！"
+	}
+
+	"Gunner2"
+	{
+		"chi"			"{olive}{1}{mint} 停止开枪了！"
+	}
+
+	"GunnerAmmo"
+	{
+		"chi"			"你已经用光了炮手能力的次数。"
+	}
+
+	"GunnerDetails"
+	{
+		"chi"			"你身上带着枪。"
+	}
+
+	"GunnerHuman"
+	{
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次炮手能力！"
+	}
+
+	"GunnerHuman2"
+	{
+		"chi"			"你的炮手能力激活失败， 请重试。"
+	}
+
+	"GunnerHuman3"
+	{
+		"chi"			"你已经激活了炮手能力。"
+	}
+
+	"GunnerHuman4"
+	{
+		"chi"			"你的炮手能力还需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"GunnerHuman5"
+	{
+		"chi"			"你的炮手能力已结束， 需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"GunnerMenu"
+	{
+		"chi"			"炮手能力信息"
+	}
+
+	"GunnerMenu2"
+	{
+		"chi"			"炮手能力"
+	}
+
 	"Heal"
 	{
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值， 同时生命值归0时将会死亡！"

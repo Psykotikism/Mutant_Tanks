@@ -2415,6 +2415,66 @@
 		"en"			"Gravity Ability"
 	}
 
+	"Gunner"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is firing gunshots at{olive} {2}{mint}!"
+	}
+
+	"Gunner2"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} is no longer firing gunshots!"
+	}
+
+	"GunnerAmmo"
+	{
+		"en"			"You've used up all your gunner ability's ammo."
+	}
+
+	"GunnerDetails"
+	{
+		"en"			"You are armed with guns."
+	}
+
+	"GunnerHuman"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gunner ability!"
+	}
+
+	"GunnerHuman2"
+	{
+		"en"			"Your gunner ability failed to activate. Try again."
+	}
+
+	"GunnerHuman3"
+	{
+		"en"			"You already activated your gunner ability."
+	}
+
+	"GunnerHuman4"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your gunner ability still needs another{yellow} {1} second(s){mint} to recharge."
+	}
+
+	"GunnerHuman5"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your gunner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+	}
+
+	"GunnerMenu"
+	{
+		"en"			"Gunner Ability Information"
+	}
+
+	"GunnerMenu2"
+	{
+		"en"			"Gunner Ability"
+	}
+
 	"Heal"
 	{
 		"#format"		"{1:t},{2:N}"

@@ -85,6 +85,7 @@
 	- [Ghost](#ghost-ability)
 	- [God](#god-ability)
 	- [Gravity](#gravity-ability)
+	- [Gunner](#gunner-ability)
 	- [Heal](#heal-ability)
 	- [Hit](#hit-ability)
 	- [Hurt](#hurt-ability)
@@ -12186,6 +12187,301 @@
 			// Minimum: 0.1
 			// Maximum: 99999.0
 			"Gravity Value"				"0.3"
+		}
+	}
+}
+```
+</details>
+
+##### Gunner Ability
+<details>
+	<summary>Click to expand!</summary>
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// The Mutant Tank is armed with guns.
+		// Requires "mt_abilities.smx" to be compiled with "mt_gunner.sp" to work.
+		"Gunner Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
+			// The ability can only activate in close areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 99999.0 range
+			"Close Areas Only"			"0.0"
+
+			// Use this ability in conjunction with other abilities.
+			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Combo Ability"				"0"
+
+			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 99999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 99999 ammo
+			"Human Ammo"				"5"
+
+			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Human Cooldown"			"0"
+
+			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 99999.0 range
+			"Open Areas Only"			"0.0"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"0"
+
+			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Ability Message"			"0"
+
+			// The accuracy of the Mutant Tank's guns.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1 (Highest)
+			// Maximum: 5.0 (Lowest)
+			"Gunner Accuracy"			"2.0"
+
+			// The number of bullets for the Mutant Tank's guns.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1 (Lowest)
+			// Maximum: 99999 (Highest)
+			"Gunner Bullets"			"3"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Gunner Chance"				"33.3"
+
+			// The clip size for the Mutant Tank's guns.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1 (Smallest)
+			// Maximum: 99999 (Largest)
+			"Gunner Clip Size"			"30"
+
+			// The cooldown for the Mutant Tank's ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Gunner Cooldown"			"0"
+
+			// The Mutant Tank's guns do this much damage.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 99999.0 damage
+			"Gunner Damage"				"5.0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Gunner Duration"			"5.0"
+
+			// The Mutant Tank's guns have glow outlines when activated.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
+			// Note: The glow outline may not appear when the "Glow Type" setting is set to "0" if the guns are not fully visible to the player.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Gunner Glow"				"1"
+
+			// The type of the Mutant Tank's gun.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Random
+			// 1: M1911/P220/Glock Pistol
+			// 2: SMG
+			// 3: Pump Shotgun
+			// 4: M16 Assault Rifle
+			// 5: Combat Shotgun
+			// 6: Hunting Rifle
+			// 7: Magnum Pistol (Only available in Left 4 Dead 2.)
+			// 8: Silenced SMG (Only available in Left 4 Dead 2.)
+			// 9: MP5 SMG (Only available in Left 4 Dead 2.)
+			// 10: Chrome Shotgun (Only available in Left 4 Dead 2.)
+			// 11: AK47 Assault Rifle (Only available in Left 4 Dead 2.)
+			// 12: SG552 Assault Rifle (Only available in Left 4 Dead 2.)
+			// 13: SCAR-L Desert Rifle (Only available in Left 4 Dead 2.)
+			// 14: SPAS Shotgun (Only available in Left 4 Dead 2.)
+			// 15: Military Sniper Rifle (Only available in Left 4 Dead 2.)
+			// 16: Steyr Scout Rifle (Only available in Left 4 Dead 2.)
+			// 17: AWP Sniper Rifle (Only available in Left 4 Dead 2.)
+			// 18: M60 Machine Rifle (Only available in Left 4 Dead 2.)
+			"Gunner Gun Type"			"0"
+
+			// The Mutant Tank fires gunshots at survivors every time this many seconds passes.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Gunner Interval"			"1.0"
+
+			// The Mutant Tank's guns take this many seconds to load in bullets before firing again.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1 (Shortest)
+			// Maximum: 99999.0 (Longest)
+			"Gunner Load Time"			"1.0"
+
+			// The distance between an enemy and the Mutant Tank needed to trigger the ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 99999.0 range
+			"Gunner Range"				"500.0"
+
+			// The Mutant Tank's guns take this many seconds to react.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1 (Shortest)
+			// Maximum: 99999.0 (Longest)
+			"Gunner Reaction Time"			"1.0"
+
+			// The type of targets tracked by the Mutant Tank's guns.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0 OR 31: All types.
+			// 1: Human-controlled survivors
+			// 2: Survivor bots
+			// 4: Incapacitated survivors
+			// 8: Common infected
+			// 16: Special infected
+			"Gunner Target Type"			"0"
 		}
 	}
 }

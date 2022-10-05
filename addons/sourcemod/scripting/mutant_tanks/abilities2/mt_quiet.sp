@@ -59,12 +59,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 char g_sFootstepsFolders[][] =
 {
-	"player/footsteps/infected/", "player/footsteps/smoker/", "player/footsteps/boomer/", "player/footsteps/hunter/", "player/footsteps/spitter/", "player/footsteps/jockey/", "player/footsteps/charger/", "player/footsteps/witch/", "player/footsteps/tank/"
-};
-
-char g_sInfectedFolders[][] =
+	"player/footsteps/infected/",
+	"player/footsteps/smoker/",
+	"player/footsteps/boomer/",
+	"player/footsteps/hunter/",
+	"player/footsteps/spitter/",
+	"player/footsteps/jockey/",
+	"player/footsteps/charger/",
+	"player/footsteps/witch/",
+	"player/footsteps/tank/"
+}, g_sInfectedFolders[][] =
 {
-	"npc/infected/", "player/smoker/", "player/boomer/", "player/hunter/", "player/spitter/", "player/jockey/", "player/charger/", "npc/witch/", "player/tank/"
+	"npc/infected/",
+	"player/smoker/",
+	"player/boomer/",
+	"player/hunter/",
+	"player/spitter/",
+	"player/jockey/",
+	"player/charger/",
+	"npc/witch/",
+	"player/tank/"
 };
 
 enum struct esQuietPlayer

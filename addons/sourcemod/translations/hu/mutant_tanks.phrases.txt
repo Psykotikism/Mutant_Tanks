@@ -2204,6 +2204,61 @@
 		"hu"			"Gravitációs Képesség"
 	}
 
+	"Gunner"
+	{
+		"hu"			"{olive}{1}{mint} lövéseket ad le{olive} {2}{mint}felé!"
+	}
+
+	"Gunner2"
+	{
+		"hu"			"{olive}{1}{mint} már nem lövöldözik!"
+	}
+
+	"GunnerAmmo"
+	{
+		"hu"			"Elhasználtad a tüzér képességed összes lőszerét."
+	}
+
+	"GunnerDetails"
+	{
+		"hu"			"Fel vagy fegyverkezve."
+	}
+
+	"GunnerHuman"
+	{
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik tüzér képességedet!"
+	}
+
+	"GunnerHuman2"
+	{
+		"hu"			"Nem sikerült aktiválni a tüzér képességedet. Próbáld újra."
+	}
+
+	"GunnerHuman3"
+	{
+		"hu"			"Már aktiváltad a tüzér képességedet."
+	}
+
+	"GunnerHuman4"
+	{
+		"hu"			"A tüzér képességednek kell még {yellow} {1} másodperc(ek){mint} az újratöltéshez."
+	}
+
+	"GunnerHuman5"
+	{
+		"hu"			"A tüzér képességed véget ért, az újratöltéshez kell még {yellow} {1} másodperc(ek){mint}."
+	}
+
+	"GunnerMenu"
+	{
+		"hu"			"Tüzér Képesség Információ"
+	}
+
+	"GunnerMenu2"
+	{
+		"hu"			"Tüzér Képesség"
+	}
+
 	"Heal"
 	{
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
