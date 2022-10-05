@@ -96,8 +96,6 @@ enum struct esSplatterPlayer
 	float g_flSplatterRange;
 	float g_flSplatterRangeChance;
 
-	Handle g_hParticleTimer;
-
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iComboAbility;
@@ -230,7 +228,7 @@ public void OnClientPutInServer(int client)
 #endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnSplatterTakeDamage);
-	vRemoveSplatter(client, true);
+	vRemoveSplatter(client);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -239,7 +237,7 @@ void vSplatterClientDisconnect_Post(int client)
 public void OnClientDisconnect_Post(int client)
 #endif
 {
-	vRemoveSplatter(client, true);
+	vRemoveSplatter(client);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -632,7 +630,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterPlayer[admin].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterPlayer[admin].g_iSplatterHit, value, 0, 1);
 		g_esSplatterPlayer[admin].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterPlayer[admin].g_iSplatterHitMode, value, 0, 2);
 		g_esSplatterPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterPlayer[admin].g_flSplatterInterval, value, 0.1, 99999.0);
-		g_esSplatterPlayer[admin].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterPlayer[admin].g_flSplatterRange, value, 0.1, 99999.0);
+		g_esSplatterPlayer[admin].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterPlayer[admin].g_flSplatterRange, value, 1.0, 99999.0);
 		g_esSplatterPlayer[admin].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterPlayer[admin].g_flSplatterRangeChance, value, 0.0, 100.0);
 		g_esSplatterPlayer[admin].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterPlayer[admin].g_iSplatterRangeCooldown, value, 0, 99999);
 		g_esSplatterPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterPlayer[admin].g_iSplatterType, value, 0, sizeof g_sParticles);
@@ -659,7 +657,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplatterAbility[type].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterAbility[type].g_iSplatterHit, value, 0, 1);
 		g_esSplatterAbility[type].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterAbility[type].g_iSplatterHitMode, value, 0, 2);
 		g_esSplatterAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterAbility[type].g_flSplatterInterval, value, 0.1, 99999.0);
-		g_esSplatterAbility[type].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterAbility[type].g_flSplatterRange, value, 0.1, 99999.0);
+		g_esSplatterAbility[type].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterAbility[type].g_flSplatterRange, value, 1.0, 99999.0);
 		g_esSplatterAbility[type].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterAbility[type].g_flSplatterRangeChance, value, 0.0, 100.0);
 		g_esSplatterAbility[type].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterAbility[type].g_iSplatterRangeCooldown, value, 0, 99999);
 		g_esSplatterAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterAbility[type].g_iSplatterType, value, 0, sizeof g_sParticles);
@@ -748,10 +746,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSplatter(iTank);
+			vRemoveSplatter(iPlayer);
+		}
+		else if (bIsHumanSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopSplatter(iPlayer);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -961,7 +963,7 @@ void vSplatterCopyStats2(int oldTank, int newTank)
 	g_esSplatterPlayer[newTank].g_iRangeCooldown = g_esSplatterPlayer[oldTank].g_iRangeCooldown;
 }
 
-void vRemoveSplatter(int tank, bool full = false)
+void vRemoveSplatter(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -969,10 +971,12 @@ void vRemoveSplatter(int tank, bool full = false)
 		{
 			g_esSplatterPlayer[iSurvivor].g_bAffected = false;
 			g_esSplatterPlayer[iSurvivor].g_iOwner = 0;
+
+			vStopSplatter(iSurvivor);
 		}
 	}
 
-	vSplatterReset3(tank, full);
+	vSplatterReset3(tank);
 }
 
 void vSplatterReset()
@@ -981,7 +985,7 @@ void vSplatterReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vSplatterReset3(iPlayer, true);
+			vSplatterReset3(iPlayer);
 		}
 	}
 }
@@ -991,6 +995,8 @@ void vSplatterReset2(int survivor, int tank, int messages)
 	g_esSplatterPlayer[survivor].g_bAffected = false;
 	g_esSplatterPlayer[survivor].g_iOwner = 0;
 
+	vStopSplatter(survivor);
+
 	if (g_esSplatterCache[tank].g_iSplatterMessage & messages)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter2", survivor);
@@ -998,7 +1004,7 @@ void vSplatterReset2(int survivor, int tank, int messages)
 	}
 }
 
-void vSplatterReset3(int tank, bool full)
+void vSplatterReset3(int tank)
 {
 	g_esSplatterPlayer[tank].g_bAffected = false;
 	g_esSplatterPlayer[tank].g_bFailed = false;
@@ -1006,11 +1012,12 @@ void vSplatterReset3(int tank, bool full)
 	g_esSplatterPlayer[tank].g_iAmmoCount = 0;
 	g_esSplatterPlayer[tank].g_iCooldown = -1;
 	g_esSplatterPlayer[tank].g_iRangeCooldown = -1;
+}
 
-	if (full)
-	{
-		delete g_esSplatterPlayer[tank].g_hParticleTimer;
-	}
+void vStopSplatter(int survivor)
+{
+	MT_TE_SetupStopAllParticles(survivor);
+	TE_SendToClient(survivor);
 }
 
 Action tTimerSplatterCombo(Handle timer, DataPack pack)
@@ -1104,32 +1111,6 @@ Action tTimerSplatter(Handle timer, DataPack pack)
 
 	MT_TE_SetupParticleAttachment(iParticle, 1, iSurvivor, true);
 	TE_SendToClient(iSurvivor);
-
-	if (iIndex < 4)
-	{
-		delete g_esSplatterPlayer[iSurvivor].g_hParticleTimer;
-
-		float flInterval = pack.ReadFloat();
-		g_esSplatterPlayer[iSurvivor].g_hParticleTimer = CreateTimer(flInterval, tTimerStopSplatter, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
-	}
-
-	return Plugin_Continue;
-}
-
-Action tTimerStopSplatter(Handle timer, int userid)
-{
-	int iPlayer = GetClientOfUserId(userid);
-	if (!bIsValidClient(iPlayer))
-	{
-		g_esSplatterPlayer[iPlayer].g_hParticleTimer = null;
-
-		return Plugin_Stop;
-	}
-
-	MT_TE_SetupStopAllParticles(iPlayer);
-	TE_SendToClient(iPlayer);
-
-	g_esSplatterPlayer[iPlayer].g_hParticleTimer = null;
 
 	return Plugin_Continue;
 }

@@ -735,10 +735,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSlow(iTank);
+			vRemoveSlow(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopSlow(iPlayer, false);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -1002,14 +1006,18 @@ void vSlowReset2(int tank)
 	g_esSlowPlayer[tank].g_iRangeCooldown = -1;
 }
 
-void vStopSlow(int survivor)
+void vStopSlow(int survivor, bool all = true)
 {
 	g_esSlowPlayer[survivor].g_bAffected = false;
 	g_esSlowPlayer[survivor].g_iOwner = 0;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	SetEntPropFloat(survivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
-	EmitSoundToAll(SOUND_DRIP, survivor);
+
+	if (all)
+	{
+		EmitSoundToAll(SOUND_DRIP, survivor);
+	}
 }
 
 Action tTimerSlowCombo(Handle timer, DataPack pack)

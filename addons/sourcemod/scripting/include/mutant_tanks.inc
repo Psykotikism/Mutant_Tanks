@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.95"
+#define MT_VERSION "8.96"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -1438,9 +1438,9 @@ stock void vFixPlayerPosition(int client)
 				TR_GetEndPosition(flOrigin, hTrace);
 				flOrigin[2] += 10.0;
 				TeleportEntity(client, flOrigin, NULL_VECTOR, {0.0, 0.0, -300.0});
-
-				delete hTrace;
 			}
+
+			delete hTrace;
 		}
 	}
 }
@@ -1784,16 +1784,23 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entity, bool follow = false)
 {
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
 	TE_Start("EffectDispatch");
 
-	float flDummy[3] = {0.0, 0.0, 0.0};
-	bool bSecondGame = bIsSecondGame();
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
@@ -1824,22 +1831,28 @@ stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entit
 
 stock void MT_TE_SetupStopAllParticles(int entity)
 {
-	float flDummy[3] = {0.0, 0.0, 0.0};
-	bool bSecondGame = bIsSecondGame();
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
 
 	TE_Start("EffectDispatch");
 
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
 	{
-		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffectStop");
 		if (iEffect == INVALID_STRING_INDEX)
 		{
 			return;
@@ -1887,15 +1900,22 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 
 stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPos[3] = {0.0, 0.0, 0.0}, int particle = -1, int entity = 0, float delay = 0.0, bool all = true, char name[64] = "", int attachment = 0, float angles[3] = {0.0, 0.0, 0.0}, int flags = 0, int damageType = 0, float magnitude = 0.0, float scale = 1.0, float radius = 0.0)
 {
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
 	TE_Start("EffectDispatch");
 
-	bool bSecondGame = bIsSecondGame();
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), startPos[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), startPos[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), startPos[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), endPos[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), endPos[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), endPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), startPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), startPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), startPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), endPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), endPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), endPos[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
@@ -2140,7 +2160,6 @@ stock bool bIsAreaNarrow(int tank = 0, float range = 150.0, float pos[3] = {0.0,
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -2176,7 +2195,6 @@ stock bool bIsAreaWide(int tank = 0, float range = 500.0, float pos[3] = {0.0, 0
 				if (GetVectorDistance(flPos, flOrigin) >= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -2564,7 +2582,6 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2572,6 +2589,33 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	}
 
 	return true;
+}
+
+stock bool bIsVisibleToPosition(float pos1[3], float pos2[3], float range)
+{
+	float flPos[3], flAngles[3];
+	MakeVectorFromPoints(pos1, pos2, flPos);
+	GetVectorAngles(flPos, flAngles);
+
+	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_ALL, RayType_Infinite, bTraceRayDontHitSelfAndSolid);
+	if (hTrace != null)
+	{
+		if (TR_DidHit(hTrace))
+		{
+			float flStart[3];
+			TR_GetEndPosition(flStart, hTrace);
+
+			if (GetVectorDistance(pos1, pos2) <= range)
+			{
+				delete hTrace;
+				return true;
+			}
+		}
+
+		delete hTrace;
+	}
+
+	return false;
 }
 
 stock bool bIsWitch(int witch)
@@ -2914,7 +2958,6 @@ stock float flGetGroundUnits(int entity)
 				TR_GetEndPosition(flPos, hTrace);
 
 				delete hTrace;
-
 				return (flOrigin[2] - flPos[2]);
 			}
 
@@ -3464,7 +3507,7 @@ stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
-		if (GetVectorDistance(pos, flCommonPos) <= range && bIsVisiblePosition(pos, flCommonPos, tank, 3))
+		if (bIsVisibleToPosition(pos, flCommonPos, range))
 		{
 			iCommons[iCommonCount] = iCommon;
 			iCommonCount++;
@@ -3484,7 +3527,7 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && tank != iSpecial)
 		{
 			GetClientEyePosition(iSpecial, flInfectedPos);
-			if (GetVectorDistance(pos, flInfectedPos) <= range && bIsVisiblePosition(pos, flInfectedPos, tank, 2))
+			if (bIsVisibleToPosition(pos, flInfectedPos, range))
 			{
 				iSpecials[iInfectedCount] = iSpecial;
 				iInfectedCount++;
@@ -3495,8 +3538,9 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 	return iSpecials[MT_GetRandomInt(0, (iInfectedCount - 1))];
 }
 
-stock int iGetNearestSurvivor(int tank, float pos[3], float range)
+stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans = false, bool noBots = false, bool noIncaps = false)
 {
+	bool bHuman = false;
 	float flSurvivorPos[3];
 	int iSurvivorCount = 0;
 	int[] iSurvivors = new int[MaxClients + 1];
@@ -3504,8 +3548,14 @@ stock int iGetNearestSurvivor(int tank, float pos[3], float range)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank))
 		{
+			bHuman = bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT);
+			if ((noHumans && bHuman) || (noBots && !bHuman) || (noIncaps && bIsPlayerIncapacitated(iSurvivor)))
+			{
+				continue;
+			}
+
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(pos, flSurvivorPos) <= range && bIsVisiblePosition(pos, flSurvivorPos, tank, 1))
+			if (bIsVisibleToPosition(pos, flSurvivorPos, range))
 			{
 				iSurvivors[iSurvivorCount] = iSurvivor;
 				iSurvivorCount++;

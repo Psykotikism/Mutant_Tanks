@@ -15208,7 +15208,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						}
 					}
 
-					if (bPlayer && attacker != victim && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
+					if (bPlayer && victim != attacker && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
 					{
 						EmitSoundToAll(SOUND_METAL, victim);
 
@@ -15348,7 +15348,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					return Plugin_Continue;
 				}
 
-				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
+				if (StrEqual(sClassname, "tank_rock") || (damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN))
 				{
 					vRemovePlayerDamage(victim, damagetype);
 
@@ -15359,6 +15359,10 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 					return Plugin_Handled;
 				}
+			}
+			else if (victim == attacker)
+			{
+				return Plugin_Handled;
 			}
 		}
 	}
@@ -20549,7 +20553,6 @@ Action tTimerUpdateBoss(Handle timer, DataPack pack)
 	iBossHealths[2] = pack.ReadCell(), iTypes[2] = pack.ReadCell(),
 	iBossHealths[3] = pack.ReadCell(), iTypes[3] = pack.ReadCell(),
 	iBossHealths[4] = -1, iTypes[4] = 0;
-
 	vEvolveBoss(iTank, iBossHealths[iBossStageCount], iBossStages, iTypes[iBossStageCount], (iBossStageCount + 1));
 
 	return Plugin_Continue;

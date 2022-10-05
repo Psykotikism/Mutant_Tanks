@@ -131,6 +131,7 @@ sm_mt_fragile - Просмотр информации о способности 
 sm_mt_ghost - Просмотр информации о способности призрак.
 sm_mt_god - Просмотр информации о способности бога.
 sm_mt_gravity - Просмотр информации о способности гравитации.
+sm_mt_gunner - Просмотр информации о стрелка способности.
 sm_mt_heal - Просмотр информации о лечебной способности.
 sm_mt_hit - Просмотр информации о способности слабого места.
 sm_mt_hurt - Просмотр информации о способности боли.
@@ -2671,7 +2672,7 @@ Overrides
 
 **honorcode23** - За плагин [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475).
 
-**panxiaohai** - За плагины [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), и [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537).
+**panxiaohai** - За плагины [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537), и [[L4D & L4D2] Automatic Robot](https://forums.alliedmods.net/showthread.php?t=130177).
 
 **strontiumdog** - За плагины [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), и [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324).
 

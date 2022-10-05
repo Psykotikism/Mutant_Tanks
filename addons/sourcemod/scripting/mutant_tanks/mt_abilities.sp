@@ -10,7 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN
-#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-38), 3: ALL
 #define MT_ABILITIES_COMPILER_MESSAGE 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
@@ -55,13 +55,14 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities/mt_fast.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fire.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fling.sp"
+	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
 #endif
 #if MT_ABILITIES_GROUP == 2 || MT_ABILITIES_GROUP == 3
-	#tryinclude "mutant_tanks/abilities/mt_fly.sp"
 	#tryinclude "mutant_tanks/abilities/mt_fragile.sp"
 	#tryinclude "mutant_tanks/abilities/mt_ghost.sp"
 	#tryinclude "mutant_tanks/abilities/mt_god.sp"
 	#tryinclude "mutant_tanks/abilities/mt_gravity.sp"
+	#tryinclude "mutant_tanks/abilities/mt_gunner.sp"
 	#tryinclude "mutant_tanks/abilities/mt_heal.sp"
 	#tryinclude "mutant_tanks/abilities/mt_hit.sp"
 	#tryinclude "mutant_tanks/abilities/mt_hurt.sp"
@@ -151,6 +152,9 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_GRAVITY
 		#warning The "Gravity" (mt_gravity.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GUNNER
+		#warning The "Gunner" (mt_gunner.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 	#if !defined MT_MENU_HEAL
 		#warning The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
@@ -267,6 +271,9 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_GRAVITY
 		#error The "Gravity" (mt_gravity.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
+	#endif
+	#if !defined MT_MENU_GUNNER
+		#error The "Gunner" (mt_gunner.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
 	#endif
 	#if !defined MT_MENU_HEAL
 		#error The "Heal" (mt_heal.sp) ability is missing from the "scripting/mutant_tanks/abilities" folder.
@@ -570,6 +577,9 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_GRAVITY
 	vGravityDisplayMenu(menu);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerDisplayMenu(menu);
+#endif
 #if defined MT_MENU_HEAL
 	vHealDisplayMenu(menu);
 #endif
@@ -688,6 +698,9 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #if defined MT_MENU_GRAVITY
 	vGravityMenuItemSelected(client, info);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerMenuItemSelected(client, info);
+#endif
 #if defined MT_MENU_HEAL
 	vHealMenuItemSelected(client, info);
 #endif
@@ -805,6 +818,9 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityMenuItemDisplayed(client, info, buffer, size);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerMenuItemDisplayed(client, info, buffer, size);
 #endif
 #if defined MT_MENU_HEAL
 	vHealMenuItemDisplayed(client, info, buffer, size);
@@ -987,6 +1003,9 @@ public void MT_OnPluginCheck(ArrayList list)
 #if defined MT_MENU_GRAVITY
 	vGravityPluginCheck(list);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerPluginCheck(list);
+#endif
 #if defined MT_MENU_HEAL
 	vHealPluginCheck(list);
 #endif
@@ -1104,6 +1123,9 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityAbilityCheck(list, list2, list3, list4);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerAbilityCheck(list, list2, list3, list4);
 #endif
 #if defined MT_MENU_HEAL
 	vHealAbilityCheck(list, list2, list3, list4);
@@ -1223,6 +1245,9 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 #if defined MT_MENU_GRAVITY
 	vGravityCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerCombineAbilities(tank, type, random, combo);
+#endif
 #if defined MT_MENU_HEAL
 	vHealCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
@@ -1337,6 +1362,9 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityConfigsLoad(mode);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerConfigsLoad(mode);
 #endif
 #if defined MT_MENU_HEAL
 	vHealConfigsLoad(mode);
@@ -1456,6 +1484,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 #if defined MT_MENU_GRAVITY
 	vGravityConfigsLoaded(subsection, key, value, type, admin, mode);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerConfigsLoaded(subsection, key, value, type, admin, mode);
+#endif
 #if defined MT_MENU_HEAL
 	vHealConfigsLoaded(subsection, key, value, type, admin, mode);
 #endif
@@ -1574,6 +1605,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #if defined MT_MENU_GRAVITY
 	vGravitySettingsCached(tank, apply, type);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerSettingsCached(tank, apply, type);
+#endif
 #if defined MT_MENU_HEAL
 	vHealSettingsCached(tank, apply, type);
 #endif
@@ -1691,6 +1725,9 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityCopyStats(oldTank, newTank);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerCopyStats(oldTank, newTank);
 #endif
 #if defined MT_MENU_HEAL
 	vHealCopyStats(oldTank, newTank);
@@ -1814,6 +1851,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_GRAVITY
 	vGravityEventFired(event, name);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerEventFired(event, name);
+#endif
 #if defined MT_MENU_HEAL
 	vHealEventFired(event, name);
 #endif
@@ -1934,6 +1974,9 @@ public void MT_OnButtonPressed(int tank, int button)
 #if defined MT_MENU_GRAVITY
 	vGravityButtonPressed(tank, button);
 #endif
+#if defined MT_MENU_GUNNER
+	vGunnerButtonPressed(tank, button);
+#endif
 #if defined MT_MENU_HEAL
 	vHealButtonPressed(tank, button);
 #endif
@@ -2003,6 +2046,9 @@ public void MT_OnButtonReleased(int tank, int button)
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityButtonReleased(tank, button);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerButtonReleased(tank, button);
 #endif
 #if defined MT_MENU_HEAL
 	vHealButtonReleased(tank, button);
@@ -2091,6 +2137,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityChangeType(tank, oldType);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_HEAL
 	vHealChangeType(tank, oldType);
@@ -2289,6 +2338,9 @@ void vAbilityMenu(int client, const char[] name)
 #endif
 #if defined MT_MENU_GRAVITY
 	vGravityMenu(client, name, 0);
+#endif
+#if defined MT_MENU_GUNNER
+	vGunnerMenu(client, name, 0);
 #endif
 #if defined MT_MENU_HEAL
 	vHealMenu(client, name, 0);
@@ -2538,6 +2590,14 @@ void vAbilityPlayer(int type, int client)
 		case 0: vGravityClientPutInServer(client);
 		case 2: vGravityClientDisconnect_Post(client);
 		case 3: vGravityAbilityActivated(client);
+	}
+#endif
+#if defined MT_MENU_GUNNER
+	switch (type)
+	{
+		case 0: vGunnerClientPutInServer(client);
+		case 2: vGunnerClientDisconnect_Post(client);
+		case 3: vGunnerAbilityActivated(client);
 	}
 #endif
 #if defined MT_MENU_HEAL
@@ -2837,6 +2897,14 @@ void vAbilitySetup(int type)
 		case 1: vGravityMapStart();
 		case 2: vGravityMapEnd();
 		case 3: vGravityPluginEnd();
+	}
+#endif
+#if defined MT_MENU_GUNNER
+	switch (type)
+	{
+		case 1: vGunnerMapStart();
+		case 2: vGunnerMapEnd();
+		case 3: vGunnerPluginEnd();
 	}
 #endif
 #if defined MT_MENU_HEAL

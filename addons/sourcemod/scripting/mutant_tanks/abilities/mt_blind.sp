@@ -759,22 +759,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveBlind(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
-		{
-			vRemoveBlind(iTank);
-		}
-	}
-	else if (StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemoveBlind(iPlayer);
 		}
-		else if (bIsHumanSurvivor(iPlayer))
+		else if (bIsHumanSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vBlind(iPlayer, 0);
 		}

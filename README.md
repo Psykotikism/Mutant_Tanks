@@ -131,6 +131,7 @@ sm_mt_fragile - View information about the Fragile ability.
 sm_mt_ghost - View information about the Ghost ability.
 sm_mt_god - View information about the God ability.
 sm_mt_gravity - View information about the Gravity ability.
+sm_mt_gunner - View information about the Gunner ability.
 sm_mt_heal - View information about the Heal ability.
 sm_mt_hit - View information about the Hit ability.
 sm_mt_hurt - View information about the Hurt ability.
@@ -2671,7 +2672,7 @@ Set the values in `Execute Config Types`.
 
 **honorcode23** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
+**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537), and [[L4D & L4D2] Automatic Robot](https://forums.alliedmods.net/showthread.php?t=130177) plugins.
 
 **strontiumdog** - For the [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
