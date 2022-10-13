@@ -76,7 +76,7 @@
 
 	"MTTankItem"
 	{
-		"chi"			"{1} (坦克 #{2})"
+		"chi"			"{1} (坦克 #{2}) [坦克 #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -586,7 +586,7 @@
 
 	"MultipleMatches"
 	{
-		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (坦克 #{1}){olive}。"
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (坦克 #{1}) [坦克 #{2}]{olive}。"
 	}
 
 	"NoAbilities"
@@ -641,7 +641,7 @@
 
 	"PersonalType"
 	{
-		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (Tank #{2}){default} 的身份出现。"
+		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 的身份出现。"
 	}
 
 	"PitchVisualOn"
@@ -681,7 +681,7 @@
 
 	"RequestSucceeded"
 	{
-		"chi"			"一种名称{yellow} (坦克 #{1}){mint} 与该名称匹配。{olive} 请求成功！"
+		"chi"			"一种名称{yellow} (坦克 #{1}) [坦克 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
 	}
 
 	"RewardAmmo"
@@ -816,7 +816,7 @@
 
 	"TankDisabled"
 	{
-		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用。"
+		"chi"			"{1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 已禁用。"
 	}
 
 	"TeammatesList"

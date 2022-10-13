@@ -76,8 +76,8 @@
 
 	"MTTankItem"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1} (Tank #{2})"
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -654,8 +654,8 @@
 
 	"MultipleMatches"
 	{
-		"#format"		"{1:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}){olive}."
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
 	"NoAbilities"
@@ -710,8 +710,8 @@
 
 	"PersonalType"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}){default} when you take control of the{mint} Tank{default}."
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} when you take control of the{mint} Tank{default}."
 	}
 
 	"PitchVisualOn"
@@ -753,8 +753,8 @@
 
 	"RequestSucceeded"
 	{
-		"#format"		"{1:i}"
-		"en"			"One type{yellow} (Tank #{1}){mint} matched that name.{olive} Request succeeded!"
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Tank #{1}) [Tank #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RewardAmmo"
@@ -900,8 +900,8 @@
 
 	"TankDisabled"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
 	}
 
 	"TeammatesList"

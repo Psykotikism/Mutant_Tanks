@@ -20,6 +20,16 @@
 
 ### Changes
 
+#### Config Files
+- The config parser now automatically assigns Mutant Tank types to each entry to prevent common user errors. (Each entry's original type will be shown in messages when necessary.)
+- The config parser now reports duplicate entries and entries that exceed the limit for Mutant Tank types. (This covers cases where the same type is assigned to multiple entries or some types are skipped over.)
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
 #### Abilities
 - Added the `Gunner` ability. (Thanks to `panxiaohai` for the code!)
 
