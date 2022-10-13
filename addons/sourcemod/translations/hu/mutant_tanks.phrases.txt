@@ -76,7 +76,7 @@
 
 	"MTTankItem"
 	{
-		"hu"			"{1} (Tank #{2})"
+		"hu"			"{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -586,7 +586,7 @@
 
 	"MultipleMatches"
 	{
-		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}){olive}."
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
 	"NoAbilities"
@@ -641,7 +641,7 @@
 
 	"PersonalType"
 	{
-		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}){default} leszel miután átveszed a{mint} Tank{default} irányítását."
+		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} leszel miután átveszed a{mint} Tank{default} irányítását."
 	}
 
 	"PitchVisualOn"
@@ -681,7 +681,7 @@
 
 	"RequestSucceeded"
 	{
-		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}){mint}.{olive} Kérés sikeres!"
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}) [Tank #{2}]{mint}.{olive} Kérés sikeres!"
 	}
 
 	"RewardAmmo"
@@ -816,7 +816,7 @@
 
 	"TankDisabled"
 	{
-		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+		"hu"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} letiltva."
 	}
 
 	"TeammatesList"
