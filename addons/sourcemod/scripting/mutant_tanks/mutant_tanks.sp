@@ -4229,7 +4229,7 @@ void vConfigMenu(int admin, int item = 0)
 		if (iListSize > 0)
 		{
 			char sSection[PLATFORM_MAX_PATH], sDisplay[PLATFORM_MAX_PATH];
-			int iStartPos = 0, iIndex = 0;
+			int iStartPos = 0, iIndex = 0, iRealType = 0;
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
 				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof sSection);
@@ -4241,8 +4241,12 @@ void vConfigMenu(int admin, int item = 0)
 						case false:
 						{
 							iStartPos = iGetConfigSectionNumber(sSection, sizeof sSection), iIndex = StringToInt(sSection[iStartPos]);
-							FormatEx(sDisplay, sizeof sDisplay, "%s (%s)", g_esTank[iIndex].g_sTankName, sSection);
-							mConfigMenu.AddItem(sSection, sDisplay);
+							if (iIndex <= MT_MAXTYPES)
+							{
+								iRealType = g_esTank[iIndex].g_iRecordedType[0];
+								FormatEx(sDisplay, sizeof sDisplay, "%s (Tank #%i) [%s]", g_esTank[iRealType].g_sTankName, iRealType, sSection);
+								mConfigMenu.AddItem(sSection, sDisplay);
+							}
 						}
 					}
 
@@ -10176,8 +10180,8 @@ void vSetTankColor(int tank, int type = 0, bool change = true, bool revert = fal
 		g_esGeneral.g_alCompTypes.Push(type);
 	}
 
-	g_esPlayer[tank].g_iTankType = type;
 	g_esPlayer[tank].g_bReplaceSelf = false;
+	g_esPlayer[tank].g_iTankType = type;
 
 	vRemoveTankProps(tank);
 	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
@@ -11852,7 +11856,6 @@ void vReadTankSettings(const char[] sub, const char[] key, const char[] value)
 			{
 				char sValue[64], sSet[4][4];
 				vGetConfigColors(sValue, sizeof sValue, value);
-
 				vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esTank[iIndex].g_sOzTankColor, sizeof esTank::g_sOzTankColor, value);
 				vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esTank[iIndex].g_sFlameColor, sizeof esTank::g_sFlameColor, value);
 				vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esTank[iIndex].g_sRockColor, sizeof esTank::g_sRockColor, value);
@@ -12890,11 +12893,7 @@ void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 {
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		case true:
-		{
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
-		}
+		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t\n%s %t", MT_TAG2, "CompletedParsing", MT_TAG2, "CheckConsole");
 		case false: vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "CompletedParsing", LANG_SERVER);
 	}
 
@@ -13730,12 +13729,18 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 				if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[0] > MT_MAXTYPES)
 				{
-					LogError("%s An entry (%s) that exceeded the limit (%i) was found.", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
+					LogError("%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
 				}
-				else
+
+				g_esGeneral.g_iTypeCounter[0]++;
+
+				if (g_esGeneral.g_iTypeCounter[0] <= MT_MAXTYPES)
 				{
-					g_esGeneral.g_iTypeCounter[0]++;
 					g_esTank[g_esGeneral.g_iTypeCounter[0]].g_iRealType[0] = iIndex;
+				}
+
+				if (iIndex <= MT_MAXTYPES)
+				{
 					g_esTank[iIndex].g_iRecordedType[0] = g_esGeneral.g_iTypeCounter[0];
 				}
 			}
@@ -13770,12 +13775,18 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 			if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[1] > MT_MAXTYPES)
 			{
-				LogError("%s An entry (%s) that exceeded the limit (%i) was found.", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
+				LogError("%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
 			}
-			else
+
+			g_esGeneral.g_iTypeCounter[1]++;
+
+			if (g_esGeneral.g_iTypeCounter[1] <= MT_MAXTYPES)
 			{
-				g_esGeneral.g_iTypeCounter[1]++;
 				g_esTank[g_esGeneral.g_iTypeCounter[1]].g_iRealType[1] = iIndex;
+			}
+
+			if (iIndex <= MT_MAXTYPES)
+			{
 				g_esTank[iIndex].g_iRecordedType[1] = g_esGeneral.g_iTypeCounter[1];
 			}
 		}
@@ -14398,7 +14409,6 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 							{
 								char sValue[64], sSet[4][4];
 								vGetConfigColors(sValue, sizeof sValue, value);
-
 								vSaveConfigColors(key, "OxygenTankColor", "Oxygen Tank Color", "Oxygen_Tank_Color", "oxygen", g_esPlayer[iPlayer].g_sOzTankColor, sizeof esPlayer::g_sOzTankColor, value);
 								vSaveConfigColors(key, "FlameColor", "Flame Color", "Flame_Color", "flame", g_esPlayer[iPlayer].g_sFlameColor, sizeof esPlayer::g_sFlameColor, value);
 								vSaveConfigColors(key, "RockColor", "Rock Color", "Rock_Color", "rock", g_esPlayer[iPlayer].g_sRockColor, sizeof esPlayer::g_sRockColor, value);
@@ -20592,7 +20602,8 @@ Action tTimerUpdateBoss(Handle timer, DataPack pack)
 		return Plugin_Continue;
 	}
 
-	int iBossStageCount = g_esPlayer[iTank].g_iBossStageCount, iBossStages = pack.ReadCell(), iBossHealths[5], iTypes[5];
+	int iBossStageCount = g_esPlayer[iTank].g_iBossStageCount,
+		iBossStages = pack.ReadCell(), iBossHealths[5], iTypes[5];
 	iBossHealths[0] = pack.ReadCell(), iTypes[0] = pack.ReadCell(),
 	iBossHealths[1] = pack.ReadCell(), iTypes[1] = pack.ReadCell(),
 	iBossHealths[2] = pack.ReadCell(), iTypes[2] = pack.ReadCell(),
