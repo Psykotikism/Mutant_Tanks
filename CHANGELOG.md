@@ -7,6 +7,9 @@
 #### General
 - Fixed a potential memory leak caused by fixing the Tank's position when stuck.
 
+#### Config Files
+- Fixed parsing errors for config files that use one of the other formats.
+
 #### Abilities
 - Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to `zaviier` for reporting!)
 - Drug: Fixed affected survivors remaining drugged after dying and respawning.
