@@ -4971,7 +4971,7 @@ int iPrefsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 {
-	char sIndex[5], sMenuItem[46], sTankName[33];
+	char sIndex[5], sMenuItem[64], sTankName[33];
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mTankMenu.SetTitle("%s List", MT_CONFIG_SECTION_MAIN);
 
