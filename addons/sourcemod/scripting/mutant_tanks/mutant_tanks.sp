@@ -689,6 +689,7 @@ enum struct esGeneral
 	int g_iConfigExecute;
 	int g_iConfigMode;
 	int g_iCreditIgniters;
+	int g_iCurrentLine;
 	int g_iCurrentMode;
 	int g_iDeathDetails;
 	int g_iDeathMessage;
@@ -4212,7 +4213,7 @@ void vConfigMenu(int admin, int item = 0)
 	g_esGeneral.g_alSections = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	if (g_esGeneral.g_alSections != null)
 	{
-		SMCParser smcConfig = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Config, SMCNewSection_Config, SMCKeyValues_Config, SMCEndSection_Config, SMCParseEnd_Config);
+		SMCParser smcConfig = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Config, SMCNewSection_Config, SMCKeyValues_Config, SMCEndSection_Config, SMCRawLine_Config, SMCParseEnd_Config);
 
 		switch (smcConfig != null)
 		{
@@ -12137,7 +12138,7 @@ void vSetupConfigs()
  * Parser functions & callbacks
  **/
 
-SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_NewSection newSectionFunc, SMC_KeyValue kvFunc, SMC_EndSection leaveSectionFunc, SMC_ParseEnd endFunc)
+SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_NewSection newSectionFunc, SMC_KeyValue kvFunc, SMC_EndSection leaveSectionFunc, SMC_RawLine rawLineFunc, SMC_ParseEnd endFunc)
 {
 	SMCParser smcParser = new SMCParser();
 	if (smcParser != null)
@@ -12146,14 +12147,16 @@ SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_Ne
 		smcParser.OnEnterSection = newSectionFunc;
 		smcParser.OnKeyValue = kvFunc;
 		smcParser.OnLeaveSection = leaveSectionFunc;
+		smcParser.OnRawLine = rawLineFunc;
 		smcParser.OnEnd = endFunc;
 		SMCError smcError = smcParser.ParseFile(savepath);
 
 		if (smcError != SMCError_Okay)
 		{
-			char sSmcError[64];
-			smcParser.GetErrorString(smcError, sSmcError, sizeof sSmcError);
-			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
+			char sError[64], sSMCError[64];
+			smcParser.GetErrorString(smcError, sError, sizeof sError);
+			FormatEx(sSMCError, sizeof sSMCError, "(Line %i) %s", g_esGeneral.g_iCurrentLine, sError);
+			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSMCError);
 
 			delete smcParser;
 		}
@@ -12169,6 +12172,7 @@ SMCParser smcSetupParser(const char[] savepath, SMC_ParseStart startFunc, SMC_Ne
 void SMCParseStart_Signatures(SMCParser smc)
 {
 	g_esGeneral.g_dsState3 = DataState_None;
+	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel5 = 0;
 	g_esGeneral.g_sCurrentSection4[0] = '\0';
 	g_esGeneral.g_iSignatureCount = 0;
@@ -12284,6 +12288,13 @@ SMCResult SMCEndSection_Signatures(SMCParser smc)
 	return SMCParse_Continue;
 }
 
+SMCResult SMCRawLine_Signatures(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
+
+	return SMCParse_Continue;
+}
+
 void SMCParseEnd_Signatures(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_dsState3 = DataState_None;
@@ -12297,6 +12308,7 @@ void SMCParseStart_Patches(SMCParser smc)
 {
 	g_esGeneral.g_bOverridePatch = true;
 	g_esGeneral.g_dsState2 = DataState_None;
+	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel4 = 0;
 	g_esGeneral.g_sCurrentSection3[0] = '\0';
 	g_esGeneral.g_sCurrentSubSection3[0] = '\0';
@@ -12454,6 +12466,13 @@ SMCResult SMCEndSection_Patches(SMCParser smc)
 	return SMCParse_Continue;
 }
 
+SMCResult SMCRawLine_Patches(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
+
+	return SMCParse_Continue;
+}
+
 void SMCParseEnd_Patches(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_dsState2 = DataState_None;
@@ -12468,6 +12487,7 @@ void SMCParseStart_Detours(SMCParser smc)
 {
 	g_esGeneral.g_bOverrideDetour = true;
 	g_esGeneral.g_dsState = DataState_None;
+	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel3 = 0;
 	g_esGeneral.g_sCurrentSection2[0] = '\0';
 	g_esGeneral.g_sCurrentSubSection2[0] = '\0';
@@ -12613,6 +12633,13 @@ SMCResult SMCEndSection_Detours(SMCParser smc)
 	return SMCParse_Continue;
 }
 
+SMCResult SMCRawLine_Detours(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
+
+	return SMCParse_Continue;
+}
+
 void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_dsState = DataState_None;
@@ -12625,7 +12652,7 @@ void SMCParseEnd_Detours(SMCParser smc, bool halted, bool failed)
 
 void SMCParseStart_Config(SMCParser smc)
 {
-	return;
+	g_esGeneral.g_iCurrentLine = 0;
 }
 
 SMCResult SMCNewSection_Config(SMCParser smc, const char[] name, bool opt_quotes)
@@ -12655,6 +12682,13 @@ SMCResult SMCEndSection_Config(SMCParser smc)
 	return SMCParse_Continue;
 }
 
+SMCResult SMCRawLine_Config(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
+
+	return SMCParse_Continue;
+}
+
 void SMCParseEnd_Config(SMCParser smc, bool halted, bool failed)
 {
 	return;
@@ -12665,7 +12699,7 @@ void vParseConfig(int client)
 	g_esGeneral.g_bUsedParser = true;
 	g_esGeneral.g_iParserViewer = client;
 
-	SMCParser smcParser = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Parser, SMCNewSection_Parser, SMCKeyValues_Parser, SMCEndSection_Parser, SMCParseEnd_Parser);
+	SMCParser smcParser = smcSetupParser(g_esGeneral.g_sChosenPath, SMCParseStart_Parser, SMCNewSection_Parser, SMCKeyValues_Parser, SMCEndSection_Parser, SMCRawLine_Parser, SMCParseEnd_Parser);
 	if (smcParser != null)
 	{
 		delete smcParser;
@@ -12675,6 +12709,7 @@ void vParseConfig(int client)
 void SMCParseStart_Parser(SMCParser smc)
 {
 	g_esGeneral.g_csState2 = ConfigState_None;
+	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel2 = 0;
 
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -12889,6 +12924,13 @@ SMCResult SMCEndSection_Parser(SMCParser smc)
 	return SMCParse_Continue;
 }
 
+SMCResult SMCRawLine_Parser(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
+
+	return SMCParse_Continue;
+}
+
 void SMCParseEnd_Parser(SMCParser smc, bool halted, bool failed)
 {
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -13008,7 +13050,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 		}
 	}
 
-	SMCParser smcMain = smcSetupParser(savepath, SMCParseStart_Main, SMCNewSection_Main, SMCKeyValues_Main, SMCEndSection_Main, SMCParseEnd_Main);
+	SMCParser smcMain = smcSetupParser(savepath, SMCParseStart_Main, SMCNewSection_Main, SMCKeyValues_Main, SMCEndSection_Main, SMCRawLine_Main, SMCParseEnd_Main);
 	if (smcMain != null)
 	{
 		delete smcMain;
@@ -13018,6 +13060,7 @@ void vLoadConfigs(const char[] savepath, int mode)
 void SMCParseStart_Main(SMCParser smc)
 {
 	g_esGeneral.g_csState = ConfigState_None;
+	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel = 0;
 	g_esGeneral.g_iTypeCounter[0] = 0;
 	g_esGeneral.g_iTypeCounter[1] = 0;
@@ -14507,6 +14550,13 @@ SMCResult SMCEndSection_Main(SMCParser smc)
 	{
 		g_esGeneral.g_csState = ConfigState_None;
 	}
+
+	return SMCParse_Continue;
+}
+
+SMCResult SMCRawLine_Main(SMCParser smc, const char[] line, int lineno)
+{
+	g_esGeneral.g_iCurrentLine = lineno;
 
 	return SMCParse_Continue;
 }
@@ -16109,7 +16159,7 @@ void vRegisterDetours()
 		return;
 	}
 
-	SMCParser smcDetours = smcSetupParser(sFilePath, SMCParseStart_Detours, SMCNewSection_Detours, SMCKeyValues_Detours, SMCEndSection_Detours, SMCParseEnd_Detours);
+	SMCParser smcDetours = smcSetupParser(sFilePath, SMCParseStart_Detours, SMCNewSection_Detours, SMCKeyValues_Detours, SMCEndSection_Detours, SMCRawLine_Detours, SMCParseEnd_Detours);
 	if (smcDetours != null)
 	{
 		delete smcDetours;
@@ -18124,7 +18174,7 @@ void vRegisterPatches()
 		return;
 	}
 
-	SMCParser smcPatches = smcSetupParser(sFilePath, SMCParseStart_Patches, SMCNewSection_Patches, SMCKeyValues_Patches, SMCEndSection_Patches, SMCParseEnd_Patches);
+	SMCParser smcPatches = smcSetupParser(sFilePath, SMCParseStart_Patches, SMCNewSection_Patches, SMCKeyValues_Patches, SMCEndSection_Patches, SMCRawLine_Patches, SMCParseEnd_Patches);
 	if (smcPatches != null)
 	{
 		delete smcPatches;
@@ -18258,7 +18308,7 @@ void vRegisterSignatures()
 		return;
 	}
 
-	SMCParser smcSignatures = smcSetupParser(sFilePath, SMCParseStart_Signatures, SMCNewSection_Signatures, SMCKeyValues_Signatures, SMCEndSection_Signatures, SMCParseEnd_Signatures);
+	SMCParser smcSignatures = smcSetupParser(sFilePath, SMCParseStart_Signatures, SMCNewSection_Signatures, SMCKeyValues_Signatures, SMCEndSection_Signatures, SMCRawLine_Signatures, SMCParseEnd_Signatures);
 	if (smcSignatures != null)
 	{
 		delete smcSignatures;
