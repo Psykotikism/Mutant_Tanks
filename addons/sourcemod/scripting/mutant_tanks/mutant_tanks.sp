@@ -9385,7 +9385,7 @@ void vChooseArrivalType(int tank, const char[] oldname, const char[] name, int m
 			{
 				char sPhrase[64], sSteamIDFinal[64], sTankNote[64];
 				FormatEx(sSteamIDFinal, sizeof sSteamIDFinal, "%s", (TranslationPhraseExists(g_esPlayer[tank].g_sSteamID32) ? g_esPlayer[tank].g_sSteamID32 : g_esPlayer[tank].g_sSteam3ID));
-				FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", g_esPlayer[tank].g_iTankType);
+				FormatEx(sPhrase, sizeof sPhrase, "Tank #%i", g_esTank[g_esPlayer[tank].g_iTankType].g_iRealType[0]);
 				FormatEx(sTankNote, sizeof sTankNote, "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 				bool bExists = TranslationPhraseExists(sTankNote);
@@ -18643,7 +18643,7 @@ void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
 	else if (g_esTank[iType].g_sTankName[0] != '\0')
 	{
 		char sTankName[32];
-		FormatEx(sTankName, sizeof sTankName, "Tank #%i Name", iType);
+		FormatEx(sTankName, sizeof sTankName, "Tank #%i Name", g_esTank[iType].g_iRealType[0]);
 
 		switch (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
 		{
