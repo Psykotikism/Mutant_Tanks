@@ -13766,13 +13766,13 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 				{
 					if (g_esTank[iType].g_iRealType[0] == iIndex)
 					{
-						LogError("%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSection);
+						vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSection);
 					}
 				}
 
 				if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[0] > MT_MAXTYPES)
 				{
-					LogError("%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
+					vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSection, MT_MAXTYPES);
 				}
 
 				g_esGeneral.g_iTypeCounter[0]++;
@@ -13812,13 +13812,13 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 			{
 				if (g_esTank[iType].g_iRealType[1] == iIndex)
 				{
-					LogError("%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSubSection);
+					vLogMessage(MT_LOG_SERVER, _, "%s A duplicate entry was found for \"%s\".", MT_TAG, g_esGeneral.g_sCurrentSubSection);
 				}
 			}
 
 			if (iIndex > MT_MAXTYPES || g_esGeneral.g_iTypeCounter[1] > MT_MAXTYPES)
 			{
-				LogError("%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
+				vLogMessage(MT_LOG_SERVER, _, "%s An entry (%s) was found that exceeds the limit (%i).", MT_TAG, g_esGeneral.g_sCurrentSubSection, MT_MAXTYPES);
 			}
 
 			g_esGeneral.g_iTypeCounter[1]++;
