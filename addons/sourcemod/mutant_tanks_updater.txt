@@ -20,6 +20,7 @@
 		"Notes"		"Abilities:"
 		"Notes"		"- Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to \"zaviier\" for reporting!)"
 		"Notes"		"- Drug: Fixed affected survivors remaining drugged after dying and respawning."
+		"Notes"		"- Heal: Fixed survivors being healed when healing their teammates. (Thanks to \"Balloons\" for reporting!)"
 		"Notes"		"- Ice: Fixed affected survivors remaining immobile after dying and respawning."
 		"Notes"		"- Laser: Fixed the incorrect minimum value of the \"Laser Range\" setting."
 		"Notes"		"- Slow: Fixed affected survivors remaining slow after dying and respawning."

@@ -156,6 +156,8 @@
 </details>
 
 ## Sections
+<details>
+	<summary>Click to expand!</summary>
 
 ### Plugin Settings
 <details>
@@ -25808,4 +25810,5 @@
 	}
 }
 ```
+</details>
 </details>

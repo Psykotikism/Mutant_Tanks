@@ -13,6 +13,7 @@
 #### Abilities
 - Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to `zaviier` for reporting!)
 - Drug: Fixed affected survivors remaining drugged after dying and respawning.
+- Heal: Fixed survivors being healed when healing their teammates. (Thanks to `Balloons` for reporting!)
 - Ice: Fixed affected survivors remaining immobile after dying and respawning.
 - Laser: Fixed the incorrect minimum value of the `Laser Range` setting.
 - Slow: Fixed affected survivors remaining slow after dying and respawning.
