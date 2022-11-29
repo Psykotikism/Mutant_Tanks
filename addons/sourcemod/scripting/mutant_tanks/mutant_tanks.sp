@@ -15901,9 +15901,12 @@ void OnEffectSpawnPost(int entity)
 
 void OnInfectedSpawnPost(int entity)
 {
-	SDKHook(entity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
-	SDKHook(entity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
-	SDKHook(entity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
+	if (bIsValidEntity(entity))
+	{
+		SDKHook(entity, SDKHook_OnTakeDamage, OnInfectedTakeDamage);
+		SDKHook(entity, SDKHook_OnTakeDamage, OnPlayerTakeDamage);
+		SDKHook(entity, SDKHook_OnTakeDamagePost, OnPlayerTakeDamagePost);
+	}
 }
 
 void OnPropSpawnPost(int entity)

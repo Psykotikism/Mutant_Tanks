@@ -6,6 +6,7 @@
 
 #### General
 - Fixed a potential memory leak caused by fixing the Tank's position when stuck.
+- Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
 
 #### Config Files
 - Fixed parsing errors for config files that use one of the other formats.
