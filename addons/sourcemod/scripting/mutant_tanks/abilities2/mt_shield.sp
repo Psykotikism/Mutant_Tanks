@@ -546,7 +546,10 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 void OnInfectedSpawnPost(int entity)
 {
-	SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	if (bIsValidEntity(entity))
+	{
+		SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	}
 }
 
 Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
