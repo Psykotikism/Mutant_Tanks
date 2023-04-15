@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -69,8 +69,10 @@ enum struct esGravityPlayer
 	float g_flCloseAreasOnly;
 	float g_flGravityChance;
 	float g_flGravityForce;
+	float g_flGravityRadius;
 	float g_flGravityRange;
 	float g_flGravityRangeChance;
+	float g_flGravityRockChance;
 	float g_flGravityValue;
 	float g_flOpenAreasOnly;
 
@@ -90,16 +92,20 @@ enum struct esGravityPlayer
 	int g_iGravityMessage;
 	int g_iGravityPointPush;
 	int g_iGravityRangeCooldown;
+	int g_iGravityRockBreak;
+	int g_iGravityRockCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
+	int g_iRockCooldown;
 	int g_iTankType;
 }
 
@@ -110,8 +116,10 @@ enum struct esGravityAbility
 	float g_flCloseAreasOnly;
 	float g_flGravityChance;
 	float g_flGravityForce;
+	float g_flGravityRadius;
 	float g_flGravityRange;
 	float g_flGravityRangeChance;
+	float g_flGravityRockChance;
 	float g_flGravityValue;
 	float g_flOpenAreasOnly;
 
@@ -126,12 +134,15 @@ enum struct esGravityAbility
 	int g_iGravityHitMode;
 	int g_iGravityMessage;
 	int g_iGravityRangeCooldown;
+	int g_iGravityRockBreak;
+	int g_iGravityRockCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
 	int g_iRequiresHumans;
 }
@@ -143,8 +154,10 @@ enum struct esGravityCache
 	float g_flCloseAreasOnly;
 	float g_flGravityChance;
 	float g_flGravityForce;
+	float g_flGravityRadius;
 	float g_flGravityRange;
 	float g_flGravityRangeChance;
+	float g_flGravityRockChance;
 	float g_flGravityValue;
 	float g_flOpenAreasOnly;
 
@@ -157,12 +170,15 @@ enum struct esGravityCache
 	int g_iGravityHitMode;
 	int g_iGravityMessage;
 	int g_iGravityRangeCooldown;
+	int g_iGravityRockBreak;
+	int g_iGravityRockCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iHumanRangeCooldown;
+	int g_iHumanRockCooldown;
 	int g_iRequiresHumans;
 }
 
@@ -278,6 +294,7 @@ void vGravityMenu(int client, const char[] name, int item)
 	mAbilityMenu.AddItem("Duration", "Duration");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
 	mAbilityMenu.AddItem("Range Cooldown", "Range Cooldown");
+	mAbilityMenu.AddItem("Rock Cooldown", "Rock Cooldown");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -307,6 +324,7 @@ int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanDuration : g_esGravityCache[param1].g_iGravityDuration));
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, (g_esGravityCache[param1].g_iHumanAbility == 0) ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 				case 8: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRangeCooldown", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanRangeCooldown : g_esGravityCache[param1].g_iGravityRangeCooldown));
+				case 9: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityRockCooldown", ((g_esGravityCache[param1].g_iHumanAbility == 1) ? g_esGravityCache[param1].g_iHumanRockCooldown : g_esGravityCache[param1].g_iGravityRockCooldown));
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
@@ -338,6 +356,7 @@ int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 					case 6: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "Duration", param1);
 					case 7: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "HumanSupport", param1);
 					case 8: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RangeCooldown", param1);
+					case 9: FormatEx(sMenuOption, sizeof sMenuOption, "%T", "RockCooldown", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);
@@ -426,7 +445,7 @@ Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGravityHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esGravityCache[attacker].g_flGravityChance, g_esGravityCache[attacker].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vGravityHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esGravityCache[attacker].g_flGravityChance, g_esGravityCache[attacker].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esGravityCache[victim].g_iGravityHitMode == 0 || g_esGravityCache[victim].g_iGravityHitMode == 2) && bIsSurvivor(attacker) && g_esGravityCache[victim].g_iComboAbility == 0)
@@ -438,7 +457,7 @@ Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vGravityHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esGravityCache[victim].g_flGravityChance, g_esGravityCache[victim].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vGravityHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esGravityCache[victim].g_flGravityChance, g_esGravityCache[victim].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -468,7 +487,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGravityCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+void vGravityCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #else
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
@@ -567,6 +586,13 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 							}
 						}
 					}
+					case MT_COMBO_ROCKBREAK:
+					{
+						if (g_esGravityCache[tank].g_iGravityRockBreak == 1 && bIsValidEntity(weapon))
+						{
+							vGravityRockBreak2(tank, weapon, random, iPos);
+						}
+					}
 				}
 
 				break;
@@ -599,6 +625,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGravityAbility[iIndex].g_iHumanDuration = 5;
 				g_esGravityAbility[iIndex].g_iHumanMode = 1;
 				g_esGravityAbility[iIndex].g_iHumanRangeCooldown = 0;
+				g_esGravityAbility[iIndex].g_iHumanRockCooldown = 0;
 				g_esGravityAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esGravityAbility[iIndex].g_iRequiresHumans = 0;
 				g_esGravityAbility[iIndex].g_iGravityAbility = 0;
@@ -608,11 +635,15 @@ public void MT_OnConfigsLoad(int mode)
 				g_esGravityAbility[iIndex].g_iGravityCooldown = 0;
 				g_esGravityAbility[iIndex].g_iGravityDuration = 5;
 				g_esGravityAbility[iIndex].g_flGravityForce = -50.0;
+				g_esGravityAbility[iIndex].g_iGravityHit = 0;
+				g_esGravityAbility[iIndex].g_iGravityHitMode = 0;
+				g_esGravityAbility[iIndex].g_flGravityRadius = 750.0;
 				g_esGravityAbility[iIndex].g_flGravityRange = 150.0;
 				g_esGravityAbility[iIndex].g_flGravityRangeChance = 15.0;
 				g_esGravityAbility[iIndex].g_iGravityRangeCooldown = 0;
-				g_esGravityAbility[iIndex].g_iGravityHit = 0;
-				g_esGravityAbility[iIndex].g_iGravityHitMode = 0;
+				g_esGravityAbility[iIndex].g_iGravityRockBreak = 0;
+				g_esGravityAbility[iIndex].g_flGravityRockChance = 33.3;
+				g_esGravityAbility[iIndex].g_iGravityRockCooldown = 0;
 				g_esGravityAbility[iIndex].g_flGravityValue = 0.3;
 			}
 		}
@@ -632,6 +663,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGravityPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanMode = 0;
 					g_esGravityPlayer[iPlayer].g_iHumanRangeCooldown = 0;
+					g_esGravityPlayer[iPlayer].g_iHumanRockCooldown = 0;
 					g_esGravityPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esGravityPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esGravityPlayer[iPlayer].g_iGravityAbility = 0;
@@ -641,11 +673,15 @@ public void MT_OnConfigsLoad(int mode)
 					g_esGravityPlayer[iPlayer].g_iGravityCooldown = 0;
 					g_esGravityPlayer[iPlayer].g_iGravityDuration = 0;
 					g_esGravityPlayer[iPlayer].g_flGravityForce = 0.0;
+					g_esGravityPlayer[iPlayer].g_iGravityHit = 0;
+					g_esGravityPlayer[iPlayer].g_iGravityHitMode = 0;
+					g_esGravityPlayer[iPlayer].g_flGravityRadius = 0.0;
 					g_esGravityPlayer[iPlayer].g_flGravityRange = 0.0;
 					g_esGravityPlayer[iPlayer].g_flGravityRangeChance = 0.0;
 					g_esGravityPlayer[iPlayer].g_iGravityRangeCooldown = 0;
-					g_esGravityPlayer[iPlayer].g_iGravityHit = 0;
-					g_esGravityPlayer[iPlayer].g_iGravityHitMode = 0;
+					g_esGravityPlayer[iPlayer].g_iGravityRockBreak = 0;
+					g_esGravityPlayer[iPlayer].g_flGravityRockChance = 0.0;
+					g_esGravityPlayer[iPlayer].g_iGravityRockCooldown = 0;
 					g_esGravityPlayer[iPlayer].g_flGravityValue = 0.0;
 				}
 			}
@@ -669,6 +705,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGravityPlayer[admin].g_iHumanDuration, value, 0, 99999);
 		g_esGravityPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityPlayer[admin].g_iHumanMode, value, 0, 1);
 		g_esGravityPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
+		g_esGravityPlayer[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravityPlayer[admin].g_iHumanRockCooldown, value, 0, 99999);
 		g_esGravityPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esGravityPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esGravityPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityPlayer[admin].g_iGravityAbility, value, 0, 3);
@@ -680,9 +717,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityPlayer[admin].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityPlayer[admin].g_flGravityForce, value, -100.0, 100.0);
 		g_esGravityPlayer[admin].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityPlayer[admin].g_iGravityHit, value, 0, 1);
 		g_esGravityPlayer[admin].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityPlayer[admin].g_iGravityHitMode, value, 0, 2);
+		g_esGravityPlayer[admin].g_flGravityRadius = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRadius", "Gravity Radius", "Gravity_Radius", "radius", g_esGravityPlayer[admin].g_flGravityRadius, value, 1.0, 99999.0);
 		g_esGravityPlayer[admin].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityPlayer[admin].g_flGravityRange, value, 1.0, 99999.0);
 		g_esGravityPlayer[admin].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityPlayer[admin].g_flGravityRangeChance, value, 0.0, 100.0);
 		g_esGravityPlayer[admin].g_iGravityRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeCooldown", "Gravity Range Cooldown", "Gravity_Range_Cooldown", "rangecooldown", g_esGravityPlayer[admin].g_iGravityRangeCooldown, value, 0, 99999);
+		g_esGravityPlayer[admin].g_iGravityRockBreak = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockBreak", "Gravity Rock Break", "Gravity_Rock_Break", "rock", g_esGravityPlayer[admin].g_iGravityRockBreak, value, 0, 1);
+		g_esGravityPlayer[admin].g_flGravityRockChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockChance", "Gravity Rock Chance", "Gravity_Rock_Chance", "rockchance", g_esGravityPlayer[admin].g_flGravityRockChance, value, 0.0, 100.0);
+		g_esGravityPlayer[admin].g_iGravityRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockCooldown", "Gravity Rock Cooldown", "Gravity_Rock_Cooldown", "rockcooldown", g_esGravityPlayer[admin].g_iGravityRockCooldown, value, 0, 99999);
 		g_esGravityPlayer[admin].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityPlayer[admin].g_flGravityValue, value, 0.1, 99999.0);
 		g_esGravityPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esGravityPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -698,6 +739,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esGravityAbility[type].g_iHumanDuration, value, 0, 99999);
 		g_esGravityAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esGravityAbility[type].g_iHumanMode, value, 0, 1);
 		g_esGravityAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esGravityAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
+		g_esGravityAbility[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esGravityAbility[type].g_iHumanRockCooldown, value, 0, 99999);
 		g_esGravityAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esGravityAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
 		g_esGravityAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGravityAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esGravityAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esGravityAbility[type].g_iGravityAbility, value, 0, 3);
@@ -709,9 +751,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGravityAbility[type].g_flGravityForce = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esGravityAbility[type].g_flGravityForce, value, -100.0, 100.0);
 		g_esGravityAbility[type].g_iGravityHit = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esGravityAbility[type].g_iGravityHit, value, 0, 1);
 		g_esGravityAbility[type].g_iGravityHitMode = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esGravityAbility[type].g_iGravityHitMode, value, 0, 2);
+		g_esGravityAbility[type].g_flGravityRadius = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRadius", "Gravity Radius", "Gravity_Radius", "radius", g_esGravityAbility[type].g_flGravityRadius, value, 1.0, 99999.0);
 		g_esGravityAbility[type].g_flGravityRange = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esGravityAbility[type].g_flGravityRange, value, 1.0, 99999.0);
 		g_esGravityAbility[type].g_flGravityRangeChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esGravityAbility[type].g_flGravityRangeChance, value, 0.0, 100.0);
 		g_esGravityAbility[type].g_iGravityRangeCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRangeCooldown", "Gravity Range Cooldown", "Gravity_Range_Cooldown", "rangecooldown", g_esGravityAbility[type].g_iGravityRangeCooldown, value, 0, 99999);
+		g_esGravityAbility[type].g_iGravityRockBreak = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockBreak", "Gravity Rock Break", "Gravity_Rock_Break", "rock", g_esGravityAbility[type].g_iGravityRockBreak, value, 0, 1);
+		g_esGravityAbility[type].g_flGravityRockChance = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockChance", "Gravity Rock Chance", "Gravity_Rock_Chance", "rockchance", g_esGravityAbility[type].g_flGravityRockChance, value, 0.0, 100.0);
+		g_esGravityAbility[type].g_iGravityRockCooldown = iGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityRockCooldown", "Gravity Rock Cooldown", "Gravity_Rock_Cooldown", "rockcooldown", g_esGravityAbility[type].g_iGravityRockCooldown, value, 0, 99999);
 		g_esGravityAbility[type].g_flGravityValue = flGetKeyValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esGravityAbility[type].g_flGravityValue, value, 0.1, 99999.0);
 		g_esGravityAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esGravityAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GRAVITY_SECTION, MT_GRAVITY_SECTION2, MT_GRAVITY_SECTION3, MT_GRAVITY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -729,8 +775,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGravityCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iComboAbility, g_esGravityAbility[type].g_iComboAbility);
 	g_esGravityCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityChance, g_esGravityAbility[type].g_flGravityChance);
 	g_esGravityCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityForce, g_esGravityAbility[type].g_flGravityForce, 2);
+	g_esGravityCache[tank].g_flGravityRadius = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRadius, g_esGravityAbility[type].g_flGravityRadius);
 	g_esGravityCache[tank].g_flGravityRange = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRange, g_esGravityAbility[type].g_flGravityRange);
 	g_esGravityCache[tank].g_flGravityRangeChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRangeChance, g_esGravityAbility[type].g_flGravityRangeChance);
+	g_esGravityCache[tank].g_flGravityRockChance = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityRockChance, g_esGravityAbility[type].g_flGravityRockChance);
 	g_esGravityCache[tank].g_flGravityValue = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flGravityValue, g_esGravityAbility[type].g_flGravityValue);
 	g_esGravityCache[tank].g_iGravityAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityAbility, g_esGravityAbility[type].g_iGravityAbility);
 	g_esGravityCache[tank].g_iGravityCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityCooldown, g_esGravityAbility[type].g_iGravityCooldown);
@@ -739,12 +787,15 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esGravityCache[tank].g_iGravityHit = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHit, g_esGravityAbility[type].g_iGravityHit);
 	g_esGravityCache[tank].g_iGravityHitMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityHitMode, g_esGravityAbility[type].g_iGravityHitMode);
 	g_esGravityCache[tank].g_iGravityMessage = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityMessage, g_esGravityAbility[type].g_iGravityMessage);
+	g_esGravityCache[tank].g_iGravityRockBreak = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockBreak, g_esGravityAbility[type].g_iGravityRockBreak);
+	g_esGravityCache[tank].g_iGravityRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iGravityRockCooldown, g_esGravityAbility[type].g_iGravityRockCooldown);
 	g_esGravityCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAbility, g_esGravityAbility[type].g_iHumanAbility);
 	g_esGravityCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanAmmo, g_esGravityAbility[type].g_iHumanAmmo);
 	g_esGravityCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanCooldown, g_esGravityAbility[type].g_iHumanCooldown);
 	g_esGravityCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanDuration, g_esGravityAbility[type].g_iHumanDuration);
 	g_esGravityCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanMode, g_esGravityAbility[type].g_iHumanMode);
 	g_esGravityCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRangeCooldown, g_esGravityAbility[type].g_iHumanRangeCooldown);
+	g_esGravityCache[tank].g_iHumanRockCooldown = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iHumanRockCooldown, g_esGravityAbility[type].g_iHumanRockCooldown);
 	g_esGravityCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_flOpenAreasOnly, g_esGravityAbility[type].g_flOpenAreasOnly);
 	g_esGravityCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esGravityPlayer[tank].g_iRequiresHumans, g_esGravityAbility[type].g_iRequiresHumans);
 	g_esGravityPlayer[tank].g_iTankType = apply ? type : 0;
@@ -860,7 +911,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esGravityCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esGravityCache[tank].g_iGravityAbility > 0 && g_esGravityCache[tank].g_iComboAbility == 0)
 	{
 		vGravityAbility(tank, false);
-		vGravityAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+		vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -908,12 +959,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esGravityPlayer[tank].g_bActivated = true;
 							g_esGravityPlayer[tank].g_iAmmoCount++;
 
-							g_esGravityPlayer[tank].g_iGravityPointPush = CreateEntityByName("point_push");
-							if (bIsValidEntity(g_esGravityPlayer[tank].g_iGravityPointPush))
-							{
-								vGravity(tank);
-							}
-
+							vGravity(tank);
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman", g_esGravityPlayer[tank].g_iAmmoCount, g_esGravityCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esGravityPlayer[tank].g_bActivated)
@@ -937,7 +983,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			switch (g_esGravityPlayer[tank].g_iRangeCooldown == -1 || g_esGravityPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vGravityAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+				case true: vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman6", (g_esGravityPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -979,26 +1025,67 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vGravityReset2(tank);
 }
 
-void vGravity(int tank)
+#if defined MT_ABILITIES_MAIN
+void vGravityRockBreak(int tank, int rock)
+#else
+public void MT_OnRockBreak(int tank, int rock)
+#endif
 {
-	if ((g_esGravityPlayer[tank].g_iCooldown2 != -1 && g_esGravityPlayer[tank].g_iCooldown2 > GetTime()) || bIsAreaNarrow(tank, g_esGravityCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGravityCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGravityPlayer[tank].g_iTankType) || (g_esGravityCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGravityCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esGravityCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGravityCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGravityPlayer[tank].g_iTankType) || (g_esGravityCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGravityCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[tank].g_iAccessFlags)) || g_esGravityCache[tank].g_iHumanAbility == 0)))
+	{
+		return;
+	}
+
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esGravityCache[tank].g_iGravityRockBreak == 1 && g_esGravityCache[tank].g_iComboAbility == 0)
+	{
+		vGravityRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
+	}
+}
+
+void vGravity(int tank, bool save = true, int rock = -1, int pos = -1)
+{
+	if (save && ((g_esGravityPlayer[tank].g_iCooldown2 != -1 && g_esGravityPlayer[tank].g_iCooldown2 > GetTime()) || bIsAreaNarrow(tank, g_esGravityCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esGravityCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esGravityPlayer[tank].g_iTankType) || (g_esGravityCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esGravityCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esGravityAbility[g_esGravityPlayer[tank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[tank].g_iAccessFlags))))
 	{
 		return;
 	}
 
 	float flOrigin[3], flAngles[3];
-	GetEntPropVector(tank, Prop_Data, "m_vecOrigin", flOrigin);
-	GetEntPropVector(tank, Prop_Data, "m_angRotation", flAngles);
+	if (save)
+	{
+		GetClientAbsOrigin(tank, flOrigin);
+		GetClientAbsAngles(tank, flAngles);
+	}
+	else
+	{
+		GetEntPropVector(rock, Prop_Data, "m_vecOrigin", flOrigin);
+		GetEntPropVector(rock, Prop_Data, "m_angRotation", flAngles);
+	}
+
 	flAngles[0] += -90.0;
 
-	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "origin", flOrigin);
-	DispatchKeyValueVector(g_esGravityPlayer[tank].g_iGravityPointPush, "angles", flAngles);
-	DispatchKeyValueInt(g_esGravityPlayer[tank].g_iGravityPointPush, "radius", 750);
-	DispatchKeyValueFloat(g_esGravityPlayer[tank].g_iGravityPointPush, "magnitude", g_esGravityCache[tank].g_flGravityForce);
-	DispatchKeyValueInt(g_esGravityPlayer[tank].g_iGravityPointPush, "spawnflags", 8);
-	vSetEntityParent(g_esGravityPlayer[tank].g_iGravityPointPush, tank, true);
-	AcceptEntityInput(g_esGravityPlayer[tank].g_iGravityPointPush, "Enable");
-	g_esGravityPlayer[tank].g_iGravityPointPush = EntIndexToEntRef(g_esGravityPlayer[tank].g_iGravityPointPush);
+	int iPointPush = CreateEntityByName("point_push");
+	if (bIsValidEntity(iPointPush))
+	{
+		DispatchKeyValueVector(iPointPush, "origin", flOrigin);
+		DispatchKeyValueVector(iPointPush, "angles", flAngles);
+		DispatchKeyValueFloat(iPointPush, "magnitude", g_esGravityCache[tank].g_flGravityForce);
+		DispatchKeyValueFloat(iPointPush, "radius", g_esGravityCache[tank].g_flGravityRadius);
+		DispatchKeyValueInt(iPointPush, "spawnflags", 8);
+		vSetEntityParent(iPointPush, tank, true);
+		AcceptEntityInput(iPointPush, "Enable");
+
+		switch (save)
+		{
+			case true: g_esGravityPlayer[tank].g_iGravityPointPush = EntIndexToEntRef(iPointPush);
+			case false:
+			{
+				float flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : float(g_esGravityCache[tank].g_iGravityDuration);
+				flDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? float(g_esGravityCache[tank].g_iHumanDuration) : flDuration;
+				iPointPush = EntIndexToEntRef(iPointPush);
+				vDeleteEntity(iPointPush, flDuration);
+			}
+		}
+	}
 }
 
 void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
@@ -1064,30 +1151,26 @@ void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
 			{
 				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGravityPlayer[tank].g_iAmmoCount < g_esGravityCache[tank].g_iHumanAmmo && g_esGravityCache[tank].g_iHumanAmmo > 0))
 				{
-					g_esGravityPlayer[tank].g_iGravityPointPush = CreateEntityByName("point_push");
-					if (bIsValidEntity(g_esGravityPlayer[tank].g_iGravityPointPush))
+					int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esGravityCache[tank].g_iGravityDuration;
+					iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? g_esGravityCache[tank].g_iHumanDuration : iDuration;
+					g_esGravityPlayer[tank].g_bActivated = true;
+					g_esGravityPlayer[tank].g_iDuration = (iTime + iDuration);
+
+					vGravity(tank);
+
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1)
 					{
-						int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esGravityCache[tank].g_iGravityDuration;
-						iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? g_esGravityCache[tank].g_iHumanDuration : iDuration;
-						g_esGravityPlayer[tank].g_bActivated = true;
-						g_esGravityPlayer[tank].g_iDuration = (iTime + iDuration);
+						g_esGravityPlayer[tank].g_iAmmoCount++;
 
-						vGravity(tank);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman", g_esGravityPlayer[tank].g_iAmmoCount, g_esGravityCache[tank].g_iHumanAmmo);
+					}
 
-						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1)
-						{
-							g_esGravityPlayer[tank].g_iAmmoCount++;
-
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman", g_esGravityPlayer[tank].g_iAmmoCount, g_esGravityCache[tank].g_iHumanAmmo);
-						}
-
-						if (g_esGravityCache[tank].g_iGravityMessage & MT_MESSAGE_SPECIAL)
-						{
-							char sTankName[33];
-							MT_GetTankName(tank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity3", sTankName);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity3", LANG_SERVER, sTankName);
-						}
+					if (g_esGravityCache[tank].g_iGravityMessage & MT_MESSAGE_SPECIAL)
+					{
+						char sTankName[33];
+						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity3", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity3", LANG_SERVER, sTankName);
 					}
 				}
 				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1)
@@ -1189,6 +1272,40 @@ void vGravityHit(int survivor, int tank, float random, float chance, int enabled
 	}
 }
 
+void vGravityRockBreak2(int tank, int rock, float random, int pos = -1)
+{
+	float flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 14, pos) : g_esGravityCache[tank].g_flGravityRockChance;
+	if (random <= flChance)
+	{
+		int iTime = GetTime(), iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esGravityCache[tank].g_iHumanAbility == 1) ? g_esGravityCache[tank].g_iHumanRockCooldown : g_esGravityCache[tank].g_iGravityRockCooldown;
+		iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 15, pos)) : iCooldown;
+		if (g_esGravityPlayer[tank].g_iRockCooldown == -1 || g_esGravityPlayer[tank].g_iRockCooldown < iTime)
+		{
+			g_esGravityPlayer[tank].g_iRockCooldown = (iTime + iCooldown);
+			if (g_esGravityPlayer[tank].g_iRockCooldown != -1 && g_esGravityPlayer[tank].g_iRockCooldown > iTime)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman8", (g_esGravityPlayer[tank].g_iRockCooldown - iTime));
+			}
+		}
+		else if (g_esGravityPlayer[tank].g_iRockCooldown != -1 && g_esGravityPlayer[tank].g_iRockCooldown > iTime)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman5", (g_esGravityPlayer[tank].g_iRockCooldown - iTime));
+
+			return;
+		}
+
+		vGravity(tank, false, rock, pos);
+
+		if (g_esGravityCache[tank].g_iGravityMessage & MT_MESSAGE_SPECIAL)
+		{
+			char sTankName[33];
+			MT_GetTankName(tank, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity4", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity4", LANG_SERVER, sTankName);
+		}
+	}
+}
+
 void vGravityCopyStats2(int oldTank, int newTank)
 {
 	g_esGravityPlayer[newTank].g_iAmmoCount = g_esGravityPlayer[oldTank].g_iAmmoCount;
@@ -1196,6 +1313,7 @@ void vGravityCopyStats2(int oldTank, int newTank)
 	g_esGravityPlayer[newTank].g_iCooldown = g_esGravityPlayer[oldTank].g_iCooldown;
 	g_esGravityPlayer[newTank].g_iCooldown2 = g_esGravityPlayer[oldTank].g_iCooldown2;
 	g_esGravityPlayer[newTank].g_iRangeCooldown = g_esGravityPlayer[oldTank].g_iRangeCooldown;
+	g_esGravityPlayer[newTank].g_iRockCooldown = g_esGravityPlayer[oldTank].g_iRockCooldown;
 }
 
 void vRemoveGravity(int tank)
@@ -1252,6 +1370,7 @@ void vGravityReset2(int tank)
 	g_esGravityPlayer[tank].g_iDuration = -1;
 	g_esGravityPlayer[tank].g_iGravityPointPush = INVALID_ENT_REFERENCE;
 	g_esGravityPlayer[tank].g_iRangeCooldown = -1;
+	g_esGravityPlayer[tank].g_iRockCooldown = -1;
 }
 
 void vGravityReset3(int tank)
@@ -1289,53 +1408,49 @@ void vStopGravity(int survivor)
 	SetEntityGravity(survivor, 1.0);
 }
 
-Action tTimerGravityCombo(Handle timer, DataPack pack)
+void tTimerGravityCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGravityAbility[g_esGravityPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGravityPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGravityCache[iTank].g_iGravityAbility == 0 || g_esGravityCache[iTank].g_iGravityAbility == 2)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vGravityAbility(iTank, true, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerGravityCombo2(Handle timer, DataPack pack)
+void tTimerGravityCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGravityAbility[g_esGravityPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGravityPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGravityCache[iTank].g_iGravityAbility == 0 || g_esGravityCache[iTank].g_iGravityAbility == 1)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vGravityAbility(iTank, false, .pos = iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerGravityCombo3(Handle timer, DataPack pack)
+void tTimerGravityCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esGravityPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGravityAbility[g_esGravityPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGravityPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGravityPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGravityCache[iTank].g_iGravityHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1350,11 +1465,9 @@ Action tTimerGravityCombo3(Handle timer, DataPack pack)
 	{
 		vGravityHit(iSurvivor, iTank, flRandom, flChance, g_esGravityCache[iTank].g_iGravityHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopGravity(Handle timer, DataPack pack)
+void tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1364,7 +1477,7 @@ Action tTimerStopGravity(Handle timer, DataPack pack)
 		g_esGravityPlayer[iSurvivor].g_bAffected = false;
 		g_esGravityPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1372,7 +1485,7 @@ Action tTimerStopGravity(Handle timer, DataPack pack)
 	{
 		vStopGravity(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	vStopGravity(iSurvivor);
@@ -1383,6 +1496,4 @@ Action tTimerStopGravity(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gravity2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

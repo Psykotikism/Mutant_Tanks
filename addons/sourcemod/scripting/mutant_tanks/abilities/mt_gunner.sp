@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -1045,6 +1045,14 @@ void vGunner2(int tank)
 		AcceptEntityInput(iDrone, "SetDefaultAnimation");
 
 		MT_HideEntity(iDrone, true);
+
+		if (g_esGunnerCache[tank].g_iGunnerMessage == 1)
+		{
+			char sTankName[33];
+			MT_GetTankName(tank, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Gunner", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Gunner", LANG_SERVER, sTankName);
+		}
 	}
 
 	g_esGunnerPlayer[tank].g_bReloadingDrone = false;
@@ -1124,7 +1132,7 @@ void vGunner3(int tank, float time, float duration)
 
 			if (!bFound)
 			{
-				if (bIsInfected(g_esGunnerPlayer[tank].g_iSpecialEnemy) && (iTargetType == 0 || (iTargetType & MT_GUNNER_SPECIAL)))
+				if (bIsInfected(g_esGunnerPlayer[tank].g_iSpecialEnemy) && tank != g_esGunnerPlayer[tank].g_iSpecialEnemy && (iTargetType == 0 || (iTargetType & MT_GUNNER_SPECIAL)))
 				{
 					bFound = true;
 					iTarget = g_esGunnerPlayer[tank].g_iSpecialEnemy;
@@ -1285,7 +1293,7 @@ void vGunner4(int tank, int target, int drone, float pos[3], float origin[3])
 			{
 				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, drone);
 			}
-			else if (bIsInfected(target))
+			else if (bIsInfected(target) && tank != target)
 			{
 				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, drone);
 			}
@@ -1334,7 +1342,7 @@ void vGunnerAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGunnerPlayer[tank].g_iAmmoCount < g_esGunnerCache[tank].g_iHumanAmmo && g_esGunnerCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esGunnerCache[tank].g_flGunnerChance && !g_esGunnerPlayer[tank].g_bActivated)
+		if (GetRandomFloat(0.1, 100.0) <= g_esGunnerCache[tank].g_flGunnerChance && !g_esGunnerPlayer[tank].g_bActivated)
 		{
 			vGunner(tank);
 		}
@@ -1478,15 +1486,13 @@ void vSetGunnerGlow(int drone, int color, int flashing, int min, int max, int ty
 	SetEntProp(drone, Prop_Send, "m_iGlowType", type);
 }
 
-Action tTimerGunnerCombo(Handle timer, int userid)
+void tTimerGunnerCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGunnerAbility[g_esGunnerPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGunnerPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGunnerPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGunnerCache[iTank].g_iGunnerAbility == 0 || g_esGunnerPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vGunner(iTank);
-
-	return Plugin_Continue;
 }

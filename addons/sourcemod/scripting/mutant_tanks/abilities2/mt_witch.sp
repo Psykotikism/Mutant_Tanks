@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -797,7 +797,7 @@ void vWitchAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esWitchCache[tank].g_flWitchChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esWitchCache[tank].g_flWitchChance)
 		{
 			vWitch(tank);
 		}
@@ -866,31 +866,27 @@ void vWitchReset()
 	}
 }
 
-Action tTimerWitchCombo(Handle timer, DataPack pack)
+void tTimerWitchCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWitchPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWitchCache[iTank].g_iWitchAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vWitch(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerWitchKillWitch(Handle timer, int ref)
+void tTimerWitchKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	RemoveEntity(iWitch);
-
-	return Plugin_Continue;
 }

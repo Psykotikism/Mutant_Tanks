@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -646,7 +646,7 @@ void vTrackRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{
 		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
@@ -1089,14 +1089,14 @@ int iGetRockTarget(float pos[3], float angles[3], int tank)
 	return iTarget;
 }
 
-Action tTimerTrack(Handle timer, DataPack pack)
+void tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
@@ -1104,7 +1104,7 @@ Action tTimerTrack(Handle timer, DataPack pack)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	SDKUnhook(iRock, SDKHook_Think, OnTrackThink);
@@ -1123,6 +1123,4 @@ Action tTimerTrack(Handle timer, DataPack pack)
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", (g_esTrackPlayer[iTank].g_iCooldown - iTime));
 		}
 	}
-
-	return Plugin_Continue;
 }

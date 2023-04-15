@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -397,7 +397,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrugHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esDrugCache[attacker].g_flDrugChance, g_esDrugCache[attacker].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vDrugHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esDrugCache[attacker].g_flDrugChance, g_esDrugCache[attacker].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esDrugCache[victim].g_iDrugHitMode == 0 || g_esDrugCache[victim].g_iDrugHitMode == 2) && bIsHumanSurvivor(attacker) && g_esDrugCache[victim].g_iComboAbility == 0)
@@ -409,7 +409,7 @@ Action OnDrugTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vDrugHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esDrugCache[victim].g_flDrugChance, g_esDrugCache[victim].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vDrugHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esDrugCache[victim].g_flDrugChance, g_esDrugCache[victim].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -779,7 +779,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esDrugCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDrugCache[tank].g_iDrugAbility == 1 && g_esDrugCache[tank].g_iComboAbility == 0)
 	{
-		vDrugAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vDrugAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -802,7 +802,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esDrugPlayer[tank].g_iRangeCooldown == -1 || g_esDrugPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vDrugAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vDrugAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrugHuman3", (g_esDrugPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1054,37 +1054,35 @@ void vDrugReset3(int tank)
 	g_esDrugPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerDrugCombo(Handle timer, DataPack pack)
+void tTimerDrugCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDrugAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerDrugCombo2(Handle timer, DataPack pack)
+void tTimerDrugCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esDrugPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrugAbility[g_esDrugPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrugPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrugPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDrugCache[iTank].g_iDrugHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1099,8 +1097,6 @@ Action tTimerDrugCombo2(Handle timer, DataPack pack)
 	{
 		vDrugHit(iSurvivor, iTank, flRandom, flChance, g_esDrugCache[iTank].g_iDrugHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerDrug(Handle timer, DataPack pack)

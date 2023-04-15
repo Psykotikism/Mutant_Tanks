@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -31,7 +31,7 @@ public Plugin myinfo =
 #define MT_GAMEDATA "mutant_tanks"
 #define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
-bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN
 #if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
@@ -311,6 +311,13 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#endif
 #endif
 
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -325,10 +332,28 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 
+	MarkNativeAsOptional("L4D_LaggedMovement");
+
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
 }
 
 public void OnAllPluginsLoaded()

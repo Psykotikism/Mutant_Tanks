@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -941,7 +941,7 @@ void vFlyAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
 		{
 			vFly(tank, true);
 		}
@@ -1493,18 +1493,16 @@ int iGetFlyTarget(float pos[3], float angles[3], int tank)
 	return iTarget;
 }
 
-Action tTimerFlyCombo(Handle timer, DataPack pack)
+void tTimerFlyCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vFly(iTank, true, iPos);
-
-	return Plugin_Continue;
 }

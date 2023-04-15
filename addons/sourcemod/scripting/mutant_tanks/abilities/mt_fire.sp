@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -392,7 +392,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFireHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esFireCache[attacker].g_flFireChance, g_esFireCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vFireHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esFireCache[attacker].g_flFireChance, g_esFireCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esFireCache[victim].g_iFireHitMode == 0 || g_esFireCache[victim].g_iFireHitMode == 2) && bIsSurvivor(attacker) && g_esFireCache[victim].g_iComboAbility == 0)
@@ -404,7 +404,7 @@ Action OnFireTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vFireHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esFireCache[victim].g_flFireChance, g_esFireCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vFireHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esFireCache[victim].g_flFireChance, g_esFireCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -762,7 +762,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFireRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+			vFireRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveFire(iTank);
 		}
 	}
@@ -785,7 +785,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFireCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFireCache[tank].g_iFireAbility == 1 && g_esFireCache[tank].g_iComboAbility == 0)
 	{
-		vFireAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vFireAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -808,7 +808,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esFirePlayer[tank].g_iRangeCooldown == -1 || g_esFirePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vFireAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vFireAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FireHuman3", (g_esFirePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -847,7 +847,7 @@ void vFirePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vFireRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
+	vFireRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -863,7 +863,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esFireCache[tank].g_iFireRockBreak == 1 && g_esFireCache[tank].g_iComboAbility == 0)
 	{
-		vFireRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
+		vFireRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -1079,37 +1079,35 @@ void vFireReset()
 	}
 }
 
-Action tTimerFireCombo(Handle timer, DataPack pack)
+void tTimerFireCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFireAbility[g_esFirePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFirePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFirePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFireCache[iTank].g_iFireAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vFireAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerFireCombo2(Handle timer, DataPack pack)
+void tTimerFireCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFireAbility[g_esFirePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFirePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFirePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFireCache[iTank].g_iFireHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1124,6 +1122,4 @@ Action tTimerFireCombo2(Handle timer, DataPack pack)
 	{
 		vFireHit(iSurvivor, iTank, flRandom, flChance, g_esFireCache[iTank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }

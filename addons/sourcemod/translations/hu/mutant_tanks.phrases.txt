@@ -356,7 +356,7 @@
 
 	"CommandUsage"
 	{
-		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
+		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan> <0: nem vak|1: megvakít>"
 	}
 
 	"CommandUsage2"
@@ -2206,7 +2206,7 @@
 
 	"Gunner"
 	{
-		"hu"			"{olive}{1}{mint} lövéseket ad le{olive} {2}{mint}felé!"
+		"hu"			"{olive}{1}{mint} lövést ad le!"
 	}
 
 	"Gunner2"

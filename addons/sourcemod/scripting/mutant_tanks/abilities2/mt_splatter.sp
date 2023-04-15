@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -403,7 +403,7 @@ Action OnSplatterTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSplatterHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSplatterCache[attacker].g_flSplatterChance, g_esSplatterCache[attacker].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSplatterHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esSplatterCache[attacker].g_flSplatterChance, g_esSplatterCache[attacker].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSplatterCache[victim].g_iSplatterHitMode == 0 || g_esSplatterCache[victim].g_iSplatterHitMode == 2) && bIsHumanSurvivor(attacker) && g_esSplatterCache[victim].g_iComboAbility == 0)
@@ -415,7 +415,7 @@ Action OnSplatterTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vSplatterHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esSplatterCache[victim].g_flSplatterChance, g_esSplatterCache[victim].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSplatterHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esSplatterCache[victim].g_flSplatterChance, g_esSplatterCache[victim].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -775,7 +775,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSplatterCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSplatterCache[tank].g_iSplatterAbility == 1 && g_esSplatterCache[tank].g_iComboAbility == 0)
 	{
-		vSplatterAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vSplatterAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -798,7 +798,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esSplatterPlayer[tank].g_iRangeCooldown == -1 || g_esSplatterPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vSplatterAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vSplatterAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplatterHuman3", (g_esSplatterPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1020,37 +1020,35 @@ void vStopSplatter(int survivor)
 	TE_SendToClient(survivor);
 }
 
-Action tTimerSplatterCombo(Handle timer, DataPack pack)
+void tTimerSplatterCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplatterAbility[g_esSplatterPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplatterPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSplatterCache[iTank].g_iSplatterAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vSplatterAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerSplatterCombo2(Handle timer, DataPack pack)
+void tTimerSplatterCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !bIsHumanSurvivor(iSurvivor) || g_esSplatterPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplatterAbility[g_esSplatterPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplatterPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSplatterCache[iTank].g_iSplatterHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1065,8 +1063,6 @@ Action tTimerSplatterCombo2(Handle timer, DataPack pack)
 	{
 		vSplatterHit(iSurvivor, iTank, flRandom, flChance, g_esSplatterCache[iTank].g_iSplatterHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerSplatter(Handle timer, DataPack pack)

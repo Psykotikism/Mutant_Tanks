@@ -387,7 +387,7 @@
 	"CommandUsage"
 	{
 		"#format"		"{1:s},{2:i},{3:i}"
-		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
+		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically> <0: not blind|1: blind>"
 	}
 
 	"CommandUsage2"
@@ -2417,8 +2417,8 @@
 
 	"Gunner"
 	{
-		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{mint} is firing gunshots at{olive} {2}{mint}!"
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} is firing gunshots!"
 	}
 
 	"Gunner2"

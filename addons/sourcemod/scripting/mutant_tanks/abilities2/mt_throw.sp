@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -815,7 +815,7 @@ void vThrowRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esThrowCache[tank].g_flThrowChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esThrowCache[tank].g_flThrowChance)
 	{
 		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esThrowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
 		{
@@ -936,30 +936,26 @@ int iGetThrownWitchCount(int tank)
 	return iWitchCount;
 }
 
-Action tTimerThrowKillInfected(Handle timer, int userid)
+void tTimerThrowKillInfected(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsInfected(iSpecial) || !g_esThrowPlayer[iSpecial].g_bThrown)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	ForcePlayerSuicide(iSpecial);
-
-	return Plugin_Continue;
 }
 
-Action tTimerThrowKillWitch(Handle timer, int ref)
+void tTimerThrowKillWitch(Handle timer, int ref)
 {
 	int iWitch = EntRefToEntIndex(ref);
 	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	RemoveEntity(iWitch);
-
-	return Plugin_Continue;
 }
 
 Action tTimerThrow(Handle timer, DataPack pack)

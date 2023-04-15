@@ -398,6 +398,35 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool)
+			 *
+			 * Note: Detouring as a pre-hook for patching screen shake.
+			 * Note: Detouring as a post-hook for removing patch for screen shake.
+			 **/
+			"MTDetour_CTerrorPlayer::OnFootstep"
+			{
+				"signature"	"CTerrorPlayer::OnFootstep"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"vec"
+					{
+						"type"		"vectorptr"
+					}
+					"a2"
+					{
+						"type"		"bool"
+					}
+					"a3"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+
+			/**
 			 * CTerrorPlayer::OnIncapacitatedAsTank(CTakeDamageInfo const&)
 			 *
 			 * Note: Detouring as a pre-hook for changing "z_tank_incapacitated_health" per Tank before the dying animation starts.
@@ -1050,6 +1079,28 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool, bool, bool)
+			 *
+			 * Note: Detouring as a pre-hook for patching screen shake.
+			 * Note: Detouring as a post-hook for removing patch for screen shake.
+			 * Note: L4D1 has 2 extra params.
+			 **/
+			"MTDetour_CTerrorPlayer::OnFootstep"
+			{
+				"arguments"
+				{
+					"a4"
+					{
+						"type"		"bool"
+					}
+					"a5"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+
+			/**
 			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool)
 			 *
 			 * Note: Detouring as a pre-hook for blocking Boomer vomits per player.
@@ -1576,6 +1627,23 @@
 				"linux"		"1018" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"mac"		"850" // start at E8 and patch 5 bytes with NOPs (0x90)
 				"windows"	"611" // start at D9 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool, bool, bool)
+			 *
+			 * Note: Patches the screen shake logic.
+			 *
+			 * How to find:
+			 * 1. Look for the team check and special infected type check in the same if statement.
+			 * 2. Look for a compare (CMP) instruction that compares a value to "5".
+			 * 3. Get the offset of the last byte.
+			 **/
+			"CTerrorPlayer::OnFootstep::Shake"
+			{
+				"linux"		"150" // start at 05 and patch 1 byte with 15 (0x0F)
+				"mac"		"81" // start at 05 and patch 1 byte with 15 (0x0F)
+				"windows"	"76" // start at 05 and patch 1 byte with 15 (0x0F)
 			}
 
 			/**
@@ -2695,6 +2763,27 @@
 				"mac"		"@_ZN13CTerrorPlayer9OnFallingEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8D"
 						/* ? ? ? ? ? ? 57 8B ? E8 ? ? ? ? 83 ? ? 0F 85 ? ? ? ? 8D */
+			}
+
+			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool, bool, bool)
+			 *
+			 * Note: Used for detouring/finding the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorPlayer::`vftable'" to jump to the "CTerrorPlayer" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnFootstep"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10OnFootstepERK6Vectorbbbb"
+				"mac"		"@_ZN13CTerrorPlayer10OnFootstepERK6Vectorbbbb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x53\x33"
+						/* ? ? ? ? ? ? ? ? D9 ? ? 53 33 */
 			}
 
 			/**
@@ -4191,6 +4280,23 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool)
+			 *
+			 * Note: Patches the screen shake logic.
+			 *
+			 * How to find:
+			 * 1. Look for the team check and special infected type check in the same if statement.
+			 * 2. Look for a compare (CMP) instruction that compares a value to "8".
+			 * 3. Get the offset of the last byte.
+			 **/
+			"CTerrorPlayer::OnFootstep::Shake"
+			{
+				"linux"		"125" // start at 08 and patch 1 byte with 15 (0x0F)
+				"mac"		"48" // start at 08 and patch 1 byte with 15 (0x0F)
+				"windows"	"40" // start at 08 and patch 1 byte with 15 (0x0F)
+			}
+
+			/**
 			 * CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&)
 			 *
 			 * How to find on Linux/Mac:
@@ -5517,6 +5623,27 @@
 				"mac"		"@_ZN13CTerrorPlayer9OnFallingEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F"
 						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 57 8B ? E8 ? ? ? ? 83 ? ? 0F */
+			}
+
+			/**
+			 * CTerrorPlayer::OnFootstep(Vector const&, bool, bool)
+			 *
+			 * Note: Used for detouring/finding the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorPlayer::`vftable'" to jump to the "CTerrorPlayer" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::OnFootstep"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10OnFootstepERK6Vectorbb"
+				"mac"		"@_ZN13CTerrorPlayer10OnFootstepERK6Vectorbb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x33\x2A\x83"
+						/* ? ? ? ? ? ? 53 56 8B ? E8 ? ? ? ? 33 ? 83 */
 			}
 
 			/**
