@@ -1,15 +1,82 @@
 # Changelog
 
-## Version 8.96 (December 25, 2022)
+## Version 8.97 (2023)
 
 ### Bug Fixes
 
 #### General
+- Fixed an issue where some RNG-based events happen too often. (Thanks to `ddd123` for reporting!)
+- Fixed an issue where Witches take a long time to die from fires. (Thanks to `ddd123` for reporting!)
+
+#### Core Plugin
+- Fixed Tank death messages not appearing when a survivor solos a Tank.
+
+#### Config Files
+- Fixed Mutant Tank type settings not being read properly under combined sections.
+
+#### Abilities
+- Gunner
+	- Fixed one of the messages not showing up when the ability activates. (Thanks to `thewintersoldier97` for reporting!)
+	- Fixed the ability targeting the Tank itself.
+- Quiet: Fixed the sound hook blocking other sound hooks.
+
+### Changes
+
+#### General
+- Mutant Tanks and its sub-plugins now properly support the [`[L4D & L4D2] Lagged Movement - Plugin Conflict Resolver`](https://forums.alliedmods.net/showthread.php?t=340345) plugin.
+
+#### Core Plugin
+- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
+
+#### Commands
+- Added a 4th parameter for the `sm_tank` command. (Usage: `sm_tank <1-500> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind>`)
+
+#### Abilities
+- Gravity
+	- Added the `Gravity Radius` setting.
+	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
+	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+
+## Version 8.96 (December 25, 2022)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
+#### General
 - Fixed a potential memory leak caused by fixing the Tank's position when stuck.
 - Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
+</details>
+<details>
+	<summary>Config Files</summary>
 
 #### Config Files
 - Fixed parsing errors for config files that use one of the other formats.
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to `zaviier` for reporting!)
@@ -22,34 +89,51 @@
 	- Fixed the incorrect minimum value of the `Splatter Range` setting.
 	- Fixed splatter effects not stopping after the ability ends and causing lag. (Thanks to `zaviier` for reporting!)
 - Yell: Fixed the incorrect minimum value of the `Yell Range` setting.
+</details>
 
 ### Changes
+<details>
+	<summary>Config Files</summary>
 
 #### Config Files
 - The config parser now automatically assigns Mutant Tank types to each entry to prevent common user errors. (Each entry's original type will be shown in messages when necessary.)
 - The config parser now reports duplicate entries and entries that exceed the limit for Mutant Tank types. (This covers cases where the same type is assigned to multiple entries or some types are skipped over.)
+</details>
+<details>
+	<summary>Translations</summary>
 
 #### Translations
 - Updated English translations.
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Added the `Gunner` ability. (Thanks to `panxiaohai` for the code!)
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 8.95 (August 25, 2022)
 <details>

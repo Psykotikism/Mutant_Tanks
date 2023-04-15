@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -794,7 +794,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags))
 			{
-				vDropWeapon(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+				vDropWeapon(iTank, 1, GetRandomFloat(0.1, 100.0));
 			}
 
 			vDropReset2(iTank);
@@ -863,7 +863,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		return;
 	}
 
-	vDropWeapon(tank, 1, MT_GetRandomFloat(0.1, 100.0));
+	vDropWeapon(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vDropWeapon(int tank, int value, float random, int pos = -1)
@@ -917,7 +917,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					}
 				}
 
-				if (MT_GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
+				if (GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
 				{
 					iClip = SDKCall(g_esDropGeneral.g_hSDKGetMaxClip1, iDrop);
 				}
@@ -1191,21 +1191,19 @@ void vDropFrame(int userid)
 	}
 }
 
-Action tTimerDropCombo(Handle timer, DataPack pack)
+void tTimerDropCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDropWeapon(iTank, 0, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerDropRenderWeapon(Handle timer, DataPack pack)

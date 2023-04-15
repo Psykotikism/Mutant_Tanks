@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -278,7 +278,7 @@ Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 		if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
-			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esVampireCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esVampireCache[attacker].g_flVampireChance && bIsSurvivor(victim))
 			{
 				if (bIsAreaNarrow(attacker, g_esVampireCache[attacker].g_flOpenAreasOnly) || bIsAreaWide(attacker, g_esVampireCache[attacker].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esVampirePlayer[attacker].g_iTankType) || (g_esVampireCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esVampireCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iAccessFlags, g_esVampirePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esVampirePlayer[attacker].g_iTankType, g_esVampireAbility[g_esVampirePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esVampirePlayer[victim].g_iImmunityFlags))
 				{

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -786,7 +786,7 @@ void vPanicAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPanicPlayer[tank].g_iAmmoCount < g_esPanicCache[tank].g_iHumanAmmo && g_esPanicCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esPanicCache[tank].g_flPanicChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esPanicCache[tank].g_flPanicChance)
 		{
 			vPanic(tank);
 		}
@@ -803,7 +803,7 @@ void vPanicAbility(int tank)
 
 void vPanicRange(int tank, bool idle)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esPanicCache[tank].g_iPanicAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esPanicCache[tank].g_flPanicChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esPanicCache[tank].g_iPanicAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esPanicCache[tank].g_flPanicChance)
 	{
 		if ((idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esPanicCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPanicCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPanicPlayer[tank].g_iTankType) || (g_esPanicCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPanicCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPanicAbility[g_esPanicPlayer[tank].g_iTankType].g_iAccessFlags, g_esPanicPlayer[tank].g_iAccessFlags)) || g_esPanicCache[tank].g_iHumanAbility == 0)))
 		{
@@ -851,20 +851,18 @@ void vPanicReset2(int tank)
 	}
 }
 
-Action tTimerPanicCombo(Handle timer, DataPack pack)
+void tTimerPanicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPanicAbility[g_esPanicPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPanicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPanicPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPanicCache[iTank].g_iPanicAbility == 0 || g_esPanicPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vPanic(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerPanic(Handle timer, DataPack pack)

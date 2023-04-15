@@ -2066,6 +2066,15 @@
 			// "strongest" - 99999.0 damage
 			"Claw Damage"				"-1.0"
 
+			// Every Mutant Tank's footsteps cause screen shakes for nearby survivors.
+			// Note: Both games already do this by default.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Footstep Shake"			"0"
+
 			// Every Mutant Tank's ground pounds hit all survivors within range.
 			// Note: Both games already do this by default in Survival modes.
 			// Note: This setting can be used for standard Tanks.
@@ -5247,6 +5256,15 @@
 			// "weakest" - 1.0 damage
 			// "strongest" - 99999.0 damage
 			"Claw Damage"				"-1.0"
+
+			// The Mutant Tank's footsteps cause screen shakes for nearby survivors.
+			// Note: Both games already do this by default.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Footstep Shake"			"0"
 
 			// The Mutant Tank's ground pounds hit all survivors within range.
 			// Note: Both games already do this by default in Survival modes.
@@ -11875,6 +11893,7 @@
 		// The Mutant Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
 		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
 		// - "Gravity Force"
+		// - "Gravity Radius"
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor's gravity changes.
 		// - "Gravity Range"
 		// - "Gravity Range Chance"
@@ -11883,6 +11902,11 @@
 		// - "Gravity Chance"
 		// - "Gravity Cooldown"
 		// - "Gravity Hit Mode"
+		// "Gravity Rock Break" - When the Mutant Tank's rock breaks, it creates a blackhole.
+		// - "Gravity Force"
+		// - "Gravity Radius"
+		// - "Gravity Rock Chance"
+		// - "Gravity Rock Cooldown"
 		// Requires "mt_abilities.smx" to be compiled with "mt_gravity.sp" to work.
 		"Gravity Ability"
 		{
@@ -12051,12 +12075,13 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 7
+			// Maximum: 15
 			// --
 			// 0: OFF
 			// 1: Display message only when "Gravity Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// 8: Display message only when "Gravity Rock Break" is enabled.
 			// --
 			// Keywords:
 			// "none"/"off" - 0
@@ -12066,7 +12091,15 @@
 			// "rock" - 4
 			// "hit,rock" - 5
 			// "ability,rock" - 6
-			// "hit,ability,rock"/"all" - 7
+			// "hit,ability,rock" - 7
+			// "break" - 8
+			// "hit,break" - 9
+			// "ability,break" - 10
+			// "hit,ability,break" - 11
+			// "rock,break" - 12
+			// "hit,rock,break" - 13
+			// "ability,rock,break" - 14
+			// "hit,ability,rock,break"/"all" - 15
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12142,6 +12175,17 @@
 			// "survivor"/"hurt" - 2
 			"Gravity Hit Mode"			"0"
 
+			// The radius of the Mutant Tank's gravity.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 99999.0 range
+			"Gravity Radius"			"750.0"
+
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -12182,6 +12226,43 @@
 			// "minute" - 1 minute
 			// "forever" - 99999 seconds
 			"Gravity Range Cooldown"		"0"
+
+			// The Mutant Tank's rock creates a blackhole when it breaks.
+			// Note: This does not need "Ability Enabled" or "Gravity Hit" to be set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Gravity Rock Break"			"0"
+
+			// The Mutant Tank's rock has this many chances out of 100.0% to trigger the rock break ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
+			"Gravity Rock Chance"			"33.3"
+
+			// The cooldown for the Mutant Tank's rock ability.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 99999 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Gravity Rock Cooldown"			"0"
 
 			// The Mutant Tank sets the survivors' gravity to this value.
 			// Note: This setting can be overridden for specific players.

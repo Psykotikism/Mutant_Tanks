@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -566,7 +566,7 @@ void vRespawnPlayerEventKilled(int victim)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(victim) && g_esRespawnCache[victim].g_iRespawnAbility == 1 && g_esRespawnCache[victim].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esRespawnCache[victim].g_flRespawnChance)
+	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(victim) && g_esRespawnCache[victim].g_iRespawnAbility == 1 && g_esRespawnCache[victim].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esRespawnCache[victim].g_flRespawnChance)
 	{
 		vRespawn(victim);
 	}
@@ -781,15 +781,13 @@ void vRespawnReset()
 	}
 }
 
-Action tTimerRespawnCombo(Handle timer, int userid)
+void tTimerRespawnCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRespawnAbility[g_esRespawnPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRespawnPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRespawnPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRespawnCache[iTank].g_iRespawnAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vRespawn(iTank);
-
-	return Plugin_Continue;
 }

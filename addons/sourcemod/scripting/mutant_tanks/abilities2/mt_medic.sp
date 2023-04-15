@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -965,7 +965,8 @@ void vMedic3(int special, int tank, int duration)
 
 	if (g_esMedicCache[tank].g_flMedicBuffSpeed > 0.0)
 	{
-		SetEntPropFloat(special, Prop_Send, "m_flLaggedMovementValue", (g_esMedicPlayer[special].g_flDefaultSpeed * g_esMedicCache[tank].g_flMedicBuffSpeed));
+		float flSpeed = (g_esMedicPlayer[special].g_flDefaultSpeed * g_esMedicCache[tank].g_flMedicBuffSpeed);
+		SetEntPropFloat(special, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(special, flSpeed) : flSpeed));
 	}
 
 	delete g_esMedicPlayer[special].g_hBuffTimer;
@@ -1003,7 +1004,7 @@ void vMedicAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esMedicPlayer[tank].g_iAmmoCount < g_esMedicCache[tank].g_iHumanAmmo && g_esMedicCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esMedicCache[tank].g_flMedicChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esMedicCache[tank].g_flMedicChance)
 		{
 			vMedic(tank);
 		}
@@ -1118,20 +1119,18 @@ int[] iGetRandomColors(int tank)
 	return g_esMedicCache[tank].g_iMedicFieldColor;
 }
 
-Action tTimerMedicCombo(Handle timer, DataPack pack)
+void tTimerMedicCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMedicAbility[g_esMedicPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMedicPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMedicPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMedicCache[iTank].g_iMedicAbility == 0 || g_esMedicPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vMedic(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerMedic(Handle timer, DataPack pack)
@@ -1192,14 +1191,14 @@ Action tTimerMedic(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-Action tTimerRemoveBuffs(Handle timer, int userid)
+void tTimerRemoveBuffs(Handle timer, int userid)
 {
 	int iInfected = GetClientOfUserId(userid);
 	if (!bIsInfected(iInfected))
 	{
 		g_esMedicPlayer[iInfected].g_hBuffTimer = null;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	float flSpeed = bIsTank(iInfected) ? g_esMedicPlayer[iInfected].g_flDefaultSpeed : 1.0;
@@ -1208,7 +1207,5 @@ Action tTimerRemoveBuffs(Handle timer, int userid)
 	g_esMedicPlayer[iInfected].g_flResistanceBuff = 0.0;
 	g_esMedicPlayer[iInfected].g_flDefaultSpeed = 0.0;
 
-	SetEntPropFloat(iInfected, Prop_Send, "m_flLaggedMovementValue", flSpeed);
-
-	return Plugin_Continue;
+	SetEntPropFloat(iInfected, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iInfected, flSpeed) : flSpeed));
 }

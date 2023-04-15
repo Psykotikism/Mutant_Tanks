@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -385,7 +385,7 @@ Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHurtHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHurtCache[attacker].g_flHurtChance, g_esHurtCache[attacker].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHurtHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHurtCache[attacker].g_flHurtChance, g_esHurtCache[attacker].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esHurtCache[victim].g_iHurtHitMode == 0 || g_esHurtCache[victim].g_iHurtHitMode == 2) && bIsSurvivor(attacker) && g_esHurtCache[victim].g_iComboAbility == 0)
@@ -397,7 +397,7 @@ Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vHurtHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHurtCache[victim].g_flHurtChance, g_esHurtCache[victim].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vHurtHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHurtCache[victim].g_flHurtChance, g_esHurtCache[victim].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -753,7 +753,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHurtCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHurtCache[tank].g_iHurtAbility == 1 && g_esHurtCache[tank].g_iComboAbility == 0)
 	{
-		vHurtAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vHurtAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -776,7 +776,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esHurtPlayer[tank].g_iRangeCooldown == -1 || g_esHurtPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vHurtAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vHurtAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HurtHuman3", (g_esHurtPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -995,37 +995,35 @@ void vHurtReset3(int tank)
 	g_esHurtPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerHurtCombo(Handle timer, DataPack pack)
+void tTimerHurtCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHurtPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHurtPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHurtCache[iTank].g_iHurtAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vHurtAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerHurtCombo2(Handle timer, DataPack pack)
+void tTimerHurtCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esHurtPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHurtAbility[g_esHurtPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHurtPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHurtPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHurtCache[iTank].g_iHurtHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1040,8 +1038,6 @@ Action tTimerHurtCombo2(Handle timer, DataPack pack)
 	{
 		vHurtHit(iSurvivor, iTank, flRandom, flChance, g_esHurtCache[iTank].g_iHurtHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerHurt(Handle timer, DataPack pack)

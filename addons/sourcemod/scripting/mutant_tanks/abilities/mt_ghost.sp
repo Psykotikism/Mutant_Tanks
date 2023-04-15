@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -462,7 +462,7 @@ Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGhostHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esGhostCache[attacker].g_flGhostChance, g_esGhostCache[attacker].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vGhostHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esGhostCache[attacker].g_flGhostChance, g_esGhostCache[attacker].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esGhostCache[victim].g_iGhostHitMode == 0 || g_esGhostCache[victim].g_iGhostHitMode == 2) && bIsSurvivor(attacker) && g_esGhostCache[victim].g_iComboAbility == 0)
@@ -474,7 +474,7 @@ Action OnGhostTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vGhostHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esGhostCache[victim].g_flGhostChance, g_esGhostCache[victim].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vGhostHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esGhostCache[victim].g_flGhostChance, g_esGhostCache[victim].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -890,7 +890,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esGhostCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esGhostCache[tank].g_iGhostAbility > 0 && g_esGhostCache[tank].g_iComboAbility == 0)
 	{
 		vGhostAbility(tank, false);
-		vGhostAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+		vGhostAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -962,7 +962,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			switch (g_esGhostPlayer[tank].g_iRangeCooldown == -1 || g_esGhostPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vGhostAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+				case true: vGhostAbility(tank, true, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "GhostHuman6", (g_esGhostPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1040,7 +1040,7 @@ void vGhost(int tank, int pos = -1)
 	dpGhost.WriteCell(g_esGhostPlayer[tank].g_iTankType);
 	dpGhost.WriteCell(iTime);
 	dpGhost.WriteCell(pos);
-	dpGhost.WriteFloat(MT_GetRandomFloat(0.1, 100.0));
+	dpGhost.WriteFloat(GetRandomFloat(0.1, 100.0));
 }
 
 void vGhostAbility(int tank, bool main, float random = 0.0, int pos = -1)
@@ -1372,53 +1372,49 @@ void vGhostResetRender(int tank)
 	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], g_esGhostPlayer[tank].g_iGhostAlpha);
 }
 
-Action tTimerGhostCombo(Handle timer, DataPack pack)
+void tTimerGhostCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostAbility == 0 || g_esGhostCache[iTank].g_iGhostAbility == 2)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vGhostAbility(iTank, true, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerGhostCombo2(Handle timer, DataPack pack)
+void tTimerGhostCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostAbility == 0 || g_esGhostCache[iTank].g_iGhostAbility == 1)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vGhostAbility(iTank, false, .pos = iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerGhostCombo3(Handle timer, DataPack pack)
+void tTimerGhostCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGhostAbility[g_esGhostPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGhostPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGhostPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGhostCache[iTank].g_iGhostHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1432,8 +1428,6 @@ Action tTimerGhostCombo3(Handle timer, DataPack pack)
 	{
 		vGhostHit(iSurvivor, iTank, flRandom, flChance, g_esGhostCache[iTank].g_iGhostHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerGhost(Handle timer, DataPack pack)

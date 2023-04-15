@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.96"
+#define MT_VERSION "8.97"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -1964,7 +1964,7 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return ((GetURandomFloat() * (max - min + 1)) + min);
+	return ((GetURandomFloat() * (max - min)) + min);
 }
 
 stock int MT_AddCommasToFloat(float number, char[] output, int size)
@@ -2077,7 +2077,7 @@ stock int MT_GetParticleIndex(const char[] particlename)
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return (RoundToFloor(GetURandomFloat() * (max - min + 1)) + min);
+	return (RoundToNearest(GetURandomFloat() * float(max - min)) + min);
 }
 
 // Checks
@@ -3042,7 +3042,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	else if ((min == -1.0 || min == 1.0) && max == 99999.0)
 	{
 		bool bDamageSetting = StrContains(key, "damage", false) != -1,
-			bForceSetting = StrContains(key, "force", false) != -1,
+			bForceSetting = (StrContains(key, "force", false) != -1 || StrContains(key, "radius", false) != -1),
 			bRangeSetting = StrContains(key, "range", false) != -1;
 		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{

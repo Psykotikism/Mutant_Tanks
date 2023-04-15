@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -366,7 +366,7 @@ Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vVisionHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esVisionCache[attacker].g_flVisionChance, g_esVisionCache[attacker].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vVisionHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esVisionCache[attacker].g_flVisionChance, g_esVisionCache[attacker].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esVisionCache[victim].g_iVisionHitMode == 0 || g_esVisionCache[victim].g_iVisionHitMode == 2) && bIsHumanSurvivor(attacker) && g_esVisionCache[victim].g_iComboAbility == 0)
@@ -378,7 +378,7 @@ Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vVisionHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esVisionCache[victim].g_flVisionChance, g_esVisionCache[victim].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vVisionHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esVisionCache[victim].g_flVisionChance, g_esVisionCache[victim].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -745,7 +745,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esVisionCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esVisionCache[tank].g_iVisionAbility == 1 && g_esVisionCache[tank].g_iComboAbility == 0)
 	{
-		vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vVisionAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -768,7 +768,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esVisionPlayer[tank].g_iRangeCooldown == -1 || g_esVisionPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vVisionAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vVisionAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "VisionHuman3", (g_esVisionPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -983,37 +983,35 @@ void vVisionReset3(int tank)
 	g_esVisionPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerVisionCombo(Handle timer, DataPack pack)
+void tTimerVisionCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esVisionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esVisionCache[iTank].g_iVisionAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vVisionAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerVisionCombo2(Handle timer, DataPack pack)
+void tTimerVisionCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esVisionPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esVisionAbility[g_esVisionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esVisionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esVisionCache[iTank].g_iVisionHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1028,8 +1026,6 @@ Action tTimerVisionCombo2(Handle timer, DataPack pack)
 	{
 		vVisionHit(iSurvivor, iTank, flRandom, flChance, g_esVisionCache[iTank].g_iVisionHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerVision(Handle timer, DataPack pack)

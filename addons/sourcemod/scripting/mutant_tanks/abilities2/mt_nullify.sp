@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -369,7 +369,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vNullifyHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esNullifyCache[attacker].g_flNullifyChance, g_esNullifyCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vNullifyHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esNullifyCache[attacker].g_flNullifyChance, g_esNullifyCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
@@ -378,7 +378,7 @@ Action OnNullifyTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esNullifyPlayer[victim].g_iTankType, g_esNullifyAbility[g_esNullifyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esNullifyPlayer[attacker].g_iImmunityFlags))
 				{
-					vNullifyHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esNullifyCache[victim].g_flNullifyChance, g_esNullifyCache[victim].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vNullifyHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esNullifyCache[victim].g_flNullifyChance, g_esNullifyCache[victim].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 
@@ -744,7 +744,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esNullifyCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esNullifyCache[tank].g_iNullifyAbility == 1 && g_esNullifyCache[tank].g_iComboAbility == 0)
 	{
-		vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vNullifyAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -767,7 +767,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esNullifyPlayer[tank].g_iRangeCooldown == -1 || g_esNullifyPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vNullifyAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vNullifyAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "NullifyHuman3", (g_esNullifyPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -964,37 +964,35 @@ void vNullifyReset2(int tank)
 	g_esNullifyPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerNullifyCombo(Handle timer, DataPack pack)
+void tTimerNullifyCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vNullifyAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerNullifyCombo2(Handle timer, DataPack pack)
+void tTimerNullifyCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esNullifyPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNullifyAbility[g_esNullifyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNullifyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNullifyPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esNullifyCache[iTank].g_iNullifyHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1009,11 +1007,9 @@ Action tTimerNullifyCombo2(Handle timer, DataPack pack)
 	{
 		vNullifyHit(iSurvivor, iTank, flRandom, flChance, g_esNullifyCache[iTank].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopNullify(Handle timer, DataPack pack)
+void tTimerStopNullify(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1023,7 +1019,7 @@ Action tTimerStopNullify(Handle timer, DataPack pack)
 		g_esNullifyPlayer[iSurvivor].g_bAffected = false;
 		g_esNullifyPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1032,7 +1028,7 @@ Action tTimerStopNullify(Handle timer, DataPack pack)
 		g_esNullifyPlayer[iSurvivor].g_bAffected = false;
 		g_esNullifyPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esNullifyPlayer[iSurvivor].g_bAffected = false;
@@ -1044,6 +1040,4 @@ Action tTimerStopNullify(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Nullify2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Nullify2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

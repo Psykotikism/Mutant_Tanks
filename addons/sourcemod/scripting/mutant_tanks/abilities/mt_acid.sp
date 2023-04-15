@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -458,7 +458,7 @@ Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAcidHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esAcidCache[attacker].g_flAcidChance, g_esAcidCache[attacker].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAcidHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esAcidCache[attacker].g_flAcidChance, g_esAcidCache[attacker].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esAcidCache[victim].g_iAcidHitMode == 0 || g_esAcidCache[victim].g_iAcidHitMode == 2) && bIsSurvivor(attacker) && g_esAcidCache[victim].g_iComboAbility == 0)
@@ -470,7 +470,7 @@ Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vAcidHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esAcidCache[victim].g_flAcidChance, g_esAcidCache[victim].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAcidHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esAcidCache[victim].g_flAcidChance, g_esAcidCache[victim].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -833,7 +833,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vAcidRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+			vAcidRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
 		}
 	}
@@ -856,7 +856,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esAcidCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidAbility == 1 && g_esAcidCache[tank].g_iComboAbility == 0)
 	{
-		vAcidAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vAcidAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -879,7 +879,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esAcidPlayer[tank].g_iRangeCooldown == -1 || g_esAcidPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vAcidAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vAcidAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman3", (g_esAcidPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -916,7 +916,7 @@ void vAcidPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vAcidRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
+	vAcidRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -932,7 +932,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidRockBreak == 1 && g_esAcidCache[tank].g_iComboAbility == 0)
 	{
-		vAcidRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
+		vAcidRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -1153,37 +1153,35 @@ void vAcidReset()
 	}
 }
 
-Action tTimerAcidCombo(Handle timer, DataPack pack)
+void tTimerAcidCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAcidAbility[g_esAcidPlayer[iTank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAcidPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esAcidCache[iTank].g_iAcidAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vAcidAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerAcidCombo2(Handle timer, DataPack pack)
+void tTimerAcidCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAcidAbility[g_esAcidPlayer[iTank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAcidPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esAcidCache[iTank].g_iAcidHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1198,6 +1196,4 @@ Action tTimerAcidCombo2(Handle timer, DataPack pack)
 	{
 		vAcidHit(iSurvivor, iTank, flRandom, flChance, g_esAcidCache[iTank].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }

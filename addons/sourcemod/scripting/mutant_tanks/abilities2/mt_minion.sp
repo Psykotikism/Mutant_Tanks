@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -855,7 +855,7 @@ void vMinionAbility(int tank)
 
 	if (g_esMinionPlayer[tank].g_iCount < g_esMinionCache[tank].g_iMinionAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esMinionCache[tank].g_flMinionChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esMinionCache[tank].g_flMinionChance)
 		{
 			vMinion(tank);
 		}
@@ -916,28 +916,24 @@ void vMinionReset()
 	}
 }
 
-Action tTimerMinionCombo(Handle timer, int userid)
+void tTimerMinionCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMinionAbility[g_esMinionPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMinionPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMinionCache[iTank].g_iMinionAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vMinion(iTank);
-
-	return Plugin_Continue;
 }
 
-Action tTimerKillMinion(Handle timer, int userid)
+void tTimerKillMinion(Handle timer, int userid)
 {
 	int iSpecial = GetClientOfUserId(userid);
 	if (!bIsSpecialInfected(iSpecial) || !g_esMinionPlayer[iSpecial].g_bMinion)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	ForcePlayerSuicide(iSpecial);
-
-	return Plugin_Continue;
 }

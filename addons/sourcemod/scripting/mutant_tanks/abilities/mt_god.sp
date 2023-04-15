@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -854,7 +854,7 @@ void vGodAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGodPlayer[tank].g_iAmmoCount < g_esGodCache[tank].g_iHumanAmmo && g_esGodCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esGodCache[tank].g_flGodChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esGodCache[tank].g_flGodChance)
 		{
 			vGod(tank);
 		}
@@ -919,18 +919,16 @@ void vGodReset3(int tank)
 	}
 }
 
-Action tTimerGodCombo(Handle timer, DataPack pack)
+void tTimerGodCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esGodAbility[g_esGodPlayer[iTank].g_iTankType].g_iAccessFlags, g_esGodPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esGodPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esGodCache[iTank].g_iGodAbility == 0 || g_esGodPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vGod(iTank, iPos);
-
-	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -32,7 +32,7 @@ public Plugin myinfo =
 #define MT_GAMEDATA "mutant_tanks"
 #define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
-bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN
 #if MT_ABILITIES_GROUP == 1 || MT_ABILITIES_GROUP == 3
@@ -319,6 +319,13 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#endif
 #endif
 
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -336,6 +343,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
 	CreateNative("MT_IsTankClone", aNative_IsTankClone);
 
+	MarkNativeAsOptional("L4D_LaggedMovement");
 	RegPluginLibrary("mt_clone");
 #endif
 	g_bDedicated = IsDedicatedServer();
@@ -362,6 +370,22 @@ any aNative_IsTankClone(Handle plugin, int numParams)
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 #endif
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
+}
 
 public void OnAllPluginsLoaded()
 {
@@ -1243,7 +1267,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	vGodCombineAbilities(tank, type, random, combo);
 #endif
 #if defined MT_MENU_GRAVITY
-	vGravityCombineAbilities(tank, type, random, combo, survivor, classname);
+	vGravityCombineAbilities(tank, type, random, combo, survivor, weapon, classname);
 #endif
 #if defined MT_MENU_GUNNER
 	vGunnerCombineAbilities(tank, type, random, combo);
@@ -2262,6 +2286,9 @@ public void MT_OnRockBreak(int tank, int rock)
 #endif
 #if defined MT_MENU_FIRE
 	vFireRockBreak(tank, rock);
+#endif
+#if defined MT_MENU_GRAVITY
+	vGravityRockBreak(tank, rock);
 #endif
 }
 

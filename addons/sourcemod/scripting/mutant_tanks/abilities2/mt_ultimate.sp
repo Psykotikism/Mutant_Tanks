@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -927,7 +927,7 @@ void vUltimateAbility(int tank)
 		return;
 	}
 
-	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && MT_GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
+	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
 	{
 		if (g_esUltimatePlayer[tank].g_iCount < g_esUltimateCache[tank].g_iUltimateAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUltimatePlayer[tank].g_iAmmoCount < g_esUltimateCache[tank].g_iHumanAmmo && g_esUltimateCache[tank].g_iHumanAmmo > 0)))
 		{
@@ -978,18 +978,16 @@ void vUltimateReset()
 	}
 }
 
-Action tTimerUltimateCombo(Handle timer, DataPack pack)
+void tTimerUltimateCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUltimateAbility[g_esUltimatePlayer[iTank].g_iTankType].g_iAccessFlags, g_esUltimatePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUltimatePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esUltimateCache[iTank].g_iUltimateAbility == 0 || g_esUltimatePlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vUltimate(iTank, iPos);
-
-	return Plugin_Continue;
 }

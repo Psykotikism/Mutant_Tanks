@@ -14,7 +14,7 @@
 	<summary>Click to expand!</summary>
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+Copyright (C) 2023  Alfred "Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -30,7 +30,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 <details>
 	<summary>Click to expand!</summary>
 
-1. `SourceMod 1.11.0.6880` or higher
+1. `SourceMod 1.12.0.6985` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended (Optional):
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
@@ -2120,8 +2120,8 @@ sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is "1" and the highest value you can set is "500" though.)
-2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is "1" and the highest value you can set is "500" though.)
+2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
 
@@ -2756,7 +2756,7 @@ Set the values in `Execute Config Types`.
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222, JustMadMan** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
