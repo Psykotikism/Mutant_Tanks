@@ -577,7 +577,7 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward (temporary)
-			// - Refill to 100% health.
+			// - Refill to a certain percentage of health.
 			// - Automatically kill any current special infected attacker.
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
@@ -640,7 +640,7 @@
 			// - Reduced pushback from hitting Tanks with melee immunity.
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
-			// - Refill to 100% health.
+			// - Refill to a certain percentage of health.
 			// - Automatically kill any current special infected attacker.
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -679,7 +679,7 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward (temporary)
-			// - Refill to 100% health.
+			// - Refill to a certain percentage of health.
 			// - Automatically kill any current special infected attacker.
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
@@ -742,7 +742,7 @@
 			// - Reduced pushback from hitting Tanks with melee immunity.
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
-			// - Refill to 100% health.
+			// - Refill to a certain percentage of health.
 			// - Automatically kill any current special infected attacker.
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -1412,6 +1412,24 @@
 			// 3rd number = Give recoil dampener to teammates.
 			// 4th number = Give recoil dampener to assistant killers.
 			"Recoil Dampener Reward"		"1,1,1,1"
+
+			// The refill percentage from the "Health" and "Refill" rewards.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 4
+			// Character limit for each percentage: 6
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			// 4th number = Heal percentage for assistant killers.
+			"Refill Percent Reward"			"100.0,100.0,100.0,100.0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -3775,6 +3793,24 @@
 			// 3rd number = Give recoil dampener to teammates.
 			// 4th number = Give recoil dampener to assistant killers.
 			"Recoil Dampener Reward"		"0,0,0,0"
+
+			// The refill percentage from the "Health" and "Refill" rewards.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 4
+			// Character limit for each percentage: 6
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			// 4th number = Heal percentage for assistant killers.
+			"Refill Percent Reward"			"0.0,0.0,0.0,0.0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

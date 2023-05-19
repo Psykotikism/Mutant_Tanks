@@ -919,14 +919,21 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 						iSlotCount++;
 					}
 
-					switch (iSlots[MT_GetRandomInt(0, (iSlotCount - 1))])
+					switch (iSlotCount > 0)
 					{
-						case 1: g_esEnforcePlayer[survivor].g_iSlot = 0;
-						case 2: g_esEnforcePlayer[survivor].g_iSlot = 1;
-						case 4: g_esEnforcePlayer[survivor].g_iSlot = 2;
-						case 8: g_esEnforcePlayer[survivor].g_iSlot = 3;
-						case 16: g_esEnforcePlayer[survivor].g_iSlot = 4;
-						default: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
+						case true:
+						{
+							switch (iSlots[MT_GetRandomInt(0, (iSlotCount - 1))])
+							{
+								case 1: g_esEnforcePlayer[survivor].g_iSlot = 0;
+								case 2: g_esEnforcePlayer[survivor].g_iSlot = 1;
+								case 4: g_esEnforcePlayer[survivor].g_iSlot = 2;
+								case 8: g_esEnforcePlayer[survivor].g_iSlot = 3;
+								case 16: g_esEnforcePlayer[survivor].g_iSlot = 4;
+								default: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
+							}
+						}
+						case false: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
 					}
 				}
 

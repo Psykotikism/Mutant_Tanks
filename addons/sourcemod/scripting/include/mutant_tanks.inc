@@ -3514,7 +3514,7 @@ stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
 		}
 	}
 
-	return iCommons[MT_GetRandomInt(0, (iCommonCount - 1))];
+	return (iCommonCount > 0) ? iCommons[MT_GetRandomInt(0, (iCommonCount - 1))] : 0;
 }
 
 stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
@@ -3535,7 +3535,7 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 		}
 	}
 
-	return iSpecials[MT_GetRandomInt(0, (iInfectedCount - 1))];
+	return (iInfectedCount > 0) ? iSpecials[MT_GetRandomInt(0, (iInfectedCount - 1))] : 0;
 }
 
 stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans = false, bool noBots = false, bool noIncaps = false)
@@ -3563,7 +3563,7 @@ stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans
 		}
 	}
 
-	return iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))];
+	return (iSurvivorCount > 0) ? iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))] : 0;
 }
 
 stock int iGetPlayerCount()

@@ -2227,6 +2227,9 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 #if defined MT_MENU_ITEM
 	vItemPlayerEventKilled(victim, attacker);
 #endif
+#if defined MT_MENU_KAMIKAZE
+	vKamikazePlayerEventKilled(victim, attacker);
+#endif
 }
 
 public Action MT_OnPlayerHitByVomitJar(int player, int thrower)

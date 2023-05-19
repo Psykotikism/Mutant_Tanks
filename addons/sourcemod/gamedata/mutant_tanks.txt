@@ -3590,6 +3590,28 @@
 			}
 
 			/**
+			 * CTerrorPlayer::PlayerRunCommand(CUserCmd *, IMoveHelper *)
+			 *
+			 * Note: Detouring as a pre-hook for patching weapon holster per player when getting on ladders.
+			 * Note: Detouring as a post-hook for removing patch for weapon holster when getting on ladders.
+			 * Note: L4D2 has two params.
+			 **/
+			"MTDetour_CTerrorPlayer::OnLadderMount"
+			{
+				"arguments"
+				{
+					"cmd"
+					{
+						"type"		"objectptr"
+					}
+					"helper"
+					{
+						"type"		"objectptr"
+					}
+				}
+			}
+
+			/**
 			 * CTerrorPlayer::SelectWeightedSequence(Activity)
 			 *
 			 * Note: Detouring as a pre-hook for accelerating Tank taunting animations after incapacitating a survivor.
@@ -4349,7 +4371,7 @@
 			{
 				"linux"		"68" // start at 75 and patch 2 bytes with NOPs (0x90)
 				"mac"		"196" // start at 74 and patch 2 bytes with NOPs (0x90)
-				"windows"	"47" // start at 74 and patch 2 bytes with POP (0x5E) and RET (0xC3)
+				"windows"	"778" // start at 74 and patch 1 byte with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -4652,8 +4674,8 @@
 				"library"	"server"
 				"linux"		"@_ZN9CDirector26HasAnySurvivorLeftSafeAreaEv"
 				"mac"		"@_ZN9CDirector26HasAnySurvivorLeftSafeAreaEv"
-				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
-						/* 8A ? A0 00 00 00 C3 */
+				"windows"	"\x8A\x2A\x60\x01\x00\x00\xC3"
+						/* 8A ? 60 01 00 00 C3 */
 			}
 
 			/**
@@ -5725,6 +5747,7 @@
 			/**
 			 * CTerrorPlayer::OnLadderMount()
 			 *
+			 * Note: (Windows) This function is in-lined with the "CTerrorPlayer::PlayerRunCommand" function.
 			 * Note: Used for detouring/finding the function.
 			 *
 			 * How to find on Windows:
@@ -5736,8 +5759,8 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnLadderMountEv"
 				"mac"		"@_ZN13CTerrorPlayer13OnLadderMountEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x50"
-						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 6A ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 50 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x53\x56\x57\x33\x2A\x89\x2A\x2A\x89\x2A\x2A\x8B\x2A\x39\x2A\x2A\x74\x2A\x8B\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x57\x57\x57\x57\x8D\x2A\x2A\x51\x50\xFF\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x6A\x2A\x57\x68\x2A\x2A\x2A\x2A\x57\x89\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x89\x2A\x2A\x89\x2A\x2A\xFF\x15\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 53 56 57 33 ? 89 ? ? 89 ? ? 8B ? 39 ? ? 74 ? 8B ? ? 68 ? ? ? ? 8B ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 57 57 57 57 8D ? ? 51 50 FF ? A1 ? ? ? ? 83 ? ? 8B ? ? 8B ? ? 8B ? ? 6A ? 57 68 ? ? ? ? 57 89 ? ? 8B 0D ? ? ? ? 68 ? ? ? ? 89 ? ? 89 ? ? FF 15 ? ? ? ? 8B ? ? 8B */
 			}
 
 			/**

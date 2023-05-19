@@ -927,12 +927,19 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						iAxisCount++;
 					}
 
-					switch (iAxes[MT_GetRandomInt(0, (iAxisCount - 1))])
+					switch (iAxisCount > 0)
 					{
-						case 1: iAxis = 0;
-						case 2: iAxis = 1;
-						case 4: iAxis = 2;
-						default: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
+						case true:
+						{
+							switch (iAxes[MT_GetRandomInt(0, (iAxisCount - 1))])
+							{
+								case 1: iAxis = 0;
+								case 2: iAxis = 1;
+								case 4: iAxis = 2;
+								default: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
+							}
+						}
+						case false: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
 					}
 
 					DataPack dpWhirl;

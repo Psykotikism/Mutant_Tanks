@@ -705,6 +705,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vKamikazePlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esKamikazeCache[attacker].g_iKamikazeBody == 1)
+	{
+		g_iKamikazeDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
 void vKamikazeAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -806,11 +818,6 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
-			}
-
-			if (g_esKamikazeCache[tank].g_iKamikazeBody == 1)
-			{
-				g_iKamikazeDeathModelOwner = GetClientUserId(survivor);
 			}
 
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);

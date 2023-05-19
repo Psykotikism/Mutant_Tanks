@@ -766,76 +766,79 @@ void vMinion(int tank)
 						iTypeCount++;
 					}
 
-					switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
+					if (iTypeCount > 0)
 					{
-						case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-						case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-						case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-						case 8: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-						case 16: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-						case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-						default:
+						switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
 						{
-							switch (MT_GetRandomInt(1, (sizeof iTypes)))
+							case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
+							case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
+							case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
+							case 8: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
+							case 16: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
+							case 32: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
+							default:
 							{
-								case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
-								case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
-								case 3: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
-								case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
-								case 5: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
-								case 6: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
-							}
-						}
-					}
-
-					int iSpecial = 0;
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-					{
-						if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
-						{
-							iSpecial = iPlayer;
-
-							break;
-						}
-					}
-
-					if (bIsSpecialInfected(iSpecial))
-					{
-						TeleportEntity(iSpecial, flHitPos);
-
-						g_esMinionPlayer[iSpecial].g_bMinion = true;
-						g_esMinionPlayer[iSpecial].g_iOwner = tank;
-						g_esMinionPlayer[tank].g_iCount++;
-
-						if (g_esMinionCache[tank].g_flMinionLifetime > 0.0)
-						{
-							CreateTimer(g_esMinionCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
-						}
-
-						if (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
-						{
-							if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1)
-							{
-								g_esMinionPlayer[tank].g_iAmmoCount++;
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esMinionPlayer[tank].g_iAmmoCount, g_esMinionCache[tank].g_iHumanAmmo);
-							}
-
-							int iPos = g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMinionCache[tank].g_iMinionCooldown;
-							iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0) ? g_esMinionCache[tank].g_iHumanCooldown : iCooldown;
-							g_esMinionPlayer[tank].g_iCooldown = (iTime + iCooldown);
-							if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime)
-							{
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman5", (g_esMinionPlayer[tank].g_iCooldown - iTime));
+								switch (MT_GetRandomInt(1, (sizeof iTypes)))
+								{
+									case 1: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "smoker");
+									case 2: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "boomer");
+									case 3: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "hunter");
+									case 4: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "spitter" : "boomer");
+									case 5: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "jockey" : "hunter");
+									case 6: vCheatCommand(tank, g_bSecondGame ? "z_spawn_old" : "z_spawn", g_bSecondGame ? "charger" : "smoker");
+								}
 							}
 						}
 
-						if (g_esMinionCache[tank].g_iMinionMessage == 1)
+						int iSpecial = 0;
+						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 						{
-							char sTankName[33];
-							MT_GetTankName(tank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Minion", LANG_SERVER, sTankName);
+							if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+							{
+								iSpecial = iPlayer;
+
+								break;
+							}
+						}
+
+						if (bIsSpecialInfected(iSpecial))
+						{
+							TeleportEntity(iSpecial, flHitPos);
+
+							g_esMinionPlayer[iSpecial].g_bMinion = true;
+							g_esMinionPlayer[iSpecial].g_iOwner = tank;
+							g_esMinionPlayer[tank].g_iCount++;
+
+							if (g_esMinionCache[tank].g_flMinionLifetime > 0.0)
+							{
+								CreateTimer(g_esMinionCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+							}
+
+							if (g_esMinionPlayer[tank].g_iCooldown == -1 || g_esMinionPlayer[tank].g_iCooldown < iTime)
+							{
+								if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1)
+								{
+									g_esMinionPlayer[tank].g_iAmmoCount++;
+
+									MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esMinionPlayer[tank].g_iAmmoCount, g_esMinionCache[tank].g_iHumanAmmo);
+								}
+
+								int iPos = g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esMinionCache[tank].g_iMinionCooldown;
+								iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility == 1 && g_esMinionPlayer[tank].g_iAmmoCount < g_esMinionCache[tank].g_iHumanAmmo && g_esMinionCache[tank].g_iHumanAmmo > 0) ? g_esMinionCache[tank].g_iHumanCooldown : iCooldown;
+								g_esMinionPlayer[tank].g_iCooldown = (iTime + iCooldown);
+								if (g_esMinionPlayer[tank].g_iCooldown != -1 && g_esMinionPlayer[tank].g_iCooldown > iTime)
+								{
+									MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman5", (g_esMinionPlayer[tank].g_iCooldown - iTime));
+								}
+							}
+
+							if (g_esMinionCache[tank].g_iMinionMessage == 1)
+							{
+								char sTankName[33];
+								MT_GetTankName(tank, sTankName);
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
+								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Minion", LANG_SERVER, sTankName);
+							}
 						}
 					}
 				}

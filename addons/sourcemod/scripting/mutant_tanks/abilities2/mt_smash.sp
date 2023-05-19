@@ -762,6 +762,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN2
+void vSmashPlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esSmashCache[attacker].g_iSmashBody == 1)
+	{
+		g_iSmashDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
 void vSmashAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -933,11 +945,6 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmashHuman5", (g_esSmashPlayer[tank].g_iCooldown - iTime));
 					}
-				}
-
-				if (g_esSmashCache[tank].g_iSmashBody == 1)
-				{
-					g_iSmashDeathModelOwner = GetClientUserId(survivor);
 				}
 
 				vSmash(survivor, tank);
