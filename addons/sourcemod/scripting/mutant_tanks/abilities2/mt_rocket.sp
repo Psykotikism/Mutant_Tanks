@@ -775,6 +775,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN2
+void vRocketPlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esRocketCache[attacker].g_iRocketBody == 1)
+	{
+		g_iRocketDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
 void vRocketAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -1143,11 +1155,6 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 		vRocketReset2(iSurvivor);
 
 		return;
-	}
-
-	if (g_esRocketCache[iTank].g_iRocketBody == 1)
-	{
-		g_iRocketDeathModelOwner = GetClientUserId(iSurvivor);
 	}
 
 	float flPos[3];

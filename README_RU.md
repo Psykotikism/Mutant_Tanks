@@ -2756,7 +2756,7 @@ Overrides
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222, JustMadMan** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222, JustMadMan, DARG367** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

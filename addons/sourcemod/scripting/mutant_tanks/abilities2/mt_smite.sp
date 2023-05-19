@@ -745,6 +745,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN2
+void vSmitePlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esSmiteCache[attacker].g_iSmiteBody == 1)
+	{
+		g_iSmiteDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
 void vSmiteAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -915,11 +927,6 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman5", (g_esSmitePlayer[tank].g_iCooldown - iTime));
 					}
-				}
-
-				if (g_esSmiteCache[tank].g_iSmiteBody == 1)
-				{
-					g_iSmiteDeathModelOwner = GetClientUserId(survivor);
 				}
 
 				vSmite(survivor);

@@ -1017,57 +1017,60 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+						if (iOptionCount > 0)
 						{
-							case 1: SetEntityModel(iCar, MODEL_CAR);
-							case 2: SetEntityModel(iCar, MODEL_CAR2);
-							case 4: SetEntityModel(iCar, MODEL_CAR3);
-							default:
+							switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
 							{
-								switch (MT_GetRandomInt(1, (sizeof iOptions)))
+								case 1: SetEntityModel(iCar, MODEL_CAR);
+								case 2: SetEntityModel(iCar, MODEL_CAR2);
+								case 4: SetEntityModel(iCar, MODEL_CAR3);
+								default:
 								{
-									case 1: SetEntityModel(iCar, MODEL_CAR);
-									case 2: SetEntityModel(iCar, MODEL_CAR2);
-									case 3: SetEntityModel(iCar, MODEL_CAR3);
+									switch (MT_GetRandomInt(1, (sizeof iOptions)))
+									{
+										case 1: SetEntityModel(iCar, MODEL_CAR);
+										case 2: SetEntityModel(iCar, MODEL_CAR2);
+										case 3: SetEntityModel(iCar, MODEL_CAR3);
+									}
 								}
 							}
-						}
 
-						int iCarColor[3];
-						for (int iPos = 0; iPos < (sizeof iCarColor); iPos++)
-						{
-							iCarColor[iPos] = MT_GetRandomInt(0, 255);
-						}
+							int iCarColor[3];
+							for (int iPos = 0; iPos < (sizeof iCarColor); iPos++)
+							{
+								iCarColor[iPos] = MT_GetRandomInt(0, 255);
+							}
 
-						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
+							SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
 
-						if (g_esThrowCache[iTank].g_iThrowCarOwner == 1)
-						{
-							SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
-						}
+							if (g_esThrowCache[iTank].g_iThrowCarOwner == 1)
+							{
+								SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
+							}
 
-						float flPos[3];
-						GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
-						RemoveEntity(iRock);
+							float flPos[3];
+							GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
+							RemoveEntity(iRock);
 
-						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
+							NormalizeVector(flVelocity, flVelocity);
+							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
 
-						TeleportEntity(iCar, flPos);
-						DispatchSpawn(iCar);
-						TeleportEntity(iCar, .velocity = flVelocity);
+							TeleportEntity(iCar, flPos);
+							DispatchSpawn(iCar);
+							TeleportEntity(iCar, .velocity = flVelocity);
 
-						SDKHook(iCar, SDKHook_StartTouch, OnThrowStartTouch);
+							SDKHook(iCar, SDKHook_StartTouch, OnThrowStartTouch);
 
-						iCar = EntIndexToEntRef(iCar);
-						vDeleteEntity(iCar, g_esThrowCache[iTank].g_flThrowCarLifetime);
+							iCar = EntIndexToEntRef(iCar);
+							vDeleteEntity(iCar, g_esThrowCache[iTank].g_flThrowCarLifetime);
 
-						if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_MELEE)
-						{
-							char sTankName[33];
-							MT_GetTankName(iTank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw", LANG_SERVER, sTankName);
+							if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_MELEE)
+							{
+								char sTankName[33];
+								MT_GetTankName(iTank, sTankName);
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
+								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw", LANG_SERVER, sTankName);
+							}
 						}
 					}
 				}
@@ -1098,65 +1101,68 @@ Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+						if (iOptionCount > 0)
 						{
-							case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
-							case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
-							case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
-							case 8: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
-							case 16: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
-							case 32: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
-							case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
-							default:
+							switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
 							{
-								switch (MT_GetRandomInt(1, (sizeof iOptions)))
+								case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+								case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+								case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+								case 8: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+								case 16: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+								case 32: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
+								case 64: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+								default:
 								{
-									case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
-									case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
-									case 3: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
-									case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
-									case 5: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
-									case 6: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
-									case 7: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+									switch (MT_GetRandomInt(1, (sizeof iOptions)))
+									{
+										case 1: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "smoker");
+										case 2: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "boomer");
+										case 3: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "hunter");
+										case 4: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "spitter" : "boomer"));
+										case 5: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "jockey" : "hunter"));
+										case 6: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), (g_bSecondGame ? "charger" : "smoker"));
+										case 7: vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank");
+									}
 								}
 							}
-						}
 
-						int iSpecial = 0;
-						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-						{
-							if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+							int iSpecial = 0;
+							for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 							{
-								iSpecial = iPlayer;
+								if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+								{
+									iSpecial = iPlayer;
 
-								break;
-							}
-						}
-
-						if (bIsInfected(iSpecial))
-						{
-							float flPos[3];
-							GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
-							RemoveEntity(iRock);
-
-							g_esThrowPlayer[iSpecial].g_bThrown = true;
-							g_esThrowPlayer[iSpecial].g_iOwner = iTank;
-
-							if (g_esThrowCache[iTank].g_flThrowInfectedLifetime > 0.0)
-							{
-								CreateTimer(g_esThrowCache[iTank].g_flThrowInfectedLifetime, tTimerThrowKillInfected, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+									break;
+								}
 							}
 
-							NormalizeVector(flVelocity, flVelocity);
-							ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
-							TeleportEntity(iSpecial, flPos, .velocity = flVelocity);
-
-							if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
+							if (bIsInfected(iSpecial))
 							{
-								char sTankName[33];
-								MT_GetTankName(iTank, sTankName);
-								MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
-								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw2", LANG_SERVER, sTankName);
+								float flPos[3];
+								GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
+								RemoveEntity(iRock);
+
+								g_esThrowPlayer[iSpecial].g_bThrown = true;
+								g_esThrowPlayer[iSpecial].g_iOwner = iTank;
+
+								if (g_esThrowCache[iTank].g_flThrowInfectedLifetime > 0.0)
+								{
+									CreateTimer(g_esThrowCache[iTank].g_flThrowInfectedLifetime, tTimerThrowKillInfected, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+								}
+
+								NormalizeVector(flVelocity, flVelocity);
+								ScaleVector(flVelocity, (g_cvMTThrowTankThrowForce.FloatValue * 1.4));
+								TeleportEntity(iSpecial, flPos, .velocity = flVelocity);
+
+								if (g_esThrowCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
+								{
+									char sTankName[33];
+									MT_GetTankName(iTank, sTankName);
+									MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
+									MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw2", LANG_SERVER, sTankName);
+								}
 							}
 						}
 					}

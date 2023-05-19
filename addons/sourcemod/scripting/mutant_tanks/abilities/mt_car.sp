@@ -970,12 +970,27 @@ Action tTimerCar(Handle timer, DataPack pack)
 				iOptionCount++;
 			}
 
-			switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+			switch (iOptionCount > 0)
 			{
-				case 1: SetEntityModel(iCar, MODEL_CAR);
-				case 2: SetEntityModel(iCar, MODEL_CAR2);
-				case 4: SetEntityModel(iCar, MODEL_CAR3);
-				default:
+				case true:
+				{
+					switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+					{
+						case 1: SetEntityModel(iCar, MODEL_CAR);
+						case 2: SetEntityModel(iCar, MODEL_CAR2);
+						case 4: SetEntityModel(iCar, MODEL_CAR3);
+						default:
+						{
+							switch (MT_GetRandomInt(1, (sizeof iOptions)))
+							{
+								case 1: SetEntityModel(iCar, MODEL_CAR);
+								case 2: SetEntityModel(iCar, MODEL_CAR2);
+								case 3: SetEntityModel(iCar, MODEL_CAR3);
+							}
+						}
+					}
+				}
+				case false:
 				{
 					switch (MT_GetRandomInt(1, (sizeof iOptions)))
 					{

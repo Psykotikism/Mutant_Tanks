@@ -2097,6 +2097,15 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 #if defined MT_MENU_RESPAWN
 	vRespawnPlayerEventKilled(victim);
 #endif
+#if defined MT_MENU_ROCKET
+	vRocketPlayerEventKilled(victim, attacker);
+#endif
+#if defined MT_MENU_SMASH
+	vSmashPlayerEventKilled(victim, attacker);
+#endif
+#if defined MT_MENU_SMITE
+	vSmitePlayerEventKilled(victim, attacker);
+#endif
 }
 
 public Action MT_OnPlayerHitByVomitJar(int player, int thrower)

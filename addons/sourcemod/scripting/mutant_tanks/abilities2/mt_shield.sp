@@ -1489,28 +1489,31 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 			iTypeCount++;
 		}
 
-		int iChosen = iTypes[MT_GetRandomInt(0, (iTypeCount - 1))];
-		if (iChosen == 2 || iChosen == 4)
+		if (iTypeCount > 0)
 		{
-			int iThrowable = CreateEntityByName("prop_physics");
-			if (bIsValidEntity(iThrowable))
+			int iChosen = iTypes[MT_GetRandomInt(0, (iTypeCount - 1))];
+			if (iChosen == 2 || iChosen == 4)
 			{
-				switch (iChosen)
+				int iThrowable = CreateEntityByName("prop_physics");
+				if (bIsValidEntity(iThrowable))
 				{
-					case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
-					case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
+					switch (iChosen)
+					{
+						case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+						case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
+					}
+
+					float flPos[3];
+					GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
+					RemoveEntity(iRock);
+
+					NormalizeVector(flVelocity, flVelocity);
+					ScaleVector(flVelocity, (g_cvMTShieldTankThrowForce.FloatValue * 1.4));
+
+					TeleportEntity(iThrowable, flPos);
+					DispatchSpawn(iThrowable);
+					TeleportEntity(iThrowable, .velocity = flVelocity);
 				}
-
-				float flPos[3];
-				GetEntPropVector(iRock, Prop_Data, "m_vecOrigin", flPos);
-				RemoveEntity(iRock);
-
-				NormalizeVector(flVelocity, flVelocity);
-				ScaleVector(flVelocity, (g_cvMTShieldTankThrowForce.FloatValue * 1.4));
-
-				TeleportEntity(iThrowable, flPos);
-				DispatchSpawn(iThrowable);
-				TeleportEntity(iThrowable, .velocity = flVelocity);
 			}
 		}
 

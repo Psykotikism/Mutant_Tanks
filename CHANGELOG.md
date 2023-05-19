@@ -7,6 +7,7 @@
 #### General
 - Fixed an issue where some RNG-based events happen too often. (Thanks to `ddd123` for reporting!)
 - Fixed an issue where Witches take a long time to die from fires. (Thanks to `ddd123` for reporting!)
+- Fixed rare array index errors.
 
 #### Core Plugin
 - Fixed Tank death messages not appearing when a survivor solos a Tank.
@@ -19,23 +20,28 @@
 	- Fixed one of the messages not showing up when the ability activates. (Thanks to `thewintersoldier97` for reporting!)
 	- Fixed the ability targeting the Tank itself.
 - Quiet: Fixed the sound hook blocking other sound hooks.
+- Rocket: Fixed an issue where survivor ragdolls will not disappear if the player goes afk and is replaced by a survivor bot. (Thanks to `Slaven555` for testing and reporting!)
 
 ### Changes
 
 #### General
 - Mutant Tanks and its sub-plugins now properly support the [`[L4D & L4D2] Lagged Movement - Plugin Conflict Resolver`](https://forums.alliedmods.net/showthread.php?t=340345) plugin.
 
-#### Core Plugin
-- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
-
 #### Commands
 - Added a 4th parameter for the `sm_tank` command. (Usage: `sm_tank <1-500> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind>`)
+
+#### Game Data
+- L4D2: Updated some signatures and offsets for the `2.2.2.7` update.
 
 #### Abilities
 - Gravity
 	- Added the `Gravity Radius` setting.
 	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
 	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
+
+#### Settings
+- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
+- Added the `Refill Percent Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `DARG367` for suggesting!)
 
 #### Translations
 - Updated English translations.

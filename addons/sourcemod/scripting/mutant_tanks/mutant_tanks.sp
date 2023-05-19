@@ -597,6 +597,7 @@ enum struct esGeneral
 	float g_flPunchForce;
 	float g_flPunchResistanceReward[4];
 	float g_flPunchThrow;
+	float g_flRefillPercentReward[4];
 	float g_flRegularDelay;
 	float g_flRegularInterval;
 	float g_flRewardChance[4];
@@ -1019,6 +1020,8 @@ enum struct esPlayer
 	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
+	float g_flRefillPercent;
+	float g_flRefillPercentReward[4];
 	float g_flRewardChance[4];
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
@@ -1293,6 +1296,7 @@ enum struct esTank
 	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
+	float g_flRefillPercentReward[4];
 	float g_flRewardChance[4];
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
@@ -1501,6 +1505,7 @@ enum struct esCache
 	float g_flPunchThrow;
 	float g_flRandomDuration;
 	float g_flRandomInterval;
+	float g_flRefillPercentReward[4];
 	float g_flRewardChance[4];
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
@@ -6756,6 +6761,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				g_esPlayer[survivor].g_flHealPercent = 0.0;
 				g_esPlayer[survivor].g_iHealthRegen = 0;
 				g_esPlayer[survivor].g_iLifeLeech = 0;
+				g_esPlayer[survivor].g_flRefillPercent = 0.0;
 				g_esPlayer[survivor].g_iReviveHealth = 0;
 				iRewardCount++;
 			}
@@ -7101,6 +7107,7 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			if (!(g_esPlayer[survivor].g_iRewardTypes & type))
 			{
 				g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
+				g_esPlayer[survivor].g_flRefillPercent = g_esCache[tank].g_flRefillPercentReward[priority];
 				g_esPlayer[survivor].g_iHealthRegen = g_esCache[tank].g_iHealthRegenReward[priority];
 				g_esPlayer[survivor].g_iLifeLeech = g_esCache[tank].g_iLifeLeechReward[priority];
 				g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
@@ -7109,6 +7116,8 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 			{
 				g_esPlayer[survivor].g_flHealPercent += g_esCache[tank].g_flHealPercentReward[priority] / 2.0;
 				g_esPlayer[survivor].g_flHealPercent = flClamp(g_esPlayer[survivor].g_flHealPercent, 1.0, 100.0);
+				g_esPlayer[survivor].g_flRefillPercent += g_esCache[tank].g_flRefillPercentReward[priority] / 2.0;
+				g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 1.0, 100.0);
 				g_esPlayer[survivor].g_iHealthRegen += g_esCache[tank].g_iHealthRegenReward[priority];
 				g_esPlayer[survivor].g_iHealthRegen = iClamp(g_esPlayer[survivor].g_iHealthRegen, 0, MT_MAXHEALTH);
 				g_esPlayer[survivor].g_iLifeLeech += g_esCache[tank].g_iLifeLeechReward[priority];
@@ -7581,6 +7590,18 @@ void vRestorePlayerGlow(int client)
  * Survivor functions
  **/
 
+void vAddSurvivorHealth(int survivor)
+{
+	float flPercentage = (g_esPlayer[survivor].g_flRefillPercent / 100.0);
+	if (flPercentage > 0.0)
+	{
+		int iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth"),
+			iExtraHealth = RoundToNearest(iMaxHealth * flPercentage), iFinalHealth = iClamp((iHealth + iExtraHealth), 0, iMaxHealth);
+		vCheatCommand(survivor, "give", "health");
+		SetEntProp(survivor, Prop_Data, "m_iHealth", iFinalHealth);
+	}
+}
+
 void vCheckGunClipSizes(int survivor)
 {
 	if (g_esGeneral.g_hSDKGetMaxClip1 != null)
@@ -7624,6 +7645,7 @@ void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 	g_esPlayer[newSurvivor].g_flLastPushTime = g_esPlayer[oldSurvivor].g_flLastPushTime;
 	g_esPlayer[newSurvivor].g_flPipeBombDuration = g_esPlayer[oldSurvivor].g_flPipeBombDuration;
 	g_esPlayer[newSurvivor].g_flPreFallZ = g_esPlayer[oldSurvivor].g_flPreFallZ;
+	g_esPlayer[newSurvivor].g_flRefillPercent = g_esPlayer[oldSurvivor].g_flRefillPercent;
 	g_esPlayer[newSurvivor].g_flShoveDamage = g_esPlayer[oldSurvivor].g_flShoveDamage;
 	g_esPlayer[newSurvivor].g_flShoveRate = g_esPlayer[oldSurvivor].g_flShoveRate;
 	g_esPlayer[newSurvivor].g_flSpeedBoost = g_esPlayer[oldSurvivor].g_flSpeedBoost;
@@ -7943,12 +7965,12 @@ void vRefillSurvivorHealth(int survivor)
 		if (iMode != 2)
 		{
 			SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-			vCheatCommand(survivor, "give", "health");
+			vAddSurvivorHealth(survivor);
 			SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
 		}
 		else
 		{
-			vCheatCommand(survivor, "give", "health");
+			vAddSurvivorHealth(survivor);
 		}
 
 		g_esPlayer[survivor].g_bLastLife = false;
@@ -8016,6 +8038,7 @@ void vResetSurvivorStats(int survivor, bool all)
 	g_esPlayer[survivor].g_flLastPushTime = 0.0;
 	g_esPlayer[survivor].g_flPipeBombDuration = 0.0;
 	g_esPlayer[survivor].g_flPreFallZ = 0.0;
+	g_esPlayer[survivor].g_flRefillPercent = 0.0;
 	g_esPlayer[survivor].g_flShoveDamage = 0.0;
 	g_esPlayer[survivor].g_flShoveRate = 0.0;
 	g_esPlayer[survivor].g_flSpeedBoost = 0.0;
@@ -10294,21 +10317,33 @@ void vSetTankModel(int tank)
 			iModelCount++;
 		}
 
-		if (iModelCount > 0)
+		switch (iModelCount > 0)
 		{
-			switch (iModels[MT_GetRandomInt(0, (iModelCount - 1))])
+			case true:
 			{
-				case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-				case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
-				default:
+				switch (iModels[MT_GetRandomInt(0, (iModelCount - 1))])
 				{
-					switch (MT_GetRandomInt(1, (sizeof iModels)))
+					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+					case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+					default:
 					{
-						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-						case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+						switch (MT_GetRandomInt(1, (sizeof iModels)))
+						{
+							case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+							case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+							case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+						}
 					}
+				}
+			}
+			case false:
+			{
+				switch (MT_GetRandomInt(1, (sizeof iModels)))
+				{
+					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+					case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
 				}
 			}
 		}
@@ -11265,6 +11300,8 @@ void vCacheSettings(int tank)
 			g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flPunchResistanceReward[iPos], g_esCache[tank].g_flPunchResistanceReward[iPos]);
 			g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRecoilDampenerReward[iPos], g_esGeneral.g_iRecoilDampenerReward[iPos]);
 			g_esCache[tank].g_iRecoilDampenerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRecoilDampenerReward[iPos], g_esCache[tank].g_iRecoilDampenerReward[iPos]);
+			g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRefillPercentReward[iPos], g_esGeneral.g_flRefillPercentReward[iPos]);
+			g_esCache[tank].g_flRefillPercentReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRefillPercentReward[iPos], g_esCache[tank].g_flRefillPercentReward[iPos]);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos]);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos]);
 			g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos]);
@@ -11725,6 +11762,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esTank[iIndex].g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 99999.0);
 					g_esTank[iIndex].g_flPipeBombDurationReward[iPos] = flGetClampedValue(key, "PipebombDurationReward", "Pipebomb Duration Reward", "Pipebomb_Duration_Reward", "pipeduration", g_esTank[iIndex].g_flPipeBombDurationReward[iPos], sSet[iPos], 0.0, 99999.0);
 					g_esTank[iIndex].g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esTank[iIndex].g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
+					g_esTank[iIndex].g_flRefillPercentReward[iPos] = flGetClampedValue(key, "RefillPercentReward", "Refill Percent Reward", "Refill_Percent_Reward", "refillpercent", g_esTank[iIndex].g_flRefillPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 					g_esTank[iIndex].g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esTank[iIndex].g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 99999.0);
 					g_esTank[iIndex].g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esTank[iIndex].g_flShoveRateReward[iPos], sSet[iPos], 0.0, 99999.0);
 					g_esTank[iIndex].g_flSpeedBoostReward[iPos] = flGetClampedValue(key, "SpeedBoostReward", "Speed Boost Reward", "Speed_Boost_Reward", "speedboost", g_esTank[iIndex].g_flSpeedBoostReward[iPos], sSet[iPos], 0.0, 99999.0);
@@ -13268,6 +13306,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iPrefsNotify[iPos] = 1;
 				g_esGeneral.g_flPunchResistanceReward[iPos] = 0.25;
 				g_esGeneral.g_iRecoilDampenerReward[iPos] = 1;
+				g_esGeneral.g_flRefillPercentReward[iPos] = 100.0;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
 				g_esGeneral.g_iReviveHealthReward[iPos] = 100;
 				g_esGeneral.g_iShareRewards[iPos] = 0;
@@ -13457,6 +13496,7 @@ void SMCParseStart_Main(SMCParser smc)
 					g_esTank[iIndex].g_iPrefsNotify[iPos] = 0;
 					g_esTank[iIndex].g_flPunchResistanceReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iRecoilDampenerReward[iPos] = 0;
+					g_esTank[iIndex].g_flRefillPercentReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
 					g_esTank[iIndex].g_iReviveHealthReward[iPos] = 0;
 					g_esTank[iIndex].g_iShareRewards[iPos] = 0;
@@ -13683,6 +13723,7 @@ void SMCParseStart_Main(SMCParser smc)
 						g_esPlayer[iPlayer].g_iPrefsNotify[iPos] = 0;
 						g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iRecoilDampenerReward[iPos] = 0;
+						g_esPlayer[iPlayer].g_flRefillPercentReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iReviveHealthReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iShareRewards[iPos] = 0;
@@ -14023,6 +14064,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 							g_esGeneral.g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esGeneral.g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 99999.0);
 							g_esGeneral.g_flPipeBombDurationReward[iPos] = flGetClampedValue(key, "PipebombDurationReward", "Pipebomb Duration Reward", "Pipebomb_Duration_Reward", "pipeduration", g_esGeneral.g_flPipeBombDurationReward[iPos], sSet[iPos], 0.0, 99999.0);
 							g_esGeneral.g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esGeneral.g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
+							g_esGeneral.g_flRefillPercentReward[iPos] = flGetClampedValue(key, "RefillPercentReward", "Refill Percent Reward", "Refill_Percent_Reward", "refillpercent", g_esGeneral.g_flRefillPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 							g_esGeneral.g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esGeneral.g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 99999.0);
 							g_esGeneral.g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esGeneral.g_flShoveRateReward[iPos], sSet[iPos], 0.0, 99999.0);
 							g_esGeneral.g_flSpeedBoostReward[iPos] = flGetClampedValue(key, "SpeedBoostReward", "Speed Boost Reward", "Speed_Boost_Reward", "speedboost", g_esGeneral.g_flSpeedBoostReward[iPos], sSet[iPos], 0.0, 99999.0);
@@ -14327,6 +14369,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 									g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos] = flGetClampedValue(key, "LoopingVoicelineInterval", "Looping Voiceline Interval", "Looping_Voiceline_Interval", "loopinterval", g_esPlayer[iPlayer].g_flLoopingVoicelineInterval[iPos], sSet[iPos], 0.1, 99999.0);
 									g_esPlayer[iPlayer].g_flPipeBombDurationReward[iPos] = flGetClampedValue(key, "PipebombDurationReward", "Pipebomb Duration Reward", "Pipebomb_Duration_Reward", "pipeduration", g_esPlayer[iPlayer].g_flPipeBombDurationReward[iPos], sSet[iPos], 0.0, 99999.0);
 									g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = flGetClampedValue(key, "PunchResistanceReward", "Punch Resistance Reward", "Punch_Resistance_Reward", "punchres", g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos], sSet[iPos], 0.0, 1.0);
+									g_esPlayer[iPlayer].g_flRefillPercentReward[iPos] = flGetClampedValue(key, "RefillPercentReward", "Refill Percent Reward", "Refill_Percent_Reward", "refillpercent", g_esPlayer[iPlayer].g_flRefillPercentReward[iPos], sSet[iPos], 0.0, 100.0);
 									g_esPlayer[iPlayer].g_flShoveDamageReward[iPos] = flGetClampedValue(key, "ShoveDamageReward", "Shove Damage Reward", "Shove_Damage_Reward", "shovedmg", g_esPlayer[iPlayer].g_flShoveDamageReward[iPos], sSet[iPos], 0.0, 99999.0);
 									g_esPlayer[iPlayer].g_flShoveRateReward[iPos] = flGetClampedValue(key, "ShoveRateReward", "Shove Rate Reward", "Shove_Rate_Reward", "shoverate", g_esPlayer[iPlayer].g_flShoveRateReward[iPos], sSet[iPos], 0.0, 99999.0);
 									g_esPlayer[iPlayer].g_flSpeedBoostReward[iPos] = flGetClampedValue(key, "SpeedBoostReward", "Speed Boost Reward", "Speed_Boost_Reward", "speedboost", g_esPlayer[iPlayer].g_flSpeedBoostReward[iPos], sSet[iPos], 0.0, 99999.0);
@@ -19652,20 +19695,25 @@ int iGetMessageType(int setting)
 		iMessageCount++;
 	}
 
-	switch (iMessages[MT_GetRandomInt(0, (iMessageCount - 1))])
+	if (iMessageCount > 0)
 	{
-		case 1: return 1;
-		case 2: return 2;
-		case 4: return 3;
-		case 8: return 4;
-		case 16: return 5;
-		case 32: return 6;
-		case 64: return 7;
-		case 128: return 8;
-		case 256: return 9;
-		case 512: return 10;
-		default: return MT_GetRandomInt(1, (sizeof iMessages));
+		switch (iMessages[MT_GetRandomInt(0, (iMessageCount - 1))])
+		{
+			case 1: return 1;
+			case 2: return 2;
+			case 4: return 3;
+			case 8: return 4;
+			case 16: return 5;
+			case 32: return 6;
+			case 64: return 7;
+			case 128: return 8;
+			case 256: return 9;
+			case 512: return 10;
+			default: return MT_GetRandomInt(1, (sizeof iMessages));
+		}
 	}
+
+	return MT_GetRandomInt(1, (sizeof iMessages));
 }
 
 int iGetRandomRecipient(int recipient, int tank, int priority, bool none)
