@@ -10,7 +10,7 @@
 
 		"Notes"		"AlliedModders forum thread: https://forums.alliedmods.net/showthread.php?t=302140"
 		"Notes"		"GitHub repository: https://github.com/Psykotikism/Mutant_Tanks"
-		"Notes"		"Release date: 2023"
+		"Notes"		"Release date: 5-21-2023"
 		"Notes"		"Changes in v8.97:"
 		"Notes"		"Bug Fixes:"
 		"Notes"		"General:"
