@@ -710,7 +710,7 @@ void vKamikazePlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esKamikazeCache[attacker].g_iKamikazeBody == 1)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esKamikazeCache[attacker].g_iKamikazeAbility == 1 && g_esKamikazeCache[attacker].g_iKamikazeBody == 1)
 	{
 		g_iKamikazeDeathModelOwner = GetClientUserId(victim);
 	}

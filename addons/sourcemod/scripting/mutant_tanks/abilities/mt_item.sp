@@ -611,7 +611,7 @@ void vItemPlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_iItemAbility == 1 && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(victim, flPos);

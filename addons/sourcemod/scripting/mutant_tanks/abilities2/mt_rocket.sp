@@ -780,7 +780,7 @@ void vRocketPlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esRocketCache[attacker].g_iRocketBody == 1)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esRocketCache[attacker].g_iRocketAbility == 1 && g_esRocketCache[attacker].g_iRocketBody == 1)
 	{
 		g_iRocketDeathModelOwner = GetClientUserId(victim);
 	}

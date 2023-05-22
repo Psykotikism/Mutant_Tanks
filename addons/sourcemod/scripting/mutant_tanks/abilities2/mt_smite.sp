@@ -750,7 +750,7 @@ void vSmitePlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esSmiteCache[attacker].g_iSmiteBody == 1)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esSmiteCache[attacker].g_iSmiteAbility == 1 && g_esSmiteCache[attacker].g_iSmiteBody == 1)
 	{
 		g_iSmiteDeathModelOwner = GetClientUserId(victim);
 	}
