@@ -799,29 +799,28 @@ void vSpawnZombie(int tank, bool uncommon)
 					iTypeCount++;
 				}
 
-				if (iTypeCount > 0)
+				int iType = (iTypeCount > 0) ? iTypes[MT_GetRandomInt(0, (iTypeCount - 1))] : iTypes[0];
+
+				switch (iType)
 				{
-					switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
+					case 1: vSpawnUncommon(tank, MODEL_CEDA);
+					case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+					case 4: vSpawnUncommon(tank, MODEL_FALLEN);
+					case 8: vSpawnUncommon(tank, MODEL_CLOWN);
+					case 16: vSpawnUncommon(tank, MODEL_MUDMAN);
+					case 32: vSpawnUncommon(tank, MODEL_ROADCREW);
+					case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
+					default:
 					{
-						case 1: vSpawnUncommon(tank, MODEL_CEDA);
-						case 2: vSpawnUncommon(tank, MODEL_JIMMY);
-						case 4: vSpawnUncommon(tank, MODEL_FALLEN);
-						case 8: vSpawnUncommon(tank, MODEL_CLOWN);
-						case 16: vSpawnUncommon(tank, MODEL_MUDMAN);
-						case 32: vSpawnUncommon(tank, MODEL_ROADCREW);
-						case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
-						default:
+						switch (MT_GetRandomInt(1, (sizeof iTypes)))
 						{
-							switch (MT_GetRandomInt(1, (sizeof iTypes)))
-							{
-								case 1: vSpawnUncommon(tank, MODEL_CEDA);
-								case 2: vSpawnUncommon(tank, MODEL_JIMMY);
-								case 3: vSpawnUncommon(tank, MODEL_FALLEN);
-								case 4: vSpawnUncommon(tank, MODEL_CLOWN);
-								case 5: vSpawnUncommon(tank, MODEL_MUDMAN);
-								case 6: vSpawnUncommon(tank, MODEL_ROADCREW);
-								case 7: vSpawnUncommon(tank, MODEL_RIOTCOP);
-							}
+							case 1: vSpawnUncommon(tank, MODEL_CEDA);
+							case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+							case 3: vSpawnUncommon(tank, MODEL_FALLEN);
+							case 4: vSpawnUncommon(tank, MODEL_CLOWN);
+							case 5: vSpawnUncommon(tank, MODEL_MUDMAN);
+							case 6: vSpawnUncommon(tank, MODEL_ROADCREW);
+							case 7: vSpawnUncommon(tank, MODEL_RIOTCOP);
 						}
 					}
 				}
