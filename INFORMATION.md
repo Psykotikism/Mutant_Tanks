@@ -1605,8 +1605,9 @@
 			// 4th number = Attack boost reward stack limit.
 			// 5th number = Ammo reward stack limit.
 			// 6th number = God mode reward stack limit.
-			// 7th number = Infinite ammo reward stack limit.
-			"Stack Limits"				"0,0,0,0,0,0,0"
+			// 7th number = Refill stack limit.
+			// 8th number = Infinite ammo reward stack limit.
+			"Stack Limits"				"0,0,0,0,0,0,0,0"
 
 			// Allow rewards from Mutant Tanks to be stacked.
 			// Note: This setting can be used for standard Tanks.
@@ -3986,8 +3987,9 @@
 			// 4th number = Attack boost reward stack limit.
 			// 5th number = Ammo reward stack limit.
 			// 6th number = God mode reward stack limit.
-			// 7th number = Infinite ammo reward stack limit.
-			"Stack Limits"				"0,0,0,0,0,0,0"
+			// 7th number = Refill stack limit.
+			// 8th number = Infinite ammo reward stack limit.
+			"Stack Limits"				"0,0,0,0,0,0,0,0"
 
 			// Allow rewards from the Mutant Tank to be stacked.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

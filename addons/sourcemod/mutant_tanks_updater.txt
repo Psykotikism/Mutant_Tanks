@@ -42,6 +42,7 @@
 		"Notes"		"Settings:"
 		"Notes"		"- Added the \"Footstep Shake\" setting under the \"Plugin Settings->Enhancements\", \"Tank #->Enhancements\", and \"STEAM_ID->Enhancements\" sections. (Thanks to \"Silvers\" for the code!)"
 		"Notes"		"- Added the \"Refill Percent Reward\" setting under the \"Plugin Settings->Rewards\", \"Tank #->Rewards\", and \"STEAM_ID->Rewards\" sections. (Thanks to \"DARG367\" for suggesting!)"
+		"Notes"		"- Updated the \"Stack Limits\" setting to accept an \"8th\" value."
 		"Notes"		"Translations:"
 		"Notes"		"- Updated English translations."
 		"Notes"		"- Updated Simplified Chinese translations."

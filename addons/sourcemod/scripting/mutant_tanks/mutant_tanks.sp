@@ -799,7 +799,7 @@ enum struct esGeneral
 	int g_iSpawnEnabled;
 	int g_iSpawnMode;
 	int g_iSpecialAmmoReward[4];
-	int g_iStackLimits[7];
+	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iStasisMode;
 	int g_iSurvivalBlock;
@@ -1025,7 +1025,7 @@ enum struct esPlayer
 	float g_flRewardChance[4];
 	float g_flRewardDuration[4];
 	float g_flRewardPercentage[4];
-	float g_flRewardTime[7];
+	float g_flRewardTime[8];
 	float g_flRockDamage;
 	float g_flRunSpeed;
 	float g_flShoveDamage;
@@ -1164,7 +1164,7 @@ enum struct esPlayer
 	int g_iRewardEffect[4];
 	int g_iRewardEnabled[4];
 	int g_iRewardNotify[4];
-	int g_iRewardStack[7];
+	int g_iRewardStack[8];
 	int g_iRewardTypes;
 	int g_iRewardVisual[4];
 	int g_iRewardVisuals;
@@ -1187,7 +1187,7 @@ enum struct esPlayer
 	int g_iSpawnType;
 	int g_iSpecialAmmo;
 	int g_iSpecialAmmoReward[4];
-	int g_iStackLimits[7];
+	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iSurvivorDamage;
 	int g_iSweepFist;
@@ -1408,7 +1408,7 @@ enum struct esTank
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
-	int g_iStackLimits[7];
+	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iSweepFist;
 	int g_iTankEnabled;
@@ -1604,7 +1604,7 @@ enum struct esCache
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[4];
-	int g_iStackLimits[7];
+	int g_iStackLimits[8];
 	int g_iStackRewards[4];
 	int g_iSweepFist;
 	int g_iTankEnabled;
@@ -6099,7 +6099,8 @@ void vEndRewards(int survivor, bool force)
 			case 3: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ATTACKBOOST);
 			case 4: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO);
 			case 5: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE);
-			case 6: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO);
+			case 6: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL);
+			case 7: bCheck = !!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO);
 		}
 
 		flDuration = g_esPlayer[survivor].g_flRewardTime[iPos];
@@ -6113,7 +6114,8 @@ void vEndRewards(int survivor, bool force)
 				case 3: iType |= MT_REWARD_ATTACKBOOST;
 				case 4: iType |= MT_REWARD_AMMO;
 				case 5: iType |= MT_REWARD_GODMODE;
-				case 6: iType |= MT_REWARD_INFAMMO;
+				case 6: iType |= MT_REWARD_REFILL;
+				case 7: iType |= MT_REWARD_INFAMMO;
 			}
 		}
 	}
@@ -6681,15 +6683,33 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
 					{
-						vSetupRefillReward(survivor, sSet[iRewardCount], sizeof sSet[]);
+						FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardRefill", survivor);
+						vSetupRefillReward(survivor, tank, priority);
+
+						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_REFILL;
 						iRewardCount++;
 					}
-
-					if (survivor != iRecipient && !(g_esPlayer[iRecipient].g_iRewardTypes & MT_REWARD_REFILL))
+					else
 					{
-						vSetupRefillReward(iRecipient, sSet2[iRewardCount2], sizeof sSet2[]);
-						iRewardCount2++;
+						vChooseRecipient(survivor, iRecipient, "RewardRefill", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6]));
+						if (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6] && survivor != iRecipient)
+						{
+							vSetupRefillReward(iRecipient, tank, priority);
+							iRewardCount2++;
+
+							if (!(g_esPlayer[iRecipient].g_iRewardTypes & MT_REWARD_REFILL))
+							{
+								g_esPlayer[iRecipient].g_iRewardTypes |= MT_REWARD_REFILL;
+							}
+						}
+						else
+						{
+							vSetupRefillReward(survivor, tank, priority);
+							iRewardCount++;
+						}
 					}
+
+					vSetupRewardDurations(survivor, iRecipient, 6, g_esCache[tank].g_iStackLimits[6], flTime, flTime2, flCurrentTime, flDuration, flDuration2);
 				}
 
 				if (iType & MT_REWARD_INFAMMO)
@@ -6704,8 +6724,8 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 					}
 					else
 					{
-						vChooseRecipient(survivor, iRecipient, "RewardInfAmmo", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6]));
-						if (g_esPlayer[survivor].g_iRewardStack[6] >= g_esCache[tank].g_iStackLimits[6] && survivor != iRecipient)
+						vChooseRecipient(survivor, iRecipient, "RewardInfAmmo", sSet[iRewardCount], sizeof sSet[], sSet2[iRewardCount2], sizeof sSet2[], (g_esPlayer[survivor].g_iRewardStack[7] >= g_esCache[tank].g_iStackLimits[7]));
+						if (g_esPlayer[survivor].g_iRewardStack[7] >= g_esCache[tank].g_iStackLimits[7] && survivor != iRecipient)
 						{
 							vSetupRewardCounts(iRecipient, tank, priority, MT_REWARD_INFAMMO);
 							iRewardCount2++;
@@ -6722,7 +6742,7 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 						}
 					}
 
-					vSetupRewardDurations(survivor, iRecipient, 6, g_esCache[tank].g_iStackLimits[6], flTime, flTime2, flCurrentTime, flDuration, flDuration2);
+					vSetupRewardDurations(survivor, iRecipient, 7, g_esCache[tank].g_iStackLimits[7], flTime, flTime2, flCurrentTime, flDuration, flDuration2);
 				}
 
 				char sRewards[1024];
@@ -6865,13 +6885,24 @@ void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = false, i
 				}
 			}
 
+			if ((iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
+			{
+				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardRefill", survivor);
+
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_REFILL;
+				g_esPlayer[survivor].g_flRewardTime[6] = -1.0;
+				g_esPlayer[survivor].g_iRewardStack[6] = 0;
+				g_esPlayer[survivor].g_flRefillPercent = 0.0;
+				iRewardCount++;
+			}
+
 			if ((iType & MT_REWARD_INFAMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO))
 			{
 				FormatEx(sSet[iRewardCount], sizeof sSet[], "%T", "RewardInfAmmo", survivor);
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_INFAMMO;
-				g_esPlayer[survivor].g_flRewardTime[6] = -1.0;
-				g_esPlayer[survivor].g_iRewardStack[6] = 0;
+				g_esPlayer[survivor].g_flRewardTime[7] = -1.0;
+				g_esPlayer[survivor].g_iRewardStack[7] = 0;
 				g_esPlayer[survivor].g_iInfiniteAmmo = 0;
 				iRewardCount++;
 			}
@@ -7087,11 +7118,9 @@ void vSetupItemReward(int survivor, int tank, int priority, char[] buffer, int s
 	}
 }
 
-void vSetupRefillReward(int survivor, char[] buffer, int size)
+void vSetupRefillReward(int survivor, int tank, int priority)
 {
-	g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_REFILL;
-
-	FormatEx(buffer, size, "%T", "RewardRefill", survivor);
+	vSetupRewardCounts(survivor, tank, priority, MT_REWARD_REFILL);
 	vSaveCaughtSurvivor(survivor);
 	vCheckGunClipSizes(survivor);
 	vRefillGunAmmo(survivor, .reset = !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO), .override = true);
@@ -7249,17 +7278,30 @@ void vSetupRewardCounts(int survivor, int tank, int priority, int type)
 				g_esPlayer[survivor].g_iRewardStack[5]++;
 			}
 		}
+		case MT_REWARD_REFILL:
+		{
+			if (!(g_esPlayer[survivor].g_iRewardTypes & type))
+			{
+				g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
+				g_esPlayer[survivor].g_flRefillPercent = g_esCache[tank].g_flRefillPercentReward[priority];
+			}
+			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[6] > 0 && g_esPlayer[survivor].g_iRewardStack[6] < g_esCache[tank].g_iStackLimits[6])
+			{
+				g_esPlayer[survivor].g_flRefillPercent += g_esCache[tank].g_flRefillPercentReward[priority] / 2.0;
+				g_esPlayer[survivor].g_flRefillPercent = flClamp(g_esPlayer[survivor].g_flRefillPercent, 0.0, 100.0);
+			}
+		}
 		case MT_REWARD_INFAMMO:
 		{
 			if (!(g_esPlayer[survivor].g_iRewardTypes & type))
 			{
 				g_esPlayer[survivor].g_iInfiniteAmmo = g_esCache[tank].g_iInfiniteAmmoReward[priority];
 			}
-			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[6] > 0 && g_esPlayer[survivor].g_iRewardStack[6] < g_esCache[tank].g_iStackLimits[6])
+			else if ((g_esCache[tank].g_iStackRewards[priority] & type) && (g_esPlayer[survivor].g_iRewardTypes & type) && g_esCache[tank].g_iStackLimits[7] > 0 && g_esPlayer[survivor].g_iRewardStack[7] < g_esCache[tank].g_iStackLimits[7])
 			{
 				g_esPlayer[survivor].g_iInfiniteAmmo |= g_esCache[tank].g_iInfiniteAmmoReward[priority];
 				g_esPlayer[survivor].g_iInfiniteAmmo = iClamp(g_esPlayer[survivor].g_iInfiniteAmmo, 0, 31);
-				g_esPlayer[survivor].g_iRewardStack[6]++;
+				g_esPlayer[survivor].g_iRewardStack[7]++;
 			}
 		}
 	}
@@ -11742,7 +11784,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		}
 		else if (StrEqual(sub, MT_CONFIG_SECTION_REWARDS, false))
 		{
-			char sValue[1280], sSet[7][320];
+			char sValue[1280], sSet[8][320];
 			strcopy(sValue, sizeof sValue, value);
 			ReplaceString(sValue, sizeof sValue, " ", "");
 			ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
@@ -14044,7 +14086,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 				}
 				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 				{
-					char sValue[1280], sSet[7][320];
+					char sValue[1280], sSet[8][320];
 					strcopy(sValue, sizeof sValue, value);
 					ReplaceString(sValue, sizeof sValue, " ", "");
 					ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
@@ -14349,7 +14391,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 						}
 						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 						{
-							char sValue[1280], sSet[7][320];
+							char sValue[1280], sSet[8][320];
 							strcopy(sValue, sizeof sValue, value);
 							ReplaceString(sValue, sizeof sValue, " ", "");
 							ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
