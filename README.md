@@ -202,6 +202,13 @@ sm_mt_zombie - View information about the Zombie ability.
 // Maximum: "1.000000"
 mt_autoupdate "0"
 
+// The config filename used by Mutant Tanks to read settings from.
+// Empty: None
+// Not empty: The custom config filename to use.
+// -
+// Default: "mutant_tanks.cfg"
+mt_configfile "mutant_tanks.cfg"
+
 // Disable Mutant Tanks in these game modes.
 // Separate by commas.
 // Empty: None
@@ -2754,9 +2761,9 @@ Set the values in `Execute Config Types`.
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao, xcd222** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, JustMadMan, DARG367** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, JustMadMan, DARG367, zonbarbar** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

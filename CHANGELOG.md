@@ -1,48 +1,32 @@
 # Changelog
 
-## Version 8.97 (May 21, 2023)
+## Version 8.98 (July 4, 2023)
 
 ### Bug Fixes
 
-#### General
-- Fixed an issue where some RNG-based events happen too often. (Thanks to `ddd123` for reporting!)
-- Fixed an issue where Witches take a long time to die from fires. (Thanks to `ddd123` for reporting!)
-- Fixed rare array index errors.
-
 #### Core Plugin
-- Fixed Tank death messages not appearing when a survivor solos a Tank.
+- Fixed the `Health` and `Refill` rewards not rewarding recipients with health properly. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
 
 #### Config Files
-- Fixed Mutant Tank type settings not being read properly under combined sections.
+- Fixed custom config Mutant Tank types overlapping with main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
+
+#### Settings
+- Fixed the `Reward Visual` setting's limit. (Thanks to `swofleswof` for testing and reporting!)
 
 #### Abilities
-- Gunner
-	- Fixed one of the messages not showing up when the ability activates. (Thanks to `thewintersoldier97` for reporting!)
-	- Fixed the ability targeting the Tank itself.
-- Quiet: Fixed the sound hook blocking other sound hooks.
-- Rocket: Fixed an issue where survivor ragdolls will not disappear if the player goes afk and is replaced by a survivor bot. (Thanks to `Slaven555` for testing and reporting!)
+- Item, Kamikaze, Rocket, Smash, Smite: Fixed survivor ragdolls being erased by all Mutant Tank types. (Thanks to `George Rex` for reporting!) [Fixed in `v8.97`.]
+- Throw: Fixed Mutant Tank types not being able to throw cars and special infected. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
 
 ### Changes
 
-#### General
-- Mutant Tanks and its sub-plugins now properly support the [`[L4D & L4D2] Lagged Movement - Plugin Conflict Resolver`](https://forums.alliedmods.net/showthread.php?t=340345) plugin.
-
-#### Commands
-- Added a 4th parameter for the `sm_tank` command. (Usage: `sm_tank <1-500> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind>`)
-
-#### Game Data
-- L4D2: Updated some signatures and offsets for the `2.2.2.7` update.
-
-#### Abilities
-- Gravity
-	- Added the `Gravity Radius` setting.
-	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
-	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
+#### ConVars
+- Added the `mt_configfile` convar. (Requested by `zonbarbar`.)
+- Added a lock mechanism to enforce temporary values across maps for the core plugin's convars. (Thanks to `NgBUCKWANGS` for the code!)
+	- Use `-l-` in front of the new value to enforce that value for the convar. (Example: `mt_configfile "-l-myconfig.cfg"`)
+	- Use `-u-` in front of the new value to allow the convar to accept new values. (Example: `mt_configfile "-u-myconfig.cfg"`)
 
 #### Settings
-- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
-- Added the `Refill Percent Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `DARG367` for suggesting!)
-- Updated the `Stack Limits` setting to accept an `8th` value.
+- Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
 
 #### Translations
 - Updated English translations.
@@ -63,6 +47,109 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+
+## Version 8.97 (May 21, 2023)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
+#### General
+- Fixed an issue where some RNG-based events happen too often. (Thanks to `ddd123` for reporting!)
+- Fixed an issue where Witches take a long time to die from fires. (Thanks to `ddd123` for reporting!)
+- Fixed rare array index errors.
+</details>
+<details>
+	<summary>Core Plugin</summary>
+
+#### Core Plugin
+- Fixed Tank death messages not appearing when a survivor solos a Tank.
+</details>
+<details>
+	<summary>Config Files</summary>
+
+#### Config Files
+- Fixed Mutant Tank type settings not being read properly under combined sections.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gunner
+	- Fixed one of the messages not showing up when the ability activates. (Thanks to `thewintersoldier97` for reporting!)
+	- Fixed the ability targeting the Tank itself.
+- Quiet: Fixed the sound hook blocking other sound hooks.
+- Rocket: Fixed an issue where survivor ragdolls will not disappear if the player goes afk and is replaced by a survivor bot. (Thanks to `Slaven555` for testing and reporting!)
+</details>
+
+### Changes
+<details>
+	<summary>General</summary>
+
+#### General
+- Mutant Tanks and its sub-plugins now properly support the [`[L4D & L4D2] Lagged Movement - Plugin Conflict Resolver`](https://forums.alliedmods.net/showthread.php?t=340345) plugin.
+</details>
+<details>
+	<summary>Commands</summary>
+
+#### Commands
+- Added a 4th parameter for the `sm_tank` command. (Usage: `sm_tank <1-500> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind>`)
+</details>
+<details>
+	<summary>Game Data</summary>
+
+#### Game Data
+- L4D2: Updated some signatures and offsets for the `2.2.2.7` update.
+</details>
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
+- Added the `Refill Percent Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `DARG367` for suggesting!)
+- Updated the `Stack Limits` setting to accept an `8th` value.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gravity
+	- Added the `Gravity Radius` setting.
+	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
+	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
 
 ## Version 8.96 (December 25, 2022)
 <details>

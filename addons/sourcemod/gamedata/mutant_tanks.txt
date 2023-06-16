@@ -735,6 +735,27 @@
 			}
 
 			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Detouring as a pre-hook for patching attack choice per Tank.
+			 * Note: Detouring as a post-hook for removing patch for attack choice.
+			 **/
+			"MTDetour_TankAttack::TryToThrowRock"
+			{
+				"signature"	"TankAttack::TryToThrowRock"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"address"
+				"arguments"
+				{
+					"tank"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
 			 * TankBehavior::InitialContainedAction(Tank *)
 			 *
 			 * Note: Detouring as a pre-hook for patching idle state per Tank.
@@ -1866,6 +1887,46 @@
 				"linux"		"11940"
 				"mac"		"11940"
 				"windows"	"11924"
+			}
+
+			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Patches the first condition for choosing between punching and throw a rock.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the six-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be punch or throw a rock.
+			 *
+			 * How to find on Mac/Windows:
+			 * 1. Look for the two-byte jump (JZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be punch or throw a rock.
+			 **/
+			"TankAttack::TryToThrowRock::GetDifficulty"
+			{
+				"linux"		"133" // start at "0F 85" and patch the "85" with "8D" to always force the jump to the next instruction.
+				"mac"		"64" // start at 74 and patch 1 byte with a short jump (0xEB) to skip instruction
+				"windows"	"48" // start at 75 and patch 1 byte with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Patches the second condition for choosing between punching and throw a rock.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the six-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the second call to the "GetDifficulty" function.
+			 *
+			 * How to find on Mac/Windows:
+			 * 1. Look for the two-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the second call to the "GetDifficulty" function.
+			 **/
+			"TankAttack::TryToThrowRock::GetDifficulty2"
+			{
+				"linux"		"1515" // start at "0F 85" and patch the "85" with "8D" to always force the jump to the next instruction.
+				"mac"		"74" // start at 74 and patch 1 byte with a short jump (0xEB) to skip instruction
+				"windows"	"58" // start at 75 and patch 1 byte with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -3295,6 +3356,24 @@
 			}
 
 			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Used for detouring/finding the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Throwing rock" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"TankAttack::TryToThrowRock"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10TankAttack14TryToThrowRockEP4Tank"
+				"mac"		"@_ZN10TankAttack14TryToThrowRockEP4Tank"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\x2A\x0F"
+						/* ? ? ? ? ? ? ? ? 83 ? ? ? 57 8B ? 89 ? ? ? 0F */
+			}
+
+			/**
 			 * TankBehavior::InitialContainedAction(Tank *)
 			 *
 			 * Note: Used for detouring/finding the function.
@@ -4496,6 +4575,46 @@
 				"linux"		"17176"
 				"mac"		"17176"
 				"windows"	"17204"
+			}
+
+			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Patches the first condition for choosing between punching and throw a rock.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the six-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be punch or throw a rock.
+			 *
+			 * How to find on Mac/Windows:
+			 * 1. Look for the two-byte jump (JZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the if statement that determines whether the Tank should be punch or throw a rock.
+			 **/
+			"TankAttack::TryToThrowRock::GetDifficulty"
+			{
+				"linux"		"952" // start at "0F 85" and patch the "85" with "8D" to always force the jump to the next instruction.
+				"mac"		"67" // start at 74 and patch 1 byte with a short jump (0xEB) to skip instruction
+				"windows"	"50" // start at 74 and patch 1 byte with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Patches the second condition for choosing between punching and throw a rock.
+			 *
+			 * How to find on Linux:
+			 * 1. Look for the six-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the second call to the "GetDifficulty" function.
+			 *
+			 * How to find on Mac/Windows:
+			 * 1. Look for the two-byte jump (JNZ) instruction under the first call to the "GetDifficulty" function.
+			 * 2. The instruction refers to the second call to the "GetDifficulty" function.
+			 **/
+			"TankAttack::TryToThrowRock::GetDifficulty2"
+			{
+				"linux"		"2105" // start at "0F 85" and patch the "85" with "8D" to always force the jump to the next instruction.
+				"mac"		"77" // start at 75 and patch 1 byte with a short jump (0xEB) to skip instruction
+				"windows"	"60" // start at 75 and patch 1 byte with a short jump (0xEB) to skip instruction
 			}
 
 			/**
@@ -6143,6 +6262,24 @@
 				"mac"		"@_ZN4Tank11LeaveStasisEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 8B */
+			}
+
+			/**
+			 * TankAttack::TryToThrowRock(Tank *)
+			 *
+			 * Note: Used for detouring/finding the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Throwing rock" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"TankAttack::TryToThrowRock"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10TankAttack14TryToThrowRockEP4Tank"
+				"mac"		"@_ZN10TankAttack14TryToThrowRockEP4Tank"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\x0F\x84"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 83 ? ? ? 57 8B ? 89 ? ? 0F 84 */
 			}
 
 			/**

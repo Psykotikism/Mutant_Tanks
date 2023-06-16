@@ -874,21 +874,22 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: 0
-			// Maximum value for each: 63
+			// Maximum value for each: 127
 			// --
 			// 0: OFF
 			// 1: Screen color
 			// 2: Particle effect
 			// 4: Looping voiceline
-			// 8: Light color
-			// 16: Body color
-			// 32: Glow outline (Only available in Left 4 Dead 2.)
+			// 8: Voice pitch
+			// 16: Light color
+			// 32: Body color
+			// 64: Glow outline (Only available in Left 4 Dead 2.)
 			// --
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
 			// 3rd number = Visual effect for teammates.
 			// 4th number = Visual effect for assistant killers.
-			"Reward Visual"				"63,63,63,63"
+			"Reward Visual"				"127,127,127,127" // Default is "63" on Left 4 Dead 1.
 
 			// Enable the "sm_mt_prefs" command and notify players about it.
 			// Note: This setting can be used for standard Tanks.
@@ -1895,6 +1896,16 @@
 			// Minimum: 0.0 (OFF)
 			// Maximum: 99999.0
 			"Force Spawn"				"0.0"
+
+			// (Co-Op modes only) Mutant Tanks should prioritize throwing rocks.
+			// Note: Tanks only prioritize throwing rocks on Advanced and Expert modes by default.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Competitive" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine Mutant Tanks' attack.
+			// 1/"enabled"/"true"/"on"/"yes": ON, force Mutant Tanks to prioritize throwing rocks.
+			"Prioritize Throws"			"0"
 
 			// The stasis mode of Mutant Tanks when spawning.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -3256,15 +3267,16 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: 0
-			// Maximum value for each: 63
+			// Maximum value for each: 127
 			// --
 			// 0: OFF
 			// 1: Screen color
 			// 2: Particle effect
 			// 4: Looping voiceline
-			// 8: Light color
-			// 16: Body color
-			// 32: Glow outline (Only available in Left 4 Dead 2.)
+			// 8: Voice pitch
+			// 16: Light color
+			// 32: Body color
+			// 64: Glow outline (Only available in Left 4 Dead 2.)
 			// --
 			// 1st number = Visual effect for killers.
 			// 2nd number = Visual effect for assistants.
@@ -4260,6 +4272,15 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine the Mutant Tank's initial behavior.
 			// 1/"enabled"/"true"/"on"/"yes": ON, force the Mutant Tank to attack immediately.
 			"Auto Aggravate"			"0"
+
+			// (Co-Op modes only) The Mutant Tank should prioritize throwing rocks.
+			// Note: Tanks only prioritize throwing rocks on Advanced and Expert modes by default.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Competitive" section.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine Mutant Tanks' attack.
+			// 1/"enabled"/"true"/"on"/"yes": ON, force Mutant Tanks to prioritize throwing rocks.
+			"Prioritize Throws"			"0"
 		}
 		"Glow"
 		{
