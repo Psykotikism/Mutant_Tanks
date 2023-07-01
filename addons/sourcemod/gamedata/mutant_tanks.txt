@@ -351,6 +351,26 @@
 			}
 
 			/**
+			 * CTerrorPlayer::GrabVictimWithTongue(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Smoker attacks.
+			 **/
+			"MTDetour_CTerrorPlayer::GrabVictimWithTongue"
+			{
+				"signature"	"CTerrorPlayer::GrabVictimWithTongue"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"victim"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
 			 * CTerrorPlayer::OnBeginChangeLevel(char const*)
 			 *
 			 * Note: Detouring as a pre-hook for ending each player's active rewards before transitioning.
@@ -486,6 +506,26 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+			}
+
+			/**
+			 * CTerrorPlayer::OnPouncedOnSurvivor(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Hunter attacks.
+			 **/
+			"MTDetour_CTerrorPlayer::OnPouncedOnSurvivor"
+			{
+				"signature"	"CTerrorPlayer::OnPouncedOnSurvivor"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"victim"
+					{
+						"type"		"cbaseentity"
+					}
+				}
 			}
 
 			/**
@@ -2731,6 +2771,24 @@
 			}
 
 			/**
+			 * CTerrorPlayer::GrabVictimWithTongue(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tongue grab starting." string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::GrabVictimWithTongue"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer20GrabVictimWithTongueEPS_"
+				"mac"		"@_ZN13CTerrorPlayer20GrabVictimWithTongueEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x53\x55\x56\x8B"
+						/* ? ? ? ? ? ? ? ? 83 ? ? ? 53 55 56 8B */
+			}
+
+			/**
 			 * CTerrorPlayer::MaterializeFromGhost()
 			 *
 			 * Note: Used for calling the function.
@@ -2918,6 +2976,26 @@
 				"mac"		"@_ZN13CTerrorPlayer13OnLadderMountEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
 						/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 6A ? 8B ? E8 ? ? ? ? 8B ? E8 ? ? ? ? 83 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnPouncedOnSurvivor(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "%s pounced on %s, %d damage interrupts\n"
+			 * - "Tongue letting go on victim getting pounced."
+			 * - "Pounce by %s dealt %0.1f damage from a 2d distance of %.0f\n"
+			 **/
+			"CTerrorPlayer::OnPouncedOnSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer19OnPouncedOnSurvivorEPS_"
+				"mac"		"@_ZN13CTerrorPlayer19OnPouncedOnSurvivorEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x81\xEC\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x53\x56"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 81 EC ? ? ? ? 83 ? ? ? 53 56 */
 			}
 
 			/**
@@ -3686,6 +3764,70 @@
 					"helper"
 					{
 						"type"		"objectptr"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::OnLeptOnSurvivor(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Jockey attacks.
+			 **/
+			"MTDetour_CTerrorPlayer::OnLeptOnSurvivor"
+			{
+				"signature"	"CTerrorPlayer::OnLeptOnSurvivor"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"victim"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::OnStartCarryingVictim(CTerrorPlayer*)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Charger attacks.
+			 **/
+			"MTDetour_CTerrorPlayer::OnStartCarryingVictim"
+			{
+				"signature"	"CTerrorPlayer::OnStartCarryingVictim"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"victim"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
+			 * CTerrorPlayer::QueuePummelVictim(CTerrorPlayer*, float)
+			 *
+			 * Note: Detouring as a pre-hook for blocking Charger attacks.
+			 **/
+			"MTDetour_CTerrorPlayer::QueuePummelVictim"
+			{
+				"signature"	"CTerrorPlayer::QueuePummelVictim"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"attacker"
+					{
+						"type"		"cbaseentity"
+					}
+					"a2"
+					{
+						"type"		"float"
 					}
 				}
 			}
@@ -5671,6 +5813,24 @@
 			}
 
 			/**
+			 * CTerrorPlayer::GrabVictimWithTongue(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tongue grab starting." string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::GrabVictimWithTongue"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer20GrabVictimWithTongueEPS_"
+				"mac"		"@_ZN13CTerrorPlayer20GrabVictimWithTongueEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x56\x8B\x2A\x57\x89\x2A\x2A\x0F\x85"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? A1 ? ? ? ? 83 ? ? ? 56 8B ? 57 89 ? ? 0F 85 */
+			}
+
+			/**
 			 * CTerrorPlayer::MaterializeFromGhost()
 			 *
 			 * Note: Used for calling the function.
@@ -5883,6 +6043,42 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnLeptOnSurvivor(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "SurvivorJockeyed" or "SurvivorJockeyedOther" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::OnLeptOnSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16OnLeptOnSurvivorEPS_"
+				"mac"		"@_ZN13CTerrorPlayer16OnLeptOnSurvivorEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x0F\x85\x2A\x2A\x2A\x2A\x56"
+						/* ? ? ? ? ? ? ? ? 83 ? ? 83 ? ? ? 57 8B ? 0F 85 ? ? ? ? 56 */
+			}
+
+			/**
+			 * CTerrorPlayer::OnPouncedOnSurvivor(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%s pounced on %s, %d damage interrupts\n" or "Pounce by %s dealt %0.1f damage from a 2d distance of %.0f\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::OnPouncedOnSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer19OnPouncedOnSurvivorEPS_"
+				"mac"		"@_ZN13CTerrorPlayer19OnPouncedOnSurvivorEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x56\x57\x8B"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? A1 ? ? ? ? 83 ? ? ? 56 57 8B */
+			}
+
+			/**
 			 * CTerrorPlayer::OnRevived()
 			 *
 			 * Note: Used for detouring/calling the function.
@@ -5963,6 +6159,24 @@
 			}
 
 			/**
+			 * CTerrorPlayer::OnStartCarryingVictim(CTerrorPlayer*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "charger_carry_start" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::OnStartCarryingVictim"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer21OnStartCarryingVictimEPS_"
+				"mac"		"@_ZN13CTerrorPlayer21OnStartCarryingVictimEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\x6A\x2A\x68\x2A\x2A\x2A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x50\x8B\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x8B\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? 8B ? 8B 0D ? ? ? ? 8B ? 8B ? ? 6A ? 6A ? 68 ? ? ? ? FF ? 8B ? 85 ? 74 ? 8B ? ? 8B 0D ? ? ? ? 8B ? 50 8B ? ? FF ? 8B ? 50 8B ? ? 68 ? ? ? ? 8B ? FF ? 8B ? ? 8B */
+			}
+
+			/**
 			 * CTerrorPlayer::OnTakeDamage_Alive(CTakeDamageInfo const&)
 			 *
 			 * Note: Used for finding the function.
@@ -6023,6 +6237,30 @@
 				"mac"		"@_ZN13CTerrorPlayer8PreThinkEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
 						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? E8 ? ? ? ? 8B ? E8 */
+			}
+
+			/**
+			 * CTerrorPlayer::QueuePummelVictim(CTerrorPlayer*, float)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Find the "CCharge::HandleCustomCollision" function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CCharge::`vftable'" to jump to the "CCharge" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 * 6. Look for a function call that passes four parameters, with the last parameters being "1" and "0".
+			 * 7. That function should be the "CTerrorPlayer::OnSlammedSurvivor" function.
+			 * 8. The last function call in the "CTerrorPlayer::OnSlammedSurvivor" function should be this function.
+			 **/
+			"CTerrorPlayer::QueuePummelVictim"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17QueuePummelVictimEPS_f"
+				"mac"		"@_ZN13CTerrorPlayer17QueuePummelVictimEPS_f"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\x8B\x2A\xFF\x2A\x8B\x2A\x83"
+						/* ? ? ? ? ? ? ? 56 57 8B ? 85 ? 74 ? 8B ? 8B ? ? 8B ? FF ? 8B ? 83 */
 			}
 
 			/**

@@ -1417,7 +1417,6 @@ stock void vFixPlayerPosition(int client)
 		while (flPosZ <= 200.0 && !bIsPlayerPositionFixed(client, 10.0, flPosZ))
 		{
 			flPosZ = -flPosZ;
-
 			if (flPosZ > 0.0)
 			{
 				flPosZ += 20.0;
@@ -2630,7 +2629,7 @@ stock bool bIsWitch(int witch)
 	return false;
 }
 
-// Filters
+// Command target filters
 bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -3503,18 +3502,21 @@ stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
 {
 	float flCommonPos[3];
 	int iCommonCount = 0, iCommon = -1;
-	int[] iCommons = new int[MaxClients + 1];
+	int[] iCommons = new int[2048];
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
-		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
-		if (bIsVisibleToPosition(pos, flCommonPos, range))
-		{
-			iCommons[iCommonCount] = iCommon;
-			iCommonCount++;
-		}
+                if (bIsValidEntity(iCommon))
+                {
+        		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
+        		if (bIsVisibleToPosition(pos, flCommonPos, range))
+        		{
+        			iCommons[iCommonCount] = iCommon;
+        			iCommonCount++;
+        		}
+                }
 	}
 
-	return (iCommonCount > 0) ? iCommons[MT_GetRandomInt(0, (iCommonCount - 1))] : 0;
+	return (iCommonCount > 0) ? iCommons[GetRandomInt(0, (iCommonCount - 1))] : 0;
 }
 
 stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
@@ -3535,7 +3537,7 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 		}
 	}
 
-	return (iInfectedCount > 0) ? iSpecials[MT_GetRandomInt(0, (iInfectedCount - 1))] : 0;
+	return (iInfectedCount > 0) ? iSpecials[GetRandomInt(0, (iInfectedCount - 1))] : 0;
 }
 
 stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans = false, bool noBots = false, bool noIncaps = false)
@@ -3563,7 +3565,7 @@ stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans
 		}
 	}
 
-	return (iSurvivorCount > 0) ? iSurvivors[MT_GetRandomInt(0, (iSurvivorCount - 1))] : 0;
+	return (iSurvivorCount > 0) ? iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))] : 0;
 }
 
 stock int iGetPlayerCount()

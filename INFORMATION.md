@@ -631,7 +631,7 @@
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers.
+			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
@@ -733,7 +733,7 @@
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers.
+			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
@@ -3024,7 +3024,7 @@
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers.
+			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
@@ -3126,7 +3126,7 @@
 			// 32: Item reward
 			// - Receive up to five items.
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers.
+			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.

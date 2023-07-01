@@ -528,6 +528,7 @@ enum struct esGeneral
 	DynamicDetour g_ddFireBulletDetour;
 	DynamicDetour g_ddFlingDetour;
 	DynamicDetour g_ddGetMaxClip1Detour;
+	DynamicDetour g_ddGrabVictimWithTongueDetour;
 	DynamicDetour g_ddHitByVomitJarDetour;
 	DynamicDetour g_ddIncapacitatedAsTankDetour;
 	DynamicDetour g_ddInitialContainedActionDetour;
@@ -536,9 +537,12 @@ enum struct esGeneral
 	DynamicDetour g_ddLadderMountDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
+	DynamicDetour g_ddLeptOnSurvivorDetour;
 	DynamicDetour g_ddMaxCarryDetour;
 	DynamicDetour g_ddPipeBombProjectileCreateDetour;
+	DynamicDetour g_ddPouncedOnSurvivorDetour;
 	DynamicDetour g_ddPreThinkDetour;
+	DynamicDetour g_ddQueuePummelVictimDetour;
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddRevivedDetour;
 	DynamicDetour g_ddSecondaryAttackDetour;
@@ -550,6 +554,7 @@ enum struct esGeneral
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggeredDetour;
 	DynamicDetour g_ddStartActionDetour;
+	DynamicDetour g_ddStartCarryingVictimDetour;
 	DynamicDetour g_ddStartHealingDetour;
 	DynamicDetour g_ddStartRevivingDetour;
 	DynamicDetour g_ddTankClawDoSwingDetour;
@@ -15033,6 +15038,21 @@ void vPlayerSpawnFrame(DataPack pack)
 	}
 }
 
+void vPummelTeleportFrame(DataPack pack)
+{
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iSpecial = GetClientOfUserId(pack.ReadCell());
+	delete pack;
+
+	if (bIsValidClient(iSurvivor) && bIsValidClient(iSpecial))
+	{
+		SetVariantString("!activator");
+		AcceptEntityInput(iSurvivor, "SetParent", iSpecial);
+		TeleportEntity(iSurvivor, view_as<float>({50.0, 0.0, 0.0}), NULL_VECTOR, NULL_VECTOR);
+		AcceptEntityInput(iSurvivor, "ClearParent");
+	}
+}
+
 void vRespawnFrame(int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
@@ -16426,6 +16446,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
 	vSetupDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling");
 	vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
+	vSetupDetour(g_esGeneral.g_ddGrabVictimWithTongueDetour, "MTDetour_CTerrorPlayer::GrabVictimWithTongue");
 	vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
 	vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
 	vSetupDetour(g_esGeneral.g_ddInitialContainedActionDetour, "MTDetour_TankBehavior::InitialContainedAction");
@@ -16434,9 +16455,12 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount");
 	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
 	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis");
+	vSetupDetour(g_esGeneral.g_ddLeptOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnLeptOnSurvivor");
 	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry");
 	vSetupDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create");
+	vSetupDetour(g_esGeneral.g_ddPouncedOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnPouncedOnSurvivor");
 	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink");
+	vSetupDetour(g_esGeneral.g_ddQueuePummelVictimDetour, "MTDetour_CTerrorPlayer::QueuePummelVictim");
 	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank");
 	vSetupDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived");
 	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack");
@@ -16448,6 +16472,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank");
 	vSetupDetour(g_esGeneral.g_ddStaggeredDetour, "MTDetour_CTerrorPlayer::OnStaggered");
 	vSetupDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction");
+	vSetupDetour(g_esGeneral.g_ddStartCarryingVictimDetour, "MTDetour_CTerrorPlayer::OnStartCarryingVictim");
 	vSetupDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing");
 	vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving");
 	vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing");
@@ -16521,11 +16546,14 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddLeptOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnLeptOnSurvivor", Hook_Pre, mreLeptOnSurvivorPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddQueuePummelVictimDetour, "MTDetour_CTerrorPlayer::QueuePummelVictim", Hook_Pre, mreQueuePummelVictimPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence", Hook_Pre, mreSelectWeightedSequencePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddStartCarryingVictimDetour, "MTDetour_CTerrorPlayer::OnStartCarryingVictim", Hook_Pre, mreStartCarryingVictimPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create", Hook_Post, mreTankRockCreatePost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, toggle, 2);
@@ -16551,6 +16579,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
+	vToggleDetour(g_esGeneral.g_ddGrabVictimWithTongueDetour, "MTDetour_CTerrorPlayer::GrabVictimWithTongue", Hook_Pre, mreGrabVictimWithTonguePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Pre, mreIncapacitatedAsTankPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Post, mreIncapacitatedAsTankPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddInitialContainedActionDetour, "MTDetour_TankBehavior::InitialContainedAction", Hook_Pre, mreInitialContainedActionPre, toggle);
@@ -16565,6 +16594,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create", Hook_Pre, mrePipeBombProjectileCreatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create", Hook_Post, mrePipeBombProjectileCreatePost, toggle);
+	vToggleDetour(g_esGeneral.g_ddPouncedOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnPouncedOnSurvivor", Hook_Pre, mrePouncedOnSurvivorPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, toggle);
@@ -17274,6 +17304,17 @@ MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 	return MRES_Ignored;
 }
 
+MRESReturn mreGrabVictimWithTonguePre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
@@ -17451,6 +17492,17 @@ MRESReturn mreLeaveStasisPost(int pThis)
 	return MRES_Ignored;
 }
 
+MRESReturn mreLeptOnSurvivorPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreMaxCarryPre(Address pThis, DHookReturn hReturn, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(2) ? 0 : hParams.Get(2), iAmmo = iGetMaxAmmo(iSurvivor, hParams.Get(1), 0, true);
@@ -17499,6 +17551,17 @@ MRESReturn mrePipeBombProjectileCreatePost(DHookReturn hReturn, DHookParam hPara
 	return MRES_Ignored;
 }
 
+MRESReturn mrePouncedOnSurvivorPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mrePreThinkPre(int pThis)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || ((g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[pThis].g_iLadderActions == 1)))
@@ -17529,6 +17592,24 @@ MRESReturn mrePreThinkPost(int pThis)
 	if (iIndex != -1)
 	{
 		vRemovePatch(iIndex);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreQueuePummelVictimPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		DataPack dpPummel = new DataPack();
+		dpPummel.WriteCell(GetClientUserId(iSurvivor));
+		dpPummel.WriteCell(GetClientUserId(pThis));
+		RequestFrame(vPummelTeleportFrame, dpPummel);
+
+		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
+
+		return MRES_Supercede;
 	}
 
 	return MRES_Ignored;
@@ -17735,6 +17816,17 @@ MRESReturn mreStartActionPost(int pThis, DHookReturn hReturn, DHookParam hParams
 	if (g_esGeneral.g_hSDKGetUseAction != null)
 	{
 		vSetDurationCvars(pThis, true);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreStartCarryingVictimPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
 	}
 
 	return MRES_Ignored;

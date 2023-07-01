@@ -14,16 +14,28 @@
 - Fixed the `Reward Visual` setting's limit. (Thanks to `swofleswof` for testing and reporting!)
 
 #### Abilities
+- Gunner: Fixed an error that caused the server to crash. (Thanks to `Mi.Cura` for testing and reporting!)
 - Item, Kamikaze, Rocket, Smash, Smite: Fixed survivor ragdolls being erased by all Mutant Tank types. (Thanks to `George Rex` for reporting!) [Fixed in `v8.97`.]
 - Throw: Fixed Mutant Tank types not being able to throw cars and special infected. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
 
 ### Changes
+
+#### Core Plugin
+- The godmode reward now prevents recipients from being pinned by any special infected.
 
 #### ConVars
 - Added the `mt_configfile` convar. (Requested by `zonbarbar`.)
 - Added a lock mechanism to enforce temporary values across maps for the core plugin's convars. (Thanks to `NgBUCKWANGS` for the code!)
 	- Use `-l-` in front of the new value to enforce that value for the convar. (Example: `mt_configfile "-l-myconfig.cfg"`)
 	- Use `-u-` in front of the new value to allow the convar to accept new values. (Example: `mt_configfile "-u-myconfig.cfg"`)
+
+#### Game Data
+- Added signatures for the following functions:
+	- `CTerrorPlayer::GrabVictimWithTongue`
+	- `CTerrorPlayer::OnLeptOnSurvivor`
+	- `CTerrorPlayer::OnPouncedOnSurvivor`
+	- `CTerrorPlayer::OnStartCarryingVictim`
+	- `CTerrorPlayer::QueuePummelVictim`
 
 #### Settings
 - Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
