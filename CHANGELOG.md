@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.98 (July 4, 2023)
+## Version 8.98 (July 11, 2023)
 
 ### Bug Fixes
 
