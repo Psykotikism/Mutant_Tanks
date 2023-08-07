@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.98 (July 20, 2023)
+## Version 8.98 (August 10, 2023)
 
 ### Bug Fixes
 
@@ -39,12 +39,6 @@
 
 #### Settings
 - Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
-
-#### Translations
-- Updated English translations.
-- Updated Simplified Chinese translations.
-- Updated Hungarian translations.
-- Updated Russian translations.
 
 ### Files
 
