@@ -202,6 +202,13 @@ sm_mt_zombie - Просмотр информации о способности �
 // Максимум: "1.000000"
 mt_autoupdate "0"
 
+// Имя файла конфигурации, из которого плагин считывает настройки.
+// Пусто: нет
+// Не пусто: Имя файла пользовательской конфигурации для использования.
+// -
+// По умолчанию: "mutant_tanks.cfg"
+mt_configfile "mutant_tanks.cfg"
+
 // Отключить Танков-мутантов в этих режимах игры.
 // Через запятую.
 // Пусто: Нет
@@ -2754,9 +2761,9 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao, xcd222** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, JustMadMan, DARG367** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, JustMadMan, DARG367, zonbarbar** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

@@ -10,7 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN
-#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-38), 3: ALL
+#define MT_ABILITIES_GROUP 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-39), 3: ALL
 #define MT_ABILITIES_COMPILER_MESSAGE 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>

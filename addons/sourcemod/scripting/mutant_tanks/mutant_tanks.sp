@@ -420,6 +420,7 @@ enum struct esGeneral
 	char g_sBodyColorVisual3[64];
 	char g_sBodyColorVisual4[64];
 	char g_sChosenPath[PLATFORM_MAX_PATH];
+	char g_sConfigPath[PLATFORM_MAX_PATH];
 	char g_sCurrentMissionDisplayTitle[64];
 	char g_sCurrentMissionName[64];
 	char g_sCurrentSection[128];
@@ -469,6 +470,7 @@ enum struct esGeneral
 	ConVar g_cvMTAutoShotgunAmmo;
 	ConVar g_cvMTAutoUpdate;
 	ConVar g_cvMTColaBottlesUseDuration;
+	ConVar g_cvMTConfigFile;
 	ConVar g_cvMTDefibrillatorUseDuration;
 	ConVar g_cvMTDifficulty;
 	ConVar g_cvMTDisabledGameModes;
@@ -526,6 +528,7 @@ enum struct esGeneral
 	DynamicDetour g_ddFireBulletDetour;
 	DynamicDetour g_ddFlingDetour;
 	DynamicDetour g_ddGetMaxClip1Detour;
+	DynamicDetour g_ddGrabVictimWithTongueDetour;
 	DynamicDetour g_ddHitByVomitJarDetour;
 	DynamicDetour g_ddIncapacitatedAsTankDetour;
 	DynamicDetour g_ddInitialContainedActionDetour;
@@ -534,9 +537,12 @@ enum struct esGeneral
 	DynamicDetour g_ddLadderMountDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
+	DynamicDetour g_ddLeptOnSurvivorDetour;
 	DynamicDetour g_ddMaxCarryDetour;
 	DynamicDetour g_ddPipeBombProjectileCreateDetour;
+	DynamicDetour g_ddPouncedOnSurvivorDetour;
 	DynamicDetour g_ddPreThinkDetour;
+	DynamicDetour g_ddQueuePummelVictimDetour;
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddRevivedDetour;
 	DynamicDetour g_ddSecondaryAttackDetour;
@@ -548,6 +554,7 @@ enum struct esGeneral
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggeredDetour;
 	DynamicDetour g_ddStartActionDetour;
+	DynamicDetour g_ddStartCarryingVictimDetour;
 	DynamicDetour g_ddStartHealingDetour;
 	DynamicDetour g_ddStartRevivingDetour;
 	DynamicDetour g_ddTankClawDoSwingDetour;
@@ -559,6 +566,7 @@ enum struct esGeneral
 	DynamicDetour g_ddTankRockReleaseDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
 	DynamicDetour g_ddThrowActivateAbilityDetour;
+	DynamicDetour g_ddTryToThrowRockDetour;
 	DynamicDetour g_ddUseDetour;
 	DynamicDetour g_ddUseDetour2;
 	DynamicDetour g_ddVomitedUponDetour;
@@ -770,6 +778,7 @@ enum struct esGeneral
 	int g_iPlayerCount[3];
 	int g_iPluginEnabled;
 	int g_iPrefsNotify[4];
+	int g_iPrioritizeThrows;
 	int g_iRecoilDampenerReward[4];
 	int g_iRegularAmount;
 	int g_iRegularCount;
@@ -819,6 +828,8 @@ enum struct esGeneral
 	int g_iVocalizeDeath;
 	int g_iVoicePitchVisual[4];
 	int g_iVomitImmunity;
+
+	StringMap g_smCvars;
 #if defined _adminmenu_included
 	TopMenu g_tmMTMenu;
 #endif
@@ -1381,6 +1392,7 @@ enum struct esTank
 	int g_iOzTankColor[4];
 	int g_iParticleEffectVisual[4];
 	int g_iPrefsNotify[4];
+	int g_iPrioritizeThrows;
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRealType[2];
@@ -1580,6 +1592,7 @@ enum struct esCache
 	int g_iOzTankColor[4];
 	int g_iParticleEffectVisual[4];
 	int g_iPrefsNotify[4];
+	int g_iPrioritizeThrows;
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
@@ -1734,6 +1747,8 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	g_esGeneral.g_smCvars = new StringMap();
+
 	char sDate[32];
 	FormatTime(sDate, sizeof sDate, "%Y-%m-%d", GetTime());
 	BuildPath(Path_SM, g_esGeneral.g_sLogFile, sizeof esGeneral::g_sLogFile, "logs/mutant_tanks_%s.log", sDate);
@@ -1763,11 +1778,12 @@ public void OnPluginStart()
 	g_esGeneral.g_ckMTPrefs = new Cookie("MTPrefs", "Mutant Tanks Preferences", CookieAccess_Private);
 #endif
 	char sSMPath[PLATFORM_MAX_PATH];
+	g_esGeneral.g_cvMTConfigFile.GetString(g_esGeneral.g_sConfigPath, sizeof esGeneral::g_sConfigPath);
 	BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_FILEPATH);
 	CreateDirectory(sSMPath, 511);
-	FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s", sSMPath, MT_CONFIG_FILE_MAIN);
+	FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s%s", sSMPath, g_esGeneral.g_sConfigPath, ((StrContains(g_esGeneral.g_sConfigPath, ".cfg") != -1) ? "" : ".cfg"));
 
-	switch (MT_FileExists(MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
+	switch (MT_FileExists(MT_CONFIG_FILEPATH, g_esGeneral.g_sConfigPath, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
 	{
 		case true: g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		case false: SetFailState("Unable to load the \"%s\" config file.", g_esGeneral.g_sSavePath);
@@ -3429,7 +3445,7 @@ Action cmdMTConfig(int client, int args)
 
 	switch (args)
 	{
-		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, g_esGeneral.g_sConfigPath);
 		case 2:
 		{
 			char sFilename[PLATFORM_MAX_PATH];
@@ -3437,13 +3453,13 @@ Action cmdMTConfig(int client, int args)
 
 			switch (StrContains(sFilename, MT_CONFIG_FILE_DETOURS, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_PATCHES, false) != -1 || StrContains(sFilename, MT_CONFIG_FILE_SIGNATURES, false) != -1)
 			{
-				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, g_esGeneral.g_sConfigPath);
 				case false:
 				{
 					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s.cfg", MT_CONFIG_FILEPATH, sFilename);
 					if (!FileExists(g_esGeneral.g_sChosenPath, true))
 					{
-						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, MT_CONFIG_FILE_MAIN);
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof esGeneral::g_sChosenPath, "%s%s", MT_CONFIG_FILEPATH, g_esGeneral.g_sConfigPath);
 					}
 				}
 			}
@@ -3805,22 +3821,24 @@ void vRegisterConVars()
 #if defined _autoexecconfig_included
 	AutoExecConfig_SetFile("mutant_tanks");
 	AutoExecConfig_SetCreateFile(true);
-	g_esGeneral.g_cvMTAutoUpdate = AutoExecConfig_CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires \"Updater\": https://github.com/Teamkiller324/Updater\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_esGeneral.g_cvMTDisabledGameModes = AutoExecConfig_CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
-	g_esGeneral.g_cvMTEnabledGameModes = AutoExecConfig_CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
-	g_esGeneral.g_cvMTGameModeTypes = AutoExecConfig_CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
-	g_esGeneral.g_cvMTListenSupport = AutoExecConfig_CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_esGeneral.g_cvMTPluginEnabled = AutoExecConfig_CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTAutoUpdate, "mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires \"Updater\": https://github.com/Teamkiller324/Updater\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTConfigFile, "mt_configfile", MT_CONFIG_FILE_MAIN, "The config filename used by Mutant Tanks to read settings from.\nEmpty: None\nNot empty: The custom config filename to use.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTDisabledGameModes, "mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTEnabledGameModes, "mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTGameModeTypes, "mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
+	vSetupConVar(g_esGeneral.g_cvMTListenSupport, "mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTPluginEnabled, "mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	AutoExecConfig_CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 #else
-	g_esGeneral.g_cvMTAutoUpdate = CreateConVar("mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires Updater: https://forums.alliedmods.net/showthread.php?t=169095\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_esGeneral.g_cvMTDisabledGameModes = CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
-	g_esGeneral.g_cvMTEnabledGameModes = CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
-	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
-	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTAutoUpdate, "mt_autoupdate", "0", "Automatically update Mutant Tanks.\nRequires Updater: https://forums.alliedmods.net/showthread.php?t=169095\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTConfigFile, "mt_configfile", MT_CONFIG_FILE_MAIN, "The config filename used by Mutant Tanks to read settings from.\nEmpty: None\nNot empty: The custom config filename to use.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTDisabledGameModes, "mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTEnabledGameModes, "mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
+	vSetupConVar(g_esGeneral.g_cvMTGameModeTypes, "mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
+	vSetupConVar(g_esGeneral.g_cvMTListenSupport, "mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	vSetupConVar(g_esGeneral.g_cvMTPluginEnabled, "mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
 	AutoExecConfig(true, "mutant_tanks");
 #endif
@@ -3857,13 +3875,9 @@ void vRegisterConVars()
 		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
 	}
 
-	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vPluginStatusCvar);
-	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vPluginStatusCvar);
-	g_esGeneral.g_cvMTGameMode.AddChangeHook(vPluginStatusCvar);
-	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vPluginStatusCvar);
-	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vPluginStatusCvar);
-	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vGameDifficultyCvar);
-	g_esGeneral.g_cvMTGunVerticalPunch.AddChangeHook(vGunVerticalPunchCvar);
+	g_esGeneral.g_cvMTGameMode.AddChangeHook(vUpdateCvar);
+	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vUpdateCvar);
+	g_esGeneral.g_cvMTGunVerticalPunch.AddChangeHook(vUpdateCvar);
 }
 
 void vSetDurationCvars(int item, bool reset, float duration = 1.0)
@@ -4021,36 +4035,96 @@ void vSetReviveDurationCvar(int survivor)
 	}
 }
 
-void vGameDifficultyCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+void vSetupConVar(ConVar &convar, const char[] name, const char[] value, const char[] details, int flags = 0, bool hasMin = false, float min = 0.0, bool hasMax = false, float max = 0.0)
 {
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sDifficultyConfig[PLATFORM_MAX_PATH];
-		if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
-		{
-			vCustomConfig(sDifficultyConfig);
-			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
-		}
-	}
+#if defined _autoexecconfig_included
+	convar = AutoExecConfig_CreateConVar(name, value, details, flags, hasMin, min, hasMax, max);
+#else
+	convar = CreateConVar(name, value, details, flags, hasMin, min, hasMax, max);
+#endif
+	convar.AddChangeHook(vUpdateCvar);
 }
 
-void vGunVerticalPunchCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+void vUpdateCvar(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_esGeneral.g_cvMTGunVerticalPunch.GetString(g_esGeneral.g_sDefaultGunVerticalPunch, sizeof esGeneral::g_sDefaultGunVerticalPunch);
+	char sName[64], sValue[64];
+	convar.GetName(sName, sizeof sName);
+	FormatEx(sValue, sizeof sValue, "%s", newValue);
+	TrimString(sValue);
 
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (StrContains(newValue, "-l-") == 0)
 	{
-		if (bIsHumanSurvivor(iPlayer) && (bIsDeveloper(iPlayer, 4) || ((g_esPlayer[iPlayer].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iPlayer].g_iRecoilDampener == 1)))
+		strcopy(sValue, sizeof sValue, sValue[3]);
+		TrimString(sValue);
+		g_esGeneral.g_smCvars.SetString(sName, sValue, true);
+	}
+	else if (StrContains(newValue, "-u-") == 0)
+	{
+		strcopy(sValue, sizeof sValue, sValue[3]);
+		TrimString(sValue);
+		g_esGeneral.g_smCvars.Remove(sName);
+	}
+
+	g_esGeneral.g_smCvars.GetString(sName, sValue, sizeof sValue);
+
+	if (!StrEqual(newValue, sValue))
+	{
+		convar.SetString(sValue);
+
+		return;
+	}
+
+	if (StrEqual(sName, "mt_configfile"))
+	{
+		char sSMPath[PLATFORM_MAX_PATH];
+		strcopy(g_esGeneral.g_sConfigPath, sizeof esGeneral::g_sConfigPath, newValue);
+		BuildPath(Path_SM, sSMPath, sizeof sSMPath, MT_CONFIG_FILEPATH);
+		FormatEx(g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath, "%s%s%s", sSMPath, g_esGeneral.g_sConfigPath, ((StrContains(g_esGeneral.g_sConfigPath, ".cfg") != -1) ? "" : ".cfg"));
+
+		switch (MT_FileExists(MT_CONFIG_FILEPATH, g_esGeneral.g_sConfigPath, g_esGeneral.g_sSavePath, g_esGeneral.g_sSavePath, sizeof esGeneral::g_sSavePath))
 		{
-			vToggleWeaponVerticalPunch(iPlayer, true);
+			case true:
+			{
+				g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+
+				vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, g_esGeneral.g_sSavePath);
+				vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+				vPluginStatus();
+				vResetTimers();
+				vToggleLogging();
+			}
+			case false: LogError("%s Unable to load the \"%s\" config file.", MT_TAG, g_esGeneral.g_sSavePath);
 		}
 	}
-}
+	else if (StrEqual(sName, "mt_disabledgamemodes") || StrEqual(sName, "mt_enabledgamemodes") || StrEqual(sName, "mt_gamemodetypes") || StrEqual(sName, "mt_pluginenabled") || StrEqual(sName, "mp_gamemode"))
+	{
+		vPluginStatus();
+	}
+	else if (StrEqual(sName, "z_difficulty"))
+	{
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1)
+		{
+			char sDifficultyConfig[PLATFORM_MAX_PATH];
+			if (bIsDifficultyConfigFound(sDifficultyConfig, sizeof sDifficultyConfig))
+			{
+				vCustomConfig(sDifficultyConfig);
+				g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+				g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
+			}
+		}
+	}
+	else if (StrEqual(sName, "z_gun_vertical_punch"))
+	{
+		g_esGeneral.g_cvMTGunVerticalPunch.GetString(g_esGeneral.g_sDefaultGunVerticalPunch, sizeof esGeneral::g_sDefaultGunVerticalPunch);
 
-void vPluginStatusCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	vPluginStatus();
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsHumanSurvivor(iPlayer) && (bIsDeveloper(iPlayer, 4) || ((g_esPlayer[iPlayer].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iPlayer].g_iRecoilDampener == 1)))
+			{
+				vToggleWeaponVerticalPunch(iPlayer, true);
+			}
+		}
+	}
 }
 
 void vViewDistanceQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
@@ -10110,7 +10184,6 @@ void vRemoveTankProps(int tank, int mode = 1)
 	}
 
 	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
-
 	vRemovePlayerGlow(tank);
 
 	if (mode == 1)
@@ -11187,6 +11260,7 @@ void vCacheSettings(int tank)
 	g_esCache[tank].g_iMinimumHumans = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMinimumHumans, g_esCache[tank].g_iMinimumHumans);
 	g_esCache[tank].g_iMultiplyHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMultiplyHealth, g_esGeneral.g_iMultiplyHealth);
 	g_esCache[tank].g_iMultiplyHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMultiplyHealth, g_esCache[tank].g_iMultiplyHealth);
+	g_esCache[tank].g_iPrioritizeThrows = iGetSettingValue(bAccess, true, g_esTank[iType].g_iPrioritizeThrows, g_esGeneral.g_iPrioritizeThrows);
 	g_esCache[tank].g_iPropsAttached = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iPropsAttached, g_esTank[iType].g_iPropsAttached);
 	g_esCache[tank].g_iRandomTank = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRandomTank, g_esTank[iType].g_iRandomTank);
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
@@ -11707,6 +11781,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 		g_esTank[iIndex].g_iVocalizeDeath = iGetKeyValue(sub, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esTank[iIndex].g_iVocalizeDeath, value, 0, 1);
 		g_esTank[iIndex].g_iTeammateLimit = iGetKeyValue(sub, MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS, MT_CONFIG_SECTION_REWARDS, key, "TeammateLimit", "Teammate Limit", "Teammate_Limit", "teamlimit", g_esTank[iIndex].g_iTeammateLimit, value, 0, 32);
 		g_esTank[iIndex].g_iAutoAggravate = iGetKeyValue(sub, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "AutoAggravate", "Auto Aggravate", "Auto_Aggravate", "autoaggro", g_esTank[iIndex].g_iAutoAggravate, value, 0, 1);
+		g_esTank[iIndex].g_iPrioritizeThrows = iGetKeyValue(sub, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "PrioritizeThrows", "Prioritize Throws", "Prioritize_Throws", "priothrow", g_esTank[iIndex].g_iPrioritizeThrows, value, 0, 1);
 		g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(sub, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "genabled", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
 		g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(sub, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
 		g_esTank[iIndex].g_iGlowType = iGetKeyValue(sub, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, MT_CONFIG_SECTION_GLOW, key, "GlowType", "Glow Type", "Glow_Type", "type", g_esTank[iIndex].g_iGlowType, value, 0, 1);
@@ -11812,7 +11887,7 @@ void vReadTankSettings(int type, const char[] sub, const char[] key, const char[
 					g_esTank[iIndex].g_iRewardBots[iPos] = iGetClampedValue(key, "RewardBots", "Reward Bots", "Reward_Bots", "bots", g_esTank[iIndex].g_iRewardBots[iPos], sSet[iPos], -1, 2147483647);
 					g_esTank[iIndex].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esTank[iIndex].g_iRewardEffect[iPos], sSet[iPos], 0, 15);
 					g_esTank[iIndex].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esTank[iIndex].g_iRewardNotify[iPos], sSet[iPos], 0, 3);
-					g_esTank[iIndex].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esTank[iIndex].g_iRewardVisual[iPos], sSet[iPos], 0, 63);
+					g_esTank[iIndex].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esTank[iIndex].g_iRewardVisual[iPos], sSet[iPos], 0, 127);
 					g_esTank[iIndex].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esTank[iIndex].g_iAmmoBoostReward[iPos], sSet[iPos], 0, 1);
 					g_esTank[iIndex].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esTank[iIndex].g_iAmmoRegenReward[iPos], sSet[iPos], 0, 99999);
 					g_esTank[iIndex].g_iBunnyHopReward[iPos] = iGetClampedValue(key, "BunnyHopReward", "Bunny Hop Reward", "Bunny_Hop_Reward", "bhop", g_esTank[iIndex].g_iBunnyHopReward[iPos], sSet[iPos], 0, 1);
@@ -13179,13 +13254,13 @@ void SMCParseStart_Main(SMCParser smc)
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iCurrentLine = 0;
 	g_esGeneral.g_iIgnoreLevel = 0;
-	g_esGeneral.g_iTypeCounter[0] = 0;
-	g_esGeneral.g_iTypeCounter[1] = 0;
 	g_esGeneral.g_sCurrentSection[0] = '\0';
 	g_esGeneral.g_sCurrentSubSection[0] = '\0';
 
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
+		g_esGeneral.g_iTypeCounter[0] = 0;
+		g_esGeneral.g_iTypeCounter[1] = 0;
 		g_esGeneral.g_iPluginEnabled = 0;
 		g_esGeneral.g_iAutoUpdate = 0;
 		g_esGeneral.g_iListenSupport = g_bDedicated ? 0 : 1;
@@ -13248,6 +13323,7 @@ void SMCParseStart_Main(SMCParser smc)
 		g_esGeneral.g_iAutoAggravate = 1;
 		g_esGeneral.g_iCreditIgniters = 1;
 		g_esGeneral.g_flForceSpawn = 0.0;
+		g_esGeneral.g_iPrioritizeThrows = 0;
 		g_esGeneral.g_iStasisMode = 0;
 		g_esGeneral.g_flSurvivalDelay = 0.1;
 		g_esGeneral.g_iScaleDamage = 0;
@@ -13320,7 +13396,7 @@ void SMCParseStart_Main(SMCParser smc)
 				g_esGeneral.g_iRewardEffect[iPos] = 15;
 				g_esGeneral.g_iRewardNotify[iPos] = 3;
 				g_esGeneral.g_flRewardPercentage[iPos] = 10.0;
-				g_esGeneral.g_iRewardVisual[iPos] = 63;
+				g_esGeneral.g_iRewardVisual[iPos] = g_bSecondGame ? 127 : 63;
 				g_esGeneral.g_flActionDurationReward[iPos] = 2.0;
 				g_esGeneral.g_iAmmoBoostReward[iPos] = 1;
 				g_esGeneral.g_iAmmoRegenReward[iPos] = 1;
@@ -13439,6 +13515,7 @@ void SMCParseStart_Main(SMCParser smc)
 			g_esTank[iIndex].g_sScreenColorVisual4[0] = '\0';
 			g_esTank[iIndex].g_iTeammateLimit = 0;
 			g_esTank[iIndex].g_iAutoAggravate = 0;
+			g_esTank[iIndex].g_iPrioritizeThrows = 0;
 			g_esTank[iIndex].g_iBaseHealth = 0;
 			g_esTank[iIndex].g_iDisplayHealth = 0;
 			g_esTank[iIndex].g_iDisplayHealthType = 0;
@@ -13882,7 +13959,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection, name);
 
-			if (!strncmp(name, "Tank", 4, false) || name[0] == '#')
+			if (g_esGeneral.g_iConfigMode == 1 && (!strncmp(name, "Tank", 4, false) || name[0] == '#'))
 			{
 				int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof esGeneral::g_sCurrentSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
 				for (int iType = 1; iType <= g_esGeneral.g_iTypeCounter[0]; iType++)
@@ -13928,7 +14005,7 @@ SMCResult SMCNewSection_Main(SMCParser smc, const char[] name, bool opt_quotes)
 
 		strcopy(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection, name);
 
-		if (!strncmp(name, "Tank", 4, false) || name[0] == '#')
+		if (g_esGeneral.g_iConfigMode == 1 && (!strncmp(name, "Tank", 4, false) || name[0] == '#'))
 		{
 			int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof esGeneral::g_sCurrentSubSection), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
 			for (int iType = 1; iType <= g_esGeneral.g_iTypeCounter[1]; iType++)
@@ -14010,6 +14087,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 				g_esGeneral.g_iAutoAggravate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "AutoAggravate", "Auto Aggravate", "Auto_Aggravate", "autoaggro", g_esGeneral.g_iAutoAggravate, value, 0, 1);
 				g_esGeneral.g_iCreditIgniters = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "CreditIgniters", "Credit Igniters", "Credit_Igniters", "credit", g_esGeneral.g_iCreditIgniters, value, 0, 1);
 				g_esGeneral.g_flForceSpawn = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "ForceSpawn", "Force Spawn", "Force_Spawn", "force", g_esGeneral.g_flForceSpawn, value, 0.0, 99999.0);
+				g_esGeneral.g_iPrioritizeThrows = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "PrioritizeThrows", "Prioritize Throws", "Prioritize_Throws", "priothrow", g_esGeneral.g_iPrioritizeThrows, value, 0, 1);
 				g_esGeneral.g_iStasisMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "StasisMode", "Stasis Mode", "Stasis_Mode", "stasis", g_esGeneral.g_iStasisMode, value, 0, 1);
 				g_esGeneral.g_flSurvivalDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2, key, "SurvivalDelay", "Survival Delay", "Survival_Delay", "survdelay", g_esGeneral.g_flSurvivalDelay, value, 0.1, 99999.0);
 				g_esGeneral.g_iScaleDamage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_DIFF, MT_CONFIG_SECTION_DIFF, MT_CONFIG_SECTION_DIFF, MT_CONFIG_SECTION_DIFF2, key, "ScaleDamage", "Scale Damage", "Scale_Damage", "scaledmg", g_esGeneral.g_iScaleDamage, value, 0, 1);
@@ -14114,7 +14192,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 							g_esGeneral.g_iRewardBots[iPos] = iGetClampedValue(key, "RewardBots", "Reward Bots", "Reward_Bots", "bots", g_esGeneral.g_iRewardBots[iPos], sSet[iPos], -1, 2147483647);
 							g_esGeneral.g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esGeneral.g_iRewardEffect[iPos], sSet[iPos], 0, 15);
 							g_esGeneral.g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esGeneral.g_iRewardNotify[iPos], sSet[iPos], 0, 3);
-							g_esGeneral.g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esGeneral.g_iRewardVisual[iPos], sSet[iPos], 0, 63);
+							g_esGeneral.g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esGeneral.g_iRewardVisual[iPos], sSet[iPos], 0, 127);
 							g_esGeneral.g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esGeneral.g_iAmmoBoostReward[iPos], sSet[iPos], 0, 1);
 							g_esGeneral.g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esGeneral.g_iAmmoRegenReward[iPos], sSet[iPos], 0, 99999);
 							g_esGeneral.g_iBunnyHopReward[iPos] = iGetClampedValue(key, "BunnyHopReward", "Bunny Hop Reward", "Bunny_Hop_Reward", "bhop", g_esGeneral.g_iBunnyHopReward[iPos], sSet[iPos], 0, 1);
@@ -14419,7 +14497,7 @@ SMCResult SMCKeyValues_Main(SMCParser smc, const char[] key, const char[] value,
 									g_esPlayer[iPlayer].g_iRewardBots[iPos] = iGetClampedValue(key, "RewardBots", "Reward Bots", "Reward_Bots", "bots", g_esPlayer[iPlayer].g_iRewardBots[iPos], sSet[iPos], -1, 2147483647);
 									g_esPlayer[iPlayer].g_iRewardEffect[iPos] = iGetClampedValue(key, "RewardEffect", "Reward Effect", "Reward_Effect", "effect", g_esPlayer[iPlayer].g_iRewardEffect[iPos], sSet[iPos], 0, 15);
 									g_esPlayer[iPlayer].g_iRewardNotify[iPos] = iGetClampedValue(key, "RewardNotify", "Reward Notify", "Reward_Notify", "rnotify", g_esPlayer[iPlayer].g_iRewardNotify[iPos], sSet[iPos], 0, 3);
-									g_esPlayer[iPlayer].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esPlayer[iPlayer].g_iRewardVisual[iPos], sSet[iPos], 0, 63);
+									g_esPlayer[iPlayer].g_iRewardVisual[iPos] = iGetClampedValue(key, "RewardVisual", "Reward Visual", "Reward_Visual", "visual", g_esPlayer[iPlayer].g_iRewardVisual[iPos], sSet[iPos], 0, 127);
 									g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos] = iGetClampedValue(key, "AmmoBoostReward", "Ammo Boost Reward", "Ammo_Boost_Reward", "ammoboost", g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos], sSet[iPos], 0, 1);
 									g_esPlayer[iPlayer].g_iAmmoRegenReward[iPos] = iGetClampedValue(key, "AmmoRegenReward", "Ammo Regen Reward", "Ammo_Regen_Reward", "ammoregen", g_esPlayer[iPlayer].g_iAmmoRegenReward[iPos], sSet[iPos], 0, 99999);
 									g_esPlayer[iPlayer].g_iBunnyHopReward[iPos] = iGetClampedValue(key, "BunnyHopReward", "Bunny Hop Reward", "Bunny_Hop_Reward", "bhop", g_esPlayer[iPlayer].g_iBunnyHopReward[iPos], sSet[iPos], 0, 1);
@@ -14696,8 +14774,6 @@ void SMCParseEnd_Main(SMCParser smc, bool halted, bool failed)
 {
 	g_esGeneral.g_csState = ConfigState_None;
 	g_esGeneral.g_iIgnoreLevel = 0;
-	g_esGeneral.g_iTypeCounter[0] = 0;
-	g_esGeneral.g_iTypeCounter[1] = 0;
 	g_esGeneral.g_sCurrentSection[0] = '\0';
 	g_esGeneral.g_sCurrentSubSection[0] = '\0';
 
@@ -14962,6 +15038,21 @@ void vPlayerSpawnFrame(DataPack pack)
 	}
 }
 
+void vPummelTeleportFrame(DataPack pack)
+{
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iSpecial = GetClientOfUserId(pack.ReadCell());
+	delete pack;
+
+	if (bIsValidClient(iSurvivor) && bIsValidClient(iSpecial))
+	{
+		SetVariantString("!activator");
+		AcceptEntityInput(iSurvivor, "SetParent", iSpecial);
+		TeleportEntity(iSurvivor, view_as<float>({50.0, 0.0, 0.0}), NULL_VECTOR, NULL_VECTOR);
+		AcceptEntityInput(iSurvivor, "ClearParent");
+	}
+}
+
 void vRespawnFrame(int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
@@ -15155,7 +15246,7 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			if (damagetype == 134217792)
 			{
 				char sClassname[5];
-				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+				GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 				if (StrEqual(sClassname, "pipe") && (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)))
 				{
 					return Plugin_Handled;
@@ -16355,6 +16446,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea");
 	vSetupDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling");
 	vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1");
+	vSetupDetour(g_esGeneral.g_ddGrabVictimWithTongueDetour, "MTDetour_CTerrorPlayer::GrabVictimWithTongue");
 	vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar");
 	vSetupDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank");
 	vSetupDetour(g_esGeneral.g_ddInitialContainedActionDetour, "MTDetour_TankBehavior::InitialContainedAction");
@@ -16363,9 +16455,12 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddLadderMountDetour, "MTDetour_CTerrorPlayer::OnLadderMount");
 	vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, "MTDetour_CEnvRockLauncher::LaunchCurrentDir");
 	vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, "MTDetour_Tank::LeaveStasis");
+	vSetupDetour(g_esGeneral.g_ddLeptOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnLeptOnSurvivor");
 	vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry");
 	vSetupDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create");
+	vSetupDetour(g_esGeneral.g_ddPouncedOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnPouncedOnSurvivor");
 	vSetupDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink");
+	vSetupDetour(g_esGeneral.g_ddQueuePummelVictimDetour, "MTDetour_CTerrorPlayer::QueuePummelVictim");
 	vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank");
 	vSetupDetour(g_esGeneral.g_ddRevivedDetour, "MTDetour_CTerrorPlayer::OnRevived");
 	vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, "MTDetour_CTerrorWeapon::SecondaryAttack");
@@ -16377,6 +16472,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, "MTDetour_ZombieManager::SpawnTank");
 	vSetupDetour(g_esGeneral.g_ddStaggeredDetour, "MTDetour_CTerrorPlayer::OnStaggered");
 	vSetupDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction");
+	vSetupDetour(g_esGeneral.g_ddStartCarryingVictimDetour, "MTDetour_CTerrorPlayer::OnStartCarryingVictim");
 	vSetupDetour(g_esGeneral.g_ddStartHealingDetour, "MTDetour_CFirstAidKit::StartHealing");
 	vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, "MTDetour_CTerrorPlayer::StartReviving");
 	vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "MTDetour_CTankClaw::DoSwing");
@@ -16388,6 +16484,7 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease");
 	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
 	vSetupDetour(g_esGeneral.g_ddThrowActivateAbilityDetour, "MTDetour_CThrow::ActivateAbility");
+	vSetupDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock");
 	vSetupDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use");
 	vSetupDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use");
 	vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, "MTDetour_CTerrorPlayer::OnVomitedUpon");
@@ -16449,11 +16546,14 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "MTDetour_CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddFlingDetour, "MTDetour_CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "MTDetour_CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddLeptOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnLeptOnSurvivor", Hook_Pre, mreLeptOnSurvivorPre, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddQueuePummelVictimDetour, "MTDetour_CTerrorPlayer::QueuePummelVictim", Hook_Pre, mreQueuePummelVictimPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "MTDetour_CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddSelectWeightedSequenceDetour, "MTDetour_CTerrorPlayer::SelectWeightedSequence", Hook_Pre, mreSelectWeightedSequencePre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddStartActionDetour, "MTDetour_CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, toggle, 2);
+	vToggleDetour(g_esGeneral.g_ddStartCarryingVictimDetour, "MTDetour_CTerrorPlayer::OnStartCarryingVictim", Hook_Pre, mreStartCarryingVictimPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create", Hook_Post, mreTankRockCreatePost, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, toggle, 2);
 	vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, toggle, 2);
@@ -16479,6 +16579,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "MTDetour_CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "MTDetour_CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "MTDetour_CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, toggle);
+	vToggleDetour(g_esGeneral.g_ddGrabVictimWithTongueDetour, "MTDetour_CTerrorPlayer::GrabVictimWithTongue", Hook_Pre, mreGrabVictimWithTonguePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Pre, mreIncapacitatedAsTankPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddIncapacitatedAsTankDetour, "MTDetour_CTerrorPlayer::OnIncapacitatedAsTank", Hook_Post, mreIncapacitatedAsTankPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddInitialContainedActionDetour, "MTDetour_TankBehavior::InitialContainedAction", Hook_Pre, mreInitialContainedActionPre, toggle);
@@ -16493,6 +16594,7 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "MTDetour_CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create", Hook_Pre, mrePipeBombProjectileCreatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPipeBombProjectileCreateDetour, "MTDetour_CPipeBombProjectile::Create", Hook_Post, mrePipeBombProjectileCreatePost, toggle);
+	vToggleDetour(g_esGeneral.g_ddPouncedOnSurvivorDetour, "MTDetour_CTerrorPlayer::OnPouncedOnSurvivor", Hook_Pre, mrePouncedOnSurvivorPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Pre, mrePreThinkPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddPreThinkDetour, "MTDetour_CTerrorPlayer::PreThink", Hook_Post, mrePreThinkPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "MTDetour_ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, toggle);
@@ -16515,6 +16617,8 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack", Hook_Pre, mreTankClawPrimaryAttackPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddThrowActivateAbilityDetour, "MTDetour_CThrow::ActivateAbility", Hook_Pre, mreThrowActivateAbilityPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock", Hook_Pre, mreTryToThrowRockPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock", Hook_Post, mreTryToThrowRockPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Pre, mreUsePre, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use", Hook_Post, mreUsePost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUseDetour2, "MTDetour_CWeaponSpawn::Use", Hook_Pre, mreUsePre, toggle);
@@ -17200,6 +17304,17 @@ MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 	return MRES_Ignored;
 }
 
+MRESReturn mreGrabVictimWithTonguePre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
@@ -17377,6 +17492,17 @@ MRESReturn mreLeaveStasisPost(int pThis)
 	return MRES_Ignored;
 }
 
+MRESReturn mreLeptOnSurvivorPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mreMaxCarryPre(Address pThis, DHookReturn hReturn, DHookParam hParams)
 {
 	int iSurvivor = hParams.IsNull(2) ? 0 : hParams.Get(2), iAmmo = iGetMaxAmmo(iSurvivor, hParams.Get(1), 0, true);
@@ -17425,6 +17551,17 @@ MRESReturn mrePipeBombProjectileCreatePost(DHookReturn hReturn, DHookParam hPara
 	return MRES_Ignored;
 }
 
+MRESReturn mrePouncedOnSurvivorPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 MRESReturn mrePreThinkPre(int pThis)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || ((g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[pThis].g_iLadderActions == 1)))
@@ -17455,6 +17592,24 @@ MRESReturn mrePreThinkPost(int pThis)
 	if (iIndex != -1)
 	{
 		vRemovePatch(iIndex);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreQueuePummelVictimPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		DataPack dpPummel = new DataPack();
+		dpPummel.WriteCell(GetClientUserId(iSurvivor));
+		dpPummel.WriteCell(GetClientUserId(pThis));
+		RequestFrame(vPummelTeleportFrame, dpPummel);
+
+		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
+
+		return MRES_Supercede;
 	}
 
 	return MRES_Ignored;
@@ -17661,6 +17816,17 @@ MRESReturn mreStartActionPost(int pThis, DHookReturn hReturn, DHookParam hParams
 	if (g_esGeneral.g_hSDKGetUseAction != null)
 	{
 		vSetDurationCvars(pThis, true);
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreStartCarryingVictimPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
 	}
 
 	return MRES_Ignored;
@@ -18034,6 +18200,52 @@ MRESReturn mreThrowActivateAbilityPre(int pThis)
 		}
 
 		g_esPlayer[iTank].g_flLastThrowTime = flCurrentTime;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTryToThrowRockPre(Address pThis, DHookParam hParams)
+{
+	int iTank = hParams.Get(1);
+	if (bIsTank(iTank) && bIsCoopMode() && g_esCache[iTank].g_iPrioritizeThrows == 1)
+	{
+		char sName[32];
+		static int iIndex[2] = {-1, -1};
+		for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
+		{
+			if (iIndex[iPos] == -1)
+			{
+				FormatEx(sName, sizeof sName, "MTPatch_TankAttackDifficulty%i", (iPos + 1));
+				iIndex[iPos] = iGetPatchIndex(sName);
+			}
+
+			if (iIndex[iPos] != -1)
+			{
+				vInstallPatch(iIndex[iPos]);
+			}
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTryToThrowRockPost(Address pThis, DHookParam hParams)
+{
+	char sName[32];
+	static int iIndex[2] = {-1, -1};
+	for (int iPos = 0; iPos < (sizeof iIndex); iPos++)
+	{
+		if (iIndex[iPos] == -1)
+		{
+			FormatEx(sName, sizeof sName, "MTPatch_TankAttackDifficulty%i", (iPos + 1));
+			iIndex[iPos] = iGetPatchIndex(sName);
+		}
+
+		if (iIndex[iPos] != -1)
+		{
+			vRemovePatch(iIndex[iPos]);
+		}
 	}
 
 	return MRES_Ignored;
