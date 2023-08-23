@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -725,54 +725,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveSplash(tank);
 }
 
-void vSplashCopyStats2(int oldTank, int newTank)
-{
-	g_esSplashPlayer[newTank].g_iAmmoCount = g_esSplashPlayer[oldTank].g_iAmmoCount;
-	g_esSplashPlayer[newTank].g_iCooldown = g_esSplashPlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveSplash(int tank)
-{
-	g_esSplashPlayer[tank].g_bActivated = false;
-	g_esSplashPlayer[tank].g_iAmmoCount = 0;
-	g_esSplashPlayer[tank].g_iCooldown = -1;
-}
-
-void vSplashReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveSplash(iPlayer);
-		}
-	}
-}
-
-void vSplashReset2(int tank)
-{
-	g_esSplashPlayer[tank].g_bActivated = false;
-
-	if (g_esSplashCache[tank].g_iSplashMessage == 1)
-	{
-		char sTankName[33];
-		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash2", LANG_SERVER, sTankName);
-	}
-}
-
-void vSplashReset3(int tank)
-{
-	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1 && g_esSplashCache[tank].g_iHumanMode == 0 && g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
-	g_esSplashPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman5", (g_esSplashPlayer[tank].g_iCooldown - iTime));
-	}
-}
-
 void vSplash(int tank, int pos = -1)
 {
 	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > GetTime())
@@ -825,7 +777,7 @@ void vSplashAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esSplashCache[tank].g_flSplashChance)
 		{
 			vSplash(tank);
 		}
@@ -840,20 +792,66 @@ void vSplashAbility(int tank)
 	}
 }
 
-Action tTimerSplashCombo(Handle timer, DataPack pack)
+void vSplashCopyStats2(int oldTank, int newTank)
+{
+	g_esSplashPlayer[newTank].g_iAmmoCount = g_esSplashPlayer[oldTank].g_iAmmoCount;
+	g_esSplashPlayer[newTank].g_iCooldown = g_esSplashPlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveSplash(int tank)
+{
+	g_esSplashPlayer[tank].g_bActivated = false;
+	g_esSplashPlayer[tank].g_iAmmoCount = 0;
+	g_esSplashPlayer[tank].g_iCooldown = -1;
+}
+
+void vSplashReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveSplash(iPlayer);
+		}
+	}
+}
+
+void vSplashReset2(int tank)
+{
+	g_esSplashPlayer[tank].g_bActivated = false;
+
+	if (g_esSplashCache[tank].g_iSplashMessage == 1)
+	{
+		char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Splash2", LANG_SERVER, sTankName);
+	}
+}
+
+void vSplashReset3(int tank)
+{
+	int iTime = GetTime(), iPos = g_esSplashAbility[g_esSplashPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSplashCache[tank].g_iSplashCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplashCache[tank].g_iHumanAbility == 1 && g_esSplashCache[tank].g_iHumanMode == 0 && g_esSplashPlayer[tank].g_iAmmoCount < g_esSplashCache[tank].g_iHumanAmmo && g_esSplashCache[tank].g_iHumanAmmo > 0) ? g_esSplashCache[tank].g_iHumanCooldown : iCooldown;
+	g_esSplashPlayer[tank].g_iCooldown = (iTime + iCooldown);
+	if (g_esSplashPlayer[tank].g_iCooldown != -1 && g_esSplashPlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman5", (g_esSplashPlayer[tank].g_iCooldown - iTime));
+	}
+}
+
+void tTimerSplashCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSplashAbility[g_esSplashPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSplashPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSplashPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSplashCache[iTank].g_iSplashAbility == 0 || g_esSplashPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vSplash(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerSplash(Handle timer, DataPack pack)

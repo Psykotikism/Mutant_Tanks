@@ -76,7 +76,7 @@
 
 	"MTTankItem"
 	{
-		"chi"			"{1} (坦克 #{2})"
+		"chi"			"{1} (坦克 #{2}) [坦克 #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -356,7 +356,7 @@
 
 	"CommandUsage"
 	{
-		"chi"			"用法： {1} <类型 {2}-{3}> <数量： 1-32> <0： 在十字准星处生成|1： 自动生成>"
+		"chi"			"用法： {1} <类型 {2}-{3}> <数量： 1-32> <0： 在十字准星处生成|1： 自动生成> <0: 没有被致盲了|1: 致盲了>"
 	}
 
 	"CommandUsage2"
@@ -586,7 +586,7 @@
 
 	"MultipleMatches"
 	{
-		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (坦克 #{1}){olive}。"
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (坦克 #{1}) [坦克 #{2}]{olive}。"
 	}
 
 	"NoAbilities"
@@ -641,7 +641,7 @@
 
 	"PersonalType"
 	{
-		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (Tank #{2}){default} 的身份出现。"
+		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 的身份出现。"
 	}
 
 	"PitchVisualOn"
@@ -681,7 +681,7 @@
 
 	"RequestSucceeded"
 	{
-		"chi"			"一种名称{yellow} (坦克 #{1}){mint} 与该名称匹配。{olive} 请求成功！"
+		"chi"			"一种名称{yellow} (坦克 #{1}) [坦克 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
 	}
 
 	"RewardAmmo"
@@ -816,7 +816,7 @@
 
 	"TankDisabled"
 	{
-		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用。"
+		"chi"			"{1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 已禁用。"
 	}
 
 	"TeammatesList"
@@ -2202,6 +2202,61 @@
 	"GravityMenu2"
 	{
 		"chi"			"重力能力"
+	}
+
+	"Gunner"
+	{
+		"chi"			"{olive}{1}{mint} 正在向开枪！"
+	}
+
+	"Gunner2"
+	{
+		"chi"			"{olive}{1}{mint} 停止开枪了！"
+	}
+
+	"GunnerAmmo"
+	{
+		"chi"			"你已经用光了炮手能力的次数。"
+	}
+
+	"GunnerDetails"
+	{
+		"chi"			"你身上带着枪。"
+	}
+
+	"GunnerHuman"
+	{
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次炮手能力！"
+	}
+
+	"GunnerHuman2"
+	{
+		"chi"			"你的炮手能力激活失败， 请重试。"
+	}
+
+	"GunnerHuman3"
+	{
+		"chi"			"你已经激活了炮手能力。"
+	}
+
+	"GunnerHuman4"
+	{
+		"chi"			"你的炮手能力还需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"GunnerHuman5"
+	{
+		"chi"			"你的炮手能力已结束， 需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"GunnerMenu"
+	{
+		"chi"			"炮手能力信息"
+	}
+
+	"GunnerMenu2"
+	{
+		"chi"			"炮手能力"
 	}
 
 	"Heal"
@@ -4291,12 +4346,12 @@
 
 	"Splatter"
 	{
-		"chi"			"{olive}{1}{mint} 会定期用飞溅覆盖每个人的屏幕！"
+		"chi"			"{olive}{1}{mint} 的喷溅物正在遮挡{olive} {2}{mint} 的屏幕!"
 	}
 
 	"Splatter2"
 	{
-		"chi"			"{olive}{1}{mint} 用{yellow} 飞溅{mint} 覆盖了每个人的屏幕！"
+		"chi"			"{olive}{1}{mint} 不再被喷溅物遮挡{mint}!"
 	}
 
 	"SplatterAmmo"
@@ -4306,7 +4361,7 @@
 
 	"SplatterDetails"
 	{
-		"chi"			"你会用飞溅覆盖每个人的屏幕。"
+		"chi"			"你可以用喷溅物遮挡幸存者屏幕。"
 	}
 
 	"SplatterHuman"
@@ -4321,12 +4376,12 @@
 
 	"SplatterHuman3"
 	{
-		"chi"			"你已经激活了飞溅功能。"
+		"chi"			"你的喷溅能力还需要{yellow} {1} 秒{mint} 进行充能。"
 	}
 
 	"SplatterHuman4"
 	{
-		"chi"			"你的飞溅能力仍然需要另外{yellow} {1} 秒{mint}来补充。"
+		"chi"			"附近没有幸存者可以给你使用喷溅能力。"
 	}
 
 	"SplatterHuman5"

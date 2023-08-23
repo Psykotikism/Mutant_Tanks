@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -752,6 +752,93 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveSpam(tank);
 }
 
+void vSpam(int tank, int pos = -1)
+{
+	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
+	g_esSpamPlayer[tank].g_bActivated = true;
+
+	vSpam2(tank, pos);
+
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+	{
+		g_esSpamPlayer[tank].g_iAmmoCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman", g_esSpamPlayer[tank].g_iAmmoCount, g_esSpamCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esSpamCache[tank].g_iSpamMessage == 1)
+	{
+		char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Spam", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Spam", LANG_SERVER, sTankName);
+	}
+}
+
+void vSpam2(int tank, int pos = -1)
+{
+	if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	char sDamage[11];
+	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : float(g_esSpamCache[tank].g_iSpamDamage);
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
+
+	float flPos[3], flAngles[3];
+	GetClientEyePosition(tank, flPos);
+	GetClientEyeAngles(tank, flAngles);
+
+	int iLauncher = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iLauncher))
+	{
+		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
+		TeleportEntity(iLauncher, flPos, flAngles);
+		DispatchSpawn(iLauncher);
+		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
+		iLauncher = EntIndexToEntRef(iLauncher);
+		g_esSpamPlayer[tank].g_iLauncher = iLauncher;
+	}
+
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esSpamCache[tank].g_flSpamInterval;
+	DataPack dpSpam;
+	CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpSpam.WriteCell(iLauncher);
+	dpSpam.WriteCell(GetClientUserId(tank));
+	dpSpam.WriteCell(g_esSpamPlayer[tank].g_iTankType);
+	dpSpam.WriteCell(GetTime());
+	dpSpam.WriteCell(pos);
+}
+
+void vSpamAbility(int tank)
+{
+	if ((g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
+	{
+		if (GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
+		{
+			vSpam(tank);
+		}
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman2");
+		}
+	}
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamAmmo");
+	}
+}
+
 void vSpamCopyStats2(int oldTank, int newTank)
 {
 	g_esSpamPlayer[newTank].g_iAmmoCount = g_esSpamPlayer[oldTank].g_iAmmoCount;
@@ -818,107 +905,18 @@ void vSpamReset3(int tank)
 	}
 }
 
-void vSpam(int tank, int pos = -1)
-{
-	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime())
-	{
-		return;
-	}
-
-	g_esSpamPlayer[tank].g_bActivated = true;
-
-	vSpam2(tank, pos);
-
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
-	{
-		g_esSpamPlayer[tank].g_iAmmoCount++;
-
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman", g_esSpamPlayer[tank].g_iAmmoCount, g_esSpamCache[tank].g_iHumanAmmo);
-	}
-
-	if (g_esSpamCache[tank].g_iSpamMessage == 1)
-	{
-		char sTankName[33];
-		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Spam", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Spam", LANG_SERVER, sTankName);
-	}
-}
-
-void vSpam2(int tank, int pos = -1)
-{
-	if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	char sDamage[11];
-	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : float(g_esSpamCache[tank].g_iSpamDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
-
-	float flPos[3], flAngles[3];
-	GetClientEyePosition(tank, flPos);
-	GetClientEyeAngles(tank, flAngles);
-
-	int iLauncher = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher))
-	{
-		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher);
-		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
-		iLauncher = EntIndexToEntRef(iLauncher);
-		g_esSpamPlayer[tank].g_iLauncher = iLauncher;
-	}
-
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esSpamCache[tank].g_flSpamInterval;
-	DataPack dpSpam;
-	CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpSpam.WriteCell(iLauncher);
-	dpSpam.WriteCell(GetClientUserId(tank));
-	dpSpam.WriteCell(g_esSpamPlayer[tank].g_iTankType);
-	dpSpam.WriteCell(GetTime());
-	dpSpam.WriteCell(pos);
-}
-
-void vSpamAbility(int tank)
-{
-	if ((g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
-	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
-		{
-			vSpam(tank);
-		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
-		{
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman2");
-		}
-	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamAmmo");
-	}
-}
-
-Action tTimerSpamCombo(Handle timer, DataPack pack)
+void tTimerSpamCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSpamCache[iTank].g_iSpamAbility == 0 || g_esSpamPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vSpam(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerSpam(Handle timer, DataPack pack)
@@ -960,7 +958,7 @@ Action tTimerSpam(Handle timer, DataPack pack)
 
 	if (bIsValidEntity(iLauncher))
 	{
-		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
+		TeleportEntity(iLauncher, flPos, flAngles);
 		AcceptEntityInput(iLauncher, "LaunchRock");
 	}
 

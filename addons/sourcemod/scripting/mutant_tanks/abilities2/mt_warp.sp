@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -472,7 +472,7 @@ Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWarpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esWarpCache[attacker].g_flWarpChance, g_esWarpCache[attacker].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vWarpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esWarpCache[attacker].g_flWarpChance, g_esWarpCache[attacker].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esWarpCache[victim].g_iWarpHitMode == 0 || g_esWarpCache[victim].g_iWarpHitMode == 2) && bIsSurvivor(attacker) && g_esWarpCache[victim].g_iComboAbility == 0)
@@ -484,7 +484,7 @@ Action OnWarpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vWarpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esWarpCache[victim].g_flWarpChance, g_esWarpCache[victim].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vWarpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esWarpCache[victim].g_flWarpChance, g_esWarpCache[victim].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -900,7 +900,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esWarpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWarpCache[tank].g_iWarpAbility > 0 && g_esWarpCache[tank].g_iComboAbility == 0)
 	{
 		vWarpAbility(tank, false);
-		vWarpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+		vWarpAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -972,7 +972,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			switch (g_esWarpPlayer[tank].g_iRangeCooldown == -1 || g_esWarpPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vWarpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+				case true: vWarpAbility(tank, true, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman6", (g_esWarpPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1030,54 +1030,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esWarpCache[tank].g_iWarpRockBreak == 1 && g_esWarpCache[tank].g_iComboAbility == 0)
 	{
-		vWarpRockBreak2(tank, rock, MT_GetRandomFloat(0.1, 100.0));
-	}
-}
-
-void vWarpCopyStats2(int oldTank, int newTank)
-{
-	g_esWarpPlayer[newTank].g_iAmmoCount = g_esWarpPlayer[oldTank].g_iAmmoCount;
-	g_esWarpPlayer[newTank].g_iAmmoCount2 = g_esWarpPlayer[oldTank].g_iAmmoCount2;
-	g_esWarpPlayer[newTank].g_iCooldown = g_esWarpPlayer[oldTank].g_iCooldown;
-	g_esWarpPlayer[newTank].g_iCooldown2 = g_esWarpPlayer[oldTank].g_iCooldown2;
-	g_esWarpPlayer[newTank].g_iRangeCooldown = g_esWarpPlayer[oldTank].g_iRangeCooldown;
-	g_esWarpPlayer[newTank].g_iRockCooldown = g_esWarpPlayer[oldTank].g_iRockCooldown;
-}
-
-void vRemoveWarp(int tank)
-{
-	g_esWarpPlayer[tank].g_bActivated = false;
-	g_esWarpPlayer[tank].g_bFailed = false;
-	g_esWarpPlayer[tank].g_bNoAmmo = false;
-	g_esWarpPlayer[tank].g_iAmmoCount = 0;
-	g_esWarpPlayer[tank].g_iAmmoCount2 = 0;
-	g_esWarpPlayer[tank].g_iCooldown = -1;
-	g_esWarpPlayer[tank].g_iCooldown2 = -1;
-	g_esWarpPlayer[tank].g_iRangeCooldown = -1;
-	g_esWarpPlayer[tank].g_iRockCooldown = -1;
-}
-
-void vWarpReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveWarp(iPlayer);
-		}
-	}
-}
-
-void vWarpReset2(int tank)
-{
-	g_esWarpPlayer[tank].g_bActivated = false;
-
-	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
-	g_esWarpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
-	if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman8", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
+		vWarpRockBreak2(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -1434,6 +1387,53 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 	}
 }
 
+void vWarpCopyStats2(int oldTank, int newTank)
+{
+	g_esWarpPlayer[newTank].g_iAmmoCount = g_esWarpPlayer[oldTank].g_iAmmoCount;
+	g_esWarpPlayer[newTank].g_iAmmoCount2 = g_esWarpPlayer[oldTank].g_iAmmoCount2;
+	g_esWarpPlayer[newTank].g_iCooldown = g_esWarpPlayer[oldTank].g_iCooldown;
+	g_esWarpPlayer[newTank].g_iCooldown2 = g_esWarpPlayer[oldTank].g_iCooldown2;
+	g_esWarpPlayer[newTank].g_iRangeCooldown = g_esWarpPlayer[oldTank].g_iRangeCooldown;
+	g_esWarpPlayer[newTank].g_iRockCooldown = g_esWarpPlayer[oldTank].g_iRockCooldown;
+}
+
+void vRemoveWarp(int tank)
+{
+	g_esWarpPlayer[tank].g_bActivated = false;
+	g_esWarpPlayer[tank].g_bFailed = false;
+	g_esWarpPlayer[tank].g_bNoAmmo = false;
+	g_esWarpPlayer[tank].g_iAmmoCount = 0;
+	g_esWarpPlayer[tank].g_iAmmoCount2 = 0;
+	g_esWarpPlayer[tank].g_iCooldown = -1;
+	g_esWarpPlayer[tank].g_iCooldown2 = -1;
+	g_esWarpPlayer[tank].g_iRangeCooldown = -1;
+	g_esWarpPlayer[tank].g_iRockCooldown = -1;
+}
+
+void vWarpReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveWarp(iPlayer);
+		}
+	}
+}
+
+void vWarpReset2(int tank)
+{
+	g_esWarpPlayer[tank].g_bActivated = false;
+
+	int iTime = GetTime(), iPos = g_esWarpAbility[g_esWarpPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esWarpCache[tank].g_iWarpCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && g_esWarpPlayer[tank].g_iAmmoCount < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0) ? g_esWarpCache[tank].g_iHumanCooldown : iCooldown;
+	g_esWarpPlayer[tank].g_iCooldown2 = (iTime + iCooldown);
+	if (g_esWarpPlayer[tank].g_iCooldown2 != -1 && g_esWarpPlayer[tank].g_iCooldown2 > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpHuman8", (g_esWarpPlayer[tank].g_iCooldown2 - iTime));
+	}
+}
+
 bool bIsSurvivorInsideSaferoom(int survivor)
 {
 	int iArea = SDKCall(g_esWarpGeneral.g_hSDKGetLastKnownArea, survivor);
@@ -1449,53 +1449,49 @@ bool bIsSurvivorInsideSaferoom(int survivor)
 	return false;
 }
 
-Action tTimerWarpCombo(Handle timer, DataPack pack)
+void tTimerWarpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWarpAbility[g_esWarpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWarpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWarpCache[iTank].g_iWarpAbility == 0 || g_esWarpCache[iTank].g_iWarpAbility == 2)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vWarpAbility(iTank, true, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerWarpCombo2(Handle timer, DataPack pack)
+void tTimerWarpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWarpAbility[g_esWarpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWarpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWarpCache[iTank].g_iWarpAbility == 0 || g_esWarpCache[iTank].g_iWarpAbility == 1)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vWarpAbility(iTank, false, .pos = iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerWarpCombo3(Handle timer, DataPack pack)
+void tTimerWarpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWarpAbility[g_esWarpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWarpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWarpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWarpCache[iTank].g_iWarpHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1510,8 +1506,6 @@ Action tTimerWarpCombo3(Handle timer, DataPack pack)
 	{
 		vWarpHit(iSurvivor, iTank, flRandom, flChance, g_esWarpCache[iTank].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerWarp(Handle timer, DataPack pack)

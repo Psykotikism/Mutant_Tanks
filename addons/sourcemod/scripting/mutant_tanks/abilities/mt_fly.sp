@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -910,7 +910,7 @@ void vFly(int tank, bool announce, int pos = -1)
 	GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 	NormalizeVector(flEyeAngles, flEyeAngles);
 	ScaleVector(flEyeAngles, 55.0);
-	TeleportEntity(tank, flOrigin, NULL_VECTOR, flEyeAngles);
+	TeleportEntity(tank, flOrigin, .velocity = flEyeAngles);
 	vCopyVector(flEyeAngles, g_esFlyPlayer[tank].g_flCurrentVelocity);
 
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
@@ -941,7 +941,7 @@ void vFlyAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
 		{
 			vFly(tank, true);
 		}
@@ -1008,7 +1008,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1024,7 +1024,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1039,7 +1039,7 @@ void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
+				TeleportEntity(tank, .velocity = flEyeAngles);
 
 				return;
 			}
@@ -1075,7 +1075,7 @@ void vFlyThink(int tank, int buttons, float duration)
 
 			switch (FloatAbs(flSpeed2[2]) > 40.0)
 			{
-				case true: flGravity = flSpeed2[2] * duration;
+				case true: flGravity = (flSpeed2[2] * duration);
 				case false: flGravity = flGravity2;
 			}
 
@@ -1093,7 +1093,7 @@ void vFlyThink(int tank, int buttons, float duration)
 			{
 				NormalizeVector(flSpeed2, flSpeed2);
 				ScaleVector(flSpeed2, flSpeed);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flSpeed2);
+				TeleportEntity(tank, .velocity = flSpeed2);
 				flGravity = flGravity2;
 			}
 
@@ -1384,7 +1384,7 @@ void vFlyThink(int tank, int buttons, float duration)
 		ScaleVector(flVelocity3, flSpeed);
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esFlyPlayer[tank].g_flCurrentVelocity);
-		TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+		TeleportEntity(tank, .velocity = flVelocity3);
 	}
 }
 
@@ -1493,18 +1493,16 @@ int iGetFlyTarget(float pos[3], float angles[3], int tank)
 	return iTarget;
 }
 
-Action tTimerFlyCombo(Handle timer, DataPack pack)
+void tTimerFlyCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vFly(iTank, true, iPos);
-
-	return Plugin_Continue;
 }

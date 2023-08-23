@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -931,7 +931,7 @@ void vMeteorAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esMeteorPlayer[tank].g_iAmmoCount < g_esMeteorCache[tank].g_iHumanAmmo && g_esMeteorCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esMeteorCache[tank].g_flMeteorChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esMeteorCache[tank].g_flMeteorChance)
 		{
 			vMeteor(tank);
 		}
@@ -994,36 +994,32 @@ void vMeteorReset3(int tank)
 	}
 }
 
-Action tTimerMeteorCombo(Handle timer, DataPack pack)
+void tTimerMeteorCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esMeteorAbility[g_esMeteorPlayer[iTank].g_iTankType].g_iAccessFlags, g_esMeteorPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esMeteorPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esMeteorCache[iTank].g_iMeteorAbility == 0 || g_esMeteorPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vMeteor(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerDestroyMeteor(Handle timer, DataPack pack)
+void tTimerDestroyMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iMeteor = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vMeteor3(iTank, iMeteor, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerMeteor(Handle timer, DataPack pack)
@@ -1095,9 +1091,9 @@ Action tTimerMeteor(Handle timer, DataPack pack)
 			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iMeteor, flHitpos, flAngles2, NULL_VECTOR);
+			TeleportEntity(iMeteor, flHitpos, flAngles2);
 			DispatchSpawn(iMeteor);
-			TeleportEntity(iMeteor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			TeleportEntity(iMeteor, .velocity = flVelocity);
 			ActivateEntity(iMeteor);
 			AcceptEntityInput(iMeteor, "Ignite");
 

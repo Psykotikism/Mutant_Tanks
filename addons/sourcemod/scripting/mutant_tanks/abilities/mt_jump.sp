@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -399,7 +399,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vJumpHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vJumpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esJumpCache[attacker].g_flJumpChance, g_esJumpCache[attacker].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esJumpCache[victim].g_iJumpHitMode == 0 || g_esJumpCache[victim].g_iJumpHitMode == 2) && bIsSurvivor(attacker) && g_esJumpCache[victim].g_iComboAbility == 0)
@@ -411,7 +411,7 @@ Action OnJumpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vJumpHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vJumpHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esJumpCache[victim].g_flJumpChance, g_esJumpCache[victim].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -813,7 +813,7 @@ public void MT_OnAbilityActivated(int tank)
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esJumpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esJumpCache[tank].g_iJumpAbility > 0 && g_esJumpCache[tank].g_iComboAbility == 0)
 	{
 		vJumpAbility(tank, false);
-		vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+		vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -885,7 +885,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			switch (g_esJumpPlayer[tank].g_iRangeCooldown == -1 || g_esJumpPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vJumpAbility(tank, true, MT_GetRandomFloat(0.1, 100.0));
+				case true: vJumpAbility(tank, true, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "JumpHuman6", (g_esJumpPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -931,7 +931,7 @@ void vJump(int survivor, int tank)
 	float flVelocity[3];
 	GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += g_esJumpCache[tank].g_flJumpHeight;
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(survivor, .velocity = flVelocity);
 }
 
 void vJump2(int tank, int pos = -1)
@@ -1222,7 +1222,6 @@ void vJumpReset4(int tank)
 
 float flGetNearestSurvivor(int tank)
 {
-	float flDistance;
 	if (bIsTank(tank))
 	{
 		float flTankPos[3], flSurvivorPos[3];
@@ -1232,63 +1231,58 @@ float flGetNearestSurvivor(int tank)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esJumpPlayer[tank].g_iTankType, g_esJumpAbility[g_esJumpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esJumpPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 
-				break;
+				return GetVectorDistance(flTankPos, flSurvivorPos);
 			}
 		}
 	}
 
-	return flDistance;
+	return 0.0;
 }
 
-Action tTimerJumpCombo(Handle timer, DataPack pack)
+void tTimerJumpCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esJumpCache[iTank].g_iJumpAbility == 0 || g_esJumpCache[iTank].g_iJumpAbility == 2)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vJumpAbility(iTank, true, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerJumpCombo2(Handle timer, DataPack pack)
+void tTimerJumpCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esJumpCache[iTank].g_iJumpAbility == 0 || g_esJumpCache[iTank].g_iJumpAbility == 1)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vJumpAbility(iTank, false, .pos = iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerJumpCombo3(Handle timer, DataPack pack)
+void tTimerJumpCombo3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esJumpPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esJumpAbility[g_esJumpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esJumpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esJumpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esJumpCache[iTank].g_iJumpHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1303,8 +1297,6 @@ Action tTimerJumpCombo3(Handle timer, DataPack pack)
 	{
 		vJumpHit(iSurvivor, iTank, flRandom, flChance, g_esJumpCache[iTank].g_iJumpHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerJump(Handle timer, DataPack pack)
@@ -1363,7 +1355,7 @@ Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (MT_GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
+	if (GetRandomFloat(0.1, 100.0) > g_esJumpCache[iTank].g_flJumpSporadicChance)
 	{
 		return Plugin_Continue;
 	}
@@ -1392,7 +1384,7 @@ Action tTimerJump2(Handle timer, DataPack pack)
 		}
 
 		flVelocity[2] += g_esJumpCache[iTank].g_flJumpSporadicHeight;
-		TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		TeleportEntity(iTank, .velocity = flVelocity);
 	}
 
 	return Plugin_Continue;

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -377,7 +377,7 @@ Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSlowHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSlowCache[attacker].g_flSlowChance, g_esSlowCache[attacker].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSlowHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esSlowCache[attacker].g_flSlowChance, g_esSlowCache[attacker].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSlowCache[victim].g_iSlowHitMode == 0 || g_esSlowCache[victim].g_iSlowHitMode == 2) && bIsSurvivor(attacker) && g_esSlowCache[victim].g_iComboAbility == 0)
@@ -389,7 +389,7 @@ Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vSlowHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esSlowCache[victim].g_flSlowChance, g_esSlowCache[victim].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSlowHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esSlowCache[victim].g_flSlowChance, g_esSlowCache[victim].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -571,6 +571,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSlowPlayer[iPlayer].g_iSlowIncline = 0;
 					g_esSlowPlayer[iPlayer].g_flSlowRange = 0.0;
 					g_esSlowPlayer[iPlayer].g_flSlowRangeChance = 0.0;
+					g_esSlowPlayer[iPlayer].g_iSlowRangeCooldown = 0;
 					g_esSlowPlayer[iPlayer].g_flSlowSpeed = 0.0;
 				}
 			}
@@ -605,8 +606,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSlowPlayer[admin].g_iSlowIncline = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowIncline", "Slow Incline", "Slow_Incline", "incline", g_esSlowPlayer[admin].g_iSlowIncline, value, 0, 1);
 		g_esSlowPlayer[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowPlayer[admin].g_flSlowRange, value, 1.0, 99999.0);
 		g_esSlowPlayer[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowPlayer[admin].g_flSlowRangeChance, value, 0.0, 100.0);
-		g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, 0.1, 0.9);
 		g_esSlowPlayer[admin].g_iSlowRangeCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeCooldown", "Slow Range Cooldown", "Slow_Range_Cooldown", "rangecooldown", g_esSlowPlayer[admin].g_iSlowRangeCooldown, value, 0, 99999);
+		g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, 0.1, 0.9);
 		g_esSlowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		g_esSlowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
@@ -734,10 +735,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSlow(iTank);
+			vRemoveSlow(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopSlow(iPlayer, false);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -774,7 +779,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSlowCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSlowCache[tank].g_iSlowAbility == 1 && g_esSlowCache[tank].g_iComboAbility == 0)
 	{
-		vSlowAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vSlowAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -797,7 +802,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esSlowPlayer[tank].g_iRangeCooldown == -1 || g_esSlowPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vSlowAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vSlowAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman3", (g_esSlowPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -816,47 +821,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveSlow(tank);
-}
-
-void vSlowCopyStats2(int oldTank, int newTank)
-{
-	g_esSlowPlayer[newTank].g_iAmmoCount = g_esSlowPlayer[oldTank].g_iAmmoCount;
-	g_esSlowPlayer[newTank].g_iCooldown = g_esSlowPlayer[oldTank].g_iCooldown;
-	g_esSlowPlayer[newTank].g_iRangeCooldown = g_esSlowPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveSlow(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esSlowPlayer[iSurvivor].g_bAffected && g_esSlowPlayer[iSurvivor].g_iOwner == tank)
-		{
-			vStopSlow(iSurvivor);
-		}
-	}
-
-	vSlowReset2(tank);
-}
-
-void vSlowReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vSlowReset2(iPlayer);
-		}
-	}
-}
-
-void vSlowReset2(int tank)
-{
-	g_esSlowPlayer[tank].g_bAffected = false;
-	g_esSlowPlayer[tank].g_bFailed = false;
-	g_esSlowPlayer[tank].g_bNoAmmo = false;
-	g_esSlowPlayer[tank].g_iAmmoCount = 0;
-	g_esSlowPlayer[tank].g_iCooldown = -1;
-	g_esSlowPlayer[tank].g_iRangeCooldown = -1;
 }
 
 void vSlowAbility(int tank, float random, int pos = -1)
@@ -956,7 +920,7 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 
 				float flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 16, pos) : g_esSlowCache[tank].g_flSlowSpeed;
-				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flSpeed);
+				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(survivor, flSpeed) : flSpeed));
 
 				if (g_esSlowCache[tank].g_iSlowIncline == 1)
 				{
@@ -1001,47 +965,90 @@ void vSlowHit(int survivor, int tank, float random, float chance, int enabled, i
 	}
 }
 
-void vStopSlow(int survivor)
+void vSlowCopyStats2(int oldTank, int newTank)
+{
+	g_esSlowPlayer[newTank].g_iAmmoCount = g_esSlowPlayer[oldTank].g_iAmmoCount;
+	g_esSlowPlayer[newTank].g_iCooldown = g_esSlowPlayer[oldTank].g_iCooldown;
+	g_esSlowPlayer[newTank].g_iRangeCooldown = g_esSlowPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveSlow(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esSlowPlayer[iSurvivor].g_bAffected && g_esSlowPlayer[iSurvivor].g_iOwner == tank)
+		{
+			vStopSlow(iSurvivor);
+		}
+	}
+
+	vSlowReset2(tank);
+}
+
+void vSlowReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vSlowReset2(iPlayer);
+		}
+	}
+}
+
+void vSlowReset2(int tank)
+{
+	g_esSlowPlayer[tank].g_bAffected = false;
+	g_esSlowPlayer[tank].g_bFailed = false;
+	g_esSlowPlayer[tank].g_bNoAmmo = false;
+	g_esSlowPlayer[tank].g_iAmmoCount = 0;
+	g_esSlowPlayer[tank].g_iCooldown = -1;
+	g_esSlowPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vStopSlow(int survivor, bool all = true)
 {
 	g_esSlowPlayer[survivor].g_bAffected = false;
 	g_esSlowPlayer[survivor].g_iOwner = 0;
 
-	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(survivor, 1.0, true) : 1.0));
 	SetEntPropFloat(survivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
-	EmitSoundToAll(SOUND_DRIP, survivor);
+
+	if (all)
+	{
+		EmitSoundToAll(SOUND_DRIP, survivor);
+	}
 }
 
-Action tTimerSlowCombo(Handle timer, DataPack pack)
+void tTimerSlowCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vSlowAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerSlowCombo2(Handle timer, DataPack pack)
+void tTimerSlowCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esSlowPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSlowAbility[g_esSlowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSlowPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSlowCache[iTank].g_iSlowHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1056,11 +1063,9 @@ Action tTimerSlowCombo2(Handle timer, DataPack pack)
 	{
 		vSlowHit(iSurvivor, iTank, flRandom, flChance, g_esSlowCache[iTank].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopSlow(Handle timer, DataPack pack)
+void tTimerStopSlow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1070,7 +1075,7 @@ Action tTimerStopSlow(Handle timer, DataPack pack)
 		g_esSlowPlayer[iSurvivor].g_bAffected = false;
 		g_esSlowPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1078,7 +1083,7 @@ Action tTimerStopSlow(Handle timer, DataPack pack)
 	{
 		vStopSlow(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	vStopSlow(iSurvivor);
@@ -1089,6 +1094,4 @@ Action tTimerStopSlow(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

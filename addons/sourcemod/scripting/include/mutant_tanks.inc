@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.95"
+#define MT_VERSION "8.98"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -41,6 +41,7 @@ public SharedPlugin __pl_mutanttanks =
 public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTypeSpawn");
+	MarkNativeAsOptional("MT_DeafenPlayer");
 	MarkNativeAsOptional("MT_DetonateTankRock");
 	MarkNativeAsOptional("MT_DoesSurvivorHaveRewardType");
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
@@ -78,6 +79,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_SetTankType");
 	MarkNativeAsOptional("MT_ShoveBySurvivor");
 	MarkNativeAsOptional("MT_SpawnTank");
+	MarkNativeAsOptional("MT_StaggerPlayer");
 	MarkNativeAsOptional("MT_TankMaxHealth");
 	MarkNativeAsOptional("MT_UnvomitPlayer");
 	MarkNativeAsOptional("MT_VomitPlayer");
@@ -470,6 +472,15 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 native bool MT_CanTypeSpawn(int type);
 
 /**
+ * Deafens a player.
+ *
+ * @param player		Client index of the player.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_DeafenPlayer(int player);
+
+/**
  * Detonates a Tank rock on the next frame.
  *
  * @param rock			Entity index of the rock.
@@ -852,6 +863,17 @@ native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
+
+/**
+ * Staggers a player from a certain direction.
+ *
+ * @param player		Client index of the player.
+ * @param pusher		Client index of the pusher.
+ * @param direction		Direction of the stagger.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_StaggerPlayer(int player, int pusher, float direction[3]);
 
 /**
  * Gets or sets a Tank's max health.
@@ -1395,7 +1417,6 @@ stock void vFixPlayerPosition(int client)
 		while (flPosZ <= 200.0 && !bIsPlayerPositionFixed(client, 10.0, flPosZ))
 		{
 			flPosZ = -flPosZ;
-
 			if (flPosZ > 0.0)
 			{
 				flPosZ += 20.0;
@@ -1408,7 +1429,7 @@ stock void vFixPlayerPosition(int client)
 		GetClientAbsOrigin(client, flOrigin);
 		flAngles[0] = 90.0;
 
-		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSolid);		
+		Handle hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSolid);
 		if (hTrace != null)
 		{
 			if (TR_DidHit(hTrace))
@@ -1416,9 +1437,9 @@ stock void vFixPlayerPosition(int client)
 				TR_GetEndPosition(flOrigin, hTrace);
 				flOrigin[2] += 10.0;
 				TeleportEntity(client, flOrigin, NULL_VECTOR, {0.0, 0.0, -300.0});
-
-				delete hTrace;
 			}
+
+			delete hTrace;
 		}
 	}
 }
@@ -1615,7 +1636,22 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(iProp, 0, 0, 0, 0);
 
-		AcceptEntityInput(iProp, "Break", tank);
+		DataPack dpProp = new DataPack();
+		dpProp.WriteCell(EntIndexToEntRef(iProp));
+		dpProp.WriteCell(GetClientUserId(tank));
+		RequestFrame(vBreakProp, dpProp);
+	}
+}
+
+void vBreakProp(DataPack pack)
+{
+	pack.Reset();
+	int iProp = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	delete pack;
+
+	if (bIsValidEntity(iProp) && bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		AcceptEntityInput(iProp, "Break", iTank);
 	}
 }
 
@@ -1649,26 +1685,6 @@ stock void vStopSound(int client, const char[] sound)
 }
 
 // Stocks
-stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
-{
-	if (FileExists(path, use_valve_fs, valve_path_id))
-	{
-		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
-		if (!StrEqual(filename, sOutput))
-		{
-			char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
-			strcopy(output, size, sTemp);
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
 stock void MT_LoadPlugin(Handle plugin = null)
 {
 	char sFilename[64];
@@ -1765,6 +1781,95 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 }
 
+stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entity, bool follow = false)
+{
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
+	TE_Start("EffectDispatch");
+
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+	TE_WriteNum("m_nHitBox", particle);
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", attachment);
+	TE_WriteNum("m_fFlags", 1);
+	TE_WriteVector("m_vAngles", flDummy);
+	TE_WriteFloat("m_flMagnitude", 0.0);
+	TE_WriteFloat("m_flScale", 1.0);
+	TE_WriteFloat("m_flRadius", 0.0);
+
+	switch (bSecondGame)
+	{
+		case true: TE_WriteNum("m_nDamageType", (follow ? 5 : 4));
+		case false: TE_WriteNum("m_nDamageType", (follow ? 4 : 3));
+	}
+}
+
+stock void MT_TE_SetupStopAllParticles(int entity)
+{
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
+	TE_Start("EffectDispatch");
+
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffectStop");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+	TE_WriteNum("m_nHitBox", 0);
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", 0);
+	TE_WriteNum("m_fFlags", 1);
+	TE_WriteVector("m_vAngles", flDummy);
+	TE_WriteFloat("m_flMagnitude", 0.0);
+	TE_WriteFloat("m_flScale", 0.0);
+	TE_WriteFloat("m_flRadius", 0.0);
+	TE_WriteNum("m_nDamageType", 0);
+}
+
 stock void MT_UnloadPlugin(Handle plugin = null)
 {
 	char sFilename[64];
@@ -1772,14 +1877,206 @@ stock void MT_UnloadPlugin(Handle plugin = null)
 	ServerCommand("sm plugins unload %s", sFilename);
 }
 
+stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
+{
+	if (FileExists(path, use_valve_fs, valve_path_id))
+	{
+		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
+		if (!StrEqual(filename, sOutput))
+		{
+			char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
+			strcopy(output, size, sTemp);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPos[3] = {0.0, 0.0, 0.0}, int particle = -1, int entity = 0, float delay = 0.0, bool all = true, char name[64] = "", int attachment = 0, float angles[3] = {0.0, 0.0, 0.0}, int flags = 0, int damageType = 0, float magnitude = 0.0, float scale = 1.0, float radius = 0.0)
+{
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
+	TE_Start("EffectDispatch");
+
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), startPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), startPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), startPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), endPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), endPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), endPos[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return false;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+
+	if (particle < 0)
+	{
+		static int iParticleString = INVALID_STRING_INDEX;
+		iParticleString = MT_FindStringIndex(iEffect, name);
+		if (iParticleString == INVALID_STRING_INDEX)
+		{
+			return false;
+		}
+
+		TE_WriteNum("m_nHitBox", iParticleString);
+	}
+	else
+	{
+		TE_WriteNum("m_nHitBox", particle);
+	}
+
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", attachment);
+	TE_WriteVector("m_vAngles", angles);
+	TE_WriteNum("m_fFlags", flags);
+	TE_WriteFloat("m_flMagnitude", magnitude);
+	TE_WriteFloat("m_flScale", scale);
+	TE_WriteFloat("m_flRadius", radius);
+	TE_WriteNum("m_nDamageType", damageType);
+
+	if (all)
+	{
+		TE_SendToAll(delay);
+	}
+
+	return true;
+}
+
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return ((GetURandomFloat() * (max - min + 1)) + min);
+	return ((GetURandomFloat() * (max - min)) + min);
+}
+
+stock int MT_AddCommasToFloat(float number, char[] output, int size)
+{
+	int iPos = 0, iPos2 = 0, iSize = 0;
+	if (number < 0.0)
+	{
+		output[iPos++] = '-';
+		number = -number;
+	}
+
+	char sTemp[18], sSet[2][18];
+	FormatEx(sTemp, sizeof sTemp, "%.2f", number);
+	ExplodeString(sTemp, ".", sSet, sizeof sSet, sizeof sSet[]);
+
+	iSize = strlen(sSet[0]);
+	if (iSize <= 3)
+	{
+		iPos += strcopy(output[iPos], size, sTemp);
+	}
+	else
+	{
+		while (iPos2 < iSize && iPos < size)
+		{
+			output[iPos++] = sSet[0][iPos2++];
+
+			if ((iSize - iPos2) && !((iSize - iPos2) % 3))
+			{
+				output[iPos++] = ',';
+			}
+		}
+
+		output[iPos] = '\0';
+		Format(output, size, "%s.%s", output, sSet[1]);
+	}
+
+	return iPos;
+}
+
+stock int MT_AddCommasToInt(int number, char[] output, int size)
+{
+	int iPos = 0, iPos2 = 0, iSize = 0;
+	if (number < 0)
+	{
+		output[iPos++] = '-';
+		number = (number ^ (number >> 31)) - (number >> 31);
+	}
+
+	char sTemp[15];
+	iSize = IntToString(number, sTemp, sizeof sTemp);
+	if (iSize <= 3)
+	{
+		iPos += strcopy(output[iPos], size, sTemp);
+	}
+	else
+	{
+		while (iPos2 < iSize && iPos < size)
+		{
+			output[iPos++] = sTemp[iPos2++];
+
+			if ((iSize - iPos2) && !((iSize - iPos2) % 3))
+			{
+				output[iPos++] = ',';
+			}
+		}
+
+		output[iPos] = '\0';
+	}
+
+	return iPos;
+}
+
+stock int MT_FindStringIndex(int index, const char[] search)
+{
+	char sBuffer[1024];
+	int iStrings = GetStringTableNumStrings(index);
+	for (int iPos = 0; iPos < iStrings; iPos++)
+	{
+		ReadStringTable(index, iPos, sBuffer, sizeof sBuffer);
+
+		if (StrEqual(sBuffer, search))
+		{
+			return iPos;
+		}
+	}
+
+	return INVALID_STRING_INDEX;
+}
+
+stock int MT_GetParticleIndex(const char[] particlename)
+{
+	static int iTable = INVALID_STRING_TABLE;
+	if (iTable == INVALID_STRING_TABLE)
+	{
+		iTable = FindStringTable("ParticleEffectNames");
+		if (iTable == INVALID_STRING_TABLE)
+		{
+			return INVALID_STRING_TABLE;
+		}
+	}
+
+	int iParticleString = MT_FindStringIndex(iTable, particlename);
+	if (iParticleString == INVALID_STRING_INDEX)
+	{
+		iParticleString = iPrecacheParticle(particlename);
+	}
+
+	return iParticleString;
 }
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return (RoundToFloor(GetURandomFloat() * (max - min + 1)) + min);
+	return (RoundToNearest(GetURandomFloat() * float(max - min)) + min);
 }
 
 // Checks
@@ -1862,7 +2159,6 @@ stock bool bIsAreaNarrow(int tank = 0, float range = 150.0, float pos[3] = {0.0,
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1898,7 +2194,6 @@ stock bool bIsAreaWide(int tank = 0, float range = 500.0, float pos[3] = {0.0, 0
 				if (GetVectorDistance(flPos, flOrigin) >= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -2206,9 +2501,9 @@ stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsInfected(spitter, flags) && bIsSecondGame() && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
+stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE, bool both = false)
 {
-	return bIsValidClient(survivor, flags) && GetClientTeam(survivor) == 2;
+	return bIsValidClient(survivor, flags) && (GetClientTeam(survivor) == 2 || (both && GetClientTeam(survivor) == 4));
 }
 
 stock bool bIsSurvivorCaught(int survivor)
@@ -2276,7 +2571,9 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndInfected, entity);
+		case 3: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndCommons, entity);
+		case 4: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
 	}
 
 	if (hTrace != null)
@@ -2284,7 +2581,6 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2292,6 +2588,33 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	}
 
 	return true;
+}
+
+stock bool bIsVisibleToPosition(float pos1[3], float pos2[3], float range)
+{
+	float flPos[3], flAngles[3];
+	MakeVectorFromPoints(pos1, pos2, flPos);
+	GetVectorAngles(flPos, flAngles);
+
+	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_ALL, RayType_Infinite, bTraceRayDontHitSelfAndSolid);
+	if (hTrace != null)
+	{
+		if (TR_DidHit(hTrace))
+		{
+			float flStart[3];
+			TR_GetEndPosition(flStart, hTrace);
+
+			if (GetVectorDistance(pos1, pos2) <= range)
+			{
+				delete hTrace;
+				return true;
+			}
+		}
+
+		delete hTrace;
+	}
+
+	return false;
 }
 
 stock bool bIsWitch(int witch)
@@ -2306,7 +2629,7 @@ stock bool bIsWitch(int witch)
 	return false;
 }
 
-// Filters
+// Command target filters
 bool bBoomerFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -2460,7 +2783,7 @@ public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 
 public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 {
-	return entity != data && !bIsSurvivor(entity);
+	return entity != data && !bIsSurvivor(entity, .both = true);
 }
 
 public bool bTraceRayDontHitSelfAndSolid(int entity, int mask)
@@ -2614,9 +2937,8 @@ stock float flGetDistance(float pos[3], float angles[3], float offset1, float of
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-	float flDistance = flGetRayDistance(pos, flAngle, entity, type);
 
-	return flDistance;
+	return flGetRayDistance(pos, flAngle, entity, type);
 }
 
 stock float flGetGroundUnits(int entity)
@@ -2631,13 +2953,11 @@ stock float flGetGroundUnits(int entity)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				float flPos[3], flUnits = 0.0;
+				float flPos[3];
 				TR_GetEndPosition(flPos, hTrace);
-				flUnits = flOrigin[2] - flPos[2];
 
 				delete hTrace;
-
-				return flUnits;
+				return (flOrigin[2] - flPos[2]);
 			}
 
 			delete hTrace;
@@ -2721,7 +3041,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	else if ((min == -1.0 || min == 1.0) && max == 99999.0)
 	{
 		bool bDamageSetting = StrContains(key, "damage", false) != -1,
-			bForceSetting = StrContains(key, "force", false) != -1,
+			bForceSetting = (StrContains(key, "force", false) != -1 || StrContains(key, "radius", false) != -1),
 			bRangeSetting = StrContains(key, "range", false) != -1;
 		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{
@@ -3176,6 +3496,76 @@ stock int iGetListenServerHost(int client, bool dedicated)
 	}
 
 	return client;
+}
+
+stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
+{
+	float flCommonPos[3];
+	int iCommonCount = 0, iCommon = -1;
+	int[] iCommons = new int[2048];
+	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
+	{
+                if (bIsValidEntity(iCommon))
+                {
+        		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
+        		if (bIsVisibleToPosition(pos, flCommonPos, range))
+        		{
+        			iCommons[iCommonCount] = iCommon;
+        			iCommonCount++;
+        		}
+                }
+	}
+
+	return (iCommonCount > 0) ? iCommons[GetRandomInt(0, (iCommonCount - 1))] : 0;
+}
+
+stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
+{
+	float flInfectedPos[3];
+	int iInfectedCount = 0;
+	int[] iSpecials = new int[MaxClients + 1];
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+	{
+		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && tank != iSpecial)
+		{
+			GetClientEyePosition(iSpecial, flInfectedPos);
+			if (bIsVisibleToPosition(pos, flInfectedPos, range))
+			{
+				iSpecials[iInfectedCount] = iSpecial;
+				iInfectedCount++;
+			}
+		}
+	}
+
+	return (iInfectedCount > 0) ? iSpecials[GetRandomInt(0, (iInfectedCount - 1))] : 0;
+}
+
+stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans = false, bool noBots = false, bool noIncaps = false)
+{
+	bool bHuman = false;
+	float flSurvivorPos[3];
+	int iSurvivorCount = 0;
+	int[] iSurvivors = new int[MaxClients + 1];
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank))
+		{
+			bHuman = bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT);
+			if ((noHumans && bHuman) || (noBots && !bHuman) || (noIncaps && bIsPlayerIncapacitated(iSurvivor)))
+			{
+				continue;
+			}
+
+			GetClientEyePosition(iSurvivor, flSurvivorPos);
+			if (bIsVisibleToPosition(pos, flSurvivorPos, range))
+			{
+				iSurvivors[iSurvivorCount] = iSurvivor;
+				iSurvivorCount++;
+			}
+		}
+	}
+
+	return (iSurvivorCount > 0) ? iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))] : 0;
 }
 
 stock int iGetPlayerCount()

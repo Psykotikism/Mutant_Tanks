@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -409,7 +409,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vRocketHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esRocketCache[attacker].g_flRocketChance, g_esRocketCache[attacker].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esRocketCache[victim].g_iRocketHitMode == 0 || g_esRocketCache[victim].g_iRocketHitMode == 2) && bIsSurvivor(attacker) && g_esRocketCache[victim].g_iComboAbility == 0)
@@ -421,7 +421,7 @@ Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vRocketHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vRocketHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esRocketCache[victim].g_flRocketChance, g_esRocketCache[victim].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -602,6 +602,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esRocketPlayer[iPlayer].g_iRocketHitMode = 0;
 					g_esRocketPlayer[iPlayer].g_flRocketRange = 0.0;
 					g_esRocketPlayer[iPlayer].g_flRocketRangeChance = 0.0;
+					g_esRocketPlayer[iPlayer].g_iRocketRangeCooldown = 0;
 				}
 			}
 		}
@@ -774,6 +775,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN2
+void vRocketPlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esRocketCache[attacker].g_iRocketAbility == 1 && g_esRocketCache[attacker].g_iRocketBody == 1)
+	{
+		g_iRocketDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
 void vRocketAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -786,7 +799,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRocketCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRocketCache[tank].g_iRocketAbility == 1 && g_esRocketCache[tank].g_iComboAbility == 0)
 	{
-		vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -809,7 +822,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esRocketPlayer[tank].g_iRangeCooldown == -1 || g_esRocketPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vRocketAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman3", (g_esRocketPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -828,58 +841,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveRocket(tank);
-}
-
-void vRocketCopyStats2(int oldTank, int newTank)
-{
-	g_esRocketPlayer[newTank].g_iAmmoCount = g_esRocketPlayer[oldTank].g_iAmmoCount;
-	g_esRocketPlayer[newTank].g_iCooldown = g_esRocketPlayer[oldTank].g_iCooldown;
-	g_esRocketPlayer[newTank].g_iRangeCooldown = g_esRocketPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveRocket(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRocketPlayer[iSurvivor].g_bAffected && g_esRocketPlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esRocketPlayer[iSurvivor].g_bAffected = false;
-			g_esRocketPlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vRocketReset3(tank);
-}
-
-void vRocketReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRocketReset3(iPlayer);
-
-			g_esRocketPlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vRocketReset2(int survivor)
-{
-	g_esRocketPlayer[survivor].g_bAffected = false;
-	g_esRocketPlayer[survivor].g_iOwner = 0;
-
-	SetEntityGravity(survivor, 1.0);
-}
-
-void vRocketReset3(int tank)
-{
-	g_esRocketPlayer[tank].g_bAffected = false;
-	g_esRocketPlayer[tank].g_bFailed = false;
-	g_esRocketPlayer[tank].g_bNoAmmo = false;
-	g_esRocketPlayer[tank].g_iAmmoCount = 0;
-	g_esRocketPlayer[tank].g_iCooldown = -1;
-	g_esRocketPlayer[tank].g_iRangeCooldown = -1;
 }
 
 void vRocketAbility(int tank, float random, int pos = -1)
@@ -999,7 +960,7 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					DispatchKeyValueInt(iFlame, "JetLength", 400);
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-					TeleportEntity(iFlame, flPos, flAngles, NULL_VECTOR);
+					TeleportEntity(iFlame, flPos, flAngles);
 					DispatchSpawn(iFlame);
 					vSetEntityParent(iFlame, survivor);
 
@@ -1045,37 +1006,87 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-Action tTimerRocketCombo(Handle timer, DataPack pack)
+void vRocketCopyStats2(int oldTank, int newTank)
+{
+	g_esRocketPlayer[newTank].g_iAmmoCount = g_esRocketPlayer[oldTank].g_iAmmoCount;
+	g_esRocketPlayer[newTank].g_iCooldown = g_esRocketPlayer[oldTank].g_iCooldown;
+	g_esRocketPlayer[newTank].g_iRangeCooldown = g_esRocketPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveRocket(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRocketPlayer[iSurvivor].g_bAffected && g_esRocketPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esRocketPlayer[iSurvivor].g_bAffected = false;
+			g_esRocketPlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vRocketReset3(tank);
+}
+
+void vRocketReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRocketReset3(iPlayer);
+
+			g_esRocketPlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vRocketReset2(int survivor)
+{
+	g_esRocketPlayer[survivor].g_bAffected = false;
+	g_esRocketPlayer[survivor].g_iOwner = 0;
+
+	SetEntityGravity(survivor, 1.0);
+}
+
+void vRocketReset3(int tank)
+{
+	g_esRocketPlayer[tank].g_bAffected = false;
+	g_esRocketPlayer[tank].g_bFailed = false;
+	g_esRocketPlayer[tank].g_bNoAmmo = false;
+	g_esRocketPlayer[tank].g_iAmmoCount = 0;
+	g_esRocketPlayer[tank].g_iCooldown = -1;
+	g_esRocketPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void tTimerRocketCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vRocketAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerRocketCombo2(Handle timer, DataPack pack)
+void tTimerRocketCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRocketCache[iTank].g_iRocketHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1090,11 +1101,9 @@ Action tTimerRocketCombo2(Handle timer, DataPack pack)
 	{
 		vRocketHit(iSurvivor, iTank, flRandom, flChance, g_esRocketCache[iTank].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerRocketLaunch(Handle timer, DataPack pack)
+void tTimerRocketLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1104,7 +1113,7 @@ Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		g_esRocketPlayer[iSurvivor].g_bAffected = false;
 		g_esRocketPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
@@ -1112,7 +1121,7 @@ Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	{
 		vRocketReset2(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	float flVelocity[3];
@@ -1123,13 +1132,11 @@ Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	EmitSoundToAll(SOUND_EXPLOSION, iSurvivor);
 	EmitSoundToAll(SOUND_LAUNCH, iSurvivor);
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iSurvivor, .velocity = flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
-
-	return Plugin_Continue;
 }
 
-Action tTimerRocketDetonate(Handle timer, DataPack pack)
+void tTimerRocketDetonate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1139,7 +1146,7 @@ Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		g_esRocketPlayer[iSurvivor].g_bAffected = false;
 		g_esRocketPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
@@ -1147,12 +1154,7 @@ Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	{
 		vRocketReset2(iSurvivor);
 
-		return Plugin_Stop;
-	}
-
-	if (g_esRocketCache[iTank].g_iRocketBody == 1)
-	{
-		g_iRocketDeathModelOwner = GetClientUserId(iSurvivor);
+		return;
 	}
 
 	float flPos[3];
@@ -1175,6 +1177,4 @@ Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rocket", LANG_SERVER, sTankName, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

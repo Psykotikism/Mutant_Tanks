@@ -14,7 +14,7 @@
 	<summary>Нажмите, чтобы расширить!</summary>
 
 Танки-мутанты: SourceMod плагин L4D/L4D2
-Все права защищены (C) 2022  Альфред "Psyk0tik" Лагас (Alfred "Psyk0tik" Llagas)
+Все права защищены (C) 2023  Альфред "Psyk0tik" Лагас (Alfred "Psyk0tik" Llagas)
 
 Эта программа является бесплатным программным обеспечением: вы можете распространять и/или изменять её в соответствии с условиями Стандартной общественной лицензии GNU, опубликованной Free Software Foundation, либо версии 3 Лицензии, либо (по вашему выбору) любой более поздней версии.
 
@@ -30,7 +30,7 @@
 <details>
 	<summary>Нажмите, чтобы расширить!</summary>
 
-1. `SourceMod 1.11.0.6880` или выше
+1. `SourceMod 1.12.0.6985` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется (Необязательно):
 - [`AutoExecConfig`](https://forums.alliedmods.net/showthread.php?t=204254)
@@ -131,6 +131,7 @@ sm_mt_fragile - Просмотр информации о способности 
 sm_mt_ghost - Просмотр информации о способности призрак.
 sm_mt_god - Просмотр информации о способности бога.
 sm_mt_gravity - Просмотр информации о способности гравитации.
+sm_mt_gunner - Просмотр информации о стрелка способности.
 sm_mt_heal - Просмотр информации о лечебной способности.
 sm_mt_hit - Просмотр информации о способности слабого места.
 sm_mt_hurt - Просмотр информации о способности боли.
@@ -200,6 +201,13 @@ sm_mt_zombie - Просмотр информации о способности �
 // Минимум: "0.000000"
 // Максимум: "1.000000"
 mt_autoupdate "0"
+
+// Имя файла конфигурации, из которого плагин считывает настройки.
+// Пусто: нет
+// Не пусто: Имя файла пользовательской конфигурации для использования.
+// -
+// По умолчанию: "mutant_tanks.cfg"
+mt_configfile "mutant_tanks.cfg"
 
 // Отключить Танков-мутантов в этих режимах игры.
 // Через запятую.
@@ -1251,6 +1259,15 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 native bool MT_CanTypeSpawn(int type);
 
 /**
+ * Оглушает игрока.
+ *
+ * @param player		Клиентский индекс игрока.
+ *
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
+ **/
+native void MT_DeafenPlayer(int player);
+
+/**
  * Взрывает камень танка на следующем кадре.
  *
  * @param rock			Индекс энтити камня.
@@ -1505,7 +1522,7 @@ native bool MT_IsCorePluginEnabled();
  * @param tank			Клиентский индекс танка.
  *
  * @return			True, если пользовательскому танку разрешено быть танком-мутантом, иначе - false.
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
  **/
 native bool MT_IsCustomTankSupported(int tank);
 
@@ -1553,7 +1570,7 @@ native bool MT_IsNonFinaleType(int type);
  * Возвращается, если танк бездействует.
  *
  * @param tank			Клиентский индекс танка.
- * @param type			Режим бездействия танка. 0 = Оба, 1 = Бездействие (ожидание выживших), 2 = Ошибка(сломался, застрял и т.п.) (нет поведения)
+ * @param type			Режим бездействия танка. 0 = Оба, 1 = Бездействие (ожидание выживших), 2 = Ошибка (сломался, застрял и т.п.) (нет поведения)
  *
  * @return			True, если танк простаивает, иначе - false.
  * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип меньше 0 или больше 2.
@@ -1598,7 +1615,7 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ..
  *
  * @param survivor		Клиентский индекс выжившего.
  *
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
  **/
 native void MT_RespawnSurvivor(int survivor);
 
@@ -1620,7 +1637,7 @@ native void MT_SetTankType(int tank, int type, bool mode);
  * @param survivor		Клиентский индекс выжившего.
  * @param direction		Направление толчка.
  *
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
  **/
 native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
 
@@ -1633,6 +1650,17 @@ native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
  * @error			Неверный индекс клиента, клиент не в игре, или тип 0 или меньше.
  **/
 native void MT_SpawnTank(int tank, int type);
+
+/**
+ * Ошеломляет игрока с определённого направления.
+ *
+ * @param player		Клиентский индекс игрока.
+ * @param pusher		Клиентский индекс толкателя.
+ * @param direction		Направление ошеломления.
+ *
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
+ **/
+native void MT_StaggerPlayer(int player, int pusher, float direction[3]);
 
 /**
  * Получает или устанавливает максимальное здоровье танка.
@@ -1649,7 +1677,7 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  *
  * @param player		Клиентский индекс игрока.
  *
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
  **/
 native void MT_UnvomitPlayer(int player);
 
@@ -1659,7 +1687,7 @@ native void MT_UnvomitPlayer(int player);
  * @param player		Клиентский индекс игрока.
  * @param boomer		Клиентский индекс Толстяка.
  *
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ * @error			Неверный индекс клиента, клиент не в игре, или клиент мёртв.
  **/
 native void MT_VomitPlayer(int player);
 ```
@@ -1694,26 +1722,6 @@ native bool MT_IsTankClone(int tank);
 	<summary>Stock'и</summary>
 
 ```
-stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
-{
-	if (FileExists(path, use_valve_fs, valve_path_id))
-	{
-		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
-		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
-		if (!StrEqual(filename, sOutput))
-		{
-			char sTemp[PLATFORM_MAX_PATH];
-			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
-			strcopy(output, size, sTemp);
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
 stock void MT_LoadPlugin(Handle plugin = null)
 {
 	char sFilename[64];
@@ -1810,6 +1818,83 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 	}
 }
 
+stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entity, bool follow = false)
+{
+	float flDummy[3] = {0.0, 0.0, 0.0};
+	bool bSecondGame = bIsSecondGame();
+
+	TE_Start("EffectDispatch");
+
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+	TE_WriteNum("m_nHitBox", particle);
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", attachment);
+	TE_WriteNum("m_fFlags", 1);
+	TE_WriteVector("m_vAngles", flDummy);
+	TE_WriteFloat("m_flMagnitude", 0.0);
+	TE_WriteFloat("m_flScale", 1.0);
+	TE_WriteFloat("m_flRadius", 0.0);
+
+	switch (bSecondGame)
+	{
+		case true: TE_WriteNum("m_nDamageType", (bFollow ? 5 : 4));
+		case false: TE_WriteNum("m_nDamageType", (bFollow ? 4 : 3));
+	}
+}
+
+stock void MT_TE_SetupStopAllParticles(int entity)
+{
+	float flDummy[3] = {0.0, 0.0, 0.0};
+	bool bSecondGame = bIsSecondGame();
+
+	TE_Start("EffectDispatch");
+
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+	TE_WriteNum("m_nHitBox", 0);
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", 0);
+	TE_WriteNum("m_fFlags", 1);
+	TE_WriteVector("m_vAngles", flDummy);
+	TE_WriteFloat("m_flMagnitude", 0.0);
+	TE_WriteFloat("m_flScale", 0.0);
+	TE_WriteFloat("m_flRadius", 0.0);
+	TE_WriteNum("m_nDamageType", 0);
+}
+
 stock void MT_UnloadPlugin(Handle plugin = null)
 {
 	char sFilename[64];
@@ -1817,14 +1902,199 @@ stock void MT_UnloadPlugin(Handle plugin = null)
 	ServerCommand("sm plugins unload %s", sFilename);
 }
 
+stock bool MT_FileExists(const char[] folder, const char[] filename, const char[] path, char[] output, int size, bool use_valve_fs = false, const char[] valve_path_id = "GAME")
+{
+	if (FileExists(path, use_valve_fs, valve_path_id))
+	{
+		char sDirectory[PLATFORM_MAX_PATH], sOutput[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sDirectory, sizeof sDirectory, folder);
+		vGetMatchingFilename(sDirectory, filename, sOutput, sizeof sOutput);
+		if (!StrEqual(filename, sOutput))
+		{
+			char sTemp[PLATFORM_MAX_PATH];
+			FormatEx(sTemp, sizeof sTemp, "%s%s", sDirectory, sOutput);
+			strcopy(output, size, sTemp);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPos[3] = {0.0, 0.0, 0.0}, int particle = -1, int entity = 0, float delay = 0.0, bool all = true, char name[64] = "", int attachment = 0, float angles[3] = {0.0, 0.0, 0.0}, int flags = 0, int damageType = 0, float magnitude = 0.0, float scale = 1.0, float radius = 0.0)
+{
+	TE_Start("EffectDispatch");
+
+	bool bSecondGame = bIsSecondGame();
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), startPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), startPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), startPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), endPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), endPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), endPos[2]);
+
+	static int iEffect = INVALID_STRING_INDEX;
+	if (iEffect < 0)
+	{
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if (iEffect == INVALID_STRING_INDEX)
+		{
+			return false;
+		}
+	}
+
+	TE_WriteNum("m_iEffectName", iEffect);
+
+	if (particle < 0)
+	{
+		static int iParticleString = INVALID_STRING_INDEX;
+		iParticleString = MT_FindStringIndex(iEffect, name);
+		if (iParticleString == INVALID_STRING_INDEX)
+		{
+			return false;
+		}
+
+		TE_WriteNum("m_nHitBox", iParticleString);
+	}
+	else
+	{
+		TE_WriteNum("m_nHitBox", particle);
+	}
+
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_nAttachmentIndex", attachment);
+	TE_WriteVector("m_vAngles", angles);
+	TE_WriteNum("m_fFlags", flags);
+	TE_WriteFloat("m_flMagnitude", magnitude);
+	TE_WriteFloat("m_flScale", scale);
+	TE_WriteFloat("m_flRadius", radius);
+	TE_WriteNum("m_nDamageType", damageType);
+
+	if (all)
+	{
+		TE_SendToAll(delay);
+	}
+
+	return true;
+}
+
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return (GetURandomFloat() * (max - min + 1)) + min;
+	return ((GetURandomFloat() * (max - min + 1)) + min);
+}
+
+stock int MT_AddCommasToFloat(float number, char[] output, int size)
+{
+	int iPos = 0, iPos2 = 0, iSize = 0;
+	if (number < 0.0)
+	{
+		output[iPos++] = '-';
+		number = -number;
+	}
+
+	char sTemp[18], sSet[2][18];
+	FormatEx(sTemp, sizeof sTemp, "%.2f", number);
+	ExplodeString(sTemp, ".", sSet, sizeof sSet, sizeof sSet[]);
+
+	iSize = strlen(sSet[0]);
+	if (iSize <= 3)
+	{
+		iPos += strcopy(output[iPos], size, sTemp);
+	}
+	else
+	{
+		while (iPos2 < iSize && iPos < size)
+		{
+			output[iPos++] = sSet[0][iPos2++];
+
+			if ((iSize - iPos2) && !((iSize - iPos2) % 3))
+			{
+				output[iPos++] = ',';
+			}
+		}
+
+		output[iPos] = '\0';
+		Format(output, size, "%s.%s", output, sSet[1]);
+	}
+
+	return iPos;
+}
+
+stock int MT_AddCommasToInt(int number, char[] output, int size)
+{
+	int iPos = 0, iPos2 = 0, iSize = 0;
+	if (number < 0)
+	{
+		output[iPos++] = '-';
+		number = (number ^ (number >> 31)) - (number >> 31);
+	}
+
+	char sTemp[15];
+	iSize = IntToString(number, sTemp, sizeof sTemp);
+	if (iSize <= 3)
+	{
+		iPos += strcopy(output[iPos], size, sTemp);
+	}
+	else
+	{
+		while (iPos2 < iSize && iPos < size)
+		{
+			output[iPos++] = sTemp[iPos2++];
+
+			if ((iSize - iPos2) && !((iSize - iPos2) % 3))
+			{
+				output[iPos++] = ',';
+			}
+		}
+
+		output[iPos] = '\0';
+	}
+
+	return iPos;
+}
+
+stock int MT_FindStringIndex(int index, const char[] search)
+{
+	char sBuffer[1024];
+	int iStrings = GetStringTableNumStrings(index);
+	for (int iPos = 0; iPos < iStrings; iPos++)
+	{
+		ReadStringTable(index, iPos, sBuffer, sizeof sBuffer);
+
+		if (StrEqual(sBuffer, search))
+		{
+			return iPos;
+		}
+	}
+
+	return INVALID_STRING_INDEX;
+}
+
+stock int MT_GetParticleIndex(const char[] particlename)
+{
+	static int iTable = INVALID_STRING_TABLE;
+	if (iTable == INVALID_STRING_TABLE)
+	{
+		iTable = FindStringTable("ParticleEffectNames");
+		if (iTable == INVALID_STRING_TABLE)
+		{
+			return INVALID_STRING_TABLE;
+		}
+	}
+
+	int iParticleString = MT_FindStringIndex(iTable, particlename);
+	if (iParticleString == INVALID_STRING_INDEX)
+	{
+		iParticleString = iPrecacheParticle(particlename);
+	}
+
+	return iParticleString;
 }
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return RoundToFloor(GetURandomFloat() * (max - min + 1)) + min;
+	return (RoundToFloor(GetURandomFloat() * (max - min + 1)) + min);
 }
 ```
 </details>
@@ -1857,8 +2127,8 @@ sm_mt_tank - Создать танка-мутанта.
 
 Допустимые входы:
 
-1. sm_tank <напишите 1*-500*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> *Минимальные и максимальные значения определяются "Type Range". (Минимальное значение, которое вы можете установить, - "1", а максимальное значение, которое вы можете установить, - это "500".)
-2. sm_tank <напишите название*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> *Плагин попытается сопоставить имя с любым из имён типов Танков-мутантов. (Допускаются частичные имена. Если найдено более одного совпадения, выбирается случайное совпадение. Если найдено 0 совпадений, команда отменяет запрос.)
+1. sm_tank <напишите 1*-500*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> <0: не слеплён|1: ослепил> *Минимальные и максимальные значения определяются "Type Range". (Минимальное значение, которое вы можете установить, - "1", а максимальное значение, которое вы можете установить, - это "500".)
+2. sm_tank <напишите название*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> <0: не слеплён|1: ослепил> *Плагин попытается сопоставить имя с любым из имён типов Танков-мутантов. (Допускаются частичные имена. Если найдено более одного совпадения, выбирается случайное совпадение. Если найдено 0 совпадений, команда отменяет запрос.)
 
 У команды 4 функции.
 
@@ -2409,7 +2679,7 @@ Overrides
 
 **honorcode23** - За плагин [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475).
 
-**panxiaohai** - За плагины [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), и [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537).
+**panxiaohai** - За плагины [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537), и [[L4D & L4D2] Automatic Robot](https://forums.alliedmods.net/showthread.php?t=130177).
 
 **strontiumdog** - За плагины [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), и [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324).
 
@@ -2489,11 +2759,11 @@ Overrides
 
 **emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao** - За сообщения о проблемах и предложения идей.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao, xcd222** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof** - За сообщения о проблемах.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, xcd222** - За предложения идей.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva, DonProof, XXrevoltadoXX, XYZC, moschinovac, JustMadMan, DARG367, zonbarbar** - За предложения идей.
 
 **Marttt** - За помощь во многих вещах и pull request'ы.
 

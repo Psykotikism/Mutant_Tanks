@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -384,7 +384,7 @@ Action OnShakeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShakeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esShakeCache[attacker].g_flShakeChance, g_esShakeCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vShakeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esShakeCache[attacker].g_flShakeChance, g_esShakeCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esShakeCache[victim].g_iShakeHitMode == 0 || g_esShakeCache[victim].g_iShakeHitMode == 2) && bIsHumanSurvivor(attacker) && g_esShakeCache[victim].g_iComboAbility == 0)
@@ -396,7 +396,7 @@ Action OnShakeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vShakeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esShakeCache[victim].g_flShakeChance, g_esShakeCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vShakeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esShakeCache[victim].g_flShakeChance, g_esShakeCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -585,6 +585,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShakePlayer[iPlayer].g_flShakeInterval = 0.0;
 					g_esShakePlayer[iPlayer].g_flShakeRange = 0.0;
 					g_esShakePlayer[iPlayer].g_flShakeRangeChance = 0.0;
+					g_esShakePlayer[iPlayer].g_iShakeRangeCooldown = 0;
 				}
 			}
 		}
@@ -741,7 +742,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vShakeRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+			vShakeRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveShake(iTank);
 		}
 	}
@@ -764,7 +765,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShakeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esShakeCache[tank].g_iShakeAbility == 1 && g_esShakeCache[tank].g_iComboAbility == 0)
 	{
-		vShakeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -787,7 +788,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esShakePlayer[tank].g_iRangeCooldown == -1 || g_esShakePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vShakeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShakeHuman3", (g_esShakePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -814,63 +815,7 @@ void vShakePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vShakeRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
-}
-
-void vShakeCopyStats2(int oldTank, int newTank)
-{
-	g_esShakePlayer[newTank].g_iAmmoCount = g_esShakePlayer[oldTank].g_iAmmoCount;
-	g_esShakePlayer[newTank].g_iCooldown = g_esShakePlayer[oldTank].g_iCooldown;
-	g_esShakePlayer[newTank].g_iRangeCooldown = g_esShakePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveShake(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShakePlayer[iSurvivor].g_bAffected && g_esShakePlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esShakePlayer[iSurvivor].g_bAffected = false;
-			g_esShakePlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vShakeReset3(tank);
-}
-
-void vShakeReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShakeReset3(iPlayer);
-
-			g_esShakePlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vShakeReset2(int survivor, int tank, int messages)
-{
-	g_esShakePlayer[survivor].g_bAffected = false;
-	g_esShakePlayer[survivor].g_iOwner = 0;
-
-	if (g_esShakeCache[tank].g_iShakeMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Shake2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shake2", LANG_SERVER, survivor);
-	}
-}
-
-void vShakeReset3(int tank)
-{
-	g_esShakePlayer[tank].g_bAffected = false;
-	g_esShakePlayer[tank].g_bFailed = false;
-	g_esShakePlayer[tank].g_bNoAmmo = false;
-	g_esShakePlayer[tank].g_iAmmoCount = 0;
-	g_esShakePlayer[tank].g_iCooldown = -1;
-	g_esShakePlayer[tank].g_iRangeCooldown = -1;
+	vShakeRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vShakeAbility(int tank, float random, int pos = -1)
@@ -1037,37 +982,91 @@ void vShakeRange(int tank, int value, float random, int pos = -1)
 	}
 }
 
-Action tTimerShakeCombo(Handle timer, DataPack pack)
+void vShakeCopyStats2(int oldTank, int newTank)
+{
+	g_esShakePlayer[newTank].g_iAmmoCount = g_esShakePlayer[oldTank].g_iAmmoCount;
+	g_esShakePlayer[newTank].g_iCooldown = g_esShakePlayer[oldTank].g_iCooldown;
+	g_esShakePlayer[newTank].g_iRangeCooldown = g_esShakePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveShake(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShakePlayer[iSurvivor].g_bAffected && g_esShakePlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esShakePlayer[iSurvivor].g_bAffected = false;
+			g_esShakePlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vShakeReset3(tank);
+}
+
+void vShakeReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShakeReset3(iPlayer);
+
+			g_esShakePlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vShakeReset2(int survivor, int tank, int messages)
+{
+	g_esShakePlayer[survivor].g_bAffected = false;
+	g_esShakePlayer[survivor].g_iOwner = 0;
+
+	if (g_esShakeCache[tank].g_iShakeMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Shake2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shake2", LANG_SERVER, survivor);
+	}
+}
+
+void vShakeReset3(int tank)
+{
+	g_esShakePlayer[tank].g_bAffected = false;
+	g_esShakePlayer[tank].g_bFailed = false;
+	g_esShakePlayer[tank].g_bNoAmmo = false;
+	g_esShakePlayer[tank].g_iAmmoCount = 0;
+	g_esShakePlayer[tank].g_iCooldown = -1;
+	g_esShakePlayer[tank].g_iRangeCooldown = -1;
+}
+
+void tTimerShakeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShakeAbility[g_esShakePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShakePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShakePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShakeCache[iTank].g_iShakeAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vShakeAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerShakeCombo2(Handle timer, DataPack pack)
+void tTimerShakeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esShakePlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShakeAbility[g_esShakePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShakePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShakePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShakeCache[iTank].g_iShakeHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1082,8 +1081,6 @@ Action tTimerShakeCombo2(Handle timer, DataPack pack)
 	{
 		vShakeHit(iSurvivor, iTank, flRandom, flChance, g_esShakeCache[iTank].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerShake(Handle timer, DataPack pack)

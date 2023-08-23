@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -857,44 +857,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveUltimate(tank);
 }
 
-void vUltimateCopyStats2(int oldTank, int newTank)
-{
-	g_esUltimatePlayer[newTank].g_bActivated = g_esUltimatePlayer[oldTank].g_bActivated;
-	g_esUltimatePlayer[newTank].g_bQualified = g_esUltimatePlayer[oldTank].g_bQualified;
-	g_esUltimatePlayer[newTank].g_flDamage = g_esUltimatePlayer[oldTank].g_flDamage;
-	g_esUltimatePlayer[newTank].g_iAmmoCount = g_esUltimatePlayer[oldTank].g_iAmmoCount;
-	g_esUltimatePlayer[newTank].g_iCooldown = g_esUltimatePlayer[oldTank].g_iCooldown;
-	g_esUltimatePlayer[newTank].g_iCount = g_esUltimatePlayer[oldTank].g_iCount;
-	g_esUltimatePlayer[newTank].g_iDuration = g_esUltimatePlayer[oldTank].g_iDuration;
-}
-
-void vRemoveUltimate(int tank)
-{
-	g_esUltimatePlayer[tank].g_bActivated = false;
-	g_esUltimatePlayer[tank].g_bQualified = false;
-	g_esUltimatePlayer[tank].g_flDamage = 0.0;
-	g_esUltimatePlayer[tank].g_iAmmoCount = 0;
-	g_esUltimatePlayer[tank].g_iCooldown = -1;
-	g_esUltimatePlayer[tank].g_iCount = 0;
-	g_esUltimatePlayer[tank].g_iDuration = -1;
-
-	if (MT_IsTankSupported(tank))
-	{
-		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	}
-}
-
-void vUltimateReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveUltimate(iPlayer);
-		}
-	}
-}
-
 void vUltimate(int tank, int pos = -1)
 {
 	int iTime = GetTime();
@@ -965,7 +927,7 @@ void vUltimateAbility(int tank)
 		return;
 	}
 
-	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && MT_GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
+	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esUltimateCache[tank].g_iUltimateHealthLimit && GetRandomFloat(0.1, 100.0) <= g_esUltimateCache[tank].g_flUltimateChance)
 	{
 		if (g_esUltimatePlayer[tank].g_iCount < g_esUltimateCache[tank].g_iUltimateAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUltimatePlayer[tank].g_iAmmoCount < g_esUltimateCache[tank].g_iHumanAmmo && g_esUltimateCache[tank].g_iHumanAmmo > 0)))
 		{
@@ -978,18 +940,54 @@ void vUltimateAbility(int tank)
 	}
 }
 
-Action tTimerUltimateCombo(Handle timer, DataPack pack)
+void vUltimateCopyStats2(int oldTank, int newTank)
+{
+	g_esUltimatePlayer[newTank].g_bActivated = g_esUltimatePlayer[oldTank].g_bActivated;
+	g_esUltimatePlayer[newTank].g_bQualified = g_esUltimatePlayer[oldTank].g_bQualified;
+	g_esUltimatePlayer[newTank].g_flDamage = g_esUltimatePlayer[oldTank].g_flDamage;
+	g_esUltimatePlayer[newTank].g_iAmmoCount = g_esUltimatePlayer[oldTank].g_iAmmoCount;
+	g_esUltimatePlayer[newTank].g_iCooldown = g_esUltimatePlayer[oldTank].g_iCooldown;
+	g_esUltimatePlayer[newTank].g_iCount = g_esUltimatePlayer[oldTank].g_iCount;
+	g_esUltimatePlayer[newTank].g_iDuration = g_esUltimatePlayer[oldTank].g_iDuration;
+}
+
+void vRemoveUltimate(int tank)
+{
+	g_esUltimatePlayer[tank].g_bActivated = false;
+	g_esUltimatePlayer[tank].g_bQualified = false;
+	g_esUltimatePlayer[tank].g_flDamage = 0.0;
+	g_esUltimatePlayer[tank].g_iAmmoCount = 0;
+	g_esUltimatePlayer[tank].g_iCooldown = -1;
+	g_esUltimatePlayer[tank].g_iCount = 0;
+	g_esUltimatePlayer[tank].g_iDuration = -1;
+
+	if (MT_IsTankSupported(tank))
+	{
+		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
+	}
+}
+
+void vUltimateReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveUltimate(iPlayer);
+		}
+	}
+}
+
+void tTimerUltimateCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUltimateAbility[g_esUltimatePlayer[iTank].g_iTankType].g_iAccessFlags, g_esUltimatePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUltimatePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esUltimateCache[iTank].g_iUltimateAbility == 0 || g_esUltimatePlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vUltimate(iTank, iPos);
-
-	return Plugin_Continue;
 }

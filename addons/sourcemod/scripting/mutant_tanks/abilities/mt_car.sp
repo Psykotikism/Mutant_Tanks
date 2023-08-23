@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -340,7 +340,7 @@ Action OnCarStartTouch(int car, int other)
 {
 	if (bIsValidEntity(car) && bIsValidEntity(other))
 	{
-		TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		TeleportEntity(car, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 		SDKUnhook(car, SDKHook_StartTouch, OnCarStartTouch);
 	}
 
@@ -835,7 +835,7 @@ void vCarAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCarCache[tank].g_flCarChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esCarCache[tank].g_flCarChance)
 		{
 			vCar(tank);
 		}
@@ -970,12 +970,27 @@ Action tTimerCar(Handle timer, DataPack pack)
 				iOptionCount++;
 			}
 
-			switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+			switch (iOptionCount > 0)
 			{
-				case 1: SetEntityModel(iCar, MODEL_CAR);
-				case 2: SetEntityModel(iCar, MODEL_CAR2);
-				case 4: SetEntityModel(iCar, MODEL_CAR3);
-				default:
+				case true:
+				{
+					switch (iOptions[MT_GetRandomInt(0, (iOptionCount - 1))])
+					{
+						case 1: SetEntityModel(iCar, MODEL_CAR);
+						case 2: SetEntityModel(iCar, MODEL_CAR2);
+						case 4: SetEntityModel(iCar, MODEL_CAR3);
+						default:
+						{
+							switch (MT_GetRandomInt(1, (sizeof iOptions)))
+							{
+								case 1: SetEntityModel(iCar, MODEL_CAR);
+								case 2: SetEntityModel(iCar, MODEL_CAR2);
+								case 3: SetEntityModel(iCar, MODEL_CAR3);
+							}
+						}
+					}
+				}
+				case false:
 				{
 					switch (MT_GetRandomInt(1, (sizeof iOptions)))
 					{
@@ -1006,9 +1021,9 @@ Action tTimerCar(Handle timer, DataPack pack)
 			flVelocity[1] = MT_GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = MT_GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iCar, flHitpos, flAngles2, NULL_VECTOR);
+			TeleportEntity(iCar, flHitpos, flAngles2);
 			DispatchSpawn(iCar);
-			TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			TeleportEntity(iCar, .velocity = flVelocity);
 
 			SDKHook(iCar, SDKHook_StartTouch, OnCarStartTouch);
 
@@ -1020,18 +1035,16 @@ Action tTimerCar(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-Action tTimerCarCombo(Handle timer, DataPack pack)
+void tTimerCarCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCarCache[iTank].g_iCarAbility == 0 || g_esCarPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vCar(iTank, iPos);
-
-	return Plugin_Continue;
 }

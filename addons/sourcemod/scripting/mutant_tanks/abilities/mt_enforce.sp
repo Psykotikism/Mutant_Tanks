@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -397,7 +397,7 @@ Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vEnforceHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esEnforceCache[attacker].g_flEnforceChance, g_esEnforceCache[attacker].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vEnforceHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esEnforceCache[attacker].g_flEnforceChance, g_esEnforceCache[attacker].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esEnforceCache[victim].g_iEnforceHitMode == 0 || g_esEnforceCache[victim].g_iEnforceHitMode == 2) && bIsSurvivor(attacker) && g_esEnforceCache[victim].g_iComboAbility == 0)
@@ -409,7 +409,7 @@ Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vEnforceHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esEnforceCache[victim].g_flEnforceChance, g_esEnforceCache[victim].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vEnforceHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esEnforceCache[victim].g_flEnforceChance, g_esEnforceCache[victim].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -589,6 +589,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esEnforcePlayer[iPlayer].g_iEnforceHitMode = 0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceRange = 0.0;
 					g_esEnforcePlayer[iPlayer].g_flEnforceRangeChance = 0.0;
+					g_esEnforcePlayer[iPlayer].g_iEnforceRangeCooldown = 0;
 					g_esEnforcePlayer[iPlayer].g_iEnforceWeaponSlots = 0;
 				}
 			}
@@ -759,7 +760,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esEnforceCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esEnforceCache[tank].g_iEnforceAbility == 1 && g_esEnforceCache[tank].g_iComboAbility == 0)
 	{
-		vEnforceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vEnforceAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -782,7 +783,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esEnforcePlayer[tank].g_iRangeCooldown == -1 || g_esEnforcePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vEnforceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vEnforceAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3", (g_esEnforcePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -918,14 +919,21 @@ void vEnforceHit(int survivor, int tank, float random, float chance, int enabled
 						iSlotCount++;
 					}
 
-					switch (iSlots[MT_GetRandomInt(0, (iSlotCount - 1))])
+					switch (iSlotCount > 0)
 					{
-						case 1: g_esEnforcePlayer[survivor].g_iSlot = 0;
-						case 2: g_esEnforcePlayer[survivor].g_iSlot = 1;
-						case 4: g_esEnforcePlayer[survivor].g_iSlot = 2;
-						case 8: g_esEnforcePlayer[survivor].g_iSlot = 3;
-						case 16: g_esEnforcePlayer[survivor].g_iSlot = 4;
-						default: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
+						case true:
+						{
+							switch (iSlots[MT_GetRandomInt(0, (iSlotCount - 1))])
+							{
+								case 1: g_esEnforcePlayer[survivor].g_iSlot = 0;
+								case 2: g_esEnforcePlayer[survivor].g_iSlot = 1;
+								case 4: g_esEnforcePlayer[survivor].g_iSlot = 2;
+								case 8: g_esEnforcePlayer[survivor].g_iSlot = 3;
+								case 16: g_esEnforcePlayer[survivor].g_iSlot = 4;
+								default: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
+							}
+						}
+						case false: g_esEnforcePlayer[survivor].g_iSlot = MT_GetRandomInt(0, 4);
 					}
 				}
 
@@ -1018,37 +1026,35 @@ void vEnforceReset3(int survivor)
 	g_esEnforcePlayer[survivor].g_iSlot = -1;
 }
 
-Action tTimerEnforceCombo(Handle timer, DataPack pack)
+void tTimerEnforceCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esEnforceAbility[g_esEnforcePlayer[iTank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esEnforcePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esEnforceCache[iTank].g_iEnforceAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vEnforceAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerEnforceCombo2(Handle timer, DataPack pack)
+void tTimerEnforceCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esEnforcePlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esEnforceAbility[g_esEnforcePlayer[iTank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esEnforcePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esEnforceCache[iTank].g_iEnforceHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1063,11 +1069,9 @@ Action tTimerEnforceCombo2(Handle timer, DataPack pack)
 	{
 		vEnforceHit(iSurvivor, iTank, flRandom, flChance, g_esEnforceCache[iTank].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopEnforce(Handle timer, DataPack pack)
+void tTimerStopEnforce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1076,7 +1080,7 @@ Action tTimerStopEnforce(Handle timer, DataPack pack)
 	{
 		vEnforceReset3(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1084,7 +1088,7 @@ Action tTimerStopEnforce(Handle timer, DataPack pack)
 	{
 		vEnforceReset3(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	vEnforceReset3(iSurvivor);
@@ -1095,6 +1099,4 @@ Action tTimerStopEnforce(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

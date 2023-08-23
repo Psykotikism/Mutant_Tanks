@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -59,12 +59,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 char g_sFootstepsFolders[][] =
 {
-	"player/footsteps/infected/", "player/footsteps/smoker/", "player/footsteps/boomer/", "player/footsteps/hunter/", "player/footsteps/spitter/", "player/footsteps/jockey/", "player/footsteps/charger/", "player/footsteps/witch/", "player/footsteps/tank/"
-};
-
-char g_sInfectedFolders[][] =
+	"player/footsteps/infected/",
+	"player/footsteps/smoker/",
+	"player/footsteps/boomer/",
+	"player/footsteps/hunter/",
+	"player/footsteps/spitter/",
+	"player/footsteps/jockey/",
+	"player/footsteps/charger/",
+	"player/footsteps/witch/",
+	"player/footsteps/tank/"
+}, g_sInfectedFolders[][] =
 {
-	"npc/infected/", "player/smoker/", "player/boomer/", "player/hunter/", "player/spitter/", "player/jockey/", "player/charger/", "npc/witch/", "player/tank/"
+	"npc/infected/",
+	"player/smoker/",
+	"player/boomer/",
+	"player/hunter/",
+	"player/spitter/",
+	"player/jockey/",
+	"player/charger/",
+	"npc/witch/",
+	"player/tank/"
 };
 
 enum struct esQuietPlayer
@@ -381,7 +395,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vQuietHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esQuietCache[attacker].g_flQuietChance, g_esQuietCache[attacker].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vQuietHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esQuietCache[attacker].g_flQuietChance, g_esQuietCache[attacker].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esQuietCache[victim].g_iQuietHitMode == 0 || g_esQuietCache[victim].g_iQuietHitMode == 2) && bIsHumanSurvivor(attacker) && g_esQuietCache[victim].g_iComboAbility == 0)
@@ -393,7 +407,7 @@ Action OnQuietTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vQuietHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esQuietCache[victim].g_flQuietChance, g_esQuietCache[victim].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vQuietHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esQuietCache[victim].g_flQuietChance, g_esQuietCache[victim].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -424,7 +438,14 @@ Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLAT
 			}
 		}
 
-		return (bChanged || numClients > 0) ? Plugin_Changed : Plugin_Stop;
+		if (bChanged)
+		{
+			switch (numClients)
+			{
+				case 0: return Plugin_Stop;
+				default: return Plugin_Changed;
+			}
+		}
 	}
 
 	return Plugin_Continue;
@@ -603,6 +624,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esQuietPlayer[iPlayer].g_iQuietHitMode = 0;
 					g_esQuietPlayer[iPlayer].g_flQuietRange = 0.0;
 					g_esQuietPlayer[iPlayer].g_flQuietRangeChance = 0.0;
+					g_esQuietPlayer[iPlayer].g_iQuietRangeCooldown = 0;
 				}
 			}
 		}
@@ -772,7 +794,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esQuietCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esQuietCache[tank].g_iQuietAbility == 1 && g_esQuietCache[tank].g_iComboAbility == 0)
 	{
-		vQuietAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -795,7 +817,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esQuietPlayer[tank].g_iRangeCooldown == -1 || g_esQuietPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vQuietAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vQuietAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "QuietHuman3", (g_esQuietPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -995,37 +1017,35 @@ void vQuietReset2(int tank)
 	g_esQuietPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerQuietCombo(Handle timer, DataPack pack)
+void tTimerQuietCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esQuietAbility[g_esQuietPlayer[iTank].g_iTankType].g_iAccessFlags, g_esQuietPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esQuietPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esQuietCache[iTank].g_iQuietAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vQuietAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerQuietCombo2(Handle timer, DataPack pack)
+void tTimerQuietCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsHumanSurvivor(iSurvivor) || g_esQuietPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esQuietAbility[g_esQuietPlayer[iTank].g_iTankType].g_iAccessFlags, g_esQuietPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esQuietPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esQuietCache[iTank].g_iQuietHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1040,11 +1060,9 @@ Action tTimerQuietCombo2(Handle timer, DataPack pack)
 	{
 		vQuietHit(iSurvivor, iTank, flRandom, flChance, g_esQuietCache[iTank].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopQuiet(Handle timer, DataPack pack)
+void tTimerStopQuiet(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1055,7 +1073,7 @@ Action tTimerStopQuiet(Handle timer, DataPack pack)
 		g_esQuietPlayer[iSurvivor].g_iFilter = 0;
 		g_esQuietPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1065,7 +1083,7 @@ Action tTimerStopQuiet(Handle timer, DataPack pack)
 		g_esQuietPlayer[iSurvivor].g_iFilter = 0;
 		g_esQuietPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esQuietPlayer[iSurvivor].g_bAffected = false;
@@ -1080,6 +1098,4 @@ Action tTimerStopQuiet(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Quiet2", sTankName, iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Quiet2", LANG_SERVER, sTankName, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

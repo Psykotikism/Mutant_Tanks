@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -591,7 +591,7 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esFastPlayer[iTank].g_bActivated)
 		{
-			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iTank, 1.0, true) : 1.0));
 		}
 	}
 }
@@ -697,7 +697,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							g_esFastPlayer[tank].g_bActivated = true;
 							g_esFastPlayer[tank].g_iAmmoCount++;
 
-							SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", g_esFastCache[tank].g_flFastSpeed);
+							SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, g_esFastCache[tank].g_flFastSpeed) : g_esFastCache[tank].g_flFastSpeed));
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman", g_esFastPlayer[tank].g_iAmmoCount, g_esFastCache[tank].g_iHumanAmmo);
 						}
 						else if (g_esFastPlayer[tank].g_bActivated)
@@ -763,7 +763,7 @@ void vFast(int tank, int pos = -1)
 	g_esFastPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	float flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 16, pos) : g_esFastCache[tank].g_flFastSpeed;
-	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flSpeed);
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, flSpeed) : flSpeed));
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFastCache[tank].g_iHumanAbility == 1)
 	{
@@ -790,7 +790,7 @@ void vFastAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFastPlayer[tank].g_iAmmoCount < g_esFastCache[tank].g_iHumanAmmo && g_esFastCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFastCache[tank].g_flFastChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esFastCache[tank].g_flFastChance)
 		{
 			vFast(tank);
 		}
@@ -835,7 +835,8 @@ void vFastReset2(int tank)
 	g_esFastPlayer[tank].g_bActivated = false;
 	g_esFastPlayer[tank].g_iDuration = -1;
 
-	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(tank));
+	float flSpeed = MT_GetRunSpeed(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, flSpeed) : flSpeed));
 
 	if (g_esFastCache[tank].g_iFastMessage == 1)
 	{
@@ -857,18 +858,16 @@ void vFastReset3(int tank)
 	}
 }
 
-Action tTimerFastCombo(Handle timer, DataPack pack)
+void tTimerFastCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFastAbility[g_esFastPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFastPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFastPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFastCache[iTank].g_iFastAbility == 0 || g_esFastPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vFast(iTank, iPos);
-
-	return Plugin_Continue;
 }

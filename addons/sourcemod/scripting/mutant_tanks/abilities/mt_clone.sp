@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -870,7 +870,7 @@ void vClone(int tank)
 
 					if (bIsTank(iTank))
 					{
-						TeleportEntity(iTank, flHitPos, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iTank, flHitPos);
 
 						g_esClonePlayer[iTank].g_bCloned = true;
 						g_esClonePlayer[iTank].g_iOwner = tank;
@@ -947,7 +947,7 @@ void vCloneAbility(int tank)
 
 	if (g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esClonePlayer[tank].g_iAmmoCount < g_esCloneCache[tank].g_iHumanAmmo && g_esCloneCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esCloneCache[tank].g_flCloneChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esCloneCache[tank].g_flCloneChance)
 		{
 			vClone(tank);
 		}
@@ -1020,28 +1020,24 @@ void vCloneReset()
 	}
 }
 
-Action tTimerCloneCombo(Handle timer, int userid)
+void tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vClone(iTank);
-
-	return Plugin_Continue;
 }
 
-Action tTimerKillClone(Handle timer, int userid)
+void tTimerKillClone(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsTankSupported(iTank) || !g_esClonePlayer[iTank].g_bCloned)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	ForcePlayerSuicide(iTank);
-
-	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -159,49 +159,6 @@ enum struct esShoveCache
 }
 
 esShoveCache g_esShoveCache[MAXPLAYERS + 1];
-
-Handle g_hSDKStagger;
-
-#if defined MT_ABILITIES_MAIN2
-void vShoveAllPluginsLoaded(GameData gdMutantTanks)
-#else
-public void OnAllPluginsLoaded()
-#endif
-{
-#if !defined MT_ABILITIES_MAIN2
-	GameData gdMutantTanks = new GameData(MT_GAMEDATA);
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"%s\" gamedata file.", MT_GAMEDATA);
-	}
-#endif
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
-	{
-#if defined MT_ABILITIES_MAIN2
-		delete gdMutantTanks;
-
-		LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
-#else
-		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
-#endif
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
-	g_hSDKStagger = EndPrepSDKCall();
-	if (g_hSDKStagger == null)
-	{
-#if defined MT_ABILITIES_MAIN2
-		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
-#else
-		SetFailState("Your \"CTerrorPlayer::OnStaggered\" signature is outdated.");
-#endif
-	}
-#if !defined MT_ABILITIES_MAIN2
-	delete gdMutantTanks;
-#endif
-}
 
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
@@ -418,7 +375,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShoveHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esShoveCache[attacker].g_flShoveChance, g_esShoveCache[attacker].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vShoveHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esShoveCache[attacker].g_flShoveChance, g_esShoveCache[attacker].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esShoveCache[victim].g_iShoveHitMode == 0 || g_esShoveCache[victim].g_iShoveHitMode == 2) && bIsSurvivor(attacker) && g_esShoveCache[victim].g_iComboAbility == 0)
@@ -430,7 +387,7 @@ Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vShoveHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esShoveCache[victim].g_flShoveChance, g_esShoveCache[victim].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vShoveHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esShoveCache[victim].g_flShoveChance, g_esShoveCache[victim].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -619,6 +576,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esShovePlayer[iPlayer].g_flShoveInterval = 0.0;
 					g_esShovePlayer[iPlayer].g_flShoveRange = 0.0;
 					g_esShovePlayer[iPlayer].g_flShoveRangeChance = 0.0;
+					g_esShovePlayer[iPlayer].g_iShoveRangeCooldown = 0;
 				}
 			}
 		}
@@ -775,7 +733,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vShoveRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+			vShoveRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveShove(iTank);
 		}
 	}
@@ -798,7 +756,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShoveCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esShoveCache[tank].g_iShoveAbility == 1 && g_esShoveCache[tank].g_iComboAbility == 0)
 	{
-		vShoveAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vShoveAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -821,7 +779,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esShovePlayer[tank].g_iRangeCooldown == -1 || g_esShovePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vShoveAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vShoveAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShoveHuman3", (g_esShovePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -848,63 +806,7 @@ void vShovePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vShoveRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
-}
-
-void vShoveCopyStats2(int oldTank, int newTank)
-{
-	g_esShovePlayer[newTank].g_iAmmoCount = g_esShovePlayer[oldTank].g_iAmmoCount;
-	g_esShovePlayer[newTank].g_iCooldown = g_esShovePlayer[oldTank].g_iCooldown;
-	g_esShovePlayer[newTank].g_iRangeCooldown = g_esShovePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveShove(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShovePlayer[iSurvivor].g_bAffected && g_esShovePlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esShovePlayer[iSurvivor].g_bAffected = false;
-			g_esShovePlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vShoveReset3(tank);
-}
-
-void vShoveReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShoveReset3(iPlayer);
-
-			g_esShovePlayer[iPlayer].g_iOwner = 0;
-		}
-	}
-}
-
-void vShoveReset2(int survivor, int tank, int messages)
-{
-	g_esShovePlayer[survivor].g_bAffected = false;
-	g_esShovePlayer[survivor].g_iOwner = 0;
-
-	if (g_esShoveCache[tank].g_iShoveMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Shove2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shove2", LANG_SERVER, survivor);
-	}
-}
-
-void vShoveReset3(int tank)
-{
-	g_esShovePlayer[tank].g_bAffected = false;
-	g_esShovePlayer[tank].g_bFailed = false;
-	g_esShovePlayer[tank].g_bNoAmmo = false;
-	g_esShovePlayer[tank].g_iAmmoCount = 0;
-	g_esShovePlayer[tank].g_iCooldown = -1;
-	g_esShovePlayer[tank].g_iRangeCooldown = -1;
+	vShoveRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vShoveAbility(int tank, float random, int pos = -1)
@@ -1063,44 +965,98 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
+					MT_StaggerPlayer(iSurvivor, tank, flTankPos);
 				}
 			}
 		}
 	}
 }
 
-Action tTimerShoveCombo(Handle timer, DataPack pack)
+void vShoveCopyStats2(int oldTank, int newTank)
+{
+	g_esShovePlayer[newTank].g_iAmmoCount = g_esShovePlayer[oldTank].g_iAmmoCount;
+	g_esShovePlayer[newTank].g_iCooldown = g_esShovePlayer[oldTank].g_iCooldown;
+	g_esShovePlayer[newTank].g_iRangeCooldown = g_esShovePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveShove(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShovePlayer[iSurvivor].g_bAffected && g_esShovePlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esShovePlayer[iSurvivor].g_bAffected = false;
+			g_esShovePlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vShoveReset3(tank);
+}
+
+void vShoveReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShoveReset3(iPlayer);
+
+			g_esShovePlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vShoveReset2(int survivor, int tank, int messages)
+{
+	g_esShovePlayer[survivor].g_bAffected = false;
+	g_esShovePlayer[survivor].g_iOwner = 0;
+
+	if (g_esShoveCache[tank].g_iShoveMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Shove2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shove2", LANG_SERVER, survivor);
+	}
+}
+
+void vShoveReset3(int tank)
+{
+	g_esShovePlayer[tank].g_bAffected = false;
+	g_esShovePlayer[tank].g_bFailed = false;
+	g_esShovePlayer[tank].g_bNoAmmo = false;
+	g_esShovePlayer[tank].g_iAmmoCount = 0;
+	g_esShovePlayer[tank].g_iCooldown = -1;
+	g_esShovePlayer[tank].g_iRangeCooldown = -1;
+}
+
+void tTimerShoveCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vShoveAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerShoveCombo2(Handle timer, DataPack pack)
+void tTimerShoveCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esShovePlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShoveAbility[g_esShovePlayer[iTank].g_iTankType].g_iAccessFlags, g_esShovePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShovePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShoveCache[iTank].g_iShoveHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1115,8 +1071,6 @@ Action tTimerShoveCombo2(Handle timer, DataPack pack)
 	{
 		vShoveHit(iSurvivor, iTank, flRandom, flChance, g_esShoveCache[iTank].g_iShoveHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerShove(Handle timer, DataPack pack)
@@ -1152,7 +1106,7 @@ Action tTimerShove(Handle timer, DataPack pack)
 
 	float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
+	MT_StaggerPlayer(iSurvivor, iTank, flOrigin);
 
 	return Plugin_Continue;
 }

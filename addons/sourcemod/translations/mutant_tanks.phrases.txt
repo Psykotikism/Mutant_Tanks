@@ -76,8 +76,8 @@
 
 	"MTTankItem"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1} (Tank #{2})"
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -387,7 +387,7 @@
 	"CommandUsage"
 	{
 		"#format"		"{1:s},{2:i},{3:i}"
-		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
+		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically> <0: not blind|1: blind>"
 	}
 
 	"CommandUsage2"
@@ -654,8 +654,8 @@
 
 	"MultipleMatches"
 	{
-		"#format"		"{1:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}){olive}."
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
 	"NoAbilities"
@@ -710,8 +710,8 @@
 
 	"PersonalType"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}){default} when you take control of the{mint} Tank{default}."
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} when you take control of the{mint} Tank{default}."
 	}
 
 	"PitchVisualOn"
@@ -753,8 +753,8 @@
 
 	"RequestSucceeded"
 	{
-		"#format"		"{1:i}"
-		"en"			"One type{yellow} (Tank #{1}){mint} matched that name.{olive} Request succeeded!"
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Tank #{1}) [Tank #{2}]{mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RewardAmmo"
@@ -900,8 +900,8 @@
 
 	"TankDisabled"
 	{
-		"#format"		"{1:t},{2:i}"
-		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
 	}
 
 	"TeammatesList"
@@ -2413,6 +2413,66 @@
 	"GravityMenu2"
 	{
 		"en"			"Gravity Ability"
+	}
+
+	"Gunner"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} is firing gunshots!"
+	}
+
+	"Gunner2"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} is no longer firing gunshots!"
+	}
+
+	"GunnerAmmo"
+	{
+		"en"			"You've used up all your gunner ability's ammo."
+	}
+
+	"GunnerDetails"
+	{
+		"en"			"You are armed with guns."
+	}
+
+	"GunnerHuman"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gunner ability!"
+	}
+
+	"GunnerHuman2"
+	{
+		"en"			"Your gunner ability failed to activate. Try again."
+	}
+
+	"GunnerHuman3"
+	{
+		"en"			"You already activated your gunner ability."
+	}
+
+	"GunnerHuman4"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your gunner ability still needs another{yellow} {1} second(s){mint} to recharge."
+	}
+
+	"GunnerHuman5"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your gunner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+	}
+
+	"GunnerMenu"
+	{
+		"en"			"Gunner Ability Information"
+	}
+
+	"GunnerMenu2"
+	{
+		"en"			"Gunner Ability"
 	}
 
 	"Heal"
@@ -4685,14 +4745,14 @@
 
 	"Splatter"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} will cover everyone's screens with splatters periodically!"
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} is splattering{olive} {2}'s{mint} screen!"
 	}
 
 	"Splatter2"
 	{
-		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} covered everyone's screens with{yellow} splatters{mint}!"
+		"#format"		"{1:N}"
+		"en"			"{olive}{1}'s{mint} screen is no longer being splattered{mint}!"
 	}
 
 	"SplatterAmmo"
@@ -4702,7 +4762,7 @@
 
 	"SplatterDetails"
 	{
-		"en"			"You cover everyone's screens with splatters."
+		"en"			"You splatter the survivors' screens."
 	}
 
 	"SplatterHuman"
@@ -4718,13 +4778,13 @@
 
 	"SplatterHuman3"
 	{
-		"en"			"You already activated your splatter ability."
+		"#format"		"{1:i}"
+		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 
 	"SplatterHuman4"
 	{
-		"#format"		"{1:i}"
-		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"en"			"There are no survivors nearby to use your splatter ability on."
 	}
 
 	"SplatterHuman5"

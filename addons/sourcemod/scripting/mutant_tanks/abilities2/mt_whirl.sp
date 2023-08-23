@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -373,7 +373,7 @@ Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWhirlHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esWhirlCache[attacker].g_flWhirlChance, g_esWhirlCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vWhirlHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esWhirlCache[attacker].g_flWhirlChance, g_esWhirlCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esWhirlCache[victim].g_iWhirlHitMode == 0 || g_esWhirlCache[victim].g_iWhirlHitMode == 2) && bIsHumanSurvivor(attacker) && g_esWhirlCache[victim].g_iComboAbility == 0)
@@ -385,7 +385,7 @@ Action OnWhirlTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vWhirlHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esWhirlCache[victim].g_flWhirlChance, g_esWhirlCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vWhirlHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esWhirlCache[victim].g_flWhirlChance, g_esWhirlCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -567,6 +567,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esWhirlPlayer[iPlayer].g_iWhirlHitMode = 0;
 					g_esWhirlPlayer[iPlayer].g_flWhirlRange = 0.0;
 					g_esWhirlPlayer[iPlayer].g_flWhirlRangeChance = 0.0;
+					g_esWhirlPlayer[iPlayer].g_iWhirlRangeCooldown = 0;
 					g_esWhirlPlayer[iPlayer].g_flWhirlSpeed = 0.0;
 				}
 			}
@@ -755,7 +756,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esWhirlCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWhirlCache[tank].g_iWhirlAbility == 1 && g_esWhirlCache[tank].g_iComboAbility == 0)
 	{
-		vWhirlAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -778,7 +779,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esWhirlPlayer[tank].g_iRangeCooldown == -1 || g_esWhirlPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vWhirlAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman3", (g_esWhirlPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -797,68 +798,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveWhirl(tank);
-}
-
-void vWhirlCopyStats2(int oldTank, int newTank)
-{
-	g_esWhirlPlayer[newTank].g_iAmmoCount = g_esWhirlPlayer[oldTank].g_iAmmoCount;
-	g_esWhirlPlayer[newTank].g_iCooldown = g_esWhirlPlayer[oldTank].g_iCooldown;
-	g_esWhirlPlayer[newTank].g_iRangeCooldown = g_esWhirlPlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveWhirl(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWhirlPlayer[iSurvivor].g_bAffected && g_esWhirlPlayer[iSurvivor].g_iOwner == tank)
-		{
-			g_esWhirlPlayer[iSurvivor].g_bAffected = false;
-			g_esWhirlPlayer[iSurvivor].g_iOwner = 0;
-		}
-	}
-
-	vWhirlReset3(tank);
-}
-
-void vWhirlReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveWhirl(iPlayer);
-		}
-	}
-}
-
-void vWhirlReset2(int survivor, int tank, int camera, int messages)
-{
-	vStopWhirl(survivor, camera);
-
-	if (g_esWhirlCache[tank].g_iWhirlMessage & messages)
-	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Whirl2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Whirl2", LANG_SERVER, survivor);
-	}
-}
-
-void vWhirlReset3(int tank)
-{
-	g_esWhirlPlayer[tank].g_bAffected = false;
-	g_esWhirlPlayer[tank].g_bFailed = false;
-	g_esWhirlPlayer[tank].g_bNoAmmo = false;
-	g_esWhirlPlayer[tank].g_iAmmoCount = 0;
-	g_esWhirlPlayer[tank].g_iCooldown = -1;
-	g_esWhirlPlayer[tank].g_iRangeCooldown = -1;
-}
-
-void vStopWhirl(int survivor, int camera)
-{
-	g_esWhirlPlayer[survivor].g_bAffected = false;
-	g_esWhirlPlayer[survivor].g_iOwner = 0;
-
-	SetClientViewEntity(survivor, survivor);
-	RemoveEntity(camera);
 }
 
 void vWhirlAbility(int tank, float random, int pos = -1)
@@ -967,10 +906,10 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 					SetEntityModel(iCamera, SPRITE_DOT);
 					SetEntityRenderMode(iCamera, RENDER_TRANSCOLOR);
 					SetEntityRenderColor(iCamera, 0, 0, 0, 0);
-					TeleportEntity(iCamera, flEyePos, flAngles, NULL_VECTOR);
+					TeleportEntity(iCamera, flEyePos, flAngles);
 					DispatchSpawn(iCamera);
 
-					TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
+					TeleportEntity(survivor, .angles = flAngles);
 
 					vSetEntityParent(iCamera, survivor);
 					SetClientViewEntity(survivor, iCamera);
@@ -988,12 +927,19 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 						iAxisCount++;
 					}
 
-					switch (iAxes[MT_GetRandomInt(0, (iAxisCount - 1))])
+					switch (iAxisCount > 0)
 					{
-						case 1: iAxis = 0;
-						case 2: iAxis = 1;
-						case 4: iAxis = 2;
-						default: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
+						case true:
+						{
+							switch (iAxes[MT_GetRandomInt(0, (iAxisCount - 1))])
+							{
+								case 1: iAxis = 0;
+								case 2: iAxis = 1;
+								case 4: iAxis = 2;
+								default: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
+							}
+						}
+						case false: iAxis = MT_GetRandomInt(0, (sizeof iAxes - 1));
 					}
 
 					DataPack dpWhirl;
@@ -1038,37 +984,97 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-Action tTimerWhirlCombo(Handle timer, DataPack pack)
+void vWhirlCopyStats2(int oldTank, int newTank)
+{
+	g_esWhirlPlayer[newTank].g_iAmmoCount = g_esWhirlPlayer[oldTank].g_iAmmoCount;
+	g_esWhirlPlayer[newTank].g_iCooldown = g_esWhirlPlayer[oldTank].g_iCooldown;
+	g_esWhirlPlayer[newTank].g_iRangeCooldown = g_esWhirlPlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveWhirl(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWhirlPlayer[iSurvivor].g_bAffected && g_esWhirlPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esWhirlPlayer[iSurvivor].g_bAffected = false;
+			g_esWhirlPlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vWhirlReset3(tank);
+}
+
+void vWhirlReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveWhirl(iPlayer);
+		}
+	}
+}
+
+void vWhirlReset2(int survivor, int tank, int camera, int messages)
+{
+	vStopWhirl(survivor, camera);
+
+	if (g_esWhirlCache[tank].g_iWhirlMessage & messages)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Whirl2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Whirl2", LANG_SERVER, survivor);
+	}
+}
+
+void vWhirlReset3(int tank)
+{
+	g_esWhirlPlayer[tank].g_bAffected = false;
+	g_esWhirlPlayer[tank].g_bFailed = false;
+	g_esWhirlPlayer[tank].g_bNoAmmo = false;
+	g_esWhirlPlayer[tank].g_iAmmoCount = 0;
+	g_esWhirlPlayer[tank].g_iCooldown = -1;
+	g_esWhirlPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vStopWhirl(int survivor, int camera)
+{
+	g_esWhirlPlayer[survivor].g_bAffected = false;
+	g_esWhirlPlayer[survivor].g_iOwner = 0;
+
+	SetClientViewEntity(survivor, survivor);
+	RemoveEntity(camera);
+}
+
+void tTimerWhirlCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWhirlAbility[g_esWhirlPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWhirlPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWhirlPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWhirlCache[iTank].g_iWhirlAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vWhirlAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerWhirlCombo2(Handle timer, DataPack pack)
+void tTimerWhirlCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esWhirlPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWhirlAbility[g_esWhirlPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWhirlPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWhirlPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWhirlCache[iTank].g_iWhirlHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1083,8 +1089,6 @@ Action tTimerWhirlCombo2(Handle timer, DataPack pack)
 	{
 		vWhirlHit(iSurvivor, iTank, flRandom, flChance, g_esWhirlCache[iTank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerWhirl(Handle timer, DataPack pack)
@@ -1134,7 +1138,7 @@ Action tTimerWhirl(Handle timer, DataPack pack)
 	GetEntPropVector(iCamera, Prop_Data, "m_angRotation", flAngles);
 	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 16, iPos) : g_esWhirlCache[iTank].g_flWhirlSpeed;
 	flAngles[iWhirlAxis] += flSpeed;
-	TeleportEntity(iCamera, NULL_VECTOR, flAngles, NULL_VECTOR);
+	TeleportEntity(iCamera, .angles = flAngles);
 
 	return Plugin_Continue;
 }

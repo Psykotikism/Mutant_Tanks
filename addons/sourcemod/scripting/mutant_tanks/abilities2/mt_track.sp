@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -646,7 +646,7 @@ void vTrackRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{
 		if (bIsAreaNarrow(tank, g_esTrackCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esTrackCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esTrackPlayer[tank].g_iTankType) || (g_esTrackCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esTrackCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iAccessFlags, g_esTrackPlayer[tank].g_iAccessFlags)))
 		{
@@ -654,32 +654,6 @@ public void MT_OnRockThrow(int tank, int rock)
 		}
 
 		vTrack(tank, rock);
-	}
-}
-
-void vTrackCopyStats2(int oldTank, int newTank)
-{
-	g_esTrackPlayer[newTank].g_iAmmoCount = g_esTrackPlayer[oldTank].g_iAmmoCount;
-	g_esTrackPlayer[newTank].g_iCooldown = g_esTrackPlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveTrack(int tank)
-{
-	g_esTrackPlayer[tank].g_bActivated = false;
-	g_esTrackPlayer[tank].g_bRainbowColor = false;
-	g_esTrackPlayer[tank].g_iAmmoCount = 0;
-	g_esTrackPlayer[tank].g_iCooldown = -1;
-	g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
-}
-
-void vTrackReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveTrack(iPlayer);
-		}
 	}
 }
 
@@ -756,7 +730,7 @@ void vTrackThink(int rock)
 					float flPos2[3], flVelocity2[3];
 					GetClientEyePosition(iTarget, flPos2);
 					GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-					if (!bIsVisiblePosition(flPos, flPos2, rock, 2) || GetVectorDistance(flPos, flPos2) > 500.0)
+					if (!bIsVisiblePosition(flPos, flPos2, rock, 4) || GetVectorDistance(flPos, flPos2) > 500.0)
 					{
 						return;
 					}
@@ -773,7 +747,7 @@ void vTrackThink(int rock)
 					NormalizeVector(flVelocity3, flVelocity3);
 					ScaleVector(flVelocity3, flVector);
 
-					TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+					TeleportEntity(rock, .velocity = flVelocity3);
 				}
 			}
 			case 1:
@@ -982,7 +956,7 @@ void vTrackThink(int rock)
 				ScaleVector(flVelocity3, g_esTrackCache[iTank].g_flTrackSpeed);
 
 				SetEntityGravity(rock, 0.01);
-				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+				TeleportEntity(rock, .velocity = flVelocity3);
 
 				if (g_esTrackCache[iTank].g_iTrackGlow == 1)
 				{
@@ -1006,33 +980,6 @@ void vTrackThink(int rock)
 			}
 		}
 	}
-}
-
-int iGetRockTarget(float pos[3], float angles[3], int tank)
-{
-	float flMin = 4.0, flPos[3], flAngle;
-	int iTarget = 0;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-		{
-			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
-			{
-				continue;
-			}
-
-			GetClientEyePosition(iSurvivor, flPos);
-			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angles, flPos);
-			if (flAngle <= flMin)
-			{
-				flMin = flAngle;
-				iTarget = iSurvivor;
-			}
-		}
-	}
-
-	return iTarget;
 }
 
 void OnTrackPreThinkPost(int tank)
@@ -1089,14 +1036,67 @@ void OnTrackThink(int rock)
 	}
 }
 
-Action tTimerTrack(Handle timer, DataPack pack)
+void vTrackCopyStats2(int oldTank, int newTank)
+{
+	g_esTrackPlayer[newTank].g_iAmmoCount = g_esTrackPlayer[oldTank].g_iAmmoCount;
+	g_esTrackPlayer[newTank].g_iCooldown = g_esTrackPlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveTrack(int tank)
+{
+	g_esTrackPlayer[tank].g_bActivated = false;
+	g_esTrackPlayer[tank].g_bRainbowColor = false;
+	g_esTrackPlayer[tank].g_iAmmoCount = 0;
+	g_esTrackPlayer[tank].g_iCooldown = -1;
+	g_esTrackPlayer[tank].g_iRock = INVALID_ENT_REFERENCE;
+}
+
+void vTrackReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveTrack(iPlayer);
+		}
+	}
+}
+
+int iGetRockTarget(float pos[3], float angles[3], int tank)
+{
+	float flMin = 4.0, flPos[3], flAngle;
+	int iTarget = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		{
+			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esTrackPlayer[tank].g_iTankType, g_esTrackAbility[g_esTrackPlayer[tank].g_iTankType].g_iImmunityFlags, g_esTrackPlayer[iSurvivor].g_iImmunityFlags))
+			{
+				continue;
+			}
+
+			GetClientEyePosition(iSurvivor, flPos);
+			MakeVectorFromPoints(pos, flPos, flPos);
+			flAngle = flGetAngle(angles, flPos);
+			if (flAngle <= flMin)
+			{
+				flMin = flAngle;
+				iTarget = iSurvivor;
+			}
+		}
+	}
+
+	return iTarget;
+}
+
+void tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
@@ -1104,7 +1104,7 @@ Action tTimerTrack(Handle timer, DataPack pack)
 	{
 		g_esTrackPlayer[iTank].g_bActivated = false;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	SDKUnhook(iRock, SDKHook_Think, OnTrackThink);
@@ -1123,6 +1123,4 @@ Action tTimerTrack(Handle timer, DataPack pack)
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", (g_esTrackPlayer[iTank].g_iCooldown - iTime));
 		}
 	}
-
-	return Plugin_Continue;
 }

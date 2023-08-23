@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -370,7 +370,7 @@ Action OnPukeTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPukeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esPukeCache[attacker].g_flPukeChance, g_esPukeCache[attacker].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vPukeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esPukeCache[attacker].g_flPukeChance, g_esPukeCache[attacker].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esPukeCache[victim].g_iPukeHitMode == 0 || g_esPukeCache[victim].g_iPukeHitMode == 2) && bIsSurvivor(attacker) && g_esPukeCache[victim].g_iComboAbility == 0)
@@ -382,7 +382,7 @@ Action OnPukeTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vPukeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esPukeCache[victim].g_flPukeChance, g_esPukeCache[victim].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vPukeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esPukeCache[victim].g_flPukeChance, g_esPukeCache[victim].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -567,6 +567,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPukePlayer[iPlayer].g_iPukeHitMode = 0;
 					g_esPukePlayer[iPlayer].g_flPukeRange = 0.0;
 					g_esPukePlayer[iPlayer].g_flPukeRangeChance = 0.0;
+					g_esPukePlayer[iPlayer].g_iPukeRangeCooldown = 0;
 				}
 			}
 		}
@@ -717,7 +718,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vPukeRange(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+			vPukeRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemovePuke(iTank);
 		}
 	}
@@ -740,7 +741,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esPukeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esPukeCache[tank].g_iPukeAbility == 1 && g_esPukeCache[tank].g_iComboAbility == 0)
 	{
-		vPukeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vPukeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -763,7 +764,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esPukePlayer[tank].g_iRangeCooldown == -1 || g_esPukePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vPukeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vPukeAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman3", (g_esPukePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -790,7 +791,7 @@ void vPukePostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	vPukeRange(tank, 1, MT_GetRandomFloat(0.1, 100.0));
+	vPukeRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vPukeAbility(int tank, float random, int pos = -1)
@@ -993,37 +994,35 @@ void vPukeReset()
 	}
 }
 
-Action tTimerPukeCombo(Handle timer, DataPack pack)
+void tTimerPukeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankType].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vPukeAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerPukeCombo2(Handle timer, DataPack pack)
+void tTimerPukeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankType].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1038,50 +1037,44 @@ Action tTimerPukeCombo2(Handle timer, DataPack pack)
 	{
 		vPukeHit(iSurvivor, iTank, flRandom, flChance, g_esPukeCache[iTank].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerPukeHit(Handle timer, DataPack pack)
+void tTimerPukeHit(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPukeAbility[g_esPukePlayer[iTank].g_iTankType].g_iAccessFlags, g_esPukePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPukePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPukeCache[iTank].g_iPukeAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iFlags = pack.ReadCell();
 	MT_VomitPlayer(iSurvivor, iTank);
 	vScreenEffect(iSurvivor, iTank, g_esPukeCache[iTank].g_iPukeEffect, iFlags);
-
-	return Plugin_Continue;
 }
 
-Action tTimerPukeRange(Handle timer, DataPack pack)
+void tTimerPukeRange(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsValidClient(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	MT_VomitPlayer(iSurvivor, iTank);
-
-	return Plugin_Continue;
 }

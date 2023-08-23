@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -389,7 +389,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vKamikazeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vKamikazeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esKamikazeCache[victim].g_iKamikazeHitMode == 0 || g_esKamikazeCache[victim].g_iKamikazeHitMode == 2) && bIsSurvivor(attacker) && g_esKamikazeCache[victim].g_iComboAbility == 0)
@@ -401,7 +401,7 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vKamikazeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esKamikazeCache[victim].g_flKamikazeChance, g_esKamikazeCache[victim].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vKamikazeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[victim].g_flKamikazeChance, g_esKamikazeCache[victim].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -705,6 +705,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN
+void vKamikazePlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esKamikazeCache[attacker].g_iKamikazeAbility == 1 && g_esKamikazeCache[attacker].g_iKamikazeBody == 1)
+	{
+		g_iKamikazeDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN
 void vKamikazeAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -717,7 +729,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esKamikazeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iComboAbility == 0)
 	{
-		vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -736,7 +748,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if ((button & MT_SUB_KEY) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iHumanAbility == 1)
 		{
-			vKamikazeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+			vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
 		}
 	}
 }
@@ -808,11 +820,6 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
 
-			if (g_esKamikazeCache[tank].g_iKamikazeBody == 1)
-			{
-				g_iKamikazeDeathModelOwner = GetClientUserId(survivor);
-			}
-
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(survivor);
 			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
@@ -852,37 +859,35 @@ void vKamikazeReset()
 	}
 }
 
-Action tTimerKamikazeCombo(Handle timer, DataPack pack)
+void tTimerKamikazeCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vKamikazeAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerKamikazeCombo2(Handle timer, DataPack pack)
+void tTimerKamikazeCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -896,6 +901,4 @@ Action tTimerKamikazeCombo2(Handle timer, DataPack pack)
 	{
 		vKamikazeHit(iSurvivor, iTank, flRandom, flChance, g_esKamikazeCache[iTank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
-
-	return Plugin_Continue;
 }

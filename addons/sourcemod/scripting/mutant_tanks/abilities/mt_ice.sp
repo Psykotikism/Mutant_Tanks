@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -367,7 +367,7 @@ Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vIceHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esIceCache[attacker].g_flIceChance, g_esIceCache[attacker].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esIceCache[victim].g_iIceHitMode == 0 || g_esIceCache[victim].g_iIceHitMode == 2) && bIsSurvivor(attacker) && g_esIceCache[victim].g_iComboAbility == 0)
@@ -379,7 +379,7 @@ Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vIceHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vIceHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esIceCache[victim].g_flIceChance, g_esIceCache[victim].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -558,6 +558,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esIcePlayer[iPlayer].g_iIceHitMode = 0;
 					g_esIcePlayer[iPlayer].g_flIceRange = 0.0;
 					g_esIcePlayer[iPlayer].g_flIceRangeChance = 0.0;
+					g_esIcePlayer[iPlayer].g_iIceRangeCooldown = 0;
 				}
 			}
 		}
@@ -714,10 +715,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveIce(iTank);
+			vRemoveIce(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vStopIce(iPlayer, false);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -739,7 +744,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esIceCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esIceCache[tank].g_iIceAbility == 1 && g_esIceCache[tank].g_iComboAbility == 0)
 	{
-		vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vIceAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -762,7 +767,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esIcePlayer[tank].g_iRangeCooldown == -1 || g_esIcePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vIceAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vIceAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "IceHuman3", (g_esIcePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -969,7 +974,7 @@ void vIceReset2(int tank)
 	g_esIcePlayer[tank].g_iRangeCooldown = -1;
 }
 
-void vStopIce(int survivor)
+void vStopIce(int survivor, bool all = true)
 {
 	g_esIcePlayer[survivor].g_bAffected = false;
 	g_esIcePlayer[survivor].g_iOwner = 0;
@@ -982,42 +987,44 @@ void vStopIce(int survivor)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityRenderColor(survivor, 255, 255, 255, 255);
-	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+
+	if (all)
+	{
+		TeleportEntity(survivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
+		EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+	}
 }
 
-Action tTimerIceCombo(Handle timer, DataPack pack)
+void tTimerIceCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esIceAbility[g_esIcePlayer[iTank].g_iTankType].g_iAccessFlags, g_esIcePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esIcePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esIceCache[iTank].g_iIceAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vIceAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerIceCombo2(Handle timer, DataPack pack)
+void tTimerIceCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esIcePlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esIceAbility[g_esIcePlayer[iTank].g_iTankType].g_iAccessFlags, g_esIcePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esIcePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esIceCache[iTank].g_iIceHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1032,11 +1039,9 @@ Action tTimerIceCombo2(Handle timer, DataPack pack)
 	{
 		vIceHit(iSurvivor, iTank, flRandom, flChance, g_esIceCache[iTank].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopIce(Handle timer, DataPack pack)
+void tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1046,7 +1051,7 @@ Action tTimerStopIce(Handle timer, DataPack pack)
 		g_esIcePlayer[iSurvivor].g_bAffected = false;
 		g_esIcePlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1054,7 +1059,7 @@ Action tTimerStopIce(Handle timer, DataPack pack)
 	{
 		vStopIce(iSurvivor);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	vStopIce(iSurvivor);
@@ -1065,6 +1070,4 @@ Action tTimerStopIce(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Ice2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ice2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

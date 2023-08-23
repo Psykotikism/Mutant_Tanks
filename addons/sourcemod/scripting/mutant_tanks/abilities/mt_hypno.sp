@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -387,7 +387,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHypnoHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vHypnoHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
@@ -396,7 +396,7 @@ Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 			{
 				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
 				{
-					vHypnoHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vHypnoHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 
@@ -646,6 +646,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esHypnoPlayer[iPlayer].g_iHypnoMode = 0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoRange = 0.0;
 					g_esHypnoPlayer[iPlayer].g_flHypnoRangeChance = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoRangeCooldown = 0;
 				}
 			}
 		}
@@ -830,7 +831,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
 	{
-		vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -853,7 +854,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esHypnoPlayer[tank].g_iRangeCooldown == -1 || g_esHypnoPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vHypnoAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman3", (g_esHypnoPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1050,37 +1051,35 @@ void vHypnoReset2(int tank)
 	g_esHypnoPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerHypnoCombo(Handle timer, DataPack pack)
+void tTimerHypnoCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vHypnoAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerHypnoCombo2(Handle timer, DataPack pack)
+void tTimerHypnoCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esHypnoPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1095,11 +1094,9 @@ Action tTimerHypnoCombo2(Handle timer, DataPack pack)
 	{
 		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopHypno(Handle timer, DataPack pack)
+void tTimerStopHypno(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1109,7 +1106,7 @@ Action tTimerStopHypno(Handle timer, DataPack pack)
 		g_esHypnoPlayer[iSurvivor].g_bAffected = false;
 		g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1118,7 +1115,7 @@ Action tTimerStopHypno(Handle timer, DataPack pack)
 		g_esHypnoPlayer[iSurvivor].g_bAffected = false;
 		g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esHypnoPlayer[iSurvivor].g_bAffected = false;
@@ -1130,6 +1127,4 @@ Action tTimerStopHypno(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }

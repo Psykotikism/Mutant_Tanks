@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -31,7 +31,7 @@ public Plugin myinfo =
 #define MT_GAMEDATA "mutant_tanks"
 #define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
-bool g_bDedicated, g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN
 #if MT_ABILITIES_GROUP2 == 1 || MT_ABILITIES_GROUP2 == 3
@@ -311,6 +311,13 @@ bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 	#endif
 #endif
 
+/**
+ * Third-party natives
+ **/
+
+// [L4D & L4D2] Lagged Movement - Plugin Conflict Resolver: https://forums.alliedmods.net/showthread.php?t=340345
+native any L4D_LaggedMovement(int client, float value, bool force = false);
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -325,10 +332,28 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 
+	MarkNativeAsOptional("L4D_LaggedMovement");
+
 	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "LaggedMovement"))
+	{
+		g_bLaggedMovementInstalled = false;
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -343,14 +368,8 @@ public void OnAllPluginsLoaded()
 #if defined MT_MENU_RESTART
 	vRestartAllPluginsLoaded(gdMutantTanks);
 #endif
-#if defined MT_MENU_SHOVE
-	vShoveAllPluginsLoaded(gdMutantTanks);
-#endif
 #if defined MT_MENU_WARP
 	vWarpAllPluginsLoaded(gdMutantTanks);
-#endif
-#if defined MT_MENU_YELL
-	vYellAllPluginsLoaded(gdMutantTanks);
 #endif
 	delete gdMutantTanks;
 }
@@ -1171,7 +1190,7 @@ public void MT_OnCombineAbilities(int tank, int type, const float random, const 
 	vSplashCombineAbilities(tank, type, random, combo);
 #endif
 #if defined MT_MENU_SPLATTER
-	vSplatterCombineAbilities(tank, type, random, combo);
+	vSplatterCombineAbilities(tank, type, random, combo, survivor, classname);
 #endif
 #if defined MT_MENU_THROW
 	vThrowCombineAbilities(tank, type, random, combo, weapon);
@@ -1945,9 +1964,6 @@ public void MT_OnButtonReleased(int tank, int button)
 #if defined MT_MENU_SPLASH
 	vSplashButtonReleased(tank, button);
 #endif
-#if defined MT_MENU_SPLATTER
-	vSplatterButtonReleased(tank, button);
-#endif
 #if defined MT_MENU_WARP
 	vWarpButtonReleased(tank, button);
 #endif
@@ -2080,6 +2096,15 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 #if defined MT_MENU_RESPAWN
 	vRespawnPlayerEventKilled(victim);
+#endif
+#if defined MT_MENU_ROCKET
+	vRocketPlayerEventKilled(victim, attacker);
+#endif
+#if defined MT_MENU_SMASH
+	vSmashPlayerEventKilled(victim, attacker);
+#endif
+#if defined MT_MENU_SMITE
+	vSmitePlayerEventKilled(victim, attacker);
 #endif
 }
 
@@ -2484,7 +2509,6 @@ void vAbilityPlayer(int type, int client)
 		case 0: vSplatterClientPutInServer(client);
 		case 2: vSplatterClientDisconnect_Post(client);
 		case 3: vSplatterAbilityActivated(client);
-		case 4: vSplatterPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_THROW

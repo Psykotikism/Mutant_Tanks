@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -399,7 +399,7 @@ Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSmiteHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esSmiteCache[attacker].g_flSmiteChance, g_esSmiteCache[attacker].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSmiteHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esSmiteCache[attacker].g_flSmiteChance, g_esSmiteCache[attacker].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esSmiteCache[victim].g_iSmiteHitMode == 0 || g_esSmiteCache[victim].g_iSmiteHitMode == 2) && bIsSurvivor(attacker) && g_esSmiteCache[victim].g_iComboAbility == 0)
@@ -411,7 +411,7 @@ Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vSmiteHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esSmiteCache[victim].g_flSmiteChance, g_esSmiteCache[victim].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSmiteHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esSmiteCache[victim].g_flSmiteChance, g_esSmiteCache[victim].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -590,6 +590,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esSmitePlayer[iPlayer].g_iSmiteHitMode = 0;
 					g_esSmitePlayer[iPlayer].g_flSmiteRange = 0.0;
 					g_esSmitePlayer[iPlayer].g_flSmiteRangeChance = 0.0;
+					g_esSmitePlayer[iPlayer].g_iSmiteRangeCooldown = 0;
 				}
 			}
 		}
@@ -744,6 +745,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 }
 
 #if defined MT_ABILITIES_MAIN2
+void vSmitePlayerEventKilled(int victim, int attacker)
+#else
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+#endif
+{
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esSmiteCache[attacker].g_iSmiteAbility == 1 && g_esSmiteCache[attacker].g_iSmiteBody == 1)
+	{
+		g_iSmiteDeathModelOwner = GetClientUserId(victim);
+	}
+}
+
+#if defined MT_ABILITIES_MAIN2
 void vSmiteAbilityActivated(int tank)
 #else
 public void MT_OnAbilityActivated(int tank)
@@ -756,7 +769,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSmiteCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSmiteCache[tank].g_iSmiteAbility == 1 && g_esSmiteCache[tank].g_iComboAbility == 0)
 	{
-		vSmiteAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vSmiteAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -779,7 +792,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esSmitePlayer[tank].g_iRangeCooldown == -1 || g_esSmitePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vSmiteAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vSmiteAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteHuman3", (g_esSmitePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -798,33 +811,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveSmite(tank);
-}
-
-void vSmiteCopyStats2(int oldTank, int newTank)
-{
-	g_esSmitePlayer[newTank].g_iAmmoCount = g_esSmitePlayer[oldTank].g_iAmmoCount;
-	g_esSmitePlayer[newTank].g_iCooldown = g_esSmitePlayer[oldTank].g_iCooldown;
-	g_esSmitePlayer[newTank].g_iRangeCooldown = g_esSmitePlayer[oldTank].g_iRangeCooldown;
-}
-
-void vRemoveSmite(int tank)
-{
-	g_esSmitePlayer[tank].g_bFailed = false;
-	g_esSmitePlayer[tank].g_bNoAmmo = false;
-	g_esSmitePlayer[tank].g_iAmmoCount = 0;
-	g_esSmitePlayer[tank].g_iCooldown = -1;
-	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
-}
-
-void vSmiteReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveSmite(iPlayer);
-		}
-	}
 }
 
 void vSmite(int survivor)
@@ -943,11 +929,6 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				if (g_esSmiteCache[tank].g_iSmiteBody == 1)
-				{
-					g_iSmiteDeathModelOwner = GetClientUserId(survivor);
-				}
-
 				vSmite(survivor);
 				ForcePlayerSuicide(survivor);
 				vScreenEffect(survivor, tank, g_esSmiteCache[tank].g_iSmiteEffect, flags);
@@ -979,37 +960,62 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 	}
 }
 
-Action tTimerSmiteCombo(Handle timer, DataPack pack)
+void vSmiteCopyStats2(int oldTank, int newTank)
+{
+	g_esSmitePlayer[newTank].g_iAmmoCount = g_esSmitePlayer[oldTank].g_iAmmoCount;
+	g_esSmitePlayer[newTank].g_iCooldown = g_esSmitePlayer[oldTank].g_iCooldown;
+	g_esSmitePlayer[newTank].g_iRangeCooldown = g_esSmitePlayer[oldTank].g_iRangeCooldown;
+}
+
+void vRemoveSmite(int tank)
+{
+	g_esSmitePlayer[tank].g_bFailed = false;
+	g_esSmitePlayer[tank].g_bNoAmmo = false;
+	g_esSmitePlayer[tank].g_iAmmoCount = 0;
+	g_esSmitePlayer[tank].g_iCooldown = -1;
+	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
+}
+
+void vSmiteReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveSmite(iPlayer);
+		}
+	}
+}
+
+void tTimerSmiteCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vSmiteAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerSmiteCombo2(Handle timer, DataPack pack)
+void tTimerSmiteCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSmiteAbility[g_esSmitePlayer[iTank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSmitePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSmiteCache[iTank].g_iSmiteHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1024,6 +1030,4 @@ Action tTimerSmiteCombo2(Handle timer, DataPack pack)
 	{
 		vSmiteHit(iSurvivor, iTank, flRandom, flChance, g_esSmiteCache[iTank].g_iSmiteHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }

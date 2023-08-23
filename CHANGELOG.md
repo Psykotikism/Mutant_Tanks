@@ -1,28 +1,340 @@
 # Changelog
 
-## Version 8.95 (2022)
+## Version 8.98 (August 10, 2023)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed the `Health` and `Refill` rewards not rewarding recipients with health properly. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
+
+#### Config Files
+- Fixed custom config Mutant Tank types overlapping with main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
+
+#### Settings
+- Fixed the `Reward Visual` setting's limit. (Thanks to `swofleswof` for testing and reporting!)
+
+#### Abilities
+- Gunner: Fixed an error that caused the server to crash. (Thanks to `Mi.Cura` for testing and reporting!)
+- Item, Kamikaze, Rocket, Smash, Smite: Fixed survivor ragdolls being erased by all Mutant Tank types. (Thanks to `George Rex` for reporting!) [Fixed in `v8.97`.]
+- Throw: Fixed Mutant Tank types not being able to throw cars and special infected. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
 
 ### Changes
 
-#### Abilities
-- Changed the minimum value of the `* Damage` setting for several abilities from `1`/`1.0` to `0`/`0.0`.
-- Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
-- Yell
-	- Added the `Yell Mode` setting.
-	- Re-added the deafen feature. (Requested by `ddd123`.)
+#### Core Plugin
+- The godmode reward now prevents recipients from being pinned by any special infected.
+
+#### ConVars
+- Added the `mt_configfile` convar. (Requested by `zonbarbar`.)
+- Added a lock mechanism to enforce temporary values across maps for the core plugin's convars. (Thanks to `NgBUCKWANGS` for the code!)
+	- Use `-l-` in front of the new value to enforce that value for the convar. (Example: `mt_configfile "-l-myconfig.cfg"`)
+	- Use `-u-` in front of the new value to allow the convar to accept new values. (Example: `mt_configfile "-u-myconfig.cfg"`)
+
+#### Game Data
+- Added signatures for the following functions:
+	- `CTerrorPlayer::GrabVictimWithTongue`
+	- `CTerrorPlayer::OnLeptOnSurvivor`
+	- `CTerrorPlayer::OnPouncedOnSurvivor`
+	- `CTerrorPlayer::OnStartCarryingVictim`
+	- `CTerrorPlayer::QueuePummelVictim`
+
+#### Settings
+- Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
 
 ### Files
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
-	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
 
 #### Updates
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
+- Updated translation files.
 - Updated updater file.
+
+## Version 8.97 (May 21, 2023)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
+#### General
+- Fixed an issue where some RNG-based events happen too often. (Thanks to `ddd123` for reporting!)
+- Fixed an issue where Witches take a long time to die from fires. (Thanks to `ddd123` for reporting!)
+- Fixed rare array index errors.
+</details>
+<details>
+	<summary>Core Plugin</summary>
+
+#### Core Plugin
+- Fixed Tank death messages not appearing when a survivor solos a Tank.
+</details>
+<details>
+	<summary>Config Files</summary>
+
+#### Config Files
+- Fixed Mutant Tank type settings not being read properly under combined sections.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gunner
+	- Fixed one of the messages not showing up when the ability activates. (Thanks to `thewintersoldier97` for reporting!)
+	- Fixed the ability targeting the Tank itself.
+- Quiet: Fixed the sound hook blocking other sound hooks.
+- Rocket: Fixed an issue where survivor ragdolls will not disappear if the player goes afk and is replaced by a survivor bot. (Thanks to `Slaven555` for testing and reporting!)
+</details>
+
+### Changes
+<details>
+	<summary>General</summary>
+
+#### General
+- Mutant Tanks and its sub-plugins now properly support the [`[L4D & L4D2] Lagged Movement - Plugin Conflict Resolver`](https://forums.alliedmods.net/showthread.php?t=340345) plugin.
+</details>
+<details>
+	<summary>Commands</summary>
+
+#### Commands
+- Added a 4th parameter for the `sm_tank` command. (Usage: `sm_tank <1-500> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> <0: not blind|1: blind>`)
+</details>
+<details>
+	<summary>Game Data</summary>
+
+#### Game Data
+- L4D2: Updated some signatures and offsets for the `2.2.2.7` update.
+</details>
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Added the `Footstep Shake` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Thanks to `Silvers` for the code!)
+- Added the `Refill Percent Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `DARG367` for suggesting!)
+- Updated the `Stack Limits` setting to accept an `8th` value.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gravity
+	- Added the `Gravity Radius` setting.
+	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
+	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations.
+- Updated Hungarian translations.
+- Updated Russian translations.
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
+
+## Version 8.96 (December 25, 2022)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
+#### General
+- Fixed a potential memory leak caused by fixing the Tank's position when stuck.
+- Fixed occasional invalid entity errors. (Thanks to `Mi.Cura` for reporting!)
+</details>
+<details>
+	<summary>Config Files</summary>
+
+#### Config Files
+- Fixed parsing errors for config files that use one of the other formats.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Blind: Fixed affected survivors remaining blind after dying and respawning. (Thanks to `zaviier` for reporting!)
+- Drug: Fixed affected survivors remaining drugged after dying and respawning.
+- Heal: Fixed survivors being healed when healing their teammates. (Thanks to `Balloons` for reporting!)
+- Ice: Fixed affected survivors remaining immobile after dying and respawning.
+- Laser: Fixed the incorrect minimum value of the `Laser Range` setting.
+- Slow: Fixed affected survivors remaining slow after dying and respawning.
+- Splatter
+	- Fixed the incorrect minimum value of the `Splatter Range` setting.
+	- Fixed splatter effects not stopping after the ability ends and causing lag. (Thanks to `zaviier` for reporting!)
+- Yell: Fixed the incorrect minimum value of the `Yell Range` setting.
+</details>
+
+### Changes
+<details>
+	<summary>Config Files</summary>
+
+#### Config Files
+- The config parser now automatically assigns Mutant Tank types to each entry to prevent common user errors. (Each entry's original type will be shown in messages when necessary.)
+- The config parser now reports duplicate entries and entries that exceed the limit for Mutant Tank types. (This covers cases where the same type is assigned to multiple entries or some types are skipped over.)
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Added the `Gunner` ability. (Thanks to `panxiaohai` for the code!)
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
+
+## Version 8.95 (August 25, 2022)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
+
+#### General
+- Fixed a rare crash caused when the Tank's rock explodes. (Thanks to `thewintersoldier97`, `zaviier`, and `ddd123` for testing and reporting!)
+- Fixed an issue where players are given the incorrect amount of special ammo when taking over a bot. (Thanks to `Slaven555` for testing and reporting!)
+- Fixed error regarding the `Boss` feature. (Thanks to `yuzumi` for testing and reporting!)
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Bury: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
+- Choke: Fixed survivors being able to shoot weapons and use items while affected. (Thanks to `ddd123` for reporting!)
+- Splatter: Fixed survivor bots getting affected by the ability.
+</details>
+
+### Changes
+<details>
+	<summary>Game Data</summary>
+
+#### Game Data
+- Removed unnecessary/unused sections.
+</details>
+<details>
+	<summary>Translations</summary>
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
+
+#### Natives & Forwards
+- Added the `MT_DeafenPlayer` native.
+- Added the `MT_StaggerPlayer` native.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Changed the minimum value of the `* Damage` setting for several abilities from `1`/`1.0` to `0`/`0.0`.
+- Blind
+	- Added a flashbang option. (Thanks to `Silvers` for the code!)
+	- Added the `Blind Mode` setting.
+	- Added the `Blind Stagger` setting.
+	- The ability can now affect bots.
+- Medic
+	- Added the `Medic Buff Damage` setting.
+	- Added the `Medic Buff Resistance` setting.
+	- Added the `Medic Buff Speed` setting.
+	- Added the `Medic Symbiosis` setting.
+- Quiet: The ability now silences footsteps. (Requested by `ddd123`.)
+- Splatter
+	- Changed how splatters are displayed. (Thanks to `Lux` and `Silvers` for the code!)
+	- Removed the `Human Duration` setting.
+	- Removed the `Human Mode` setting.
+	- Added the `Immunity Flags` setting.
+	- Added the `Ability Effect` setting.
+	- Added the `Splatter Hit` setting.
+	- Added the `Splatter Hit Mode` setting.
+	- Added the `Splatter Range` setting.
+	- Added the `Splatter Range Chance` setting.
+	- Added the `Splatter Range Cooldown` setting.
+	- Changed the default value of the `Splatter Duration` setting from `0` to `5`.
+	- Changed the default value of the `Splatter Interval` setting from `5.0` to `1.0`.
+- Yell
+	- Added the `Yell Mode` setting.
+	- Re-added the deafen feature. (Requested by `ddd123`.)
+	- Changed the default value of the `Requires Humans` setting from `1` to `0`.
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.11.0.6880` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
 
 ## Version 8.94 (July 4, 2022)
 <details>

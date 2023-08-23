@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -62,40 +62,148 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 char g_sMeleeScripts[][] =
 {
-	"scripts/melee/fireaxe.txt", "scripts/melee/baseball_bat.txt", "scripts/melee/cricket_bat.txt", "scripts/melee/crowbar.txt", "scripts/melee/golfclub.txt", "scripts/melee/electric_guitar.txt",
-	"scripts/melee/katana.txt", "scripts/melee/knife.txt", "scripts/melee/machete.txt", "scripts/melee/frying_pan.txt", "scripts/melee/tonfa.txt", "scripts/melee/pitchfork.txt", "scripts/melee/shovel.txt"
+	"scripts/melee/fireaxe.txt",
+	"scripts/melee/baseball_bat.txt",
+	"scripts/melee/cricket_bat.txt",
+	"scripts/melee/crowbar.txt",
+	"scripts/melee/golfclub.txt",
+	"scripts/melee/electric_guitar.txt",
+	"scripts/melee/katana.txt",
+	"scripts/melee/knife.txt",
+	"scripts/melee/machete.txt",
+	"scripts/melee/frying_pan.txt",
+	"scripts/melee/tonfa.txt",
+	"scripts/melee/pitchfork.txt",
+	"scripts/melee/shovel.txt"
 }, g_sWeaponClasses[][] =
 {
-	"weapon_rifle", "weapon_autoshotgun", "weapon_hunting_rifle", "weapon_pumpshotgun", "weapon_smg", "weapon_pistol"
+	"weapon_rifle",
+	"weapon_autoshotgun",
+	"weapon_hunting_rifle",
+	"weapon_pumpshotgun",
+	"weapon_smg",
+	"weapon_pistol"
 }, g_sWeaponModelsView[][] =
 {
-	"models/v_models/weapons/v_rifle_m16a2.mdl", "models/v_models/weapons/v_autoshot_m4super.mdl", "models/v_models/weapons/v_sniper_mini14.mdl",
-	"models/v_models/weapons/v_shotgun.mdl", "models/v_models/weapons/v_smg_uzi.mdl", "models/v_models/weapons/v_pistol_1911.mdl"
+	"models/v_models/weapons/v_rifle_m16a2.mdl",
+	"models/v_models/weapons/v_autoshot_m4super.mdl",
+	"models/v_models/weapons/v_sniper_mini14.mdl",
+	"models/v_models/weapons/v_shotgun.mdl",
+	"models/v_models/weapons/v_smg_uzi.mdl",
+	"models/v_models/weapons/v_pistol_1911.mdl"
 }, g_sWeaponModelsWorld[][] =
 {
-	"models/w_models/weapons/w_rifle_m16a2.mdl", "models/w_models/weapons/w_autoshot_m4super.mdl", "models/w_models/weapons/w_sniper_mini14.mdl",
-	"models/w_models/weapons/w_shotgun.mdl", "models/w_models/weapons/w_smg_uzi.mdl", "models/w_models/weapons/w_pistol_1911.mdl"
+	"models/w_models/weapons/w_rifle_m16a2.mdl",
+	"models/w_models/weapons/w_autoshot_m4super.mdl",
+	"models/w_models/weapons/w_sniper_mini14.mdl",
+	"models/w_models/weapons/w_shotgun.mdl",
+	"models/w_models/weapons/w_smg_uzi.mdl",
+	"models/w_models/weapons/w_pistol_1911.mdl"
 }, g_sWeaponClasses2[][] =
 {
-	"weapon_rifle_m60", "weapon_rifle_ak47", "weapon_rifle_desert", "weapon_rifle_sg552", "weapon_rifle", "weapon_shotgun_spas", "weapon_autoshotgun", "weapon_sniper_military", "weapon_sniper_awp",
-	"weapon_sniper_scout", "weapon_hunting_rifle", "weapon_grenade_launcher", "weapon_shotgun_chrome", "weapon_pumpshotgun", "weapon_smg_silenced", "weapon_smg", "weapon_smg_mp5", "weapon_pistol_magnum",
-	"weapon_pistol", "fireaxe", "baseball_bat", "weapon_chainsaw", "cricket_bat", "crowbar", "golfclub", "electric_guitar", "katana", "knife", "machete", "frying_pan", "tonfa", "pitchfork", "shovel"
+	"weapon_rifle_m60",
+	"weapon_rifle_ak47",
+	"weapon_rifle_desert",
+	"weapon_rifle_sg552",
+	"weapon_rifle",
+	"weapon_shotgun_spas",
+	"weapon_autoshotgun",
+	"weapon_sniper_military",
+	"weapon_sniper_awp",
+	"weapon_sniper_scout",
+	"weapon_hunting_rifle",
+	"weapon_grenade_launcher",
+	"weapon_shotgun_chrome",
+	"weapon_pumpshotgun",
+	"weapon_smg_silenced",
+	"weapon_smg",
+	"weapon_smg_mp5",
+	"weapon_pistol_magnum",
+	"weapon_pistol",
+	"fireaxe",
+	"baseball_bat",
+	"weapon_chainsaw",
+	"cricket_bat",
+	"crowbar",
+	"golfclub",
+	"electric_guitar",
+	"katana",
+	"knife",
+	"machete",
+	"frying_pan",
+	"tonfa",
+	"pitchfork",
+	"shovel"
 }, g_sWeaponModelsView2[][] =
 {
-	"models/v_models/weapons/v_m60.mdl", "models/v_models/weapons/v_rifle_ak47.mdl", "models/v_models/weapons/v_desert_rifle.mdl", "models/v_models/weapons/v_rifle_sg552.mdl", "models/v_models/weapons/v_rifle_m16a2.mdl",
-	"models/v_models/weapons/v_shotgun_spas.mdl", "models/v_models/weapons/v_autoshot_m4super.mdl", "models/v_models/weapons/v_sniper_military.mdl", "models/v_models/weapons/v_sniper_awp.mdl", "models/v_models/weapons/v_sniper_scout.mdl",
-	"models/v_models/weapons/v_sniper_mini14.mdl", "models/v_models/weapons/v_grenade_launcher.mdl", "models/v_models/weapons/v_pumpshotgun_a.mdl", "models/v_models/weapons/v_shotgun.mdl", "models/v_models/weapons/v_smg_a.mdl",
-	"models/v_models/weapons/v_smg_uzi.mdl", "models/v_models/weapons/v_smg_mp5.mdl", "models/v_models/weapons/v_desert_eagle.mdl", "models/v_models/weapons/v_pistol_a.mdl", "models/weapons/melee/v_fireaxe.mdl", "models/weapons/melee/v_bat.mdl",
-	"models/weapons/melee/v_chainsaw.mdl", "models/weapons/melee/v_cricket_bat.mdl", "models/weapons/melee/v_crowbar.mdl", "models/weapons/melee/v_golfclub.mdl", "models/weapons/melee/v_electric_guitar.mdl", "models/weapons/melee/v_katana.mdl",
-	"models/v_models/v_knife_t.mdl", "models/weapons/melee/v_machete.mdl", "models/weapons/melee/v_frying_pan.mdl", "models/weapons/melee/v_tonfa.mdl", "models/weapons/melee/v_pitchfork.mdl", "models/weapons/melee/v_shovel.mdl"
+	"models/v_models/weapons/v_m60.mdl",
+	"models/v_models/weapons/v_rifle_ak47.mdl",
+	"models/v_models/weapons/v_desert_rifle.mdl",
+	"models/v_models/weapons/v_rifle_sg552.mdl",
+	"models/v_models/weapons/v_rifle_m16a2.mdl",
+	"models/v_models/weapons/v_shotgun_spas.mdl",
+	"models/v_models/weapons/v_autoshot_m4super.mdl",
+	"models/v_models/weapons/v_sniper_military.mdl",
+	"models/v_models/weapons/v_sniper_awp.mdl",
+	"models/v_models/weapons/v_sniper_scout.mdl",
+	"models/v_models/weapons/v_sniper_mini14.mdl",
+	"models/v_models/weapons/v_grenade_launcher.mdl",
+	"models/v_models/weapons/v_pumpshotgun_a.mdl",
+	"models/v_models/weapons/v_shotgun.mdl",
+	"models/v_models/weapons/v_smg_a.mdl",
+	"models/v_models/weapons/v_smg_uzi.mdl",
+	"models/v_models/weapons/v_smg_mp5.mdl",
+	"models/v_models/weapons/v_desert_eagle.mdl",
+	"models/v_models/weapons/v_pistol_a.mdl",
+	"models/weapons/melee/v_fireaxe.mdl",
+	"models/weapons/melee/v_bat.mdl",
+	"models/weapons/melee/v_chainsaw.mdl",
+	"models/weapons/melee/v_cricket_bat.mdl",
+	"models/weapons/melee/v_crowbar.mdl",
+	"models/weapons/melee/v_golfclub.mdl",
+	"models/weapons/melee/v_electric_guitar.mdl",
+	"models/weapons/melee/v_katana.mdl",
+	"models/v_models/v_knife_t.mdl",
+	"models/weapons/melee/v_machete.mdl",
+	"models/weapons/melee/v_frying_pan.mdl",
+	"models/weapons/melee/v_tonfa.mdl",
+	"models/weapons/melee/v_pitchfork.mdl",
+	"models/weapons/melee/v_shovel.mdl"
 }, g_sWeaponModelsWorld2[][] =
 {
-	"models/w_models/weapons/w_m60.mdl", "models/w_models/weapons/w_rifle_ak47.mdl", "models/w_models/weapons/w_desert_rifle.mdl", "models/w_models/weapons/w_rifle_sg552.mdl", "models/w_models/weapons/w_rifle_m16a2.mdl",
-	"models/w_models/weapons/w_shotgun_spas.mdl", "models/w_models/weapons/w_autoshot_m4super.mdl", "models/w_models/weapons/w_sniper_military.mdl", "models/w_models/weapons/w_sniper_awp.mdl", "models/w_models/weapons/w_sniper_scout.mdl",
-	"models/w_models/weapons/w_sniper_mini14.mdl", "models/w_models/weapons/w_grenade_launcher.mdl", "models/w_models/weapons/w_pumpshotgun_a.mdl", "models/w_models/weapons/w_shotgun.mdl", "models/w_models/weapons/w_smg_a.mdl",
-	"models/w_models/weapons/w_smg_uzi.mdl", "models/w_models/weapons/w_smg_mp5.mdl", "models/w_models/weapons/w_desert_eagle.mdl", "models/w_models/weapons/w_pistol_a.mdl", "models/weapons/melee/w_fireaxe.mdl", "models/weapons/melee/w_bat.mdl",
-	"models/weapons/melee/w_chainsaw.mdl", "models/weapons/melee/w_cricket_bat.mdl", "models/weapons/melee/w_crowbar.mdl", "models/weapons/melee/w_golfclub.mdl", "models/weapons/melee/w_electric_guitar.mdl", "models/weapons/melee/w_katana.mdl",
-	"models/w_models/weapons/w_knife_t.mdl", "models/weapons/melee/w_machete.mdl", "models/weapons/melee/w_frying_pan.mdl", "models/weapons/melee/w_tonfa.mdl", "models/weapons/melee/w_pitchfork.mdl", "models/weapons/melee/w_shovel.mdl"
+	"models/w_models/weapons/w_m60.mdl",
+	"models/w_models/weapons/w_rifle_ak47.mdl",
+	"models/w_models/weapons/w_desert_rifle.mdl",
+	"models/w_models/weapons/w_rifle_sg552.mdl",
+	"models/w_models/weapons/w_rifle_m16a2.mdl",
+	"models/w_models/weapons/w_shotgun_spas.mdl",
+	"models/w_models/weapons/w_autoshot_m4super.mdl",
+	"models/w_models/weapons/w_sniper_military.mdl",
+	"models/w_models/weapons/w_sniper_awp.mdl",
+	"models/w_models/weapons/w_sniper_scout.mdl",
+	"models/w_models/weapons/w_sniper_mini14.mdl",
+	"models/w_models/weapons/w_grenade_launcher.mdl",
+	"models/w_models/weapons/w_pumpshotgun_a.mdl",
+	"models/w_models/weapons/w_shotgun.mdl",
+	"models/w_models/weapons/w_smg_a.mdl",
+	"models/w_models/weapons/w_smg_uzi.mdl",
+	"models/w_models/weapons/w_smg_mp5.mdl",
+	"models/w_models/weapons/w_desert_eagle.mdl",
+	"models/w_models/weapons/w_pistol_a.mdl",
+	"models/weapons/melee/w_fireaxe.mdl",
+	"models/weapons/melee/w_bat.mdl",
+	"models/weapons/melee/w_chainsaw.mdl",
+	"models/weapons/melee/w_cricket_bat.mdl",
+	"models/weapons/melee/w_crowbar.mdl",
+	"models/weapons/melee/w_golfclub.mdl",
+	"models/weapons/melee/w_electric_guitar.mdl",
+	"models/weapons/melee/w_katana.mdl",
+	"models/w_models/weapons/w_knife_t.mdl",
+	"models/weapons/melee/w_machete.mdl",
+	"models/weapons/melee/w_frying_pan.mdl",
+	"models/weapons/melee/w_tonfa.mdl",
+	"models/weapons/melee/w_pitchfork.mdl",
+	"models/weapons/melee/w_shovel.mdl"
 };
 
 enum struct esDropGeneral
@@ -686,7 +794,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags))
 			{
-				vDropWeapon(iTank, 1, MT_GetRandomFloat(0.1, 100.0));
+				vDropWeapon(iTank, 1, GetRandomFloat(0.1, 100.0));
 			}
 
 			vDropReset2(iTank);
@@ -755,7 +863,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		return;
 	}
 
-	vDropWeapon(tank, 1, MT_GetRandomFloat(0.1, 100.0));
+	vDropWeapon(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 void vDropWeapon(int tank, int value, float random, int pos = -1)
@@ -780,7 +888,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 			int iDrop = CreateEntityByName(sWeapon);
 			if (bIsValidEntity(iDrop))
 			{
-				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				TeleportEntity(iDrop, flPos, flAngles);
 				DispatchSpawn(iDrop);
 
 				int iAmmo = 0, iClip = 0, iType = GetEntProp(iDrop, Prop_Send, "m_iPrimaryAmmoType");
@@ -809,7 +917,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 					}
 				}
 
-				if (MT_GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
+				if (GetRandomFloat(0.1, 100.0) <= g_esDropCache[tank].g_flDropClipChance)
 				{
 					iClip = SDKCall(g_esDropGeneral.g_hSDKGetMaxClip1, iDrop);
 				}
@@ -839,7 +947,7 @@ void vDropWeapon(int tank, int value, float random, int pos = -1)
 			if (bIsValidEntity(iDrop))
 			{
 				DispatchKeyValue(iDrop, "melee_script_name", sWeapon);
-				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				TeleportEntity(iDrop, flPos, flAngles);
 				DispatchSpawn(iDrop);
 
 				if (g_esDropCache[tank].g_iDropMessage == 1)
@@ -1063,7 +1171,7 @@ void vDropFrame(int userid)
 		}
 
 		SetEntProp(g_esDropPlayer[iTank].g_iWeapon, Prop_Send, "m_CollisionGroup", 2);
-		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);
+		TeleportEntity(g_esDropPlayer[iTank].g_iWeapon, flPos, flAngles);
 		DispatchSpawn(g_esDropPlayer[iTank].g_iWeapon);
 
 		if (g_bSecondGame)
@@ -1083,21 +1191,19 @@ void vDropFrame(int userid)
 	}
 }
 
-Action tTimerDropCombo(Handle timer, DataPack pack)
+void tTimerDropCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDropAbility[g_esDropPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDropPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDropPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDropCache[iTank].g_iDropAbility == 0 || g_esDropPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDropWeapon(iTank, 0, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerDropRenderWeapon(Handle timer, DataPack pack)

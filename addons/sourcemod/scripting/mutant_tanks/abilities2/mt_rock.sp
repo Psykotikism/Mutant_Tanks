@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -789,6 +789,93 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveRock(tank);
 }
 
+void vRock(int tank, int pos = -1)
+{
+	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime())
+	{
+		return;
+	}
+
+	g_esRockPlayer[tank].g_bActivated = true;
+
+	vRock2(tank, pos);
+
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
+	{
+		g_esRockPlayer[tank].g_iAmmoCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman", g_esRockPlayer[tank].g_iAmmoCount, g_esRockCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esRockCache[tank].g_iRockMessage == 1)
+	{
+		char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock", LANG_SERVER, sTankName);
+	}
+}
+
+void vRock2(int tank, int pos = -1)
+{
+	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	char sDamage[11];
+	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : float(g_esRockCache[tank].g_iRockDamage);
+	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
+
+	float flPos[3], flAngles[3];
+	GetClientEyePosition(tank, flPos);
+	GetClientEyeAngles(tank, flAngles);
+
+	int iLauncher = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iLauncher))
+	{
+		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
+		TeleportEntity(iLauncher, flPos, flAngles);
+		DispatchSpawn(iLauncher);
+		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
+		iLauncher = EntIndexToEntRef(iLauncher);
+		g_esRockPlayer[tank].g_iLauncher = iLauncher;
+	}
+
+	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esRockCache[tank].g_flRockInterval;
+	DataPack dpRock;
+	CreateDataTimer(flInterval, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpRock.WriteCell(iLauncher);
+	dpRock.WriteCell(GetClientUserId(tank));
+	dpRock.WriteCell(g_esRockPlayer[tank].g_iTankType);
+	dpRock.WriteCell(GetTime());
+	dpRock.WriteCell(pos);
+}
+
+void vRockAbility(int tank)
+{
+	if ((g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0))
+	{
+		if (GetRandomFloat(0.1, 100.0) <= g_esRockCache[tank].g_flRockChance)
+		{
+			vRock(tank);
+		}
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman2");
+		}
+	}
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockAmmo");
+	}
+}
+
 void vRockCopyStats2(int oldTank, int newTank)
 {
 	g_esRockPlayer[newTank].g_iAmmoCount = g_esRockPlayer[oldTank].g_iAmmoCount;
@@ -855,107 +942,18 @@ void vRockReset3(int tank)
 	}
 }
 
-void vRock(int tank, int pos = -1)
-{
-	if (g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime())
-	{
-		return;
-	}
-
-	g_esRockPlayer[tank].g_bActivated = true;
-
-	vRock2(tank, pos);
-
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
-	{
-		g_esRockPlayer[tank].g_iAmmoCount++;
-
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman", g_esRockPlayer[tank].g_iAmmoCount, g_esRockCache[tank].g_iHumanAmmo);
-	}
-
-	if (g_esRockCache[tank].g_iRockMessage == 1)
-	{
-		char sTankName[33];
-		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Rock", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rock", LANG_SERVER, sTankName);
-	}
-}
-
-void vRock2(int tank, int pos = -1)
-{
-	if (bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	char sDamage[11];
-	float flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 3, pos) : float(g_esRockCache[tank].g_iRockDamage);
-	IntToString(RoundToNearest(MT_GetScaledDamage(flDamage)), sDamage, sizeof sDamage);
-
-	float flPos[3], flAngles[3];
-	GetClientEyePosition(tank, flPos);
-	GetClientEyeAngles(tank, flAngles);
-
-	int iLauncher = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher))
-	{
-		SetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher);
-		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
-		iLauncher = EntIndexToEntRef(iLauncher);
-		g_esRockPlayer[tank].g_iLauncher = iLauncher;
-	}
-
-	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esRockCache[tank].g_flRockInterval;
-	DataPack dpRock;
-	CreateDataTimer(flInterval, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpRock.WriteCell(iLauncher);
-	dpRock.WriteCell(GetClientUserId(tank));
-	dpRock.WriteCell(g_esRockPlayer[tank].g_iTankType);
-	dpRock.WriteCell(GetTime());
-	dpRock.WriteCell(pos);
-}
-
-void vRockAbility(int tank)
-{
-	if ((g_esRockPlayer[tank].g_iCooldown != -1 && g_esRockPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esRockCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRockCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRockPlayer[tank].g_iTankType) || (g_esRockCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRockCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRockAbility[g_esRockPlayer[tank].g_iTankType].g_iAccessFlags, g_esRockPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRockPlayer[tank].g_iAmmoCount < g_esRockCache[tank].g_iHumanAmmo && g_esRockCache[tank].g_iHumanAmmo > 0))
-	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esRockCache[tank].g_flRockChance)
-		{
-			vRock(tank);
-		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
-		{
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockHuman2");
-		}
-	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRockCache[tank].g_iHumanAbility == 1)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RockAmmo");
-	}
-}
-
-Action tTimerRockCombo(Handle timer, DataPack pack)
+void tTimerRockCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRockAbility[g_esRockPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRockPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRockPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRockCache[iTank].g_iRockAbility == 0 || g_esRockPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vRock(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerRock(Handle timer, DataPack pack)
@@ -1023,7 +1021,7 @@ Action tTimerRock(Handle timer, DataPack pack)
 			flAngles2[2] = -2.0;
 			GetVectorAngles(flAngles2, flAngles2);
 
-			TeleportEntity(iLauncher, flHitPos, flAngles2, NULL_VECTOR);
+			TeleportEntity(iLauncher, flHitPos, flAngles2);
 			AcceptEntityInput(iLauncher, "LaunchRock");
 		}
 	}

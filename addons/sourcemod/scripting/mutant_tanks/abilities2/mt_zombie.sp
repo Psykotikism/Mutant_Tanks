@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -756,43 +756,6 @@ public void MT_OnPostTankSpawn(int tank)
 	vZombieRange(tank);
 }
 
-void vZombieCopyStats2(int oldTank, int newTank)
-{
-	g_esZombiePlayer[newTank].g_iAmmoCount = g_esZombiePlayer[oldTank].g_iAmmoCount;
-	g_esZombiePlayer[newTank].g_iCooldown = g_esZombiePlayer[oldTank].g_iCooldown;
-}
-
-void vRemoveZombie(int tank)
-{
-	g_esZombiePlayer[tank].g_bActivated = false;
-	g_esZombiePlayer[tank].g_iAmmoCount = 0;
-	g_esZombiePlayer[tank].g_iCooldown = -1;
-}
-
-void vZombieReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveZombie(iPlayer);
-		}
-	}
-}
-
-void vZombieReset2(int tank)
-{
-	g_esZombiePlayer[tank].g_bActivated = false;
-
-	int iTime = GetTime(), iPos = g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esZombieCache[tank].g_iZombieCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1 && g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? g_esZombieCache[tank].g_iHumanCooldown : iCooldown;
-	g_esZombiePlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
-	}
-}
-
 void vSpawnUncommon(int tank, const char[] model)
 {
 	int iInfected = CreateEntityByName("infected");
@@ -811,7 +774,7 @@ void vSpawnUncommon(int tank, const char[] model)
 		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
 		flOrigin[2] += 5.0;
 
-		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iInfected, flOrigin);
 	}
 }
 
@@ -836,7 +799,9 @@ void vSpawnZombie(int tank, bool uncommon)
 					iTypeCount++;
 				}
 
-				switch (iTypes[MT_GetRandomInt(0, (iTypeCount - 1))])
+				int iType = (iTypeCount > 0) ? iTypes[MT_GetRandomInt(0, (iTypeCount - 1))] : iTypes[0];
+
+				switch (iType)
 				{
 					case 1: vSpawnUncommon(tank, MODEL_CEDA);
 					case 2: vSpawnUncommon(tank, MODEL_JIMMY);
@@ -944,7 +909,7 @@ void vZombieAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
 		{
 			vZombie(tank);
 		}
@@ -961,7 +926,7 @@ void vZombieAbility(int tank)
 
 void vZombieRange(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esZombieCache[tank].g_iZombieAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esZombieCache[tank].g_iZombieAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esZombieCache[tank].g_flZombieChance)
 	{
 		if (bIsAreaNarrow(tank, g_esZombieCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esZombieCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esZombiePlayer[tank].g_iTankType) || (g_esZombieCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esZombieCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[tank].g_iAccessFlags)) || g_esZombieCache[tank].g_iHumanAbility == 0)))
 		{
@@ -972,20 +937,55 @@ void vZombieRange(int tank)
 	}
 }
 
-Action tTimerZombieCombo(Handle timer, DataPack pack)
+void vZombieCopyStats2(int oldTank, int newTank)
+{
+	g_esZombiePlayer[newTank].g_iAmmoCount = g_esZombiePlayer[oldTank].g_iAmmoCount;
+	g_esZombiePlayer[newTank].g_iCooldown = g_esZombiePlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveZombie(int tank)
+{
+	g_esZombiePlayer[tank].g_bActivated = false;
+	g_esZombiePlayer[tank].g_iAmmoCount = 0;
+	g_esZombiePlayer[tank].g_iCooldown = -1;
+}
+
+void vZombieReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveZombie(iPlayer);
+		}
+	}
+}
+
+void vZombieReset2(int tank)
+{
+	g_esZombiePlayer[tank].g_bActivated = false;
+
+	int iTime = GetTime(), iPos = g_esZombieAbility[g_esZombiePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esZombieCache[tank].g_iZombieCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esZombieCache[tank].g_iHumanAbility == 1 && g_esZombiePlayer[tank].g_iAmmoCount < g_esZombieCache[tank].g_iHumanAmmo && g_esZombieCache[tank].g_iHumanAmmo > 0) ? g_esZombieCache[tank].g_iHumanCooldown : iCooldown;
+	g_esZombiePlayer[tank].g_iCooldown = (iTime + iCooldown);
+	if (g_esZombiePlayer[tank].g_iCooldown != -1 && g_esZombiePlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieHuman5", (g_esZombiePlayer[tank].g_iCooldown - iTime));
+	}
+}
+
+void tTimerZombieCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esZombieAbility[g_esZombiePlayer[iTank].g_iTankType].g_iAccessFlags, g_esZombiePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esZombiePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esZombieCache[iTank].g_iZombieAbility == 0 || g_esZombiePlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vZombie(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerZombie(Handle timer, DataPack pack)

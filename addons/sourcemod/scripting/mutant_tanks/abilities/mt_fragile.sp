@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -439,8 +439,12 @@ Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				switch (g_esFragileCache[victim].g_iFragileMode)
 				{
-					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (MT_GetRunSpeed(victim) + g_esFragileCache[victim].g_flFragileSpeedBoost));
-					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esFragileCache[victim].g_flFragileSpeedBoost);
+					case 0:
+					{
+						float flSpeed = (MT_GetRunSpeed(victim) + g_esFragileCache[victim].g_flFragileSpeedBoost);
+						SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(victim, flSpeed) : flSpeed));
+					}
+					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(victim, g_esFragileCache[victim].g_flFragileSpeedBoost) : g_esFragileCache[victim].g_flFragileSpeedBoost));
 				}
 
 				return Plugin_Changed;
@@ -751,7 +755,7 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esFragilePlayer[iTank].g_bActivated)
 		{
-			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iTank, 1.0, true) : 1.0));
 		}
 	}
 }
@@ -946,7 +950,7 @@ void vFragileAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esFragileCache[tank].g_flFragileChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esFragileCache[tank].g_flFragileChance)
 		{
 			vFragile(tank);
 		}
@@ -991,7 +995,8 @@ void vFragileReset2(int tank)
 	g_esFragilePlayer[tank].g_bActivated = false;
 	g_esFragilePlayer[tank].g_iDuration = -1;
 
-	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(tank));
+	float flSpeed = MT_GetRunSpeed(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, flSpeed) : flSpeed));
 
 	if (g_esFragileCache[tank].g_iFragileMessage == 1)
 	{
@@ -1013,18 +1018,16 @@ void vFragileReset3(int tank)
 	}
 }
 
-Action tTimerFragileCombo(Handle timer, DataPack pack)
+void tTimerFragileCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFragileAbility[g_esFragilePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFragilePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFragileCache[iTank].g_iFragileAbility == 0 || g_esFragilePlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vFragile(iTank, iPos);
-
-	return Plugin_Continue;
 }

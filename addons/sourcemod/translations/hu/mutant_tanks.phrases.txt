@@ -76,7 +76,7 @@
 
 	"MTTankItem"
 	{
-		"hu"			"{1} (Tank #{2})"
+		"hu"			"{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -356,7 +356,7 @@
 
 	"CommandUsage"
 	{
-		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
+		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan> <0: nem vak|1: megvakít>"
 	}
 
 	"CommandUsage2"
@@ -586,7 +586,7 @@
 
 	"MultipleMatches"
 	{
-		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}){olive}."
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
 	"NoAbilities"
@@ -641,7 +641,7 @@
 
 	"PersonalType"
 	{
-		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}){default} leszel miután átveszed a{mint} Tank{default} irányítását."
+		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} leszel miután átveszed a{mint} Tank{default} irányítását."
 	}
 
 	"PitchVisualOn"
@@ -681,7 +681,7 @@
 
 	"RequestSucceeded"
 	{
-		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}){mint}.{olive} Kérés sikeres!"
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}) [Tank #{2}]{mint}.{olive} Kérés sikeres!"
 	}
 
 	"RewardAmmo"
@@ -816,7 +816,7 @@
 
 	"TankDisabled"
 	{
-		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+		"hu"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} letiltva."
 	}
 
 	"TeammatesList"
@@ -2202,6 +2202,61 @@
 	"GravityMenu2"
 	{
 		"hu"			"Gravitációs Képesség"
+	}
+
+	"Gunner"
+	{
+		"hu"			"{olive}{1}{mint} lövést ad le!"
+	}
+
+	"Gunner2"
+	{
+		"hu"			"{olive}{1}{mint} már nem lövöldözik!"
+	}
+
+	"GunnerAmmo"
+	{
+		"hu"			"Elhasználtad a tüzér képességed összes lőszerét."
+	}
+
+	"GunnerDetails"
+	{
+		"hu"			"Fel vagy fegyverkezve."
+	}
+
+	"GunnerHuman"
+	{
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik tüzér képességedet!"
+	}
+
+	"GunnerHuman2"
+	{
+		"hu"			"Nem sikerült aktiválni a tüzér képességedet. Próbáld újra."
+	}
+
+	"GunnerHuman3"
+	{
+		"hu"			"Már aktiváltad a tüzér képességedet."
+	}
+
+	"GunnerHuman4"
+	{
+		"hu"			"A tüzér képességednek kell még {yellow} {1} másodperc(ek){mint} az újratöltéshez."
+	}
+
+	"GunnerHuman5"
+	{
+		"hu"			"A tüzér képességed véget ért, az újratöltéshez kell még {yellow} {1} másodperc(ek){mint}."
+	}
+
+	"GunnerMenu"
+	{
+		"hu"			"Tüzér Képesség Információ"
+	}
+
+	"GunnerMenu2"
+	{
+		"hu"			"Tüzér Képesség"
 	}
 
 	"Heal"
@@ -4291,12 +4346,12 @@
 
 	"Splatter"
 	{
-		"hu"			"{olive}{1}{mint} időszakosan mindenki képernyőjét befröcsköli!"
+		"hu"			"{olive}{1}{mint} épp összefröcsköli{olive} {2}{mint} képernyőjét!"
 	}
 
 	"Splatter2"
 	{
-		"hu"			"{olive}{1}{mint} mindenki képernyőjét{yellow} befröcskölte{mint}!"
+		"hu"			"{olive}{1}képernyője{mint} többé már nincs összefröcskölve{mint}!"
 	}
 
 	"SplatterAmmo"
@@ -4306,7 +4361,7 @@
 
 	"SplatterDetails"
 	{
-		"hu"			"Mindenki képernyőjét befröcskölöd."
+		"hu"			"Összefröcskölöd a túlélők képernyőjét."
 	}
 
 	"SplatterHuman"
@@ -4321,12 +4376,12 @@
 
 	"SplatterHuman3"
 	{
-		"hu"			"Már aktiváltad a fröcskölő képességedet."
+		"hu"			"A fröccsenő képességednek még kell{yellow} {1} másodperc(ek){mint} az újratöltéshez.."
 	}
 
 	"SplatterHuman4"
 	{
-		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"Nincsenek túlélők a közeledben akiken használhatnád a fröccsenő képességedet."
 	}
 
 	"SplatterHuman5"

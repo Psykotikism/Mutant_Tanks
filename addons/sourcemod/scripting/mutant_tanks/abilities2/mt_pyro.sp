@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -404,8 +404,12 @@ Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 				switch (g_esPyroCache[victim].g_iPyroMode)
 				{
-					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (MT_GetRunSpeed(victim) + g_esPyroCache[victim].g_flPyroSpeedBoost));
-					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esPyroCache[victim].g_flPyroSpeedBoost);
+					case 0:
+					{
+						float flSpeed = (MT_GetRunSpeed(victim) + g_esPyroCache[victim].g_flPyroSpeedBoost);
+						SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(victim, flSpeed) : flSpeed));
+					}
+					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(victim, g_esPyroCache[victim].g_flPyroSpeedBoost) : g_esPyroCache[victim].g_flPyroSpeedBoost));
 				}
 
 				if (!g_esPyroPlayer[victim].g_bActivated2 && g_esPyroCache[victim].g_iPyroMessage == 1)
@@ -710,7 +714,7 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPyroPlayer[iTank].g_bActivated)
 		{
-			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iTank, 1.0, true) : 1.0));
 		}
 	}
 }
@@ -910,7 +914,7 @@ void vPyroAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPyroPlayer[tank].g_iAmmoCount < g_esPyroCache[tank].g_iHumanAmmo && g_esPyroCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esPyroCache[tank].g_flPyroChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esPyroCache[tank].g_flPyroChance)
 		{
 			vPyro(tank);
 		}
@@ -967,8 +971,9 @@ void vPyroReset2(int tank)
 	g_esPyroPlayer[tank].g_bActivated2 = false;
 	g_esPyroPlayer[tank].g_iDuration = -1;
 
+	float flSpeed = MT_GetRunSpeed(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(tank, flSpeed) : flSpeed));
 	ExtinguishEntity(tank);
-	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(tank));
 
 	if (g_esPyroCache[tank].g_iPyroMessage == 1)
 	{
@@ -990,18 +995,16 @@ void vPyroReset3(int tank)
 	}
 }
 
-Action tTimerPyroCombo(Handle timer, DataPack pack)
+void tTimerPyroCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPyroAbility[g_esPyroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPyroPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPyroCache[iTank].g_iPyroAbility == 0 || g_esPyroPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vPyro(iTank, iPos);
-
-	return Plugin_Continue;
 }

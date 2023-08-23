@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -642,7 +642,7 @@ public void MT_OnPlayerEventKilled(int victim, int attacker)
 				}
 
 				iPos = g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iComboPosition;
-				bRandom = (iPos != -1) ? true : MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
+				bRandom = (iPos != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esNecroCache[iTank].g_flNecroChance;
 				if (g_esNecroCache[iTank].g_iNecroAbility == 1 && bRandom)
 				{
 					flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 9, iPos) : g_esNecroCache[iTank].g_flNecroRange;
@@ -823,7 +823,7 @@ void vNecro(int tank, float pos[3], const char[] type)
 
 	if (bIsSpecialInfected(iInfected))
 	{
-		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iInfected, pos);
 
 		if (g_esNecroCache[tank].g_iNecroMessage == 1)
 		{
@@ -845,7 +845,7 @@ void vNecroAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esNecroPlayer[tank].g_iAmmoCount < g_esNecroCache[tank].g_iHumanAmmo && g_esNecroCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esNecroCache[tank].g_flNecroChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esNecroCache[tank].g_flNecroChance)
 		{
 			g_esNecroPlayer[tank].g_bActivated = true;
 
@@ -906,15 +906,13 @@ void vNecroReset2(int tank)
 	}
 }
 
-Action tTimerNecroCombo(Handle timer, int userid)
+void tTimerNecroCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esNecroAbility[g_esNecroPlayer[iTank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esNecroPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esNecroCache[iTank].g_iNecroAbility == 0 || g_esNecroPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esNecroPlayer[iTank].g_bActivated = true;
-
-	return Plugin_Continue;
 }

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -611,7 +611,7 @@ void vItemPlayerEventKilled(int victim, int attacker)
 public void MT_OnPlayerEventKilled(int victim, int attacker)
 #endif
 {
-	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && MT_GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
+	if (bIsSurvivor(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsTankSupported(attacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(attacker) && g_esItemCache[attacker].g_iItemAbility == 1 && g_esItemCache[attacker].g_sItemPinata[0] != '\0' && GetRandomFloat(0.1, 100.0) <= g_esItemCache[attacker].g_flItemPinataChance)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(victim, flPos);
@@ -646,7 +646,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esItemCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 0 && MT_GetRandomFloat(0.1, 100.0) <= g_esItemCache[tank].g_flItemChance && !g_esItemPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esItemCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esItemCache[tank].g_iItemAbility == 1 && g_esItemCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esItemCache[tank].g_flItemChance && !g_esItemPlayer[tank].g_bActivated)
 	{
 		g_esItemPlayer[tank].g_bActivated = true;
 	}
@@ -839,7 +839,7 @@ void vSpawnItem(const char[] name, float pos[3])
 
 	if (bIsValidEntity(iItem))
 	{
-		TeleportEntity(iItem, pos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iItem, pos);
 		DispatchSpawn(iItem);
 		ActivateEntity(iItem);
 
@@ -869,29 +869,25 @@ void vSpawnItem(const char[] name, float pos[3])
 	}
 }
 
-Action tTimerItemCombo(Handle timer, int userid)
+void tTimerItemCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esItemAbility[g_esItemPlayer[iTank].g_iTankType].g_iAccessFlags, g_esItemPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esItemPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esItemCache[iTank].g_iItemAbility == 0 || g_esItemPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esItemPlayer[iTank].g_bActivated = true;
-
-	return Plugin_Continue;
 }
 
-Action tTimerRemoveItemHooks(Handle timer, int ref)
+void tTimerRemoveItemHooks(Handle timer, int ref)
 {
 	int iItem = EntRefToEntIndex(ref);
 	if (!bIsValidEntity(iItem))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	SDKUnhook(iItem, SDKHook_OnTakeDamage, OnItemTakeDamage);
 	SDKUnhook(iItem, SDKHook_Use, OnItemUse);
-
-	return Plugin_Continue;
 }

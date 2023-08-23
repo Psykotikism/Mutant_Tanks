@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -369,7 +369,7 @@ Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrunkHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esDrunkCache[attacker].g_flDrunkChance, g_esDrunkCache[attacker].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vDrunkHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esDrunkCache[attacker].g_flDrunkChance, g_esDrunkCache[attacker].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esDrunkCache[victim].g_iDrunkHitMode == 0 || g_esDrunkCache[victim].g_iDrunkHitMode == 2) && bIsSurvivor(attacker) && g_esDrunkCache[victim].g_iComboAbility == 0)
@@ -381,7 +381,7 @@ Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 			if (StrEqual(sClassname[7], "melee"))
 			{
-				vDrunkHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esDrunkCache[victim].g_flDrunkChance, g_esDrunkCache[victim].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vDrunkHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esDrunkCache[victim].g_flDrunkChance, g_esDrunkCache[victim].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -562,6 +562,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esDrunkPlayer[iPlayer].g_iDrunkHitMode = 0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkRange = 0.0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkRangeChance = 0.0;
+					g_esDrunkPlayer[iPlayer].g_iDrunkRangeCooldown = 0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkSpeedInterval = 0.0;
 					g_esDrunkPlayer[iPlayer].g_flDrunkTurnInterval = 0.0;
 				}
@@ -693,7 +694,7 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esDrunkPlayer[iSurvivor].g_bAffected)
 		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, 1.0, true) : 1.0));
 		}
 	}
 }
@@ -751,7 +752,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esDrunkCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esDrunkCache[tank].g_iDrunkAbility == 1 && g_esDrunkCache[tank].g_iComboAbility == 0)
 	{
-		vDrunkAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vDrunkAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -774,7 +775,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esDrunkPlayer[tank].g_iRangeCooldown == -1 || g_esDrunkPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vDrunkAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vDrunkAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DrunkHuman3", (g_esDrunkPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -999,37 +1000,35 @@ void vDrunkReset3(int tank)
 	g_esDrunkPlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerDrunkCombo(Handle timer, DataPack pack)
+void tTimerDrunkCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrunkAbility[g_esDrunkPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrunkPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrunkPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDrunkCache[iTank].g_iDrunkAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDrunkAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerDrunkCombo2(Handle timer, DataPack pack)
+void tTimerDrunkCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esDrunkPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esDrunkAbility[g_esDrunkPlayer[iTank].g_iTankType].g_iAccessFlags, g_esDrunkPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esDrunkPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esDrunkCache[iTank].g_iDrunkHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1044,8 +1043,6 @@ Action tTimerDrunkCombo2(Handle timer, DataPack pack)
 	{
 		vDrunkHit(iSurvivor, iTank, flRandom, flChance, g_esDrunkCache[iTank].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
 Action tTimerDrunkSpeed(Handle timer, DataPack pack)
@@ -1072,7 +1069,8 @@ Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", MT_GetRandomFloat(1.5, 3.0));
+	float flRandom = MT_GetRandomFloat(1.5, 3.0);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, flRandom) : flRandom));
 	CreateTimer(MT_GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	return Plugin_Continue;
@@ -1118,21 +1116,19 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	flEyeAngles[1] -= flAngle;
 	flPunchAngles[1] += flAngle;
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
+	TeleportEntity(iSurvivor, .angles = flEyeAngles);
 	SetEntPropVector(iSurvivor, Prop_Data, "m_vecPunchAngle", flPunchAngles);
 
 	return Plugin_Continue;
 }
 
-Action tTimerStopDrunkSpeed(Handle timer, int userid)
+void tTimerStopDrunkSpeed(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor))
 	{
-		return Plugin_Stop;
+		return;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-
-	return Plugin_Continue;
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iSurvivor, 1.0, true) : 1.0));
 }

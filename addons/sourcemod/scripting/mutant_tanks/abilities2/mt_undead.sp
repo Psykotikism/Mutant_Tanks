@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -682,33 +682,6 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveUndead(tank);
 }
 
-void vUndeadCopyStats2(int oldTank, int newTank)
-{
-	g_esUndeadPlayer[newTank].g_bActivated = g_esUndeadPlayer[oldTank].g_bActivated;
-	g_esUndeadPlayer[newTank].g_iAmmoCount = g_esUndeadPlayer[oldTank].g_iAmmoCount;
-	g_esUndeadPlayer[newTank].g_iCooldown = g_esUndeadPlayer[oldTank].g_iCooldown;
-	g_esUndeadPlayer[newTank].g_iCount = g_esUndeadPlayer[oldTank].g_iCount;
-}
-
-void vRemoveUndead(int tank)
-{
-	g_esUndeadPlayer[tank].g_bActivated = false;
-	g_esUndeadPlayer[tank].g_iAmmoCount = 0;
-	g_esUndeadPlayer[tank].g_iCooldown = -1;
-	g_esUndeadPlayer[tank].g_iCount = 0;
-}
-
-void vUndeadReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vRemoveUndead(iPlayer);
-		}
-	}
-}
-
 void vUndead(int tank)
 {
 	if (g_esUndeadPlayer[tank].g_iCooldown != -1 && g_esUndeadPlayer[tank].g_iCooldown > GetTime())
@@ -747,7 +720,7 @@ void vUndeadAbility(int tank)
 
 	if (g_esUndeadPlayer[tank].g_iCount < g_esUndeadCache[tank].g_iUndeadAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esUndeadPlayer[tank].g_iAmmoCount < g_esUndeadCache[tank].g_iHumanAmmo && g_esUndeadCache[tank].g_iHumanAmmo > 0)))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esUndeadCache[tank].g_flUndeadChance)
 		{
 			vUndead(tank);
 		}
@@ -762,15 +735,40 @@ void vUndeadAbility(int tank)
 	}
 }
 
-Action tTimerUndeadCombo(Handle timer, int userid)
+void vUndeadCopyStats2(int oldTank, int newTank)
+{
+	g_esUndeadPlayer[newTank].g_bActivated = g_esUndeadPlayer[oldTank].g_bActivated;
+	g_esUndeadPlayer[newTank].g_iAmmoCount = g_esUndeadPlayer[oldTank].g_iAmmoCount;
+	g_esUndeadPlayer[newTank].g_iCooldown = g_esUndeadPlayer[oldTank].g_iCooldown;
+	g_esUndeadPlayer[newTank].g_iCount = g_esUndeadPlayer[oldTank].g_iCount;
+}
+
+void vRemoveUndead(int tank)
+{
+	g_esUndeadPlayer[tank].g_bActivated = false;
+	g_esUndeadPlayer[tank].g_iAmmoCount = 0;
+	g_esUndeadPlayer[tank].g_iCooldown = -1;
+	g_esUndeadPlayer[tank].g_iCount = 0;
+}
+
+void vUndeadReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vRemoveUndead(iPlayer);
+		}
+	}
+}
+
+void tTimerUndeadCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esUndeadAbility[g_esUndeadPlayer[iTank].g_iTankType].g_iAccessFlags, g_esUndeadPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esUndeadPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esUndeadCache[iTank].g_iUndeadAbility == 0 || g_esUndeadPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vUndead(iTank);
-
-	return Plugin_Continue;
 }

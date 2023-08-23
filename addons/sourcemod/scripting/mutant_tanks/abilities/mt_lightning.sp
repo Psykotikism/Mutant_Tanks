@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -64,7 +64,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_LIGHTNING "Lightning Ability"
 
-char g_sLightningSounds[8][26] = {"ambient/energy/zap1.wav", "ambient/energy/zap2.wav", "ambient/energy/zap3.wav", "ambient/energy/zap5.wav", "ambient/energy/zap6.wav", "ambient/energy/zap7.wav", "ambient/energy/zap8.wav", "ambient/energy/zap9.wav"};
+char g_sLightningSounds[8][26] =
+{
+	"ambient/energy/zap1.wav",
+	"ambient/energy/zap2.wav",
+	"ambient/energy/zap3.wav",
+	"ambient/energy/zap5.wav",
+	"ambient/energy/zap6.wav",
+	"ambient/energy/zap7.wav",
+	"ambient/energy/zap8.wav",
+	"ambient/energy/zap9.wav"
+};
 
 enum struct esLightningPlayer
 {
@@ -790,7 +800,7 @@ void vLightningAbility(int tank)
 
 	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esLightningPlayer[tank].g_iAmmoCount < g_esLightningCache[tank].g_iHumanAmmo && g_esLightningCache[tank].g_iHumanAmmo > 0))
 	{
-		if (MT_GetRandomFloat(0.1, 100.0) <= g_esLightningCache[tank].g_flLightningChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esLightningCache[tank].g_flLightningChance)
 		{
 			vLightning(tank);
 		}
@@ -853,20 +863,18 @@ void vLightningReset3(int tank)
 	}
 }
 
-Action tTimerLightningCombo(Handle timer, DataPack pack)
+void tTimerLightningCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esLightningAbility[g_esLightningPlayer[iTank].g_iTankType].g_iAccessFlags, g_esLightningPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esLightningPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esLightningCache[iTank].g_iLightningAbility == 0 || g_esLightningPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iPos = pack.ReadCell();
 	vLightning(iTank, iPos);
-
-	return Plugin_Continue;
 }
 
 Action tTimerLightning(Handle timer, DataPack pack)
@@ -913,7 +921,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 	{
 		Format(sTargetName, sizeof sTargetName, "mutant_tank_target_%i_%i", iTank, g_esLightningPlayer[iTank].g_iTankType);
 		DispatchKeyValue(iTarget, "targetname", sTargetName);
-		TeleportEntity(iTarget, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iTarget, flOrigin);
 		DispatchSpawn(iTarget);
 		ActivateEntity(iTarget);
 		SetVariantString("OnUser2 !self:Kill::2.0:1");
@@ -947,7 +955,7 @@ Action tTimerLightning(Handle timer, DataPack pack)
 		DispatchKeyValue(iLightning, "effect_name", PARTICLE_LIGHTNING);
 		DispatchKeyValue(iLightning, "cpoint1", sTargetName);
 
-		TeleportEntity(iLightning, flOrigin, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iLightning, flOrigin);
 		DispatchSpawn(iLightning);
 		ActivateEntity(iLightning);
 		AcceptEntityInput(iLightning, "Start");

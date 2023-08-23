@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -368,6 +368,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (g_esChokePlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
 	{
+		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 99999.0);
+			SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 99999.0);
+		}
+
 		buttons &= IN_ATTACK;
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
@@ -401,7 +408,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
-					vChokeHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esChokeCache[attacker].g_flChokeChance, g_esChokeCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+					vChokeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esChokeCache[attacker].g_flChokeChance, g_esChokeCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 				}
 			}
 			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esChokeCache[victim].g_iChokeHitMode == 0 || g_esChokeCache[victim].g_iChokeHitMode == 2) && bIsSurvivor(attacker) && g_esChokeCache[victim].g_iComboAbility == 0)
@@ -413,7 +420,7 @@ Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damag
 
 				if (StrEqual(sClassname[7], "melee"))
 				{
-					vChokeHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esChokeCache[victim].g_flChokeChance, g_esChokeCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vChokeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esChokeCache[victim].g_flChokeChance, g_esChokeCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 		}
@@ -597,6 +604,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esChokePlayer[iPlayer].g_iChokeHitMode = 0;
 					g_esChokePlayer[iPlayer].g_flChokeRange = 0.0;
 					g_esChokePlayer[iPlayer].g_flChokeRangeChance = 0.0;
+					g_esChokePlayer[iPlayer].g_iChokeRangeCooldown = 0;
 				}
 			}
 		}
@@ -800,7 +808,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esChokeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esChokeCache[tank].g_iChokeAbility == 1 && g_esChokeCache[tank].g_iComboAbility == 0)
 	{
-		vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vChokeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -823,7 +831,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esChokePlayer[tank].g_iRangeCooldown == -1 || g_esChokePlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vChokeAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vChokeAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ChokeHuman3", (g_esChokePlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1023,6 +1031,18 @@ void vChokeReset2(int survivor, int tank, int messages)
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 	SetEntityGravity(survivor, 1.0);
 
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
+		}
+	}
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
+
 	if (g_esChokeCache[tank].g_iChokeMessage & messages)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Choke2", survivor);
@@ -1041,7 +1061,52 @@ void vChokeReset3(int tank)
 	g_esChokePlayer[tank].g_iRangeCooldown = -1;
 }
 
-Action tTimerChokeLaunch(Handle timer, DataPack pack)
+void tTimerChokeCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeAbility == 0)
+	{
+		return;
+	}
+
+	float flRandom = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	vChokeAbility(iTank, flRandom, iPos);
+}
+
+void tTimerChokeCombo2(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsHumanSurvivor(iSurvivor) || g_esChokePlayer[iSurvivor].g_bAffected)
+	{
+		return;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeHit == 0)
+	{
+		return;
+	}
+
+	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	char sClassname[32];
+	pack.ReadString(sClassname, sizeof sClassname);
+	if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
+	{
+		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+	}
+	else if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 2) && StrEqual(sClassname[7], "melee"))
+	{
+		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+	}
+}
+
+void tTimerChokeLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1051,7 +1116,7 @@ Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
 		g_esChokePlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iChokeEnabled = pack.ReadCell();
@@ -1060,13 +1125,13 @@ Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
 		g_esChokePlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	g_esChokePlayer[iSurvivor].g_bBlockFall = true;
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 300.0}));
+	TeleportEntity(iSurvivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
+	TeleportEntity(iSurvivor, .velocity = view_as<float>({0.0, 0.0, 300.0}));
 	SetEntityGravity(iSurvivor, 0.1);
 
 	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
@@ -1079,8 +1144,6 @@ Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	dpChokeDamage.WriteCell(iChokeEnabled);
 	dpChokeDamage.WriteCell(iPos);
 	dpChokeDamage.WriteCell(GetTime());
-
-	return Plugin_Continue;
 }
 
 Action tTimerChokeDamage(Handle timer, DataPack pack)
@@ -1114,7 +1177,7 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	TeleportEntity(iSurvivor, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
@@ -1122,55 +1185,6 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	if (flDamage > 0.0)
 	{
 		vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
-	}
-
-	return Plugin_Continue;
-}
-
-Action tTimerChokeCombo(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeAbility == 0)
-	{
-		return Plugin_Stop;
-	}
-
-	float flRandom = pack.ReadFloat();
-	int iPos = pack.ReadCell();
-	vChokeAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
-}
-
-Action tTimerChokeCombo2(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor) || g_esChokePlayer[iSurvivor].g_bAffected)
-	{
-		return Plugin_Stop;
-	}
-
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esChokeCache[iTank].g_iChokeHit == 0)
-	{
-		return Plugin_Stop;
-	}
-
-	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
-	int iPos = pack.ReadCell();
-	char sClassname[32];
-	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
-	{
-		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
-	}
-	else if ((g_esChokeCache[iTank].g_iChokeHitMode == 0 || g_esChokeCache[iTank].g_iChokeHitMode == 2) && StrEqual(sClassname[7], "melee"))
-	{
-		vChokeHit(iSurvivor, iTank, flRandom, flChance, g_esChokeCache[iTank].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
 
 	return Plugin_Continue;

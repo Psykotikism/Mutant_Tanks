@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -546,7 +546,10 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 void OnInfectedSpawnPost(int entity)
 {
-	SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	if (bIsValidEntity(entity))
+	{
+		SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	}
 }
 
 Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -1143,7 +1146,7 @@ void vShieldRockThrow(int tank, int rock)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esShieldCache[tank].g_iShieldAbility == 1 && MT_GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldThrowChance && ((g_esShieldCache[tank].g_iShieldType & MT_SHIELD_EXPLOSIVE) || (g_esShieldCache[tank].g_iShieldType & MT_SHIELD_FIRE)))
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esShieldCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldThrowChance && ((g_esShieldCache[tank].g_iShieldType & MT_SHIELD_EXPLOSIVE) || (g_esShieldCache[tank].g_iShieldType & MT_SHIELD_FIRE)))
 	{
 		if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esShieldCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
 		{
@@ -1155,73 +1158,6 @@ public void MT_OnRockThrow(int tank, int rock)
 		dpShieldThrow.WriteCell(EntIndexToEntRef(rock));
 		dpShieldThrow.WriteCell(GetClientUserId(tank));
 		dpShieldThrow.WriteCell(g_esShieldPlayer[tank].g_iTankType);
-	}
-}
-
-void vShieldCopyStats2(int oldTank, int newTank)
-{
-	g_esShieldPlayer[newTank].g_iAmmoCount = g_esShieldPlayer[oldTank].g_iAmmoCount;
-	g_esShieldPlayer[newTank].g_iCooldown = g_esShieldPlayer[oldTank].g_iCooldown;
-	g_esShieldPlayer[newTank].g_iCooldown2 = g_esShieldPlayer[oldTank].g_iCooldown2;
-}
-
-void vRemoveShield(int tank)
-{
-	if (bIsValidEntRef(g_esShieldPlayer[tank].g_iShield))
-	{
-		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
-		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
-		{
-			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
-
-			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
-			{
-				int iGlowColor[4];
-				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
-			}
-
-			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);
-			RemoveEntity(g_esShieldPlayer[tank].g_iShield);
-		}
-	}
-
-	g_esShieldPlayer[tank].g_bActivated = false;
-	g_esShieldPlayer[tank].g_bRainbowColor = false;
-	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
-}
-
-void vShieldReset()
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			vShieldAbility(iPlayer, false);
-			vShieldReset2(iPlayer);
-		}
-	}
-}
-
-void vShieldReset2(int tank)
-{
-	g_esShieldPlayer[tank].g_bRainbowColor = false;
-	g_esShieldPlayer[tank].g_flHealth = 0.0;
-	g_esShieldPlayer[tank].g_iAmmoCount = 0;
-	g_esShieldPlayer[tank].g_iCooldown = -1;
-	g_esShieldPlayer[tank].g_iCooldown2 = -1;
-	g_esShieldPlayer[tank].g_iDuration = -1;
-	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
-}
-
-void vShieldReset3(int tank)
-{
-	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
-	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", (g_esShieldPlayer[tank].g_iCooldown - iTime));
 	}
 }
 
@@ -1310,7 +1246,7 @@ void vShieldAbility(int tank, bool shield)
 
 			if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0))
 			{
-				if (MT_GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldChance)
+				if (GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldChance)
 				{
 					g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
 					if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
@@ -1435,17 +1371,82 @@ void OnShieldPreThinkPost(int tank)
 	}
 }
 
-Action tTimerShieldCombo(Handle timer, int userid)
+void vShieldCopyStats2(int oldTank, int newTank)
+{
+	g_esShieldPlayer[newTank].g_iAmmoCount = g_esShieldPlayer[oldTank].g_iAmmoCount;
+	g_esShieldPlayer[newTank].g_iCooldown = g_esShieldPlayer[oldTank].g_iCooldown;
+	g_esShieldPlayer[newTank].g_iCooldown2 = g_esShieldPlayer[oldTank].g_iCooldown2;
+}
+
+void vRemoveShield(int tank)
+{
+	if (bIsValidEntRef(g_esShieldPlayer[tank].g_iShield))
+	{
+		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
+		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+		{
+			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
+
+			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
+			{
+				int iGlowColor[4];
+				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), !!MT_IsGlowFlashing(tank), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), ((MT_GetGlowType(tank) == 1) ? 3 : 2));
+			}
+
+			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);
+			RemoveEntity(g_esShieldPlayer[tank].g_iShield);
+		}
+	}
+
+	g_esShieldPlayer[tank].g_bActivated = false;
+	g_esShieldPlayer[tank].g_bRainbowColor = false;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShieldAbility(iPlayer, false);
+			vShieldReset2(iPlayer);
+		}
+	}
+}
+
+void vShieldReset2(int tank)
+{
+	g_esShieldPlayer[tank].g_bRainbowColor = false;
+	g_esShieldPlayer[tank].g_flHealth = 0.0;
+	g_esShieldPlayer[tank].g_iAmmoCount = 0;
+	g_esShieldPlayer[tank].g_iCooldown = -1;
+	g_esShieldPlayer[tank].g_iCooldown2 = -1;
+	g_esShieldPlayer[tank].g_iDuration = -1;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset3(int tank)
+{
+	int iTime = GetTime(), iPos = g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esShieldCache[tank].g_iShieldCooldown;
+	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1 && g_esShieldCache[tank].g_iHumanMode == 0 && g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? g_esShieldCache[tank].g_iHumanCooldown : iCooldown;
+	g_esShieldPlayer[tank].g_iCooldown = (iTime + iCooldown);
+	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", (g_esShieldPlayer[tank].g_iCooldown - iTime));
+	}
+}
+
+void tTimerShieldCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShieldCache[iTank].g_iShieldAbility == 0 || g_esShieldPlayer[iTank].g_bActivated)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	vShieldAbility(iTank, true);
-
-	return Plugin_Continue;
 }
 
 Action tTimerShieldThrow(Handle timer, DataPack pack)
@@ -1488,7 +1489,7 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 			iTypeCount++;
 		}
 
-		int iChosen = iTypes[MT_GetRandomInt(0, (iTypeCount - 1))];
+		int iChosen = (iTypeCount > 0) ? iTypes[MT_GetRandomInt(0, (iTypeCount - 1))] : iTypes[0];
 		if (iChosen == 2 || iChosen == 4)
 		{
 			int iThrowable = CreateEntityByName("prop_physics");
@@ -1507,9 +1508,9 @@ Action tTimerShieldThrow(Handle timer, DataPack pack)
 				NormalizeVector(flVelocity, flVelocity);
 				ScaleVector(flVelocity, (g_cvMTShieldTankThrowForce.FloatValue * 1.4));
 
-				TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(iThrowable, flPos);
 				DispatchSpawn(iThrowable);
-				TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
+				TeleportEntity(iThrowable, .velocity = flVelocity);
 			}
 		}
 

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2022  Alfred "Psyk0tik" Llagas
+ * Copyright (C) 2023  Alfred "Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -410,6 +410,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (g_esBuryPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
 	{
+		int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 99999.0);
+			SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 99999.0);
+		}
+
 		buttons &= IN_ATTACK;
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
@@ -443,7 +450,7 @@ Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 				if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
-					vBuryHit(victim, attacker, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+					vBuryHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esBuryCache[attacker].g_flBuryChance, g_esBuryCache[attacker].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 				}
 			}
 			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esBuryCache[victim].g_iBuryHitMode == 0 || g_esBuryCache[victim].g_iBuryHitMode == 2) && bIsSurvivor(attacker) && g_esBuryCache[victim].g_iComboAbility == 0)
@@ -455,7 +462,7 @@ Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 
 				if (StrEqual(sClassname[7], "melee"))
 				{
-					vBuryHit(attacker, victim, MT_GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+					vBuryHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esBuryCache[victim].g_flBuryChance, g_esBuryCache[victim].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 				}
 			}
 		}
@@ -639,6 +646,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esBuryPlayer[iPlayer].g_iBuryHitMode = 0;
 					g_esBuryPlayer[iPlayer].g_flBuryRange = 0.0;
 					g_esBuryPlayer[iPlayer].g_flBuryRangeChance = 0.0;
+					g_esBuryPlayer[iPlayer].g_iBuryRangeCooldown = 0;
 				}
 			}
 		}
@@ -856,7 +864,7 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esBuryCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esBuryCache[tank].g_iBuryAbility == 1 && g_esBuryCache[tank].g_iComboAbility == 0)
 	{
-		vBuryAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+		vBuryAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -879,7 +887,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 			switch (g_esBuryPlayer[tank].g_iRangeCooldown == -1 || g_esBuryPlayer[tank].g_iRangeCooldown < iTime)
 			{
-				case true: vBuryAbility(tank, MT_GetRandomFloat(0.1, 100.0));
+				case true: vBuryAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "BuryHuman3", (g_esBuryPlayer[tank].g_iRangeCooldown - iTime));
 			}
 		}
@@ -1143,8 +1151,20 @@ void vStopBury(int survivor, int tank)
 	{
 		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight;
 
-		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+		TeleportEntity(survivor, g_esBuryPlayer[survivor].g_flLastPosition, .velocity = view_as<float>({0.0, 0.0, 0.0}));
 	}
+
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > MaxClients)
+		{
+			SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", 1.0);
+		}
+	}
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flNextAttack", 1.0);
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
 	{
@@ -1152,37 +1172,35 @@ void vStopBury(int survivor, int tank)
 	}
 }
 
-Action tTimerBuryCombo(Handle timer, DataPack pack)
+void tTimerBuryCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esBuryAbility[g_esBuryPlayer[iTank].g_iTankType].g_iAccessFlags, g_esBuryPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esBuryPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esBuryCache[iTank].g_iBuryAbility == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vBuryAbility(iTank, flRandom, iPos);
-
-	return Plugin_Continue;
 }
 
-Action tTimerBuryCombo2(Handle timer, DataPack pack)
+void tTimerBuryCombo2(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || g_esBuryPlayer[iSurvivor].g_bAffected)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esBuryAbility[g_esBuryPlayer[iTank].g_iTankType].g_iAccessFlags, g_esBuryPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esBuryPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esBuryCache[iTank].g_iBuryHit == 0)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
@@ -1197,11 +1215,9 @@ Action tTimerBuryCombo2(Handle timer, DataPack pack)
 	{
 		vBuryHit(iSurvivor, iTank, flRandom, flChance, g_esBuryCache[iTank].g_iBuryHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
 	}
-
-	return Plugin_Continue;
 }
 
-Action tTimerStopBury(Handle timer, DataPack pack)
+void tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
@@ -1211,7 +1227,7 @@ Action tTimerStopBury(Handle timer, DataPack pack)
 		g_esBuryPlayer[iSurvivor].g_bAffected = false;
 		g_esBuryPlayer[iSurvivor].g_iOwner = 0;
 
-		return Plugin_Stop;
+		return;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -1219,7 +1235,7 @@ Action tTimerStopBury(Handle timer, DataPack pack)
 	{
 		vStopBury(iSurvivor, iTank);
 
-		return Plugin_Stop;
+		return;
 	}
 
 	vStopBury(iSurvivor, iTank);
@@ -1230,6 +1246,4 @@ Action tTimerStopBury(Handle timer, DataPack pack)
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Bury2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury2", LANG_SERVER, iSurvivor);
 	}
-
-	return Plugin_Continue;
 }
