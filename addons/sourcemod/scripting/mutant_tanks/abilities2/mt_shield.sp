@@ -562,7 +562,7 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		{
 			vShieldAbility(victim, false);
 
-			return Plugin_Continue;
+			//return Plugin_Continue;
 		}
 
 		if (bSurvivor || bSpecial || bCommon)
@@ -592,7 +592,7 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		{
 			if (bRewarded)
 			{
-				return Plugin_Handled;
+				//return Plugin_Handled;
 			}
 
 			float flTankPos[3];
@@ -605,7 +605,7 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			}
 		}
 
-		return Plugin_Handled;
+		//return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
