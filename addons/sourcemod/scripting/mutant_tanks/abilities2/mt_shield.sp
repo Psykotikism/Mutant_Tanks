@@ -562,7 +562,7 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		{
 			vShieldAbility(victim, false);
 
-			//return Plugin_Continue;
+			return Plugin_Continue;
 		}
 
 		if (bSurvivor || bSpecial || bCommon)
@@ -592,6 +592,8 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 		{
 			if (bRewarded)
 			{
+				MT_PrintToChatAll("OnShieldTakeDamage: bRewarded - Block damage");
+				MT_LogMessage(MT_LOG_ABILITY, "OnShieldTakeDamage: bRewarded - Block damage");
 				//return Plugin_Handled;
 			}
 
@@ -605,6 +607,8 @@ Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			}
 		}
 
+		MT_PrintToChatAll("OnShieldTakeDamage: Block damage");
+		MT_LogMessage(MT_LOG_ABILITY, "OnShieldTakeDamage: Block damage");
 		//return Plugin_Handled;
 	}
 

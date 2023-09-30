@@ -15188,7 +15188,7 @@ Action OnCombineTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (!bHasCoreAdminAccess(attacker) || bIsCoreAdminImmune(victim, attacker))
 			{
-				//return Plugin_Continue;
+				return Plugin_Continue;
 			}
 
 			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
@@ -15200,7 +15200,7 @@ Action OnCombineTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (!bHasCoreAdminAccess(victim) || bIsCoreAdminImmune(attacker, victim))
 			{
-				//return Plugin_Continue;
+				return Plugin_Continue;
 			}
 
 			if (StrEqual(sClassname[7], "melee"))
@@ -15221,6 +15221,8 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 		{
 			if ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)) || (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1)))
 			{
+				MT_PrintToChatAll("OnFriendlyTakeDamage: survivor - Block damage");
+				vLogMessage(-1, _, "OnFriendlyTakeDamage: survivor - Block damage");
 				//return Plugin_Handled;
 			}
 		}
@@ -15234,10 +15236,14 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 					GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 					if (StrEqual(sClassname, "pipe"))
 					{
+						MT_PrintToChatAll("OnFriendlyTakeDamage: owned pipe_bomb - Block damage");
+						vLogMessage(-1, _, "OnFriendlyTakeDamage: owned pipe_bomb - Block damage");
 						//return Plugin_Handled;
 					}
 				}
 
+				MT_PrintToChatAll("OnFriendlyTakeDamage: owned entity - Block damage");
+				vLogMessage(-1, _, "OnFriendlyTakeDamage: owned entity - Block damage");
 				//return Plugin_Handled;
 			}
 		}
@@ -15249,6 +15255,8 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				GetEntityClassname(inflictor, sClassname, sizeof sClassname);
 				if (StrEqual(sClassname, "pipe") && (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)))
 				{
+					MT_PrintToChatAll("OnFriendlyTakeDamage: free pipe_bomb - Block damage");
+					vLogMessage(-1, _, "OnFriendlyTakeDamage: free pipe_bomb - Block damage");
 					//return Plugin_Handled;
 				}
 			}
@@ -15257,6 +15265,8 @@ Action OnFriendlyTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				attacker = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
 				if ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iFriendlyFire == 1)) && (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2))))
 				{
+					MT_PrintToChatAll("OnFriendlyTakeDamage: free entity - Block damage");
+					vLogMessage(-1, _, "OnFriendlyTakeDamage: free entity - Block damage");
 					//return Plugin_Handled;
 				}
 			}
@@ -15276,7 +15286,8 @@ Action OnInfectedTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
 			{
 				vRemovePlayerDamage(victim, damagetype);
-
+				MT_PrintToChatAll("OnInfectedTakeDamage: free zombie - Block damage");
+				vLogMessage(-1, _, "OnInfectedTakeDamage: free zombie - Block damage");
 				//return Plugin_Handled;
 			}
 		}
@@ -15285,7 +15296,8 @@ Action OnInfectedTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			if (g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
 			{
 				vRemovePlayerDamage(victim, damagetype);
-
+				MT_PrintToChatAll("OnInfectedTakeDamage: owned zombie - Block damage");
+				vLogMessage(-1, _, "OnInfectedTakeDamage: owned zombie - Block damage");
 				//return Plugin_Handled;
 			}
 		}
@@ -15396,9 +15408,11 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				{
 					SetEntProp(victim, Prop_Data, "m_takedamage", 2, 1);
 
-					//return Plugin_Continue;
+					return Plugin_Continue;
 				}
 
+				MT_PrintToChatAll("OnPlayerTakeDamage: survivor godmode reward - Block damage");
+				vLogMessage(-1, _, "OnPlayerTakeDamage: survivor godmode reward - Block damage");
 				//return Plugin_Handled;
 			}
 			else if ((g_esPlayer[victim].g_iFallPasses > 0 || (iIndex != -1 && g_esPatch[iIndex].g_iType == 2) || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
@@ -15408,10 +15422,14 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					g_esPlayer[victim].g_iFallPasses--;
 				}
 
+				MT_PrintToChatAll("OnPlayerTakeDamage: survivor fall - Block damage");
+				vLogMessage(-1, _, "OnPlayerTakeDamage: survivor fall - Block damage");
 				//return Plugin_Handled;
 			}
 			else if ((bIsDeveloper(victim, 8) || bIsDeveloper(victim, 10)) && StrEqual(sClassname, "insect_swarm"))
 			{
+				MT_PrintToChatAll("OnPlayerTakeDamage: survivor acid puddle - Block damage");
+				vLogMessage(-1, _, "OnPlayerTakeDamage: survivor acid puddle - Block damage");
 				//return Plugin_Handled;
 			}
 			else if (bIsTank(attacker))
@@ -15425,6 +15443,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
+						MT_PrintToChatAll("OnPlayerTakeDamage: claw damage - Changed/Block damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: claw damage - Changed/Block damage");
 						//return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 					else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
@@ -15433,6 +15453,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
+						MT_PrintToChatAll("OnPlayerTakeDamage: hittable damage - Changed/Block damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: hittable damage - Changed/Block damage");
 						//return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iLauncher) && g_esCache[attacker].g_flRockDamage >= 0.0)
@@ -15441,13 +15463,16 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						damage = bIsPlayerIncapacitated(victim) ? (damage * g_esCache[attacker].g_flIncapDamageMultiplier) : damage;
 						damage = (bRewarded && flResistance > 0.0) ? (damage * flResistance) : damage;
 
+						MT_PrintToChatAll("OnPlayerTakeDamage: rock damage - Changed/Block damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: rock damage - Changed/Block damage");
 						//return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 				}
 				else if (bRewarded && flResistance > 0.0)
 				{
 					damage *= flResistance;
-
+					MT_PrintToChatAll("OnPlayerTakeDamage: damage resistance - Changed damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: damage resistance - Changed damage");
 					//return Plugin_Changed;
 				}
 			}
@@ -15471,7 +15496,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				if (flResistance > 0.0)
 				{
 					damage *= flResistance;
-
+					MT_PrintToChatAll("OnPlayerTakeDamage: damage resistance 2 - Changed damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: damage resistance 2 - Changed damage");
 					//return Plugin_Changed;
 				}
 			}
@@ -15488,7 +15514,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				if (StrEqual(sClassname, "tank_rock"))
 				{
 					RequestFrame(vDetonateRockFrame, EntIndexToEntRef(inflictor));
-
+					MT_PrintToChatAll("OnPlayerTakeDamage: tank_rock - Block damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: tank_rock - Block damage");
 					//return Plugin_Handled;
 				}
 
@@ -15511,24 +15538,27 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						if (flDamage > 0.0)
 						{
 							damage *= flDamage;
-
+							MT_PrintToChatAll("OnPlayerTakeDamage: damage boost - Changed damage");
+							vLogMessage(-1, _, "OnPlayerTakeDamage: damage boost - Changed damage");
 							//return Plugin_Changed;
 						}
 
-						//return Plugin_Continue;
+						return Plugin_Continue;
 					}
 
 					if (bBlockBullets && ((!bBlockExplosives && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))) || (!bBlockFire && (damagetype & DMG_BURN))))
 					{
 						damagetype &= ~DMG_BULLET|DMG_BUCKSHOT;
-
+						MT_PrintToChatAll("OnPlayerTakeDamage: damage type - Changed damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: damage type - Changed damage");
 						//return Plugin_Changed;
 					}
 
 					if (bBlockExplosives && !bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
 					{
 						damagetype &= ~DMG_BLAST|DMG_BLAST_SURFACE|DMG_AIRBOAT|DMG_PLASMA;
-
+						MT_PrintToChatAll("OnPlayerTakeDamage: damage type 2 - Changed damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: damage type 2 - Changed damage");
 						//return Plugin_Changed;
 					}
 
@@ -15539,7 +15569,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						if (!bBlockBullets && ((damagetype & DMG_BULLET) || (damagetype & DMG_BUCKSHOT)))
 						{
 							damagetype &= ~DMG_BURN;
-
+							MT_PrintToChatAll("OnPlayerTakeDamage: damage type 3 - Changed damage");
+							vLogMessage(-1, _, "OnPlayerTakeDamage: damage type 3 - Changed damage");
 							//return Plugin_Changed;
 						}
 					}
@@ -15561,6 +15592,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 						}
 					}
 
+					MT_PrintToChatAll("OnPlayerTakeDamage: immunities - Block damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: immunities - Block damage");
 					//return Plugin_Handled;
 				}
 
@@ -15597,7 +15630,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 						inflictor = 0;
 						attacker = 0;
-
+						MT_PrintToChatAll("OnPlayerTakeDamage: credit igniters - Changed damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: credit igniters - Changed damage");
 						//return Plugin_Changed;
 					}
 				}
@@ -15660,6 +15694,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 
 					if (bChanged)
 					{
+						MT_PrintToChatAll("OnPlayerTakeDamage: survivor damage boost - Changed damage");
+						vLogMessage(-1, _, "OnPlayerTakeDamage: survivor damage boost - Changed damage");
 						//return Plugin_Changed;
 					}
 				}
@@ -15673,7 +15709,8 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				if (flDamage > 0.0)
 				{
 					damage *= flDamage;
-
+					MT_PrintToChatAll("OnPlayerTakeDamage: survivor damage boost reward - Changed damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: survivor damage boost reward - Changed damage");
 					//return Plugin_Changed;
 				}
 			}
@@ -15681,7 +15718,7 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 			{
 				if (StrEqual(sClassname[7], "tank_claw"))
 				{
-					//return Plugin_Continue;
+					return Plugin_Continue;
 				}
 
 				if (StrEqual(sClassname, "tank_rock") || (damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN))
@@ -15692,12 +15729,15 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 					{
 						RequestFrame(vDetonateRockFrame, EntIndexToEntRef(inflictor));
 					}
-
+					MT_PrintToChatAll("OnPlayerTakeDamage: tank_claw - Block damage");
+					vLogMessage(-1, _, "OnPlayerTakeDamage: tank_claw - Block damage");
 					//return Plugin_Handled;
 				}
 			}
 			else if (victim == attacker)
 			{
+				MT_PrintToChatAll("OnPlayerTakeDamage: same attacker - Ignore/Block damage");
+				vLogMessage(-1, _, "OnPlayerTakeDamage: same attacker - Ignore/Block damage");
 				//return (bIsWitch(victim) && (damagetype & DMG_BURN)) ? Plugin_Continue : Plugin_Handled;
 			}
 		}
@@ -15715,6 +15755,8 @@ Action OnPropTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 			attacker = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity");
 			if (attacker == -1 || (bIsValidClient(attacker, MT_CHECK_INDEX) && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2)))
 			{
+				MT_PrintToChatAll("OnPropTakeDamage: free prop - Block damage");
+				vLogMessage(-1, _, "OnPropTakeDamage: free prop - Block damage");
 				//return Plugin_Handled;
 			}
 		}
@@ -15722,6 +15764,8 @@ Action OnPropTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 		{
 			if (g_esGeneral.g_iTeamID2[inflictor] == 2 && ((bIsValidClient(victim) && GetClientTeam(victim) == GetClientTeam(attacker) && (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iFriendlyFire == 1))) || !IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID2 || GetClientTeam(attacker) != 2))
 			{
+				MT_PrintToChatAll("OnPropTakeDamage: owned prop - Block damage");
+				vLogMessage(-1, _, "OnPropTakeDamage: owned prop - Block damage");
 				//return Plugin_Handled;
 			}
 		}
