@@ -92,6 +92,32 @@ enum struct esCarPlayer
 
 esCarPlayer g_esCarPlayer[MAXPLAYERS + 1];
 
+enum struct esCarTeammate
+{
+	float g_flCarChance;
+	float g_flCarInterval;
+	float g_flCarLifetime;
+	float g_flCarRadius[2];
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+
+	int g_iCarAbility;
+	int g_iCarCooldown;
+	int g_iCarDuration;
+	int g_iCarMessage;
+	int g_iCarOptions;
+	int g_iCarOwner;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esCarTeammate g_esCarTeammate[MAXPLAYERS + 1];
+
 enum struct esCarAbility
 {
 	float g_flCarChance;
@@ -119,6 +145,32 @@ enum struct esCarAbility
 }
 
 esCarAbility g_esCarAbility[MT_MAXTYPES + 1];
+
+enum struct esCarSpecial
+{
+	float g_flCarChance;
+	float g_flCarInterval;
+	float g_flCarLifetime;
+	float g_flCarRadius[2];
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+
+	int g_iCarAbility;
+	int g_iCarCooldown;
+	int g_iCarDuration;
+	int g_iCarMessage;
+	int g_iCarOptions;
+	int g_iCarOwner;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esCarSpecial g_esCarSpecial[MT_MAXTYPES + 1];
 
 enum struct esCarCache
 {
@@ -374,7 +426,7 @@ void vCarCombineAbilities(int tank, int type, const float random, const char[] c
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility != 2)
 	{
 		g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -438,8 +490,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esCarAbility[iIndex].g_iAccessFlags = 0;
 				g_esCarAbility[iIndex].g_flCloseAreasOnly = 0.0;
@@ -463,68 +514,130 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCarAbility[iIndex].g_flCarLifetime = 30.0;
 				g_esCarAbility[iIndex].g_flCarRadius[0] = -180.0;
 				g_esCarAbility[iIndex].g_flCarRadius[1] = 180.0;
+
+				g_esCarSpecial[iIndex].g_iComboAbility = -1;
+				g_esCarSpecial[iIndex].g_iHumanAbility = -1;
+				g_esCarSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esCarSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esCarSpecial[iIndex].g_iHumanDuration = -1;
+				g_esCarSpecial[iIndex].g_iHumanMode = -1;
+				g_esCarSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esCarSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esCarSpecial[iIndex].g_iCarAbility = -1;
+				g_esCarSpecial[iIndex].g_iCarMessage = -1;
+				g_esCarSpecial[iIndex].g_flCarChance = -1.0;
+				g_esCarSpecial[iIndex].g_iCarCooldown = -1;
+				g_esCarSpecial[iIndex].g_iCarDuration = -1;
+				g_esCarSpecial[iIndex].g_iCarOptions = -1;
+				g_esCarSpecial[iIndex].g_iCarOwner = -1;
+				g_esCarSpecial[iIndex].g_flCarInterval = -1.0;
+				g_esCarSpecial[iIndex].g_flCarLifetime = -1.0;
+				g_esCarSpecial[iIndex].g_flCarRadius[0] = 1.0;
+				g_esCarSpecial[iIndex].g_flCarRadius[1] = -1.0;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esCarPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esCarPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esCarPlayer[iPlayer].g_iComboAbility = 0;
-					g_esCarPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esCarPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esCarPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esCarPlayer[iPlayer].g_iHumanDuration = 0;
-					g_esCarPlayer[iPlayer].g_iHumanMode = 0;
-					g_esCarPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esCarPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esCarPlayer[iPlayer].g_iCarAbility = 0;
-					g_esCarPlayer[iPlayer].g_iCarMessage = 0;
-					g_esCarPlayer[iPlayer].g_flCarChance = 0.0;
-					g_esCarPlayer[iPlayer].g_iCarCooldown = 0;
-					g_esCarPlayer[iPlayer].g_iCarDuration = 0;
-					g_esCarPlayer[iPlayer].g_iCarOptions = 0;
-					g_esCarPlayer[iPlayer].g_iCarOwner = 0;
-					g_esCarPlayer[iPlayer].g_flCarInterval = 0.0;
-					g_esCarPlayer[iPlayer].g_flCarLifetime = 0.0;
-					g_esCarPlayer[iPlayer].g_flCarRadius[0] = 0.0;
-					g_esCarPlayer[iPlayer].g_flCarRadius[1] = 0.0;
-				}
+				g_esCarPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esCarPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esCarPlayer[iPlayer].g_iComboAbility = -1;
+				g_esCarPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esCarPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esCarPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esCarPlayer[iPlayer].g_iHumanDuration = -1;
+				g_esCarPlayer[iPlayer].g_iHumanMode = -1;
+				g_esCarPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esCarPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esCarPlayer[iPlayer].g_iCarAbility = -1;
+				g_esCarPlayer[iPlayer].g_iCarMessage = -1;
+				g_esCarPlayer[iPlayer].g_flCarChance = -1.0;
+				g_esCarPlayer[iPlayer].g_iCarCooldown = -1;
+				g_esCarPlayer[iPlayer].g_iCarDuration = -1;
+				g_esCarPlayer[iPlayer].g_iCarOptions = -1;
+				g_esCarPlayer[iPlayer].g_iCarOwner = -1;
+				g_esCarPlayer[iPlayer].g_flCarInterval = -1.0;
+				g_esCarPlayer[iPlayer].g_flCarLifetime = -1.0;
+				g_esCarPlayer[iPlayer].g_flCarRadius[0] = 1.0;
+				g_esCarPlayer[iPlayer].g_flCarRadius[1] = -1.0;
+
+				g_esCarTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esCarTeammate[iPlayer].g_iComboAbility = -1;
+				g_esCarTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esCarTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esCarTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esCarTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esCarTeammate[iPlayer].g_iHumanMode = -1;
+				g_esCarTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esCarTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esCarTeammate[iPlayer].g_iCarAbility = -1;
+				g_esCarTeammate[iPlayer].g_iCarMessage = -1;
+				g_esCarTeammate[iPlayer].g_flCarChance = -1.0;
+				g_esCarTeammate[iPlayer].g_iCarCooldown = -1;
+				g_esCarTeammate[iPlayer].g_iCarDuration = -1;
+				g_esCarTeammate[iPlayer].g_iCarOptions = -1;
+				g_esCarTeammate[iPlayer].g_iCarOwner = -1;
+				g_esCarTeammate[iPlayer].g_flCarInterval = -1.0;
+				g_esCarTeammate[iPlayer].g_flCarLifetime = -1.0;
+				g_esCarTeammate[iPlayer].g_flCarRadius[0] = 1.0;
+				g_esCarTeammate[iPlayer].g_flCarRadius[1] = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vCarConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vCarConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esCarPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esCarPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esCarPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esCarPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esCarPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esCarPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarPlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esCarPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esCarPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esCarPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esCarPlayer[admin].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarPlayer[admin].g_iCarAbility, value, 0, 1);
-		g_esCarPlayer[admin].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarPlayer[admin].g_iCarMessage, value, 0, 1);
-		g_esCarPlayer[admin].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarPlayer[admin].g_flCarChance, value, 0.0, 100.0);
-		g_esCarPlayer[admin].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarPlayer[admin].g_iCarCooldown, value, 0, 99999);
-		g_esCarPlayer[admin].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarPlayer[admin].g_iCarDuration, value, 0, 99999);
-		g_esCarPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarPlayer[admin].g_flCarInterval, value, 0.1, 1.0);
-		g_esCarPlayer[admin].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarPlayer[admin].g_flCarLifetime, value, 0.1, 99999.0);
-		g_esCarPlayer[admin].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarPlayer[admin].g_iCarOptions, value, 0, 7);
-		g_esCarPlayer[admin].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarPlayer[admin].g_iCarOwner, value, 0, 1);
-		g_esCarPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esCarTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCarTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esCarTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esCarTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esCarTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esCarTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esCarTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esCarTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCarTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esCarTeammate[admin].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarTeammate[admin].g_iCarAbility, value, -1, 1);
+			g_esCarTeammate[admin].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarTeammate[admin].g_iCarMessage, value, -1, 1);
+			g_esCarTeammate[admin].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarTeammate[admin].g_flCarChance, value, -1.0, 100.0);
+			g_esCarTeammate[admin].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarTeammate[admin].g_iCarCooldown, value, -1, 99999);
+			g_esCarTeammate[admin].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarTeammate[admin].g_iCarDuration, value, -1, 99999);
+			g_esCarTeammate[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarTeammate[admin].g_flCarInterval, value, -1.0, 1.0);
+			g_esCarTeammate[admin].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarTeammate[admin].g_flCarLifetime, value, -1.0, 99999.0);
+			g_esCarTeammate[admin].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarTeammate[admin].g_iCarOptions, value, -1, 7);
+			g_esCarTeammate[admin].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarTeammate[admin].g_iCarOwner, value, -1, 1);
+		}
+		else
+		{
+			g_esCarPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCarPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esCarPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esCarPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esCarPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esCarPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarPlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esCarPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esCarPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCarPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esCarPlayer[admin].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarPlayer[admin].g_iCarAbility, value, -1, 1);
+			g_esCarPlayer[admin].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarPlayer[admin].g_iCarMessage, value, -1, 1);
+			g_esCarPlayer[admin].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarPlayer[admin].g_flCarChance, value, -1.0, 100.0);
+			g_esCarPlayer[admin].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarPlayer[admin].g_iCarCooldown, value, -1, 99999);
+			g_esCarPlayer[admin].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarPlayer[admin].g_iCarDuration, value, -1, 99999);
+			g_esCarPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarPlayer[admin].g_flCarInterval, value, -1.0, 1.0);
+			g_esCarPlayer[admin].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarPlayer[admin].g_flCarLifetime, value, -1.0, 99999.0);
+			g_esCarPlayer[admin].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarPlayer[admin].g_iCarOptions, value, -1, 7);
+			g_esCarPlayer[admin].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarPlayer[admin].g_iCarOwner, value, -1, 1);
+			g_esCarPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 
 		if (StrEqual(subsection, MT_CAR_SECTION, false) || StrEqual(subsection, MT_CAR_SECTION2, false) || StrEqual(subsection, MT_CAR_SECTION3, false) || StrEqual(subsection, MT_CAR_SECTION4, false))
 		{
@@ -535,33 +648,65 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
-				g_esCarPlayer[admin].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esCarPlayer[admin].g_flCarRadius[0];
-				g_esCarPlayer[admin].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esCarPlayer[admin].g_flCarRadius[1];
+				if (special && specsection[0] != '\0')
+				{
+					g_esCarTeammate[admin].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esCarTeammate[admin].g_flCarRadius[0];
+					g_esCarTeammate[admin].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esCarTeammate[admin].g_flCarRadius[1];
+				}
+				else
+				{
+					g_esCarPlayer[admin].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esCarPlayer[admin].g_flCarRadius[0];
+					g_esCarPlayer[admin].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esCarPlayer[admin].g_flCarRadius[1];
+				}
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esCarAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esCarAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarAbility[type].g_iComboAbility, value, 0, 1);
-		g_esCarAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esCarAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esCarAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esCarAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esCarAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarAbility[type].g_iHumanMode, value, 0, 1);
-		g_esCarAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esCarAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esCarAbility[type].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarAbility[type].g_iCarAbility, value, 0, 1);
-		g_esCarAbility[type].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarAbility[type].g_iCarMessage, value, 0, 1);
-		g_esCarAbility[type].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarAbility[type].g_flCarChance, value, 0.0, 100.0);
-		g_esCarAbility[type].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarAbility[type].g_iCarCooldown, value, 0, 99999);
-		g_esCarAbility[type].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarAbility[type].g_iCarDuration, value, 0, 99999);
-		g_esCarAbility[type].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarAbility[type].g_flCarInterval, value, 0.1, 1.0);
-		g_esCarAbility[type].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarAbility[type].g_flCarLifetime, value, 0.1, 99999.0);
-		g_esCarAbility[type].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarAbility[type].g_iCarOptions, value, 0, 7);
-		g_esCarAbility[type].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarAbility[type].g_iCarOwner, value, 0, 1);
-		g_esCarAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esCarSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCarSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esCarSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esCarSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esCarSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esCarSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esCarSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esCarSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCarSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esCarSpecial[type].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarSpecial[type].g_iCarAbility, value, -1, 1);
+			g_esCarSpecial[type].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarSpecial[type].g_iCarMessage, value, -1, 1);
+			g_esCarSpecial[type].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarSpecial[type].g_flCarChance, value, -1.0, 100.0);
+			g_esCarSpecial[type].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarSpecial[type].g_iCarCooldown, value, -1, 99999);
+			g_esCarSpecial[type].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarSpecial[type].g_iCarDuration, value, -1, 99999);
+			g_esCarSpecial[type].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarSpecial[type].g_flCarInterval, value, -1.0, 1.0);
+			g_esCarSpecial[type].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarSpecial[type].g_flCarLifetime, value, -1.0, 99999.0);
+			g_esCarSpecial[type].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarSpecial[type].g_iCarOptions, value, -1, 7);
+			g_esCarSpecial[type].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarSpecial[type].g_iCarOwner, value, -1, 1);
+		}
+		else
+		{
+			g_esCarAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCarAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCarAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCarAbility[type].g_iComboAbility, value, -1, 1);
+			g_esCarAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCarAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esCarAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCarAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esCarAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCarAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esCarAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esCarAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esCarAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esCarAbility[type].g_iHumanMode, value, -1, 1);
+			g_esCarAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCarAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCarAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCarAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esCarAbility[type].g_iCarAbility = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCarAbility[type].g_iCarAbility, value, -1, 1);
+			g_esCarAbility[type].g_iCarMessage = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCarAbility[type].g_iCarMessage, value, -1, 1);
+			g_esCarAbility[type].g_flCarChance = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esCarAbility[type].g_flCarChance, value, -1.0, 100.0);
+			g_esCarAbility[type].g_iCarCooldown = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarCooldown", "Car Cooldown", "Car_Cooldown", "cooldown", g_esCarAbility[type].g_iCarCooldown, value, -1, 99999);
+			g_esCarAbility[type].g_iCarDuration = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esCarAbility[type].g_iCarDuration, value, -1, 99999);
+			g_esCarAbility[type].g_flCarInterval = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esCarAbility[type].g_flCarInterval, value, -1.0, 1.0);
+			g_esCarAbility[type].g_flCarLifetime = flGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esCarAbility[type].g_flCarLifetime, value, -1.0, 99999.0);
+			g_esCarAbility[type].g_iCarOptions = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOptions", "Car Options", "Car_Options", "options", g_esCarAbility[type].g_iCarOptions, value, -1, 7);
+			g_esCarAbility[type].g_iCarOwner = iGetKeyValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "CarOwner", "Car Owner", "Car_Owner", "owner", g_esCarAbility[type].g_iCarOwner, value, -1, 1);
+			g_esCarAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CAR_SECTION, MT_CAR_SECTION2, MT_CAR_SECTION3, MT_CAR_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 
 		if (StrEqual(subsection, MT_CAR_SECTION, false) || StrEqual(subsection, MT_CAR_SECTION2, false) || StrEqual(subsection, MT_CAR_SECTION3, false) || StrEqual(subsection, MT_CAR_SECTION4, false))
 		{
@@ -572,8 +717,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof sSet, sizeof sSet[]);
 
-				g_esCarAbility[type].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esCarAbility[type].g_flCarRadius[0];
-				g_esCarAbility[type].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esCarAbility[type].g_flCarRadius[1];
+				if (special && specsection[0] != '\0')
+				{
+					g_esCarSpecial[type].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esCarSpecial[type].g_flCarRadius[0];
+					g_esCarSpecial[type].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esCarSpecial[type].g_flCarRadius[1];
+				}
+				else
+				{
+					g_esCarAbility[type].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 1.0) : g_esCarAbility[type].g_flCarRadius[0];
+					g_esCarAbility[type].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), -1.0, 200.0) : g_esCarAbility[type].g_flCarRadius[1];
+				}
 			}
 		}
 	}
@@ -585,28 +738,55 @@ void vCarSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esCarCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarChance, g_esCarAbility[type].g_flCarChance);
-	g_esCarCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarInterval, g_esCarAbility[type].g_flCarInterval);
-	g_esCarCache[tank].g_flCarLifetime = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarLifetime, g_esCarAbility[type].g_flCarLifetime);
-	g_esCarCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[0], g_esCarAbility[type].g_flCarRadius[0]);
-	g_esCarCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[1], g_esCarAbility[type].g_flCarRadius[1]);
-	g_esCarCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarAbility, g_esCarAbility[type].g_iCarAbility);
-	g_esCarCache[tank].g_iCarCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarCooldown, g_esCarAbility[type].g_iCarCooldown);
-	g_esCarCache[tank].g_iCarDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarDuration, g_esCarAbility[type].g_iCarDuration);
-	g_esCarCache[tank].g_iCarMessage = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarMessage, g_esCarAbility[type].g_iCarMessage);
-	g_esCarCache[tank].g_iCarOptions = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOptions, g_esCarAbility[type].g_iCarOptions);
-	g_esCarCache[tank].g_iCarOwner = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOwner, g_esCarAbility[type].g_iCarOwner);
-	g_esCarCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarAbility[type].g_flCloseAreasOnly);
-	g_esCarCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iComboAbility, g_esCarAbility[type].g_iComboAbility);
-	g_esCarCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAbility, g_esCarAbility[type].g_iHumanAbility);
-	g_esCarCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarAbility[type].g_iHumanAmmo);
-	g_esCarCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarAbility[type].g_iHumanCooldown);
-	g_esCarCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanDuration, g_esCarAbility[type].g_iHumanDuration);
-	g_esCarCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanMode, g_esCarAbility[type].g_iHumanMode);
-	g_esCarCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarAbility[type].g_flOpenAreasOnly);
-	g_esCarCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esCarPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esCarCache[tank].g_flCarChance = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarChance, g_esCarPlayer[tank].g_flCarChance, g_esCarSpecial[type].g_flCarChance, g_esCarAbility[type].g_flCarChance, 1);
+		g_esCarCache[tank].g_flCarInterval = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarInterval, g_esCarPlayer[tank].g_flCarInterval, g_esCarSpecial[type].g_flCarInterval, g_esCarAbility[type].g_flCarInterval, 1);
+		g_esCarCache[tank].g_flCarLifetime = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarLifetime, g_esCarPlayer[tank].g_flCarLifetime, g_esCarSpecial[type].g_flCarLifetime, g_esCarAbility[type].g_flCarLifetime, 1);
+		g_esCarCache[tank].g_flCarRadius[0] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[0], g_esCarPlayer[tank].g_flCarRadius[0], g_esCarSpecial[type].g_flCarRadius[0], g_esCarAbility[type].g_flCarRadius[0], 2, 1.0);
+		g_esCarCache[tank].g_flCarRadius[1] = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCarRadius[1], g_esCarPlayer[tank].g_flCarRadius[1], g_esCarSpecial[type].g_flCarRadius[1], g_esCarAbility[type].g_flCarRadius[1], 2, -1.0);
+		g_esCarCache[tank].g_iCarAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarAbility, g_esCarPlayer[tank].g_iCarAbility, g_esCarSpecial[type].g_iCarAbility, g_esCarAbility[type].g_iCarAbility, 1);
+		g_esCarCache[tank].g_iCarCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarCooldown, g_esCarPlayer[tank].g_iCarCooldown, g_esCarSpecial[type].g_iCarCooldown, g_esCarAbility[type].g_iCarCooldown, 1);
+		g_esCarCache[tank].g_iCarDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarDuration, g_esCarPlayer[tank].g_iCarDuration, g_esCarSpecial[type].g_iCarDuration, g_esCarAbility[type].g_iCarDuration, 1);
+		g_esCarCache[tank].g_iCarMessage = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarMessage, g_esCarPlayer[tank].g_iCarMessage, g_esCarSpecial[type].g_iCarMessage, g_esCarAbility[type].g_iCarMessage, 1);
+		g_esCarCache[tank].g_iCarOptions = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOptions, g_esCarPlayer[tank].g_iCarOptions, g_esCarSpecial[type].g_iCarOptions, g_esCarAbility[type].g_iCarOptions, 1);
+		g_esCarCache[tank].g_iCarOwner = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iCarOwner, g_esCarPlayer[tank].g_iCarOwner, g_esCarSpecial[type].g_iCarOwner, g_esCarAbility[type].g_iCarOwner, 1);
+		g_esCarCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flCloseAreasOnly, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarSpecial[type].g_flCloseAreasOnly, g_esCarAbility[type].g_flCloseAreasOnly, 1);
+		g_esCarCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iComboAbility, g_esCarPlayer[tank].g_iComboAbility, g_esCarSpecial[type].g_iComboAbility, g_esCarAbility[type].g_iComboAbility, 1);
+		g_esCarCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAbility, g_esCarPlayer[tank].g_iHumanAbility, g_esCarSpecial[type].g_iHumanAbility, g_esCarAbility[type].g_iHumanAbility, 1);
+		g_esCarCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanAmmo, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarSpecial[type].g_iHumanAmmo, g_esCarAbility[type].g_iHumanAmmo, 1);
+		g_esCarCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanCooldown, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarSpecial[type].g_iHumanCooldown, g_esCarAbility[type].g_iHumanCooldown, 1);
+		g_esCarCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanDuration, g_esCarPlayer[tank].g_iHumanDuration, g_esCarSpecial[type].g_iHumanDuration, g_esCarAbility[type].g_iHumanDuration, 1);
+		g_esCarCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iHumanMode, g_esCarPlayer[tank].g_iHumanMode, g_esCarSpecial[type].g_iHumanMode, g_esCarAbility[type].g_iHumanMode, 1);
+		g_esCarCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_flOpenAreasOnly, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarSpecial[type].g_flOpenAreasOnly, g_esCarAbility[type].g_flOpenAreasOnly, 1);
+		g_esCarCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esCarTeammate[tank].g_iRequiresHumans, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarSpecial[type].g_iRequiresHumans, g_esCarAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esCarCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarChance, g_esCarAbility[type].g_flCarChance, 1);
+		g_esCarCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarInterval, g_esCarAbility[type].g_flCarInterval, 1);
+		g_esCarCache[tank].g_flCarLifetime = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarLifetime, g_esCarAbility[type].g_flCarLifetime, 1);
+		g_esCarCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[0], g_esCarAbility[type].g_flCarRadius[0], 2, 1.0);
+		g_esCarCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarRadius[1], g_esCarAbility[type].g_flCarRadius[1], 2, -1.0);
+		g_esCarCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarAbility, g_esCarAbility[type].g_iCarAbility, 1);
+		g_esCarCache[tank].g_iCarCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarCooldown, g_esCarAbility[type].g_iCarCooldown, 1);
+		g_esCarCache[tank].g_iCarDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarDuration, g_esCarAbility[type].g_iCarDuration, 1);
+		g_esCarCache[tank].g_iCarMessage = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarMessage, g_esCarAbility[type].g_iCarMessage, 1);
+		g_esCarCache[tank].g_iCarOptions = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOptions, g_esCarAbility[type].g_iCarOptions, 1);
+		g_esCarCache[tank].g_iCarOwner = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iCarOwner, g_esCarAbility[type].g_iCarOwner, 1);
+		g_esCarCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCloseAreasOnly, g_esCarAbility[type].g_flCloseAreasOnly, 1);
+		g_esCarCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iComboAbility, g_esCarAbility[type].g_iComboAbility, 1);
+		g_esCarCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAbility, g_esCarAbility[type].g_iHumanAbility, 1);
+		g_esCarCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanAmmo, g_esCarAbility[type].g_iHumanAmmo, 1);
+		g_esCarCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanCooldown, g_esCarAbility[type].g_iHumanCooldown, 1);
+		g_esCarCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanDuration, g_esCarAbility[type].g_iHumanDuration, 1);
+		g_esCarCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iHumanMode, g_esCarAbility[type].g_iHumanMode, 1);
+		g_esCarCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flOpenAreasOnly, g_esCarAbility[type].g_flOpenAreasOnly, 1);
+		g_esCarCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_iRequiresHumans, g_esCarAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -640,7 +820,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vCarCopyStats2(iBot, iTank);
 			vRemoveCar(iBot);
@@ -650,7 +830,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vCarCopyStats2(iTank, iBot);
 			vRemoveCar(iTank);
@@ -681,7 +861,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCarCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iComboAbility == 0 && !g_esCarPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esCarCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iComboAbility == 0 && !g_esCarPlayer[tank].g_bActivated)
 	{
 		vCarAbility(tank);
 	}
@@ -695,7 +875,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -703,7 +883,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esCarCache[tank].g_iCarAbility == 1 && g_esCarCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esCarCache[tank].g_iHumanMode)
 			{
@@ -761,7 +941,7 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esCarCache[tank].g_iHumanMode == 1 && g_esCarPlayer[tank].g_bActivated && (g_esCarPlayer[tank].g_iCooldown == -1 || g_esCarPlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esCarCache[tank].g_iHumanMode == 1 && g_esCarPlayer[tank].g_bActivated && (g_esCarPlayer[tank].g_iCooldown == -1 || g_esCarPlayer[tank].g_iCooldown <= GetTime()))
 		{
 			vCarReset2(tank);
 			vCarReset3(tank);
@@ -785,7 +965,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vCar(int tank, int pos = -1)
 {
-	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > GetTime())
+	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= GetTime())
 	{
 		return;
 	}
@@ -794,7 +974,7 @@ void vCar(int tank, int pos = -1)
 
 	vCar2(tank, pos);
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
 	{
 		g_esCarPlayer[tank].g_iAmmoCount++;
 
@@ -812,39 +992,42 @@ void vCar(int tank, int pos = -1)
 
 void vCar2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esCarCache[tank].g_flCarInterval;
-	DataPack dpCar;
-	CreateDataTimer(flInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpCar.WriteCell(GetClientUserId(tank));
-	dpCar.WriteCell(g_esCarPlayer[tank].g_iTankType);
-	dpCar.WriteCell(GetTime());
-	dpCar.WriteCell(pos);
+	if (flInterval > 0.0)
+	{
+		DataPack dpCar;
+		CreateDataTimer(flInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpCar.WriteCell(GetClientUserId(tank));
+		dpCar.WriteCell(g_esCarPlayer[tank].g_iTankType);
+		dpCar.WriteCell(GetTime());
+		dpCar.WriteCell(pos);
+	}
 }
 
 void vCarAbility(int tank)
 {
-	if ((g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
+	if ((g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCarCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCarCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esCarPlayer[tank].g_iTankType, tank) || (g_esCarCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCarCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCarCache[tank].g_flCarChance)
 		{
 			vCar(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarAmmo");
 	}
@@ -890,9 +1073,9 @@ void vCarReset2(int tank)
 void vCarReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esCarCache[tank].g_iCarCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1 && g_esCarCache[tank].g_iHumanMode == 0 && g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0) ? g_esCarCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1 && g_esCarCache[tank].g_iHumanMode == 0 && g_esCarPlayer[tank].g_iAmmoCount < g_esCarCache[tank].g_iHumanAmmo && g_esCarCache[tank].g_iHumanAmmo > 0) ? g_esCarCache[tank].g_iHumanCooldown : iCooldown;
 	g_esCarPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown > iTime)
+	if (g_esCarPlayer[tank].g_iCooldown != -1 && g_esCarPlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman5", (g_esCarPlayer[tank].g_iCooldown - iTime));
 	}
@@ -903,7 +1086,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esCarPlayer[iTank].g_iTankType || !g_esCarPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esCarPlayer[iTank].g_iTankType || !g_esCarPlayer[iTank].g_bActivated)
 	{
 		g_esCarPlayer[iTank].g_bActivated = false;
 
@@ -917,7 +1100,7 @@ Action tTimerCar(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsInfected(iTank, MT_CHECK_FAKECLIENT);
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
 		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esCarCache[iTank].g_iCarDuration;
 	iDuration = (bHuman && g_esCarCache[iTank].g_iHumanAbility == 1) ? g_esCarCache[iTank].g_iHumanDuration : iDuration;
@@ -1040,7 +1223,7 @@ void tTimerCarCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCarCache[iTank].g_iCarAbility == 0 || g_esCarPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCarAbility[g_esCarPlayer[iTank].g_iTankType].g_iAccessFlags, g_esCarPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esCarPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esCarCache[iTank].g_iCarAbility == 0 || g_esCarPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

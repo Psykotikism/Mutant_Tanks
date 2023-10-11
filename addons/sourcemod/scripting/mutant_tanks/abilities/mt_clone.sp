@@ -28,16 +28,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bDedicated;
+bool g_bDedicated, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Clone Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Clone Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
@@ -97,6 +101,32 @@ enum struct esClonePlayer
 
 esClonePlayer g_esClonePlayer[MAXPLAYERS + 1];
 
+enum struct esCloneTeammate
+{
+	float g_flCloneChance;
+	float g_flCloneLifetime;
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+
+	int g_iCloneAbility;
+	int g_iCloneAmount;
+	int g_iCloneCooldown;
+	int g_iCloneHealth;
+	int g_iCloneMaxType;
+	int g_iCloneMinType;
+	int g_iCloneMessage;
+	int g_iCloneMode;
+	int g_iCloneRemove;
+	int g_iCloneReplace;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+}
+
+esCloneTeammate g_esCloneTeammate[MAXPLAYERS + 1];
+
 enum struct esCloneAbility
 {
 	float g_flCloneChance;
@@ -124,6 +154,32 @@ enum struct esCloneAbility
 }
 
 esCloneAbility g_esCloneAbility[MT_MAXTYPES + 1];
+
+enum struct esCloneSpecial
+{
+	float g_flCloneChance;
+	float g_flCloneLifetime;
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+
+	int g_iCloneAbility;
+	int g_iCloneAmount;
+	int g_iCloneCooldown;
+	int g_iCloneHealth;
+	int g_iCloneMaxType;
+	int g_iCloneMinType;
+	int g_iCloneMessage;
+	int g_iCloneMode;
+	int g_iCloneRemove;
+	int g_iCloneReplace;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+}
+
+esCloneSpecial g_esCloneSpecial[MT_MAXTYPES + 1];
 
 enum struct esCloneCache
 {
@@ -203,7 +259,7 @@ void vCloneClientDisconnect(int client)
 public void OnClientDisconnect(int client)
 #endif
 {
-	if (bIsTank(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esClonePlayer[client].g_bCloned)
+	if (bIsInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esClonePlayer[client].g_bCloned)
 	{
 		g_esClonePlayer[g_esClonePlayer[client].g_iOwner].g_iCount--;
 		g_esClonePlayer[client].g_iOwner = 0;
@@ -390,7 +446,7 @@ void vCloneCombineAbilities(int tank, int type, const float random, const char[]
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility != 2)
 	{
 		g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -448,8 +504,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esCloneAbility[iIndex].g_iAccessFlags = 0;
 				g_esCloneAbility[iIndex].g_flCloseAreasOnly = 0.0;
@@ -472,66 +527,126 @@ public void MT_OnConfigsLoad(int mode)
 				g_esCloneAbility[iIndex].g_iCloneMode = 0;
 				g_esCloneAbility[iIndex].g_iCloneRemove = 1;
 				g_esCloneAbility[iIndex].g_iCloneReplace = 1;
+
+				g_esCloneSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esCloneSpecial[iIndex].g_iComboAbility = -1;
+				g_esCloneSpecial[iIndex].g_iHumanAbility = -1;
+				g_esCloneSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esCloneSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esCloneSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esCloneSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esCloneSpecial[iIndex].g_iCloneAbility = -1;
+				g_esCloneSpecial[iIndex].g_iCloneMessage = -1;
+				g_esCloneSpecial[iIndex].g_iCloneAmount = -1;
+				g_esCloneSpecial[iIndex].g_flCloneChance = -1.0;
+				g_esCloneSpecial[iIndex].g_iCloneCooldown = -1;
+				g_esCloneSpecial[iIndex].g_iCloneHealth = -1;
+				g_esCloneSpecial[iIndex].g_flCloneLifetime = -1.0;
+				g_esCloneSpecial[iIndex].g_iCloneMaxType = -1;
+				g_esCloneSpecial[iIndex].g_iCloneMinType = -1;
+				g_esCloneSpecial[iIndex].g_iCloneMode = -1;
+				g_esCloneSpecial[iIndex].g_iCloneRemove = -1;
+				g_esCloneSpecial[iIndex].g_iCloneReplace = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esClonePlayer[iPlayer].g_iAccessFlags = 0;
-					g_esClonePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esClonePlayer[iPlayer].g_iComboAbility = 0;
-					g_esClonePlayer[iPlayer].g_iHumanAbility = 0;
-					g_esClonePlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esClonePlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esClonePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esClonePlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esClonePlayer[iPlayer].g_iCloneAbility = 0;
-					g_esClonePlayer[iPlayer].g_iCloneMessage = 0;
-					g_esClonePlayer[iPlayer].g_iCloneAmount = 0;
-					g_esClonePlayer[iPlayer].g_flCloneChance = 0.0;
-					g_esClonePlayer[iPlayer].g_iCloneCooldown = 0;
-					g_esClonePlayer[iPlayer].g_iCloneHealth = 0;
-					g_esClonePlayer[iPlayer].g_flCloneLifetime = 0.0;
-					g_esClonePlayer[iPlayer].g_iCloneMaxType = 0;
-					g_esClonePlayer[iPlayer].g_iCloneMinType = 0;
-					g_esClonePlayer[iPlayer].g_iCloneMode = 0;
-					g_esClonePlayer[iPlayer].g_iCloneRemove = 0;
-					g_esClonePlayer[iPlayer].g_iCloneReplace = 0;
-				}
+				g_esClonePlayer[iPlayer].g_iAccessFlags = -1;
+				g_esClonePlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esClonePlayer[iPlayer].g_iComboAbility = -1;
+				g_esClonePlayer[iPlayer].g_iHumanAbility = -1;
+				g_esClonePlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esClonePlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esClonePlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esClonePlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esClonePlayer[iPlayer].g_iCloneAbility = -1;
+				g_esClonePlayer[iPlayer].g_iCloneMessage = -1;
+				g_esClonePlayer[iPlayer].g_iCloneAmount = -1;
+				g_esClonePlayer[iPlayer].g_flCloneChance = -1.0;
+				g_esClonePlayer[iPlayer].g_iCloneCooldown = -1;
+				g_esClonePlayer[iPlayer].g_iCloneHealth = -1;
+				g_esClonePlayer[iPlayer].g_flCloneLifetime = -1.0;
+				g_esClonePlayer[iPlayer].g_iCloneMaxType = -1;
+				g_esClonePlayer[iPlayer].g_iCloneMinType = -1;
+				g_esClonePlayer[iPlayer].g_iCloneMode = -1;
+				g_esClonePlayer[iPlayer].g_iCloneRemove = -1;
+				g_esClonePlayer[iPlayer].g_iCloneReplace = -1;
+
+				g_esCloneTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esCloneTeammate[iPlayer].g_iComboAbility = -1;
+				g_esCloneTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esCloneTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esCloneTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esCloneTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esCloneTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneAbility = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneMessage = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneAmount = -1;
+				g_esCloneTeammate[iPlayer].g_flCloneChance = -1.0;
+				g_esCloneTeammate[iPlayer].g_iCloneCooldown = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneHealth = -1;
+				g_esCloneTeammate[iPlayer].g_flCloneLifetime = -1.0;
+				g_esCloneTeammate[iPlayer].g_iCloneMaxType = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneMinType = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneMode = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneRemove = -1;
+				g_esCloneTeammate[iPlayer].g_iCloneReplace = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vCloneConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vCloneConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esClonePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esClonePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esClonePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esClonePlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esClonePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esClonePlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esClonePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esClonePlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esClonePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esClonePlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esClonePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esClonePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esClonePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esClonePlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esClonePlayer[admin].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esClonePlayer[admin].g_iCloneAbility, value, 0, 1);
-		g_esClonePlayer[admin].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esClonePlayer[admin].g_iCloneMessage, value, 0, 1);
-		g_esClonePlayer[admin].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esClonePlayer[admin].g_iCloneAmount, value, 1, 15);
-		g_esClonePlayer[admin].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esClonePlayer[admin].g_flCloneChance, value, 0.0, 100.0);
-		g_esClonePlayer[admin].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esClonePlayer[admin].g_iCloneCooldown, value, 0, 99999);
-		g_esClonePlayer[admin].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esClonePlayer[admin].g_iCloneHealth, value, 1, MT_MAXHEALTH);
-		g_esClonePlayer[admin].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esClonePlayer[admin].g_flCloneLifetime, value, 0.0, 99999.0);
-		g_esClonePlayer[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esClonePlayer[admin].g_iCloneMode, value, 0, 1);
-		g_esClonePlayer[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esClonePlayer[admin].g_iCloneRemove, value, 0, 1);
-		g_esClonePlayer[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esClonePlayer[admin].g_iCloneReplace, value, 0, 1);
-		g_esClonePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esCloneTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCloneTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCloneTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCloneTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esCloneTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCloneTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esCloneTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloneTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esCloneTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloneTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esCloneTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloneTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCloneTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloneTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esCloneTeammate[admin].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloneTeammate[admin].g_iCloneAbility, value, -1, 1);
+			g_esCloneTeammate[admin].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloneTeammate[admin].g_iCloneMessage, value, -1, 1);
+			g_esCloneTeammate[admin].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esCloneTeammate[admin].g_iCloneAmount, value, -1, 15);
+			g_esCloneTeammate[admin].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esCloneTeammate[admin].g_flCloneChance, value, -1.0, 100.0);
+			g_esCloneTeammate[admin].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esCloneTeammate[admin].g_iCloneCooldown, value, -1, 99999);
+			g_esCloneTeammate[admin].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esCloneTeammate[admin].g_iCloneHealth, value, -1, MT_MAXHEALTH);
+			g_esCloneTeammate[admin].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esCloneTeammate[admin].g_flCloneLifetime, value, -1.0, 99999.0);
+			g_esCloneTeammate[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneTeammate[admin].g_iCloneMode, value, -1, 1);
+			g_esCloneTeammate[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneTeammate[admin].g_iCloneRemove, value, -1, 1);
+			g_esCloneTeammate[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneTeammate[admin].g_iCloneReplace, value, -1, 1);
+		}
+		else
+		{
+			g_esClonePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esClonePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esClonePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esClonePlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esClonePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esClonePlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esClonePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esClonePlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esClonePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esClonePlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esClonePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esClonePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esClonePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esClonePlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esClonePlayer[admin].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esClonePlayer[admin].g_iCloneAbility, value, -1, 1);
+			g_esClonePlayer[admin].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esClonePlayer[admin].g_iCloneMessage, value, -1, 1);
+			g_esClonePlayer[admin].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esClonePlayer[admin].g_iCloneAmount, value, -1, 15);
+			g_esClonePlayer[admin].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esClonePlayer[admin].g_flCloneChance, value, -1.0, 100.0);
+			g_esClonePlayer[admin].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esClonePlayer[admin].g_iCloneCooldown, value, -1, 99999);
+			g_esClonePlayer[admin].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esClonePlayer[admin].g_iCloneHealth, value, -1, MT_MAXHEALTH);
+			g_esClonePlayer[admin].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esClonePlayer[admin].g_flCloneLifetime, value, -1.0, 99999.0);
+			g_esClonePlayer[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esClonePlayer[admin].g_iCloneMode, value, -1, 1);
+			g_esClonePlayer[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esClonePlayer[admin].g_iCloneRemove, value, -1, 1);
+			g_esClonePlayer[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esClonePlayer[admin].g_iCloneReplace, value, -1, 1);
+			g_esClonePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 
 		if (StrEqual(subsection, MT_CLONE_SECTION, false) || StrEqual(subsection, MT_CLONE_SECTION2, false) || StrEqual(subsection, MT_CLONE_SECTION3, false) || StrEqual(subsection, MT_CLONE_SECTION4, false))
 		{
@@ -542,32 +657,63 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
-				g_esClonePlayer[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMinType;
-				g_esClonePlayer[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMaxType;
+				if (special && specsection[0] != '\0')
+				{
+					g_esCloneTeammate[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneTeammate[admin].g_iCloneMinType;
+					g_esCloneTeammate[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneTeammate[admin].g_iCloneMaxType;
+				}
+				else
+				{
+					g_esClonePlayer[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMinType;
+					g_esClonePlayer[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esClonePlayer[admin].g_iCloneMaxType;
+				}
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esCloneAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCloneAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esCloneAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCloneAbility[type].g_iComboAbility, value, 0, 1);
-		g_esCloneAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCloneAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esCloneAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloneAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esCloneAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloneAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esCloneAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloneAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esCloneAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloneAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esCloneAbility[type].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloneAbility[type].g_iCloneAbility, value, 0, 1);
-		g_esCloneAbility[type].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloneAbility[type].g_iCloneMessage, value, 0, 1);
-		g_esCloneAbility[type].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esCloneAbility[type].g_iCloneAmount, value, 1, 15);
-		g_esCloneAbility[type].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esCloneAbility[type].g_flCloneChance, value, 0.0, 100.0);
-		g_esCloneAbility[type].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esCloneAbility[type].g_iCloneCooldown, value, 0, 99999);
-		g_esCloneAbility[type].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esCloneAbility[type].g_iCloneHealth, value, 1, MT_MAXHEALTH);
-		g_esCloneAbility[type].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esCloneAbility[type].g_flCloneLifetime, value, 0.0, 99999.0);
-		g_esCloneAbility[type].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneAbility[type].g_iCloneMode, value, 0, 1);
-		g_esCloneAbility[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneAbility[type].g_iCloneRemove, value, 0, 1);
-		g_esCloneAbility[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneAbility[type].g_iCloneReplace, value, 0, 1);
-		g_esCloneAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esCloneSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCloneSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCloneSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCloneSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esCloneSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCloneSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esCloneSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloneSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esCloneSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloneSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esCloneSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloneSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCloneSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloneSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esCloneSpecial[type].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloneSpecial[type].g_iCloneAbility, value, -1, 1);
+			g_esCloneSpecial[type].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloneSpecial[type].g_iCloneMessage, value, -1, 1);
+			g_esCloneSpecial[type].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esCloneSpecial[type].g_iCloneAmount, value, -1, 15);
+			g_esCloneSpecial[type].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esCloneSpecial[type].g_flCloneChance, value, -1.0, 100.0);
+			g_esCloneSpecial[type].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esCloneSpecial[type].g_iCloneCooldown, value, -1, 99999);
+			g_esCloneSpecial[type].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esCloneSpecial[type].g_iCloneHealth, value, -1, MT_MAXHEALTH);
+			g_esCloneSpecial[type].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esCloneSpecial[type].g_flCloneLifetime, value, -1.0, 99999.0);
+			g_esCloneSpecial[type].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneSpecial[type].g_iCloneMode, value, -1, 1);
+			g_esCloneSpecial[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneSpecial[type].g_iCloneRemove, value, -1, 1);
+			g_esCloneSpecial[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneSpecial[type].g_iCloneReplace, value, -1, 1);
+		}
+		else
+		{
+			g_esCloneAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esCloneAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esCloneAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esCloneAbility[type].g_iComboAbility, value, -1, 1);
+			g_esCloneAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esCloneAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esCloneAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esCloneAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esCloneAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esCloneAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esCloneAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esCloneAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esCloneAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esCloneAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esCloneAbility[type].g_iCloneAbility = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esCloneAbility[type].g_iCloneAbility, value, -1, 1);
+			g_esCloneAbility[type].g_iCloneMessage = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esCloneAbility[type].g_iCloneMessage, value, -1, 1);
+			g_esCloneAbility[type].g_iCloneAmount = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esCloneAbility[type].g_iCloneAmount, value, -1, 15);
+			g_esCloneAbility[type].g_flCloneChance = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esCloneAbility[type].g_flCloneChance, value, -1.0, 100.0);
+			g_esCloneAbility[type].g_iCloneCooldown = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneCooldown", "Clone Cooldown", "Clone_Cooldown", "cooldown", g_esCloneAbility[type].g_iCloneCooldown, value, -1, 99999);
+			g_esCloneAbility[type].g_iCloneHealth = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esCloneAbility[type].g_iCloneHealth, value, -1, MT_MAXHEALTH);
+			g_esCloneAbility[type].g_flCloneLifetime = flGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esCloneAbility[type].g_flCloneLifetime, value, -1.0, 99999.0);
+			g_esCloneAbility[type].g_iCloneMode = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esCloneAbility[type].g_iCloneMode, value, -1, 1);
+			g_esCloneAbility[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esCloneAbility[type].g_iCloneRemove, value, -1, 1);
+			g_esCloneAbility[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esCloneAbility[type].g_iCloneReplace, value, -1, 1);
+			g_esCloneAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CLONE_SECTION, MT_CLONE_SECTION2, MT_CLONE_SECTION3, MT_CLONE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 
 		if (StrEqual(subsection, MT_CLONE_SECTION, false) || StrEqual(subsection, MT_CLONE_SECTION2, false) || StrEqual(subsection, MT_CLONE_SECTION3, false) || StrEqual(subsection, MT_CLONE_SECTION4, false))
 		{
@@ -578,8 +724,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ReplaceString(sValue, sizeof sValue, " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof sRange, sizeof sRange[]);
 
-				g_esCloneAbility[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMinType;
-				g_esCloneAbility[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMaxType;
+				if (special && specsection[0] != '\0')
+				{
+					g_esCloneSpecial[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneSpecial[type].g_iCloneMinType;
+					g_esCloneSpecial[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneSpecial[type].g_iCloneMaxType;
+				}
+				else
+				{
+					g_esCloneAbility[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMinType;
+					g_esCloneAbility[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esCloneAbility[type].g_iCloneMaxType;
+				}
 			}
 		}
 	}
@@ -591,27 +745,53 @@ void vCloneSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esCloneCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneChance, g_esCloneAbility[type].g_flCloneChance);
-	g_esCloneCache[tank].g_flCloneLifetime = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneLifetime, g_esCloneAbility[type].g_flCloneLifetime);
-	g_esCloneCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAbility, g_esCloneAbility[type].g_iCloneAbility);
-	g_esCloneCache[tank].g_iCloneAmount = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAmount, g_esCloneAbility[type].g_iCloneAmount);
-	g_esCloneCache[tank].g_iCloneCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneAbility[type].g_iCloneCooldown);
-	g_esCloneCache[tank].g_iCloneHealth = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneHealth, g_esCloneAbility[type].g_iCloneHealth);
-	g_esCloneCache[tank].g_iCloneMaxType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMaxType, g_esCloneAbility[type].g_iCloneMaxType);
-	g_esCloneCache[tank].g_iCloneMinType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneAbility[type].g_iCloneMinType);
-	g_esCloneCache[tank].g_iCloneMessage = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMessage, g_esCloneAbility[type].g_iCloneMessage);
-	g_esCloneCache[tank].g_iCloneMode = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMode, g_esCloneAbility[type].g_iCloneMode);
-	g_esCloneCache[tank].g_iCloneRemove = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneRemove, g_esCloneAbility[type].g_iCloneRemove);
-	g_esCloneCache[tank].g_iCloneReplace = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneReplace, g_esCloneAbility[type].g_iCloneReplace);
-	g_esCloneCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloseAreasOnly, g_esCloneAbility[type].g_flCloseAreasOnly);
-	g_esCloneCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iComboAbility, g_esCloneAbility[type].g_iComboAbility);
-	g_esCloneCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanAbility, g_esCloneAbility[type].g_iHumanAbility);
-	g_esCloneCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanAmmo, g_esCloneAbility[type].g_iHumanAmmo);
-	g_esCloneCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanCooldown, g_esCloneAbility[type].g_iHumanCooldown);
-	g_esCloneCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flOpenAreasOnly, g_esCloneAbility[type].g_flOpenAreasOnly);
-	g_esCloneCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iRequiresHumans, g_esCloneAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esClonePlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esCloneCache[tank].g_flCloneChance = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloneChance, g_esClonePlayer[tank].g_flCloneChance, g_esCloneSpecial[type].g_flCloneChance, g_esCloneAbility[type].g_flCloneChance, 1);
+		g_esCloneCache[tank].g_flCloneLifetime = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloneLifetime, g_esClonePlayer[tank].g_flCloneLifetime, g_esCloneSpecial[type].g_flCloneLifetime, g_esCloneAbility[type].g_flCloneLifetime, 1);
+		g_esCloneCache[tank].g_iCloneAbility = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneAbility, g_esClonePlayer[tank].g_iCloneAbility, g_esCloneSpecial[type].g_iCloneAbility, g_esCloneAbility[type].g_iCloneAbility, 1);
+		g_esCloneCache[tank].g_iCloneAmount = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneAmount, g_esClonePlayer[tank].g_iCloneAmount, g_esCloneSpecial[type].g_iCloneAmount, g_esCloneAbility[type].g_iCloneAmount, 1);
+		g_esCloneCache[tank].g_iCloneCooldown = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneCooldown, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneSpecial[type].g_iCloneCooldown, g_esCloneAbility[type].g_iCloneCooldown, 1);
+		g_esCloneCache[tank].g_iCloneHealth = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneHealth, g_esClonePlayer[tank].g_iCloneHealth, g_esCloneSpecial[type].g_iCloneHealth, g_esCloneAbility[type].g_iCloneHealth, 1);
+		g_esCloneCache[tank].g_iCloneMaxType = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMaxType, g_esClonePlayer[tank].g_iCloneMaxType, g_esCloneSpecial[type].g_iCloneMaxType, g_esCloneAbility[type].g_iCloneMaxType, 1);
+		g_esCloneCache[tank].g_iCloneMinType = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMinType, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneSpecial[type].g_iCloneMinType, g_esCloneAbility[type].g_iCloneMinType, 1);
+		g_esCloneCache[tank].g_iCloneMessage = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMessage, g_esClonePlayer[tank].g_iCloneMessage, g_esCloneSpecial[type].g_iCloneMessage, g_esCloneAbility[type].g_iCloneMessage, 1);
+		g_esCloneCache[tank].g_iCloneMode = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneMode, g_esClonePlayer[tank].g_iCloneMode, g_esCloneSpecial[type].g_iCloneMode, g_esCloneAbility[type].g_iCloneMode, 1);
+		g_esCloneCache[tank].g_iCloneRemove = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneRemove, g_esClonePlayer[tank].g_iCloneRemove, g_esCloneSpecial[type].g_iCloneRemove, g_esCloneAbility[type].g_iCloneRemove, 1);
+		g_esCloneCache[tank].g_iCloneReplace = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iCloneReplace, g_esClonePlayer[tank].g_iCloneReplace, g_esCloneSpecial[type].g_iCloneReplace, g_esCloneAbility[type].g_iCloneReplace, 1);
+		g_esCloneCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flCloseAreasOnly, g_esClonePlayer[tank].g_flCloseAreasOnly, g_esCloneSpecial[type].g_flCloseAreasOnly, g_esCloneAbility[type].g_flCloseAreasOnly, 1);
+		g_esCloneCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iComboAbility, g_esClonePlayer[tank].g_iComboAbility, g_esCloneSpecial[type].g_iComboAbility, g_esCloneAbility[type].g_iComboAbility, 1);
+		g_esCloneCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iHumanAbility, g_esClonePlayer[tank].g_iHumanAbility, g_esCloneSpecial[type].g_iHumanAbility, g_esCloneAbility[type].g_iHumanAbility, 1);
+		g_esCloneCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iHumanAmmo, g_esClonePlayer[tank].g_iHumanAmmo, g_esCloneSpecial[type].g_iHumanAmmo, g_esCloneAbility[type].g_iHumanAmmo, 1);
+		g_esCloneCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iHumanCooldown, g_esClonePlayer[tank].g_iHumanCooldown, g_esCloneSpecial[type].g_iHumanCooldown, g_esCloneAbility[type].g_iHumanCooldown, 1);
+		g_esCloneCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_flOpenAreasOnly, g_esClonePlayer[tank].g_flOpenAreasOnly, g_esCloneSpecial[type].g_flOpenAreasOnly, g_esCloneAbility[type].g_flOpenAreasOnly, 1);
+		g_esCloneCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esCloneTeammate[tank].g_iRequiresHumans, g_esClonePlayer[tank].g_iRequiresHumans, g_esCloneSpecial[type].g_iRequiresHumans, g_esCloneAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esCloneCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneChance, g_esCloneAbility[type].g_flCloneChance, 1);
+		g_esCloneCache[tank].g_flCloneLifetime = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneLifetime, g_esCloneAbility[type].g_flCloneLifetime, 1);
+		g_esCloneCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAbility, g_esCloneAbility[type].g_iCloneAbility, 1);
+		g_esCloneCache[tank].g_iCloneAmount = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneAmount, g_esCloneAbility[type].g_iCloneAmount, 1);
+		g_esCloneCache[tank].g_iCloneCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneCooldown, g_esCloneAbility[type].g_iCloneCooldown, 1);
+		g_esCloneCache[tank].g_iCloneHealth = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneHealth, g_esCloneAbility[type].g_iCloneHealth, 1);
+		g_esCloneCache[tank].g_iCloneMaxType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMaxType, g_esCloneAbility[type].g_iCloneMaxType, 1);
+		g_esCloneCache[tank].g_iCloneMinType = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMinType, g_esCloneAbility[type].g_iCloneMinType, 1);
+		g_esCloneCache[tank].g_iCloneMessage = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMessage, g_esCloneAbility[type].g_iCloneMessage, 1);
+		g_esCloneCache[tank].g_iCloneMode = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneMode, g_esCloneAbility[type].g_iCloneMode, 1);
+		g_esCloneCache[tank].g_iCloneRemove = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneRemove, g_esCloneAbility[type].g_iCloneRemove, 1);
+		g_esCloneCache[tank].g_iCloneReplace = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iCloneReplace, g_esCloneAbility[type].g_iCloneReplace, 1);
+		g_esCloneCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloseAreasOnly, g_esCloneAbility[type].g_flCloseAreasOnly, 1);
+		g_esCloneCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iComboAbility, g_esCloneAbility[type].g_iComboAbility, 1);
+		g_esCloneCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanAbility, g_esCloneAbility[type].g_iHumanAbility, 1);
+		g_esCloneCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanAmmo, g_esCloneAbility[type].g_iHumanAmmo, 1);
+		g_esCloneCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iHumanCooldown, g_esCloneAbility[type].g_iHumanCooldown, 1);
+		g_esCloneCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flOpenAreasOnly, g_esCloneAbility[type].g_flOpenAreasOnly, 1);
+		g_esCloneCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_iRequiresHumans, g_esCloneAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -643,7 +823,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (bIsTank(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esClonePlayer[iClone].g_bCloned)
+		if (bIsInfected(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esClonePlayer[iClone].g_bCloned)
 		{
 			ForcePlayerSuicide(iClone);
 		}
@@ -660,7 +840,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vCloneCopyStats2(iBot, iTank);
 			vRemoveClone(iBot);
@@ -670,7 +850,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vCloneCopyStats2(iTank, iBot);
 			vRemoveClone(iTank);
@@ -702,13 +882,13 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 										g_esClonePlayer[iOwner].g_iCount = (g_esCloneCache[iOwner].g_iCloneReplace == 1) ? 0 : g_esClonePlayer[iOwner].g_iCount;
 
 										iTime = GetTime();
-										if (g_esClonePlayer[iOwner].g_iCooldown == -1 || g_esClonePlayer[iOwner].g_iCooldown < iTime)
+										if (g_esClonePlayer[iOwner].g_iCooldown == -1 || g_esClonePlayer[iOwner].g_iCooldown <= iTime)
 										{
 											iPos = g_esCloneAbility[g_esClonePlayer[iOwner].g_iTankType].g_iComboPosition;
 											iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iOwner, 2, iPos)) : g_esCloneCache[iOwner].g_iCloneCooldown;
-											iCooldown = (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1 && g_esClonePlayer[iOwner].g_iAmmoCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? g_esCloneCache[iOwner].g_iHumanCooldown : iCooldown;
+											iCooldown = (bIsInfected(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1 && g_esClonePlayer[iOwner].g_iAmmoCount < g_esCloneCache[iOwner].g_iHumanAmmo && g_esCloneCache[iOwner].g_iHumanAmmo > 0) ? g_esCloneCache[iOwner].g_iHumanCooldown : iCooldown;
 											g_esClonePlayer[iOwner].g_iCooldown = (iTime + iCooldown);
-											if (g_esClonePlayer[iOwner].g_iCooldown != -1 && g_esClonePlayer[iOwner].g_iCooldown > iTime)
+											if (g_esClonePlayer[iOwner].g_iCooldown != -1 && g_esClonePlayer[iOwner].g_iCooldown >= iTime)
 											{
 												MT_PrintToChat(iOwner, "%s %t", MT_TAG3, "CloneHuman6", (g_esClonePlayer[iOwner].g_iCooldown - iTime));
 											}
@@ -721,7 +901,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 											g_esClonePlayer[iOwner].g_iCount--;
 										}
 
-										if (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1)
+										if (bIsInfected(iOwner, MT_CHECK_FAKECLIENT) && g_esCloneCache[iOwner].g_iHumanAbility == 1)
 										{
 											MT_PrintToChat(iOwner, "%s %t", MT_TAG3, "CloneHuman5");
 										}
@@ -756,7 +936,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCloneCache[tank].g_iHumanAbility != 1) && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iComboAbility == 0 && (g_esClonePlayer[tank].g_iCooldown == -1 || g_esClonePlayer[tank].g_iCooldown < GetTime()) && !g_esClonePlayer[tank].g_bCloned)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esCloneCache[tank].g_iHumanAbility != 1) && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iComboAbility == 0 && (g_esClonePlayer[tank].g_iCooldown == -1 || g_esClonePlayer[tank].g_iCooldown <= GetTime()) && !g_esClonePlayer[tank].g_bCloned)
 	{
 		vCloneAbility(tank);
 	}
@@ -770,7 +950,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
 	{
-		if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -778,7 +958,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_SPECIAL_KEY) && g_esCloneCache[tank].g_iCloneAbility == 1 && g_esCloneCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown >= iTime;
 			if (!g_esClonePlayer[tank].g_bCloned && !bRecharging)
 			{
 				vCloneAbility(tank);
@@ -812,7 +992,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vClone(int tank)
 {
-	if (g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > GetTime())
+	if (g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown >= GetTime())
 	{
 		return;
 	}
@@ -845,7 +1025,7 @@ void vClone(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bExists[iPlayer] = false;
-						if (bIsTank(iPlayer, MT_CHECK_INGAME))
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME))
 						{
 							bExists[iPlayer] = true;
 						}
@@ -860,7 +1040,7 @@ void vClone(int tank)
 					int iTank = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
 							iTank = iPlayer;
 
@@ -868,7 +1048,7 @@ void vClone(int tank)
 						}
 					}
 
-					if (bIsTank(iTank))
+					if (bIsInfected(iTank))
 					{
 						TeleportEntity(iTank, flHitPos);
 
@@ -886,11 +1066,11 @@ void vClone(int tank)
 							CreateTimer(g_esCloneCache[tank].g_flCloneLifetime, tTimerKillClone, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 						}
 
-						int iNewHealth = (g_esCloneCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCloneCache[tank].g_iCloneHealth;
+						int iNewHealth = iClamp(g_esCloneCache[tank].g_iCloneHealth, 1, MT_MAXHEALTH);
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 
-						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
+						if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
 						{
 							g_esClonePlayer[tank].g_iAmmoCount++;
 
@@ -915,48 +1095,53 @@ void vClone(int tank)
 
 void vClone2(int tank, int min = 0, int max = 0)
 {
-	if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	int iMin = (min > 0) ? min : MT_GetMinType(),
 		iMax = (max > 0) ? max : MT_GetMaxType(),
+		iSpecType = iGetInfectedType(tank), iType = iMin,
 		iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
-	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
+	if (iMin != iMax)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
+		for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 		{
-			continue;
+			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iSpecType) || MT_DoesTypeRequireHumans(iIndex, tank))
+			{
+				continue;
+			}
+
+			iTankTypes[iTypeCount + 1] = iIndex;
+			iTypeCount++;
 		}
 
-		iTankTypes[iTypeCount + 1] = iIndex;
-		iTypeCount++;
+		iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	}
 
-	int iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esClonePlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
 }
 
 void vCloneAbility(int tank)
 {
-	if ((g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
+	if ((g_esClonePlayer[tank].g_iCooldown != -1 && g_esClonePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esCloneCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esCloneCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esClonePlayer[tank].g_iTankType, tank) || (g_esCloneCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCloneCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esClonePlayer[tank].g_iAmmoCount < g_esCloneCache[tank].g_iHumanAmmo && g_esCloneCache[tank].g_iHumanAmmo > 0)))
+	if (g_esClonePlayer[tank].g_iCount < g_esCloneCache[tank].g_iCloneAmount && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esClonePlayer[tank].g_iAmmoCount < g_esCloneCache[tank].g_iHumanAmmo && g_esCloneCache[tank].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCloneCache[tank].g_flCloneChance)
 		{
 			vClone(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneAmmo");
 	}
@@ -1015,7 +1200,7 @@ void vCloneReset()
 		{
 			vRemoveClone(iPlayer);
 
-			g_esClonePlayer[iPlayer].g_iOwner = 0;
+			g_esClonePlayer[iPlayer].g_iOwner = -1;
 		}
 	}
 }
@@ -1023,7 +1208,7 @@ void vCloneReset()
 void tTimerCloneCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esCloneAbility[g_esClonePlayer[iTank].g_iTankType].g_iAccessFlags, g_esClonePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esClonePlayer[iTank].g_iTankType, iTank) || g_esClonePlayer[iTank].g_bCloned || g_esCloneCache[iTank].g_iCloneAbility == 0)
 	{
 		return;
 	}

@@ -83,6 +83,7 @@
 // Доступно администраторам только с флагом "z" (Root).
 sm_mt_admin - Панель администратора Танков-мутантов.
 sm_mt_config - Просмотр раздела файла конфигурации.
+sm_mt_edit - Редактировать настройку в файле конфигурации.
 sm_mt_list - Просмотр списка установленных способностей.
 sm_mt_reload - Перезагрузка файла конфигурации.
 sm_tank - Создать танка-мутанта.
@@ -90,12 +91,7 @@ sm_mt_tank - Создать танка-мутанта.
 sm_mt_version - Узнать текущую версию плагина.
 
 // Доступно только разработчику.
-sm_mt_config2 - Просмотр раздела файла конфигурации.
 sm_mt_dev - Используется только разработчиком и для него.
-sm_mt_list2 - Просмотр списка установленных способностей.
-sm_tank2 - Создать танка-мутанта.
-sm_mt_tank2 - Создать танка-мутанта.
-sm_mt_version2 - Узнать текущую версию плагина.
 
 // Доступны всем игрокам.
 sm_mutanttank - Выбрать танка-мутанта. (Эта команда работает только в том случае, если параметр "Spawn Mode" в разделе "Plugin Settings/Human Support" установлен на 0.)
@@ -114,12 +110,12 @@ sm_mt_ammo - Просмотр информации о способности б�
 sm_mt_blind - Просмотр информации о способности ослепления.
 sm_mt_bomb - Просмотр информации о способности бомбы.
 sm_mt_bury - Просмотр информации о способности закапывания.
-sm_mt_car - Просмотр информации о способности автомобиля.
+sm_mt_car - Просмотр информации о способности машины.
 sm_mt_choke - Просмотр информации о способности удушения.
 sm_mt_clone - Просмотр информации о способности клонирования.
 sm_mt_cloud - Просмотр информации о дымовой способности.
 sm_mt_drop - Просмотр информации о способности выпадения оружия.
-sm_mt_drug - Просмотр информации о способности наркотического эффекта.
+sm_mt_drug - Просмотр информации о способности одурманивающего эффекта.
 sm_mt_drunk - Просмотр информации о способности опьянения.
 sm_mt_electric - Просмотр информации о электрической способности.
 sm_mt_enforce - Просмотр информации о способности принуждения.
@@ -128,14 +124,14 @@ sm_mt_fire - Просмотр информации о способности о�
 sm_mt_fling - Просмотр информации о способности броска.
 sm_mt_fly - Просмотр информации о способности летать.
 sm_mt_fragile - Просмотр информации о способности уязвимости.
-sm_mt_ghost - Просмотр информации о способности призрак.
+sm_mt_ghost - Просмотр информации о способности призрака.
 sm_mt_god - Просмотр информации о способности бога.
 sm_mt_gravity - Просмотр информации о способности гравитации.
-sm_mt_gunner - Просмотр информации о стрелка способности.
-sm_mt_heal - Просмотр информации о лечебной способности.
+sm_mt_gunner - Просмотр информации о способности стрелка.
+sm_mt_heal - Просмотр информации о способности лечения.
 sm_mt_hit - Просмотр информации о способности слабого места.
 sm_mt_hurt - Просмотр информации о способности боли.
-sm_mt_hypno - Просмотр информации о гипно-способности.
+sm_mt_hypno - Просмотр информации о гипноспособности.
 sm_mt_ice - Просмотр информации о способности льда.
 sm_mt_idle - Просмотр информации о способности бездействия.
 sm_mt_invert - Просмотр информации о способности инвертирования.
@@ -148,15 +144,16 @@ sm_mt_leech - Просмотр информации о способности к
 sm_mt_lightning - Просмотр информации о способности грозового шторма.
 sm_mt_medic - Просмотр информации о способности медика.
 sm_mt_meteor - Просмотр информации о способности метеоритного дождя.
-sm_mt_minion - Просмотр информации о способности миньонов.
-sm_mt_necro - Просмотр информации о некро-способности.
-sm_mt_nullify - Просмотр информации о способности аннулирования.
-sm_mt_omni - Просмотр информации о омни-способности.
+sm_mt_minion - Просмотр информации о способности приспешников.
+sm_mt_necro - Просмотр информации о некроспособности.
+sm_mt_nullify - Просмотр информации о способности обнуления.
+sm_mt_omni - Просмотр информации о омниспособности.
 sm_mt_panic - Просмотр информации о способности орды.
 sm_mt_pimp - Просмотр информации о способности пощёчины.
 sm_mt_puke - Просмотр информации о способности рвоты.
 sm_mt_pyro - Просмотр информации о способности поджигателя.
 sm_mt_quiet - Просмотр информации о способности скрытности.
+sm_mt_recall - Просмотр информации о способности телепортации.
 sm_mt_recoil - Просмотр информации о способности отдачи.
 sm_mt_regen - Просмотр информации о способности регенерации.
 sm_mt_respawn - Просмотр информации о способности возрождения.
@@ -168,20 +165,20 @@ sm_mt_shield - Просмотр информации о способности �
 sm_mt_shove - Просмотр информации о способности толчка.
 sm_mt_slow - Просмотр информации о способности замедления.
 sm_mt_smash - Просмотр информации о способности сокрушения.
-sm_mt_smite - Просмотр информации о способности поражения.
+sm_mt_smite - Просмотр информации о способности толкания.
 sm_mt_spam - Просмотр информации о способности спама.
-sm_mt_splash - Просмотр информации о способности всплеска.
+sm_mt_splash - Просмотр информации о способности урона по области.
 sm_mt_splatter - Просмотр информации о способности опрыскивания.
-sm_mt_throw - Просмотр информации о метательной способности.
+sm_mt_throw - Просмотр информации о способности метания.
 sm_mt_track - Просмотр информации о способности самонаведения.
-sm_mt_ultimate - Просмотр информации о способности Ультимэйт.
+sm_mt_ultimate - Просмотр информации о способности «Ультимэйт».
 sm_mt_undead - Просмотр информации о способности нежити.
 sm_mt_vampire - Просмотр информации о способности вампира.
 sm_mt_vision - Просмотр информации о способности видимости.
-sm_mt_warp - Просмотр информации о способности варпа.
+sm_mt_warp - Просмотр информации о способности искривления.
 sm_mt_whirl - Просмотр информации о способности вихря.
 sm_mt_witch - Просмотр информации о способности ведьмы.
-sm_mt_xiphos - Просмотр информации о способности Ксифос.
+sm_mt_xiphos - Просмотр информации о способности «Ксифос».
 sm_mt_yell - Просмотр информации о способности крика.
 sm_mt_zombie - Просмотр информации о способности зомби.
 ```
@@ -924,6 +921,12 @@ mt_pluginenabled "1"
 	"MutantTanks"
 	{
 		"item"		"sm_mt_tank"
+		"item"		"sm_mt_smoker"
+		"item"		"sm_mt_boomer"
+		"item"		"sm_mt_hunter"
+		"item"		"sm_mt_spitter"
+		"item"		"sm_mt_jockey"
+		"item"		"sm_mt_charger"
 		"item"		"sm_mt_config"
 		"item"		"sm_mt_info"
 		"item"		"sm_mt_list"
@@ -1033,8 +1036,10 @@ forward void MT_OnConfigsLoad(int mode);
  * @param type			Тип танка-мутанта, на котором сейчас работает анализатор конфигурации. (Используется для специфических настроек Танков-мутантов.)
  * @param admin			Клиентский индекс админа. (Используется для настроек, специфичных для администратора.)
  * @param mode			1 = Загрузить общие настройки, 2 = 1 + настройки типа нагрузки, 3 = Загрузить настройки администратора
+ * @param special		True при чтении настройки особого заражённого, иначе - false.
+ * @param specsection		Специальный раздел, на котором в данный момент находится анализатор конфигурации.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection);
 
 /**
  * Вызывается, когда танк передаётся другому игроку или боту.
@@ -1252,11 +1257,12 @@ forward Action MT_OnTypeChosen(int &type, int tank);
  * Возвращается, если может появиться определённый тип танка-мутанта.
  *
  * @param type			Тип танка-мутанта.
+ * @param specType		Тип особого заражённого.
  *
  * @return			True, если тип может появляться, иначе - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_CanTypeSpawn(int type);
+native bool MT_CanTypeSpawn(int type, int specType);
 
 /**
  * Оглушает игрока.
@@ -1292,11 +1298,12 @@ native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
  * Возвращается, если для эффективности определённого типа танка-мутанта требуется присутствие выживших, контролируемых игроком.
  *
  * @param type			Тип танка-мутанта.
+ * @param tank			Клиентский индекс танка, если выбранный тип применяется напрямую, в противном случае - 0.
  *
  * @return			True, если тип требует присутствия выживших, контролируемых игроком, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_DoesTypeRequireHumans(int type);
+native bool MT_DoesTypeRequireHumans(int type, int tank);
 
 /**
  * Возвращает текущие флаги доступа, установленные основным плагином.
@@ -1481,11 +1488,12 @@ native bool MT_HasAdminAccess(int admin);
  * Возвращает, если у определённого типа танка-мутанта есть шанс на появление.
  *
  * @param type			Тип танка-мутанта.
+ * @param tank			Клиентский индекс танка.
  *
  * @return			True, если у типа есть шанс появления, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_HasChanceToSpawn(int type);
+native bool MT_HasChanceToSpawn(int type, int tank);
 
 /**
  * Перехватывает/отключает любую энтити от обратного вызова SetTransmit основного плагина.
@@ -1530,11 +1538,12 @@ native bool MT_IsCustomTankSupported(int tank);
  * Возвращается, если определённый тип танка-мутанта доступен только на финальных картах.
  *
  * @param type			Тип танка-мутанта.
+ * @param tank			Клиентский индекс танка.
  *
  * @return			True, если тип доступен, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_IsFinaleType(int type);
+native bool MT_IsFinaleType(int type, int tank);
 
 /**
  * Возвращается, если у танка-мутанта есть светящийся контур.
@@ -1560,11 +1569,12 @@ native bool MT_IsGlowFlashing(int tank);
  * Возвращается, если определённый тип танка-мутанта доступен только на нефинальных картах.
  *
  * @param type			Тип танка-мутанта.
+ * @param tank			Клиентский индекс танка.
  *
  * @return			True, если тип доступен, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_IsNonFinaleType(int type);
+native bool MT_IsNonFinaleType(int type, int tank);
 
 /**
  * Возвращается, если танк бездействует.
@@ -1595,11 +1605,12 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * Возвращается, если включен определённый тип танка-мутанта.
  *
  * @param type			Тип танка-мутанта.
+ * @param tank			Клиентский индекс танка.
  *
  * @return			True, если тип включен, иначе - false.
  * @error			Тип 0 или меньше.
  **/
-native bool MT_IsTypeEnabled(int type);
+native bool MT_IsTypeEnabled(int type, int tank);
 
 /**
  * Записывает сообщение.
@@ -1820,17 +1831,23 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entity, bool follow = false)
 {
-	float flDummy[3] = {0.0, 0.0, 0.0};
-	bool bSecondGame = bIsSecondGame();
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
 
 	TE_Start("EffectDispatch");
 
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
@@ -1854,29 +1871,35 @@ stock void MT_TE_SetupParticleAttachment(int particle, int attachment, int entit
 
 	switch (bSecondGame)
 	{
-		case true: TE_WriteNum("m_nDamageType", (bFollow ? 5 : 4));
-		case false: TE_WriteNum("m_nDamageType", (bFollow ? 4 : 3));
+		case true: TE_WriteNum("m_nDamageType", (follow ? 5 : 4));
+		case false: TE_WriteNum("m_nDamageType", (follow ? 4 : 3));
 	}
 }
 
 stock void MT_TE_SetupStopAllParticles(int entity)
 {
-	float flDummy[3] = {0.0, 0.0, 0.0};
-	bool bSecondGame = bIsSecondGame();
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
 
 	TE_Start("EffectDispatch");
 
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), flDummy[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), flDummy[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), flDummy[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), flDummy[2]);
+	static float flDummy[3] = {0.0, 0.0, 0.0};
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), flDummy[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), flDummy[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), flDummy[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), flDummy[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
 	{
-		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffect");
+		iEffect = MT_FindStringIndex(FindStringTable("EffectDispatch"), "ParticleEffectStop");
 		if (iEffect == INVALID_STRING_INDEX)
 		{
 			return;
@@ -1893,6 +1916,16 @@ stock void MT_TE_SetupStopAllParticles(int entity)
 	TE_WriteFloat("m_flScale", 0.0);
 	TE_WriteFloat("m_flRadius", 0.0);
 	TE_WriteNum("m_nDamageType", 0);
+}
+
+stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
+{
+	float flPos[3];
+	flPos[0] = origin[0] + (direction[0] * distance);
+	flPos[1] = origin[1] + (direction[1] * distance);
+	flPos[2] = origin[2] + (direction[2] * distance);
+
+	TeleportEntity(tank, flPos, angles, velocity);
 }
 
 stock void MT_UnloadPlugin(Handle plugin = null)
@@ -1924,15 +1957,22 @@ stock bool MT_FileExists(const char[] folder, const char[] filename, const char[
 
 stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPos[3] = {0.0, 0.0, 0.0}, int particle = -1, int entity = 0, float delay = 0.0, bool all = true, char name[64] = "", int attachment = 0, float angles[3] = {0.0, 0.0, 0.0}, int flags = 0, int damageType = 0, float magnitude = 0.0, float scale = 1.0, float radius = 0.0)
 {
+	static bool bSecondGame = false;
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+		bSecondGame = (evEngine == Engine_Left4Dead2);
+	}
+
 	TE_Start("EffectDispatch");
 
-	bool bSecondGame = bIsSecondGame();
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vStart[0]"), startPos[0]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vStart[1]"), startPos[1]);
-	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vStart[2]"), startPos[2]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vOrigin[0]"), endPos[0]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vOrigin[1]"), endPos[1]);
-	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vOrigin[2]"), endPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.x" : "m_vOrigin[0]"), startPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.y" : "m_vOrigin[1]"), startPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vOrigin.z" : "m_vOrigin[2]"), startPos[2]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.x" : "m_vStart[0]"), endPos[0]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.y" : "m_vStart[1]"), endPos[1]);
+	TE_WriteFloat((bSecondGame ? "m_vStart.z" : "m_vStart[2]"), endPos[2]);
 
 	static int iEffect = INVALID_STRING_INDEX;
 	if (iEffect < 0)
@@ -1981,7 +2021,7 @@ stock bool MT_TE_CreateParticle(float startPos[3] = {0.0, 0.0, 0.0}, float endPo
 
 stock float MT_GetRandomFloat(float min, float max)
 {
-	return ((GetURandomFloat() * (max - min + 1)) + min);
+	return ((GetURandomFloat() * (max - min)) + min);
 }
 
 stock int MT_AddCommasToFloat(float number, char[] output, int size)
@@ -2094,7 +2134,7 @@ stock int MT_GetParticleIndex(const char[] particlename)
 
 stock int MT_GetRandomInt(int min, int max)
 {
-	return (RoundToFloor(GetURandomFloat() * (max - min + 1)) + min);
+	return (RoundToNearest(GetURandomFloat() * float(max - min)) + min);
 }
 ```
 </details>
@@ -2108,13 +2148,24 @@ stock int MT_GetRandomInt(int min, int max)
 @spitters
 @jockeys
 @chargers
-@witches
 @tanks
 @special
 @infected
 @mutants
 @mtanks
 @psytanks
+@msmokers
+@psysmokers
+@mboomers
+@psyboomers
+@mhunters
+@psyhunters
+@mspitters
+@psyspitters
+@mjockeys
+@psyjockeys
+@mchargers
+@psychargers
 ```
 </details>
 <details>
@@ -2731,6 +2782,10 @@ Overrides
 
 **Erreur 500** - За плагин [[ANY] Stuck](https://forums.alliedmods.net/showthread.php?t=243151).
 
+**Xutax_Kamay** - За плагин [[ANY] Hit Registration Fix Plugin (bullet displacement by 1 tick)](https://forums.alliedmods.net/showthread.php?t=315405).
+
+**Carl Sagan** - За плагин [[L4D2] Tank Rush 2](https://forums.alliedmods.net/showthread.php?t=234840).
+
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помощь с подписями игровых данных и помощь оптимизировать/исправить различные части кода.
 
 **epz/epzminion** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
@@ -2759,7 +2814,7 @@ Overrides
 
 **emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao, xcd222** - За сообщения о проблемах и предложения идей.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart, saberQAQ, Shao, xcd222, PVNDV, SpannerV2** - За сообщения о проблемах и предложения идей.
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala, ddd123, GL_INS, Slaven555, Neki93, kot4404, KadabraZz, Krufftys Killers, thewintersoldier97, Balloons, George Rex, swofleswof** - За сообщения о проблемах.
 

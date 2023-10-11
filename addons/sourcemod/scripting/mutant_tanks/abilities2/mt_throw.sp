@@ -108,6 +108,35 @@ enum struct esThrowPlayer
 
 esThrowPlayer g_esThrowPlayer[MAXPLAYERS + 1];
 
+enum struct esThrowTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flThrowCarLifetime;
+	float g_flThrowChance;
+	float g_flThrowInfectedLifetime;
+	float g_flThrowWitchDamage;
+	float g_flThrowWitchLifetime;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+	int g_iThrowAbility;
+	int g_iThrowCarOptions;
+	int g_iThrowCarOwner;
+	int g_iThrowCooldown;
+	int g_iThrowInfectedAmount;
+	int g_iThrowInfectedOptions;
+	int g_iThrowInfectedRemove;
+	int g_iThrowMessage;
+	int g_iThrowWitchAmount;
+	int g_iThrowWitchRemove;
+}
+
+esThrowTeammate g_esThrowTeammate[MAXPLAYERS + 1];
+
 enum struct esThrowAbility
 {
 	float g_flCloseAreasOnly;
@@ -139,6 +168,35 @@ enum struct esThrowAbility
 }
 
 esThrowAbility g_esThrowAbility[MT_MAXTYPES + 1];
+
+enum struct esThrowSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flThrowCarLifetime;
+	float g_flThrowChance;
+	float g_flThrowInfectedLifetime;
+	float g_flThrowWitchDamage;
+	float g_flThrowWitchLifetime;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+	int g_iThrowAbility;
+	int g_iThrowCarOptions;
+	int g_iThrowCarOwner;
+	int g_iThrowCooldown;
+	int g_iThrowInfectedAmount;
+	int g_iThrowInfectedOptions;
+	int g_iThrowInfectedRemove;
+	int g_iThrowMessage;
+	int g_iThrowWitchAmount;
+	int g_iThrowWitchRemove;
+}
+
+esThrowSpecial g_esThrowSpecial[MT_MAXTYPES + 1];
 
 enum struct esThrowCache
 {
@@ -449,7 +507,7 @@ void vThrowCombineAbilities(int tank, int type, const float random, const char[]
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esThrowCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esThrowCache[tank].g_iHumanAbility != 2)
 	{
 		g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -499,8 +557,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esThrowAbility[iIndex].g_iAccessFlags = 0;
 				g_esThrowAbility[iIndex].g_iImmunityFlags = 0;
@@ -527,104 +584,203 @@ public void MT_OnConfigsLoad(int mode)
 				g_esThrowAbility[iIndex].g_flThrowWitchDamage = 5.0;
 				g_esThrowAbility[iIndex].g_flThrowWitchLifetime = 0.0;
 				g_esThrowAbility[iIndex].g_iThrowWitchRemove = 1;
+
+				g_esThrowSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esThrowSpecial[iIndex].g_iComboAbility = -1;
+				g_esThrowSpecial[iIndex].g_iHumanAbility = -1;
+				g_esThrowSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esThrowSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esThrowSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esThrowSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esThrowSpecial[iIndex].g_iThrowAbility = -1;
+				g_esThrowSpecial[iIndex].g_iThrowMessage = -1;
+				g_esThrowSpecial[iIndex].g_flThrowCarLifetime = -1.0;
+				g_esThrowSpecial[iIndex].g_iThrowCarOptions = -1;
+				g_esThrowSpecial[iIndex].g_iThrowCarOwner = -1;
+				g_esThrowSpecial[iIndex].g_flThrowChance = -1.0;
+				g_esThrowSpecial[iIndex].g_iThrowCooldown = -1;
+				g_esThrowSpecial[iIndex].g_iThrowInfectedAmount = -1;
+				g_esThrowSpecial[iIndex].g_flThrowInfectedLifetime = -1.0;
+				g_esThrowSpecial[iIndex].g_iThrowInfectedOptions = -1;
+				g_esThrowSpecial[iIndex].g_iThrowInfectedRemove = -1;
+				g_esThrowSpecial[iIndex].g_iThrowWitchAmount = -1;
+				g_esThrowSpecial[iIndex].g_flThrowWitchDamage = -1.0;
+				g_esThrowSpecial[iIndex].g_flThrowWitchLifetime = -1.0;
+				g_esThrowSpecial[iIndex].g_iThrowWitchRemove = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esThrowPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esThrowPlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esThrowPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esThrowPlayer[iPlayer].g_iComboAbility = 0;
-					g_esThrowPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esThrowPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esThrowPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esThrowPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esThrowPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowAbility = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowMessage = 0;
-					g_esThrowPlayer[iPlayer].g_flThrowCarLifetime = 0.0;
-					g_esThrowPlayer[iPlayer].g_iThrowCarOptions = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowCarOwner = 0;
-					g_esThrowPlayer[iPlayer].g_flThrowChance = 0.0;
-					g_esThrowPlayer[iPlayer].g_iThrowCooldown = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowInfectedAmount = 0;
-					g_esThrowPlayer[iPlayer].g_flThrowInfectedLifetime = 0.0;
-					g_esThrowPlayer[iPlayer].g_iThrowInfectedOptions = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowInfectedRemove = 0;
-					g_esThrowPlayer[iPlayer].g_iThrowWitchAmount = 0;
-					g_esThrowPlayer[iPlayer].g_flThrowWitchDamage = 0.0;
-					g_esThrowPlayer[iPlayer].g_flThrowWitchLifetime = 0.0;
-					g_esThrowPlayer[iPlayer].g_iThrowWitchRemove = 0;
-				}
+				g_esThrowPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esThrowPlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esThrowPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esThrowPlayer[iPlayer].g_iComboAbility = -1;
+				g_esThrowPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esThrowPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esThrowPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esThrowPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esThrowPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowAbility = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowMessage = -1;
+				g_esThrowPlayer[iPlayer].g_flThrowCarLifetime = -1.0;
+				g_esThrowPlayer[iPlayer].g_iThrowCarOptions = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowCarOwner = -1;
+				g_esThrowPlayer[iPlayer].g_flThrowChance = -1.0;
+				g_esThrowPlayer[iPlayer].g_iThrowCooldown = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowInfectedAmount = -1;
+				g_esThrowPlayer[iPlayer].g_flThrowInfectedLifetime = -1.0;
+				g_esThrowPlayer[iPlayer].g_iThrowInfectedOptions = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowInfectedRemove = -1;
+				g_esThrowPlayer[iPlayer].g_iThrowWitchAmount = -1;
+				g_esThrowPlayer[iPlayer].g_flThrowWitchDamage = -1.0;
+				g_esThrowPlayer[iPlayer].g_flThrowWitchLifetime = -1.0;
+				g_esThrowPlayer[iPlayer].g_iThrowWitchRemove = -1;
+
+				g_esThrowTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esThrowTeammate[iPlayer].g_iComboAbility = -1;
+				g_esThrowTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esThrowTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esThrowTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esThrowTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esThrowTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowAbility = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowMessage = -1;
+				g_esThrowTeammate[iPlayer].g_flThrowCarLifetime = -1.0;
+				g_esThrowTeammate[iPlayer].g_iThrowCarOptions = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowCarOwner = -1;
+				g_esThrowTeammate[iPlayer].g_flThrowChance = -1.0;
+				g_esThrowTeammate[iPlayer].g_iThrowCooldown = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowInfectedAmount = -1;
+				g_esThrowTeammate[iPlayer].g_flThrowInfectedLifetime = -1.0;
+				g_esThrowTeammate[iPlayer].g_iThrowInfectedOptions = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowInfectedRemove = -1;
+				g_esThrowTeammate[iPlayer].g_iThrowWitchAmount = -1;
+				g_esThrowTeammate[iPlayer].g_flThrowWitchDamage = -1.0;
+				g_esThrowTeammate[iPlayer].g_flThrowWitchLifetime = -1.0;
+				g_esThrowTeammate[iPlayer].g_iThrowWitchRemove = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vThrowConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vThrowConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esThrowPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esThrowPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esThrowPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esThrowPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esThrowPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esThrowPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esThrowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esThrowPlayer[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowPlayer[admin].g_iThrowAbility, value, 0, 15);
-		g_esThrowPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowPlayer[admin].g_iThrowMessage, value, 0, 15);
-		g_esThrowPlayer[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowPlayer[admin].g_flThrowCarLifetime, value, 0.1, 99999.0);
-		g_esThrowPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowPlayer[admin].g_iThrowCarOptions, value, 0, 7);
-		g_esThrowPlayer[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowPlayer[admin].g_iThrowCarOwner, value, 0, 1);
-		g_esThrowPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowPlayer[admin].g_flThrowChance, value, 0.0, 100.0);
-		g_esThrowPlayer[admin].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowPlayer[admin].g_iThrowCooldown, value, 0, 99999);
-		g_esThrowPlayer[admin].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowPlayer[admin].g_iThrowInfectedAmount, value, 1, 32);
-		g_esThrowPlayer[admin].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowPlayer[admin].g_flThrowInfectedLifetime, value, 0.0, 99999.0);
-		g_esThrowPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
-		g_esThrowPlayer[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowPlayer[admin].g_iThrowInfectedRemove, value, 0, 1);
-		g_esThrowPlayer[admin].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowPlayer[admin].g_iThrowWitchAmount, value, 1, 25);
-		g_esThrowPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowPlayer[admin].g_flThrowWitchDamage, value, 0.0, 99999.0);
-		g_esThrowPlayer[admin].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowPlayer[admin].g_flThrowWitchLifetime, value, 0.0, 99999.0);
-		g_esThrowPlayer[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowPlayer[admin].g_iThrowWitchRemove, value, 0, 1);
-		g_esThrowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esThrowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esThrowTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esThrowTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esThrowTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esThrowTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esThrowTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esThrowTeammate[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowTeammate[admin].g_iThrowAbility, value, -1, 15);
+			g_esThrowTeammate[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowTeammate[admin].g_iThrowMessage, value, -1, 15);
+			g_esThrowTeammate[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowTeammate[admin].g_flThrowCarLifetime, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowTeammate[admin].g_iThrowCarOptions, value, -1, 7);
+			g_esThrowTeammate[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowTeammate[admin].g_iThrowCarOwner, value, -1, 1);
+			g_esThrowTeammate[admin].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowTeammate[admin].g_flThrowChance, value, -1.0, 100.0);
+			g_esThrowTeammate[admin].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowTeammate[admin].g_iThrowCooldown, value, -1, 99999);
+			g_esThrowTeammate[admin].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowTeammate[admin].g_iThrowInfectedAmount, value, -1, 32);
+			g_esThrowTeammate[admin].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowTeammate[admin].g_flThrowInfectedLifetime, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowTeammate[admin].g_iThrowInfectedOptions, value, -1, 127);
+			g_esThrowTeammate[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowTeammate[admin].g_iThrowInfectedRemove, value, -1, 1);
+			g_esThrowTeammate[admin].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowTeammate[admin].g_iThrowWitchAmount, value, -1, 25);
+			g_esThrowTeammate[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowTeammate[admin].g_flThrowWitchDamage, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowTeammate[admin].g_flThrowWitchLifetime, value, -1.0, 99999.0);
+			g_esThrowTeammate[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowTeammate[admin].g_iThrowWitchRemove, value, -1, 1);
+		}
+		else
+		{
+			g_esThrowPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esThrowPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esThrowPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esThrowPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esThrowPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esThrowPlayer[admin].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowPlayer[admin].g_iThrowAbility, value, -1, 15);
+			g_esThrowPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowPlayer[admin].g_iThrowMessage, value, -1, 15);
+			g_esThrowPlayer[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowPlayer[admin].g_flThrowCarLifetime, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowPlayer[admin].g_iThrowCarOptions, value, -1, 7);
+			g_esThrowPlayer[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowPlayer[admin].g_iThrowCarOwner, value, -1, 1);
+			g_esThrowPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowPlayer[admin].g_flThrowChance, value, -1.0, 100.0);
+			g_esThrowPlayer[admin].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowPlayer[admin].g_iThrowCooldown, value, -1, 99999);
+			g_esThrowPlayer[admin].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowPlayer[admin].g_iThrowInfectedAmount, value, -1, 32);
+			g_esThrowPlayer[admin].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowPlayer[admin].g_flThrowInfectedLifetime, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowPlayer[admin].g_iThrowInfectedOptions, value, -1, 127);
+			g_esThrowPlayer[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowPlayer[admin].g_iThrowInfectedRemove, value, -1, 1);
+			g_esThrowPlayer[admin].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowPlayer[admin].g_iThrowWitchAmount, value, -1, 25);
+			g_esThrowPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowPlayer[admin].g_flThrowWitchDamage, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowPlayer[admin].g_flThrowWitchLifetime, value, -1.0, 99999.0);
+			g_esThrowPlayer[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowPlayer[admin].g_iThrowWitchRemove, value, -1, 1);
+			g_esThrowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esThrowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esThrowAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esThrowAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowAbility[type].g_iComboAbility, value, 0, 1);
-		g_esThrowAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esThrowAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esThrowAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esThrowAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esThrowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esThrowAbility[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowAbility[type].g_iThrowAbility, value, 0, 15);
-		g_esThrowAbility[type].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowAbility[type].g_iThrowMessage, value, 0, 15);
-		g_esThrowAbility[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowAbility[type].g_flThrowCarLifetime, value, 0.1, 99999.0);
-		g_esThrowAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowAbility[type].g_iThrowCarOptions, value, 0, 7);
-		g_esThrowAbility[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowAbility[type].g_iThrowCarOwner, value, 0, 1);
-		g_esThrowAbility[type].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowAbility[type].g_flThrowChance, value, 0.0, 100.0);
-		g_esThrowAbility[type].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowAbility[type].g_iThrowCooldown, value, 0, 99999);
-		g_esThrowAbility[type].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowAbility[type].g_iThrowInfectedAmount, value, 1, 32);
-		g_esThrowAbility[type].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowAbility[type].g_flThrowInfectedLifetime, value, 0.0, 99999.0);
-		g_esThrowAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowAbility[type].g_iThrowInfectedOptions, value, 0, 127);
-		g_esThrowAbility[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowAbility[type].g_iThrowInfectedRemove, value, 0, 1);
-		g_esThrowAbility[type].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowAbility[type].g_iThrowWitchAmount, value, 1, 25);
-		g_esThrowAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowAbility[type].g_flThrowWitchDamage, value, 0.0, 99999.0);
-		g_esThrowAbility[type].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowAbility[type].g_flThrowWitchLifetime, value, 0.0, 99999.0);
-		g_esThrowAbility[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowAbility[type].g_iThrowWitchRemove, value, 0, 1);
-		g_esThrowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esThrowAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esThrowSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esThrowSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esThrowSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esThrowSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esThrowSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esThrowSpecial[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowSpecial[type].g_iThrowAbility, value, -1, 15);
+			g_esThrowSpecial[type].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowSpecial[type].g_iThrowMessage, value, -1, 15);
+			g_esThrowSpecial[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowSpecial[type].g_flThrowCarLifetime, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowSpecial[type].g_iThrowCarOptions, value, -1, 7);
+			g_esThrowSpecial[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowSpecial[type].g_iThrowCarOwner, value, -1, 1);
+			g_esThrowSpecial[type].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowSpecial[type].g_flThrowChance, value, -1.0, 100.0);
+			g_esThrowSpecial[type].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowSpecial[type].g_iThrowCooldown, value, -1, 99999);
+			g_esThrowSpecial[type].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowSpecial[type].g_iThrowInfectedAmount, value, -1, 32);
+			g_esThrowSpecial[type].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowSpecial[type].g_flThrowInfectedLifetime, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowSpecial[type].g_iThrowInfectedOptions, value, -1, 127);
+			g_esThrowSpecial[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowSpecial[type].g_iThrowInfectedRemove, value, -1, 1);
+			g_esThrowSpecial[type].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowSpecial[type].g_iThrowWitchAmount, value, -1, 25);
+			g_esThrowSpecial[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowSpecial[type].g_flThrowWitchDamage, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowSpecial[type].g_flThrowWitchLifetime, value, -1.0, 99999.0);
+			g_esThrowSpecial[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowSpecial[type].g_iThrowWitchRemove, value, -1, 1);
+		}
+		else
+		{
+			g_esThrowAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esThrowAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esThrowAbility[type].g_iComboAbility, value, -1, 1);
+			g_esThrowAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esThrowAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esThrowAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esThrowAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esThrowAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esThrowAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esThrowAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esThrowAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esThrowAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esThrowAbility[type].g_iThrowAbility = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esThrowAbility[type].g_iThrowAbility, value, -1, 15);
+			g_esThrowAbility[type].g_iThrowMessage = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esThrowAbility[type].g_iThrowMessage, value, -1, 15);
+			g_esThrowAbility[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esThrowAbility[type].g_flThrowCarLifetime, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esThrowAbility[type].g_iThrowCarOptions, value, -1, 7);
+			g_esThrowAbility[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esThrowAbility[type].g_iThrowCarOwner, value, -1, 1);
+			g_esThrowAbility[type].g_flThrowChance = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esThrowAbility[type].g_flThrowChance, value, -1.0, 100.0);
+			g_esThrowAbility[type].g_iThrowCooldown = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowCooldown", "Throw Cooldown", "Throw_Cooldown", "cooldown", g_esThrowAbility[type].g_iThrowCooldown, value, -1, 99999);
+			g_esThrowAbility[type].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esThrowAbility[type].g_iThrowInfectedAmount, value, -1, 32);
+			g_esThrowAbility[type].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esThrowAbility[type].g_flThrowInfectedLifetime, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esThrowAbility[type].g_iThrowInfectedOptions, value, -1, 127);
+			g_esThrowAbility[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esThrowAbility[type].g_iThrowInfectedRemove, value, -1, 1);
+			g_esThrowAbility[type].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esThrowAbility[type].g_iThrowWitchAmount, value, -1, 25);
+			g_esThrowAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esThrowAbility[type].g_flThrowWitchDamage, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esThrowAbility[type].g_flThrowWitchLifetime, value, -1.0, 99999.0);
+			g_esThrowAbility[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esThrowAbility[type].g_iThrowWitchRemove, value, -1, 1);
+			g_esThrowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esThrowAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_THROW_SECTION, MT_THROW_SECTION2, MT_THROW_SECTION3, MT_THROW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -634,30 +790,59 @@ void vThrowSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esThrowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowAbility[type].g_flCloseAreasOnly);
-	g_esThrowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowAbility[type].g_iComboAbility);
-	g_esThrowCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowAbility[type].g_flThrowCarLifetime);
-	g_esThrowCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowAbility[type].g_flThrowChance);
-	g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowAbility[type].g_flThrowInfectedLifetime);
-	g_esThrowCache[tank].g_flThrowWitchDamage = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchDamage, g_esThrowAbility[type].g_flThrowWitchDamage);
-	g_esThrowCache[tank].g_flThrowWitchLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchLifetime, g_esThrowAbility[type].g_flThrowWitchLifetime);
-	g_esThrowCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAbility, g_esThrowAbility[type].g_iHumanAbility);
-	g_esThrowCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAmmo, g_esThrowAbility[type].g_iHumanAmmo);
-	g_esThrowCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanCooldown, g_esThrowAbility[type].g_iHumanCooldown);
-	g_esThrowCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flOpenAreasOnly, g_esThrowAbility[type].g_flOpenAreasOnly);
-	g_esThrowCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iRequiresHumans, g_esThrowAbility[type].g_iRequiresHumans);
-	g_esThrowCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowAbility, g_esThrowAbility[type].g_iThrowAbility);
-	g_esThrowCache[tank].g_iThrowCarOptions = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCarOptions, g_esThrowAbility[type].g_iThrowCarOptions);
-	g_esThrowCache[tank].g_iThrowCarOwner = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCarOwner, g_esThrowAbility[type].g_iThrowCarOwner);
-	g_esThrowCache[tank].g_iThrowCooldown = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCooldown, g_esThrowAbility[type].g_iThrowCooldown);
-	g_esThrowCache[tank].g_iThrowInfectedAmount = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedAmount, g_esThrowAbility[type].g_iThrowInfectedAmount);
-	g_esThrowCache[tank].g_iThrowInfectedOptions = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedOptions, g_esThrowAbility[type].g_iThrowInfectedOptions);
-	g_esThrowCache[tank].g_iThrowInfectedRemove = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedRemove, g_esThrowAbility[type].g_iThrowInfectedRemove);
-	g_esThrowCache[tank].g_iThrowMessage = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowMessage, g_esThrowAbility[type].g_iThrowMessage);
-	g_esThrowCache[tank].g_iThrowWitchAmount = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowWitchAmount, g_esThrowAbility[type].g_iThrowWitchAmount);
-	g_esThrowCache[tank].g_iThrowWitchRemove = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowWitchRemove, g_esThrowAbility[type].g_iThrowWitchRemove);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esThrowPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flCloseAreasOnly, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowSpecial[type].g_flCloseAreasOnly, g_esThrowAbility[type].g_flCloseAreasOnly, 1);
+		g_esThrowCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iComboAbility, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowSpecial[type].g_iComboAbility, g_esThrowAbility[type].g_iComboAbility, 1);
+		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowCarLifetime, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowSpecial[type].g_flThrowCarLifetime, g_esThrowAbility[type].g_flThrowCarLifetime, 1);
+		g_esThrowCache[tank].g_flThrowChance = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowChance, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowSpecial[type].g_flThrowChance, g_esThrowAbility[type].g_flThrowChance, 1);
+		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowInfectedLifetime, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowSpecial[type].g_flThrowInfectedLifetime, g_esThrowAbility[type].g_flThrowInfectedLifetime, 1);
+		g_esThrowCache[tank].g_flThrowWitchDamage = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowWitchDamage, g_esThrowPlayer[tank].g_flThrowWitchDamage, g_esThrowSpecial[type].g_flThrowWitchDamage, g_esThrowAbility[type].g_flThrowWitchDamage, 1);
+		g_esThrowCache[tank].g_flThrowWitchLifetime = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flThrowWitchLifetime, g_esThrowPlayer[tank].g_flThrowWitchLifetime, g_esThrowSpecial[type].g_flThrowWitchLifetime, g_esThrowAbility[type].g_flThrowWitchLifetime, 1);
+		g_esThrowCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanAbility, g_esThrowPlayer[tank].g_iHumanAbility, g_esThrowSpecial[type].g_iHumanAbility, g_esThrowAbility[type].g_iHumanAbility, 1);
+		g_esThrowCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanAmmo, g_esThrowPlayer[tank].g_iHumanAmmo, g_esThrowSpecial[type].g_iHumanAmmo, g_esThrowAbility[type].g_iHumanAmmo, 1);
+		g_esThrowCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iHumanCooldown, g_esThrowPlayer[tank].g_iHumanCooldown, g_esThrowSpecial[type].g_iHumanCooldown, g_esThrowAbility[type].g_iHumanCooldown, 1);
+		g_esThrowCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_flOpenAreasOnly, g_esThrowPlayer[tank].g_flOpenAreasOnly, g_esThrowSpecial[type].g_flOpenAreasOnly, g_esThrowAbility[type].g_flOpenAreasOnly, 1);
+		g_esThrowCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iRequiresHumans, g_esThrowPlayer[tank].g_iRequiresHumans, g_esThrowSpecial[type].g_iRequiresHumans, g_esThrowAbility[type].g_iRequiresHumans, 1);
+		g_esThrowCache[tank].g_iThrowAbility = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowAbility, g_esThrowPlayer[tank].g_iThrowAbility, g_esThrowSpecial[type].g_iThrowAbility, g_esThrowAbility[type].g_iThrowAbility, 1);
+		g_esThrowCache[tank].g_iThrowCarOptions = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowCarOptions, g_esThrowPlayer[tank].g_iThrowCarOptions, g_esThrowSpecial[type].g_iThrowCarOptions, g_esThrowAbility[type].g_iThrowCarOptions, 1);
+		g_esThrowCache[tank].g_iThrowCarOwner = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowCarOwner, g_esThrowPlayer[tank].g_iThrowCarOwner, g_esThrowSpecial[type].g_iThrowCarOwner, g_esThrowAbility[type].g_iThrowCarOwner, 1);
+		g_esThrowCache[tank].g_iThrowCooldown = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowCooldown, g_esThrowPlayer[tank].g_iThrowCooldown, g_esThrowSpecial[type].g_iThrowCooldown, g_esThrowAbility[type].g_iThrowCooldown, 1);
+		g_esThrowCache[tank].g_iThrowInfectedAmount = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowInfectedAmount, g_esThrowPlayer[tank].g_iThrowInfectedAmount, g_esThrowSpecial[type].g_iThrowInfectedAmount, g_esThrowAbility[type].g_iThrowInfectedAmount, 1);
+		g_esThrowCache[tank].g_iThrowInfectedOptions = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowInfectedOptions, g_esThrowPlayer[tank].g_iThrowInfectedOptions, g_esThrowSpecial[type].g_iThrowInfectedOptions, g_esThrowAbility[type].g_iThrowInfectedOptions, 1);
+		g_esThrowCache[tank].g_iThrowInfectedRemove = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowInfectedRemove, g_esThrowPlayer[tank].g_iThrowInfectedRemove, g_esThrowSpecial[type].g_iThrowInfectedRemove, g_esThrowAbility[type].g_iThrowInfectedRemove, 1);
+		g_esThrowCache[tank].g_iThrowMessage = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowMessage, g_esThrowPlayer[tank].g_iThrowMessage, g_esThrowSpecial[type].g_iThrowMessage, g_esThrowAbility[type].g_iThrowMessage, 1);
+		g_esThrowCache[tank].g_iThrowWitchAmount = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowWitchAmount, g_esThrowPlayer[tank].g_iThrowWitchAmount, g_esThrowSpecial[type].g_iThrowWitchAmount, g_esThrowAbility[type].g_iThrowWitchAmount, 1);
+		g_esThrowCache[tank].g_iThrowWitchRemove = iGetSubSettingValue(apply, bHuman, g_esThrowTeammate[tank].g_iThrowWitchRemove, g_esThrowPlayer[tank].g_iThrowWitchRemove, g_esThrowSpecial[type].g_iThrowWitchRemove, g_esThrowAbility[type].g_iThrowWitchRemove, 1);
+	}
+	else
+	{
+		g_esThrowCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flCloseAreasOnly, g_esThrowAbility[type].g_flCloseAreasOnly, 1);
+		g_esThrowCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iComboAbility, g_esThrowAbility[type].g_iComboAbility, 1);
+		g_esThrowCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowCarLifetime, g_esThrowAbility[type].g_flThrowCarLifetime, 1);
+		g_esThrowCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowChance, g_esThrowAbility[type].g_flThrowChance, 1);
+		g_esThrowCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowInfectedLifetime, g_esThrowAbility[type].g_flThrowInfectedLifetime, 1);
+		g_esThrowCache[tank].g_flThrowWitchDamage = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchDamage, g_esThrowAbility[type].g_flThrowWitchDamage, 1);
+		g_esThrowCache[tank].g_flThrowWitchLifetime = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flThrowWitchLifetime, g_esThrowAbility[type].g_flThrowWitchLifetime, 1);
+		g_esThrowCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAbility, g_esThrowAbility[type].g_iHumanAbility, 1);
+		g_esThrowCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanAmmo, g_esThrowAbility[type].g_iHumanAmmo, 1);
+		g_esThrowCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iHumanCooldown, g_esThrowAbility[type].g_iHumanCooldown, 1);
+		g_esThrowCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_flOpenAreasOnly, g_esThrowAbility[type].g_flOpenAreasOnly, 1);
+		g_esThrowCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iRequiresHumans, g_esThrowAbility[type].g_iRequiresHumans, 1);
+		g_esThrowCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowAbility, g_esThrowAbility[type].g_iThrowAbility, 1);
+		g_esThrowCache[tank].g_iThrowCarOptions = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCarOptions, g_esThrowAbility[type].g_iThrowCarOptions, 1);
+		g_esThrowCache[tank].g_iThrowCarOwner = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCarOwner, g_esThrowAbility[type].g_iThrowCarOwner, 1);
+		g_esThrowCache[tank].g_iThrowCooldown = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowCooldown, g_esThrowAbility[type].g_iThrowCooldown, 1);
+		g_esThrowCache[tank].g_iThrowInfectedAmount = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedAmount, g_esThrowAbility[type].g_iThrowInfectedAmount, 1);
+		g_esThrowCache[tank].g_iThrowInfectedOptions = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedOptions, g_esThrowAbility[type].g_iThrowInfectedOptions, 1);
+		g_esThrowCache[tank].g_iThrowInfectedRemove = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowInfectedRemove, g_esThrowAbility[type].g_iThrowInfectedRemove, 1);
+		g_esThrowCache[tank].g_iThrowMessage = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowMessage, g_esThrowAbility[type].g_iThrowMessage, 1);
+		g_esThrowCache[tank].g_iThrowWitchAmount = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowWitchAmount, g_esThrowAbility[type].g_iThrowWitchAmount, 1);
+		g_esThrowCache[tank].g_iThrowWitchRemove = iGetSettingValue(apply, bHuman, g_esThrowPlayer[tank].g_iThrowWitchRemove, g_esThrowAbility[type].g_iThrowWitchRemove, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -715,7 +900,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vThrowCopyStats2(iBot, iTank);
 			vRemoveThrow(iBot);
@@ -725,7 +910,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vThrowCopyStats2(iTank, iBot);
 			vRemoveThrow(iTank);
@@ -759,7 +944,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esThrowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esThrowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType, tank) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -767,7 +952,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_SPECIAL_KEY) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown >= iTime;
 			if (!g_esThrowPlayer[tank].g_bActivated && !bRecharging)
 			{
 				switch (g_esThrowPlayer[tank].g_iAmmoCount < g_esThrowCache[tank].g_iHumanAmmo && g_esThrowCache[tank].g_iHumanAmmo > 0)
@@ -817,7 +1002,7 @@ public void MT_OnRockThrow(int tank, int rock)
 {
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esThrowCache[tank].g_iThrowAbility > 0 && g_esThrowCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esThrowCache[tank].g_flThrowChance)
 	{
-		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esThrowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esThrowCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esThrowCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[tank].g_iTankType, tank) || (g_esThrowCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esThrowAbility[g_esThrowPlayer[tank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -828,12 +1013,12 @@ public void MT_OnRockThrow(int tank, int rock)
 
 void vThrow(int tank, int rock)
 {
-	if (g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown > GetTime())
+	if (g_esThrowPlayer[tank].g_iCooldown != -1 && g_esThrowPlayer[tank].g_iCooldown >= GetTime())
 	{
 		return;
 	}
 
-	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esThrowCache[tank].g_iHumanAbility != 1) && !g_esThrowPlayer[tank].g_bActivated)
+	if ((!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esThrowCache[tank].g_iHumanAbility != 1) && !g_esThrowPlayer[tank].g_bActivated)
 	{
 		g_esThrowPlayer[tank].g_bActivated = true;
 	}
@@ -969,7 +1154,7 @@ Action tTimerThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esThrowCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esThrowCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[iTank].g_iTankType) || (g_esThrowCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esThrowPlayer[iTank].g_iTankType || g_esThrowCache[iTank].g_iThrowAbility == 0 || !g_esThrowPlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esThrowCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esThrowCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esThrowPlayer[iTank].g_iTankType, iTank) || (g_esThrowCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esThrowCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iAccessFlags, g_esThrowPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esThrowPlayer[iTank].g_iTankType || g_esThrowCache[iTank].g_iThrowAbility == 0 || !g_esThrowPlayer[iTank].g_bActivated)
 	{
 		g_esThrowPlayer[iTank].g_bActivated = false;
 
@@ -1225,12 +1410,12 @@ Action tTimerThrow(Handle timer, DataPack pack)
 		g_esThrowPlayer[iTank].g_bActivated = false;
 
 		int iTime = GetTime();
-		if (g_esThrowPlayer[iTank].g_iCooldown == -1 || g_esThrowPlayer[iTank].g_iCooldown < iTime)
+		if (g_esThrowPlayer[iTank].g_iCooldown == -1 || g_esThrowPlayer[iTank].g_iCooldown <= iTime)
 		{
 			int iPos = g_esThrowAbility[g_esThrowPlayer[iTank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 2, iPos)) : g_esThrowCache[iTank].g_iThrowCooldown;
-			iCooldown = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esThrowCache[iTank].g_iHumanAbility == 1 && g_esThrowPlayer[iTank].g_iAmmoCount < g_esThrowCache[iTank].g_iHumanAmmo && g_esThrowCache[iTank].g_iHumanAmmo > 0) ? g_esThrowCache[iTank].g_iHumanCooldown : iCooldown;
+			iCooldown = (bIsInfected(iTank, MT_CHECK_FAKECLIENT) && g_esThrowCache[iTank].g_iHumanAbility == 1 && g_esThrowPlayer[iTank].g_iAmmoCount < g_esThrowCache[iTank].g_iHumanAmmo && g_esThrowCache[iTank].g_iHumanAmmo > 0) ? g_esThrowCache[iTank].g_iHumanCooldown : iCooldown;
 			g_esThrowPlayer[iTank].g_iCooldown = (iTime + iCooldown);
-			if (g_esThrowPlayer[iTank].g_iCooldown != -1 && g_esThrowPlayer[iTank].g_iCooldown > iTime)
+			if (g_esThrowPlayer[iTank].g_iCooldown != -1 && g_esThrowPlayer[iTank].g_iCooldown >= iTime)
 			{
 				MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman4", (g_esThrowPlayer[iTank].g_iCooldown - iTime));
 			}

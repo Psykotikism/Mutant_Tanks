@@ -19,9 +19,79 @@
 		"chi"			"吸收坦克"
 	}
 
+	"Boomer #1 Name"
+	{
+		"chi"			"吸收胖子"
+	}
+
+	"Charger #1 Name"
+	{
+		"chi"			"吸收牛"
+	}
+
+	"Hunter #1 Name"
+	{
+		"chi"			"吸收猎人"
+	}
+
+	"Jockey #1 Name"
+	{
+		"chi"			"吸收猴子"
+	}
+
+	"Smoker #1 Name"
+	{
+		"chi"			"吸收烟鬼"
+	}
+
+	"Spitter #1 Name"
+	{
+		"chi"			"吸收口水"
+	}
+
+	"Witch #1 Name"
+	{
+		"chi"			"吸收女巫"
+	}
+
 	"Tank #1"
 	{
 		"chi"			"{mint}这个坦克可以吸收大部分伤害。"
+	}
+
+	"Boomer #1"
+	{
+		"chi"			"{mint}这个胖子可以吸收大部分伤害。"
+	}
+
+	"Charger #1"
+	{
+		"chi"			"{mint}这个牛可以吸收大部分伤害。"
+	}
+
+	"Hunter #1"
+	{
+		"chi"			"{mint}这个猎人可以吸收大部分伤害。"
+	}
+
+	"Jockey #1"
+	{
+		"chi"			"{mint}这个猴子可以吸收大部分伤害。"
+	}
+
+	"Smoker #1"
+	{
+		"chi"			"{mint}这个烟鬼可以吸收大部分伤害。"
+	}
+
+	"Spitter #1"
+	{
+		"chi"			"{mint}这个口水可以吸收大部分伤害。"
+	}
+
+	"Witch #1"
+	{
+		"chi"			"{mint}这个女巫可以吸收大部分伤害。"
 	}
 
 	"Tank #2 Name"
@@ -29,9 +99,79 @@
 		"chi"			"酸液坦克"
 	}
 
+	"Boomer #2 Name"
+	{
+		"chi"			"酸液胖子"
+	}
+
+	"Charger #2 Name"
+	{
+		"chi"			"酸液牛"
+	}
+
+	"Hunter #2 Name"
+	{
+		"chi"			"酸液猎人"
+	}
+
+	"Jockey #2 Name"
+	{
+		"chi"			"酸液猴子"
+	}
+
+	"Smoker #2 Name"
+	{
+		"chi"			"酸液烟鬼"
+	}
+
+	"Spitter #2 Name"
+	{
+		"chi"			"酸液口水"
+	}
+
+	"Witch #2 Name"
+	{
+		"chi"			"酸液女巫"
+	}
+
 	"Tank #2"
 	{
 		"chi"			"{mint}这个坦克可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Boomer #2"
+	{
+		"chi"			"{mint}这个胖子可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Charger #2"
+	{
+		"chi"			"{mint}这个牛可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Hunter #2"
+	{
+		"chi"			"{mint}这个猎人可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Jockey #2"
+	{
+		"chi"			"{mint}这个猴子可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Smoker #2"
+	{
+		"chi"			"{mint}这个烟鬼可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Spitter #2"
+	{
+		"chi"			"{mint}这个口水可以在幸存者脚下生成酸液地带。"
+	}
+
+	"Witch #2"
+	{
+		"chi"			"{mint}这个女巫可以在幸存者脚下生成酸液地带。"
 	}
 
 	"Tank #3 Name"
@@ -39,9 +179,79 @@
 		"chi"			"禁瞄坦克"
 	}
 
+	"Boomer #3 Name"
+	{
+		"chi"			"禁瞄胖子"
+	}
+
+	"Charger #3 Name"
+	{
+		"chi"			"禁瞄牛"
+	}
+
+	"Hunter #3 Name"
+	{
+		"chi"			"禁瞄猎人"
+	}
+
+	"Jockey #3 Name"
+	{
+		"chi"			"禁瞄猴子"
+	}
+
+	"Smoker #3 Name"
+	{
+		"chi"			"禁瞄烟鬼"
+	}
+
+	"Spitter #3 Name"
+	{
+		"chi"			"禁瞄口水"
+	}
+
+	"Witch #3 Name"
+	{
+		"chi"			"禁瞄女巫"
+	}
+
 	"Tank #3"
 	{
 		"chi"			"{mint}这个坦克可以阻止幸存者瞄准。"
+	}
+
+	"Boomer #3"
+	{
+		"chi"			"{mint}这个胖子可以阻止幸存者瞄准。"
+	}
+
+	"Charger #3"
+	{
+		"chi"			"{mint}这个牛可以阻止幸存者瞄准。"
+	}
+
+	"Hunter #3"
+	{
+		"chi"			"{mint}这个猎人可以阻止幸存者瞄准。"
+	}
+
+	"Jockey #3"
+	{
+		"chi"			"{mint}这个猴子可以阻止幸存者瞄准。"
+	}
+
+	"Smoker #3"
+	{
+		"chi"			"{mint}这个烟鬼可以阻止幸存者瞄准。"
+	}
+
+	"Spitter #3"
+	{
+		"chi"			"{mint}这个口水可以阻止幸存者瞄准。"
+	}
+
+	"Witch #3"
+	{
+		"chi"			"{mint}这个女巫可以阻止幸存者瞄准。"
 	}
 
 	"Tank #4 Name"
@@ -49,9 +259,79 @@
 		"chi"			"掠弹坦克"
 	}
 
+	"Boomer #4 Name"
+	{
+		"chi"			"掠弹胖子"
+	}
+
+	"Charger #4 Name"
+	{
+		"chi"			"掠弹牛"
+	}
+
+	"Hunter #4 Name"
+	{
+		"chi"			"掠弹猎人"
+	}
+
+	"Jockey #4 Name"
+	{
+		"chi"			"掠弹猴子"
+	}
+
+	"Smoker #4 Name"
+	{
+		"chi"			"掠弹烟鬼"
+	}
+
+	"Spitter #4 Name"
+	{
+		"chi"			"掠弹口水"
+	}
+
+	"Witch #4 Name"
+	{
+		"chi"			"掠弹女巫"
+	}
+
 	"Tank #4"
 	{
 		"chi"			"{mint}这个坦克可以偷走你的部分或全部弹药。"
+	}
+
+	"Boomer #4"
+	{
+		"chi"			"{mint}这个胖子可以偷走你的部分或全部弹药。"
+	}
+
+	"Charger #4"
+	{
+		"chi"			"{mint}这个牛可以偷走你的部分或全部弹药。"
+	}
+
+	"Hunter #4"
+	{
+		"chi"			"{mint}这个猎人可以偷走你的部分或全部弹药。"
+	}
+
+	"Jockey #4"
+	{
+		"chi"			"{mint}这个猴子可以偷走你的部分或全部弹药。"
+	}
+
+	"Smoker #4"
+	{
+		"chi"			"{mint}这个烟鬼可以偷走你的部分或全部弹药。"
+	}
+
+	"Spitter #4"
+	{
+		"chi"			"{mint}这个口水可以偷走你的部分或全部弹药。"
+	}
+
+	"Witch #4"
+	{
+		"chi"			"{mint}这个女巫可以偷走你的部分或全部弹药。"
 	}
 
 	"Tank #5 Name"
@@ -59,9 +339,79 @@
 		"chi"			"致盲坦克"
 	}
 
+	"Boomer #5 Name"
+	{
+		"chi"			"致盲胖子"
+	}
+
+	"Charger #5 Name"
+	{
+		"chi"			"致盲牛"
+	}
+
+	"Hunter #5 Name"
+	{
+		"chi"			"致盲猎人"
+	}
+
+	"Jockey #5 Name"
+	{
+		"chi"			"致盲猴子"
+	}
+
+	"Smoker #5 Name"
+	{
+		"chi"			"致盲烟鬼"
+	}
+
+	"Spitter #5 Name"
+	{
+		"chi"			"致盲口水"
+	}
+
+	"Witch #5 Name"
+	{
+		"chi"			"致盲女巫"
+	}
+
 	"Tank #5"
 	{
 		"chi"			"{mint}这个坦克可以让你失明。"
+	}
+
+	"Boomer #5"
+	{
+		"chi"			"{mint}这个胖子可以让你失明。"
+	}
+
+	"Charger #5"
+	{
+		"chi"			"{mint}这个牛可以让你失明。"
+	}
+
+	"Hunter #5"
+	{
+		"chi"			"{mint}这个猎人可以让你失明。"
+	}
+
+	"Jockey #5"
+	{
+		"chi"			"{mint}这个猴子可以让你失明。"
+	}
+
+	"Smoker #5"
+	{
+		"chi"			"{mint}这个烟鬼可以让你失明。"
+	}
+
+	"Spitter #5"
+	{
+		"chi"			"{mint}这个口水可以让你失明。"
+	}
+
+	"Witch #5"
+	{
+		"chi"			"{mint}这个女巫可以让你失明。"
 	}
 
 	"Tank #6 Name"
@@ -69,9 +419,79 @@
 		"chi"			"裂爆坦克"
 	}
 
+	"Boomer #6 Name"
+	{
+		"chi"			"裂爆胖子"
+	}
+
+	"Charger #6 Name"
+	{
+		"chi"			"裂爆牛"
+	}
+
+	"Hunter #6 Name"
+	{
+		"chi"			"裂爆猎人"
+	}
+
+	"Jockey #6 Name"
+	{
+		"chi"			"裂爆猴子"
+	}
+
+	"Smoker #6 Name"
+	{
+		"chi"			"裂爆烟鬼"
+	}
+
+	"Spitter #6 Name"
+	{
+		"chi"			"裂爆口水"
+	}
+
+	"Witch #6 Name"
+	{
+		"chi"			"裂爆女巫"
+	}
+
 	"Tank #6"
 	{
 		"chi"			"{mint}这个坦克可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Boomer #6"
+	{
+		"chi"			"{mint}这个胖子可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Charger #6"
+	{
+		"chi"			"{mint}这个牛可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Hunter #6"
+	{
+		"chi"			"{mint}这个猎人可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Jockey #6"
+	{
+		"chi"			"{mint}这个猴子可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Smoker #6"
+	{
+		"chi"			"{mint}这个烟鬼可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Spitter #6"
+	{
+		"chi"			"{mint}这个口水可以引发爆炸， 同时免疫爆炸伤害。"
+	}
+
+	"Witch #6"
+	{
+		"chi"			"{mint}这个女巫可以引发爆炸， 同时免疫爆炸伤害。"
 	}
 
 	"Tank #7 Name"
@@ -79,9 +499,79 @@
 		"chi"			"胖子坦克"
 	}
 
+	"Boomer #7 Name"
+	{
+		"chi"			"胖子胖子"
+	}
+
+	"Charger #7 Name"
+	{
+		"chi"			"胖子牛"
+	}
+
+	"Hunter #7 Name"
+	{
+		"chi"			"胖子猎人"
+	}
+
+	"Jockey #7 Name"
+	{
+		"chi"			"胖子猴子"
+	}
+
+	"Smoker #7 Name"
+	{
+		"chi"			"胖子烟鬼"
+	}
+
+	"Spitter #7 Name"
+	{
+		"chi"			"胖子口水"
+	}
+
+	"Witch #7 Name"
+	{
+		"chi"			"胖子女巫"
+	}
+
 	"Tank #7"
 	{
-		"chi"			"{mint}这个坦克可以生成Boomer和向幸存者投掷Boomer。"
+		"chi"			"{mint}这个坦克可以生成胖子和向幸存者投掷胖子。"
+	}
+
+	"Boomer #7"
+	{
+		"chi"			"{mint}这个胖子可以生成胖子。"
+	}
+
+	"Charger #7"
+	{
+		"chi"			"{mint}这个牛可以生成胖子。"
+	}
+
+	"Hunter #7"
+	{
+		"chi"			"{mint}这个猎人可以生成胖子。"
+	}
+
+	"Jockey #7"
+	{
+		"chi"			"{mint}这个猴子可以生成胖子。"
+	}
+
+	"Smoker #7"
+	{
+		"chi"			"{mint}这个烟鬼可以生成胖子。"
+	}
+
+	"Spitter #7"
+	{
+		"chi"			"{mint}这个口水可以生成胖子。"
+	}
+
+	"Witch #7"
+	{
+		"chi"			"{mint}这个女巫可以生成胖子。"
 	}
 
 	"Tank #8 Name"
@@ -89,9 +579,79 @@
 		"chi"			"防弹坦克"
 	}
 
+	"Boomer #8 Name"
+	{
+		"chi"			"防弹胖子"
+	}
+
+	"Charger #8 Name"
+	{
+		"chi"			"防弹牛"
+	}
+
+	"Hunter #8 Name"
+	{
+		"chi"			"防弹猎人"
+	}
+
+	"Jockey #8 Name"
+	{
+		"chi"			"防弹猴子"
+	}
+
+	"Smoker #8 Name"
+	{
+		"chi"			"防弹烟鬼"
+	}
+
+	"Spitter #8 Name"
+	{
+		"chi"			"防弹口水"
+	}
+
+	"Witch #8 Name"
+	{
+		"chi"			"防弹女巫"
+	}
+
 	"Tank #8"
 	{
 		"chi"			"{mint}这个坦克免疫子弹伤害。"
+	}
+
+	"Boomer #8"
+	{
+		"chi"			"{mint}这个胖子免疫子弹伤害。"
+	}
+
+	"Charger #8"
+	{
+		"chi"			"{mint}这个牛免疫子弹伤害。"
+	}
+
+	"Hunter #8"
+	{
+		"chi"			"{mint}这个猎人免疫子弹伤害。"
+	}
+
+	"Jockey #8"
+	{
+		"chi"			"{mint}这个猴子免疫子弹伤害。"
+	}
+
+	"Smoker #8"
+	{
+		"chi"			"{mint}这个烟鬼免疫子弹伤害。"
+	}
+
+	"Spitter #8"
+	{
+		"chi"			"{mint}这个口水免疫子弹伤害。"
+	}
+
+	"Witch #8"
+	{
+		"chi"			"{mint}这个女巫免疫子弹伤害。"
 	}
 
 	"Tank #9 Name"
@@ -99,9 +659,79 @@
 		"chi"			"埋葬坦克"
 	}
 
+	"Boomer #9 Name"
+	{
+		"chi"			"埋葬胖子"
+	}
+
+	"Charger #9 Name"
+	{
+		"chi"			"埋葬牛"
+	}
+
+	"Hunter #9 Name"
+	{
+		"chi"			"埋葬猎人"
+	}
+
+	"Jockey #9 Name"
+	{
+		"chi"			"埋葬猴子"
+	}
+
+	"Smoker #9 Name"
+	{
+		"chi"			"埋葬烟鬼"
+	}
+
+	"Spitter #9 Name"
+	{
+		"chi"			"埋葬口水"
+	}
+
+	"Witch #9 Name"
+	{
+		"chi"			"埋葬女巫"
+	}
+
 	"Tank #9"
 	{
 		"chi"			"{mint}这个坦克可以埋葬幸存者。"
+	}
+
+	"Boomer #9"
+	{
+		"chi"			"{mint}这个胖子可以埋葬幸存者。"
+	}
+
+	"Charger #9"
+	{
+		"chi"			"{mint}这个牛可以埋葬幸存者。"
+	}
+
+	"Hunter #9"
+	{
+		"chi"			"{mint}这个猎人可以埋葬幸存者。"
+	}
+
+	"Jockey #9"
+	{
+		"chi"			"{mint}这个猴子可以埋葬幸存者。"
+	}
+
+	"Smoker #9"
+	{
+		"chi"			"{mint}这个烟鬼可以埋葬幸存者。"
+	}
+
+	"Spitter #9"
+	{
+		"chi"			"{mint}这个口水可以埋葬幸存者。"
+	}
+
+	"Witch #9"
+	{
+		"chi"			"{mint}这个女巫可以埋葬幸存者。"
 	}
 
 	"Tank #10 Name"
@@ -109,9 +739,79 @@
 		"chi"			"投车坦克"
 	}
 
+	"Boomer #10 Name"
+	{
+		"chi"			"投车胖子"
+	}
+
+	"Charger #10 Name"
+	{
+		"chi"			"投车牛"
+	}
+
+	"Hunter #10 Name"
+	{
+		"chi"			"投车猎人"
+	}
+
+	"Jockey #10 Name"
+	{
+		"chi"			"投车猴子"
+	}
+
+	"Smoker #10 Name"
+	{
+		"chi"			"投车烟鬼"
+	}
+
+	"Spitter #10 Name"
+	{
+		"chi"			"投车口水"
+	}
+
+	"Witch #10 Name"
+	{
+		"chi"			"投车女巫"
+	}
+
 	"Tank #10"
 	{
 		"chi"			"{mint}这个坦克可以向幸存者投掷汽车。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Boomer #10"
+	{
+		"chi"			"{mint}这个胖子可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Charger #10"
+	{
+		"chi"			"{mint}这个牛可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Hunter #10"
+	{
+		"chi"			"{mint}这个猎人可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Jockey #10"
+	{
+		"chi"			"{mint}这个猴子可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Smoker #10"
+	{
+		"chi"			"{mint}这个烟鬼可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Spitter #10"
+	{
+		"chi"			"{mint}这个口水可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
+	}
+
+	"Witch #10"
+	{
+		"chi"			"{mint}这个女巫可以召唤汽车雨。 投掷出来的汽车在30秒后消失。"
 	}
 
 	"Tank #11 Name"
@@ -119,9 +819,79 @@
 		"chi"			"莽牛坦克"
 	}
 
+	"Boomer #11 Name"
+	{
+		"chi"			"莽牛胖子"
+	}
+
+	"Charger #11 Name"
+	{
+		"chi"			"莽牛牛"
+	}
+
+	"Hunter #11 Name"
+	{
+		"chi"			"莽牛猎人"
+	}
+
+	"Jockey #11 Name"
+	{
+		"chi"			"莽牛猴子"
+	}
+
+	"Smoker #11 Name"
+	{
+		"chi"			"莽牛烟鬼"
+	}
+
+	"Spitter #11 Name"
+	{
+		"chi"			"莽牛口水"
+	}
+
+	"Witch #11 Name"
+	{
+		"chi"			"莽牛女巫"
+	}
+
 	"Tank #11"
 	{
-		"chi"			"{mint}这个坦克可以生成Charger和向幸存者投掷Charger。"
+		"chi"			"{mint}这个坦克可以生成牛和向幸存者投掷牛。"
+	}
+
+	"Boomer #11"
+	{
+		"chi"			"{mint}这个胖子可以生成牛。"
+	}
+
+	"Charger #11"
+	{
+		"chi"			"{mint}这个牛可以生成牛。"
+	}
+
+	"Hunter #11"
+	{
+		"chi"			"{mint}这个猎人可以生成牛。"
+	}
+
+	"Jockey #11"
+	{
+		"chi"			"{mint}这个猴子可以生成牛。"
+	}
+
+	"Smoker #11"
+	{
+		"chi"			"{mint}这个烟鬼可以生成牛。"
+	}
+
+	"Spitter #11"
+	{
+		"chi"			"{mint}这个口水可以生成牛。"
+	}
+
+	"Witch #11"
+	{
+		"chi"			"{mint}这个女巫可以生成牛。"
 	}
 
 	"Tank #12 Name"
@@ -129,9 +899,79 @@
 		"chi"			"窒息坦克"
 	}
 
+	"Boomer #12 Name"
+	{
+		"chi"			"窒息胖子"
+	}
+
+	"Charger #12 Name"
+	{
+		"chi"			"窒息牛"
+	}
+
+	"Hunter #12 Name"
+	{
+		"chi"			"窒息猎人"
+	}
+
+	"Jockey #12 Name"
+	{
+		"chi"			"窒息猴子"
+	}
+
+	"Smoker #12 Name"
+	{
+		"chi"			"窒息烟鬼"
+	}
+
+	"Spitter #12 Name"
+	{
+		"chi"			"窒息口水"
+	}
+
+	"Witch #12 Name"
+	{
+		"chi"			"窒息女巫"
+	}
+
 	"Tank #12"
 	{
 		"chi"			"{mint}这个坦克可以让幸存者窒息。"
+	}
+
+	"Boomer #12"
+	{
+		"chi"			"{mint}这个胖子可以让幸存者窒息。"
+	}
+
+	"Charger #12"
+	{
+		"chi"			"{mint}这个牛可以让幸存者窒息。"
+	}
+
+	"Hunter #12"
+	{
+		"chi"			"{mint}这个猎人可以让幸存者窒息。"
+	}
+
+	"Jockey #12"
+	{
+		"chi"			"{mint}这个猴子可以让幸存者窒息。"
+	}
+
+	"Smoker #12"
+	{
+		"chi"			"{mint}这个烟鬼可以让幸存者窒息。"
+	}
+
+	"Spitter #12"
+	{
+		"chi"			"{mint}这个口水可以让幸存者窒息。"
+	}
+
+	"Witch #12"
+	{
+		"chi"			"{mint}这个女巫可以让幸存者窒息。"
 	}
 
 	"Tank #13 Name"
@@ -139,9 +979,79 @@
 		"chi"			"克隆坦克"
 	}
 
+	"Boomer #13 Name"
+	{
+		"chi"			"克隆胖子"
+	}
+
+	"Charger #13 Name"
+	{
+		"chi"			"克隆牛"
+	}
+
+	"Hunter #13 Name"
+	{
+		"chi"			"克隆猎人"
+	}
+
+	"Jockey #13 Name"
+	{
+		"chi"			"克隆猴子"
+	}
+
+	"Smoker #13 Name"
+	{
+		"chi"			"克隆烟鬼"
+	}
+
+	"Spitter #13 Name"
+	{
+		"chi"			"克隆口水"
+	}
+
+	"Witch #13 Name"
+	{
+		"chi"			"克隆女巫"
+	}
+
 	"Tank #13"
 	{
-		"chi"			"{mint}这个坦克可以生成自己的克隆体和向幸存者投掷Tank。"
+		"chi"			"{mint}这个坦克可以生成自己的克隆体和向幸存者投掷坦克。"
+	}
+
+	"Boomer #13"
+	{
+		"chi"			"{mint}这个胖子可以生成自己的克隆体。"
+	}
+
+	"Charger #13"
+	{
+		"chi"			"{mint}这个牛可以生成自己的克隆体。"
+	}
+
+	"Hunter #13"
+	{
+		"chi"			"{mint}这个猎人可以生成自己的克隆体。"
+	}
+
+	"Jockey #13"
+	{
+		"chi"			"{mint}这个猴子可以生成自己的克隆体。"
+	}
+
+	"Smoker #13"
+	{
+		"chi"			"{mint}这个烟鬼可以生成自己的克隆体。"
+	}
+
+	"Spitter #13"
+	{
+		"chi"			"{mint}这个口水可以生成自己的克隆体。"
+	}
+
+	"Witch #13"
+	{
+		"chi"			"{mint}这个女巫可以生成自己的克隆体。"
 	}
 
 	"Tank #14 Name"
@@ -149,9 +1059,79 @@
 		"chi"			"烟雾坦克"
 	}
 
+	"Boomer #14 Name"
+	{
+		"chi"			"烟雾胖子"
+	}
+
+	"Charger #14 Name"
+	{
+		"chi"			"烟雾牛"
+	}
+
+	"Hunter #14 Name"
+	{
+		"chi"			"烟雾猎人"
+	}
+
+	"Jockey #14 Name"
+	{
+		"chi"			"烟雾猴子"
+	}
+
+	"Smoker #14 Name"
+	{
+		"chi"			"烟雾烟鬼"
+	}
+
+	"Spitter #14 Name"
+	{
+		"chi"			"烟雾口水"
+	}
+
+	"Witch #14 Name"
+	{
+		"chi"			"烟雾女巫"
+	}
+
 	"Tank #14"
 	{
 		"chi"			"{mint}这个坦克会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Boomer #14"
+	{
+		"chi"			"{mint}这个胖子会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Charger #14"
+	{
+		"chi"			"{mint}这个牛会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Hunter #14"
+	{
+		"chi"			"{mint}这个猎人会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Jockey #14"
+	{
+		"chi"			"{mint}这个猴子会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Smoker #14"
+	{
+		"chi"			"{mint}这个烟鬼会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Spitter #14"
+	{
+		"chi"			"{mint}这个口水会散播能伤害和困惑幸存者的烟雾。"
+	}
+
+	"Witch #14"
+	{
+		"chi"			"{mint}这个女巫会散播能伤害和困惑幸存者的烟雾。"
 	}
 
 	"Tank #15 Name"
@@ -159,9 +1139,79 @@
 		"chi"			"掉物坦克"
 	}
 
+	"Boomer #15 Name"
+	{
+		"chi"			"掉物胖子"
+	}
+
+	"Charger #15 Name"
+	{
+		"chi"			"掉物牛"
+	}
+
+	"Hunter #15 Name"
+	{
+		"chi"			"掉物猎人"
+	}
+
+	"Jockey #15 Name"
+	{
+		"chi"			"掉物猴子"
+	}
+
+	"Smoker #15 Name"
+	{
+		"chi"			"掉物烟鬼"
+	}
+
+	"Spitter #15 Name"
+	{
+		"chi"			"掉物口水"
+	}
+
+	"Witch #15 Name"
+	{
+		"chi"			"掉物女巫"
+	}
+
 	"Tank #15"
 	{
 		"chi"			"{mint}这个坦克死亡时会掉落随机武器。"
+	}
+
+	"Boomer #15"
+	{
+		"chi"			"{mint}这个胖子死亡时会掉落随机武器。"
+	}
+
+	"Charger #15"
+	{
+		"chi"			"{mint}这个牛死亡时会掉落随机武器。"
+	}
+
+	"Hunter #15"
+	{
+		"chi"			"{mint}这个猎人死亡时会掉落随机武器。"
+	}
+
+	"Jockey #15"
+	{
+		"chi"			"{mint}这个猴子死亡时会掉落随机武器。"
+	}
+
+	"Smoker #15"
+	{
+		"chi"			"{mint}这个烟鬼死亡时会掉落随机武器。"
+	}
+
+	"Spitter #15"
+	{
+		"chi"			"{mint}这个口水死亡时会掉落随机武器。"
+	}
+
+	"Witch #15"
+	{
+		"chi"			"{mint}这个女巫死亡时会掉落随机武器。"
 	}
 
 	"Tank #16 Name"
@@ -169,9 +1219,79 @@
 		"chi"			"投毒坦克"
 	}
 
+	"Boomer #16 Name"
+	{
+		"chi"			"投毒胖子"
+	}
+
+	"Charger #16 Name"
+	{
+		"chi"			"投毒牛"
+	}
+
+	"Hunter #16 Name"
+	{
+		"chi"			"投毒猎人"
+	}
+
+	"Jockey #16 Name"
+	{
+		"chi"			"投毒猴子"
+	}
+
+	"Smoker #16 Name"
+	{
+		"chi"			"投毒烟鬼"
+	}
+
+	"Spitter #16 Name"
+	{
+		"chi"			"投毒口水"
+	}
+
+	"Witch #16 Name"
+	{
+		"chi"			"投毒女巫"
+	}
+
 	"Tank #16"
 	{
 		"chi"			"{mint}这个坦克可以对幸存者下毒药。"
+	}
+
+	"Boomer #16"
+	{
+		"chi"			"{mint}这个胖子可以对幸存者下毒药。"
+	}
+
+	"Charger #16"
+	{
+		"chi"			"{mint}这个牛可以对幸存者下毒药。"
+	}
+
+	"Hunter #16"
+	{
+		"chi"			"{mint}这个猎人可以对幸存者下毒药。"
+	}
+
+	"Jockey #16"
+	{
+		"chi"			"{mint}这个猴子可以对幸存者下毒药。"
+	}
+
+	"Smoker #16"
+	{
+		"chi"			"{mint}这个烟鬼可以对幸存者下毒药。"
+	}
+
+	"Spitter #16"
+	{
+		"chi"			"{mint}这个口水可以对幸存者下毒药。"
+	}
+
+	"Witch #16"
+	{
+		"chi"			"{mint}这个女巫可以对幸存者下毒药。"
 	}
 
 	"Tank #17 Name"
@@ -179,9 +1299,79 @@
 		"chi"			"醉酒坦克"
 	}
 
+	"Boomer #17 Name"
+	{
+		"chi"			"醉酒胖子"
+	}
+
+	"Charger #17 Name"
+	{
+		"chi"			"醉酒牛"
+	}
+
+	"Hunter #17 Name"
+	{
+		"chi"			"醉酒猎人"
+	}
+
+	"Jockey #17 Name"
+	{
+		"chi"			"醉酒猴子"
+	}
+
+	"Smoker #17 Name"
+	{
+		"chi"			"醉酒烟鬼"
+	}
+
+	"Spitter #17 Name"
+	{
+		"chi"			"醉酒口水"
+	}
+
+	"Witch #17 Name"
+	{
+		"chi"			"醉酒女巫"
+	}
+
 	"Tank #17"
 	{
 		"chi"			"{mint}这个坦克可以让幸存者喝醉酒。"
+	}
+
+	"Boomer #17"
+	{
+		"chi"			"{mint}这个胖子可以让幸存者喝醉酒。"
+	}
+
+	"Charger #17"
+	{
+		"chi"			"{mint}这个牛可以让幸存者喝醉酒。"
+	}
+
+	"Hunter #17"
+	{
+		"chi"			"{mint}这个猎人可以让幸存者喝醉酒。"
+	}
+
+	"Jockey #17"
+	{
+		"chi"			"{mint}这个猴子可以让幸存者喝醉酒。"
+	}
+
+	"Smoker #17"
+	{
+		"chi"			"{mint}这个烟鬼可以让幸存者喝醉酒。"
+	}
+
+	"Spitter #17"
+	{
+		"chi"			"{mint}这个口水可以让幸存者喝醉酒。"
+	}
+
+	"Witch #17"
+	{
+		"chi"			"{mint}这个女巫可以让幸存者喝醉酒。"
 	}
 
 	"Tank #18 Name"
@@ -189,9 +1379,79 @@
 		"chi"			"电击坦克"
 	}
 
+	"Boomer #18 Name"
+	{
+		"chi"			"电击胖子"
+	}
+
+	"Charger #18 Name"
+	{
+		"chi"			"电击牛"
+	}
+
+	"Hunter #18 Name"
+	{
+		"chi"			"电击猎人"
+	}
+
+	"Jockey #18 Name"
+	{
+		"chi"			"电击猴子"
+	}
+
+	"Smoker #18 Name"
+	{
+		"chi"			"电击烟鬼"
+	}
+
+	"Spitter #18 Name"
+	{
+		"chi"			"电击口水"
+	}
+
+	"Witch #18 Name"
+	{
+		"chi"			"电击女巫"
+	}
+
 	"Tank #18"
 	{
 		"chi"			"{mint}这个坦克可以电击幸存者。"
+	}
+
+	"Boomer #18"
+	{
+		"chi"			"{mint}这个胖子可以电击幸存者。"
+	}
+
+	"Charger #18"
+	{
+		"chi"			"{mint}这个牛可以电击幸存者。"
+	}
+
+	"Hunter #18"
+	{
+		"chi"			"{mint}这个猎人可以电击幸存者。"
+	}
+
+	"Jockey #18"
+	{
+		"chi"			"{mint}这个猴子可以电击幸存者。"
+	}
+
+	"Smoker #18"
+	{
+		"chi"			"{mint}这个烟鬼可以电击幸存者。"
+	}
+
+	"Spitter #18"
+	{
+		"chi"			"{mint}这个口水可以电击幸存者。"
+	}
+
+	"Witch #18"
+	{
+		"chi"			"{mint}这个女巫可以电击幸存者。"
 	}
 
 	"Tank #19 Name"
@@ -199,9 +1459,79 @@
 		"chi"			"强迫坦克"
 	}
 
+	"Boomer #19 Name"
+	{
+		"chi"			"强迫胖子"
+	}
+
+	"Charger #19 Name"
+	{
+		"chi"			"强迫牛"
+	}
+
+	"Hunter #19 Name"
+	{
+		"chi"			"强迫猎人"
+	}
+
+	"Jockey #19 Name"
+	{
+		"chi"			"强迫猴子"
+	}
+
+	"Smoker #19 Name"
+	{
+		"chi"			"强迫烟鬼"
+	}
+
+	"Spitter #19 Name"
+	{
+		"chi"			"强迫口水"
+	}
+
+	"Witch #19 Name"
+	{
+		"chi"			"强迫女巫"
+	}
+
 	"Tank #19"
 	{
 		"chi"			"{mint}这个坦克可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Boomer #19"
+	{
+		"chi"			"{mint}这个胖子可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Charger #19"
+	{
+		"chi"			"{mint}这个牛可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Hunter #19"
+	{
+		"chi"			"{mint}这个猎人可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Jockey #19"
+	{
+		"chi"			"{mint}这个猴子可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Smoker #19"
+	{
+		"chi"			"{mint}这个烟鬼可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Spitter #19"
+	{
+		"chi"			"{mint}这个口水可以强迫幸存者在一定时间内只能使用特定的武器槽。"
+	}
+
+	"Witch #19"
+	{
+		"chi"			"{mint}这个女巫可以强迫幸存者在一定时间内只能使用特定的武器槽。"
 	}
 
 	"Tank #20 Name"
@@ -209,9 +1539,79 @@
 		"chi"			"闪速坦克"
 	}
 
+	"Boomer #20 Name"
+	{
+		"chi"			"闪速胖子"
+	}
+
+	"Charger #20 Name"
+	{
+		"chi"			"闪速牛"
+	}
+
+	"Hunter #20 Name"
+	{
+		"chi"			"闪速猎人"
+	}
+
+	"Jockey #20 Name"
+	{
+		"chi"			"闪速猴子"
+	}
+
+	"Smoker #20 Name"
+	{
+		"chi"			"闪速烟鬼"
+	}
+
+	"Spitter #20 Name"
+	{
+		"chi"			"闪速口水"
+	}
+
+	"Witch #20 Name"
+	{
+		"chi"			"闪速女巫"
+	}
+
 	"Tank #20"
 	{
 		"chi"			"{mint}这个坦克可以跑的跟闪电一样快。"
+	}
+
+	"Boomer #20"
+	{
+		"chi"			"{mint}这个胖子可以跑的跟闪电一样快。"
+	}
+
+	"Charger #20"
+	{
+		"chi"			"{mint}这个牛可以跑的跟闪电一样快。"
+	}
+
+	"Hunter #20"
+	{
+		"chi"			"{mint}这个猎人可以跑的跟闪电一样快。"
+	}
+
+	"Jockey #20"
+	{
+		"chi"			"{mint}这个猴子可以跑的跟闪电一样快。"
+	}
+
+	"Smoker #20"
+	{
+		"chi"			"{mint}这个烟鬼可以跑的跟闪电一样快。"
+	}
+
+	"Spitter #20"
+	{
+		"chi"			"{mint}这个口水可以跑的跟闪电一样快。"
+	}
+
+	"Witch #20"
+	{
+		"chi"			"{mint}这个女巫可以跑的跟闪电一样快。"
 	}
 
 	"Tank #21 Name"
@@ -219,9 +1619,79 @@
 		"chi"			"防火坦克"
 	}
 
+	"Boomer #21 Name"
+	{
+		"chi"			"防火胖子"
+	}
+
+	"Charger #21 Name"
+	{
+		"chi"			"防火牛"
+	}
+
+	"Hunter #21 Name"
+	{
+		"chi"			"防火猎人"
+	}
+
+	"Jockey #21 Name"
+	{
+		"chi"			"防火猴子"
+	}
+
+	"Smoker #21 Name"
+	{
+		"chi"			"防火烟鬼"
+	}
+
+	"Spitter #21 Name"
+	{
+		"chi"			"防火口水"
+	}
+
+	"Witch #21 Name"
+	{
+		"chi"			"防火女巫"
+	}
+
 	"Tank #21"
 	{
 		"chi"			"{mint}这个坦克可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Boomer #21"
+	{
+		"chi"			"{mint}这个胖子可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Charger #21"
+	{
+		"chi"			"{mint}这个牛可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Hunter #21"
+	{
+		"chi"			"{mint}这个猎人可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Jockey #21"
+	{
+		"chi"			"{mint}这个猴子可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Smoker #21"
+	{
+		"chi"			"{mint}这个烟鬼可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Spitter #21"
+	{
+		"chi"			"{mint}这个口水可以引发火灾而且免疫火焰伤害。"
+	}
+
+	"Witch #21"
+	{
+		"chi"			"{mint}这个女巫可以引发火灾而且免疫火焰伤害。"
 	}
 
 	"Tank #22 Name"
@@ -229,9 +1699,79 @@
 		"chi"			"投空坦克"
 	}
 
+	"Boomer #22 Name"
+	{
+		"chi"			"投空胖子"
+	}
+
+	"Charger #22 Name"
+	{
+		"chi"			"投空牛"
+	}
+
+	"Hunter #22 Name"
+	{
+		"chi"			"投空猎人"
+	}
+
+	"Jockey #22 Name"
+	{
+		"chi"			"投空猴子"
+	}
+
+	"Smoker #22 Name"
+	{
+		"chi"			"投空烟鬼"
+	}
+
+	"Spitter #22 Name"
+	{
+		"chi"			"投空口水"
+	}
+
+	"Witch #22 Name"
+	{
+		"chi"			"投空女巫"
+	}
+
 	"Tank #22"
 	{
 		"chi"			"{mint}这个坦克可以把幸存者抛向半空。"
+	}
+
+	"Boomer #22"
+	{
+		"chi"			"{mint}这个胖子可以把幸存者抛向半空。"
+	}
+
+	"Charger #22"
+	{
+		"chi"			"{mint}这个牛可以把幸存者抛向半空。"
+	}
+
+	"Hunter #22"
+	{
+		"chi"			"{mint}这个猎人可以把幸存者抛向半空。"
+	}
+
+	"Jockey #22"
+	{
+		"chi"			"{mint}这个猴子可以把幸存者抛向半空。"
+	}
+
+	"Smoker #22"
+	{
+		"chi"			"{mint}这个烟鬼可以把幸存者抛向半空。"
+	}
+
+	"Spitter #22"
+	{
+		"chi"			"{mint}这个口水可以把幸存者抛向半空。"
+	}
+
+	"Witch #22"
+	{
+		"chi"			"{mint}这个女巫可以把幸存者抛向半空。"
 	}
 
 	"Tank #23 Name"
@@ -239,9 +1779,79 @@
 		"chi"			"飞行坦克"
 	}
 
+	"Boomer #23 Name"
+	{
+		"chi"			"飞行胖子"
+	}
+
+	"Charger #23 Name"
+	{
+		"chi"			"飞行牛"
+	}
+
+	"Hunter #23 Name"
+	{
+		"chi"			"飞行猎人"
+	}
+
+	"Jockey #23 Name"
+	{
+		"chi"			"飞行猴子"
+	}
+
+	"Smoker #23 Name"
+	{
+		"chi"			"飞行烟鬼"
+	}
+
+	"Spitter #23 Name"
+	{
+		"chi"			"飞行口水"
+	}
+
+	"Witch #23 Name"
+	{
+		"chi"			"飞行女巫"
+	}
+
 	"Tank #23"
 	{
 		"chi"			"{mint}这个坦克四处寻找受害者。"
+	}
+
+	"Boomer #23"
+	{
+		"chi"			"{mint}这个胖子四处寻找受害者。"
+	}
+
+	"Charger #23"
+	{
+		"chi"			"{mint}这个牛四处寻找受害者。"
+	}
+
+	"Hunter #23"
+	{
+		"chi"			"{mint}这个猎人四处寻找受害者。"
+	}
+
+	"Jockey #23"
+	{
+		"chi"			"{mint}这个猴子四处寻找受害者。"
+	}
+
+	"Smoker #23"
+	{
+		"chi"			"{mint}这个烟鬼四处寻找受害者。"
+	}
+
+	"Spitter #23"
+	{
+		"chi"			"{mint}这个口水四处寻找受害者。"
+	}
+
+	"Witch #23"
+	{
+		"chi"			"{mint}这个女巫四处寻找受害者。"
 	}
 
 	"Tank #24 Name"
@@ -249,9 +1859,79 @@
 		"chi"			"脆弱坦克"
 	}
 
+	"Boomer #24 Name"
+	{
+		"chi"			"脆弱胖子"
+	}
+
+	"Charger #24 Name"
+	{
+		"chi"			"脆弱牛"
+	}
+
+	"Hunter #24 Name"
+	{
+		"chi"			"脆弱猎人"
+	}
+
+	"Jockey #24 Name"
+	{
+		"chi"			"脆弱猴子"
+	}
+
+	"Smoker #24 Name"
+	{
+		"chi"			"脆弱烟鬼"
+	}
+
+	"Spitter #24 Name"
+	{
+		"chi"			"脆弱口水"
+	}
+
+	"Witch #24 Name"
+	{
+		"chi"			"脆弱女巫"
+	}
+
 	"Tank #24"
 	{
 		"chi"			"{mint}这个坦克在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Boomer #24"
+	{
+		"chi"			"{mint}这个胖子在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Charger #24"
+	{
+		"chi"			"{mint}这个牛在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Hunter #24"
+	{
+		"chi"			"{mint}这个猎人在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Jockey #24"
+	{
+		"chi"			"{mint}这个猴子在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Smoker #24"
+	{
+		"chi"			"{mint}这个烟鬼在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Spitter #24"
+	{
+		"chi"			"{mint}这个口水在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
+	}
+
+	"Witch #24"
+	{
+		"chi"			"{mint}这个女巫在受到更多伤害的同时， 移动速度变快且对幸存者造成的伤害也更高。"
 	}
 
 	"Tank #25 Name"
@@ -259,9 +1939,79 @@
 		"chi"			"幽灵坦克"
 	}
 
+	"Boomer #25 Name"
+	{
+		"chi"			"幽灵胖子"
+	}
+
+	"Charger #25 Name"
+	{
+		"chi"			"幽灵牛"
+	}
+
+	"Hunter #25 Name"
+	{
+		"chi"			"幽灵猎人"
+	}
+
+	"Jockey #25 Name"
+	{
+		"chi"			"幽灵猴子"
+	}
+
+	"Smoker #25 Name"
+	{
+		"chi"			"幽灵烟鬼"
+	}
+
+	"Spitter #25 Name"
+	{
+		"chi"			"幽灵口水"
+	}
+
+	"Witch #25 Name"
+	{
+		"chi"			"幽灵女巫"
+	}
+
 	"Tank #25"
 	{
 		"chi"			"{mint}这个坦克可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Boomer #25"
+	{
+		"chi"			"{mint}这个胖子可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Charger #25"
+	{
+		"chi"			"{mint}这个牛可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Hunter #25"
+	{
+		"chi"			"{mint}这个猎人可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Jockey #25"
+	{
+		"chi"			"{mint}这个猴子可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Smoker #25"
+	{
+		"chi"			"{mint}这个烟鬼可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Spitter #25"
+	{
+		"chi"			"{mint}这个口水可以让自己隐身和让幸存者缴械。"
+	}
+
+	"Witch #25"
+	{
+		"chi"			"{mint}这个女巫可以让自己隐身和让幸存者缴械。"
 	}
 
 	"Tank #26 Name"
@@ -269,9 +2019,79 @@
 		"chi"			"虔诚坦克"
 	}
 
+	"Boomer #26 Name"
+	{
+		"chi"			"虔诚胖子"
+	}
+
+	"Charger #26 Name"
+	{
+		"chi"			"虔诚牛"
+	}
+
+	"Hunter #26 Name"
+	{
+		"chi"			"虔诚猎人"
+	}
+
+	"Jockey #26 Name"
+	{
+		"chi"			"虔诚猴子"
+	}
+
+	"Smoker #26 Name"
+	{
+		"chi"			"虔诚烟鬼"
+	}
+
+	"Spitter #26 Name"
+	{
+		"chi"			"虔诚口水"
+	}
+
+	"Witch #26 Name"
+	{
+		"chi"			"虔诚女巫"
+	}
+
 	"Tank #26"
 	{
 		"chi"			"{mint}这个坦克可以获得暂时性的无敌。"
+	}
+
+	"Boomer #26"
+	{
+		"chi"			"{mint}这个胖子可以获得暂时性的无敌。"
+	}
+
+	"Charger #26"
+	{
+		"chi"			"{mint}这个牛可以获得暂时性的无敌。"
+	}
+
+	"Hunter #26"
+	{
+		"chi"			"{mint}这个猎人可以获得暂时性的无敌。"
+	}
+
+	"Jockey #26"
+	{
+		"chi"			"{mint}这个猴子可以获得暂时性的无敌。"
+	}
+
+	"Smoker #26"
+	{
+		"chi"			"{mint}这个烟鬼可以获得暂时性的无敌。"
+	}
+
+	"Spitter #26"
+	{
+		"chi"			"{mint}这个口水可以获得暂时性的无敌。"
+	}
+
+	"Witch #26"
+	{
+		"chi"			"{mint}这个女巫可以获得暂时性的无敌。"
 	}
 
 	"Tank #27 Name"
@@ -279,19 +2099,159 @@
 		"chi"			"重力坦克"
 	}
 
+	"Boomer #27 Name"
+	{
+		"chi"			"重力胖子"
+	}
+
+	"Charger #27 Name"
+	{
+		"chi"			"重力牛"
+	}
+
+	"Hunter #27 Name"
+	{
+		"chi"			"重力猎人"
+	}
+
+	"Jockey #27 Name"
+	{
+		"chi"			"重力猴子"
+	}
+
+	"Smoker #27 Name"
+	{
+		"chi"			"重力烟鬼"
+	}
+
+	"Spitter #27 Name"
+	{
+		"chi"			"重力口水"
+	}
+
+	"Witch #27 Name"
+	{
+		"chi"			"重力女巫"
+	}
+
 	"Tank #27"
 	{
 		"chi"			"{mint}这个坦克可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
 	}
 
+	"Boomer #27"
+	{
+		"chi"			"{mint}这个胖子可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Charger #27"
+	{
+		"chi"			"{mint}这个牛可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Hunter #27"
+	{
+		"chi"			"{mint}这个猎人可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Jockey #27"
+	{
+		"chi"			"{mint}这个猴子可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Smoker #27"
+	{
+		"chi"			"{mint}这个烟鬼可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Spitter #27"
+	{
+		"chi"			"{mint}这个口水可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
+	"Witch #27"
+	{
+		"chi"			"{mint}这个女巫可以把附近的幸存者和感染者拉向他的脚下， 同时降低幸存者的重力值。"
+	}
+
 	"Tank #28 Name"
 	{
-		"chi"			"炮手坦克此坦克会用枪械武装自己并对幸存者开枪"
+		"chi"			"炮手坦克"
+	}
+
+	"Boomer #28 Name"
+	{
+		"chi"			"炮手胖子"
+	}
+
+	"Charger #28 Name"
+	{
+		"chi"			"炮手牛"
+	}
+
+	"Hunter #28 Name"
+	{
+		"chi"			"炮手猎人"
+	}
+
+	"Jockey #28 Name"
+	{
+		"chi"			"炮手猴子"
+	}
+
+	"Smoker #28 Name"
+	{
+		"chi"			"炮手烟鬼"
+	}
+
+	"Spitter #28 Name"
+	{
+		"chi"			"炮手口水"
+	}
+
+	"Witch #28 Name"
+	{
+		"chi"			"炮手女巫"
 	}
 
 	"Tank #28"
 	{
-		"chi"			"{mint}"
+		"chi"			"{mint}此坦克会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Boomer #28"
+	{
+		"chi"			"{mint}此胖子会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Charger #28"
+	{
+		"chi"			"{mint}此牛会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Hunter #28"
+	{
+		"chi"			"{mint}此猎人会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Jockey #28"
+	{
+		"chi"			"{mint}此猴子会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Smoker #28"
+	{
+		"chi"			"{mint}此烟鬼会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Spitter #28"
+	{
+		"chi"			"{mint}此口水会用枪械武装自己并对幸存者开枪。"
+	}
+
+	"Witch #28"
+	{
+		"chi"			"{mint}此女巫会用枪械武装自己并对幸存者开枪。"
 	}
 
 	"Tank #29 Name"
@@ -299,9 +2259,79 @@
 		"chi"			"败血坦克"
 	}
 
+	"Boomer #29 Name"
+	{
+		"chi"			"败血胖子"
+	}
+
+	"Charger #29 Name"
+	{
+		"chi"			"败血牛"
+	}
+
+	"Hunter #29 Name"
+	{
+		"chi"			"败血猎人"
+	}
+
+	"Jockey #29 Name"
+	{
+		"chi"			"败血猴子"
+	}
+
+	"Smoker #29 Name"
+	{
+		"chi"			"败血烟鬼"
+	}
+
+	"Spitter #29 Name"
+	{
+		"chi"			"败血口水"
+	}
+
+	"Witch #29 Name"
+	{
+		"chi"			"败血女巫"
+	}
+
 	"Tank #29"
 	{
 		"chi"			"{mint}这个坦克可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Boomer #29"
+	{
+		"chi"			"{mint}这个胖子可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Charger #29"
+	{
+		"chi"			"{mint}这个牛可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Hunter #29"
+	{
+		"chi"			"{mint}这个猎人可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Jockey #29"
+	{
+		"chi"			"{mint}这个猴子可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Smoker #29"
+	{
+		"chi"			"{mint}这个烟鬼可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Spitter #29"
+	{
+		"chi"			"{mint}这个口水可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
+	}
+
+	"Witch #29"
+	{
+		"chi"			"{mint}这个女巫可以让幸存者的生命变成临时生命值， 并且可以吸收附近特殊感染者的生命值。"
 	}
 
 	"Tank #30 Name"
@@ -309,9 +2339,79 @@
 		"chi"			"弱点坦克"
 	}
 
+	"Boomer #30 Name"
+	{
+		"chi"			"弱点胖子"
+	}
+
+	"Charger #30 Name"
+	{
+		"chi"			"弱点牛"
+	}
+
+	"Hunter #30 Name"
+	{
+		"chi"			"弱点猎人"
+	}
+
+	"Jockey #30 Name"
+	{
+		"chi"			"弱点猴子"
+	}
+
+	"Smoker #30 Name"
+	{
+		"chi"			"弱点烟鬼"
+	}
+
+	"Spitter #30 Name"
+	{
+		"chi"			"弱点口水"
+	}
+
+	"Witch #30 Name"
+	{
+		"chi"			"弱点女巫"
+	}
+
 	"Tank #30"
 	{
 		"chi"			"{mint}这个坦克只能射击头部造成伤害。"
+	}
+
+	"Boomer #30"
+	{
+		"chi"			"{mint}这个胖子只能射击头部造成伤害。"
+	}
+
+	"Charger #30"
+	{
+		"chi"			"{mint}这个牛只能射击头部造成伤害。"
+	}
+
+	"Hunter #30"
+	{
+		"chi"			"{mint}这个猎人只能射击头部造成伤害。"
+	}
+
+	"Jockey #30"
+	{
+		"chi"			"{mint}这个猴子只能射击头部造成伤害。"
+	}
+
+	"Smoker #30"
+	{
+		"chi"			"{mint}这个烟鬼只能射击头部造成伤害。"
+	}
+
+	"Spitter #30"
+	{
+		"chi"			"{mint}这个口水只能射击头部造成伤害。"
+	}
+
+	"Witch #30"
+	{
+		"chi"			"{mint}这个女巫只能射击头部造成伤害。"
 	}
 
 	"Tank #31 Name"
@@ -319,9 +2419,79 @@
 		"chi"			"猎人坦克"
 	}
 
+	"Boomer #31 Name"
+	{
+		"chi"			"猎人胖子"
+	}
+
+	"Charger #31 Name"
+	{
+		"chi"			"猎人牛"
+	}
+
+	"Hunter #31 Name"
+	{
+		"chi"			"猎人猎人"
+	}
+
+	"Jockey #31 Name"
+	{
+		"chi"			"猎人猴子"
+	}
+
+	"Smoker #31 Name"
+	{
+		"chi"			"猎人烟鬼"
+	}
+
+	"Spitter #31 Name"
+	{
+		"chi"			"猎人口水"
+	}
+
+	"Witch #31 Name"
+	{
+		"chi"			"猎人女巫"
+	}
+
 	"Tank #31"
 	{
-		"chi"			"{mint}这个坦克可以生成Hunters和向幸存者投掷Hunters。"
+		"chi"			"{mint}这个坦克可以生成猎人和向幸存者投掷猎人。"
+	}
+
+	"Boomer #31"
+	{
+		"chi"			"{mint}这个胖子可以生成猎人。"
+	}
+
+	"Charger #31"
+	{
+		"chi"			"{mint}这个牛可以生成猎人。"
+	}
+
+	"Hunter #31"
+	{
+		"chi"			"{mint}这个猎人可以生成猎人。"
+	}
+
+	"Jockey #31"
+	{
+		"chi"			"{mint}这个猴子可以生成猎人。"
+	}
+
+	"Smoker #31"
+	{
+		"chi"			"{mint}这个烟鬼可以生成猎人。"
+	}
+
+	"Spitter #31"
+	{
+		"chi"			"{mint}这个口水可以生成猎人。"
+	}
+
+	"Witch #31"
+	{
+		"chi"			"{mint}这个女巫可以生成猎人。"
 	}
 
 	"Tank #32 Name"
@@ -329,9 +2499,79 @@
 		"chi"			"悲伤坦克"
 	}
 
+	"Boomer #32 Name"
+	{
+		"chi"			"悲伤胖子"
+	}
+
+	"Charger #32 Name"
+	{
+		"chi"			"悲伤牛"
+	}
+
+	"Hunter #32 Name"
+	{
+		"chi"			"悲伤猎人"
+	}
+
+	"Jockey #32 Name"
+	{
+		"chi"			"悲伤猴子"
+	}
+
+	"Smoker #32 Name"
+	{
+		"chi"			"悲伤烟鬼"
+	}
+
+	"Spitter #32 Name"
+	{
+		"chi"			"悲伤口水"
+	}
+
+	"Witch #32 Name"
+	{
+		"chi"			"悲伤女巫"
+	}
+
 	"Tank #32"
 	{
 		"chi"			"{mint}这个坦克可以持续伤害幸存者一段时间。"
+	}
+
+	"Boomer #32"
+	{
+		"chi"			"{mint}这个胖子可以持续伤害幸存者一段时间。"
+	}
+
+	"Charger #32"
+	{
+		"chi"			"{mint}这个牛可以持续伤害幸存者一段时间。"
+	}
+
+	"Hunter #32"
+	{
+		"chi"			"{mint}这个猎人可以持续伤害幸存者一段时间。"
+	}
+
+	"Jockey #32"
+	{
+		"chi"			"{mint}这个猴子可以持续伤害幸存者一段时间。"
+	}
+
+	"Smoker #32"
+	{
+		"chi"			"{mint}这个烟鬼可以持续伤害幸存者一段时间。"
+	}
+
+	"Spitter #32"
+	{
+		"chi"			"{mint}这个口水可以持续伤害幸存者一段时间。"
+	}
+
+	"Witch #32"
+	{
+		"chi"			"{mint}这个女巫可以持续伤害幸存者一段时间。"
 	}
 
 	"Tank #33 Name"
@@ -339,9 +2579,79 @@
 		"chi"			"催眠坦克"
 	}
 
+	"Boomer #33 Name"
+	{
+		"chi"			"催眠胖子"
+	}
+
+	"Charger #33 Name"
+	{
+		"chi"			"催眠牛"
+	}
+
+	"Hunter #33 Name"
+	{
+		"chi"			"催眠猎人"
+	}
+
+	"Jockey #33 Name"
+	{
+		"chi"			"催眠猴子"
+	}
+
+	"Smoker #33 Name"
+	{
+		"chi"			"催眠烟鬼"
+	}
+
+	"Spitter #33 Name"
+	{
+		"chi"			"催眠口水"
+	}
+
+	"Witch #33 Name"
+	{
+		"chi"			"催眠女巫"
+	}
+
 	"Tank #33"
 	{
 		"chi"			"{mint}这个坦克可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Boomer #33"
+	{
+		"chi"			"{mint}这个胖子可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Charger #33"
+	{
+		"chi"			"{mint}这个牛可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Hunter #33"
+	{
+		"chi"			"{mint}这个猎人可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Jockey #33"
+	{
+		"chi"			"{mint}这个猴子可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Smoker #33"
+	{
+		"chi"			"{mint}这个烟鬼可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Spitter #33"
+	{
+		"chi"			"{mint}这个口水可以催眠幸存者让其自残或伤害他的队友。"
+	}
+
+	"Witch #33"
+	{
+		"chi"			"{mint}这个女巫可以催眠幸存者让其自残或伤害他的队友。"
 	}
 
 	"Tank #34 Name"
@@ -349,9 +2659,79 @@
 		"chi"			"冻结坦克"
 	}
 
+	"Boomer #34 Name"
+	{
+		"chi"			"冻结胖子"
+	}
+
+	"Charger #34 Name"
+	{
+		"chi"			"冻结牛"
+	}
+
+	"Hunter #34 Name"
+	{
+		"chi"			"冻结猎人"
+	}
+
+	"Jockey #34 Name"
+	{
+		"chi"			"冻结猴子"
+	}
+
+	"Smoker #34 Name"
+	{
+		"chi"			"冻结烟鬼"
+	}
+
+	"Spitter #34 Name"
+	{
+		"chi"			"冻结口水"
+	}
+
+	"Witch #34 Name"
+	{
+		"chi"			"冻结女巫"
+	}
+
 	"Tank #34"
 	{
 		"chi"			"{mint}这个坦克可以冻结幸存者。"
+	}
+
+	"Boomer #34"
+	{
+		"chi"			"{mint}这个胖子可以冻结幸存者。"
+	}
+
+	"Charger #34"
+	{
+		"chi"			"{mint}这个牛可以冻结幸存者。"
+	}
+
+	"Hunter #34"
+	{
+		"chi"			"{mint}这个猎人可以冻结幸存者。"
+	}
+
+	"Jockey #34"
+	{
+		"chi"			"{mint}这个猴子可以冻结幸存者。"
+	}
+
+	"Smoker #34"
+	{
+		"chi"			"{mint}这个烟鬼可以冻结幸存者。"
+	}
+
+	"Spitter #34"
+	{
+		"chi"			"{mint}这个口水可以冻结幸存者。"
+	}
+
+	"Witch #34"
+	{
+		"chi"			"{mint}这个女巫可以冻结幸存者。"
 	}
 
 	"Tank #35 Name"
@@ -359,9 +2739,79 @@
 		"chi"			"闲置坦克"
 	}
 
+	"Boomer #35 Name"
+	{
+		"chi"			"闲置胖子"
+	}
+
+	"Charger #35 Name"
+	{
+		"chi"			"闲置牛"
+	}
+
+	"Hunter #35 Name"
+	{
+		"chi"			"闲置猎人"
+	}
+
+	"Jockey #35 Name"
+	{
+		"chi"			"闲置猴子"
+	}
+
+	"Smoker #35 Name"
+	{
+		"chi"			"闲置烟鬼"
+	}
+
+	"Spitter #35 Name"
+	{
+		"chi"			"闲置口水"
+	}
+
+	"Witch #35 Name"
+	{
+		"chi"			"闲置女巫"
+	}
+
 	"Tank #35"
 	{
 		"chi"			"{mint}这个坦克可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Boomer #35"
+	{
+		"chi"			"{mint}这个胖子可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Charger #35"
+	{
+		"chi"			"{mint}这个牛可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Hunter #35"
+	{
+		"chi"			"{mint}这个猎人可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Jockey #35"
+	{
+		"chi"			"{mint}这个猴子可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Smoker #35"
+	{
+		"chi"			"{mint}这个烟鬼可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Spitter #35"
+	{
+		"chi"			"{mint}这个口水可以让幸存者进入闲置模式。 (这对Bot无效。)"
+	}
+
+	"Witch #35"
+	{
+		"chi"			"{mint}这个女巫可以让幸存者进入闲置模式。 (这对Bot无效。)"
 	}
 
 	"Tank #36 Name"
@@ -369,9 +2819,79 @@
 		"chi"			"反向坦克"
 	}
 
+	"Boomer #36 Name"
+	{
+		"chi"			"反向胖子"
+	}
+
+	"Charger #36 Name"
+	{
+		"chi"			"反向牛"
+	}
+
+	"Hunter #36 Name"
+	{
+		"chi"			"反向猎人"
+	}
+
+	"Jockey #36 Name"
+	{
+		"chi"			"反向猴子"
+	}
+
+	"Smoker #36 Name"
+	{
+		"chi"			"反向烟鬼"
+	}
+
+	"Spitter #36 Name"
+	{
+		"chi"			"反向口水"
+	}
+
+	"Witch #36 Name"
+	{
+		"chi"			"反向女巫"
+	}
+
 	"Tank #36"
 	{
 		"chi"			"{mint}这个坦克可以反转幸存者的方向键。"
+	}
+
+	"Boomer #36"
+	{
+		"chi"			"{mint}这个胖子可以反转幸存者的方向键。"
+	}
+
+	"Charger #36"
+	{
+		"chi"			"{mint}这个牛可以反转幸存者的方向键。"
+	}
+
+	"Hunter #36"
+	{
+		"chi"			"{mint}这个猎人可以反转幸存者的方向键。"
+	}
+
+	"Jockey #36"
+	{
+		"chi"			"{mint}这个猴子可以反转幸存者的方向键。"
+	}
+
+	"Smoker #36"
+	{
+		"chi"			"{mint}这个烟鬼可以反转幸存者的方向键。"
+	}
+
+	"Spitter #36"
+	{
+		"chi"			"{mint}这个口水可以反转幸存者的方向键。"
+	}
+
+	"Witch #36"
+	{
+		"chi"			"{mint}这个女巫可以反转幸存者的方向键。"
 	}
 
 	"Tank #37 Name"
@@ -379,9 +2899,79 @@
 		"chi"			"载物坦克"
 	}
 
+	"Boomer #37 Name"
+	{
+		"chi"			"载物胖子"
+	}
+
+	"Charger #37 Name"
+	{
+		"chi"			"载物牛"
+	}
+
+	"Hunter #37 Name"
+	{
+		"chi"			"载物猎人"
+	}
+
+	"Jockey #37 Name"
+	{
+		"chi"			"载物猴子"
+	}
+
+	"Smoker #37 Name"
+	{
+		"chi"			"载物烟鬼"
+	}
+
+	"Spitter #37 Name"
+	{
+		"chi"			"载物口水"
+	}
+
+	"Witch #37 Name"
+	{
+		"chi"			"载物女巫"
+	}
+
 	"Tank #37"
 	{
 		"chi"			"{mint}这个坦克在死亡时会给予幸存者道具。"
+	}
+
+	"Boomer #37"
+	{
+		"chi"			"{mint}这个胖子在死亡时会给予幸存者道具。"
+	}
+
+	"Charger #37"
+	{
+		"chi"			"{mint}这个牛在死亡时会给予幸存者道具。"
+	}
+
+	"Hunter #37"
+	{
+		"chi"			"{mint}这个猎人在死亡时会给予幸存者道具。"
+	}
+
+	"Jockey #37"
+	{
+		"chi"			"{mint}这个猴子在死亡时会给予幸存者道具。"
+	}
+
+	"Smoker #37"
+	{
+		"chi"			"{mint}这个烟鬼在死亡时会给予幸存者道具。"
+	}
+
+	"Spitter #37"
+	{
+		"chi"			"{mint}这个口水在死亡时会给予幸存者道具。"
+	}
+
+	"Witch #37"
+	{
+		"chi"			"{mint}这个女巫在死亡时会给予幸存者道具。"
 	}
 
 	"Tank #38 Name"
@@ -389,9 +2979,79 @@
 		"chi"			"猴子坦克"
 	}
 
+	"Boomer #38 Name"
+	{
+		"chi"			"猴子胖子"
+	}
+
+	"Charger #38 Name"
+	{
+		"chi"			"猴子牛"
+	}
+
+	"Hunter #38 Name"
+	{
+		"chi"			"猴子猎人"
+	}
+
+	"Jockey #38 Name"
+	{
+		"chi"			"猴子猴子"
+	}
+
+	"Smoker #38 Name"
+	{
+		"chi"			"猴子烟鬼"
+	}
+
+	"Spitter #38 Name"
+	{
+		"chi"			"猴子口水"
+	}
+
+	"Witch #38 Name"
+	{
+		"chi"			"猴子女巫"
+	}
+
 	"Tank #38"
 	{
-		"chi"			"{mint}这个坦克可以生成Jockey和向幸存者投掷Jockey。"
+		"chi"			"{mint}这个坦克可以生成猴子和向幸存者投掷猴子。"
+	}
+
+	"Boomer #38"
+	{
+		"chi"			"{mint}这个胖子可以生成猴子。"
+	}
+
+	"Charger #38"
+	{
+		"chi"			"{mint}这个牛可以生成猴子。"
+	}
+
+	"Hunter #38"
+	{
+		"chi"			"{mint}这个猎人可以生成猴子。"
+	}
+
+	"Jockey #38"
+	{
+		"chi"			"{mint}这个猴子可以生成猴子。"
+	}
+
+	"Smoker #38"
+	{
+		"chi"			"{mint}这个烟鬼可以生成猴子。"
+	}
+
+	"Spitter #38"
+	{
+		"chi"			"{mint}这个口水可以生成猴子。"
+	}
+
+	"Witch #38"
+	{
+		"chi"			"{mint}这个女巫可以生成猴子。"
 	}
 
 	"Tank #39 Name"
@@ -399,9 +3059,79 @@
 		"chi"			"跳跃坦克"
 	}
 
+	"Boomer #39 Name"
+	{
+		"chi"			"跳跃胖子"
+	}
+
+	"Charger #39 Name"
+	{
+		"chi"			"跳跃牛"
+	}
+
+	"Hunter #39 Name"
+	{
+		"chi"			"跳跃猎人"
+	}
+
+	"Jockey #39 Name"
+	{
+		"chi"			"跳跃猴子"
+	}
+
+	"Smoker #39 Name"
+	{
+		"chi"			"跳跃烟鬼"
+	}
+
+	"Spitter #39 Name"
+	{
+		"chi"			"跳跃口水"
+	}
+
+	"Witch #39 Name"
+	{
+		"chi"			"跳跃女巫"
+	}
+
 	"Tank #39"
 	{
 		"chi"			"{mint}这个坦克会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Boomer #39"
+	{
+		"chi"			"{mint}这个胖子会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Charger #39"
+	{
+		"chi"			"{mint}这个牛会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Hunter #39"
+	{
+		"chi"			"{mint}这个猎人会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Jockey #39"
+	{
+		"chi"			"{mint}这个猴子会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Smoker #39"
+	{
+		"chi"			"{mint}这个烟鬼会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Spitter #39"
+	{
+		"chi"			"{mint}这个口水会进行周期性的跳跃和让幸存者无法自控地跳跃。"
+	}
+
+	"Witch #39"
+	{
+		"chi"			"{mint}这个女巫会进行周期性的跳跃和让幸存者无法自控地跳跃。"
 	}
 
 	"Tank #40 Name"
@@ -409,9 +3139,79 @@
 		"chi"			"神风坦克"
 	}
 
+	"Boomer #40 Name"
+	{
+		"chi"			"神风胖子"
+	}
+
+	"Charger #40 Name"
+	{
+		"chi"			"神风牛"
+	}
+
+	"Hunter #40 Name"
+	{
+		"chi"			"神风猎人"
+	}
+
+	"Jockey #40 Name"
+	{
+		"chi"			"神风猴子"
+	}
+
+	"Smoker #40 Name"
+	{
+		"chi"			"神风烟鬼"
+	}
+
+	"Spitter #40 Name"
+	{
+		"chi"			"神风口水"
+	}
+
+	"Witch #40 Name"
+	{
+		"chi"			"神风女巫"
+	}
+
 	"Tank #40"
 	{
 		"chi"			"{mint}这个坦克会和幸存者同归于尽。"
+	}
+
+	"Boomer #40"
+	{
+		"chi"			"{mint}这个胖子会和幸存者同归于尽。"
+	}
+
+	"Charger #40"
+	{
+		"chi"			"{mint}这个牛会和幸存者同归于尽。"
+	}
+
+	"Hunter #40"
+	{
+		"chi"			"{mint}这个猎人会和幸存者同归于尽。"
+	}
+
+	"Jockey #40"
+	{
+		"chi"			"{mint}这个猴子会和幸存者同归于尽。"
+	}
+
+	"Smoker #40"
+	{
+		"chi"			"{mint}这个烟鬼会和幸存者同归于尽。"
+	}
+
+	"Spitter #40"
+	{
+		"chi"			"{mint}这个口水会和幸存者同归于尽。"
+	}
+
+	"Witch #40"
+	{
+		"chi"			"{mint}这个女巫会和幸存者同归于尽。"
 	}
 
 	"Tank #41 Name"
@@ -419,9 +3219,79 @@
 		"chi"			"滞后坦克"
 	}
 
+	"Boomer #41 Name"
+	{
+		"chi"			"滞后胖子"
+	}
+
+	"Charger #41 Name"
+	{
+		"chi"			"滞后牛"
+	}
+
+	"Hunter #41 Name"
+	{
+		"chi"			"滞后猎人"
+	}
+
+	"Jockey #41 Name"
+	{
+		"chi"			"滞后猴子"
+	}
+
+	"Smoker #41 Name"
+	{
+		"chi"			"滞后烟鬼"
+	}
+
+	"Spitter #41 Name"
+	{
+		"chi"			"滞后口水"
+	}
+
+	"Witch #41 Name"
+	{
+		"chi"			"滞后女巫"
+	}
+
 	"Tank #41"
 	{
 		"chi"			"{mint}这个坦克会让幸存者产生滞后感。"
+	}
+
+	"Boomer #41"
+	{
+		"chi"			"{mint}这个胖子会让幸存者产生滞后感。"
+	}
+
+	"Charger #41"
+	{
+		"chi"			"{mint}这个牛会让幸存者产生滞后感。"
+	}
+
+	"Hunter #41"
+	{
+		"chi"			"{mint}这个猎人会让幸存者产生滞后感。"
+	}
+
+	"Jockey #41"
+	{
+		"chi"			"{mint}这个猴子会让幸存者产生滞后感。"
+	}
+
+	"Smoker #41"
+	{
+		"chi"			"{mint}这个烟鬼会让幸存者产生滞后感。"
+	}
+
+	"Spitter #41"
+	{
+		"chi"			"{mint}这个口水会让幸存者产生滞后感。"
+	}
+
+	"Witch #41"
+	{
+		"chi"			"{mint}这个女巫会让幸存者产生滞后感。"
 	}
 
 	"Tank #42 Name"
@@ -429,9 +3299,79 @@
 		"chi"			"激光坦克"
 	}
 
+	"Boomer #42 Name"
+	{
+		"chi"			"激光胖子"
+	}
+
+	"Charger #42 Name"
+	{
+		"chi"			"激光牛"
+	}
+
+	"Hunter #42 Name"
+	{
+		"chi"			"激光猎人"
+	}
+
+	"Jockey #42 Name"
+	{
+		"chi"			"激光猴子"
+	}
+
+	"Smoker #42 Name"
+	{
+		"chi"			"激光烟鬼"
+	}
+
+	"Spitter #42 Name"
+	{
+		"chi"			"激光口水"
+	}
+
+	"Witch #42 Name"
+	{
+		"chi"			"激光女巫"
+	}
+
 	"Tank #42"
 	{
 		"chi"			"{mint}这个坦克会对幸存者发射激光。"
+	}
+
+	"Boomer #42"
+	{
+		"chi"			"{mint}这个胖子会对幸存者发射激光。"
+	}
+
+	"Charger #42"
+	{
+		"chi"			"{mint}这个牛会对幸存者发射激光。"
+	}
+
+	"Hunter #42"
+	{
+		"chi"			"{mint}这个猎人会对幸存者发射激光。"
+	}
+
+	"Jockey #42"
+	{
+		"chi"			"{mint}这个猴子会对幸存者发射激光。"
+	}
+
+	"Smoker #42"
+	{
+		"chi"			"{mint}这个烟鬼会对幸存者发射激光。"
+	}
+
+	"Spitter #42"
+	{
+		"chi"			"{mint}这个口水会对幸存者发射激光。"
+	}
+
+	"Witch #42"
+	{
+		"chi"			"{mint}这个女巫会对幸存者发射激光。"
 	}
 
 	"Tank #43 Name"
@@ -439,9 +3379,79 @@
 		"chi"			"水蛭坦克"
 	}
 
+	"Boomer #43 Name"
+	{
+		"chi"			"水蛭胖子"
+	}
+
+	"Charger #43 Name"
+	{
+		"chi"			"水蛭牛"
+	}
+
+	"Hunter #43 Name"
+	{
+		"chi"			"水蛭猎人"
+	}
+
+	"Jockey #43 Name"
+	{
+		"chi"			"水蛭猴子"
+	}
+
+	"Smoker #43 Name"
+	{
+		"chi"			"水蛭烟鬼"
+	}
+
+	"Spitter #43 Name"
+	{
+		"chi"			"水蛭口水"
+	}
+
+	"Witch #43 Name"
+	{
+		"chi"			"水蛭女巫"
+	}
+
 	"Tank #43"
 	{
 		"chi"			"{mint}这个坦克可以从幸存者身上汲取生命。"
+	}
+
+	"Boomer #43"
+	{
+		"chi"			"{mint}这个胖子可以从幸存者身上汲取生命。"
+	}
+
+	"Charger #43"
+	{
+		"chi"			"{mint}这个牛可以从幸存者身上汲取生命。"
+	}
+
+	"Hunter #43"
+	{
+		"chi"			"{mint}这个猎人可以从幸存者身上汲取生命。"
+	}
+
+	"Jockey #43"
+	{
+		"chi"			"{mint}这个猴子可以从幸存者身上汲取生命。"
+	}
+
+	"Smoker #43"
+	{
+		"chi"			"{mint}这个烟鬼可以从幸存者身上汲取生命。"
+	}
+
+	"Spitter #43"
+	{
+		"chi"			"{mint}这个口水可以从幸存者身上汲取生命。"
+	}
+
+	"Witch #43"
+	{
+		"chi"			"{mint}这个女巫可以从幸存者身上汲取生命。"
 	}
 
 	"Tank #44 Name"
@@ -449,9 +3459,79 @@
 		"chi"			"雷暴坦克"
 	}
 
+	"Boomer #44 Name"
+	{
+		"chi"			"雷暴胖子"
+	}
+
+	"Charger #44 Name"
+	{
+		"chi"			"雷暴牛"
+	}
+
+	"Hunter #44 Name"
+	{
+		"chi"			"雷暴猎人"
+	}
+
+	"Jockey #44 Name"
+	{
+		"chi"			"雷暴猴子"
+	}
+
+	"Smoker #44 Name"
+	{
+		"chi"			"雷暴烟鬼"
+	}
+
+	"Spitter #44 Name"
+	{
+		"chi"			"雷暴口水"
+	}
+
+	"Witch #44 Name"
+	{
+		"chi"			"雷暴女巫"
+	}
+
 	"Tank #44"
 	{
 		"chi"			"{mint}这个坦克制造了闪电风暴。"
+	}
+
+	"Boomer #44"
+	{
+		"chi"			"{mint}这个胖子制造了闪电风暴。"
+	}
+
+	"Charger #44"
+	{
+		"chi"			"{mint}这个牛制造了闪电风暴。"
+	}
+
+	"Hunter #44"
+	{
+		"chi"			"{mint}这个猎人制造了闪电风暴。"
+	}
+
+	"Jockey #44"
+	{
+		"chi"			"{mint}这个猴子制造了闪电风暴。"
+	}
+
+	"Smoker #44"
+	{
+		"chi"			"{mint}这个烟鬼制造了闪电风暴。"
+	}
+
+	"Spitter #44"
+	{
+		"chi"			"{mint}这个口水制造了闪电风暴。"
+	}
+
+	"Witch #44"
+	{
+		"chi"			"{mint}这个女巫制造了闪电风暴。"
 	}
 
 	"Tank #45 Name"
@@ -459,9 +3539,79 @@
 		"chi"			"军医坦克"
 	}
 
+	"Boomer #45 Name"
+	{
+		"chi"			"军医胖子"
+	}
+
+	"Charger #45 Name"
+	{
+		"chi"			"军医牛"
+	}
+
+	"Hunter #45 Name"
+	{
+		"chi"			"军医猎人"
+	}
+
+	"Jockey #45 Name"
+	{
+		"chi"			"军医猴子"
+	}
+
+	"Smoker #45 Name"
+	{
+		"chi"			"军医烟鬼"
+	}
+
+	"Spitter #45 Name"
+	{
+		"chi"			"军医口水"
+	}
+
+	"Witch #45 Name"
+	{
+		"chi"			"军医女巫"
+	}
+
 	"Tank #45"
 	{
 		"chi"			"{mint}这个坦克死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Boomer #45"
+	{
+		"chi"			"{mint}这个胖子死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Charger #45"
+	{
+		"chi"			"{mint}这个牛死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Hunter #45"
+	{
+		"chi"			"{mint}这个猎人死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Jockey #45"
+	{
+		"chi"			"{mint}这个猴子死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Smoker #45"
+	{
+		"chi"			"{mint}这个烟鬼死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Spitter #45"
+	{
+		"chi"			"{mint}这个口水死亡后会治愈附近的特殊感染者。"
+	}
+
+	"Witch #45"
+	{
+		"chi"			"{mint}这个女巫死亡后会治愈附近的特殊感染者。"
 	}
 
 	"Tank #46 Name"
@@ -469,9 +3619,79 @@
 		"chi"			"流星坦克"
 	}
 
+	"Boomer #46 Name"
+	{
+		"chi"			"流星胖子"
+	}
+
+	"Charger #46 Name"
+	{
+		"chi"			"流星牛"
+	}
+
+	"Hunter #46 Name"
+	{
+		"chi"			"流星猎人"
+	}
+
+	"Jockey #46 Name"
+	{
+		"chi"			"流星猴子"
+	}
+
+	"Smoker #46 Name"
+	{
+		"chi"			"流星烟鬼"
+	}
+
+	"Spitter #46 Name"
+	{
+		"chi"			"流星口水"
+	}
+
+	"Witch #46 Name"
+	{
+		"chi"			"流星女巫"
+	}
+
 	"Tank #46"
 	{
 		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Boomer #46"
+	{
+		"chi"			"{mint}这个胖子可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Charger #46"
+	{
+		"chi"			"{mint}这个牛可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Hunter #46"
+	{
+		"chi"			"{mint}这个猎人可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Jockey #46"
+	{
+		"chi"			"{mint}这个猴子可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Smoker #46"
+	{
+		"chi"			"{mint}这个烟鬼可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Spitter #46"
+	{
+		"chi"			"{mint}这个口水可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
+	}
+
+	"Witch #46"
+	{
+		"chi"			"{mint}这个女巫可以召唤带火焰和爆炸效果的流星雨， 会持续好几秒。"
 	}
 
 	"Tank #47 Name"
@@ -479,9 +3699,79 @@
 		"chi"			"死灵坦克"
 	}
 
+	"Boomer #47 Name"
+	{
+		"chi"			"死灵胖子"
+	}
+
+	"Charger #47 Name"
+	{
+		"chi"			"死灵牛"
+	}
+
+	"Hunter #47 Name"
+	{
+		"chi"			"死灵猎人"
+	}
+
+	"Jockey #47 Name"
+	{
+		"chi"			"死灵猴子"
+	}
+
+	"Smoker #47 Name"
+	{
+		"chi"			"死灵烟鬼"
+	}
+
+	"Spitter #47 Name"
+	{
+		"chi"			"死灵口水"
+	}
+
+	"Witch #47 Name"
+	{
+		"chi"			"死灵女巫"
+	}
+
 	"Tank #47"
 	{
 		"chi"			"{mint}这个坦克可以复活死亡的的特殊感染者。"
+	}
+
+	"Boomer #47"
+	{
+		"chi"			"{mint}这个胖子可以复活死亡的的特殊感染者。"
+	}
+
+	"Charger #47"
+	{
+		"chi"			"{mint}这个牛可以复活死亡的的特殊感染者。"
+	}
+
+	"Hunter #47"
+	{
+		"chi"			"{mint}这个猎人可以复活死亡的的特殊感染者。"
+	}
+
+	"Jockey #47"
+	{
+		"chi"			"{mint}这个猴子可以复活死亡的的特殊感染者。"
+	}
+
+	"Smoker #47"
+	{
+		"chi"			"{mint}这个烟鬼可以复活死亡的的特殊感染者。"
+	}
+
+	"Spitter #47"
+	{
+		"chi"			"{mint}这个口水可以复活死亡的的特殊感染者。"
+	}
+
+	"Witch #47"
+	{
+		"chi"			"{mint}这个女巫可以复活死亡的的特殊感染者。"
 	}
 
 	"Tank #48 Name"
@@ -489,9 +3779,79 @@
 		"chi"			"免疫坦克"
 	}
 
+	"Boomer #48 Name"
+	{
+		"chi"			"免疫胖子"
+	}
+
+	"Charger #48 Name"
+	{
+		"chi"			"免疫牛"
+	}
+
+	"Hunter #48 Name"
+	{
+		"chi"			"免疫猎人"
+	}
+
+	"Jockey #48 Name"
+	{
+		"chi"			"免疫猴子"
+	}
+
+	"Smoker #48 Name"
+	{
+		"chi"			"免疫烟鬼"
+	}
+
+	"Spitter #48 Name"
+	{
+		"chi"			"免疫口水"
+	}
+
+	"Witch #48 Name"
+	{
+		"chi"			"免疫女巫"
+	}
+
 	"Tank #48"
 	{
 		"chi"			"{mint}这个坦克可以抵消幸存者造成的伤害。"
+	}
+
+	"Boomer #48"
+	{
+		"chi"			"{mint}这个胖子可以抵消幸存者造成的伤害。"
+	}
+
+	"Charger #48"
+	{
+		"chi"			"{mint}这个牛可以抵消幸存者造成的伤害。"
+	}
+
+	"Hunter #48"
+	{
+		"chi"			"{mint}这个猎人可以抵消幸存者造成的伤害。"
+	}
+
+	"Jockey #48"
+	{
+		"chi"			"{mint}这个猴子可以抵消幸存者造成的伤害。"
+	}
+
+	"Smoker #48"
+	{
+		"chi"			"{mint}这个烟鬼可以抵消幸存者造成的伤害。"
+	}
+
+	"Spitter #48"
+	{
+		"chi"			"{mint}这个口水可以抵消幸存者造成的伤害。"
+	}
+
+	"Witch #48"
+	{
+		"chi"			"{mint}这个女巫可以抵消幸存者造成的伤害。"
 	}
 
 	"Tank #49 Name"
@@ -499,9 +3859,79 @@
 		"chi"			"全能坦克"
 	}
 
+	"Boomer #49 Name"
+	{
+		"chi"			"全能胖子"
+	}
+
+	"Charger #49 Name"
+	{
+		"chi"			"全能牛"
+	}
+
+	"Hunter #49 Name"
+	{
+		"chi"			"全能猎人"
+	}
+
+	"Jockey #49 Name"
+	{
+		"chi"			"全能猴子"
+	}
+
+	"Smoker #49 Name"
+	{
+		"chi"			"全能烟鬼"
+	}
+
+	"Spitter #49 Name"
+	{
+		"chi"			"全能口水"
+	}
+
+	"Witch #49 Name"
+	{
+		"chi"			"全能女巫"
+	}
+
 	"Tank #49"
 	{
 		"chi"			"{mint}这个坦克可以使用附近突变坦克的能力。"
+	}
+
+	"Boomer #49"
+	{
+		"chi"			"{mint}这个胖子可以使用附近突变胖子的能力。"
+	}
+
+	"Charger #49"
+	{
+		"chi"			"{mint}这个牛可以使用附近突变牛的能力。"
+	}
+
+	"Hunter #49"
+	{
+		"chi"			"{mint}这个猎人可以使用附近突变猎人的能力。"
+	}
+
+	"Jockey #49"
+	{
+		"chi"			"{mint}这个猴子可以使用附近突变猴子的能力。"
+	}
+
+	"Smoker #49"
+	{
+		"chi"			"{mint}这个烟鬼可以使用附近突变烟鬼的能力。"
+	}
+
+	"Spitter #49"
+	{
+		"chi"			"{mint}这个口水可以使用附近突变口水的能力。"
+	}
+
+	"Witch #49"
+	{
+		"chi"			"{mint}这个女巫可以使用附近突变女巫的能力。"
 	}
 
 	"Tank #50 Name"
@@ -509,9 +3939,79 @@
 		"chi"			"尸潮坦克"
 	}
 
+	"Boomer #50 Name"
+	{
+		"chi"			"尸潮胖子"
+	}
+
+	"Charger #50 Name"
+	{
+		"chi"			"尸潮牛"
+	}
+
+	"Hunter #50 Name"
+	{
+		"chi"			"尸潮猎人"
+	}
+
+	"Jockey #50 Name"
+	{
+		"chi"			"尸潮猴子"
+	}
+
+	"Smoker #50 Name"
+	{
+		"chi"			"尸潮烟鬼"
+	}
+
+	"Spitter #50 Name"
+	{
+		"chi"			"尸潮口水"
+	}
+
+	"Witch #50 Name"
+	{
+		"chi"			"尸潮女巫"
+	}
+
 	"Tank #50"
 	{
 		"chi"			"{mint}这个坦克可以召唤尸潮。"
+	}
+
+	"Boomer #50"
+	{
+		"chi"			"{mint}这个胖子可以召唤尸潮。"
+	}
+
+	"Charger #50"
+	{
+		"chi"			"{mint}这个牛可以召唤尸潮。"
+	}
+
+	"Hunter #50"
+	{
+		"chi"			"{mint}这个猎人可以召唤尸潮。"
+	}
+
+	"Jockey #50"
+	{
+		"chi"			"{mint}这个猴子可以召唤尸潮。"
+	}
+
+	"Smoker #50"
+	{
+		"chi"			"{mint}这个烟鬼可以召唤尸潮。"
+	}
+
+	"Spitter #50"
+	{
+		"chi"			"{mint}这个口水可以召唤尸潮。"
+	}
+
+	"Witch #50"
+	{
+		"chi"			"{mint}这个女巫可以召唤尸潮。"
 	}
 
 	"Tank #51 Name"
@@ -519,9 +4019,79 @@
 		"chi"			"拥抱坦克"
 	}
 
+	"Boomer #51 Name"
+	{
+		"chi"			"拥抱胖子"
+	}
+
+	"Charger #51 Name"
+	{
+		"chi"			"拥抱牛"
+	}
+
+	"Hunter #51 Name"
+	{
+		"chi"			"拥抱猎人"
+	}
+
+	"Jockey #51 Name"
+	{
+		"chi"			"拥抱猴子"
+	}
+
+	"Smoker #51 Name"
+	{
+		"chi"			"拥抱烟鬼"
+	}
+
+	"Spitter #51 Name"
+	{
+		"chi"			"拥抱口水"
+	}
+
+	"Witch #51 Name"
+	{
+		"chi"			"拥抱女巫"
+	}
+
 	"Tank #51"
 	{
 		"chi"			"{mint}这个坦克忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Boomer #51"
+	{
+		"chi"			"{mint}这个胖子忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Charger #51"
+	{
+		"chi"			"{mint}这个牛忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Hunter #51"
+	{
+		"chi"			"{mint}这个猎人忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Jockey #51"
+	{
+		"chi"			"{mint}这个猴子忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Smoker #51"
+	{
+		"chi"			"{mint}这个烟鬼忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Spitter #51"
+	{
+		"chi"			"{mint}这个口水忠于幸存者， 喜欢拥抱。"
+	}
+
+	"Witch #51"
+	{
+		"chi"			"{mint}这个女巫忠于幸存者， 喜欢拥抱。"
 	}
 
 	"Tank #52 Name"
@@ -529,9 +4099,79 @@
 		"chi"			"鞭挞坦克"
 	}
 
+	"Boomer #52 Name"
+	{
+		"chi"			"鞭挞胖子"
+	}
+
+	"Charger #52 Name"
+	{
+		"chi"			"鞭挞牛"
+	}
+
+	"Hunter #52 Name"
+	{
+		"chi"			"鞭挞猎人"
+	}
+
+	"Jockey #52 Name"
+	{
+		"chi"			"鞭挞猴子"
+	}
+
+	"Smoker #52 Name"
+	{
+		"chi"			"鞭挞烟鬼"
+	}
+
+	"Spitter #52 Name"
+	{
+		"chi"			"鞭挞口水"
+	}
+
+	"Witch #52 Name"
+	{
+		"chi"			"鞭挞女巫"
+	}
+
 	"Tank #52"
 	{
 		"chi"			"{mint}这个坦克可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Boomer #52"
+	{
+		"chi"			"{mint}这个胖子可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Charger #52"
+	{
+		"chi"			"{mint}这个牛可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Hunter #52"
+	{
+		"chi"			"{mint}这个猎人可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Jockey #52"
+	{
+		"chi"			"{mint}这个猴子可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Smoker #52"
+	{
+		"chi"			"{mint}这个烟鬼可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Spitter #52"
+	{
+		"chi"			"{mint}这个口水可以鞭挞幸存者， 让幸存者知道谁才是老大。"
+	}
+
+	"Witch #52"
+	{
+		"chi"			"{mint}这个女巫可以鞭挞幸存者， 让幸存者知道谁才是老大。"
 	}
 
 	"Tank #53 Name"
@@ -539,9 +4179,79 @@
 		"chi"			"白金坦克"
 	}
 
+	"Boomer #53 Name"
+	{
+		"chi"			"白金胖子"
+	}
+
+	"Charger #53 Name"
+	{
+		"chi"			"白金牛"
+	}
+
+	"Hunter #53 Name"
+	{
+		"chi"			"白金猎人"
+	}
+
+	"Jockey #53 Name"
+	{
+		"chi"			"白金猴子"
+	}
+
+	"Smoker #53 Name"
+	{
+		"chi"			"白金烟鬼"
+	}
+
+	"Spitter #53 Name"
+	{
+		"chi"			"白金口水"
+	}
+
+	"Witch #53 Name"
+	{
+		"chi"			"白金女巫"
+	}
+
 	"Tank #53"
 	{
 		"chi"			"{mint}这个坦克免疫近战伤害。"
+	}
+
+	"Boomer #53"
+	{
+		"chi"			"{mint}这个胖子免疫近战伤害。"
+	}
+
+	"Charger #53"
+	{
+		"chi"			"{mint}这个牛免疫近战伤害。"
+	}
+
+	"Hunter #53"
+	{
+		"chi"			"{mint}这个猎人免疫近战伤害。"
+	}
+
+	"Jockey #53"
+	{
+		"chi"			"{mint}这个猴子免疫近战伤害。"
+	}
+
+	"Smoker #53"
+	{
+		"chi"			"{mint}这个烟鬼免疫近战伤害。"
+	}
+
+	"Spitter #53"
+	{
+		"chi"			"{mint}这个口水免疫近战伤害。"
+	}
+
+	"Witch #53"
+	{
+		"chi"			"{mint}这个女巫免疫近战伤害。"
 	}
 
 	"Tank #54 Name"
@@ -549,9 +4259,79 @@
 		"chi"			"呕吐坦克"
 	}
 
+	"Boomer #54 Name"
+	{
+		"chi"			"呕吐胖子"
+	}
+
+	"Charger #54 Name"
+	{
+		"chi"			"呕吐牛"
+	}
+
+	"Hunter #54 Name"
+	{
+		"chi"			"呕吐猎人"
+	}
+
+	"Jockey #54 Name"
+	{
+		"chi"			"呕吐猴子"
+	}
+
+	"Smoker #54 Name"
+	{
+		"chi"			"呕吐烟鬼"
+	}
+
+	"Spitter #54 Name"
+	{
+		"chi"			"呕吐口水"
+	}
+
+	"Witch #54 Name"
+	{
+		"chi"			"呕吐女巫"
+	}
+
 	"Tank #54"
 	{
 		"chi"			"{mint}这个坦克会对幸存者呕吐。"
+	}
+
+	"Boomer #54"
+	{
+		"chi"			"{mint}这个胖子会对幸存者呕吐。"
+	}
+
+	"Charger #54"
+	{
+		"chi"			"{mint}这个牛会对幸存者呕吐。"
+	}
+
+	"Hunter #54"
+	{
+		"chi"			"{mint}这个猎人会对幸存者呕吐。"
+	}
+
+	"Jockey #54"
+	{
+		"chi"			"{mint}这个猴子会对幸存者呕吐。"
+	}
+
+	"Smoker #54"
+	{
+		"chi"			"{mint}这个烟鬼会对幸存者呕吐。"
+	}
+
+	"Spitter #54"
+	{
+		"chi"			"{mint}这个口水会对幸存者呕吐。"
+	}
+
+	"Witch #54"
+	{
+		"chi"			"{mint}这个女巫会对幸存者呕吐。"
 	}
 
 	"Tank #55 Name"
@@ -559,9 +4339,79 @@
 		"chi"			"烈火坦克"
 	}
 
+	"Boomer #55 Name"
+	{
+		"chi"			"烈火胖子"
+	}
+
+	"Charger #55 Name"
+	{
+		"chi"			"烈火牛"
+	}
+
+	"Hunter #55 Name"
+	{
+		"chi"			"烈火猎人"
+	}
+
+	"Jockey #55 Name"
+	{
+		"chi"			"烈火猴子"
+	}
+
+	"Smoker #55 Name"
+	{
+		"chi"			"烈火烟鬼"
+	}
+
+	"Spitter #55 Name"
+	{
+		"chi"			"烈火口水"
+	}
+
+	"Witch #55 Name"
+	{
+		"chi"			"烈火女巫"
+	}
+
 	"Tank #55"
 	{
 		"chi"			"{mint}这个坦克被点燃时会提高移动速度。"
+	}
+
+	"Boomer #55"
+	{
+		"chi"			"{mint}这个胖子被点燃时会提高移动速度。"
+	}
+
+	"Charger #55"
+	{
+		"chi"			"{mint}这个牛被点燃时会提高移动速度。"
+	}
+
+	"Hunter #55"
+	{
+		"chi"			"{mint}这个猎人被点燃时会提高移动速度。"
+	}
+
+	"Jockey #55"
+	{
+		"chi"			"{mint}这个猴子被点燃时会提高移动速度。"
+	}
+
+	"Smoker #55"
+	{
+		"chi"			"{mint}这个烟鬼被点燃时会提高移动速度。"
+	}
+
+	"Spitter #55"
+	{
+		"chi"			"{mint}这个口水被点燃时会提高移动速度。"
+	}
+
+	"Witch #55"
+	{
+		"chi"			"{mint}这个女巫被点燃时会提高移动速度。"
 	}
 
 	"Tank #56 Name"
@@ -569,719 +4419,5839 @@
 		"chi"			"沉默坦克"
 	}
 
+	"Boomer #56 Name"
+	{
+		"chi"			"沉默胖子"
+	}
+
+	"Charger #56 Name"
+	{
+		"chi"			"沉默牛"
+	}
+
+	"Hunter #56 Name"
+	{
+		"chi"			"沉默猎人"
+	}
+
+	"Jockey #56 Name"
+	{
+		"chi"			"沉默猴子"
+	}
+
+	"Smoker #56 Name"
+	{
+		"chi"			"沉默烟鬼"
+	}
+
+	"Spitter #56 Name"
+	{
+		"chi"			"沉默口水"
+	}
+
+	"Witch #56 Name"
+	{
+		"chi"			"沉默女巫"
+	}
+
 	"Tank #56"
 	{
 		"chi"			"{mint}这个坦克可以在幸存者附近消无声息。"
 	}
 
+	"Boomer #56"
+	{
+		"chi"			"{mint}这个胖子可以在幸存者附近消无声息。"
+	}
+
+	"Charger #56"
+	{
+		"chi"			"{mint}这个牛可以在幸存者附近消无声息。"
+	}
+
+	"Hunter #56"
+	{
+		"chi"			"{mint}这个猎人可以在幸存者附近消无声息。"
+	}
+
+	"Jockey #56"
+	{
+		"chi"			"{mint}这个猴子可以在幸存者附近消无声息。"
+	}
+
+	"Smoker #56"
+	{
+		"chi"			"{mint}这个烟鬼可以在幸存者附近消无声息。"
+	}
+
+	"Spitter #56"
+	{
+		"chi"			"{mint}这个口水可以在幸存者附近消无声息。"
+	}
+
+	"Witch #56"
+	{
+		"chi"			"{mint}这个女巫可以在幸存者附近消无声息。"
+	}
+
 	"Tank #57 Name"
 	{
-		"chi"			"冲击坦克"
+		"chi"			"回溯坦克"
+	}
+
+	"Boomer #57 Name"
+	{
+		"chi"			"回溯胖子"
+	}
+
+	"Charger #57 Name"
+	{
+		"chi"			"回溯牛"
+	}
+
+	"Hunter #57 Name"
+	{
+		"chi"			"回溯猎人"
+	}
+
+	"Jockey #57 Name"
+	{
+		"chi"			"回溯猴子"
+	}
+
+	"Smoker #57 Name"
+	{
+		"chi"			"回溯烟鬼"
+	}
+
+	"Spitter #57 Name"
+	{
+		"chi"			"回溯口水"
+	}
+
+	"Witch #57 Name"
+	{
+		"chi"			"回溯女巫"
 	}
 
 	"Tank #57"
 	{
-		"chi"			"{mint}这个坦克会给予幸存者巨大的后坐力。"
+		"chi"			"{mint}这个坦克会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Boomer #57"
+	{
+		"chi"			"{mint}这个胖子会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Charger #57"
+	{
+		"chi"			"{mint}这个牛会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Hunter #57"
+	{
+		"chi"			"{mint}这个猎人会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Jockey #57"
+	{
+		"chi"			"{mint}这个猴子会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Smoker #57"
+	{
+		"chi"			"{mint}这个烟鬼会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Spitter #57"
+	{
+		"chi"			"{mint}这个口水会使用时间能力穿越时空, 特别让幸存者烦恼。"
+	}
+
+	"Witch #57"
+	{
+		"chi"			"{mint}这个女巫会使用时间能力穿越时空, 特别让幸存者烦恼。"
 	}
 
 	"Tank #58 Name"
 	{
-		"chi"			"渐愈坦克"
+		"chi"			"冲击坦克"
+	}
+
+	"Boomer #58 Name"
+	{
+		"chi"			"冲击胖子"
+	}
+
+	"Charger #58 Name"
+	{
+		"chi"			"冲击牛"
+	}
+
+	"Hunter #58 Name"
+	{
+		"chi"			"冲击猎人"
+	}
+
+	"Jockey #58 Name"
+	{
+		"chi"			"冲击猴子"
+	}
+
+	"Smoker #58 Name"
+	{
+		"chi"			"冲击烟鬼"
+	}
+
+	"Spitter #58 Name"
+	{
+		"chi"			"冲击口水"
+	}
+
+	"Witch #58 Name"
+	{
+		"chi"			"冲击女巫"
 	}
 
 	"Tank #58"
 	{
-		"chi"			"{mint}这个坦克会每秒持续恢复生命值。"
+		"chi"			"{mint}这个坦克会给予幸存者巨大的后坐力。"
+	}
+
+	"Boomer #58"
+	{
+		"chi"			"{mint}这个胖子会给予幸存者巨大的后坐力。"
+	}
+
+	"Charger #58"
+	{
+		"chi"			"{mint}这个牛会给予幸存者巨大的后坐力。"
+	}
+
+	"Hunter #58"
+	{
+		"chi"			"{mint}这个猎人会给予幸存者巨大的后坐力。"
+	}
+
+	"Jockey #58"
+	{
+		"chi"			"{mint}这个猴子会给予幸存者巨大的后坐力。"
+	}
+
+	"Smoker #58"
+	{
+		"chi"			"{mint}这个烟鬼会给予幸存者巨大的后坐力。"
+	}
+
+	"Spitter #58"
+	{
+		"chi"			"{mint}这个口水会给予幸存者巨大的后坐力。"
+	}
+
+	"Witch #58"
+	{
+		"chi"			"{mint}这个女巫会给予幸存者巨大的后坐力。"
 	}
 
 	"Tank #59 Name"
 	{
-		"chi"			"重生坦克"
+		"chi"			"渐愈坦克"
+	}
+
+	"Boomer #59 Name"
+	{
+		"chi"			"渐愈胖子"
+	}
+
+	"Charger #59 Name"
+	{
+		"chi"			"渐愈牛"
+	}
+
+	"Hunter #59 Name"
+	{
+		"chi"			"渐愈猎人"
+	}
+
+	"Jockey #59 Name"
+	{
+		"chi"			"渐愈猴子"
+	}
+
+	"Smoker #59 Name"
+	{
+		"chi"			"渐愈烟鬼"
+	}
+
+	"Spitter #59 Name"
+	{
+		"chi"			"渐愈口水"
+	}
+
+	"Witch #59 Name"
+	{
+		"chi"			"渐愈女巫"
 	}
 
 	"Tank #59"
 	{
-		"chi"			"{mint}这个坦克死亡后会复活。"
+		"chi"			"{mint}这个坦克会每秒持续恢复生命值。"
+	}
+
+	"Boomer #59"
+	{
+		"chi"			"{mint}这个胖子会每秒持续恢复生命值。"
+	}
+
+	"Charger #59"
+	{
+		"chi"			"{mint}这个牛会每秒持续恢复生命值。"
+	}
+
+	"Hunter #59"
+	{
+		"chi"			"{mint}这个猎人会每秒持续恢复生命值。"
+	}
+
+	"Jockey #59"
+	{
+		"chi"			"{mint}这个猴子会每秒持续恢复生命值。"
+	}
+
+	"Smoker #59"
+	{
+		"chi"			"{mint}这个烟鬼会每秒持续恢复生命值。"
+	}
+
+	"Spitter #59"
+	{
+		"chi"			"{mint}这个口水会每秒持续恢复生命值。"
+	}
+
+	"Witch #59"
+	{
+		"chi"			"{mint}这个女巫会每秒持续恢复生命值。"
 	}
 
 	"Tank #60 Name"
 	{
-		"chi"			"轮回坦克"
+		"chi"			"重生坦克"
+	}
+
+	"Boomer #60 Name"
+	{
+		"chi"			"重生胖子"
+	}
+
+	"Charger #60 Name"
+	{
+		"chi"			"重生牛"
+	}
+
+	"Hunter #60 Name"
+	{
+		"chi"			"重生猎人"
+	}
+
+	"Jockey #60 Name"
+	{
+		"chi"			"重生猴子"
+	}
+
+	"Smoker #60 Name"
+	{
+		"chi"			"重生烟鬼"
+	}
+
+	"Spitter #60 Name"
+	{
+		"chi"			"重生口水"
+	}
+
+	"Witch #60 Name"
+	{
+		"chi"			"重生女巫"
 	}
 
 	"Tank #60"
 	{
-		"chi"			"{mint}这个坦克能让幸存者用新的装备套件重新开始。"
+		"chi"			"{mint}这个坦克死亡后会复活。"
+	}
+
+	"Boomer #60"
+	{
+		"chi"			"{mint}这个胖子死亡后会复活。"
+	}
+
+	"Charger #60"
+	{
+		"chi"			"{mint}这个牛死亡后会复活。"
+	}
+
+	"Hunter #60"
+	{
+		"chi"			"{mint}这个猎人死亡后会复活。"
+	}
+
+	"Jockey #60"
+	{
+		"chi"			"{mint}这个猴子死亡后会复活。"
+	}
+
+	"Smoker #60"
+	{
+		"chi"			"{mint}这个烟鬼死亡后会复活。"
+	}
+
+	"Spitter #60"
+	{
+		"chi"			"{mint}这个口水死亡后会复活。"
+	}
+
+	"Witch #60"
+	{
+		"chi"			"{mint}这个女巫死亡后会复活。"
 	}
 
 	"Tank #61 Name"
 	{
-		"chi"			"岩石坦克"
+		"chi"			"轮回坦克"
+	}
+
+	"Boomer #61 Name"
+	{
+		"chi"			"轮回胖子"
+	}
+
+	"Charger #61 Name"
+	{
+		"chi"			"轮回牛"
+	}
+
+	"Hunter #61 Name"
+	{
+		"chi"			"轮回猎人"
+	}
+
+	"Jockey #61 Name"
+	{
+		"chi"			"轮回猴子"
+	}
+
+	"Smoker #61 Name"
+	{
+		"chi"			"轮回烟鬼"
+	}
+
+	"Spitter #61 Name"
+	{
+		"chi"			"轮回口水"
+	}
+
+	"Witch #61 Name"
+	{
+		"chi"			"轮回女巫"
 	}
 
 	"Tank #61"
 	{
-		"chi"			"{mint}这个坦克可以召唤岩石雨。"
+		"chi"			"{mint}这个坦克能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Boomer #61"
+	{
+		"chi"			"{mint}这个胖子能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Charger #61"
+	{
+		"chi"			"{mint}这个牛能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Hunter #61"
+	{
+		"chi"			"{mint}这个猎人能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Jockey #61"
+	{
+		"chi"			"{mint}这个猴子能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Smoker #61"
+	{
+		"chi"			"{mint}这个烟鬼能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Spitter #61"
+	{
+		"chi"			"{mint}这个口水能让幸存者用新的装备套件重新开始。"
+	}
+
+	"Witch #61"
+	{
+		"chi"			"{mint}这个女巫能让幸存者用新的装备套件重新开始。"
 	}
 
 	"Tank #62 Name"
 	{
-		"chi"			"火箭坦克"
+		"chi"			"岩石坦克"
+	}
+
+	"Boomer #62 Name"
+	{
+		"chi"			"岩石胖子"
+	}
+
+	"Charger #62 Name"
+	{
+		"chi"			"岩石牛"
+	}
+
+	"Hunter #62 Name"
+	{
+		"chi"			"岩石猎人"
+	}
+
+	"Jockey #62 Name"
+	{
+		"chi"			"岩石猴子"
+	}
+
+	"Smoker #62 Name"
+	{
+		"chi"			"岩石烟鬼"
+	}
+
+	"Spitter #62 Name"
+	{
+		"chi"			"岩石口水"
+	}
+
+	"Witch #62 Name"
+	{
+		"chi"			"岩石女巫"
 	}
 
 	"Tank #62"
 	{
-		"chi"			"{mint}这个坦克可以把幸存者送上太空。"
+		"chi"			"{mint}这个坦克可以召唤岩石雨。"
+	}
+
+	"Boomer #62"
+	{
+		"chi"			"{mint}这个胖子可以召唤岩石雨。"
+	}
+
+	"Charger #62"
+	{
+		"chi"			"{mint}这个牛可以召唤岩石雨。"
+	}
+
+	"Hunter #62"
+	{
+		"chi"			"{mint}这个猎人可以召唤岩石雨。"
+	}
+
+	"Jockey #62"
+	{
+		"chi"			"{mint}这个猴子可以召唤岩石雨。"
+	}
+
+	"Smoker #62"
+	{
+		"chi"			"{mint}这个烟鬼可以召唤岩石雨。"
+	}
+
+	"Spitter #62"
+	{
+		"chi"			"{mint}这个口水可以召唤岩石雨。"
+	}
+
+	"Witch #62"
+	{
+		"chi"			"{mint}这个女巫可以召唤岩石雨。"
 	}
 
 	"Tank #63 Name"
 	{
-		"chi"			"投手坦克"
+		"chi"			"火箭坦克"
+	}
+
+	"Boomer #63 Name"
+	{
+		"chi"			"火箭胖子"
+	}
+
+	"Charger #63 Name"
+	{
+		"chi"			"火箭牛"
+	}
+
+	"Hunter #63 Name"
+	{
+		"chi"			"火箭猎人"
+	}
+
+	"Jockey #63 Name"
+	{
+		"chi"			"火箭猴子"
+	}
+
+	"Smoker #63 Name"
+	{
+		"chi"			"火箭烟鬼"
+	}
+
+	"Spitter #63 Name"
+	{
+		"chi"			"火箭口水"
+	}
+
+	"Witch #63 Name"
+	{
+		"chi"			"火箭女巫"
 	}
 
 	"Tank #63"
 	{
-		"chi"			"{mint}这个坦克会对幸存者投掷随机的物品。"
+		"chi"			"{mint}这个坦克可以把幸存者送上太空。"
+	}
+
+	"Boomer #63"
+	{
+		"chi"			"{mint}这个胖子可以把幸存者送上太空。"
+	}
+
+	"Charger #63"
+	{
+		"chi"			"{mint}这个牛可以把幸存者送上太空。"
+	}
+
+	"Hunter #63"
+	{
+		"chi"			"{mint}这个猎人可以把幸存者送上太空。"
+	}
+
+	"Jockey #63"
+	{
+		"chi"			"{mint}这个猴子可以把幸存者送上太空。"
+	}
+
+	"Smoker #63"
+	{
+		"chi"			"{mint}这个烟鬼可以把幸存者送上太空。"
+	}
+
+	"Spitter #63"
+	{
+		"chi"			"{mint}这个口水可以把幸存者送上太空。"
+	}
+
+	"Witch #63"
+	{
+		"chi"			"{mint}这个女巫可以把幸存者送上太空。"
 	}
 
 	"Tank #64 Name"
 	{
-		"chi"			"撼动坦克"
+		"chi"			"投手坦克"
+	}
+
+	"Boomer #64 Name"
+	{
+		"chi"			"投手胖子"
+	}
+
+	"Charger #64 Name"
+	{
+		"chi"			"投手牛"
+	}
+
+	"Hunter #64 Name"
+	{
+		"chi"			"投手猎人"
+	}
+
+	"Jockey #64 Name"
+	{
+		"chi"			"投手猴子"
+	}
+
+	"Smoker #64 Name"
+	{
+		"chi"			"投手烟鬼"
+	}
+
+	"Spitter #64 Name"
+	{
+		"chi"			"投手口水"
+	}
+
+	"Witch #64 Name"
+	{
+		"chi"			"投手女巫"
 	}
 
 	"Tank #64"
 	{
-		"chi"			"{mint}这个坦克可以震动幸存者的屏幕。"
+		"chi"			"{mint}这个坦克会对幸存者投掷随机的物品。"
+	}
+
+	"Boomer #64"
+	{
+		"chi"			"{mint}这个胖子会对幸存者投掷随机的物品。"
+	}
+
+	"Charger #64"
+	{
+		"chi"			"{mint}这个牛会对幸存者投掷随机的物品。"
+	}
+
+	"Hunter #64"
+	{
+		"chi"			"{mint}这个猎人会对幸存者投掷随机的物品。"
+	}
+
+	"Jockey #64"
+	{
+		"chi"			"{mint}这个猴子会对幸存者投掷随机的物品。"
+	}
+
+	"Smoker #64"
+	{
+		"chi"			"{mint}这个烟鬼会对幸存者投掷随机的物品。"
+	}
+
+	"Spitter #64"
+	{
+		"chi"			"{mint}这个口水会对幸存者投掷随机的物品。"
+	}
+
+	"Witch #64"
+	{
+		"chi"			"{mint}这个女巫会对幸存者投掷随机的物品。"
 	}
 
 	"Tank #65 Name"
 	{
-		"chi"			"护盾坦克"
+		"chi"			"撼动坦克"
+	}
+
+	"Boomer #65 Name"
+	{
+		"chi"			"撼动胖子"
+	}
+
+	"Charger #65 Name"
+	{
+		"chi"			"撼动牛"
+	}
+
+	"Hunter #65 Name"
+	{
+		"chi"			"撼动猎人"
+	}
+
+	"Jockey #65 Name"
+	{
+		"chi"			"撼动猴子"
+	}
+
+	"Smoker #65 Name"
+	{
+		"chi"			"撼动烟鬼"
+	}
+
+	"Spitter #65 Name"
+	{
+		"chi"			"撼动口水"
+	}
+
+	"Witch #65 Name"
+	{
+		"chi"			"撼动女巫"
 	}
 
 	"Tank #65"
 	{
-		"chi"			"{mint}这个坦克出生时会被护盾保护， 投掷的石头会变成煤气瓶或汽油桶， 幸存者可以用他们打破盾牌。"
+		"chi"			"{mint}这个坦克可以震动幸存者的屏幕。"
+	}
+
+	"Boomer #65"
+	{
+		"chi"			"{mint}这个胖子可以震动幸存者的屏幕。"
+	}
+
+	"Charger #65"
+	{
+		"chi"			"{mint}这个牛可以震动幸存者的屏幕。"
+	}
+
+	"Hunter #65"
+	{
+		"chi"			"{mint}这个猎人可以震动幸存者的屏幕。"
+	}
+
+	"Jockey #65"
+	{
+		"chi"			"{mint}这个猴子可以震动幸存者的屏幕。"
+	}
+
+	"Smoker #65"
+	{
+		"chi"			"{mint}这个烟鬼可以震动幸存者的屏幕。"
+	}
+
+	"Spitter #65"
+	{
+		"chi"			"{mint}这个口水可以震动幸存者的屏幕。"
+	}
+
+	"Witch #65"
+	{
+		"chi"			"{mint}这个女巫可以震动幸存者的屏幕。"
 	}
 
 	"Tank #66 Name"
 	{
-		"chi"			"推挤坦克"
+		"chi"			"护盾坦克"
+	}
+
+	"Boomer #66 Name"
+	{
+		"chi"			"护盾胖子"
+	}
+
+	"Charger #66 Name"
+	{
+		"chi"			"护盾牛"
+	}
+
+	"Hunter #66 Name"
+	{
+		"chi"			"护盾猎人"
+	}
+
+	"Jockey #66 Name"
+	{
+		"chi"			"护盾猴子"
+	}
+
+	"Smoker #66 Name"
+	{
+		"chi"			"护盾烟鬼"
+	}
+
+	"Spitter #66 Name"
+	{
+		"chi"			"护盾口水"
+	}
+
+	"Witch #66 Name"
+	{
+		"chi"			"护盾女巫"
 	}
 
 	"Tank #66"
 	{
-		"chi"			"{mint}这个坦克可以把幸存者推到附近。"
+		"chi"			"{mint}这个坦克出生时会被护盾保护， 投掷的石头会变成煤气瓶或汽油桶， 幸存者可以用他们打破盾牌。"
+	}
+
+	"Boomer #66"
+	{
+		"chi"			"{mint}这个胖子出生时会被护盾保护。"
+	}
+
+	"Charger #66"
+	{
+		"chi"			"{mint}这个牛出生时会被护盾保护。"
+	}
+
+	"Hunter #66"
+	{
+		"chi"			"{mint}这个猎人出生时会被护盾保护。"
+	}
+
+	"Jockey #66"
+	{
+		"chi"			"{mint}这个猴子出生时会被护盾保护。"
+	}
+
+	"Smoker #66"
+	{
+		"chi"			"{mint}这个烟鬼出生时会被护盾保护。"
+	}
+
+	"Spitter #66"
+	{
+		"chi"			"{mint}这个口水出生时会被护盾保护。"
+	}
+
+	"Witch #66"
+	{
+		"chi"			"{mint}这个女巫出生时会被护盾保护。"
 	}
 
 	"Tank #67 Name"
 	{
-		"chi"			"缓速坦克"
+		"chi"			"推挤坦克"
+	}
+
+	"Boomer #67 Name"
+	{
+		"chi"			"推挤胖子"
+	}
+
+	"Charger #67 Name"
+	{
+		"chi"			"推挤牛"
+	}
+
+	"Hunter #67 Name"
+	{
+		"chi"			"推挤猎人"
+	}
+
+	"Jockey #67 Name"
+	{
+		"chi"			"推挤猴子"
+	}
+
+	"Smoker #67 Name"
+	{
+		"chi"			"推挤烟鬼"
+	}
+
+	"Spitter #67 Name"
+	{
+		"chi"			"推挤口水"
+	}
+
+	"Witch #67 Name"
+	{
+		"chi"			"推挤女巫"
 	}
 
 	"Tank #67"
 	{
-		"chi"			"{mint}这个坦克可以减慢幸存者的速度。"
+		"chi"			"{mint}这个坦克可以把幸存者推到附近。"
+	}
+
+	"Boomer #67"
+	{
+		"chi"			"{mint}这个胖子可以把幸存者推到附近。"
+	}
+
+	"Charger #67"
+	{
+		"chi"			"{mint}这个牛可以把幸存者推到附近。"
+	}
+
+	"Hunter #67"
+	{
+		"chi"			"{mint}这个猎人可以把幸存者推到附近。"
+	}
+
+	"Jockey #67"
+	{
+		"chi"			"{mint}这个猴子可以把幸存者推到附近。"
+	}
+
+	"Smoker #67"
+	{
+		"chi"			"{mint}这个烟鬼可以把幸存者推到附近。"
+	}
+
+	"Spitter #67"
+	{
+		"chi"			"{mint}这个口水可以把幸存者推到附近。"
+	}
+
+	"Witch #67"
+	{
+		"chi"			"{mint}这个女巫可以把幸存者推到附近。"
 	}
 
 	"Tank #68 Name"
 	{
-		"chi"			"粉碎坦克"
+		"chi"			"缓速坦克"
+	}
+
+	"Boomer #68 Name"
+	{
+		"chi"			"缓速胖子"
+	}
+
+	"Charger #68 Name"
+	{
+		"chi"			"缓速牛"
+	}
+
+	"Hunter #68 Name"
+	{
+		"chi"			"缓速猎人"
+	}
+
+	"Jockey #68 Name"
+	{
+		"chi"			"缓速猴子"
+	}
+
+	"Smoker #68 Name"
+	{
+		"chi"			"缓速烟鬼"
+	}
+
+	"Spitter #68 Name"
+	{
+		"chi"			"缓速口水"
+	}
+
+	"Witch #68 Name"
+	{
+		"chi"			"缓速女巫"
 	}
 
 	"Tank #68"
 	{
-		"chi"			"{mint}这个坦克可以砸死幸存者。"
+		"chi"			"{mint}这个坦克可以减慢幸存者的速度。"
+	}
+
+	"Boomer #68"
+	{
+		"chi"			"{mint}这个胖子可以减慢幸存者的速度。"
+	}
+
+	"Charger #68"
+	{
+		"chi"			"{mint}这个牛可以减慢幸存者的速度。"
+	}
+
+	"Hunter #68"
+	{
+		"chi"			"{mint}这个猎人可以减慢幸存者的速度。"
+	}
+
+	"Jockey #68"
+	{
+		"chi"			"{mint}这个猴子可以减慢幸存者的速度。"
+	}
+
+	"Smoker #68"
+	{
+		"chi"			"{mint}这个烟鬼可以减慢幸存者的速度。"
+	}
+
+	"Spitter #68"
+	{
+		"chi"			"{mint}这个口水可以减慢幸存者的速度。"
+	}
+
+	"Witch #68"
+	{
+		"chi"			"{mint}这个女巫可以减慢幸存者的速度。"
 	}
 
 	"Tank #69 Name"
 	{
-		"chi"			"重击坦克"
+		"chi"			"粉碎坦克"
+	}
+
+	"Boomer #69 Name"
+	{
+		"chi"			"粉碎胖子"
+	}
+
+	"Charger #69 Name"
+	{
+		"chi"			"粉碎牛"
+	}
+
+	"Hunter #69 Name"
+	{
+		"chi"			"粉碎猎人"
+	}
+
+	"Jockey #69 Name"
+	{
+		"chi"			"粉碎猴子"
+	}
+
+	"Smoker #69 Name"
+	{
+		"chi"			"粉碎烟鬼"
+	}
+
+	"Spitter #69 Name"
+	{
+		"chi"			"粉碎口水"
+	}
+
+	"Witch #69 Name"
+	{
+		"chi"			"粉碎女巫"
 	}
 
 	"Tank #69"
 	{
-		"chi"			"{mint}这个坦克击倒幸存者会直接杀死。"
+		"chi"			"{mint}这个坦克可以砸死幸存者。"
+	}
+
+	"Boomer #69"
+	{
+		"chi"			"{mint}这个胖子可以砸死幸存者。"
+	}
+
+	"Charger #69"
+	{
+		"chi"			"{mint}这个牛可以砸死幸存者。"
+	}
+
+	"Hunter #69"
+	{
+		"chi"			"{mint}这个猎人可以砸死幸存者。"
+	}
+
+	"Jockey #69"
+	{
+		"chi"			"{mint}这个猴子可以砸死幸存者。"
+	}
+
+	"Smoker #69"
+	{
+		"chi"			"{mint}这个烟鬼可以砸死幸存者。"
+	}
+
+	"Spitter #69"
+	{
+		"chi"			"{mint}这个口水可以砸死幸存者。"
+	}
+
+	"Witch #69"
+	{
+		"chi"			"{mint}这个女巫可以砸死幸存者。"
 	}
 
 	"Tank #70 Name"
 	{
-		"chi"			"烟鬼坦克"
+		"chi"			"重击坦克"
+	}
+
+	"Boomer #70 Name"
+	{
+		"chi"			"重击胖子"
+	}
+
+	"Charger #70 Name"
+	{
+		"chi"			"重击牛"
+	}
+
+	"Hunter #70 Name"
+	{
+		"chi"			"重击猎人"
+	}
+
+	"Jockey #70 Name"
+	{
+		"chi"			"重击猴子"
+	}
+
+	"Smoker #70 Name"
+	{
+		"chi"			"重击烟鬼"
+	}
+
+	"Spitter #70 Name"
+	{
+		"chi"			"重击口水"
+	}
+
+	"Witch #70 Name"
+	{
+		"chi"			"重击女巫"
 	}
 
 	"Tank #70"
 	{
-		"chi"			"{mint}这个坦克可以生成Smoker和向幸存者投掷Smoker。"
+		"chi"			"{mint}这个坦克击倒幸存者会直接杀死。"
+	}
+
+	"Boomer #70"
+	{
+		"chi"			"{mint}这个胖子击倒幸存者会直接杀死。"
+	}
+
+	"Charger #70"
+	{
+		"chi"			"{mint}这个牛击倒幸存者会直接杀死。"
+	}
+
+	"Hunter #70"
+	{
+		"chi"			"{mint}这个猎人击倒幸存者会直接杀死。"
+	}
+
+	"Jockey #70"
+	{
+		"chi"			"{mint}这个猴子击倒幸存者会直接杀死。"
+	}
+
+	"Smoker #70"
+	{
+		"chi"			"{mint}这个烟鬼击倒幸存者会直接杀死。"
+	}
+
+	"Spitter #70"
+	{
+		"chi"			"{mint}这个口水击倒幸存者会直接杀死。"
+	}
+
+	"Witch #70"
+	{
+		"chi"			"{mint}这个女巫击倒幸存者会直接杀死。"
 	}
 
 	"Tank #71 Name"
 	{
-		"chi"			"投石坦克"
+		"chi"			"烟鬼坦克"
+	}
+
+	"Boomer #71 Name"
+	{
+		"chi"			"烟鬼胖子"
+	}
+
+	"Charger #71 Name"
+	{
+		"chi"			"烟鬼牛"
+	}
+
+	"Hunter #71 Name"
+	{
+		"chi"			"烟鬼猎人"
+	}
+
+	"Jockey #71 Name"
+	{
+		"chi"			"烟鬼猴子"
+	}
+
+	"Smoker #71 Name"
+	{
+		"chi"			"烟鬼烟鬼"
+	}
+
+	"Spitter #71 Name"
+	{
+		"chi"			"烟鬼口水"
+	}
+
+	"Witch #71 Name"
+	{
+		"chi"			"烟鬼女巫"
 	}
 
 	"Tank #71"
 	{
-		"chi"			"{mint}这个坦克可以对幸存者投掷一堆岩石。"
+		"chi"			"{mint}这个坦克可以生成烟鬼和向幸存者投掷烟鬼。"
+	}
+
+	"Boomer #71"
+	{
+		"chi"			"{mint}这个胖子可以生成烟鬼。"
+	}
+
+	"Charger #71"
+	{
+		"chi"			"{mint}这个牛可以生成烟鬼。"
+	}
+
+	"Hunter #71"
+	{
+		"chi"			"{mint}这个猎人可以生成烟鬼。"
+	}
+
+	"Jockey #71"
+	{
+		"chi"			"{mint}这个猴子可以生成烟鬼。"
+	}
+
+	"Smoker #71"
+	{
+		"chi"			"{mint}这个烟鬼可以生成烟鬼。"
+	}
+
+	"Spitter #71"
+	{
+		"chi"			"{mint}这个口水可以生成烟鬼。"
+	}
+
+	"Witch #71"
+	{
+		"chi"			"{mint}这个女巫可以生成烟鬼。"
 	}
 
 	"Tank #72 Name"
 	{
-		"chi"			"特种坦克"
+		"chi"			"投石坦克"
+	}
+
+	"Boomer #72 Name"
+	{
+		"chi"			"投石胖子"
+	}
+
+	"Charger #72 Name"
+	{
+		"chi"			"投石牛"
+	}
+
+	"Hunter #72 Name"
+	{
+		"chi"			"投石猎人"
+	}
+
+	"Jockey #72 Name"
+	{
+		"chi"			"投石猴子"
+	}
+
+	"Smoker #72 Name"
+	{
+		"chi"			"投石烟鬼"
+	}
+
+	"Spitter #72 Name"
+	{
+		"chi"			"投石口水"
+	}
+
+	"Witch #72 Name"
+	{
+		"chi"			"投石女巫"
 	}
 
 	"Tank #72"
 	{
-		"chi"			"{mint}这个坦克可以生成特殊感染者和向幸存者投掷特殊感染者。"
+		"chi"			"{mint}这个坦克可以对幸存者投掷一堆岩石。"
+	}
+
+	"Boomer #72"
+	{
+		"chi"			"{mint}这个胖子可以对幸存者投掷一堆岩石。"
+	}
+
+	"Charger #72"
+	{
+		"chi"			"{mint}这个牛可以对幸存者投掷一堆岩石。"
+	}
+
+	"Hunter #72"
+	{
+		"chi"			"{mint}这个猎人可以对幸存者投掷一堆岩石。"
+	}
+
+	"Jockey #72"
+	{
+		"chi"			"{mint}这个猴子可以对幸存者投掷一堆岩石。"
+	}
+
+	"Smoker #72"
+	{
+		"chi"			"{mint}这个烟鬼可以对幸存者投掷一堆岩石。"
+	}
+
+	"Spitter #72"
+	{
+		"chi"			"{mint}这个口水可以对幸存者投掷一堆岩石。"
+	}
+
+	"Witch #72"
+	{
+		"chi"			"{mint}这个女巫可以对幸存者投掷一堆岩石。"
 	}
 
 	"Tank #73 Name"
 	{
-		"chi"			"口水坦克"
+		"chi"			"特种坦克"
+	}
+
+	"Boomer #73 Name"
+	{
+		"chi"			"特种胖子"
+	}
+
+	"Charger #73 Name"
+	{
+		"chi"			"特种牛"
+	}
+
+	"Hunter #73 Name"
+	{
+		"chi"			"特种猎人"
+	}
+
+	"Jockey #73 Name"
+	{
+		"chi"			"特种猴子"
+	}
+
+	"Smoker #73 Name"
+	{
+		"chi"			"特种烟鬼"
+	}
+
+	"Spitter #73 Name"
+	{
+		"chi"			"特种口水"
+	}
+
+	"Witch #73 Name"
+	{
+		"chi"			"特种女巫"
 	}
 
 	"Tank #73"
 	{
-		"chi"			"{mint}这个坦克可以生成Spitter和向幸存者投掷Spitter"
+		"chi"			"{mint}这个坦克可以生成特殊感染者和向幸存者投掷特殊感染者。"
+	}
+
+	"Boomer #73"
+	{
+		"chi"			"{mint}这个胖子可以生成特殊感染者。"
+	}
+
+	"Charger #73"
+	{
+		"chi"			"{mint}这个牛可以生成特殊感染者。"
+	}
+
+	"Hunter #73"
+	{
+		"chi"			"{mint}这个猎人可以生成特殊感染者。"
+	}
+
+	"Jockey #73"
+	{
+		"chi"			"{mint}这个猴子可以生成特殊感染者。"
+	}
+
+	"Smoker #73"
+	{
+		"chi"			"{mint}这个烟鬼可以生成特殊感染者。"
+	}
+
+	"Spitter #73"
+	{
+		"chi"			"{mint}这个口水可以生成特殊感染者。"
+	}
+
+	"Witch #73"
+	{
+		"chi"			"{mint}这个女巫可以生成特殊感染者。"
 	}
 
 	"Tank #74 Name"
 	{
-		"chi"			"溅射坦克"
+		"chi"			"口水坦克"
+	}
+
+	"Boomer #74 Name"
+	{
+		"chi"			"口水胖子"
+	}
+
+	"Charger #74 Name"
+	{
+		"chi"			"口水牛"
+	}
+
+	"Hunter #74 Name"
+	{
+		"chi"			"口水猎人"
+	}
+
+	"Jockey #74 Name"
+	{
+		"chi"			"口水猴子"
+	}
+
+	"Smoker #74 Name"
+	{
+		"chi"			"口水烟鬼"
+	}
+
+	"Spitter #74 Name"
+	{
+		"chi"			"口水口水"
+	}
+
+	"Witch #74 Name"
+	{
+		"chi"			"口水女巫"
 	}
 
 	"Tank #74"
 	{
-		"chi"			"{mint}这个坦克可以让一定范围内的幸存者受到伤害。"
+		"chi"			"{mint}这个坦克可以生成口水和向幸存者投掷口水。"
+	}
+
+	"Boomer #74"
+	{
+		"chi"			"{mint}这个胖子可以生成口水。"
+	}
+
+	"Charger #74"
+	{
+		"chi"			"{mint}这个牛可以生成口水。"
+	}
+
+	"Hunter #74"
+	{
+		"chi"			"{mint}这个猎人可以生成口水。"
+	}
+
+	"Jockey #74"
+	{
+		"chi"			"{mint}这个猴子可以生成口水。"
+	}
+
+	"Smoker #74"
+	{
+		"chi"			"{mint}这个烟鬼可以生成口水。"
+	}
+
+	"Spitter #74"
+	{
+		"chi"			"{mint}这个口水可以生成口水。"
+	}
+
+	"Witch #74"
+	{
+		"chi"			"{mint}这个女巫可以生成口水。"
 	}
 
 	"Tank #75 Name"
 	{
-		"chi"			"飞溅坦克"
+		"chi"			"溅射坦克"
+	}
+
+	"Boomer #75 Name"
+	{
+		"chi"			"溅射胖子"
+	}
+
+	"Charger #75 Name"
+	{
+		"chi"			"溅射牛"
+	}
+
+	"Hunter #75 Name"
+	{
+		"chi"			"溅射猎人"
+	}
+
+	"Jockey #75 Name"
+	{
+		"chi"			"溅射猴子"
+	}
+
+	"Smoker #75 Name"
+	{
+		"chi"			"溅射烟鬼"
+	}
+
+	"Spitter #75 Name"
+	{
+		"chi"			"溅射口水"
+	}
+
+	"Witch #75 Name"
+	{
+		"chi"			"溅射女巫"
 	}
 
 	"Tank #75"
 	{
-		"chi"			"{mint}该坦克可以用飞溅覆盖每个人的屏幕。"
+		"chi"			"{mint}这个坦克可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Boomer #75"
+	{
+		"chi"			"{mint}这个胖子可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Charger #75"
+	{
+		"chi"			"{mint}这个牛可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Hunter #75"
+	{
+		"chi"			"{mint}这个猎人可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Jockey #75"
+	{
+		"chi"			"{mint}这个猴子可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Smoker #75"
+	{
+		"chi"			"{mint}这个烟鬼可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Spitter #75"
+	{
+		"chi"			"{mint}这个口水可以让一定范围内的幸存者受到伤害。"
+	}
+
+	"Witch #75"
+	{
+		"chi"			"{mint}这个女巫可以让一定范围内的幸存者受到伤害。"
 	}
 
 	"Tank #76 Name"
 	{
-		"chi"			"投掷坦克"
+		"chi"			"飞溅坦克"
+	}
+
+	"Boomer #76 Name"
+	{
+		"chi"			"飞溅胖子"
+	}
+
+	"Charger #76 Name"
+	{
+		"chi"			"飞溅牛"
+	}
+
+	"Hunter #76 Name"
+	{
+		"chi"			"飞溅猎人"
+	}
+
+	"Jockey #76 Name"
+	{
+		"chi"			"飞溅猴子"
+	}
+
+	"Smoker #76 Name"
+	{
+		"chi"			"飞溅烟鬼"
+	}
+
+	"Spitter #76 Name"
+	{
+		"chi"			"飞溅口水"
+	}
+
+	"Witch #76 Name"
+	{
+		"chi"			"飞溅女巫"
 	}
 
 	"Tank #76"
 	{
-		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+		"chi"			"{mint}该坦克可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Boomer #76"
+	{
+		"chi"			"{mint}该胖子可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Charger #76"
+	{
+		"chi"			"{mint}该牛可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Hunter #76"
+	{
+		"chi"			"{mint}该猎人可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Jockey #76"
+	{
+		"chi"			"{mint}该猴子可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Smoker #76"
+	{
+		"chi"			"{mint}该烟鬼可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Spitter #76"
+	{
+		"chi"			"{mint}该口水可以用飞溅覆盖每个人的屏幕。"
+	}
+
+	"Witch #76"
+	{
+		"chi"			"{mint}该女巫可以用飞溅覆盖每个人的屏幕。"
 	}
 
 	"Tank #77 Name"
 	{
-		"chi"			"追踪坦克"
+		"chi"			"投掷坦克"
+	}
+
+	"Boomer #77 Name"
+	{
+		"chi"			"投掷胖子"
+	}
+
+	"Charger #77 Name"
+	{
+		"chi"			"投掷牛"
+	}
+
+	"Hunter #77 Name"
+	{
+		"chi"			"投掷猎人"
+	}
+
+	"Jockey #77 Name"
+	{
+		"chi"			"投掷猴子"
+	}
+
+	"Smoker #77 Name"
+	{
+		"chi"			"投掷烟鬼"
+	}
+
+	"Spitter #77 Name"
+	{
+		"chi"			"投掷口水"
+	}
+
+	"Witch #77 Name"
+	{
+		"chi"			"投掷女巫"
 	}
 
 	"Tank #77"
 	{
-		"chi"			"{mint}这个坦克投掷的岩石会追踪附近的幸存者。"
+		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Boomer #77"
+	{
+		"chi"			"{mint}这个胖子可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Charger #77"
+	{
+		"chi"			"{mint}这个牛可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Hunter #77"
+	{
+		"chi"			"{mint}这个猎人可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Jockey #77"
+	{
+		"chi"			"{mint}这个猴子可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Smoker #77"
+	{
+		"chi"			"{mint}这个烟鬼可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Spitter #77"
+	{
+		"chi"			"{mint}这个口水可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
+	}
+
+	"Witch #77"
+	{
+		"chi"			"{mint}这个女巫可以投掷汽车/特殊感染者/坦克/女巫， 甚至它自己!"
 	}
 
 	"Tank #78 Name"
 	{
-		"chi"			"终极坦克"
+		"chi"			"追踪坦克"
+	}
+
+	"Boomer #78 Name"
+	{
+		"chi"			"追踪胖子"
+	}
+
+	"Charger #78 Name"
+	{
+		"chi"			"追踪牛"
+	}
+
+	"Hunter #78 Name"
+	{
+		"chi"			"追踪猎人"
+	}
+
+	"Jockey #78 Name"
+	{
+		"chi"			"追踪猴子"
+	}
+
+	"Smoker #78 Name"
+	{
+		"chi"			"追踪烟鬼"
+	}
+
+	"Spitter #78 Name"
+	{
+		"chi"			"追踪口水"
+	}
+
+	"Witch #78 Name"
+	{
+		"chi"			"追踪女巫"
 	}
 
 	"Tank #78"
 	{
-		"chi"			"{mint}这个坦克在生命值过低时会获得暂时性的无敌和伤害提升。"
+		"chi"			"{mint}这个坦克投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Boomer #78"
+	{
+		"chi"			"{mint}这个胖子投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Charger #78"
+	{
+		"chi"			"{mint}这个牛投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Hunter #78"
+	{
+		"chi"			"{mint}这个猎人投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Jockey #78"
+	{
+		"chi"			"{mint}这个猴子投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Smoker #78"
+	{
+		"chi"			"{mint}这个烟鬼投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Spitter #78"
+	{
+		"chi"			"{mint}这个口水投掷的岩石会追踪附近的幸存者。"
+	}
+
+	"Witch #78"
+	{
+		"chi"			"{mint}这个女巫投掷的岩石会追踪附近的幸存者。"
 	}
 
 	"Tank #79 Name"
 	{
-		"chi"			"亡灵坦克"
+		"chi"			"终极坦克"
+	}
+
+	"Boomer #79 Name"
+	{
+		"chi"			"终极胖子"
+	}
+
+	"Charger #79 Name"
+	{
+		"chi"			"终极牛"
+	}
+
+	"Hunter #79 Name"
+	{
+		"chi"			"终极猎人"
+	}
+
+	"Jockey #79 Name"
+	{
+		"chi"			"终极猴子"
+	}
+
+	"Smoker #79 Name"
+	{
+		"chi"			"终极烟鬼"
+	}
+
+	"Spitter #79 Name"
+	{
+		"chi"			"终极口水"
+	}
+
+	"Witch #79 Name"
+	{
+		"chi"			"终极女巫"
 	}
 
 	"Tank #79"
 	{
-		"chi"			"{mint}这个坦克在濒临死亡时会回满生命值。"
+		"chi"			"{mint}这个坦克在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Boomer #79"
+	{
+		"chi"			"{mint}这个胖子在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Charger #79"
+	{
+		"chi"			"{mint}这个牛在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Hunter #79"
+	{
+		"chi"			"{mint}这个猎人在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Jockey #79"
+	{
+		"chi"			"{mint}这个猴子在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Smoker #79"
+	{
+		"chi"			"{mint}这个烟鬼在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Spitter #79"
+	{
+		"chi"			"{mint}这个口水在生命值过低时会获得暂时性的无敌和伤害提升。"
+	}
+
+	"Witch #79"
+	{
+		"chi"			"{mint}这个女巫在生命值过低时会获得暂时性的无敌和伤害提升。"
 	}
 
 	"Tank #80 Name"
 	{
-		"chi"			"吸血坦克"
+		"chi"			"亡灵坦克"
+	}
+
+	"Boomer #80 Name"
+	{
+		"chi"			"亡灵胖子"
+	}
+
+	"Charger #80 Name"
+	{
+		"chi"			"亡灵牛"
+	}
+
+	"Hunter #80 Name"
+	{
+		"chi"			"亡灵猎人"
+	}
+
+	"Jockey #80 Name"
+	{
+		"chi"			"亡灵猴子"
+	}
+
+	"Smoker #80 Name"
+	{
+		"chi"			"亡灵烟鬼"
+	}
+
+	"Spitter #80 Name"
+	{
+		"chi"			"亡灵口水"
+	}
+
+	"Witch #80 Name"
+	{
+		"chi"			"亡灵女巫"
 	}
 
 	"Tank #80"
 	{
-		"chi"			"{mint}这个坦克可以窃取幸存者生命值。"
+		"chi"			"{mint}这个坦克在濒临死亡时会回满生命值。"
+	}
+
+	"Boomer #80"
+	{
+		"chi"			"{mint}这个胖子在濒临死亡时会回满生命值。"
+	}
+
+	"Charger #80"
+	{
+		"chi"			"{mint}这个牛在濒临死亡时会回满生命值。"
+	}
+
+	"Hunter #80"
+	{
+		"chi"			"{mint}这个猎人在濒临死亡时会回满生命值。"
+	}
+
+	"Jockey #80"
+	{
+		"chi"			"{mint}这个猴子在濒临死亡时会回满生命值。"
+	}
+
+	"Smoker #80"
+	{
+		"chi"			"{mint}这个烟鬼在濒临死亡时会回满生命值。"
+	}
+
+	"Spitter #80"
+	{
+		"chi"			"{mint}这个口水在濒临死亡时会回满生命值。"
+	}
+
+	"Witch #80"
+	{
+		"chi"			"{mint}这个女巫在濒临死亡时会回满生命值。"
 	}
 
 	"Tank #81 Name"
 	{
-		"chi"			"视觉坦克"
+		"chi"			"吸血坦克"
+	}
+
+	"Boomer #81 Name"
+	{
+		"chi"			"吸血胖子"
+	}
+
+	"Charger #81 Name"
+	{
+		"chi"			"吸血牛"
+	}
+
+	"Hunter #81 Name"
+	{
+		"chi"			"吸血猎人"
+	}
+
+	"Jockey #81 Name"
+	{
+		"chi"			"吸血猴子"
+	}
+
+	"Smoker #81 Name"
+	{
+		"chi"			"吸血烟鬼"
+	}
+
+	"Spitter #81 Name"
+	{
+		"chi"			"吸血口水"
+	}
+
+	"Witch #81 Name"
+	{
+		"chi"			"吸血女巫"
 	}
 
 	"Tank #81"
 	{
-		"chi"			"{mint}这个坦克可以改变幸存者的视野。"
+		"chi"			"{mint}这个坦克可以窃取幸存者生命值。"
+	}
+
+	"Boomer #81"
+	{
+		"chi"			"{mint}这个胖子可以窃取幸存者生命值。"
+	}
+
+	"Charger #81"
+	{
+		"chi"			"{mint}这个牛可以窃取幸存者生命值。"
+	}
+
+	"Hunter #81"
+	{
+		"chi"			"{mint}这个猎人可以窃取幸存者生命值。"
+	}
+
+	"Jockey #81"
+	{
+		"chi"			"{mint}这个猴子可以窃取幸存者生命值。"
+	}
+
+	"Smoker #81"
+	{
+		"chi"			"{mint}这个烟鬼可以窃取幸存者生命值。"
+	}
+
+	"Spitter #81"
+	{
+		"chi"			"{mint}这个口水可以窃取幸存者生命值。"
+	}
+
+	"Witch #81"
+	{
+		"chi"			"{mint}这个女巫可以窃取幸存者生命值。"
 	}
 
 	"Tank #82 Name"
 	{
-		"chi"			"变形坦克"
+		"chi"			"视觉坦克"
+	}
+
+	"Boomer #82 Name"
+	{
+		"chi"			"视觉胖子"
+	}
+
+	"Charger #82 Name"
+	{
+		"chi"			"视觉牛"
+	}
+
+	"Hunter #82 Name"
+	{
+		"chi"			"视觉猎人"
+	}
+
+	"Jockey #82 Name"
+	{
+		"chi"			"视觉猴子"
+	}
+
+	"Smoker #82 Name"
+	{
+		"chi"			"视觉烟鬼"
+	}
+
+	"Spitter #82 Name"
+	{
+		"chi"			"视觉口水"
+	}
+
+	"Witch #82 Name"
+	{
+		"chi"			"视觉女巫"
 	}
 
 	"Tank #82"
 	{
-		"chi"			"{mint}这个坦克会传送到随机一名幸存者身上。"
+		"chi"			"{mint}这个坦克可以改变幸存者的视野。"
+	}
+
+	"Boomer #82"
+	{
+		"chi"			"{mint}这个胖子可以改变幸存者的视野。"
+	}
+
+	"Charger #82"
+	{
+		"chi"			"{mint}这个牛可以改变幸存者的视野。"
+	}
+
+	"Hunter #82"
+	{
+		"chi"			"{mint}这个猎人可以改变幸存者的视野。"
+	}
+
+	"Jockey #82"
+	{
+		"chi"			"{mint}这个猴子可以改变幸存者的视野。"
+	}
+
+	"Smoker #82"
+	{
+		"chi"			"{mint}这个烟鬼可以改变幸存者的视野。"
+	}
+
+	"Spitter #82"
+	{
+		"chi"			"{mint}这个口水可以改变幸存者的视野。"
+	}
+
+	"Witch #82"
+	{
+		"chi"			"{mint}这个女巫可以改变幸存者的视野。"
 	}
 
 	"Tank #83 Name"
 	{
-		"chi"			"旋风坦克"
+		"chi"			"变形坦克"
+	}
+
+	"Boomer #83 Name"
+	{
+		"chi"			"变形胖子"
+	}
+
+	"Charger #83 Name"
+	{
+		"chi"			"变形牛"
+	}
+
+	"Hunter #83 Name"
+	{
+		"chi"			"变形猎人"
+	}
+
+	"Jockey #83 Name"
+	{
+		"chi"			"变形猴子"
+	}
+
+	"Smoker #83 Name"
+	{
+		"chi"			"变形烟鬼"
+	}
+
+	"Spitter #83 Name"
+	{
+		"chi"			"变形口水"
+	}
+
+	"Witch #83 Name"
+	{
+		"chi"			"变形女巫"
 	}
 
 	"Tank #83"
 	{
-		"chi"			"{mint}这个坦克可以把幸存者翻转。"
+		"chi"			"{mint}这个坦克会传送到随机一名幸存者身上。"
+	}
+
+	"Boomer #83"
+	{
+		"chi"			"{mint}这个胖子会传送到随机一名幸存者身上。"
+	}
+
+	"Charger #83"
+	{
+		"chi"			"{mint}这个牛会传送到随机一名幸存者身上。"
+	}
+
+	"Hunter #83"
+	{
+		"chi"			"{mint}这个猎人会传送到随机一名幸存者身上。"
+	}
+
+	"Jockey #83"
+	{
+		"chi"			"{mint}这个猴子会传送到随机一名幸存者身上。"
+	}
+
+	"Smoker #83"
+	{
+		"chi"			"{mint}这个烟鬼会传送到随机一名幸存者身上。"
+	}
+
+	"Spitter #83"
+	{
+		"chi"			"{mint}这个口水会传送到随机一名幸存者身上。"
+	}
+
+	"Witch #83"
+	{
+		"chi"			"{mint}这个女巫会传送到随机一名幸存者身上。"
 	}
 
 	"Tank #84 Name"
 	{
-		"chi"			"女巫坦克"
+		"chi"			"旋风坦克"
+	}
+
+	"Boomer #84 Name"
+	{
+		"chi"			"旋风胖子"
+	}
+
+	"Charger #84 Name"
+	{
+		"chi"			"旋风牛"
+	}
+
+	"Hunter #84 Name"
+	{
+		"chi"			"旋风猎人"
+	}
+
+	"Jockey #84 Name"
+	{
+		"chi"			"旋风猴子"
+	}
+
+	"Smoker #84 Name"
+	{
+		"chi"			"旋风烟鬼"
+	}
+
+	"Spitter #84 Name"
+	{
+		"chi"			"旋风口水"
+	}
+
+	"Witch #84 Name"
+	{
+		"chi"			"旋风女巫"
 	}
 
 	"Tank #84"
 	{
-		"chi"			"{mint}这个坦克可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+		"chi"			"{mint}这个坦克可以把幸存者翻转。"
+	}
+
+	"Boomer #84"
+	{
+		"chi"			"{mint}这个胖子可以把幸存者翻转。"
+	}
+
+	"Charger #84"
+	{
+		"chi"			"{mint}这个牛可以把幸存者翻转。"
+	}
+
+	"Hunter #84"
+	{
+		"chi"			"{mint}这个猎人可以把幸存者翻转。"
+	}
+
+	"Jockey #84"
+	{
+		"chi"			"{mint}这个猴子可以把幸存者翻转。"
+	}
+
+	"Smoker #84"
+	{
+		"chi"			"{mint}这个烟鬼可以把幸存者翻转。"
+	}
+
+	"Spitter #84"
+	{
+		"chi"			"{mint}这个口水可以把幸存者翻转。"
+	}
+
+	"Witch #84"
+	{
+		"chi"			"{mint}这个女巫可以把幸存者翻转。"
 	}
 
 	"Tank #85 Name"
 	{
-		"chi"			"换血坦克"
+		"chi"			"女巫坦克"
+	}
+
+	"Boomer #85 Name"
+	{
+		"chi"			"女巫胖子"
+	}
+
+	"Charger #85 Name"
+	{
+		"chi"			"女巫牛"
+	}
+
+	"Hunter #85 Name"
+	{
+		"chi"			"女巫猎人"
+	}
+
+	"Jockey #85 Name"
+	{
+		"chi"			"女巫猴子"
+	}
+
+	"Smoker #85 Name"
+	{
+		"chi"			"女巫烟鬼"
+	}
+
+	"Spitter #85 Name"
+	{
+		"chi"			"女巫口水"
+	}
+
+	"Witch #85 Name"
+	{
+		"chi"			"女巫女巫"
 	}
 
 	"Tank #85"
 	{
-		"chi"			"{mint}这个坦克可以窃取幸存者生命值， 反之亦然。"
+		"chi"			"{mint}这个坦克可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Boomer #85"
+	{
+		"chi"			"{mint}这个胖子可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Charger #85"
+	{
+		"chi"			"{mint}这个牛可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Hunter #85"
+	{
+		"chi"			"{mint}这个猎人可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Jockey #85"
+	{
+		"chi"			"{mint}这个猴子可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Smoker #85"
+	{
+		"chi"			"{mint}这个烟鬼可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Spitter #85"
+	{
+		"chi"			"{mint}这个口水可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
+	}
+
+	"Witch #85"
+	{
+		"chi"			"{mint}这个女巫可以把附近的普通感染者转化成女巫并向幸存者投掷女巫。"
 	}
 
 	"Tank #86 Name"
 	{
-		"chi"			"狂吼坦克"
+		"chi"			"换血坦克"
+	}
+
+	"Boomer #86 Name"
+	{
+		"chi"			"换血胖子"
+	}
+
+	"Charger #86 Name"
+	{
+		"chi"			"换血牛"
+	}
+
+	"Hunter #86 Name"
+	{
+		"chi"			"换血猎人"
+	}
+
+	"Jockey #86 Name"
+	{
+		"chi"			"换血猴子"
+	}
+
+	"Smoker #86 Name"
+	{
+		"chi"			"换血烟鬼"
+	}
+
+	"Spitter #86 Name"
+	{
+		"chi"			"换血口水"
+	}
+
+	"Witch #86 Name"
+	{
+		"chi"			"换血女巫"
 	}
 
 	"Tank #86"
 	{
-		"chi"			"{mint}这个坦克可以大吼来震慑幸存者。"
+		"chi"			"{mint}这个坦克可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Boomer #86"
+	{
+		"chi"			"{mint}这个胖子可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Charger #86"
+	{
+		"chi"			"{mint}这个牛可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Hunter #86"
+	{
+		"chi"			"{mint}这个猎人可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Jockey #86"
+	{
+		"chi"			"{mint}这个猴子可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Smoker #86"
+	{
+		"chi"			"{mint}这个烟鬼可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Spitter #86"
+	{
+		"chi"			"{mint}这个口水可以窃取幸存者生命值， 反之亦然。"
+	}
+
+	"Witch #86"
+	{
+		"chi"			"{mint}这个女巫可以窃取幸存者生命值， 反之亦然。"
 	}
 
 	"Tank #87 Name"
 	{
-		"chi"			"僵尸坦克"
+		"chi"			"狂吼坦克"
+	}
+
+	"Boomer #87 Name"
+	{
+		"chi"			"狂吼胖子"
+	}
+
+	"Charger #87 Name"
+	{
+		"chi"			"狂吼牛"
+	}
+
+	"Hunter #87 Name"
+	{
+		"chi"			"狂吼猎人"
+	}
+
+	"Jockey #87 Name"
+	{
+		"chi"			"狂吼猴子"
+	}
+
+	"Smoker #87 Name"
+	{
+		"chi"			"狂吼烟鬼"
+	}
+
+	"Spitter #87 Name"
+	{
+		"chi"			"狂吼口水"
+	}
+
+	"Witch #87 Name"
+	{
+		"chi"			"狂吼女巫"
 	}
 
 	"Tank #87"
 	{
-		"chi"			"{mint}这个坦克可以在某个区域内召唤僵尸。"
+		"chi"			"{mint}这个坦克可以大吼来震慑幸存者。"
+	}
+
+	"Boomer #87"
+	{
+		"chi"			"{mint}这个胖子可以大吼来震慑幸存者。"
+	}
+
+	"Charger #87"
+	{
+		"chi"			"{mint}这个牛可以大吼来震慑幸存者。"
+	}
+
+	"Hunter #87"
+	{
+		"chi"			"{mint}这个猎人可以大吼来震慑幸存者。"
+	}
+
+	"Jockey #87"
+	{
+		"chi"			"{mint}这个猴子可以大吼来震慑幸存者。"
+	}
+
+	"Smoker #87"
+	{
+		"chi"			"{mint}这个烟鬼可以大吼来震慑幸存者。"
+	}
+
+	"Spitter #87"
+	{
+		"chi"			"{mint}这个口水可以大吼来震慑幸存者。"
+	}
+
+	"Witch #87"
+	{
+		"chi"			"{mint}这个女巫可以大吼来震慑幸存者。"
 	}
 
 	"Tank #88 Name"
 	{
-		"chi"			"决战坦克"
+		"chi"			"僵尸坦克"
+	}
+
+	"Boomer #88 Name"
+	{
+		"chi"			"僵尸胖子"
+	}
+
+	"Charger #88 Name"
+	{
+		"chi"			"僵尸牛"
+	}
+
+	"Hunter #88 Name"
+	{
+		"chi"			"僵尸猎人"
+	}
+
+	"Jockey #88 Name"
+	{
+		"chi"			"僵尸猴子"
+	}
+
+	"Smoker #88 Name"
+	{
+		"chi"			"僵尸烟鬼"
+	}
+
+	"Spitter #88 Name"
+	{
+		"chi"			"僵尸口水"
+	}
+
+	"Witch #88 Name"
+	{
+		"chi"			"僵尸女巫"
 	}
 
 	"Tank #88"
 	{
-		"chi"			"{mint}这个坦克免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+		"chi"			"{mint}这个坦克可以在某个区域内召唤僵尸。"
+	}
+
+	"Boomer #88"
+	{
+		"chi"			"{mint}这个胖子可以在某个区域内召唤僵尸。"
+	}
+
+	"Charger #88"
+	{
+		"chi"			"{mint}这个牛可以在某个区域内召唤僵尸。"
+	}
+
+	"Hunter #88"
+	{
+		"chi"			"{mint}这个猎人可以在某个区域内召唤僵尸。"
+	}
+
+	"Jockey #88"
+	{
+		"chi"			"{mint}这个猴子可以在某个区域内召唤僵尸。"
+	}
+
+	"Smoker #88"
+	{
+		"chi"			"{mint}这个烟鬼可以在某个区域内召唤僵尸。"
+	}
+
+	"Spitter #88"
+	{
+		"chi"			"{mint}这个口水可以在某个区域内召唤僵尸。"
+	}
+
+	"Witch #88"
+	{
+		"chi"			"{mint}这个女巫可以在某个区域内召唤僵尸。"
 	}
 
 	"Tank #89 Name"
 	{
-		"chi"			"精英坦克"
+		"chi"			"决战坦克"
+	}
+
+	"Boomer #89 Name"
+	{
+		"chi"			"决战胖子"
+	}
+
+	"Charger #89 Name"
+	{
+		"chi"			"决战牛"
+	}
+
+	"Hunter #89 Name"
+	{
+		"chi"			"决战猎人"
+	}
+
+	"Jockey #89 Name"
+	{
+		"chi"			"决战猴子"
+	}
+
+	"Smoker #89 Name"
+	{
+		"chi"			"决战烟鬼"
+	}
+
+	"Spitter #89 Name"
+	{
+		"chi"			"决战口水"
+	}
+
+	"Witch #89 Name"
+	{
+		"chi"			"决战女巫"
 	}
 
 	"Tank #89"
 	{
-		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+		"chi"			"{mint}这个坦克免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Boomer #89"
+	{
+		"chi"			"{mint}这个胖子免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Charger #89"
+	{
+		"chi"			"{mint}这个牛免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Hunter #89"
+	{
+		"chi"			"{mint}这个猎人免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Jockey #89"
+	{
+		"chi"			"{mint}这个猴子免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Smoker #89"
+	{
+		"chi"			"{mint}这个烟鬼免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Spitter #89"
+	{
+		"chi"			"{mint}这个口水免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
+	}
+
+	"Witch #89"
+	{
+		"chi"			"{mint}这个女巫免疫爆炸伤害， 可以把幸存者和特殊感染者拉向它身边。 并且可以召唤流星雨。"
 	}
 
 	"Tank #90 Name"
 	{
-		"chi"			"钴金坦克"
+		"chi"			"精英坦克"
+	}
+
+	"Boomer #90 Name"
+	{
+		"chi"			"精英胖子"
+	}
+
+	"Charger #90 Name"
+	{
+		"chi"			"精英牛"
+	}
+
+	"Hunter #90 Name"
+	{
+		"chi"			"精英猎人"
+	}
+
+	"Jockey #90 Name"
+	{
+		"chi"			"精英猴子"
+	}
+
+	"Smoker #90 Name"
+	{
+		"chi"			"精英烟鬼"
+	}
+
+	"Spitter #90 Name"
+	{
+		"chi"			"精英口水"
+	}
+
+	"Witch #90 Name"
+	{
+		"chi"			"精英女巫"
 	}
 
 	"Tank #90"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害同时跑得很快。"
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Boomer #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Charger #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Hunter #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Jockey #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Smoker #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Spitter #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
+	}
+
+	"Witch #90"
+	{
+		"chi"			"{mint}对火免疫， 跑得快， 伪装自己， 让幸存者缴械， 把幸存者拉向它身边同时改变他们的重力， 周期性跳跃和召唤流星雨， 出生自带护盾， 会重击幸存者， 会传送到幸存者身边并生成女巫/僵尸。"
 	}
 
 	"Tank #91 Name"
 	{
-		"chi"			"牵引坦克"
+		"chi"			"钴金坦克"
+	}
+
+	"Boomer #91 Name"
+	{
+		"chi"			"钴金胖子"
+	}
+
+	"Charger #91 Name"
+	{
+		"chi"			"钴金牛"
+	}
+
+	"Hunter #91 Name"
+	{
+		"chi"			"钴金猎人"
+	}
+
+	"Jockey #91 Name"
+	{
+		"chi"			"钴金猴子"
+	}
+
+	"Smoker #91 Name"
+	{
+		"chi"			"钴金烟鬼"
+	}
+
+	"Spitter #91 Name"
+	{
+		"chi"			"钴金口水"
+	}
+
+	"Witch #91 Name"
+	{
+		"chi"			"钴金女巫"
 	}
 
 	"Tank #91"
 	{
-		"chi"			"{mint}这个坦克会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+		"chi"			"{mint}这个坦克免疫火焰伤害同时跑得很快。"
+	}
+
+	"Boomer #91"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害同时跑得很快。"
+	}
+
+	"Charger #91"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害同时跑得很快。"
+	}
+
+	"Hunter #91"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害同时跑得很快。"
+	}
+
+	"Jockey #91"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害同时跑得很快。"
+	}
+
+	"Smoker #91"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害同时跑得很快。"
+	}
+
+	"Spitter #91"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害同时跑得很快。"
+	}
+
+	"Witch #91"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害同时跑得很快。"
 	}
 
 	"Tank #92 Name"
 	{
-		"chi"			"抗拒坦克"
+		"chi"			"牵引坦克"
+	}
+
+	"Boomer #92 Name"
+	{
+		"chi"			"牵引胖子"
+	}
+
+	"Charger #92 Name"
+	{
+		"chi"			"牵引牛"
+	}
+
+	"Hunter #92 Name"
+	{
+		"chi"			"牵引猎人"
+	}
+
+	"Jockey #92 Name"
+	{
+		"chi"			"牵引猴子"
+	}
+
+	"Smoker #92 Name"
+	{
+		"chi"			"牵引烟鬼"
+	}
+
+	"Spitter #92 Name"
+	{
+		"chi"			"牵引口水"
+	}
+
+	"Witch #92 Name"
+	{
+		"chi"			"牵引女巫"
 	}
 
 	"Tank #92"
 	{
-		"chi"			"{mint}这个坦克会一直推开幸存者。"
+		"chi"			"{mint}这个坦克会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Boomer #92"
+	{
+		"chi"			"{mint}这个胖子会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Charger #92"
+	{
+		"chi"			"{mint}这个牛会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Hunter #92"
+	{
+		"chi"			"{mint}这个猎人会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Jockey #92"
+	{
+		"chi"			"{mint}这个猴子会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Smoker #92"
+	{
+		"chi"			"{mint}这个烟鬼会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Spitter #92"
+	{
+		"chi"			"{mint}这个口水会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
+	}
+
+	"Witch #92"
+	{
+		"chi"			"{mint}这个女巫会周期性的跳跃， 让幸存者不受控制的跳跃并且会传送到幸存者身边。"
 	}
 
 	"Tank #93 Name"
 	{
-		"chi"			"闪光坦克"
+		"chi"			"抗拒坦克"
+	}
+
+	"Boomer #93 Name"
+	{
+		"chi"			"抗拒胖子"
+	}
+
+	"Charger #93 Name"
+	{
+		"chi"			"抗拒牛"
+	}
+
+	"Hunter #93 Name"
+	{
+		"chi"			"抗拒猎人"
+	}
+
+	"Jockey #93 Name"
+	{
+		"chi"			"抗拒猴子"
+	}
+
+	"Smoker #93 Name"
+	{
+		"chi"			"抗拒烟鬼"
+	}
+
+	"Spitter #93 Name"
+	{
+		"chi"			"抗拒口水"
+	}
+
+	"Witch #93 Name"
+	{
+		"chi"			"抗拒女巫"
 	}
 
 	"Tank #93"
 	{
-		"chi"			"{mint}这个坦克的运行速度非常快，可以向生还者投掷闪电，并可以减慢其周围的时间，而这一切都是暂时的。"
+		"chi"			"{mint}这个坦克会一直推开幸存者。"
+	}
+
+	"Boomer #93"
+	{
+		"chi"			"{mint}这个胖子会一直推开幸存者。"
+	}
+
+	"Charger #93"
+	{
+		"chi"			"{mint}这个牛会一直推开幸存者。"
+	}
+
+	"Hunter #93"
+	{
+		"chi"			"{mint}这个猎人会一直推开幸存者。"
+	}
+
+	"Jockey #93"
+	{
+		"chi"			"{mint}这个猴子会一直推开幸存者。"
+	}
+
+	"Smoker #93"
+	{
+		"chi"			"{mint}这个烟鬼会一直推开幸存者。"
+	}
+
+	"Spitter #93"
+	{
+		"chi"			"{mint}这个口水会一直推开幸存者。"
+	}
+
+	"Witch #93"
+	{
+		"chi"			"{mint}这个女巫会一直推开幸存者。"
 	}
 
 	"Tank #94 Name"
 	{
-		"chi"			"巨人坦克"
+		"chi"			"闪光坦克"
+	}
+
+	"Boomer #94 Name"
+	{
+		"chi"			"闪光胖子"
+	}
+
+	"Charger #94 Name"
+	{
+		"chi"			"闪光牛"
+	}
+
+	"Hunter #94 Name"
+	{
+		"chi"			"闪光猎人"
+	}
+
+	"Jockey #94 Name"
+	{
+		"chi"			"闪光猴子"
+	}
+
+	"Smoker #94 Name"
+	{
+		"chi"			"闪光烟鬼"
+	}
+
+	"Spitter #94 Name"
+	{
+		"chi"			"闪光口水"
+	}
+
+	"Witch #94 Name"
+	{
+		"chi"			"闪光女巫"
 	}
 
 	"Tank #94"
 	{
-		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+		"chi"			"{mint}这个坦克的运行速度非常快，可以向生还者投掷闪电，并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Boomer #94"
+	{
+		"chi"			"{mint}这个胖子的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Charger #94"
+	{
+		"chi"			"{mint}这个牛的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Hunter #94"
+	{
+		"chi"			"{mint}这个猎人的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Jockey #94"
+	{
+		"chi"			"{mint}这个猴子的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Smoker #94"
+	{
+		"chi"			"{mint}这个烟鬼的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Spitter #94"
+	{
+		"chi"			"{mint}这个口水的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
+	}
+
+	"Witch #94"
+	{
+		"chi"			"{mint}这个女巫的运行速度非常快，可并可以减慢其周围的时间，而这一切都是暂时的。"
 	}
 
 	"Tank #95 Name"
 	{
-		"chi"			"幻觉坦克"
+		"chi"			"巨人坦克"
+	}
+
+	"Boomer #95 Name"
+	{
+		"chi"			"巨人胖子"
+	}
+
+	"Charger #95 Name"
+	{
+		"chi"			"巨人牛"
+	}
+
+	"Hunter #95 Name"
+	{
+		"chi"			"巨人猎人"
+	}
+
+	"Jockey #95 Name"
+	{
+		"chi"			"巨人猴子"
+	}
+
+	"Smoker #95 Name"
+	{
+		"chi"			"巨人烟鬼"
+	}
+
+	"Spitter #95 Name"
+	{
+		"chi"			"巨人口水"
+	}
+
+	"Witch #95 Name"
+	{
+		"chi"			"巨人女巫"
 	}
 
 	"Tank #95"
 	{
-		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Boomer #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Charger #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Hunter #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Jockey #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Smoker #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Spitter #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
+	}
+
+	"Witch #95"
+	{
+		"chi"			"{mint}免疫火焰伤害， 移动速度慢， 会给予幸存者临时生命值， 吸收附近特殊感染者的生命值， 出生自带护盾和重击幸存者。"
 	}
 
 	"Tank #96 Name"
 	{
-		"chi"			"米姆坦克"
+		"chi"			"幻觉坦克"
+	}
+
+	"Boomer #96 Name"
+	{
+		"chi"			"幻觉胖子"
+	}
+
+	"Charger #96 Name"
+	{
+		"chi"			"幻觉牛"
+	}
+
+	"Hunter #96 Name"
+	{
+		"chi"			"幻觉猎人"
+	}
+
+	"Jockey #96 Name"
+	{
+		"chi"			"幻觉猴子"
+	}
+
+	"Smoker #96 Name"
+	{
+		"chi"			"幻觉烟鬼"
+	}
+
+	"Spitter #96 Name"
+	{
+		"chi"			"幻觉口水"
+	}
+
+	"Witch #96 Name"
+	{
+		"chi"			"幻觉女巫"
 	}
 
 	"Tank #96"
 	{
-		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Boomer #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Charger #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Hunter #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Jockey #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Smoker #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Spitter #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
+	}
+
+	"Witch #96"
+	{
+		"chi"			"{mint}免疫火焰伤害， 伪装自己且会传送到幸存者身边。"
 	}
 
 	"Tank #97 Name"
 	{
-		"chi"			"幻影坦克"
+		"chi"			"米姆坦克"
+	}
+
+	"Boomer #97 Name"
+	{
+		"chi"			"米姆胖子"
+	}
+
+	"Charger #97 Name"
+	{
+		"chi"			"米姆牛"
+	}
+
+	"Hunter #97 Name"
+	{
+		"chi"			"米姆猎人"
+	}
+
+	"Jockey #97 Name"
+	{
+		"chi"			"米姆猴子"
+	}
+
+	"Smoker #97 Name"
+	{
+		"chi"			"米姆烟鬼"
+	}
+
+	"Spitter #97 Name"
+	{
+		"chi"			"米姆口水"
+	}
+
+	"Witch #97 Name"
+	{
+		"chi"			"米姆女巫"
 	}
 
 	"Tank #97"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Boomer #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Charger #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Hunter #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Jockey #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Smoker #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Spitter #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
+	}
+
+	"Witch #97"
+	{
+		"chi"			"{mint}免疫火焰伤害， 吸收伤害， 跑得快， 伪装自己， 将幸存者拉向自己并改变他们重力值， 跳得高， 召唤流星雨， 重击幸存者， 投掷一堆岩石， 会传送到幸存者身边和召唤女巫/僵尸。"
 	}
 
 	"Tank #98 Name"
 	{
-		"chi"			"恶作剧坦克"
+		"chi"			"幻影坦克"
+	}
+
+	"Boomer #98 Name"
+	{
+		"chi"			"幻影胖子"
+	}
+
+	"Charger #98 Name"
+	{
+		"chi"			"幻影牛"
+	}
+
+	"Hunter #98 Name"
+	{
+		"chi"			"幻影猎人"
+	}
+
+	"Jockey #98 Name"
+	{
+		"chi"			"幻影猴子"
+	}
+
+	"Smoker #98 Name"
+	{
+		"chi"			"幻影烟鬼"
+	}
+
+	"Spitter #98 Name"
+	{
+		"chi"			"幻影口水"
+	}
+
+	"Witch #98 Name"
+	{
+		"chi"			"幻影女巫"
 	}
 
 	"Tank #98"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Boomer #98"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Charger #98"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Hunter #98"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Jockey #98"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Smoker #98"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Spitter #98"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
+	}
+
+	"Witch #98"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害， 跑得快并可以传送到幸存者身边。"
 	}
 
 	"Tank #99 Name"
 	{
-		"chi"			"精神病坦克"
+		"chi"			"恶作剧坦克"
+	}
+
+	"Boomer #99 Name"
+	{
+		"chi"			"恶作剧胖子"
+	}
+
+	"Charger #99 Name"
+	{
+		"chi"			"恶作剧牛"
+	}
+
+	"Hunter #99 Name"
+	{
+		"chi"			"恶作剧猎人"
+	}
+
+	"Jockey #99 Name"
+	{
+		"chi"			"恶作剧猴子"
+	}
+
+	"Smoker #99 Name"
+	{
+		"chi"			"恶作剧烟鬼"
+	}
+
+	"Spitter #99 Name"
+	{
+		"chi"			"恶作剧口水"
+	}
+
+	"Witch #99 Name"
+	{
+		"chi"			"恶作剧女巫"
 	}
 
 	"Tank #99"
 	{
-		"chi"			"{mint}该坦克可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Boomer #99"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Charger #99"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Hunter #99"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Jockey #99"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Smoker #99"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Spitter #99"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
+	}
+
+	"Witch #99"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害， 跑得快， 伪装自己并可以传送到幸存者身边。"
 	}
 
 	"Tank #100 Name"
 	{
-		"chi"			"反闪坦克"
+		"chi"			"精神病坦克"
+	}
+
+	"Boomer #100 Name"
+	{
+		"chi"			"精神病胖子"
+	}
+
+	"Charger #100 Name"
+	{
+		"chi"			"精神病牛"
+	}
+
+	"Hunter #100 Name"
+	{
+		"chi"			"精神病猎人"
+	}
+
+	"Jockey #100 Name"
+	{
+		"chi"			"精神病猴子"
+	}
+
+	"Smoker #100 Name"
+	{
+		"chi"			"精神病烟鬼"
+	}
+
+	"Spitter #100 Name"
+	{
+		"chi"			"精神病口水"
+	}
+
+	"Witch #100 Name"
+	{
+		"chi"			"精神病女巫"
 	}
 
 	"Tank #100"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+		"chi"			"{mint}该坦克可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Boomer #100"
+	{
+		"chi"			"{mint}该胖子可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Charger #100"
+	{
+		"chi"			"{mint}该牛可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Hunter #100"
+	{
+		"chi"			"{mint}该猎人可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Jockey #100"
+	{
+		"chi"			"{mint}该猴子可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Smoker #100"
+	{
+		"chi"			"{mint}该烟鬼可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Spitter #100"
+	{
+		"chi"			"{mint}该口水可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
+	}
+
+	"Witch #100"
+	{
+		"chi"			"{mint}该女巫可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲。"
 	}
 
 	"Tank #101 Name"
 	{
-		"chi"			"召唤坦克"
+		"chi"			"反闪坦克"
+	}
+
+	"Boomer #101 Name"
+	{
+		"chi"			"反闪胖子"
+	}
+
+	"Charger #101 Name"
+	{
+		"chi"			"反闪牛"
+	}
+
+	"Hunter #101 Name"
+	{
+		"chi"			"反闪猎人"
+	}
+
+	"Jockey #101 Name"
+	{
+		"chi"			"反闪猴子"
+	}
+
+	"Smoker #101 Name"
+	{
+		"chi"			"反闪烟鬼"
+	}
+
+	"Spitter #101 Name"
+	{
+		"chi"			"反闪口水"
+	}
+
+	"Witch #101 Name"
+	{
+		"chi"			"反闪女巫"
 	}
 
 	"Tank #101"
 	{
-		"chi"			"{mint}这个坦克会在烟雾内生成僵尸。"
+		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Boomer #101"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Charger #101"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Hunter #101"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Jockey #101"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Smoker #101"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Spitter #101"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
+	}
+
+	"Witch #101"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害， 跑得快， 并且可以传送到幸存者身边。"
 	}
 
 	"Tank #102 Name"
 	{
-		"chi"			"变焦坦克"
+		"chi"			"召唤坦克"
+	}
+
+	"Boomer #102 Name"
+	{
+		"chi"			"召唤胖子"
+	}
+
+	"Charger #102 Name"
+	{
+		"chi"			"召唤牛"
+	}
+
+	"Hunter #102 Name"
+	{
+		"chi"			"召唤猎人"
+	}
+
+	"Jockey #102 Name"
+	{
+		"chi"			"召唤猴子"
+	}
+
+	"Smoker #102 Name"
+	{
+		"chi"			"召唤烟鬼"
+	}
+
+	"Spitter #102 Name"
+	{
+		"chi"			"召唤口水"
+	}
+
+	"Witch #102 Name"
+	{
+		"chi"			"召唤女巫"
 	}
 
 	"Tank #102"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+		"chi"			"{mint}这个坦克会在烟雾内生成僵尸。"
+	}
+
+	"Boomer #102"
+	{
+		"chi"			"{mint}这个胖子会在烟雾内生成僵尸。"
+	}
+
+	"Charger #102"
+	{
+		"chi"			"{mint}这个牛会在烟雾内生成僵尸。"
+	}
+
+	"Hunter #102"
+	{
+		"chi"			"{mint}这个猎人会在烟雾内生成僵尸。"
+	}
+
+	"Jockey #102"
+	{
+		"chi"			"{mint}这个猴子会在烟雾内生成僵尸。"
+	}
+
+	"Smoker #102"
+	{
+		"chi"			"{mint}这个烟鬼会在烟雾内生成僵尸。"
+	}
+
+	"Spitter #102"
+	{
+		"chi"			"{mint}这个口水会在烟雾内生成僵尸。"
+	}
+
+	"Witch #102"
+	{
+		"chi"			"{mint}这个女巫会在烟雾内生成僵尸。"
 	}
 
 	"Tank #103 Name"
 	{
-		"chi"			"陷阱坦克"
+		"chi"			"变焦坦克"
+	}
+
+	"Boomer #103 Name"
+	{
+		"chi"			"变焦胖子"
+	}
+
+	"Charger #103 Name"
+	{
+		"chi"			"变焦牛"
+	}
+
+	"Hunter #103 Name"
+	{
+		"chi"			"变焦猎人"
+	}
+
+	"Jockey #103 Name"
+	{
+		"chi"			"变焦猴子"
+	}
+
+	"Smoker #103 Name"
+	{
+		"chi"			"变焦烟鬼"
+	}
+
+	"Spitter #103 Name"
+	{
+		"chi"			"变焦口水"
+	}
+
+	"Witch #103 Name"
+	{
+		"chi"			"变焦女巫"
 	}
 
 	"Tank #103"
 	{
-		"chi"			"{mint}这看上去不像坦克?"
+		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Boomer #103"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Charger #103"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Hunter #103"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Jockey #103"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Smoker #103"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Spitter #103"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
+	}
+
+	"Witch #103"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害， 跑得快， 并且会传送到幸存者身边。"
 	}
 
 	"Tank #104 Name"
 	{
-		"chi"			"恐惧坦克"
+		"chi"			"陷阱坦克"
+	}
+
+	"Boomer #104 Name"
+	{
+		"chi"			"陷阱胖子"
+	}
+
+	"Charger #104 Name"
+	{
+		"chi"			"陷阱牛"
+	}
+
+	"Hunter #104 Name"
+	{
+		"chi"			"陷阱猎人"
+	}
+
+	"Jockey #104 Name"
+	{
+		"chi"			"陷阱猴子"
+	}
+
+	"Smoker #104 Name"
+	{
+		"chi"			"陷阱烟鬼"
+	}
+
+	"Spitter #104 Name"
+	{
+		"chi"			"陷阱口水"
+	}
+
+	"Witch #104 Name"
+	{
+		"chi"			"陷阱女巫"
 	}
 
 	"Tank #104"
 	{
-		"chi"			"{mint}该坦克可以使幸存者部分失明。"
+		"chi"			"{mint}这看上去不像坦克?"
+	}
+
+	"Boomer #104"
+	{
+		"chi"			"{mint}这看上去不像胖子?"
+	}
+
+	"Charger #104"
+	{
+		"chi"			"{mint}这看上去不像牛?"
+	}
+
+	"Hunter #104"
+	{
+		"chi"			"{mint}这看上去不像猎人?"
+	}
+
+	"Jockey #104"
+	{
+		"chi"			"{mint}这看上去不像猴子?"
+	}
+
+	"Smoker #104"
+	{
+		"chi"			"{mint}这看上去不像烟鬼?"
+	}
+
+	"Spitter #104"
+	{
+		"chi"			"{mint}这看上去不像口水?"
+	}
+
+	"Witch #104"
+	{
+		"chi"			"{mint}这看上去不像女巫?"
 	}
 
 	"Tank #105 Name"
 	{
-		"chi"			"狂暴坦克"
+		"chi"			"恐惧坦克"
+	}
+
+	"Boomer #105 Name"
+	{
+		"chi"			"恐惧胖子"
+	}
+
+	"Charger #105 Name"
+	{
+		"chi"			"恐惧牛"
+	}
+
+	"Hunter #105 Name"
+	{
+		"chi"			"恐惧猎人"
+	}
+
+	"Jockey #105 Name"
+	{
+		"chi"			"恐惧猴子"
+	}
+
+	"Smoker #105 Name"
+	{
+		"chi"			"恐惧烟鬼"
+	}
+
+	"Spitter #105 Name"
+	{
+		"chi"			"恐惧口水"
+	}
+
+	"Witch #105 Name"
+	{
+		"chi"			"恐惧女巫"
 	}
 
 	"Tank #105"
 	{
-		"chi"			"{mint}这个坦克可以让幸存者中毒和受到持续伤害。"
+		"chi"			"{mint}该坦克可以使幸存者部分失明。"
+	}
+
+	"Boomer #105"
+	{
+		"chi"			"{mint}该胖子可以使幸存者部分失明。"
+	}
+
+	"Charger #105"
+	{
+		"chi"			"{mint}该牛可以使幸存者部分失明。"
+	}
+
+	"Hunter #105"
+	{
+		"chi"			"{mint}该猎人可以使幸存者部分失明。"
+	}
+
+	"Jockey #105"
+	{
+		"chi"			"{mint}该猴子可以使幸存者部分失明。"
+	}
+
+	"Smoker #105"
+	{
+		"chi"			"{mint}该烟鬼可以使幸存者部分失明。"
+	}
+
+	"Spitter #105"
+	{
+		"chi"			"{mint}该口水可以使幸存者部分失明。"
+	}
+
+	"Witch #105"
+	{
+		"chi"			"{mint}该女巫可以使幸存者部分失明。"
 	}
 
 	"Tank #106 Name"
 	{
-		"chi"			"震荡坦克"
+		"chi"			"狂暴坦克"
+	}
+
+	"Boomer #106 Name"
+	{
+		"chi"			"狂暴胖子"
+	}
+
+	"Charger #106 Name"
+	{
+		"chi"			"狂暴牛"
+	}
+
+	"Hunter #106 Name"
+	{
+		"chi"			"狂暴猎人"
+	}
+
+	"Jockey #106 Name"
+	{
+		"chi"			"狂暴猴子"
+	}
+
+	"Smoker #106 Name"
+	{
+		"chi"			"狂暴烟鬼"
+	}
+
+	"Spitter #106 Name"
+	{
+		"chi"			"狂暴口水"
+	}
+
+	"Witch #106 Name"
+	{
+		"chi"			"狂暴女巫"
 	}
 
 	"Tank #106"
 	{
-		"chi"			"{mint}该坦克可以向生还者投掷石块。"
+		"chi"			"{mint}这个坦克可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Boomer #106"
+	{
+		"chi"			"{mint}这个胖子可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Charger #106"
+	{
+		"chi"			"{mint}这个牛可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Hunter #106"
+	{
+		"chi"			"{mint}这个猎人可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Jockey #106"
+	{
+		"chi"			"{mint}这个猴子可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Smoker #106"
+	{
+		"chi"			"{mint}这个烟鬼可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Spitter #106"
+	{
+		"chi"			"{mint}这个口水可以让幸存者中毒和受到持续伤害。"
+	}
+
+	"Witch #106"
+	{
+		"chi"			"{mint}这个女巫可以让幸存者中毒和受到持续伤害。"
 	}
 
 	"Tank #107 Name"
 	{
-		"chi"			"Psyk0tik 坦克"
+		"chi"			"震荡坦克"
+	}
+
+	"Boomer #107 Name"
+	{
+		"chi"			"震荡胖子"
+	}
+
+	"Charger #107 Name"
+	{
+		"chi"			"震荡牛"
+	}
+
+	"Hunter #107 Name"
+	{
+		"chi"			"震荡猎人"
+	}
+
+	"Jockey #107 Name"
+	{
+		"chi"			"震荡猴子"
+	}
+
+	"Smoker #107 Name"
+	{
+		"chi"			"震荡烟鬼"
+	}
+
+	"Spitter #107 Name"
+	{
+		"chi"			"震荡口水"
+	}
+
+	"Witch #107 Name"
+	{
+		"chi"			"震荡女巫"
 	}
 
 	"Tank #107"
 	{
-		"chi"			"{mint}这个坦克会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+		"chi"			"{mint}该坦克可以向生还者投掷石块。"
+	}
+
+	"Boomer #107"
+	{
+		"chi"			"{mint}该胖子可以向生还者投掷石块。"
+	}
+
+	"Charger #107"
+	{
+		"chi"			"{mint}该牛可以向生还者投掷石块。"
+	}
+
+	"Hunter #107"
+	{
+		"chi"			"{mint}该猎人可以向生还者投掷石块。"
+	}
+
+	"Jockey #107"
+	{
+		"chi"			"{mint}该猴子可以向生还者投掷石块。"
+	}
+
+	"Smoker #107"
+	{
+		"chi"			"{mint}该烟鬼可以向生还者投掷石块。"
+	}
+
+	"Spitter #107"
+	{
+		"chi"			"{mint}该口水可以向生还者投掷石块。"
+	}
+
+	"Witch #107"
+	{
+		"chi"			"{mint}该女巫可以向生还者投掷石块。"
 	}
 
 	"Tank #108 Name"
 	{
-		"chi"			"末日坦克"
+		"chi"			"Psyk0tik 坦克"
+	}
+
+	"Boomer #108 Name"
+	{
+		"chi"			"Psyk0tik 胖子"
+	}
+
+	"Charger #108 Name"
+	{
+		"chi"			"Psyk0tik 牛"
+	}
+
+	"Hunter #108 Name"
+	{
+		"chi"			"Psyk0tik 猎人"
+	}
+
+	"Jockey #108 Name"
+	{
+		"chi"			"Psyk0tik 猴子"
+	}
+
+	"Smoker #108 Name"
+	{
+		"chi"			"Psyk0tik 烟鬼"
+	}
+
+	"Spitter #108 Name"
+	{
+		"chi"			"Psyk0tik 口水"
+	}
+
+	"Witch #108 Name"
+	{
+		"chi"			"Psyk0tik 女巫"
 	}
 
 	"Tank #108"
 	{
-		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+		"chi"			"{mint}这个坦克会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Boomer #108"
+	{
+		"chi"			"{mint}这个胖子会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Charger #108"
+	{
+		"chi"			"{mint}这个牛会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Hunter #108"
+	{
+		"chi"			"{mint}这个猎人会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Jockey #108"
+	{
+		"chi"			"{mint}这个猴子会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Smoker #108"
+	{
+		"chi"			"{mint}这个烟鬼会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Spitter #108"
+	{
+		"chi"			"{mint}这个口水会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
+	}
+
+	"Witch #108"
+	{
+		"chi"			"{mint}这个女巫会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行。"
 	}
 
 	"Tank #109 Name"
 	{
-		"chi"			"达斯·维达 坦克"
+		"chi"			"末日坦克"
+	}
+
+	"Boomer #109 Name"
+	{
+		"chi"			"末日胖子"
+	}
+
+	"Charger #109 Name"
+	{
+		"chi"			"末日牛"
+	}
+
+	"Hunter #109 Name"
+	{
+		"chi"			"末日猎人"
+	}
+
+	"Jockey #109 Name"
+	{
+		"chi"			"末日猴子"
+	}
+
+	"Smoker #109 Name"
+	{
+		"chi"			"末日烟鬼"
+	}
+
+	"Spitter #109 Name"
+	{
+		"chi"			"末日口水"
+	}
+
+	"Witch #109 Name"
+	{
+		"chi"			"末日女巫"
 	}
 
 	"Tank #109"
 	{
-		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变坦克!"
+		"chi"			"{mint}这个坦克免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Boomer #109"
+	{
+		"chi"			"{mint}这个胖子免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Charger #109"
+	{
+		"chi"			"{mint}这个牛免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Hunter #109"
+	{
+		"chi"			"{mint}这个猎人免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Jockey #109"
+	{
+		"chi"			"{mint}这个猴子免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Smoker #109"
+	{
+		"chi"			"{mint}这个烟鬼免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Spitter #109"
+	{
+		"chi"			"{mint}这个口水免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
+	}
+
+	"Witch #109"
+	{
+		"chi"			"{mint}这个女巫免疫火焰伤害， 跑得快， 会召唤流星雨/尸潮和岩石雨"
 	}
 
 	"Tank #110 Name"
 	{
-		"chi"			"吸毒坦克"
+		"chi"			"达斯·维达 坦克"
+	}
+
+	"Boomer #110 Name"
+	{
+		"chi"			"达斯·维达 胖子"
+	}
+
+	"Charger #110 Name"
+	{
+		"chi"			"达斯·维达 牛"
+	}
+
+	"Hunter #110 Name"
+	{
+		"chi"			"达斯·维达 猎人"
+	}
+
+	"Jockey #110 Name"
+	{
+		"chi"			"达斯·维达 猴子"
+	}
+
+	"Smoker #110 Name"
+	{
+		"chi"			"达斯·维达 烟鬼"
+	}
+
+	"Spitter #110 Name"
+	{
+		"chi"			"达斯·维达 口水"
+	}
+
+	"Witch #110 Name"
+	{
+		"chi"			"达斯·维达 女巫"
 	}
 
 	"Tank #110"
 	{
-		"chi"			"{mint}这个坦克具有传染性上瘾。"
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变坦克!"
+	}
+
+	"Boomer #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变胖子!"
+	}
+
+	"Charger #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变牛!"
+	}
+
+	"Hunter #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变猎人!"
+	}
+
+	"Jockey #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变猴子!"
+	}
+
+	"Smoker #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变烟鬼!"
+	}
+
+	"Spitter #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变口水!"
+	}
+
+	"Witch #110"
+	{
+		"chi"			"{mint}是。。。 是达斯·维达。。。 它是帝国的突变女巫!"
 	}
 
 	"Tank #111 Name"
 	{
-		"chi"			"神行坦克"
+		"chi"			"吸毒坦克"
+	}
+
+	"Boomer #111 Name"
+	{
+		"chi"			"吸毒胖子"
+	}
+
+	"Charger #111 Name"
+	{
+		"chi"			"吸毒牛"
+	}
+
+	"Hunter #111 Name"
+	{
+		"chi"			"吸毒猎人"
+	}
+
+	"Jockey #111 Name"
+	{
+		"chi"			"吸毒猴子"
+	}
+
+	"Smoker #111 Name"
+	{
+		"chi"			"吸毒烟鬼"
+	}
+
+	"Spitter #111 Name"
+	{
+		"chi"			"吸毒口水"
+	}
+
+	"Witch #111 Name"
+	{
+		"chi"			"吸毒女巫"
 	}
 
 	"Tank #111"
 	{
-		"chi"			"{mint}此坦克免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+		"chi"			"{mint}这个坦克具有传染性上瘾。"
+	}
+
+	"Boomer #111"
+	{
+		"chi"			"{mint}这个胖子具有传染性上瘾。"
+	}
+
+	"Charger #111"
+	{
+		"chi"			"{mint}这个牛具有传染性上瘾。"
+	}
+
+	"Hunter #111"
+	{
+		"chi"			"{mint}这个猎人具有传染性上瘾。"
+	}
+
+	"Jockey #111"
+	{
+		"chi"			"{mint}这个猴子具有传染性上瘾。"
+	}
+
+	"Smoker #111"
+	{
+		"chi"			"{mint}这个烟鬼具有传染性上瘾。"
+	}
+
+	"Spitter #111"
+	{
+		"chi"			"{mint}这个口水具有传染性上瘾。"
+	}
+
+	"Witch #111"
+	{
+		"chi"			"{mint}这个女巫具有传染性上瘾。"
 	}
 
 	"Tank #112 Name"
 	{
-		"chi"			"死神坦克"
+		"chi"			"神行坦克"
+	}
+
+	"Boomer #112 Name"
+	{
+		"chi"			"神行胖子"
+	}
+
+	"Charger #112 Name"
+	{
+		"chi"			"神行牛"
+	}
+
+	"Hunter #112 Name"
+	{
+		"chi"			"神行猎人"
+	}
+
+	"Jockey #112 Name"
+	{
+		"chi"			"神行猴子"
+	}
+
+	"Smoker #112 Name"
+	{
+		"chi"			"神行烟鬼"
+	}
+
+	"Spitter #112 Name"
+	{
+		"chi"			"神行口水"
+	}
+
+	"Witch #112 Name"
+	{
+		"chi"			"神行女巫"
 	}
 
 	"Tank #112"
 	{
-		"chi"			"{mint}这个坦克跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+		"chi"			"{mint}此坦克免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Boomer #112"
+	{
+		"chi"			"{mint}此胖子免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Charger #112"
+	{
+		"chi"			"{mint}此牛免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Hunter #112"
+	{
+		"chi"			"{mint}此猎人免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Jockey #112"
+	{
+		"chi"			"{mint}此猴子免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Smoker #112"
+	{
+		"chi"			"{mint}此烟鬼免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Spitter #112"
+	{
+		"chi"			"{mint}此口水免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
+	}
+
+	"Witch #112"
+	{
+		"chi"			"{mint}此女巫免疫火炎伤害,跑的快同时还会向幸存者方向传送。"
 	}
 
 	"Tank #113 Name"
 	{
-		"chi"			"部落坦克"
+		"chi"			"死神坦克"
+	}
+
+	"Boomer #113 Name"
+	{
+		"chi"			"死神胖子"
+	}
+
+	"Charger #113 Name"
+	{
+		"chi"			"死神牛"
+	}
+
+	"Hunter #113 Name"
+	{
+		"chi"			"死神猎人"
+	}
+
+	"Jockey #113 Name"
+	{
+		"chi"			"死神猴子"
+	}
+
+	"Smoker #113 Name"
+	{
+		"chi"			"死神烟鬼"
+	}
+
+	"Spitter #113 Name"
+	{
+		"chi"			"死神口水"
+	}
+
+	"Witch #113 Name"
+	{
+		"chi"			"死神女巫"
 	}
 
 	"Tank #113"
 	{
-		"chi"			"{mint}这个坦克可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+		"chi"			"{mint}这个坦克跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Boomer #113"
+	{
+		"chi"			"{mint}这个胖子跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Charger #113"
+	{
+		"chi"			"{mint}这个牛跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Hunter #113"
+	{
+		"chi"			"{mint}这个猎人跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Jockey #113"
+	{
+		"chi"			"{mint}这个猴子跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Smoker #113"
+	{
+		"chi"			"{mint}这个烟鬼跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Spitter #113"
+	{
+		"chi"			"{mint}这个口水跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
+	}
+
+	"Witch #113"
+	{
+		"chi"			"{mint}这个女巫跑的比一般的快， 会伪装自己， 可以埋葬幸存者和传送到幸存者身边。"
 	}
 
 	"Tank #114 Name"
 	{
-		"chi"			"绿巨人坦克"
+		"chi"			"部落坦克"
+	}
+
+	"Boomer #114 Name"
+	{
+		"chi"			"部落胖子"
+	}
+
+	"Charger #114 Name"
+	{
+		"chi"			"部落牛"
+	}
+
+	"Hunter #114 Name"
+	{
+		"chi"			"部落猎人"
+	}
+
+	"Jockey #114 Name"
+	{
+		"chi"			"部落猴子"
+	}
+
+	"Smoker #114 Name"
+	{
+		"chi"			"部落烟鬼"
+	}
+
+	"Spitter #114 Name"
+	{
+		"chi"			"部落口水"
+	}
+
+	"Witch #114 Name"
+	{
+		"chi"			"部落女巫"
 	}
 
 	"Tank #114"
 	{
-		"chi"			"{mint}遇到难以置信的绿巨人!这个坦克拥有绿巨人的大部分能力!"
+		"chi"			"{mint}这个坦克可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Boomer #114"
+	{
+		"chi"			"{mint}这个胖子可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Charger #114"
+	{
+		"chi"			"{mint}这个牛可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Hunter #114"
+	{
+		"chi"			"{mint}这个猎人可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Jockey #114"
+	{
+		"chi"			"{mint}这个猴子可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Smoker #114"
+	{
+		"chi"			"{mint}这个烟鬼可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Spitter #114"
+	{
+		"chi"			"{mint}这个口水可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
+	}
+
+	"Witch #114"
+	{
+		"chi"			"{mint}这个女巫可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间。"
 	}
 
 	"Tank #115 Name"
 	{
-		"chi"			"忍者坦克"
+		"chi"			"绿巨人坦克"
+	}
+
+	"Boomer #115 Name"
+	{
+		"chi"			"绿巨人胖子"
+	}
+
+	"Charger #115 Name"
+	{
+		"chi"			"绿巨人牛"
+	}
+
+	"Hunter #115 Name"
+	{
+		"chi"			"绿巨人猎人"
+	}
+
+	"Jockey #115 Name"
+	{
+		"chi"			"绿巨人猴子"
+	}
+
+	"Smoker #115 Name"
+	{
+		"chi"			"绿巨人烟鬼"
+	}
+
+	"Spitter #115 Name"
+	{
+		"chi"			"绿巨人口水"
+	}
+
+	"Witch #115 Name"
+	{
+		"chi"			"绿巨人女巫"
 	}
 
 	"Tank #115"
 	{
-		"chi"			"{mint}这个坦克可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+		"chi"			"{mint}遇到难以置信的绿巨人!这个坦克拥有绿巨人的大部分能力!"
+	}
+
+	"Boomer #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个胖子拥有绿巨人的大部分能力!"
+	}
+
+	"Charger #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个牛拥有绿巨人的大部分能力!"
+	}
+
+	"Hunter #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个猎人拥有绿巨人的大部分能力!"
+	}
+
+	"Jockey #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个猴子拥有绿巨人的大部分能力!"
+	}
+
+	"Smoker #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个烟鬼拥有绿巨人的大部分能力!"
+	}
+
+	"Spitter #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个口水拥有绿巨人的大部分能力!"
+	}
+
+	"Witch #115"
+	{
+		"chi"			"{mint}遇到难以置信的绿巨人!这个女巫拥有绿巨人的大部分能力!"
 	}
 
 	"Tank #116 Name"
 	{
-		"chi"			"冥思坦克"
+		"chi"			"忍者坦克"
+	}
+
+	"Boomer #116 Name"
+	{
+		"chi"			"忍者胖子"
+	}
+
+	"Charger #116 Name"
+	{
+		"chi"			"忍者牛"
+	}
+
+	"Hunter #116 Name"
+	{
+		"chi"			"忍者猎人"
+	}
+
+	"Jockey #116 Name"
+	{
+		"chi"			"忍者猴子"
+	}
+
+	"Smoker #116 Name"
+	{
+		"chi"			"忍者烟鬼"
+	}
+
+	"Spitter #116 Name"
+	{
+		"chi"			"忍者口水"
+	}
+
+	"Witch #116 Name"
+	{
+		"chi"			"忍者女巫"
 	}
 
 	"Tank #116"
 	{
-		"chi"			"{mint}这个坦克沉迷冥思， 根本对你毫无兴趣。"
+		"chi"			"{mint}这个坦克可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Boomer #116"
+	{
+		"chi"			"{mint}这个胖子可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Charger #116"
+	{
+		"chi"			"{mint}这个牛可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Hunter #116"
+	{
+		"chi"			"{mint}这个猎人可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Jockey #116"
+	{
+		"chi"			"{mint}这个猴子可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Smoker #116"
+	{
+		"chi"			"{mint}这个烟鬼可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Spitter #116"
+	{
+		"chi"			"{mint}这个口水可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
+	}
+
+	"Witch #116"
+	{
+		"chi"			"{mint}这个女巫可以瞬移， 消无声息的移动和伪装自己。 需要特别小心!"
 	}
 
 	"Tank #117 Name"
 	{
-		"chi"			"老板 (第一形式)"
+		"chi"			"冥思坦克"
+	}
+
+	"Boomer #117 Name"
+	{
+		"chi"			"冥思胖子"
+	}
+
+	"Charger #117 Name"
+	{
+		"chi"			"冥思牛"
+	}
+
+	"Hunter #117 Name"
+	{
+		"chi"			"冥思猎人"
+	}
+
+	"Jockey #117 Name"
+	{
+		"chi"			"冥思猴子"
+	}
+
+	"Smoker #117 Name"
+	{
+		"chi"			"冥思烟鬼"
+	}
+
+	"Spitter #117 Name"
+	{
+		"chi"			"冥思口水"
+	}
+
+	"Witch #117 Name"
+	{
+		"chi"			"冥思女巫"
 	}
 
 	"Tank #117"
 	{
-		"chi"			"{mint}这个坦克会对幸存者投掷会爆炸的岩石并会定期进行传送。"
+		"chi"			"{mint}这个坦克沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Boomer #117"
+	{
+		"chi"			"{mint}这个胖子沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Charger #117"
+	{
+		"chi"			"{mint}这个牛沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Hunter #117"
+	{
+		"chi"			"{mint}这个猎人沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Jockey #117"
+	{
+		"chi"			"{mint}这个猴子沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Smoker #117"
+	{
+		"chi"			"{mint}这个烟鬼沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Spitter #117"
+	{
+		"chi"			"{mint}这个口水沉迷冥思， 根本对你毫无兴趣。"
+	}
+
+	"Witch #117"
+	{
+		"chi"			"{mint}这个女巫沉迷冥思， 根本对你毫无兴趣。"
 	}
 
 	"Tank #118 Name"
 	{
-		"chi"			"钢铁霸主 (第二种形式)"
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Boomer #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Charger #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Hunter #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Jockey #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Smoker #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Spitter #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
+	}
+
+	"Witch #118 Name"
+	{
+		"chi"			"老板 (第一形式)"
 	}
 
 	"Tank #118"
 	{
-		"chi"			"{mint}这个坦克跑得比一般的快， 免疫近战伤害， 比一般的坦克强一点， 会投掷爆炸的岩石， 可以改变幸存者的重力值和传送到幸存者身边。"
+		"chi"			"{mint}这个坦克会对幸存者投掷会爆炸的岩石并会定期进行传送。"
+	}
+
+	"Boomer #118"
+	{
+		"chi"			"{mint}这个胖子并会定期进行传送。"
+	}
+
+	"Charger #118"
+	{
+		"chi"			"{mint}这个牛并会定期进行传送。"
+	}
+
+	"Hunter #118"
+	{
+		"chi"			"{mint}这个猎人并会定期进行传送。"
+	}
+
+	"Jockey #118"
+	{
+		"chi"			"{mint}这个猴子并会定期进行传送。"
+	}
+
+	"Smoker #118"
+	{
+		"chi"			"{mint}这个烟鬼并会定期进行传送。"
+	}
+
+	"Spitter #118"
+	{
+		"chi"			"{mint}这个口水并会定期进行传送。"
+	}
+
+	"Witch #118"
+	{
+		"chi"			"{mint}这个女巫并会定期进行传送。"
 	}
 
 	"Tank #119 Name"
 	{
-		"chi"			"暗夜魔王 (第三形式)"
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Boomer #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Charger #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Hunter #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Jockey #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Smoker #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Spitter #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
+	}
+
+	"Witch #119 Name"
+	{
+		"chi"			"钢铁霸主 (第二种形式)"
 	}
 
 	"Tank #119"
 	{
-		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的坦克弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫近战伤害， 比一般的坦克强一点， 会投掷爆炸的岩石， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Boomer #119"
+	{
+		"chi"			"{mint}这个胖子跑得比一般的快， 免疫近战伤害， 比一般的胖子强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Charger #119"
+	{
+		"chi"			"{mint}这个牛跑得比一般的快， 免疫近战伤害， 比一般的牛强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Hunter #119"
+	{
+		"chi"			"{mint}这个猎人跑得比一般的快， 免疫近战伤害， 比一般的猎人强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Jockey #119"
+	{
+		"chi"			"{mint}这个猴子跑得比一般的快， 免疫近战伤害， 比一般的猴子强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Smoker #119"
+	{
+		"chi"			"{mint}这个烟鬼跑得比一般的快， 免疫近战伤害， 比一般的烟鬼强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Spitter #119"
+	{
+		"chi"			"{mint}这个口水跑得比一般的快， 免疫近战伤害， 比一般的口水强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
+	}
+
+	"Witch #119"
+	{
+		"chi"			"{mint}这个女巫跑得比一般的快， 免疫近战伤害， 比一般的女巫强一点， 可以改变幸存者的重力值和传送到幸存者身边。"
 	}
 
 	"Tank #120 Name"
 	{
-		"chi"			"火灵 (第四形式)"
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Boomer #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Charger #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Hunter #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Jockey #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Smoker #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Spitter #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
+	}
+
+	"Witch #120 Name"
+	{
+		"chi"			"暗夜魔王 (第三形式)"
 	}
 
 	"Tank #120"
 	{
-		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的坦克强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的坦克弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Boomer #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的胖子弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Charger #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的牛弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Hunter #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的猎人弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Jockey #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的猴子弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Smoker #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的烟鬼弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Spitter #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的口水弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
+	}
+
+	"Witch #120"
+	{
+		"chi"			"{mint}这个坦克跑得比一般的快， 免疫火焰伤害， 比一般的女巫弱一点， 会投掷爆炸的岩石， 可以让幸存者失明和伪装自己， 并会定期传送到幸存者身边。"
 	}
 
 	"Tank #121 Name"
 	{
-		"chi"			"随机坦克"
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Boomer #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Charger #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Hunter #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Jockey #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Smoker #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Spitter #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
+	}
+
+	"Witch #121 Name"
+	{
+		"chi"			"火灵 (第四形式)"
 	}
 
 	"Tank #121"
 	{
-		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型， 会造成巨大威胁。 请小心。。。"
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的坦克强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Boomer #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的胖子强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Charger #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的牛强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Hunter #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的猎人强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Jockey #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的猴子强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Smoker #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的烟鬼强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Spitter #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的口水强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
+	}
+
+	"Witch #121"
+	{
+		"chi"			"{mint}这个坦克跑的比一般的快， 免疫火焰伤害， 比一般的女巫强一点， 会投掷爆炸的岩石和引发火灾， 给予幸存者临时生命值， 会定期进行跳跃和传送到幸存者身边。"
 	}
 
 	"Tank #122 Name"
 	{
-		"chi"			"变形坦克"
+		"chi"			"随机坦克"
+	}
+
+	"Boomer #122 Name"
+	{
+		"chi"			"随机胖子"
+	}
+
+	"Charger #122 Name"
+	{
+		"chi"			"随机牛"
+	}
+
+	"Hunter #122 Name"
+	{
+		"chi"			"随机猎人"
+	}
+
+	"Jockey #122 Name"
+	{
+		"chi"			"随机猴子"
+	}
+
+	"Smoker #122 Name"
+	{
+		"chi"			"随机烟鬼"
+	}
+
+	"Spitter #122 Name"
+	{
+		"chi"			"随机口水"
+	}
+
+	"Witch #122 Name"
+	{
+		"chi"			"随机女巫"
 	}
 
 	"Tank #122"
 	{
-		"chi"			"{mint}这个坦克可以变成其他突变坦克类型。 要特别小心。。。"
+		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Boomer #122"
+	{
+		"chi"			"{mint}这个胖子会随机转化成其他突变胖子类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Charger #122"
+	{
+		"chi"			"{mint}这个牛会随机转化成其他突变牛类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Hunter #122"
+	{
+		"chi"			"{mint}这个猎人会随机转化成其他突变猎人类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Jockey #122"
+	{
+		"chi"			"{mint}这个猴子会随机转化成其他突变猴子类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Smoker #122"
+	{
+		"chi"			"{mint}这个烟鬼会随机转化成其他突变烟鬼类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Spitter #122"
+	{
+		"chi"			"{mint}这个口水会随机转化成其他突变口水类型， 会造成巨大威胁。 请小心。。。"
+	}
+
+	"Witch #122"
+	{
+		"chi"			"{mint}这个女巫会随机转化成其他突变女巫类型， 会造成巨大威胁。 请小心。。。"
 	}
 
 	"Tank #123 Name"
 	{
-		"chi"			"闪光坦克"
+		"chi"			"变形坦克"
+	}
+
+	"Boomer #123 Name"
+	{
+		"chi"			"变形胖子"
+	}
+
+	"Charger #123 Name"
+	{
+		"chi"			"变形牛"
+	}
+
+	"Hunter #123 Name"
+	{
+		"chi"			"变形猎人"
+	}
+
+	"Jockey #123 Name"
+	{
+		"chi"			"变形猴子"
+	}
+
+	"Smoker #123 Name"
+	{
+		"chi"			"变形烟鬼"
+	}
+
+	"Spitter #123 Name"
+	{
+		"chi"			"变形口水"
+	}
+
+	"Witch #123 Name"
+	{
+		"chi"			"变形女巫"
 	}
 
 	"Tank #123"
 	{
-		"chi"			"{mint}此坦克会用闪光弹让它和受它攻击的人蹒跚。"
+		"chi"			"{mint}这个坦克可以变成其他突变坦克类型。 要特别小心。。。"
+	}
+
+	"Boomer #123"
+	{
+		"chi"			"{mint}这个胖子可以变成其他突变胖子类型。 要特别小心。。。"
+	}
+
+	"Charger #123"
+	{
+		"chi"			"{mint}这个牛可以变成其他突变牛类型。 要特别小心。。。"
+	}
+
+	"Hunter #123"
+	{
+		"chi"			"{mint}这个猎人可以变成其他突变猎人类型。 要特别小心。。。"
+	}
+
+	"Jockey #123"
+	{
+		"chi"			"{mint}这个猴子可以变成其他突变猴子类型。 要特别小心。。。"
+	}
+
+	"Smoker #123"
+	{
+		"chi"			"{mint}这个烟鬼可以变成其他突变烟鬼类型。 要特别小心。。。"
+	}
+
+	"Spitter #123"
+	{
+		"chi"			"{mint}这个口水可以变成其他突变口水类型。 要特别小心。。。"
+	}
+
+	"Witch #123"
+	{
+		"chi"			"{mint}这个女巫可以变成其他突变女巫类型。 要特别小心。。。"
 	}
 
 	"Tank #124 Name"
 	{
-		"chi"			"泥浆坦克"
+		"chi"			"闪光坦克"
+	}
+
+	"Boomer #124 Name"
+	{
+		"chi"			"闪光胖子"
+	}
+
+	"Charger #124 Name"
+	{
+		"chi"			"闪光牛"
+	}
+
+	"Hunter #124 Name"
+	{
+		"chi"			"闪光猎人"
+	}
+
+	"Jockey #124 Name"
+	{
+		"chi"			"闪光猴子"
+	}
+
+	"Smoker #124 Name"
+	{
+		"chi"			"闪光烟鬼"
+	}
+
+	"Spitter #124 Name"
+	{
+		"chi"			"闪光口水"
+	}
+
+	"Witch #124 Name"
+	{
+		"chi"			"闪光女巫"
 	}
 
 	"Tank #124"
 	{
-		"chi"			"{mint}这个坦克像任何泥人一样令人讨厌。"
+		"chi"			"{mint}此坦克会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Boomer #124"
+	{
+		"chi"			"{mint}此胖子会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Charger #124"
+	{
+		"chi"			"{mint}此牛会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Hunter #124"
+	{
+		"chi"			"{mint}此猎人会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Jockey #124"
+	{
+		"chi"			"{mint}此猴子会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Smoker #124"
+	{
+		"chi"			"{mint}此烟鬼会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Spitter #124"
+	{
+		"chi"			"{mint}此口水会用闪光弹让它和受它攻击的人蹒跚。"
+	}
+
+	"Witch #124"
+	{
+		"chi"			"{mint}此女巫会用闪光弹让它和受它攻击的人蹒跚。"
 	}
 
 	"Tank #125 Name"
 	{
-		"chi"			"残局坦克"
+		"chi"			"泥浆坦克"
+	}
+
+	"Boomer #125 Name"
+	{
+		"chi"			"泥浆胖子"
+	}
+
+	"Charger #125 Name"
+	{
+		"chi"			"泥浆牛"
+	}
+
+	"Hunter #125 Name"
+	{
+		"chi"			"泥浆猎人"
+	}
+
+	"Jockey #125 Name"
+	{
+		"chi"			"泥浆猴子"
+	}
+
+	"Smoker #125 Name"
+	{
+		"chi"			"泥浆烟鬼"
+	}
+
+	"Spitter #125 Name"
+	{
+		"chi"			"泥浆口水"
+	}
+
+	"Witch #125 Name"
+	{
+		"chi"			"泥浆女巫"
 	}
 
 	"Tank #125"
 	{
-		"chi"			"{mint}再见了， 大家!"
+		"chi"			"{mint}这个坦克像任何泥人一样令人讨厌。"
+	}
+
+	"Boomer #125"
+	{
+		"chi"			"{mint}这个胖子像任何泥人一样令人讨厌。"
+	}
+
+	"Charger #125"
+	{
+		"chi"			"{mint}这个牛像任何泥人一样令人讨厌。"
+	}
+
+	"Hunter #125"
+	{
+		"chi"			"{mint}这个猎人像任何泥人一样令人讨厌。"
+	}
+
+	"Jockey #125"
+	{
+		"chi"			"{mint}这个猴子像任何泥人一样令人讨厌。"
+	}
+
+	"Smoker #125"
+	{
+		"chi"			"{mint}这个烟鬼像任何泥人一样令人讨厌。"
+	}
+
+	"Spitter #125"
+	{
+		"chi"			"{mint}这个口水像任何泥人一样令人讨厌。"
+	}
+
+	"Witch #125"
+	{
+		"chi"			"{mint}这个女巫像任何泥人一样令人讨厌。"
 	}
 
 	"Tank #126 Name"
 	{
-		"chi"			"俏皮坦克"
+		"chi"			"残局坦克"
+	}
+
+	"Boomer #126 Name"
+	{
+		"chi"			"残局胖子"
+	}
+
+	"Charger #126 Name"
+	{
+		"chi"			"残局牛"
+	}
+
+	"Hunter #126 Name"
+	{
+		"chi"			"残局猎人"
+	}
+
+	"Jockey #126 Name"
+	{
+		"chi"			"残局猴子"
+	}
+
+	"Smoker #126 Name"
+	{
+		"chi"			"残局烟鬼"
+	}
+
+	"Spitter #126 Name"
+	{
+		"chi"			"残局口水"
+	}
+
+	"Witch #126 Name"
+	{
+		"chi"			"残局女巫"
 	}
 
 	"Tank #126"
 	{
-		"chi"			"{mint}该坦克不会造成任何伤害。 它只是想玩!"
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Boomer #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Charger #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Hunter #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Jockey #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Smoker #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Spitter #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
+	}
+
+	"Witch #126"
+	{
+		"chi"			"{mint}再见了， 大家!"
 	}
 
 	"Tank #127 Name"
 	{
-		"chi"			"纠缠坦克"
+		"chi"			"俏皮坦克"
+	}
+
+	"Boomer #127 Name"
+	{
+		"chi"			"俏皮胖子"
+	}
+
+	"Charger #127 Name"
+	{
+		"chi"			"俏皮牛"
+	}
+
+	"Hunter #127 Name"
+	{
+		"chi"			"俏皮猎人"
+	}
+
+	"Jockey #127 Name"
+	{
+		"chi"			"俏皮猴子"
+	}
+
+	"Smoker #127 Name"
+	{
+		"chi"			"俏皮烟鬼"
+	}
+
+	"Spitter #127 Name"
+	{
+		"chi"			"俏皮口水"
+	}
+
+	"Witch #127 Name"
+	{
+		"chi"			"俏皮女巫"
 	}
 
 	"Tank #127"
 	{
+		"chi"			"{mint}该坦克不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Boomer #127"
+	{
+		"chi"			"{mint}该胖子不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Charger #127"
+	{
+		"chi"			"{mint}该牛不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Hunter #127"
+	{
+		"chi"			"{mint}该猎人不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Jockey #127"
+	{
+		"chi"			"{mint}该猴子不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Smoker #127"
+	{
+		"chi"			"{mint}该烟鬼不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Spitter #127"
+	{
+		"chi"			"{mint}该口水不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Witch #127"
+	{
+		"chi"			"{mint}该女巫不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Tank #128 Name"
+	{
+		"chi"			"纠缠坦克"
+	}
+
+	"Boomer #128 Name"
+	{
+		"chi"			"纠缠胖子"
+	}
+
+	"Charger #128 Name"
+	{
+		"chi"			"纠缠牛"
+	}
+
+	"Hunter #128 Name"
+	{
+		"chi"			"纠缠猎人"
+	}
+
+	"Jockey #128 Name"
+	{
+		"chi"			"纠缠猴子"
+	}
+
+	"Smoker #128 Name"
+	{
+		"chi"			"纠缠烟鬼"
+	}
+
+	"Spitter #128 Name"
+	{
+		"chi"			"纠缠口水"
+	}
+
+	"Witch #128 Name"
+	{
+		"chi"			"纠缠女巫"
+	}
+
+	"Tank #128"
+	{
 		"chi"			"{mint}这个坦克不会消失。"
+	}
+
+	"Boomer #128"
+	{
+		"chi"			"{mint}这个胖子不会消失。"
+	}
+
+	"Charger #128"
+	{
+		"chi"			"{mint}这个牛不会消失。"
+	}
+
+	"Hunter #128"
+	{
+		"chi"			"{mint}这个猎人不会消失。"
+	}
+
+	"Jockey #128"
+	{
+		"chi"			"{mint}这个猴子不会消失。"
+	}
+
+	"Smoker #128"
+	{
+		"chi"			"{mint}这个烟鬼不会消失。"
+	}
+
+	"Spitter #128"
+	{
+		"chi"			"{mint}这个口水不会消失。"
+	}
+
+	"Witch #128"
+	{
+		"chi"			"{mint}这个女巫不会消失。"
 	}
 
 	// 这实际上是一个有效的 Steam32ID， 所以请不要取消注释， 这只是一个示例
@@ -1294,6 +10264,76 @@
 	// "STEAM_0:1:23456789"
 	// {
 	//	"chi"			"{mint}这个坦克是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer Name"
+	// {
+	//	"chi"			"胖子"
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer"
+	// {
+	//	"chi"			"{mint}这个胖子是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger Name"
+	// {
+	//	"chi"			"牛"
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger"
+	// {
+	//	"chi"			"{mint}这个牛是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter Name"
+	// {
+	//	"chi"			"猎人"
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter"
+	// {
+	//	"chi"			"{mint}这个猎人是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey Name"
+	// {
+	//	"chi"			"猴子"
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey"
+	// {
+	//	"chi"			"{mint}这个猴子是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker Name"
+	// {
+	//	"chi"			"烟鬼"
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker"
+	// {
+	//	"chi"			"{mint}这个烟鬼是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter Name"
+	// {
+	//	"chi"			"口水"
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter"
+	// {
+	//	"chi"			"{mint}这个口水是某某某在控制的。"
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch Name"
+	// {
+	//	"chi"			"女巫"
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch"
+	// {
+	//	"chi"			"{mint}这个女巫是某某某在控制的。"
 	// }
 	// --
 	// 给你自己所控的突变坦克添加坦克注释短语文本!

@@ -87,6 +87,29 @@ enum struct esSpamPlayer
 
 esSpamPlayer g_esSpamPlayer[MAXPLAYERS + 1];
 
+enum struct esSpamTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flSpamChance;
+	float g_flSpamInterval;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+	int g_iSpamAbility;
+	int g_iSpamCooldown;
+	int g_iSpamDamage;
+	int g_iSpamDuration;
+	int g_iSpamMessage;
+}
+
+esSpamTeammate g_esSpamTeammate[MAXPLAYERS + 1];
+
 enum struct esSpamAbility
 {
 	float g_flCloseAreasOnly;
@@ -112,6 +135,29 @@ enum struct esSpamAbility
 }
 
 esSpamAbility g_esSpamAbility[MT_MAXTYPES + 1];
+
+enum struct esSpamSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flSpamChance;
+	float g_flSpamInterval;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+	int g_iSpamAbility;
+	int g_iSpamCooldown;
+	int g_iSpamDamage;
+	int g_iSpamDuration;
+	int g_iSpamMessage;
+}
+
+esSpamSpecial g_esSpamSpecial[MT_MAXTYPES + 1];
 
 enum struct esSpamCache
 {
@@ -325,15 +371,19 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 Action OnSpamTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		if (bIsValidEntity(inflictor))
+		{
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		}
+
 		if (StrEqual(sClassname, "tank_rock"))
 		{
 			int iLauncher = GetEntPropEnt(inflictor, Prop_Data, "m_hOwnerEntity"),
 				iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
-			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
+			if (bIsValidEntity(iLauncher) && bIsInfected(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				int iTank = GetEntPropEnt(iLauncher, Prop_Data, "m_hOwnerEntity");
 				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esSpamCache[iTank].g_iSpamAbility == 1 && g_esSpamPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esSpamPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)))
@@ -383,7 +433,7 @@ void vSpamCombineAbilities(int tank, int type, const float random, const char[] 
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility != 2)
 	{
 		g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -447,8 +497,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esSpamAbility[iIndex].g_iAccessFlags = 0;
 				g_esSpamAbility[iIndex].g_iImmunityFlags = 0;
@@ -469,86 +518,161 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSpamAbility[iIndex].g_iSpamDamage = 5;
 				g_esSpamAbility[iIndex].g_iSpamDuration = 5;
 				g_esSpamAbility[iIndex].g_flSpamInterval = 0.5;
+
+				g_esSpamSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esSpamSpecial[iIndex].g_iComboAbility = -1;
+				g_esSpamSpecial[iIndex].g_iHumanAbility = -1;
+				g_esSpamSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esSpamSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esSpamSpecial[iIndex].g_iHumanDuration = -1;
+				g_esSpamSpecial[iIndex].g_iHumanMode = -1;
+				g_esSpamSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esSpamSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esSpamSpecial[iIndex].g_iSpamAbility = -1;
+				g_esSpamSpecial[iIndex].g_iSpamMessage = -1;
+				g_esSpamSpecial[iIndex].g_flSpamChance = -1.0;
+				g_esSpamSpecial[iIndex].g_iSpamCooldown = -1;
+				g_esSpamSpecial[iIndex].g_iSpamDamage = -1;
+				g_esSpamSpecial[iIndex].g_iSpamDuration = -1;
+				g_esSpamSpecial[iIndex].g_flSpamInterval = -1.0;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esSpamPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esSpamPlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esSpamPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esSpamPlayer[iPlayer].g_iComboAbility = 0;
-					g_esSpamPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esSpamPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esSpamPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esSpamPlayer[iPlayer].g_iHumanDuration = 0;
-					g_esSpamPlayer[iPlayer].g_iHumanMode = 0;
-					g_esSpamPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esSpamPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esSpamPlayer[iPlayer].g_iSpamAbility = 0;
-					g_esSpamPlayer[iPlayer].g_iSpamMessage = 0;
-					g_esSpamPlayer[iPlayer].g_flSpamChance = 0.0;
-					g_esSpamPlayer[iPlayer].g_iSpamCooldown = 0;
-					g_esSpamPlayer[iPlayer].g_iSpamDamage = 0;
-					g_esSpamPlayer[iPlayer].g_iSpamDuration = 0;
-					g_esSpamPlayer[iPlayer].g_flSpamInterval = 0.0;
-				}
+				g_esSpamPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esSpamPlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esSpamPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esSpamPlayer[iPlayer].g_iComboAbility = -1;
+				g_esSpamPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esSpamPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esSpamPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esSpamPlayer[iPlayer].g_iHumanDuration = -1;
+				g_esSpamPlayer[iPlayer].g_iHumanMode = -1;
+				g_esSpamPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esSpamPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esSpamPlayer[iPlayer].g_iSpamAbility = -1;
+				g_esSpamPlayer[iPlayer].g_iSpamMessage = -1;
+				g_esSpamPlayer[iPlayer].g_flSpamChance = -1.0;
+				g_esSpamPlayer[iPlayer].g_iSpamCooldown = -1;
+				g_esSpamPlayer[iPlayer].g_iSpamDamage = -1;
+				g_esSpamPlayer[iPlayer].g_iSpamDuration = -1;
+				g_esSpamPlayer[iPlayer].g_flSpamInterval = -1.0;
+
+				g_esSpamTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esSpamTeammate[iPlayer].g_iComboAbility = -1;
+				g_esSpamTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esSpamTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esSpamTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esSpamTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esSpamTeammate[iPlayer].g_iHumanMode = -1;
+				g_esSpamTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esSpamTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esSpamTeammate[iPlayer].g_iSpamAbility = -1;
+				g_esSpamTeammate[iPlayer].g_iSpamMessage = -1;
+				g_esSpamTeammate[iPlayer].g_flSpamChance = -1.0;
+				g_esSpamTeammate[iPlayer].g_iSpamCooldown = -1;
+				g_esSpamTeammate[iPlayer].g_iSpamDamage = -1;
+				g_esSpamTeammate[iPlayer].g_iSpamDuration = -1;
+				g_esSpamTeammate[iPlayer].g_flSpamInterval = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSpamConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vSpamConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esSpamPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esSpamPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esSpamPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esSpamPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esSpamPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esSpamPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamPlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esSpamPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esSpamPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esSpamPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esSpamPlayer[admin].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamPlayer[admin].g_iSpamAbility, value, 0, 1);
-		g_esSpamPlayer[admin].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamPlayer[admin].g_iSpamMessage, value, 0, 1);
-		g_esSpamPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamPlayer[admin].g_flSpamChance, value, 0.0, 100.0);
-		g_esSpamPlayer[admin].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamPlayer[admin].g_iSpamCooldown, value, 0, 99999);
-		g_esSpamPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamPlayer[admin].g_iSpamDamage, value, 0, 99999);
-		g_esSpamPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamPlayer[admin].g_iSpamDuration, value, 0, 99999);
-		g_esSpamPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamPlayer[admin].g_flSpamInterval, value, 0.1, 1.0);
-		g_esSpamPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSpamPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esSpamTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSpamTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esSpamTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esSpamTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esSpamTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esSpamTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esSpamTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esSpamTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSpamTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esSpamTeammate[admin].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamTeammate[admin].g_iSpamAbility, value, -1, 1);
+			g_esSpamTeammate[admin].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamTeammate[admin].g_iSpamMessage, value, -1, 1);
+			g_esSpamTeammate[admin].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamTeammate[admin].g_flSpamChance, value, -1.0, 100.0);
+			g_esSpamTeammate[admin].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamTeammate[admin].g_iSpamCooldown, value, -1, 99999);
+			g_esSpamTeammate[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamTeammate[admin].g_iSpamDamage, value, -1, 99999);
+			g_esSpamTeammate[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamTeammate[admin].g_iSpamDuration, value, -1, 99999);
+			g_esSpamTeammate[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamTeammate[admin].g_flSpamInterval, value, -1.0, 1.0);
+		}
+		else
+		{
+			g_esSpamPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSpamPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esSpamPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esSpamPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esSpamPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esSpamPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamPlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esSpamPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esSpamPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSpamPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esSpamPlayer[admin].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamPlayer[admin].g_iSpamAbility, value, -1, 1);
+			g_esSpamPlayer[admin].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamPlayer[admin].g_iSpamMessage, value, -1, 1);
+			g_esSpamPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamPlayer[admin].g_flSpamChance, value, -1.0, 100.0);
+			g_esSpamPlayer[admin].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamPlayer[admin].g_iSpamCooldown, value, -1, 99999);
+			g_esSpamPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamPlayer[admin].g_iSpamDamage, value, -1, 99999);
+			g_esSpamPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamPlayer[admin].g_iSpamDuration, value, -1, 99999);
+			g_esSpamPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamPlayer[admin].g_flSpamInterval, value, -1.0, 1.0);
+			g_esSpamPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esSpamPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esSpamAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esSpamAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamAbility[type].g_iComboAbility, value, 0, 1);
-		g_esSpamAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esSpamAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esSpamAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esSpamAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esSpamAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamAbility[type].g_iHumanMode, value, 0, 1);
-		g_esSpamAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esSpamAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esSpamAbility[type].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamAbility[type].g_iSpamAbility, value, 0, 1);
-		g_esSpamAbility[type].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamAbility[type].g_iSpamMessage, value, 0, 1);
-		g_esSpamAbility[type].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamAbility[type].g_flSpamChance, value, 0.0, 100.0);
-		g_esSpamAbility[type].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamAbility[type].g_iSpamCooldown, value, 0, 99999);
-		g_esSpamAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamAbility[type].g_iSpamDamage, value, 0, 99999);
-		g_esSpamAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamAbility[type].g_iSpamDuration, value, 0, 99999);
-		g_esSpamAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamAbility[type].g_flSpamInterval, value, 0.1, 1.0);
-		g_esSpamAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esSpamAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esSpamSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSpamSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esSpamSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esSpamSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esSpamSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esSpamSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esSpamSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esSpamSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSpamSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esSpamSpecial[type].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamSpecial[type].g_iSpamAbility, value, -1, 1);
+			g_esSpamSpecial[type].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamSpecial[type].g_iSpamMessage, value, -1, 1);
+			g_esSpamSpecial[type].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamSpecial[type].g_flSpamChance, value, -1.0, 100.0);
+			g_esSpamSpecial[type].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamSpecial[type].g_iSpamCooldown, value, -1, 99999);
+			g_esSpamSpecial[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamSpecial[type].g_iSpamDamage, value, -1, 99999);
+			g_esSpamSpecial[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamSpecial[type].g_iSpamDuration, value, -1, 99999);
+			g_esSpamSpecial[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamSpecial[type].g_flSpamInterval, value, -1.0, 1.0);
+		}
+		else
+		{
+			g_esSpamAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSpamAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esSpamAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSpamAbility[type].g_iComboAbility, value, -1, 1);
+			g_esSpamAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSpamAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esSpamAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSpamAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esSpamAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSpamAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esSpamAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esSpamAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esSpamAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esSpamAbility[type].g_iHumanMode, value, -1, 1);
+			g_esSpamAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSpamAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esSpamAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSpamAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esSpamAbility[type].g_iSpamAbility = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSpamAbility[type].g_iSpamAbility, value, -1, 1);
+			g_esSpamAbility[type].g_iSpamMessage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSpamAbility[type].g_iSpamMessage, value, -1, 1);
+			g_esSpamAbility[type].g_flSpamChance = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esSpamAbility[type].g_flSpamChance, value, -1.0, 100.0);
+			g_esSpamAbility[type].g_iSpamCooldown = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamCooldown", "Spam Cooldown", "Spam_Cooldown", "cooldown", g_esSpamAbility[type].g_iSpamCooldown, value, -1, 99999);
+			g_esSpamAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamAbility[type].g_iSpamDamage, value, -1, 99999);
+			g_esSpamAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamAbility[type].g_iSpamDuration, value, -1, 99999);
+			g_esSpamAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamAbility[type].g_flSpamInterval, value, -1.0, 1.0);
+			g_esSpamAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esSpamAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTION, MT_SPAM_SECTION2, MT_SPAM_SECTION3, MT_SPAM_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -558,24 +682,47 @@ void vSpamSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esSpamCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flCloseAreasOnly, g_esSpamAbility[type].g_flCloseAreasOnly);
-	g_esSpamCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iComboAbility, g_esSpamAbility[type].g_iComboAbility);
-	g_esSpamCache[tank].g_flSpamChance = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flSpamChance, g_esSpamAbility[type].g_flSpamChance);
-	g_esSpamCache[tank].g_flSpamInterval = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flSpamInterval, g_esSpamAbility[type].g_flSpamInterval);
-	g_esSpamCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanAbility, g_esSpamAbility[type].g_iHumanAbility);
-	g_esSpamCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanAmmo, g_esSpamAbility[type].g_iHumanAmmo);
-	g_esSpamCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanCooldown, g_esSpamAbility[type].g_iHumanCooldown);
-	g_esSpamCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanDuration, g_esSpamAbility[type].g_iHumanDuration);
-	g_esSpamCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanMode, g_esSpamAbility[type].g_iHumanMode);
-	g_esSpamCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flOpenAreasOnly, g_esSpamAbility[type].g_flOpenAreasOnly);
-	g_esSpamCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iRequiresHumans, g_esSpamAbility[type].g_iRequiresHumans);
-	g_esSpamCache[tank].g_iSpamAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamAbility, g_esSpamAbility[type].g_iSpamAbility);
-	g_esSpamCache[tank].g_iSpamCooldown = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamCooldown, g_esSpamAbility[type].g_iSpamCooldown);
-	g_esSpamCache[tank].g_iSpamDamage = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamDamage, g_esSpamAbility[type].g_iSpamDamage);
-	g_esSpamCache[tank].g_iSpamDuration = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamDuration, g_esSpamAbility[type].g_iSpamDuration);
-	g_esSpamCache[tank].g_iSpamMessage = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamMessage, g_esSpamAbility[type].g_iSpamMessage);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esSpamPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esSpamCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_flCloseAreasOnly, g_esSpamPlayer[tank].g_flCloseAreasOnly, g_esSpamSpecial[type].g_flCloseAreasOnly, g_esSpamAbility[type].g_flCloseAreasOnly, 1);
+		g_esSpamCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iComboAbility, g_esSpamPlayer[tank].g_iComboAbility, g_esSpamSpecial[type].g_iComboAbility, g_esSpamAbility[type].g_iComboAbility, 1);
+		g_esSpamCache[tank].g_flSpamChance = flGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_flSpamChance, g_esSpamPlayer[tank].g_flSpamChance, g_esSpamSpecial[type].g_flSpamChance, g_esSpamAbility[type].g_flSpamChance, 1);
+		g_esSpamCache[tank].g_flSpamInterval = flGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_flSpamInterval, g_esSpamPlayer[tank].g_flSpamInterval, g_esSpamSpecial[type].g_flSpamInterval, g_esSpamAbility[type].g_flSpamInterval, 1);
+		g_esSpamCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iHumanAbility, g_esSpamPlayer[tank].g_iHumanAbility, g_esSpamSpecial[type].g_iHumanAbility, g_esSpamAbility[type].g_iHumanAbility, 1);
+		g_esSpamCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iHumanAmmo, g_esSpamPlayer[tank].g_iHumanAmmo, g_esSpamSpecial[type].g_iHumanAmmo, g_esSpamAbility[type].g_iHumanAmmo, 1);
+		g_esSpamCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iHumanCooldown, g_esSpamPlayer[tank].g_iHumanCooldown, g_esSpamSpecial[type].g_iHumanCooldown, g_esSpamAbility[type].g_iHumanCooldown, 1);
+		g_esSpamCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iHumanDuration, g_esSpamPlayer[tank].g_iHumanDuration, g_esSpamSpecial[type].g_iHumanDuration, g_esSpamAbility[type].g_iHumanDuration, 1);
+		g_esSpamCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iHumanMode, g_esSpamPlayer[tank].g_iHumanMode, g_esSpamSpecial[type].g_iHumanMode, g_esSpamAbility[type].g_iHumanMode, 1);
+		g_esSpamCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_flOpenAreasOnly, g_esSpamPlayer[tank].g_flOpenAreasOnly, g_esSpamSpecial[type].g_flOpenAreasOnly, g_esSpamAbility[type].g_flOpenAreasOnly, 1);
+		g_esSpamCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iRequiresHumans, g_esSpamPlayer[tank].g_iRequiresHumans, g_esSpamSpecial[type].g_iRequiresHumans, g_esSpamAbility[type].g_iRequiresHumans, 1);
+		g_esSpamCache[tank].g_iSpamAbility = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iSpamAbility, g_esSpamPlayer[tank].g_iSpamAbility, g_esSpamSpecial[type].g_iSpamAbility, g_esSpamAbility[type].g_iSpamAbility, 1);
+		g_esSpamCache[tank].g_iSpamCooldown = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iSpamCooldown, g_esSpamPlayer[tank].g_iSpamCooldown, g_esSpamSpecial[type].g_iSpamCooldown, g_esSpamAbility[type].g_iSpamCooldown, 1);
+		g_esSpamCache[tank].g_iSpamDamage = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iSpamDamage, g_esSpamPlayer[tank].g_iSpamDamage, g_esSpamSpecial[type].g_iSpamDamage, g_esSpamAbility[type].g_iSpamDamage, 1);
+		g_esSpamCache[tank].g_iSpamDuration = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iSpamDuration, g_esSpamPlayer[tank].g_iSpamDuration, g_esSpamSpecial[type].g_iSpamDuration, g_esSpamAbility[type].g_iSpamDuration, 1);
+		g_esSpamCache[tank].g_iSpamMessage = iGetSubSettingValue(apply, bHuman, g_esSpamTeammate[tank].g_iSpamMessage, g_esSpamPlayer[tank].g_iSpamMessage, g_esSpamSpecial[type].g_iSpamMessage, g_esSpamAbility[type].g_iSpamMessage, 1);
+	}
+	else
+	{
+		g_esSpamCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flCloseAreasOnly, g_esSpamAbility[type].g_flCloseAreasOnly, 1);
+		g_esSpamCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iComboAbility, g_esSpamAbility[type].g_iComboAbility, 1);
+		g_esSpamCache[tank].g_flSpamChance = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flSpamChance, g_esSpamAbility[type].g_flSpamChance, 1);
+		g_esSpamCache[tank].g_flSpamInterval = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flSpamInterval, g_esSpamAbility[type].g_flSpamInterval, 1);
+		g_esSpamCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanAbility, g_esSpamAbility[type].g_iHumanAbility, 1);
+		g_esSpamCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanAmmo, g_esSpamAbility[type].g_iHumanAmmo, 1);
+		g_esSpamCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanCooldown, g_esSpamAbility[type].g_iHumanCooldown, 1);
+		g_esSpamCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanDuration, g_esSpamAbility[type].g_iHumanDuration, 1);
+		g_esSpamCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iHumanMode, g_esSpamAbility[type].g_iHumanMode, 1);
+		g_esSpamCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_flOpenAreasOnly, g_esSpamAbility[type].g_flOpenAreasOnly, 1);
+		g_esSpamCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iRequiresHumans, g_esSpamAbility[type].g_iRequiresHumans, 1);
+		g_esSpamCache[tank].g_iSpamAbility = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamAbility, g_esSpamAbility[type].g_iSpamAbility, 1);
+		g_esSpamCache[tank].g_iSpamCooldown = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamCooldown, g_esSpamAbility[type].g_iSpamCooldown, 1);
+		g_esSpamCache[tank].g_iSpamDamage = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamDamage, g_esSpamAbility[type].g_iSpamDamage, 1);
+		g_esSpamCache[tank].g_iSpamDuration = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamDuration, g_esSpamAbility[type].g_iSpamDuration, 1);
+		g_esSpamCache[tank].g_iSpamMessage = iGetSettingValue(apply, bHuman, g_esSpamPlayer[tank].g_iSpamMessage, g_esSpamAbility[type].g_iSpamMessage, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -609,7 +756,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vSpamCopyStats2(iBot, iTank);
 			vRemoveSpam(iBot);
@@ -619,7 +766,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vSpamCopyStats2(iTank, iBot);
 			vRemoveSpam(iTank);
@@ -650,7 +797,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esSpamCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iComboAbility == 0 && !g_esSpamPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esSpamCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iComboAbility == 0 && !g_esSpamPlayer[tank].g_bActivated)
 	{
 		vSpamAbility(tank);
 	}
@@ -664,7 +811,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType, tank) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -672,7 +819,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esSpamCache[tank].g_iSpamAbility == 1 && g_esSpamCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esSpamCache[tank].g_iHumanMode)
 			{
@@ -730,7 +877,7 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esSpamCache[tank].g_iHumanMode == 1 && g_esSpamPlayer[tank].g_bActivated && (g_esSpamPlayer[tank].g_iCooldown == -1 || g_esSpamPlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esSpamCache[tank].g_iHumanMode == 1 && g_esSpamPlayer[tank].g_bActivated && (g_esSpamPlayer[tank].g_iCooldown == -1 || g_esSpamPlayer[tank].g_iCooldown <= GetTime()))
 		{
 			vSpamReset2(tank);
 			vSpamReset3(tank);
@@ -754,7 +901,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vSpam(int tank, int pos = -1)
 {
-	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime())
+	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown >= GetTime())
 	{
 		return;
 	}
@@ -763,7 +910,7 @@ void vSpam(int tank, int pos = -1)
 
 	vSpam2(tank, pos);
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
 	{
 		g_esSpamPlayer[tank].g_iAmmoCount++;
 
@@ -781,7 +928,7 @@ void vSpam(int tank, int pos = -1)
 
 void vSpam2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType, tank) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -806,34 +953,37 @@ void vSpam2(int tank, int pos = -1)
 	}
 
 	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esSpamCache[tank].g_flSpamInterval;
-	DataPack dpSpam;
-	CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpSpam.WriteCell(iLauncher);
-	dpSpam.WriteCell(GetClientUserId(tank));
-	dpSpam.WriteCell(g_esSpamPlayer[tank].g_iTankType);
-	dpSpam.WriteCell(GetTime());
-	dpSpam.WriteCell(pos);
+	if (flInterval > 0.0)
+	{
+		DataPack dpSpam;
+		CreateDataTimer(flInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpSpam.WriteCell(iLauncher);
+		dpSpam.WriteCell(GetClientUserId(tank));
+		dpSpam.WriteCell(g_esSpamPlayer[tank].g_iTankType);
+		dpSpam.WriteCell(GetTime());
+		dpSpam.WriteCell(pos);
+	}
 }
 
 void vSpamAbility(int tank)
 {
-	if ((g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
+	if ((g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esSpamCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esSpamCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[tank].g_iTankType, tank) || (g_esSpamCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esSpamCache[tank].g_flSpamChance)
 		{
 			vSpam(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamAmmo");
 	}
@@ -897,9 +1047,9 @@ void vSpamReset2(int tank)
 void vSpamReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esSpamAbility[g_esSpamPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esSpamCache[tank].g_iSpamCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1 && g_esSpamCache[tank].g_iHumanMode == 0 && g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0) ? g_esSpamCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esSpamCache[tank].g_iHumanAbility == 1 && g_esSpamCache[tank].g_iHumanMode == 0 && g_esSpamPlayer[tank].g_iAmmoCount < g_esSpamCache[tank].g_iHumanAmmo && g_esSpamCache[tank].g_iHumanAmmo > 0) ? g_esSpamCache[tank].g_iHumanCooldown : iCooldown;
 	g_esSpamPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown > iTime)
+	if (g_esSpamPlayer[tank].g_iCooldown != -1 && g_esSpamPlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpamHuman5", (g_esSpamPlayer[tank].g_iCooldown - iTime));
 	}
@@ -910,7 +1060,7 @@ void tTimerSpamCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esSpamCache[iTank].g_iSpamAbility == 0 || g_esSpamPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esSpamCache[iTank].g_iSpamAbility == 0 || g_esSpamPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -932,14 +1082,14 @@ Action tTimerSpam(Handle timer, DataPack pack)
 	}
 
 	int iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSpamCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esSpamCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[iTank].g_iTankType) || (g_esSpamCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esSpamPlayer[iTank].g_iTankType || g_esSpamCache[iTank].g_iSpamAbility == 0 || !g_esSpamPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esSpamCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esSpamCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esSpamPlayer[iTank].g_iTankType, iTank) || (g_esSpamCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSpamCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esSpamAbility[g_esSpamPlayer[iTank].g_iTankType].g_iAccessFlags, g_esSpamPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esSpamPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esSpamPlayer[iTank].g_iTankType || g_esSpamCache[iTank].g_iSpamAbility == 0 || !g_esSpamPlayer[iTank].g_bActivated)
 	{
 		vSpamReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsInfected(iTank, MT_CHECK_FAKECLIENT);
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
 		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esSpamCache[iTank].g_iSpamDuration;
 	iDuration = (bHuman && g_esSpamCache[iTank].g_iHumanAbility == 1) ? g_esSpamCache[iTank].g_iHumanDuration : iDuration;

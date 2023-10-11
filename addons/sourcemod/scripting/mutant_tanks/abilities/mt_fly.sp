@@ -95,6 +95,29 @@ enum struct esFlyPlayer
 
 esFlyPlayer g_esFlyPlayer[MAXPLAYERS + 1];
 
+enum struct esFlyTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flFlyChance;
+	float g_flFlySpeed;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iFlyAbility;
+	int g_iFlyCooldown;
+	int g_iFlyDuration;
+	int g_iFlyMessage;
+	int g_iFlyType;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esFlyTeammate g_esFlyTeammate[MAXPLAYERS + 1];
+
 enum struct esFlyAbility
 {
 	float g_flCloseAreasOnly;
@@ -120,6 +143,29 @@ enum struct esFlyAbility
 }
 
 esFlyAbility g_esFlyAbility[MT_MAXTYPES + 1];
+
+enum struct esFlySpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flFlyChance;
+	float g_flFlySpeed;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iFlyAbility;
+	int g_iFlyCooldown;
+	int g_iFlyDuration;
+	int g_iFlyMessage;
+	int g_iFlyType;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esFlySpecial g_esFlySpecial[MT_MAXTYPES + 1];
 
 enum struct esFlyCache
 {
@@ -350,7 +396,7 @@ void vFlyPlayerRunCmd(int client)
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
-	if (!MT_IsTankSupported(client) || !g_esFlyPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esFlyCache[client].g_iHumanMode == 1) || g_esFlyPlayer[client].g_iDuration == -1)
+	if (!MT_IsTankSupported(client) || !g_esFlyPlayer[client].g_bActivated || (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esFlyCache[client].g_iHumanMode == 1) || g_esFlyPlayer[client].g_iDuration == -1)
 	{
 #if defined MT_ABILITIES_MAIN
 		return;
@@ -359,9 +405,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #endif
 	}
 
-	if (g_esFlyPlayer[client].g_iDuration < GetTime())
+	if (g_esFlyPlayer[client].g_iDuration <= GetTime())
 	{
-		vStopFly(client);
+		vRemoveFly2(client);
 	}
 #if !defined MT_ABILITIES_MAIN
 	return Plugin_Continue;
@@ -372,7 +418,7 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(attacker) && (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esFlyCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esFlyCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && (!bIsInfected(attacker, MT_CHECK_FAKECLIENT) || g_esFlyCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esFlyCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankType].g_iAccessFlags, g_esFlyPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esFlyPlayer[attacker].g_iTankType, g_esFlyAbility[g_esFlyPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[victim].g_iImmunityFlags))
 			{
@@ -381,7 +427,8 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+			bool bCaught = bIsSurvivorCaught(victim);
+			if ((bIsSpecialInfected(attacker) && (bCaught || (!bCaught && (damagetype & DMG_CLUB)) || (bIsSpitter(attacker) && StrEqual(sClassname, "insect_swarm")))) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				if ((g_esFlyCache[attacker].g_iFlyType == 0 || (g_esFlyCache[attacker].g_iFlyType & MT_FLY_ATTACK)) && !g_esFlyPlayer[attacker].g_bActivated)
 				{
@@ -389,11 +436,11 @@ Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage,
 				}
 				else if (g_esFlyPlayer[attacker].g_bActivated)
 				{
-					vStopFly(attacker);
+					vRemoveFly2(attacker);
 				}
 			}
 		}
-		else if (MT_IsTankSupported(victim) && (!bIsTank(victim, MT_CHECK_FAKECLIENT) || g_esFlyCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esFlyCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && (!bIsInfected(victim, MT_CHECK_FAKECLIENT) || g_esFlyCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esFlyCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankType].g_iAccessFlags, g_esFlyPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esFlyPlayer[victim].g_iTankType, g_esFlyAbility[g_esFlyPlayer[victim].g_iTankType].g_iImmunityFlags, g_esFlyPlayer[attacker].g_iImmunityFlags))
 			{
@@ -428,9 +475,9 @@ Action OnFlyPreThink(int tank)
 
 Action OnFlyStartTouch(int tank, int other)
 {
-	if (bIsTank(tank) && bIsValidEntity(other))
+	if (bIsInfected(tank) && bIsValidEntity(other))
 	{
-		vStopFly(tank);
+		vRemoveFly2(tank);
 	}
 
 	return Plugin_Continue;
@@ -463,7 +510,7 @@ void vFlyCombineAbilities(int tank, int type, const float random, const char[] c
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility != 2)
 	{
 		g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -527,8 +574,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esFlyAbility[iIndex].g_iAccessFlags = 0;
 				g_esFlyAbility[iIndex].g_iImmunityFlags = 0;
@@ -549,86 +595,161 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFlyAbility[iIndex].g_iFlyDuration = 30;
 				g_esFlyAbility[iIndex].g_flFlySpeed = 500.0;
 				g_esFlyAbility[iIndex].g_iFlyType = 0;
+
+				g_esFlySpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esFlySpecial[iIndex].g_iComboAbility = -1;
+				g_esFlySpecial[iIndex].g_iHumanAbility = -1;
+				g_esFlySpecial[iIndex].g_iHumanAmmo = -1;
+				g_esFlySpecial[iIndex].g_iHumanCooldown = -1;
+				g_esFlySpecial[iIndex].g_iHumanDuration = -1;
+				g_esFlySpecial[iIndex].g_iHumanMode = -1;
+				g_esFlySpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esFlySpecial[iIndex].g_iRequiresHumans = -1;
+				g_esFlySpecial[iIndex].g_iFlyAbility = -1;
+				g_esFlySpecial[iIndex].g_iFlyMessage = -1;
+				g_esFlySpecial[iIndex].g_flFlyChance = -1.0;
+				g_esFlySpecial[iIndex].g_iFlyCooldown = -1;
+				g_esFlySpecial[iIndex].g_iFlyDuration = -1;
+				g_esFlySpecial[iIndex].g_flFlySpeed = -1.0;
+				g_esFlySpecial[iIndex].g_iFlyType = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esFlyPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esFlyPlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esFlyPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esFlyPlayer[iPlayer].g_iComboAbility = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanDuration = 0;
-					g_esFlyPlayer[iPlayer].g_iHumanMode = 0;
-					g_esFlyPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esFlyPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esFlyPlayer[iPlayer].g_iFlyAbility = 0;
-					g_esFlyPlayer[iPlayer].g_iFlyMessage = 0;
-					g_esFlyPlayer[iPlayer].g_flFlyChance = 0.0;
-					g_esFlyPlayer[iPlayer].g_iFlyCooldown = 0;
-					g_esFlyPlayer[iPlayer].g_iFlyDuration = 0;
-					g_esFlyPlayer[iPlayer].g_flFlySpeed = 0.0;
-					g_esFlyPlayer[iPlayer].g_iFlyType = 0;
-				}
+				g_esFlyPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esFlyPlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esFlyPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esFlyPlayer[iPlayer].g_iComboAbility = -1;
+				g_esFlyPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esFlyPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esFlyPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esFlyPlayer[iPlayer].g_iHumanDuration = -1;
+				g_esFlyPlayer[iPlayer].g_iHumanMode = -1;
+				g_esFlyPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esFlyPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esFlyPlayer[iPlayer].g_iFlyAbility = -1;
+				g_esFlyPlayer[iPlayer].g_iFlyMessage = -1;
+				g_esFlyPlayer[iPlayer].g_flFlyChance = -1.0;
+				g_esFlyPlayer[iPlayer].g_iFlyCooldown = -1;
+				g_esFlyPlayer[iPlayer].g_iFlyDuration = -1;
+				g_esFlyPlayer[iPlayer].g_flFlySpeed = -1.0;
+				g_esFlyPlayer[iPlayer].g_iFlyType = -1;
+
+				g_esFlyTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esFlyTeammate[iPlayer].g_iComboAbility = -1;
+				g_esFlyTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esFlyTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esFlyTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esFlyTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esFlyTeammate[iPlayer].g_iHumanMode = -1;
+				g_esFlyTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esFlyTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esFlyTeammate[iPlayer].g_iFlyAbility = -1;
+				g_esFlyTeammate[iPlayer].g_iFlyMessage = -1;
+				g_esFlyTeammate[iPlayer].g_flFlyChance = -1.0;
+				g_esFlyTeammate[iPlayer].g_iFlyCooldown = -1;
+				g_esFlyTeammate[iPlayer].g_iFlyDuration = -1;
+				g_esFlyTeammate[iPlayer].g_flFlySpeed = -1.0;
+				g_esFlyTeammate[iPlayer].g_iFlyType = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esFlyPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esFlyPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esFlyPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esFlyPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esFlyPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esFlyPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyPlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esFlyPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esFlyPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esFlyPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esFlyPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyPlayer[admin].g_iFlyAbility, value, 0, 1);
-		g_esFlyPlayer[admin].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyPlayer[admin].g_iFlyMessage, value, 0, 1);
-		g_esFlyPlayer[admin].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyPlayer[admin].g_flFlyChance, value, 0.0, 100.0);
-		g_esFlyPlayer[admin].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyPlayer[admin].g_iFlyCooldown, value, 0, 99999);
-		g_esFlyPlayer[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyPlayer[admin].g_iFlyDuration, value, 0, 99999);
-		g_esFlyPlayer[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyPlayer[admin].g_flFlySpeed, value, 0.1, 99999.0);
-		g_esFlyPlayer[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyPlayer[admin].g_iFlyType, value, 0, 15);
-		g_esFlyPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFlyPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esFlyTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFlyTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esFlyTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esFlyTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esFlyTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esFlyTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esFlyTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esFlyTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFlyTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esFlyTeammate[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyTeammate[admin].g_iFlyAbility, value, -1, 1);
+			g_esFlyTeammate[admin].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyTeammate[admin].g_iFlyMessage, value, -1, 1);
+			g_esFlyTeammate[admin].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyTeammate[admin].g_flFlyChance, value, -1.0, 100.0);
+			g_esFlyTeammate[admin].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyTeammate[admin].g_iFlyCooldown, value, -1, 99999);
+			g_esFlyTeammate[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyTeammate[admin].g_iFlyDuration, value, -1, 99999);
+			g_esFlyTeammate[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyTeammate[admin].g_flFlySpeed, value, -1.0, 99999.0);
+			g_esFlyTeammate[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyTeammate[admin].g_iFlyType, value, -1, 15);
+		}
+		else
+		{
+			g_esFlyPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFlyPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esFlyPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esFlyPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esFlyPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esFlyPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyPlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esFlyPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esFlyPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFlyPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esFlyPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyPlayer[admin].g_iFlyAbility, value, -1, 1);
+			g_esFlyPlayer[admin].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyPlayer[admin].g_iFlyMessage, value, -1, 1);
+			g_esFlyPlayer[admin].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyPlayer[admin].g_flFlyChance, value, -1.0, 100.0);
+			g_esFlyPlayer[admin].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyPlayer[admin].g_iFlyCooldown, value, -1, 99999);
+			g_esFlyPlayer[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyPlayer[admin].g_iFlyDuration, value, -1, 99999);
+			g_esFlyPlayer[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyPlayer[admin].g_flFlySpeed, value, -1.0, 99999.0);
+			g_esFlyPlayer[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyPlayer[admin].g_iFlyType, value, -1, 15);
+			g_esFlyPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esFlyPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esFlyAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esFlyAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyAbility[type].g_iComboAbility, value, 0, 1);
-		g_esFlyAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esFlyAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esFlyAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esFlyAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esFlyAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyAbility[type].g_iHumanMode, value, 0, 1);
-		g_esFlyAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esFlyAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esFlyAbility[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyAbility[type].g_iFlyAbility, value, 0, 1);
-		g_esFlyAbility[type].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyAbility[type].g_iFlyMessage, value, 0, 1);
-		g_esFlyAbility[type].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyAbility[type].g_flFlyChance, value, 0.0, 100.0);
-		g_esFlyAbility[type].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyAbility[type].g_iFlyCooldown, value, 0, 99999);
-		g_esFlyAbility[type].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyAbility[type].g_iFlyDuration, value, 0, 99999);
-		g_esFlyAbility[type].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyAbility[type].g_flFlySpeed, value, 0.1, 99999.0);
-		g_esFlyAbility[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyAbility[type].g_iFlyType, value, 0, 15);
-		g_esFlyAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFlyAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esFlySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFlySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlySpecial[type].g_iComboAbility, value, -1, 1);
+			g_esFlySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlySpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esFlySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlySpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esFlySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlySpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esFlySpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlySpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esFlySpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlySpecial[type].g_iHumanMode, value, -1, 1);
+			g_esFlySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFlySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlySpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esFlySpecial[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlySpecial[type].g_iFlyAbility, value, -1, 1);
+			g_esFlySpecial[type].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlySpecial[type].g_iFlyMessage, value, -1, 1);
+			g_esFlySpecial[type].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlySpecial[type].g_flFlyChance, value, -1.0, 100.0);
+			g_esFlySpecial[type].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlySpecial[type].g_iFlyCooldown, value, -1, 99999);
+			g_esFlySpecial[type].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlySpecial[type].g_iFlyDuration, value, -1, 99999);
+			g_esFlySpecial[type].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlySpecial[type].g_flFlySpeed, value, -1.0, 99999.0);
+			g_esFlySpecial[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlySpecial[type].g_iFlyType, value, -1, 15);
+		}
+		else
+		{
+			g_esFlyAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFlyAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyAbility[type].g_iComboAbility, value, -1, 1);
+			g_esFlyAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esFlyAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esFlyAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esFlyAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esFlyAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyAbility[type].g_iHumanMode, value, -1, 1);
+			g_esFlyAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFlyAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esFlyAbility[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyAbility[type].g_iFlyAbility, value, -1, 1);
+			g_esFlyAbility[type].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyAbility[type].g_iFlyMessage, value, -1, 1);
+			g_esFlyAbility[type].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyAbility[type].g_flFlyChance, value, -1.0, 100.0);
+			g_esFlyAbility[type].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyAbility[type].g_iFlyCooldown, value, -1, 99999);
+			g_esFlyAbility[type].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyAbility[type].g_iFlyDuration, value, -1, 99999);
+			g_esFlyAbility[type].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyAbility[type].g_flFlySpeed, value, -1.0, 99999.0);
+			g_esFlyAbility[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyAbility[type].g_iFlyType, value, -1, 15);
+			g_esFlyAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esFlyAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -638,23 +759,45 @@ void vFlySettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esFlyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly);
-	g_esFlyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility);
-	g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance);
-	g_esFlyCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed);
-	g_esFlyCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility);
-	g_esFlyCache[tank].g_iFlyCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown);
-	g_esFlyCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration);
-	g_esFlyCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyType, g_esFlyAbility[type].g_iFlyType);
-	g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility);
-	g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo);
-	g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown);
-	g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration);
-	g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode);
-	g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly);
-	g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esFlyPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[type].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
+		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[type].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
+		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[type].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
+		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[type].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
+		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[type].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
+		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[type].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
+		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[type].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
+		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[type].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
+		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[type].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
+		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[type].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
+		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[type].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
+		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[type].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
+		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[type].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
+		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[type].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
+		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[type].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
+		g_esFlyCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
+		g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
+		g_esFlyCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
+		g_esFlyCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
+		g_esFlyCache[tank].g_iFlyCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
+		g_esFlyCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
+		g_esFlyCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
+		g_esFlyCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
+		g_esFlyCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
+		g_esFlyCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
+		g_esFlyCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
+		g_esFlyCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
+		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
+		g_esFlyCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -710,7 +853,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vFlyCopyStats2(iBot, iTank);
 			vRemoveFly(iBot);
@@ -720,7 +863,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vFlyCopyStats2(iTank, iBot);
 			vRemoveFly(iTank);
@@ -729,7 +872,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_jump"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank) && (!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esFlyCache[iTank].g_iHumanAbility == 2))
+		if (MT_IsTankSupported(iTank) && (!bIsInfected(iTank, MT_CHECK_FAKECLIENT) || g_esFlyCache[iTank].g_iHumanAbility == 2))
 		{
 			if (g_esFlyCache[iTank].g_iFlyAbility == 1 && (g_esFlyCache[iTank].g_iFlyType == 0 || (g_esFlyCache[iTank].g_iFlyType & MT_FLY_JUMP)) && !g_esFlyPlayer[iTank].g_bActivated)
 			{
@@ -762,7 +905,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iComboAbility == 0 && !g_esFlyPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iComboAbility == 0 && !g_esFlyPlayer[tank].g_bActivated)
 	{
 		vFlyAbility(tank);
 	}
@@ -776,7 +919,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -784,7 +927,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esFlyCache[tank].g_iFlyAbility == 1 && g_esFlyCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esFlyCache[tank].g_iHumanMode)
 			{
@@ -838,9 +981,9 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esFlyCache[tank].g_iHumanMode == 1 && g_esFlyPlayer[tank].g_bActivated && (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esFlyCache[tank].g_iHumanMode == 1 && g_esFlyPlayer[tank].g_bActivated && (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown <= GetTime()))
 		{
-			vStopFly(tank);
+			vRemoveFly2(tank);
 		}
 	}
 }
@@ -865,9 +1008,9 @@ void vFlyRockThrow(int tank)
 public void MT_OnRockThrow(int tank, int rock)
 #endif
 {
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && (g_esFlyCache[tank].g_iFlyType == 0 || (g_esFlyCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esFlyPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && (g_esFlyCache[tank].g_iFlyType == 0 || (g_esFlyCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esFlyPlayer[tank].g_bActivated)
 	{
-		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -880,7 +1023,7 @@ void vFly(int tank, bool announce, int pos = -1)
 {
 	if (bIsAreaNarrow(tank))
 	{
-		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
+		if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman6");
 		}
@@ -889,13 +1032,13 @@ void vFly(int tank, bool announce, int pos = -1)
 	}
 
 	int iTime = GetTime();
-	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
+	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= iTime)
 	{
 		return;
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFlyCache[tank].g_iFlyDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1) ? g_esFlyCache[tank].g_iHumanDuration : iDuration;
+	iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1) ? g_esFlyCache[tank].g_iHumanDuration : iDuration;
 	g_esFlyPlayer[tank].g_bActivated = true;
 	g_esFlyPlayer[tank].g_iAmmoCount++;
 	g_esFlyPlayer[tank].g_iDuration = (iTime + iDuration);
@@ -918,7 +1061,7 @@ void vFly(int tank, bool announce, int pos = -1)
 	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 	SDKHook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility > 0)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility > 0)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esFlyPlayer[tank].g_iAmmoCount, g_esFlyCache[tank].g_iHumanAmmo);
 	}
@@ -934,23 +1077,23 @@ void vFly(int tank, bool announce, int pos = -1)
 
 void vFlyAbility(int tank)
 {
-	if ((g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+	if ((g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFlyCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFlyCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esFlyCache[tank].g_flFlyChance)
 		{
 			vFly(tank, true);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyAmmo");
 	}
@@ -958,434 +1101,431 @@ void vFlyAbility(int tank)
 
 void vFlyThink(int tank, int buttons, float duration)
 {
-	if (bIsValidClient(tank))
+	if (!bIsInfected(tank) || MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType, tank) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
 	{
-		if (MT_DoesTypeRequireHumans(g_esFlyPlayer[tank].g_iTankType) || (g_esFlyCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlyCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)))
+		vRemoveFly2(tank);
+
+		return;
+	}
+
+	int iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition;
+	float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(tank, 16, iPos) : g_esFlyCache[tank].g_flFlySpeed;
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT))
+	{
+		if (buttons & IN_USE)
 		{
-			vStopFly(tank);
+			float flFall;
+			if (buttons & IN_SPEED)
+			{
+				flFall = 0.75;
+			}
+			else
+			{
+				switch (buttons & IN_DUCK)
+				{
+					case true: flFall = 0.5;
+					case false: flFall = 1.0;
+				}
+			}
+
+			SetEntityGravity(tank, flFall);
 
 			return;
 		}
 
-		int iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition;
-		float flSpeed = (iPos != -1) ? MT_GetCombinationSetting(tank, 16, iPos) : g_esFlyCache[tank].g_flFlySpeed;
-		if (bIsTank(tank, MT_CHECK_FAKECLIENT))
+		SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY);
+
+		float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2 = 50.0, flGravity = 0.001, flGravity2 = 0.01;
+		GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flSpeed2);
+		GetClientEyeAngles(tank, flEyeAngles);
+		GetClientAbsOrigin(tank, flOrigin);
+
+		bool bJumping = false;
+		if (buttons & IN_JUMP)
 		{
-			if (buttons & IN_USE)
-			{
-				float flFall;
-				if (buttons & IN_SPEED)
-				{
-					flFall = 0.75;
-				}
-				else
-				{
-					switch (buttons & IN_DUCK)
-					{
-						case true: flFall = 0.5;
-						case false: flFall = 1.0;
-					}
-				}
+			bJumping = true;
+			flEyeAngles[0] = -50.0;
 
-				SetEntityGravity(tank, flFall);
+			GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flEyeAngles, flEyeAngles);
+			ScaleVector(flEyeAngles, flSpeed);
+			TeleportEntity(tank, .velocity = flEyeAngles);
 
-				return;
-			}
+			return;
+		}
 
-			SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY);
-
-			float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2 = 50.0, flGravity = 0.001, flGravity2 = 0.01;
-			GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flSpeed2);
-			GetClientEyeAngles(tank, flEyeAngles);
-			GetClientAbsOrigin(tank, flOrigin);
-
-			bool bJumping = false;
-			if (buttons & IN_JUMP)
-			{
-				bJumping = true;
-				flEyeAngles[0] = -50.0;
-
-				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, flSpeed);
-				TeleportEntity(tank, .velocity = flEyeAngles);
-
-				return;
-			}
-
-			if ((buttons & IN_SPEED) && !bJumping)
-			{
-				flSpeed3 = ((flSpeed * 75.0) / 100.0);
-				if (buttons & IN_FORWARD)
-				{
-					flSpeed3 = flSpeed;
-				}
-
-				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, .velocity = flEyeAngles);
-
-				return;
-			}
-			else if (!(buttons & IN_SPEED) && (buttons & IN_DUCK) && !bJumping)
-			{
-				flSpeed3 = ((flSpeed * 33.33) / 100.0);
-				if (buttons & IN_FORWARD)
-				{
-					flSpeed3 = ((flSpeed * 50.0) / 100.0);
-				}
-
-				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, flSpeed3);
-				TeleportEntity(tank, .velocity = flEyeAngles);
-
-				return;
-			}
-
+		if ((buttons & IN_SPEED) && !bJumping)
+		{
+			flSpeed3 = ((flSpeed * 75.0) / 100.0);
 			if (buttons & IN_FORWARD)
 			{
-				GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp);
-				AddVectors(flForce, flTemp, flForce);
-			}
-			else if (buttons & IN_BACK)
-			{
-				GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp);
-				SubtractVectors(flForce, flTemp, flForce);
+				flSpeed3 = flSpeed;
 			}
 
-			if (buttons & IN_MOVELEFT)
+			GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flEyeAngles, flEyeAngles);
+			ScaleVector(flEyeAngles, flSpeed3);
+			TeleportEntity(tank, .velocity = flEyeAngles);
+
+			return;
+		}
+		else if (!(buttons & IN_SPEED) && (buttons & IN_DUCK) && !bJumping)
+		{
+			flSpeed3 = ((flSpeed * 33.33) / 100.0);
+			if (buttons & IN_FORWARD)
 			{
-				GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp);
-				SubtractVectors(flForce, flTemp, flForce);
-			}
-			else if (buttons & IN_MOVERIGHT)
-			{
-				GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp);
-				AddVectors(flForce, flTemp, flForce);
+				flSpeed3 = ((flSpeed * 50.0) / 100.0);
 			}
 
-			NormalizeVector(flForce, flForce);
-			ScaleVector(flForce, flForce2 * duration);
-
-			switch (FloatAbs(flSpeed2[2]) > 40.0)
-			{
-				case true: flGravity = (flSpeed2[2] * duration);
-				case false: flGravity = flGravity2;
-			}
-
-			if (flGravity > 0.5)
-			{
-				flGravity = 0.5;
-			}
-			else if (flGravity < -0.5)
-			{
-				flGravity = -0.5;
-			}
-
-			float flSpeed4 = GetVectorLength(flSpeed2);
-			if (flSpeed4 > flSpeed)
-			{
-				NormalizeVector(flSpeed2, flSpeed2);
-				ScaleVector(flSpeed2, flSpeed);
-				TeleportEntity(tank, .velocity = flSpeed2);
-				flGravity = flGravity2;
-			}
-
-			SetEntityGravity(tank, flGravity);
+			GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flEyeAngles, flEyeAngles);
+			ScaleVector(flEyeAngles, flSpeed3);
+			TeleportEntity(tank, .velocity = flEyeAngles);
 
 			return;
 		}
 
-		float flPos[3], flVelocity[3];
-		GetClientAbsOrigin(tank, flPos);
-		GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flVelocity);
-		flPos[2] += 30.0;
-
-		vCopyVector(g_esFlyPlayer[tank].g_flCurrentVelocity, flVelocity);
-
-		if (GetVectorLength(flVelocity) < 10.0)
+		if (buttons & IN_FORWARD)
 		{
-			return;
+			GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flTemp, flTemp);
+			AddVectors(flForce, flTemp, flForce);
+		}
+		else if (buttons & IN_BACK)
+		{
+			GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flTemp, flTemp);
+			SubtractVectors(flForce, flTemp, flForce);
 		}
 
-		NormalizeVector(flVelocity, flVelocity);
-
-		int iTarget;
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
+		if (buttons & IN_MOVELEFT)
 		{
-			iTarget = iGetFlyTarget(flPos, flVelocity, tank);
+			GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
+			NormalizeVector(flTemp, flTemp);
+			SubtractVectors(flForce, flTemp, flForce);
 		}
-		else
+		else if (buttons & IN_MOVERIGHT)
 		{
-			float flDirection[3];
-			GetClientEyeAngles(tank, flDirection);
-			GetAngleVectors(flDirection, flDirection, NULL_VECTOR, NULL_VECTOR);
-			NormalizeVector(flDirection, flDirection);
-			iTarget = iGetFlyTarget(flPos, flDirection, tank);
+			GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
+			NormalizeVector(flTemp, flTemp);
+			AddVectors(flForce, flTemp, flForce);
 		}
 
-		bool bVisible = false;
-		float flVector[3], flVelocity2[3], flAngles[3], flDistance = 1000.0;
+		NormalizeVector(flForce, flForce);
+		ScaleVector(flForce, flForce2 * duration);
 
-		if (bIsSurvivor(iTarget))
+		switch (FloatAbs(flSpeed2[2]) > 40.0)
 		{
-			float flPos2[3];
-			GetClientEyePosition(iTarget, flPos2);
-			flDistance = GetVectorDistance(flPos, flPos2);
-			bVisible = bIsVisiblePosition(flPos, flPos2, tank, 1);
-
-			GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-			ScaleVector(flVelocity2, duration);
-			AddVectors(flPos2, flVelocity2, flPos2);
-			MakeVectorFromPoints(flPos, flPos2, flVector);
+			case true: flGravity = (flSpeed2[2] * duration);
+			case false: flGravity = flGravity2;
 		}
 
-		float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
-			flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0, flBase2 = 10.0;
-		GetVectorAngles(flVelocity, flAngles);
-
-		float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, tank, 3),
-			flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, tank, 3),
-			flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, tank, 3),
-			flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, tank, 3),
-			flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, tank, 3),
-			flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, tank, 3),
-			flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, tank, 3),
-			flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, tank, 3),
-			flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, tank, 3),
-			flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, tank, 3),
-			flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, tank, 3),
-			flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, tank, 3),
-			flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, tank, 3);
-
-		NormalizeVector(flFront, flFront);
-		NormalizeVector(flUp, flUp);
-		NormalizeVector(flDown, flDown);
-		NormalizeVector(flLeft, flLeft);
-		NormalizeVector(flRight, flRight);
-		NormalizeVector(flVector, flVector);
-		NormalizeVector(flVector1, flVector1);
-		NormalizeVector(flVector2, flVector2);
-		NormalizeVector(flVector3, flVector3);
-		NormalizeVector(flVector4, flVector4);
-		NormalizeVector(flVector5, flVector5);
-		NormalizeVector(flVector6, flVector6);
-		NormalizeVector(flVector7, flVector7);
-		NormalizeVector(flVector8, flVector8);
-
-		if (bVisible)
+		if (flGravity > 0.5)
 		{
-			flBase = 80.0;
+			flGravity = 0.5;
+		}
+		else if (flGravity < -0.5)
+		{
+			flGravity = -0.5;
 		}
 
-		if (flFront2 > flBase)
+		float flSpeed4 = GetVectorLength(flSpeed2);
+		if (flSpeed4 > flSpeed)
 		{
-			flFront2 = flBase;
+			NormalizeVector(flSpeed2, flSpeed2);
+			ScaleVector(flSpeed2, flSpeed);
+			TeleportEntity(tank, .velocity = flSpeed2);
+			flGravity = flGravity2;
 		}
 
-		if (flUp2 > flBase)
-		{
-			flUp2 = flBase;
-		}
+		SetEntityGravity(tank, flGravity);
 
-		if (flDown2 > flBase)
-		{
-			flDown2 = flBase;
-		}
-
-		if (flLeft2 > flBase)
-		{
-			flLeft2 = flBase;
-		}
-
-		if (flRight2 > flBase)
-		{
-			flRight2 = flBase;
-		}
-
-		if (flDistance2 > flBase)
-		{
-			flDistance2 = flBase;
-		}
-
-		if (flDistance3 > flBase)
-		{
-			flDistance3 = flBase;
-		}
-
-		if (flDistance4 > flBase)
-		{
-			flDistance4 = flBase;
-		}
-
-		if (flDistance5 > flBase)
-		{
-			flDistance5 = flBase;
-		}
-
-		if (flDistance6 > flBase)
-		{
-			flDistance6 = flBase;
-		}
-
-		if (flDistance7 > flBase)
-		{
-			flDistance7 = flBase;
-		}
-
-		if (flDistance8 > flBase)
-		{
-			flDistance8 = flBase;
-		}
-
-		if (flDistance9 > flBase)
-		{
-			flDistance9 = flBase;
-		}
-
-		if (flFront2 < flBase2)
-		{
-			flFront2 = flBase2;
-		}
-
-		if (flUp2 < flBase2)
-		{
-			flUp2 = flBase2;
-		}
-
-		if (flDown2 < flBase2)
-		{
-			flDown2 = flBase2;
-		}
-
-		if (flLeft2 < flBase2)
-		{
-			flLeft2 = flBase2;
-		}
-
-		if (flRight2 < flBase2)
-		{
-			flRight2 = flBase2;
-		}
-
-		if (flDistance2 < flBase2)
-		{
-			flDistance2 = flBase2;
-		}
-
-		if (flDistance3 < flBase2)
-		{
-			flDistance3 = flBase2;
-		}
-
-		if (flDistance4 < flBase2)
-		{
-			flDistance4 = flBase2;
-		}
-
-		if (flDistance5 < flBase2)
-		{
-			flDistance5 = flBase2;
-		}
-
-		if (flDistance6 < flBase2)
-		{
-			flDistance6 = flBase2;
-		}
-
-		if (flDistance7 < flBase2)
-		{
-			flDistance7 = flBase2;
-		}
-
-		if (flDistance8 < flBase2)
-		{
-			flDistance8 = flBase2;
-		}
-
-		if (flDistance9 < flBase2)
-		{
-			flDistance9 = flBase2;
-		}
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flFront2)) / flBase);
-		ScaleVector(flFront, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flUp2)) / flBase);
-		ScaleVector(flUp, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDown2)) / flBase);
-		ScaleVector(flDown, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flLeft2)) / flBase);
-		ScaleVector(flLeft, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flRight2)) / flBase);
-		ScaleVector(flRight, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance2)) / flDistance2);
-		ScaleVector(flVector1, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance3)) / flDistance3);
-		ScaleVector(flVector2, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance4)) / flDistance4);
-		ScaleVector(flVector3, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance5)) / flDistance5);
-		ScaleVector(flVector4, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance6)) / flDistance6);
-		ScaleVector(flVector5, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance7)) / flDistance7);
-		ScaleVector(flVector6, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance8)) / flDistance8);
-		ScaleVector(flVector7, flVector9);
-
-		flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance9)) / flDistance9);
-		ScaleVector(flVector8, flVector9);
-
-		if (flDistance >= 500.0)
-		{
-			flDistance = 500.0;
-		}
-
-		flVector9 = ((1.0 * flFactor2 * (1000.0 - flDistance)) / 500.0);
-		ScaleVector(flVector, flVector9);
-
-		AddVectors(flFront, flUp, flFront);
-		AddVectors(flFront, flDown, flFront);
-		AddVectors(flFront, flLeft, flFront);
-		AddVectors(flFront, flRight, flFront);
-		AddVectors(flFront, flVector1, flFront);
-		AddVectors(flFront, flVector2, flFront);
-		AddVectors(flFront, flVector3, flFront);
-		AddVectors(flFront, flVector4, flFront);
-		AddVectors(flFront, flVector5, flFront);
-		AddVectors(flFront, flVector6, flFront);
-		AddVectors(flFront, flVector7, flFront);
-		AddVectors(flFront, flVector8, flFront);
-		AddVectors(flFront, flVector, flFront);
-
-		NormalizeVector(flFront, flFront);
-		ScaleVector(flFront, (FLOAT_PI * duration * 2.0));
-
-		float flVelocity3[3];
-		AddVectors(flVelocity, flFront, flVelocity3);
-		NormalizeVector(flVelocity3, flVelocity3);
-		ScaleVector(flVelocity3, flSpeed);
-		SetEntityMoveType(tank, MOVETYPE_FLY);
-		vCopyVector(flVelocity3, g_esFlyPlayer[tank].g_flCurrentVelocity);
-		TeleportEntity(tank, .velocity = flVelocity3);
+		return;
 	}
+
+	float flPos[3], flVelocity[3];
+	GetClientAbsOrigin(tank, flPos);
+	GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flVelocity);
+	flPos[2] += 30.0;
+
+	vCopyVector(g_esFlyPlayer[tank].g_flCurrentVelocity, flVelocity);
+
+	if (GetVectorLength(flVelocity) < 10.0)
+	{
+		return;
+	}
+
+	NormalizeVector(flVelocity, flVelocity);
+
+	int iTarget;
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT))
+	{
+		iTarget = iGetFlyTarget(flPos, flVelocity, tank);
+	}
+	else
+	{
+		float flDirection[3];
+		GetClientEyeAngles(tank, flDirection);
+		GetAngleVectors(flDirection, flDirection, NULL_VECTOR, NULL_VECTOR);
+		NormalizeVector(flDirection, flDirection);
+		iTarget = iGetFlyTarget(flPos, flDirection, tank);
+	}
+
+	bool bVisible = false;
+	float flVector[3], flVelocity2[3], flAngles[3], flDistance = 1000.0;
+
+	if (bIsSurvivor(iTarget))
+	{
+		float flPos2[3];
+		GetClientEyePosition(iTarget, flPos2);
+		flDistance = GetVectorDistance(flPos, flPos2);
+		bVisible = bIsVisiblePosition(flPos, flPos2, tank, 1);
+
+		GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
+		ScaleVector(flVelocity2, duration);
+		AddVectors(flPos2, flVelocity2, flPos2);
+		MakeVectorFromPoints(flPos, flPos2, flVector);
+	}
+
+	float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+		flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0, flBase2 = 10.0;
+	GetVectorAngles(flVelocity, flAngles);
+
+	float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, tank, 3),
+		flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, tank, 3),
+		flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, tank, 3),
+		flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, tank, 3),
+		flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, tank, 3),
+		flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, tank, 3),
+		flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, tank, 3),
+		flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, tank, 3),
+		flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, tank, 3),
+		flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, tank, 3),
+		flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, tank, 3),
+		flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, tank, 3),
+		flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, tank, 3);
+
+	NormalizeVector(flFront, flFront);
+	NormalizeVector(flUp, flUp);
+	NormalizeVector(flDown, flDown);
+	NormalizeVector(flLeft, flLeft);
+	NormalizeVector(flRight, flRight);
+	NormalizeVector(flVector, flVector);
+	NormalizeVector(flVector1, flVector1);
+	NormalizeVector(flVector2, flVector2);
+	NormalizeVector(flVector3, flVector3);
+	NormalizeVector(flVector4, flVector4);
+	NormalizeVector(flVector5, flVector5);
+	NormalizeVector(flVector6, flVector6);
+	NormalizeVector(flVector7, flVector7);
+	NormalizeVector(flVector8, flVector8);
+
+	if (bVisible)
+	{
+		flBase = 80.0;
+	}
+
+	if (flFront2 > flBase)
+	{
+		flFront2 = flBase;
+	}
+
+	if (flUp2 > flBase)
+	{
+		flUp2 = flBase;
+	}
+
+	if (flDown2 > flBase)
+	{
+		flDown2 = flBase;
+	}
+
+	if (flLeft2 > flBase)
+	{
+		flLeft2 = flBase;
+	}
+
+	if (flRight2 > flBase)
+	{
+		flRight2 = flBase;
+	}
+
+	if (flDistance2 > flBase)
+	{
+		flDistance2 = flBase;
+	}
+
+	if (flDistance3 > flBase)
+	{
+		flDistance3 = flBase;
+	}
+
+	if (flDistance4 > flBase)
+	{
+		flDistance4 = flBase;
+	}
+
+	if (flDistance5 > flBase)
+	{
+		flDistance5 = flBase;
+	}
+
+	if (flDistance6 > flBase)
+	{
+		flDistance6 = flBase;
+	}
+
+	if (flDistance7 > flBase)
+	{
+		flDistance7 = flBase;
+	}
+
+	if (flDistance8 > flBase)
+	{
+		flDistance8 = flBase;
+	}
+
+	if (flDistance9 > flBase)
+	{
+		flDistance9 = flBase;
+	}
+
+	if (flFront2 < flBase2)
+	{
+		flFront2 = flBase2;
+	}
+
+	if (flUp2 < flBase2)
+	{
+		flUp2 = flBase2;
+	}
+
+	if (flDown2 < flBase2)
+	{
+		flDown2 = flBase2;
+	}
+
+	if (flLeft2 < flBase2)
+	{
+		flLeft2 = flBase2;
+	}
+
+	if (flRight2 < flBase2)
+	{
+		flRight2 = flBase2;
+	}
+
+	if (flDistance2 < flBase2)
+	{
+		flDistance2 = flBase2;
+	}
+
+	if (flDistance3 < flBase2)
+	{
+		flDistance3 = flBase2;
+	}
+
+	if (flDistance4 < flBase2)
+	{
+		flDistance4 = flBase2;
+	}
+
+	if (flDistance5 < flBase2)
+	{
+		flDistance5 = flBase2;
+	}
+
+	if (flDistance6 < flBase2)
+	{
+		flDistance6 = flBase2;
+	}
+
+	if (flDistance7 < flBase2)
+	{
+		flDistance7 = flBase2;
+	}
+
+	if (flDistance8 < flBase2)
+	{
+		flDistance8 = flBase2;
+	}
+
+	if (flDistance9 < flBase2)
+	{
+		flDistance9 = flBase2;
+	}
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flFront2)) / flBase);
+	ScaleVector(flFront, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flUp2)) / flBase);
+	ScaleVector(flUp, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDown2)) / flBase);
+	ScaleVector(flDown, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flLeft2)) / flBase);
+	ScaleVector(flLeft, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flRight2)) / flBase);
+	ScaleVector(flRight, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance2)) / flDistance2);
+	ScaleVector(flVector1, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance3)) / flDistance3);
+	ScaleVector(flVector2, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance4)) / flDistance4);
+	ScaleVector(flVector3, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance5)) / flDistance5);
+	ScaleVector(flVector4, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance6)) / flDistance6);
+	ScaleVector(flVector5, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance7)) / flDistance7);
+	ScaleVector(flVector6, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance8)) / flDistance8);
+	ScaleVector(flVector7, flVector9);
+
+	flVector9 =- ((1.0 * flFactor1 * (flBase - flDistance9)) / flDistance9);
+	ScaleVector(flVector8, flVector9);
+
+	if (flDistance >= 500.0)
+	{
+		flDistance = 500.0;
+	}
+
+	flVector9 = ((1.0 * flFactor2 * (1000.0 - flDistance)) / 500.0);
+	ScaleVector(flVector, flVector9);
+
+	AddVectors(flFront, flUp, flFront);
+	AddVectors(flFront, flDown, flFront);
+	AddVectors(flFront, flLeft, flFront);
+	AddVectors(flFront, flRight, flFront);
+	AddVectors(flFront, flVector1, flFront);
+	AddVectors(flFront, flVector2, flFront);
+	AddVectors(flFront, flVector3, flFront);
+	AddVectors(flFront, flVector4, flFront);
+	AddVectors(flFront, flVector5, flFront);
+	AddVectors(flFront, flVector6, flFront);
+	AddVectors(flFront, flVector7, flFront);
+	AddVectors(flFront, flVector8, flFront);
+	AddVectors(flFront, flVector, flFront);
+
+	NormalizeVector(flFront, flFront);
+	ScaleVector(flFront, (FLOAT_PI * duration * 2.0));
+
+	float flVelocity3[3];
+	AddVectors(flVelocity, flFront, flVelocity3);
+	NormalizeVector(flVelocity3, flVelocity3);
+	ScaleVector(flVelocity3, flSpeed);
+	SetEntityMoveType(tank, MOVETYPE_FLY);
+	vCopyVector(flVelocity3, g_esFlyPlayer[tank].g_flCurrentVelocity);
+	TeleportEntity(tank, .velocity = flVelocity3);
 }
 
 void vFlyCopyStats2(int oldTank, int newTank)
@@ -1396,8 +1536,6 @@ void vFlyCopyStats2(int oldTank, int newTank)
 
 void vRemoveFly(int tank)
 {
-	vStopFly(tank);
-
 	g_esFlyPlayer[tank].g_iAmmoCount = 0;
 	g_esFlyPlayer[tank].g_iCooldown = -1;
 }
@@ -1429,9 +1567,9 @@ void vFlyReset2(int tank)
 void vFlyReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFlyCache[tank].g_iFlyCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyCache[tank].g_iHumanMode == 0 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1 && g_esFlyCache[tank].g_iHumanMode == 0 && g_esFlyPlayer[tank].g_iAmmoCount < g_esFlyCache[tank].g_iHumanAmmo && g_esFlyCache[tank].g_iHumanAmmo > 0) ? g_esFlyCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFlyPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown > iTime)
+	if (g_esFlyPlayer[tank].g_iCooldown != -1 && g_esFlyPlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman5", (g_esFlyPlayer[tank].g_iCooldown - iTime));
 	}
@@ -1447,10 +1585,8 @@ void vFlyReset4(int tank)
 	g_esFlyPlayer[tank].g_iDuration = -1;
 }
 
-void vStopFly(int tank)
+void vRemoveFly2(int tank)
 {
-	vFlyReset2(tank);
-
 	SDKUnhook(tank, SDKHook_PreThink, OnFlyPreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, OnFlyStartTouch);
 
@@ -1458,12 +1594,14 @@ void vStopFly(int tank)
 	{
 		SetEntityMoveType(tank, MOVETYPE_WALK);
 		SetEntityGravity(tank, 1.0);
-
-		if (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown < GetTime())
-		{
-			vFlyReset3(tank);
-		}
 	}
+
+	if (g_esFlyPlayer[tank].g_iCooldown == -1 || g_esFlyPlayer[tank].g_iCooldown <= GetTime())
+	{
+		vFlyReset3(tank);
+	}
+
+	vFlyReset2(tank);
 }
 
 int iGetFlyTarget(float pos[3], float angles[3], int tank)
@@ -1498,7 +1636,7 @@ void tTimerFlyCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlyAbility[g_esFlyPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlyPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFlyCache[iTank].g_iFlyAbility == 0 || g_esFlyPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

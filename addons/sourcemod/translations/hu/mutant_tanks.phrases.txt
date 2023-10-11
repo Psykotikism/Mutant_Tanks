@@ -21,7 +21,7 @@
 
 	"MTAbilitiesMenu"
 	{
-		"hu"			"Mutáns Tank Képességek"
+		"hu"			"Mutáns Tankok Képességek"
 	}
 
 	"MTConfigMenu"
@@ -34,9 +34,79 @@
 		"hu"			"Alapértelmezett Tank"
 	}
 
+	"MTDefaultItemBoomer"
+	{
+		"hu"			"Alapértelmezett Pukkancs"
+	}
+
+	"MTDefaultItemCharger"
+	{
+		"hu"			"Alapértelmezett Rohanó"
+	}
+
+	"MTDefaultItemHunter"
+	{
+		"hu"			"Alapértelmezett Vadász"
+	}
+
+	"MTDefaultItemJockey"
+	{
+		"hu"			"Alapértelmezett Zsoké"
+	}
+
+	"MTDefaultItemSmoker"
+	{
+		"hu"			"Alapértelmezett Füstös"
+	}
+
+	"MTDefaultItemSpitter"
+	{
+		"hu"			"Alapértelmezett Köpködő"
+	}
+
+	"MTDefaultItemWitch"
+	{
+		"hu"			"Alapértelmezett Boszorka"
+	}
+
 	"MTFavoriteMenu"
 	{
 		"hu"			"Használjuk a kedvenc Mutáns Tank típusodat?"
+	}
+
+	"MTFavoriteMenuBoomer"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Pukkancs típusodat?"
+	}
+
+	"MTFavoriteMenuCharger"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Rohanó típusodat?"
+	}
+
+	"MTFavoriteMenuHunter"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Vadász típusodat?"
+	}
+
+	"MTFavoriteMenuJockey"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Zsoké típusodat?"
+	}
+
+	"MTFavoriteMenuSmoker"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Füstös típusodat?"
+	}
+
+	"MTFavoriteMenuSpitter"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Köpködő típusodat?"
+	}
+
+	"MTFavoriteMenuWitch"
+	{
+		"hu"			"Használjuk a kedvenc Mutáns Boszorka típusodat?"
 	}
 
 	"MTInfoMenu"
@@ -44,9 +114,84 @@
 		"hu"			"Mutáns Tankok Információ"
 	}
 
+	"MTItem"
+	{
+		"hu"			"{1} (Tank #{2}) [Tank #{3}]"
+	}
+
+	"MTItemBoomer"
+	{
+		"hu"			"{1} (Pukkancs #{2}) [Pukkancs #{3}]"
+	}
+
+	"MTItemCharger"
+	{
+		"hu"			"{1} (Rohanó #{2}) [Rohanó #{3}]"
+	}
+
+	"MTItemHunter"
+	{
+		"hu"			"{1} (Vadász #{2}) [Vadász #{3}]"
+	}
+
+	"MTItemJockey"
+	{
+		"hu"			"{1} (Zsoké #{2}) [Zsoké #{3}]"
+	}
+
+	"MTItemSmoker"
+	{
+		"hu"			"{1} (Füstös #{2}) [Füstös #{3}]"
+	}
+
+	"MTItemSpitter"
+	{
+		"hu"			"{1} (Köpködő #{2}) [Köpködő #{3}]"
+	}
+
+	"MTItemWitch"
+	{
+		"hu"			"{1} (Boszorka #{2}) [Boszorka #{3}]"
+	}
+
 	"MTListMenu"
 	{
 		"hu"			"Mutáns Tankok Listája"
+	}
+
+	"MTListMenuBoomer"
+	{
+		"hu"			"Mutáns Pukkancsok Listája"
+	}
+
+	"MTListMenuCharger"
+	{
+		"hu"			"Mutáns Rohanók Listája"
+	}
+
+	"MTListMenuHunter"
+	{
+		"hu"			"Mutáns Vadászok Listája"
+	}
+
+	"MTListMenuJockey"
+	{
+		"hu"			"Mutáns Zsokék Listája"
+	}
+
+	"MTListMenuSmoker"
+	{
+		"hu"			"Mutáns Füstösök Listája"
+	}
+
+	"MTListMenuSpitter"
+	{
+		"hu"			"Mutáns Köpködők Listája"
+	}
+
+	"MTListMenuWitch"
+	{
+		"hu"			"Mutáns Boszorkák Listája"
 	}
 
 	"MTPathMenu"
@@ -74,14 +219,9 @@
 		"hu"			"Plugin Beállítások"
 	}
 
-	"MTTankItem"
-	{
-		"hu"			"{1} (Tank #{2}) [Tank #{3}]"
-	}
-
 	"MTVersionMenu"
 	{
-		"hu"			"Mutáns Tank Verzió"
+		"hu"			"Mutáns Tankok Verzió"
 	}
 
 	"Ammunition"
@@ -349,6 +489,41 @@
 		"hu"			"A személyes Mutáns Tank típusod megváltozott."
 	}
 
+	"ChangeTypeBoomer"
+	{
+		"hu"			"A személyes Mutáns Pukkancs típusod megváltozott."
+	}
+
+	"ChangeTypeCharger"
+	{
+		"hu"			"A személyes Mutáns Rohanó típusod megváltozott."
+	}
+
+	"ChangeTypeHunter"
+	{
+		"hu"			"A személyes Mutáns Vadász típusod megváltozott."
+	}
+
+	"ChangeTypeJockey"
+	{
+		"hu"			"A személyes Mutáns Zsoké típusod megváltozott."
+	}
+
+	"ChangeTypeSmoker"
+	{
+		"hu"			"A személyes Mutáns Füstös típusod megváltozott."
+	}
+
+	"ChangeTypeSpitter"
+	{
+		"hu"			"A személyes Mutáns Köpködő típusod megváltozott."
+	}
+
+	"ChangeTypeWitch"
+	{
+		"hu"			"A személyes Mutáns Boszorka típusod megváltozott."
+	}
+
 	"CheckConsole"
 	{
 		"hu"			"Nézd meg a konzolban a teljes kimenetett."
@@ -419,6 +594,61 @@
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket!"
 	}
 
+	"DespawnCanceled"
+	{
+		"hu"			"A szellem módba való visszatérésed törlésre került!"
+	}
+
+	"DespawnNow"
+	{
+		"hu"			"Visszatértél szellem módba!"
+	}
+
+	"DespawnTimer"
+	{
+		"hu"			"Visszatérsz szellem módba {1} másodperc múlva!"
+	}
+
+	"DisabledType"
+	{
+		"hu"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeBoomer"
+	{
+		"hu"			"{1}{yellow} (Pukkancs #{2}) [Pukkancs #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeCharger"
+	{
+		"hu"			"{1}{yellow} (Rohanó #{2}) [Rohanó #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeHunter"
+	{
+		"hu"			"{1}{yellow} (Vadász #{2}) [Vadász #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeJockey"
+	{
+		"hu"			"{1}{yellow} (Zsoké #{2}) [Zsoké #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeSmoker"
+	{
+		"hu"			"{1}{yellow} (Füstös #{2}) [Füstös #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeSpitter"
+	{
+		"hu"			"{1}{yellow} (Köpködő #{2}) [Köpködő #{3}]{default} letiltva."
+	}
+
+	"DisabledTypeWitch"
+	{
+		"hu"			"{1}{yellow} (Boszorka #{2}) [Boszorka #{3}]{default} letiltva."
+	}
+
 	"ErrorParsing"
 	{
 		"hu"			"Hiba a fájl elemzésekor \"{1}\". Hiba üzenet: {2}."
@@ -439,6 +669,41 @@
 		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Tank típusodat."
 	}
 
+	"FavoriteUnusedBoomer"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Pukkancs típusodat."
+	}
+
+	"FavoriteUnusedCharger"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Rohanó típusodat."
+	}
+
+	"FavoriteUnusedHunter"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Vadász típusodat."
+	}
+
+	"FavoriteUnusedJockey"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Zsoké típusodat."
+	}
+
+	"FavoriteUnusedSmoker"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Füstös típusodat."
+	}
+
+	"FavoriteUnusedSpitter"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Köpködő típusodat."
+	}
+
+	"FavoriteUnusedWitch"
+	{
+		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Boszorka típusodat."
+	}
+
 	"GeneralDetails"
 	{
 		"hu"			"A Mutáns Tankok újra izgalmassá teszik a küzdelmet!"
@@ -454,9 +719,59 @@
 		"hu"			"Vizuális Fénylő Körvonal: KI"
 	}
 
+	"HardcoreModeOn"
+	{
+		"hu"			"HARDCORE{default} mód is{olive} engedélyezve{default}!"
+	}
+
+	"HardcoreModeOff"
+	{
+		"hu"			"HARDCORE{default} mód is{olive} letiltva{default}!"
+	}
+
+	"HardcoreModeWarning"
+	{
+		"hu"			"Csak egyetlen esélyed lesz túlélni a HARDCORE módot!"
+	}
+
 	"HumanCooldown"
 	{
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."
+	}
+
+	"HumanCooldownBoomer"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Pukkancsra váltasz."
+	}
+
+	"HumanCooldownCharger"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Rohanóra váltasz."
+	}
+
+	"HumanCooldownHunter"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Vadászra váltasz."
+	}
+
+	"HumanCooldownJockey"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Zsokéra váltasz."
+	}
+
+	"HumanCooldownSmoker"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Füstösra váltasz."
+	}
+
+	"HumanCooldownSpitter"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Köpködőra váltasz."
+	}
+
+	"HumanCooldownWitch"
+	{
+		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Boszorkara váltasz."
 	}
 
 	"HumanTag"
@@ -564,6 +879,51 @@
 		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}"
 	}
 
+	"KillCountdown"
+	{
+		"hu"			"A Tankoknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownAll"
+	{
+		"hu"			"A Speciális fertőzötteknek{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownBoomer"
+	{
+		"hu"			"A Pukkancsoknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownCharger"
+	{
+		"hu"			"A Rohanóknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownHunter"
+	{
+		"hu"			"A Vadászoknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownJockey"
+	{
+		"hu"			"A Zsokéknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownSmoker"
+	{
+		"hu"			"A Füstösöknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownSpitter"
+	{
+		"hu"			"A Köpködőknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
+	"KillCountdownWitch"
+	{
+		"hu"			"A Boszorkáknak{default} van{yellow} {1} perc {2} másodperc{default} hogy megöljék a túlélőket."
+	}
+
 	"LightVisualOn"
 	{
 		"hu"			"Vizuális Fényszóró Szín: BE"
@@ -589,6 +949,41 @@
 		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
+	"MultipleMatchesBoomer"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Pukkancs #{1}) [Pukkancs #{2}]{olive}."
+	}
+
+	"MultipleMatchesCharger"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Rohanó #{1}) [Rohanó #{2}]{olive}."
+	}
+
+	"MultipleMatchesHunter"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Vadász #{1}) [Vadász #{2}]{olive}."
+	}
+
+	"MultipleMatchesJockey"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Zsoké #{1}) [Zsoké #{2}]{olive}."
+	}
+
+	"MultipleMatchesSmoker"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Füstös #{1}) [Füstös #{2}]{olive}."
+	}
+
+	"MultipleMatchesSpitter"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Köpködő #{1}) [Köpködő #{2}]{olive}."
+	}
+
+	"MultipleMatchesWitch"
+	{
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Boszorka #{1}) [Boszorka #{2}]{olive}."
+	}
+
 	"NoAbilities"
 	{
 		"hu"			"Nem találtunk képességeket."
@@ -609,14 +1004,119 @@
 		"hu"			"Tank"
 	}
 
+	"NoNameBoomer"
+	{
+		"hu"			"Pukkancs"
+	}
+
+	"NoNameCharger"
+	{
+		"hu"			"Rohanó"
+	}
+
+	"NoNameHunter"
+	{
+		"hu"			"Vadász"
+	}
+
+	"NoNameJockey"
+	{
+		"hu"			"Zsoké"
+	}
+
+	"NoNameSmoker"
+	{
+		"hu"			"Füstös"
+	}
+
+	"NoNameSpitter"
+	{
+		"hu"			"Köpködő"
+	}
+
+	"NoNameWitch"
+	{
+		"hu"			"Boszorka"
+	}
+
 	"NoNote"
 	{
-		"hu"			"Nincs jegyzet ehhez a Szuper Tankhoz."
+		"hu"			"Nincs jegyzet ehhez a Mutáns Tankhoz."
+	}
+
+	"NoNoteBoomer"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Pukkancshoz."
+	}
+
+	"NoNoteCharger"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Rohanóhoz."
+	}
+
+	"NoNoteHunter"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Vadászhoz."
+	}
+
+	"NoNoteJockey"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Zsokéhoz."
+	}
+
+	"NoNoteSmoker"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Füstöshoz."
+	}
+
+	"NoNoteSpitter"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Köpködőhoz."
+	}
+
+	"NoNoteWitch"
+	{
+		"hu"			"Nincs jegyzet ehhez a Mutáns Boszorkahoz."
 	}
 
 	"NoTypeAccess"
 	{
 		"hu"			"Nincs hozzáférésed ehhez a Mutáns Tank típushoz."
+	}
+
+	"NoTypeAccessBoomer"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Pukkancs típushoz."
+	}
+
+	"NoTypeAccessCharger"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Rohanó típushoz."
+	}
+
+	"NoTypeAccessHunter"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Vadász típushoz."
+	}
+
+	"NoTypeAccessJockey"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Zsoké típushoz."
+	}
+
+	"NoTypeAccessSmoker"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Füstös típushoz."
+	}
+
+	"NoTypeAccessSpitter"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Köpködő típushoz."
+	}
+
+	"NoTypeAccessWitch"
+	{
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Boszorka típushoz."
 	}
 
 	"OptionNo"
@@ -642,6 +1142,41 @@
 	"PersonalType"
 	{
 		"hu"			"Születéskor{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} leszel miután átveszed a{mint} Tank{default} irányítását."
+	}
+
+	"PersonalTypeBoomer"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Pukkancs #{2}) [Pukkancs #{3}]{default} leszel miután átveszed a{mint} Pukkancs{default} irányítását."
+	}
+
+	"PersonalTypeCharger"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Rohanó #{2}) [Rohanó #{3}]{default} leszel miután átveszed a{mint} Rohanó{default} irányítását."
+	}
+
+	"PersonalTypeHunter"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Vadász #{2}) [Vadász #{3}]{default} leszel miután átveszed a{mint} Vadász{default} irányítását."
+	}
+
+	"PersonalTypeJockey"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Zsoké #{2}) [Zsoké #{3}]{default} leszel miután átveszed a{mint} Zsoké{default} irányítását."
+	}
+
+	"PersonalTypeSmoker"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Füstös #{2}) [Füstös #{3}]{default} leszel miután átveszed a{mint} Füstös{default} irányítását."
+	}
+
+	"PersonalTypeSpitter"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Köpködő #{2}) [Köpködő #{3}]{default} leszel miután átveszed a{mint} Köpködő{default} irányítását."
+	}
+
+	"PersonalTypeWitch"
+	{
+		"hu"			"Születéskor{olive} {1}{yellow} (Boszorka #{2}) [Boszorka #{3}]{default} leszel miután átveszed a{mint} Boszorka{default} irányítását."
 	}
 
 	"PitchVisualOn"
@@ -682,6 +1217,46 @@
 	"RequestSucceeded"
 	{
 		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}) [Tank #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededBoomer"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Pukkancs #{1}) [Pukkancs #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededCharger"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Rohanó #{1}) [Rohanó #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededHunter"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Vadász #{1}) [Vadász #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededJockey"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Zsoké #{1}) [Zsoké #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededSmoker"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Füstös #{1}) [Füstös #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededSpitter"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Köpködő #{1}) [Köpködő #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RequestSucceededWitch"
+	{
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Boszorka #{1}) [Boszorka #{2}]{mint}.{olive} Kérés sikeres!"
+	}
+
+	"RestCountdown"
+	{
+		"hu"			"A túlélőknek{default} van{yellow} {1} perc {2} másodperc{default} hogy pihenhessenek."
 	}
 
 	"RewardAmmo"
@@ -784,6 +1359,96 @@
 		"hu"			"sebesség növelést"
 	}
 
+	"Rush"
+	{
+		"hu"			"Üdv a{yellow} Tank Rohanásban{mint}!"
+	}
+
+	"RushAll"
+	{
+		"hu"			"Üdv a{yellow} Speciális Arénában{mint}!"
+	}
+
+	"RushBoomer"
+	{
+		"hu"			"Üdv a{yellow} Hányás Kamrában{mint}!"
+	}
+
+	"RushCharger"
+	{
+		"hu"			"Üdv a{yellow} Húsdarálóban{mint}!"
+	}
+
+	"RushHunter"
+	{
+		"hu"			"Üdv a{yellow} Vadászmezőkön{mint}!"
+	}
+
+	"RushJockey"
+	{
+		"hu"			"Üdv a{yellow} Vidámparkban{mint}!"
+	}
+
+	"RushSmoker"
+	{
+		"hu"			"Üdv a{yellow} Gázkamrában{mint}!"
+	}
+
+	"RushSpitter"
+	{
+		"hu"			"Üdv a{yellow} Savas Esőben{mint}!"
+	}
+
+	"RushWitch"
+	{
+		"hu"			"Üdv a{yellow} Bölcsődében{mint}!"
+	}
+
+	"RushWarning"
+	{
+		"hu"			"A Tankok{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningAll"
+	{
+		"hu"			"A Speciális fertőzöttek{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningBoomer"
+	{
+		"hu"			"A Pukkancsok{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningCharger"
+	{
+		"hu"			"A Rohanók{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningHunter"
+	{
+		"hu"			"A Vadászok{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningJockey"
+	{
+		"hu"			"A Zsokék{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningSmoker"
+	{
+		"hu"			"A Füstösök{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningSpitter"
+	{
+		"hu"			"A Köpködők{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
+	"RushWarningWitch"
+	{
+		"hu"			"A Boszorkák{default} megszületnek{yellow} {1} másodperc múlva{default}!"
+	}
+
 	"ScreenVisualOn"
 	{
 		"hu"			"Képernyő Vizualitások: BE"
@@ -804,6 +1469,96 @@
 		"hu"			"Mutáns Tank lettél! Használhatod a következőket:"
 	}
 
+	"SpawnMessageBoomer"
+	{
+		"hu"			"Mutáns Pukkancs lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageCharger"
+	{
+		"hu"			"Mutáns Rohanó lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageHunter"
+	{
+		"hu"			"Mutáns Vadász lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageJockey"
+	{
+		"hu"			"Mutáns Zsoké lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageSmoker"
+	{
+		"hu"			"Mutáns Füstös lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageSpitter"
+	{
+		"hu"			"Mutáns Köpködő lettél! Használhatod a következőket:"
+	}
+
+	"SpawnMessageWitch"
+	{
+		"hu"			"Mutáns Boszorka lettél! Használhatod a következőket:"
+	}
+
+	"SpawnNow"
+	{
+		"hu"			"Most már megszülethetsz!"
+	}
+
+	"SpawnTimer"
+	{
+		"hu"			"Képes leszel megszületni {1} másodperc múlva!"
+	}
+
+	"SpawnWarning"
+	{
+		"hu"			"A Tankok elkezdtek megszületni..."
+	}
+
+	"SpawnWarningAll"
+	{
+		"hu"			"A Speciális Fertőzöttek elkezdtek megszületni..."
+	}
+
+	"SpawnWarningBoomer"
+	{
+		"hu"			"A Pukkancsok elkezdtek megszületni..."
+	}
+
+	"SpawnWarningCharger"
+	{
+		"hu"			"A Rohanók elkezdtek megszületni..."
+	}
+
+	"SpawnWarningHunter"
+	{
+		"hu"			"A Vadászok elkezdtek megszületni..."
+	}
+
+	"SpawnWarningJockey"
+	{
+		"hu"			"A Zsokék elkezdtek megszületni..."
+	}
+
+	"SpawnWarningSmoker"
+	{
+		"hu"			"A Füstösök elkezdtek megszületni..."
+	}
+
+	"SpawnWarningSpitter"
+	{
+		"hu"			"A Köpködők elkezdtek megszületni..."
+	}
+
+	"SpawnWarningWitch"
+	{
+		"hu"			"A Boszorkák elkezdtek megszületni..."
+	}
+
 	"StartParsing"
 	{
 		"hu"			"Konfig fájl ellenőrzése..."
@@ -812,11 +1567,6 @@
 	"StillParsing"
 	{
 		"hu"			"A plugin még elemzi a konfig fájlt."
-	}
-
-	"TankDisabled"
-	{
-		"hu"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} letiltva."
 	}
 
 	"TeammatesList"
@@ -842,6 +1592,46 @@
 	"VoicelineVisualOff"
 	{
 		"hu"			"Vizuális Ismétlődő Hangsor: KI"
+	}
+
+	"AllTypes"
+	{
+		"hu"			"Minden típus"
+	}
+
+	"Bot-dependentTypes"
+	{
+		"hu"			"Bot-függő típusok"
+	}
+
+	"CompetitiveTypes"
+	{
+		"hu"			"Versenytípusok"
+	}
+
+	"Human-dependentTypes"
+	{
+		"hu"			"Ember-függő típusok"
+	}
+
+	"IndoorTypes"
+	{
+		"hu"			"Beltéri típusok"
+	}
+
+	"OutdoorTypes"
+	{
+		"hu"			"Kültéri típusok"
+	}
+
+	"SpawnableTypes"
+	{
+		"hu"			"Születési típusok"
+	}
+
+	"UnspawnableTypes"
+	{
+		"hu"			"Nem születhető típusok"
 	}
 
 	"Absorb"
@@ -3291,7 +4081,7 @@
 
 	"OmniDetails"
 	{
-		"hu"			"Mindenség-szintű hozzáférésed van a többi közelben lévő Mutáns tank képességeihez."
+		"hu"			"Mindenség-szintű hozzáférésed van a többi közelben lévő Mutáns Tankok képességeihez."
 	}
 
 	"OmniHuman"
@@ -3602,6 +4392,86 @@
 	"QuietMenu2"
 	{
 		"hu"			"Csend Képesség"
+	}
+
+	"Recall"
+	{
+		"hu"			"{olive}{1}{mint} egy véletlenszerű helyre villant."	
+	}
+
+	"Recall2"
+	{
+		"hu"			"{olive}{1}{mint} visszament{yellow} {2} másodperccel{mint} ezelőttre!"
+	}
+
+	"Recall3"
+	{
+		"hu"			"{olive}{1}{mint} újra képes a visszahívásra!"	
+	}
+
+	"RecallAmmo"
+	{
+		"hu"			"Felhasználtad a villanó képességed összes lőszerét."
+	}
+
+	"RecallAmmo2"
+	{
+		"hu"			"Felhasználtad a visszahívás képességed összes lőszerét."	
+	}
+
+	"RecallDetails"
+	{
+		"hu"			"Tudsz Idő utazni, ezzel bosszantva a túlélőket."	
+	}
+
+	"RecallHuman"
+	{
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villanó képességedet!"
+	}
+
+	"RecallHuman2"
+	{
+		"hu"			"Nem sikerült aktiválni a villanó képességedet. Próbáld újra."	
+	}
+
+	"RecallHuman3"
+	{
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik visszahívás képességedet!"
+	}
+
+	"RecallHuman4"
+	{
+		"hu"			"Nem sikerült aktiválni a visszahívó képességedet. Próbáld újra."	
+	}
+
+	"RecallHuman5"
+	{
+		"hu"			"A villanó képességednek még szükséges{yellow} {1} másodperc{mint} az újratöltéshez."	
+	}
+
+	"RecallHuman6"
+	{
+		"hu"			"A visszahívás képességednek még szükséges{yellow} {1} másodperc{mint} az újratöltéshez."
+	}
+
+	"RecallHuman7"
+	{
+		"hu"			"A villanó képességed véget ért, az újratöltéshez még szükséges{yellow} {1} másodperc{mint}."	
+	}
+
+	"RecallHuman8"
+	{
+		"hu"			"A visszahívás képességed véget ért, az újratöltéshez még szükséges{yellow} {1} másodperc{mint}."
+	}
+
+	"RecallMenu"
+	{
+		"hu"			"Visszahívás Képesség Információ"	
+	}
+
+	"RecallMenu2"
+	{
+		"hu"			"Visszahívás Képesség"
 	}
 
 	"Recoil"

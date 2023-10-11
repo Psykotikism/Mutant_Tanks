@@ -88,11 +88,36 @@ enum struct esKamikazePlayer
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
 	int g_iKamikazeMessage;
+	int g_iKamikazeMode;
+	int g_iKamikazeSight;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
 esKamikazePlayer g_esKamikazePlayer[MAXPLAYERS + 1];
+
+enum struct esKamikazeTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flKamikazeChance;
+	float g_flKamikazeRange;
+	float g_flKamikazeRangeChance;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iKamikazeAbility;
+	int g_iKamikazeBody;
+	int g_iKamikazeEffect;
+	int g_iKamikazeHit;
+	int g_iKamikazeHitMode;
+	int g_iKamikazeMessage;
+	int g_iKamikazeMode;
+	int g_iKamikazeSight;
+	int g_iRequiresHumans;
+}
+
+esKamikazeTeammate g_esKamikazeTeammate[MAXPLAYERS + 1];
 
 enum struct esKamikazeAbility
 {
@@ -112,10 +137,35 @@ enum struct esKamikazeAbility
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
 	int g_iKamikazeMessage;
+	int g_iKamikazeMode;
+	int g_iKamikazeSight;
 	int g_iRequiresHumans;
 }
 
 esKamikazeAbility g_esKamikazeAbility[MT_MAXTYPES + 1];
+
+enum struct esKamikazeSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flKamikazeChance;
+	float g_flKamikazeRange;
+	float g_flKamikazeRangeChance;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iKamikazeAbility;
+	int g_iKamikazeBody;
+	int g_iKamikazeEffect;
+	int g_iKamikazeHit;
+	int g_iKamikazeHitMode;
+	int g_iKamikazeMessage;
+	int g_iKamikazeMode;
+	int g_iKamikazeSight;
+	int g_iRequiresHumans;
+}
+
+esKamikazeSpecial g_esKamikazeSpecial[MT_MAXTYPES + 1];
 
 enum struct esKamikazeCache
 {
@@ -133,6 +183,8 @@ enum struct esKamikazeCache
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
 	int g_iKamikazeMessage;
+	int g_iKamikazeMode;
+	int g_iKamikazeSight;
 	int g_iRequiresHumans;
 }
 
@@ -170,8 +222,6 @@ void vKamikazeMapStart()
 public void OnMapStart()
 #endif
 {
-	iPrecacheParticle(PARTICLE_BLOOD);
-
 	if (g_bSecondGame)
 	{
 		PrecacheSound(SOUND_GROWL2, true);
@@ -376,10 +426,14 @@ void OnKamikazeModelSpawnPost(int model)
 
 Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		if (bIsValidEntity(inflictor))
+		{
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		}
+
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esKamikazeCache[attacker].g_iKamikazeHitMode == 0 || g_esKamikazeCache[attacker].g_iKamikazeHitMode == 1) && bIsSurvivor(victim) && g_esKamikazeCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esKamikazeAbility[g_esKamikazePlayer[attacker].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esKamikazePlayer[attacker].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[attacker].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[victim].g_iImmunityFlags))
@@ -387,7 +441,8 @@ Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+			bool bCaught = bIsSurvivorCaught(victim);
+			if ((bIsSpecialInfected(attacker) && (bCaught || (!bCaught && (damagetype & DMG_CLUB)) || (bIsSpitter(attacker) && StrEqual(sClassname, "insect_swarm")))) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vKamikazeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[attacker].g_flKamikazeChance, g_esKamikazeCache[attacker].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -436,7 +491,7 @@ void vKamikazeCombineAbilities(int tank, int type, const float random, const cha
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility != 2)
 	{
 		return;
 	}
@@ -527,8 +582,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esKamikazeAbility[iIndex].g_iAccessFlags = 0;
 				g_esKamikazeAbility[iIndex].g_iImmunityFlags = 0;
@@ -544,82 +598,165 @@ public void MT_OnConfigsLoad(int mode)
 				g_esKamikazeAbility[iIndex].g_flKamikazeChance = 33.3;
 				g_esKamikazeAbility[iIndex].g_iKamikazeHit = 0;
 				g_esKamikazeAbility[iIndex].g_iKamikazeHitMode = 0;
+				g_esKamikazeAbility[iIndex].g_iKamikazeMode = 1;
 				g_esKamikazeAbility[iIndex].g_flKamikazeRange = 150.0;
 				g_esKamikazeAbility[iIndex].g_flKamikazeRangeChance = 15.0;
+				g_esKamikazeAbility[iIndex].g_iKamikazeSight = 0;
+
+				g_esKamikazeSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esKamikazeSpecial[iIndex].g_iComboAbility = -1;
+				g_esKamikazeSpecial[iIndex].g_iHumanAbility = -1;
+				g_esKamikazeSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esKamikazeSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeAbility = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeEffect = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeMessage = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeBody = -1;
+				g_esKamikazeSpecial[iIndex].g_flKamikazeChance = -1.0;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeHit = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeHitMode = -1;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeMode = -1;
+				g_esKamikazeSpecial[iIndex].g_flKamikazeRange = -1.0;
+				g_esKamikazeSpecial[iIndex].g_flKamikazeRangeChance = -1.0;
+				g_esKamikazeSpecial[iIndex].g_iKamikazeSight = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esKamikazePlayer[iPlayer].g_iAccessFlags = 0;
-					g_esKamikazePlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esKamikazePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esKamikazePlayer[iPlayer].g_iComboAbility = 0;
-					g_esKamikazePlayer[iPlayer].g_iHumanAbility = 0;
-					g_esKamikazePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esKamikazePlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeAbility = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeEffect = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeMessage = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeBody = 0;
-					g_esKamikazePlayer[iPlayer].g_flKamikazeChance = 0.0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeHit = 0;
-					g_esKamikazePlayer[iPlayer].g_iKamikazeHitMode = 0;
-					g_esKamikazePlayer[iPlayer].g_flKamikazeRange = 0.0;
-					g_esKamikazePlayer[iPlayer].g_flKamikazeRangeChance = 0.0;
-				}
+				g_esKamikazePlayer[iPlayer].g_iAccessFlags = -1;
+				g_esKamikazePlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esKamikazePlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esKamikazePlayer[iPlayer].g_iComboAbility = -1;
+				g_esKamikazePlayer[iPlayer].g_iHumanAbility = -1;
+				g_esKamikazePlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esKamikazePlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeAbility = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeEffect = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeMessage = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeBody = -1;
+				g_esKamikazePlayer[iPlayer].g_flKamikazeChance = -1.0;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeHit = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeHitMode = -1;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeMode = -1;
+				g_esKamikazePlayer[iPlayer].g_flKamikazeRange = -1.0;
+				g_esKamikazePlayer[iPlayer].g_flKamikazeRangeChance = -1.0;
+				g_esKamikazePlayer[iPlayer].g_iKamikazeSight = -1;
+
+				g_esKamikazeTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esKamikazeTeammate[iPlayer].g_iComboAbility = -1;
+				g_esKamikazeTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esKamikazeTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esKamikazeTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeAbility = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeEffect = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeMessage = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeBody = -1;
+				g_esKamikazeTeammate[iPlayer].g_flKamikazeChance = -1.0;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeHit = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeHitMode = -1;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeMode = -1;
+				g_esKamikazeTeammate[iPlayer].g_flKamikazeRange = -1.0;
+				g_esKamikazeTeammate[iPlayer].g_flKamikazeRangeChance = -1.0;
+				g_esKamikazeTeammate[iPlayer].g_iKamikazeSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vKamikazeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vKamikazeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esKamikazePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esKamikazePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazePlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esKamikazePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazePlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esKamikazePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esKamikazePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazePlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esKamikazePlayer[admin].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazePlayer[admin].g_iKamikazeAbility, value, 0, 1);
-		g_esKamikazePlayer[admin].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazePlayer[admin].g_iKamikazeEffect, value, 0, 7);
-		g_esKamikazePlayer[admin].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazePlayer[admin].g_iKamikazeMessage, value, 0, 3);
-		g_esKamikazePlayer[admin].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazePlayer[admin].g_iKamikazeBody, value, 0, 1);
-		g_esKamikazePlayer[admin].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazePlayer[admin].g_flKamikazeChance, value, 0.0, 100.0);
-		g_esKamikazePlayer[admin].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazePlayer[admin].g_iKamikazeHit, value, 0, 1);
-		g_esKamikazePlayer[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazePlayer[admin].g_iKamikazeHitMode, value, 0, 2);
-		g_esKamikazePlayer[admin].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazePlayer[admin].g_flKamikazeRange, value, 1.0, 99999.0);
-		g_esKamikazePlayer[admin].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazePlayer[admin].g_flKamikazeRangeChance, value, 0.0, 100.0);
-		g_esKamikazePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esKamikazePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esKamikazeTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazeTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazeTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esKamikazeTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazeTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esKamikazeTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazeTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazeTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esKamikazeTeammate[admin].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazeTeammate[admin].g_iKamikazeAbility, value, -1, 1);
+			g_esKamikazeTeammate[admin].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazeTeammate[admin].g_iKamikazeEffect, value, -1, 7);
+			g_esKamikazeTeammate[admin].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazeTeammate[admin].g_iKamikazeMessage, value, -1, 3);
+			g_esKamikazeTeammate[admin].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazeTeammate[admin].g_iKamikazeBody, value, -1, 1);
+			g_esKamikazeTeammate[admin].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazeTeammate[admin].g_flKamikazeChance, value, -1.0, 100.0);
+			g_esKamikazeTeammate[admin].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazeTeammate[admin].g_iKamikazeHit, value, -1, 1);
+			g_esKamikazeTeammate[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazeTeammate[admin].g_iKamikazeHitMode, value, -1, 2);
+			g_esKamikazeTeammate[admin].g_iKamikazeMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeMode", "Kamikaze Mode", "Kamikaze_Mode", "mode", g_esKamikazeTeammate[admin].g_iKamikazeMode, value, -1, 3);
+			g_esKamikazeTeammate[admin].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazeTeammate[admin].g_flKamikazeRange, value, -1.0, 99999.0);
+			g_esKamikazeTeammate[admin].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazeTeammate[admin].g_flKamikazeRangeChance, value, -1.0, 100.0);
+			g_esKamikazeTeammate[admin].g_iKamikazeSight = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeSight", "Kamikaze Sight", "Kamikaze_Sight", "sight", g_esKamikazeTeammate[admin].g_iKamikazeSight, value, -1, 2);
+		}
+		else
+		{
+			g_esKamikazePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazePlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esKamikazePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazePlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esKamikazePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazePlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esKamikazePlayer[admin].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazePlayer[admin].g_iKamikazeAbility, value, -1, 1);
+			g_esKamikazePlayer[admin].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazePlayer[admin].g_iKamikazeEffect, value, -1, 7);
+			g_esKamikazePlayer[admin].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazePlayer[admin].g_iKamikazeMessage, value, -1, 3);
+			g_esKamikazePlayer[admin].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazePlayer[admin].g_iKamikazeBody, value, -1, 1);
+			g_esKamikazePlayer[admin].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazePlayer[admin].g_flKamikazeChance, value, -1.0, 100.0);
+			g_esKamikazePlayer[admin].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazePlayer[admin].g_iKamikazeHit, value, -1, 1);
+			g_esKamikazePlayer[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazePlayer[admin].g_iKamikazeHitMode, value, -1, 2);
+			g_esKamikazePlayer[admin].g_iKamikazeMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeMode", "Kamikaze Mode", "Kamikaze_Mode", "mode", g_esKamikazePlayer[admin].g_iKamikazeMode, value, -1, 3);
+			g_esKamikazePlayer[admin].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazePlayer[admin].g_flKamikazeRange, value, -1.0, 99999.0);
+			g_esKamikazePlayer[admin].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazePlayer[admin].g_flKamikazeRangeChance, value, -1.0, 100.0);
+			g_esKamikazePlayer[admin].g_iKamikazeSight = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeSight", "Kamikaze Sight", "Kamikaze_Sight", "sight", g_esKamikazePlayer[admin].g_iKamikazeSight, value, -1, 2);
+			g_esKamikazePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esKamikazePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esKamikazeAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazeAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esKamikazeAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazeAbility[type].g_iComboAbility, value, 0, 1);
-		g_esKamikazeAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazeAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esKamikazeAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazeAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esKamikazeAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazeAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esKamikazeAbility[type].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazeAbility[type].g_iKamikazeAbility, value, 0, 1);
-		g_esKamikazeAbility[type].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazeAbility[type].g_iKamikazeEffect, value, 0, 7);
-		g_esKamikazeAbility[type].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazeAbility[type].g_iKamikazeMessage, value, 0, 3);
-		g_esKamikazeAbility[type].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazeAbility[type].g_iKamikazeBody, value, 0, 1);
-		g_esKamikazeAbility[type].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazeAbility[type].g_flKamikazeChance, value, 0.0, 100.0);
-		g_esKamikazeAbility[type].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazeAbility[type].g_iKamikazeHit, value, 0, 1);
-		g_esKamikazeAbility[type].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazeAbility[type].g_iKamikazeHitMode, value, 0, 2);
-		g_esKamikazeAbility[type].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazeAbility[type].g_flKamikazeRange, value, 1.0, 99999.0);
-		g_esKamikazeAbility[type].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazeAbility[type].g_flKamikazeRangeChance, value, 0.0, 100.0);
-		g_esKamikazeAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esKamikazeAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esKamikazeSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazeSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazeSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esKamikazeSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazeSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esKamikazeSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazeSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazeSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esKamikazeSpecial[type].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazeSpecial[type].g_iKamikazeAbility, value, -1, 1);
+			g_esKamikazeSpecial[type].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazeSpecial[type].g_iKamikazeEffect, value, -1, 7);
+			g_esKamikazeSpecial[type].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazeSpecial[type].g_iKamikazeMessage, value, -1, 3);
+			g_esKamikazeSpecial[type].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazeSpecial[type].g_iKamikazeBody, value, -1, 1);
+			g_esKamikazeSpecial[type].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazeSpecial[type].g_flKamikazeChance, value, -1.0, 100.0);
+			g_esKamikazeSpecial[type].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazeSpecial[type].g_iKamikazeHit, value, -1, 1);
+			g_esKamikazeSpecial[type].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazeSpecial[type].g_iKamikazeHitMode, value, -1, 2);
+			g_esKamikazeSpecial[type].g_iKamikazeMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeMode", "Kamikaze Mode", "Kamikaze_Mode", "mode", g_esKamikazeSpecial[type].g_iKamikazeMode, value, -1, 3);
+			g_esKamikazeSpecial[type].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazeSpecial[type].g_flKamikazeRange, value, -1.0, 99999.0);
+			g_esKamikazeSpecial[type].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazeSpecial[type].g_flKamikazeRangeChance, value, -1.0, 100.0);
+			g_esKamikazeSpecial[type].g_iKamikazeSight = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeSight", "Kamikaze Sight", "Kamikaze_Sight", "sight", g_esKamikazeSpecial[type].g_iKamikazeSight, value, -1, 2);
+		}
+		else
+		{
+			g_esKamikazeAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esKamikazeAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esKamikazeAbility[type].g_iComboAbility, value, -1, 1);
+			g_esKamikazeAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esKamikazeAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esKamikazeAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esKamikazeAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esKamikazeAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esKamikazeAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esKamikazeAbility[type].g_iKamikazeAbility = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esKamikazeAbility[type].g_iKamikazeAbility, value, -1, 1);
+			g_esKamikazeAbility[type].g_iKamikazeEffect = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esKamikazeAbility[type].g_iKamikazeEffect, value, -1, 7);
+			g_esKamikazeAbility[type].g_iKamikazeMessage = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esKamikazeAbility[type].g_iKamikazeMessage, value, -1, 3);
+			g_esKamikazeAbility[type].g_iKamikazeBody = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esKamikazeAbility[type].g_iKamikazeBody, value, -1, 1);
+			g_esKamikazeAbility[type].g_flKamikazeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esKamikazeAbility[type].g_flKamikazeChance, value, -1.0, 100.0);
+			g_esKamikazeAbility[type].g_iKamikazeHit = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esKamikazeAbility[type].g_iKamikazeHit, value, -1, 1);
+			g_esKamikazeAbility[type].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esKamikazeAbility[type].g_iKamikazeHitMode, value, -1, 2);
+			g_esKamikazeAbility[type].g_iKamikazeMode = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeMode", "Kamikaze Mode", "Kamikaze_Mode", "mode", g_esKamikazeAbility[type].g_iKamikazeMode, value, -1, 3);
+			g_esKamikazeAbility[type].g_flKamikazeRange = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esKamikazeAbility[type].g_flKamikazeRange, value, -1.0, 99999.0);
+			g_esKamikazeAbility[type].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esKamikazeAbility[type].g_flKamikazeRangeChance, value, -1.0, 100.0);
+			g_esKamikazeAbility[type].g_iKamikazeSight = iGetKeyValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "KamikazeSight", "Kamikaze Sight", "Kamikaze_Sight", "sight", g_esKamikazeAbility[type].g_iKamikazeSight, value, -1, 2);
+			g_esKamikazeAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esKamikazeAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_KAMIKAZE_SECTION, MT_KAMIKAZE_SECTION2, MT_KAMIKAZE_SECTION3, MT_KAMIKAZE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -629,22 +766,47 @@ void vKamikazeSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly);
-	g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility);
-	g_esKamikazeCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance);
-	g_esKamikazeCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange);
-	g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance);
-	g_esKamikazeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility);
-	g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility);
-	g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect);
-	g_esKamikazeCache[tank].g_iKamikazeBody = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeAbility[type].g_iKamikazeBody);
-	g_esKamikazeCache[tank].g_iKamikazeHit = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeAbility[type].g_iKamikazeHit);
-	g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeAbility[type].g_iKamikazeHitMode);
-	g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeAbility[type].g_iKamikazeMessage);
-	g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeAbility[type].g_flOpenAreasOnly);
-	g_esKamikazeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esKamikazePlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flCloseAreasOnly, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeSpecial[type].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iComboAbility, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeSpecial[type].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility, 1);
+		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeChance, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeSpecial[type].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRange, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeSpecial[type].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flKamikazeRangeChance, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeSpecial[type].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance, 1);
+		g_esKamikazeCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iHumanAbility, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeSpecial[type].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeAbility, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeSpecial[type].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeEffect, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeSpecial[type].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect, 1);
+		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeBody, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeSpecial[type].g_iKamikazeBody, g_esKamikazeAbility[type].g_iKamikazeBody, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHit, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeSpecial[type].g_iKamikazeHit, g_esKamikazeAbility[type].g_iKamikazeHit, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeHitMode, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeSpecial[type].g_iKamikazeHitMode, g_esKamikazeAbility[type].g_iKamikazeHitMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMessage, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeSpecial[type].g_iKamikazeMessage, g_esKamikazeAbility[type].g_iKamikazeMessage, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeMode, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeSpecial[type].g_iKamikazeMode, g_esKamikazeAbility[type].g_iKamikazeMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iKamikazeSight, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeSpecial[type].g_iKamikazeSight, g_esKamikazeAbility[type].g_iKamikazeSight, 1);
+		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_flOpenAreasOnly, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeSpecial[type].g_flOpenAreasOnly, g_esKamikazeAbility[type].g_flOpenAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esKamikazeTeammate[tank].g_iRequiresHumans, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeSpecial[type].g_iRequiresHumans, g_esKamikazeAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esKamikazeCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flCloseAreasOnly, g_esKamikazeAbility[type].g_flCloseAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iComboAbility, g_esKamikazeAbility[type].g_iComboAbility, 1);
+		g_esKamikazeCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeChance, g_esKamikazeAbility[type].g_flKamikazeChance, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRange, g_esKamikazeAbility[type].g_flKamikazeRange, 1);
+		g_esKamikazeCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flKamikazeRangeChance, g_esKamikazeAbility[type].g_flKamikazeRangeChance, 1);
+		g_esKamikazeCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iHumanAbility, g_esKamikazeAbility[type].g_iHumanAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeAbility, g_esKamikazeAbility[type].g_iKamikazeAbility, 1);
+		g_esKamikazeCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeEffect, g_esKamikazeAbility[type].g_iKamikazeEffect, 1);
+		g_esKamikazeCache[tank].g_iKamikazeBody = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeBody, g_esKamikazeAbility[type].g_iKamikazeBody, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHit = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHit, g_esKamikazeAbility[type].g_iKamikazeHit, 1);
+		g_esKamikazeCache[tank].g_iKamikazeHitMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeHitMode, g_esKamikazeAbility[type].g_iKamikazeHitMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMessage = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMessage, g_esKamikazeAbility[type].g_iKamikazeMessage, 1);
+		g_esKamikazeCache[tank].g_iKamikazeMode = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeMode, g_esKamikazeAbility[type].g_iKamikazeMode, 1);
+		g_esKamikazeCache[tank].g_iKamikazeSight = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iKamikazeSight, g_esKamikazeAbility[type].g_iKamikazeSight, 1);
+		g_esKamikazeCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_flOpenAreasOnly, g_esKamikazeAbility[type].g_flOpenAreasOnly, 1);
+		g_esKamikazeCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esKamikazePlayer[tank].g_iRequiresHumans, g_esKamikazeAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -676,7 +838,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			g_esKamikazePlayer[iBot].g_bFailed = false;
 		}
@@ -685,7 +847,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			g_esKamikazePlayer[iTank].g_bFailed = false;
 		}
@@ -696,6 +858,16 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			g_esKamikazePlayer[iTank].g_bFailed = false;
+		}
+	}
+	else if (StrEqual(name, "player_now_it"))
+	{
+		bool bExploded = event.GetBool("exploded");
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
+			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
+		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
+		{
+			vKamikazeHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esKamikazeCache[iBoomer].g_flKamikazeChance, g_esKamikazeCache[iBoomer].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -727,7 +899,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esKamikazeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esKamikazeCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esKamikazeCache[tank].g_iKamikazeAbility == 1 && g_esKamikazeCache[tank].g_iComboAbility == 0)
 	{
 		vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -741,7 +913,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType, tank) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -769,7 +941,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vKamikazeAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType, tank) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -786,7 +958,7 @@ void vKamikazeAbility(int tank, float random, int pos = -1)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esKamikazePlayer[tank].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esKamikazeCache[tank].g_iKamikazeSight, .range = flRange))
 			{
 				vKamikazeHit(iSurvivor, tank, random, flChance, g_esKamikazeCache[tank].g_iKamikazeAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
@@ -797,7 +969,7 @@ void vKamikazeAbility(int tank, float random, int pos = -1)
 
 	if (iSurvivorCount == 0)
 	{
-		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1)
+		if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman3");
 		}
@@ -806,7 +978,7 @@ void vKamikazeAbility(int tank, float random, int pos = -1)
 
 void vKamikazeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
 {
-	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esKamikazePlayer[tank].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esKamikazeCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esKamikazeCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esKamikazePlayer[tank].g_iTankType, tank) || (g_esKamikazeCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esKamikazeCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esKamikazePlayer[tank].g_iTankType, g_esKamikazeAbility[g_esKamikazePlayer[tank].g_iTankType].g_iImmunityFlags, g_esKamikazePlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -815,17 +987,31 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 	{
 		if (random <= chance)
 		{
-			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
+			if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
 
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
-			ForcePlayerSuicide(survivor);
 			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
+
+			switch (g_esKamikazeCache[tank].g_iKamikazeMode)
+			{
+				case 0, 3:
+				{
+					switch (MT_GetRandomInt(1, 2))
+					{
+						case 1: ForcePlayerSuicide(survivor);
+						case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+					}
+				}
+				case 1: ForcePlayerSuicide(survivor);
+				case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+			}
+
 			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-			ForcePlayerSuicide(tank);
 			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, tank);
+			ForcePlayerSuicide(tank);
 			vScreenEffect(survivor, tank, g_esKamikazeCache[tank].g_iKamikazeEffect, flags);
 
 			if (g_esKamikazeCache[tank].g_iKamikazeMessage & messages)
@@ -838,7 +1024,7 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 		}
 		else if ((flags & MT_ATTACK_RANGE))
 		{
-			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1 && !g_esKamikazePlayer[tank].g_bFailed)
+			if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esKamikazeCache[tank].g_iHumanAbility == 1 && !g_esKamikazePlayer[tank].g_bFailed)
 			{
 				g_esKamikazePlayer[tank].g_bFailed = true;
 
@@ -864,7 +1050,7 @@ void tTimerKamikazeCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeAbility == 0)
 	{
 		return;
 	}
@@ -885,7 +1071,7 @@ void tTimerKamikazeCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esKamikazeAbility[g_esKamikazePlayer[iTank].g_iTankType].g_iAccessFlags, g_esKamikazePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esKamikazePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esKamikazeCache[iTank].g_iKamikazeHit == 0)
 	{
 		return;
 	}
@@ -893,7 +1079,7 @@ void tTimerKamikazeCombo2(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esKamikazeCache[iTank].g_iKamikazeHitMode == 0 || g_esKamikazeCache[iTank].g_iKamikazeHitMode == 1) && (bIsSpecialInfected(iTank) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vKamikazeHit(iSurvivor, iTank, flRandom, flChance, g_esKamikazeCache[iTank].g_iKamikazeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 	}

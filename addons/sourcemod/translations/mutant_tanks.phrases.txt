@@ -34,9 +34,79 @@
 		"en"			"Default Tank"
 	}
 
+	"MTDefaultItemBoomer"
+	{
+		"en"			"Default Boomer"
+	}
+
+	"MTDefaultItemCharger"
+	{
+		"en"			"Default Charger"
+	}
+
+	"MTDefaultItemHunter"
+	{
+		"en"			"Default Hunter"
+	}
+
+	"MTDefaultItemJockey"
+	{
+		"en"			"Default Jockey"
+	}
+
+	"MTDefaultItemSmoker"
+	{
+		"en"			"Default Smoker"
+	}
+
+	"MTDefaultItemSpitter"
+	{
+		"en"			"Default Spitter"
+	}
+
+	"MTDefaultItemWitch"
+	{
+		"en"			"Default Witch"
+	}
+
 	"MTFavoriteMenu"
 	{
 		"en"			"Use your favorite Mutant Tank type?"
+	}
+
+	"MTFavoriteMenuBoomer"
+	{
+		"en"			"Use your favorite Mutant Boomer type?"
+	}
+
+	"MTFavoriteMenuCharger"
+	{
+		"en"			"Use your favorite Mutant Charger type?"
+	}
+
+	"MTFavoriteMenuHunter"
+	{
+		"en"			"Use your favorite Mutant Hunter type?"
+	}
+
+	"MTFavoriteMenuJockey"
+	{
+		"en"			"Use your favorite Mutant Jockey type?"
+	}
+
+	"MTFavoriteMenuSmoker"
+	{
+		"en"			"Use your favorite Mutant Smoker type?"
+	}
+
+	"MTFavoriteMenuSpitter"
+	{
+		"en"			"Use your favorite Mutant Spitter type?"
+	}
+
+	"MTFavoriteMenuWitch"
+	{
+		"en"			"Use your favorite Mutant Witch type?"
 	}
 
 	"MTInfoMenu"
@@ -44,9 +114,92 @@
 		"en"			"Mutant Tanks Information"
 	}
 
+	"MTItem"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Tank #{2}) [Tank #{3}]"
+	}
+
+	"MTItemBoomer"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Boomer #{2}) [Boomer #{3}]"
+	}
+
+	"MTItemCharger"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Charger #{2}) [Charger #{3}]"
+	}
+
+	"MTItemHunter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Hunter #{2}) [Hunter #{3}]"
+	}
+
+	"MTItemJockey"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Jockey #{2}) [Jockey #{3}]"
+	}
+
+	"MTItemSmoker"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Smoker #{2}) [Smoker #{3}]"
+	}
+
+	"MTItemSpitter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Spitter #{2}) [Spitter #{3}]"
+	}
+
+	"MTItemWitch"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1} (Witch #{2}) [Witch #{3}]"
+	}
+
 	"MTListMenu"
 	{
 		"en"			"Mutant Tanks List"
+	}
+
+	"MTListMenuBoomer"
+	{
+		"en"			"Mutant Boomers List"
+	}
+
+	"MTListMenuCharger"
+	{
+		"en"			"Mutant Chargers List"
+	}
+
+	"MTListMenuHunter"
+	{
+		"en"			"Mutant Hunters List"
+	}
+
+	"MTListMenuJockey"
+	{
+		"en"			"Mutant Jockeys List"
+	}
+
+	"MTListMenuSmoker"
+	{
+		"en"			"Mutant Smokers List"
+	}
+
+	"MTListMenuSpitter"
+	{
+		"en"			"Mutant Spitters List"
+	}
+
+	"MTListMenuWitch"
+	{
+		"en"			"Mutant Witches List"
 	}
 
 	"MTPathMenu"
@@ -72,12 +225,6 @@
 	"MTSettingsItem"
 	{
 		"en"			"Plugin Settings"
-	}
-
-	"MTTankItem"
-	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1} (Tank #{2}) [Tank #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -379,6 +526,41 @@
 		"en"			"Your personal Mutant Tank type changed."
 	}
 
+	"ChangeTypeBoomer"
+	{
+		"en"			"Your personal Mutant Boomer type changed."
+	}
+
+	"ChangeTypeCharger"
+	{
+		"en"			"Your personal Mutant Charger type changed."
+	}
+
+	"ChangeTypeHunter"
+	{
+		"en"			"Your personal Mutant Hunter type changed."
+	}
+
+	"ChangeTypeJockey"
+	{
+		"en"			"Your personal Mutant Jockey type changed."
+	}
+
+	"ChangeTypeSmoker"
+	{
+		"en"			"Your personal Mutant Smoker type changed."
+	}
+
+	"ChangeTypeSpitter"
+	{
+		"en"			"Your personal Mutant Spitter type changed."
+	}
+
+	"ChangeTypeWitch"
+	{
+		"en"			"Your personal Mutant Witch type changed."
+	}
+
 	"CheckConsole"
 	{
 		"en"			"See console for full output."
@@ -461,6 +643,70 @@
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all!"
 	}
 
+	"DespawnCanceled"
+	{
+		"en"			"Your despawn was canceled!"
+	}
+
+	"DespawnNow"
+	{
+		"en"			"You have despawned!"
+	}
+
+	"DespawnTimer"
+	{
+		"#format"		"{1:i}"
+		"en"			"You will despawn in {1} second(s)!"
+	}
+
+	"DisabledType"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeBoomer"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeCharger"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Charger #{2}) [Charger #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeHunter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeJockey"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeSmoker"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeSpitter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} is disabled."
+	}
+
+	"DisabledTypeWitch"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"{1}{yellow} (Witch #{2}) [Witch #{3}]{default} is disabled."
+	}
+
 	"ErrorParsing"
 	{
 		"#format"		"{1:s},{2:s}"
@@ -484,6 +730,41 @@
 		"en"			"You chose not to use your favorite Mutant Tank type."
 	}
 
+	"FavoriteUnusedBoomer"
+	{
+		"en"			"You chose not to use your favorite Mutant Boomer type."
+	}
+
+	"FavoriteUnusedCharger"
+	{
+		"en"			"You chose not to use your favorite Mutant Charger type."
+	}
+
+	"FavoriteUnusedHunter"
+	{
+		"en"			"You chose not to use your favorite Mutant Hunter type."
+	}
+
+	"FavoriteUnusedJockey"
+	{
+		"en"			"You chose not to use your favorite Mutant Jockey type."
+	}
+
+	"FavoriteUnusedSmoker"
+	{
+		"en"			"You chose not to use your favorite Mutant Smoker type."
+	}
+
+	"FavoriteUnusedSpitter"
+	{
+		"en"			"You chose not to use your favorite Mutant Spitter type."
+	}
+
+	"FavoriteUnusedWitch"
+	{
+		"en"			"You chose not to use your favorite Mutant Witch type."
+	}
+
 	"GeneralDetails"
 	{
 		"en"			"Mutant Tanks makes fighting Tanks great again!"
@@ -499,10 +780,67 @@
 		"en"			"Glow Outline Visual: OFF"
 	}
 
+	"HardcoreModeOn"
+	{
+		"en"			"HARDCORE{default} mode is{olive} enabled{default}!"
+	}
+
+	"HardcoreModeOff"
+	{
+		"en"			"HARDCORE{default} mode is{olive} disabled{default}!"
+	}
+
+	"HardcoreModeWarning"
+	{
+		"en"			"You only get one chance to survive on HARDCORE mode!"
+	}
+
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"
 		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
+	}
+
+	"HumanCooldownBoomer"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Boomer type."
+	}
+
+	"HumanCooldownCharger"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Charger type."
+	}
+
+	"HumanCooldownHunter"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Hunter type."
+	}
+
+	"HumanCooldownJockey"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Jockey type."
+	}
+
+	"HumanCooldownSmoker"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Smoker type."
+	}
+
+	"HumanCooldownSpitter"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Spitter type."
+	}
+
+	"HumanCooldownWitch"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Witch type."
 	}
 
 	"HumanTag"
@@ -630,6 +968,60 @@
 		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 
+	"KillCountdown"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Tanks{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownAll"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Special Infected{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownBoomer"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Boomers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownCharger"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Chargers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownHunter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Hunters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownJockey"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Jockeys{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownSmoker"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Smokers{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownSpitter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Spitters{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
+	"KillCountdownWitch"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Witches{default} have{yellow} {1} minute(s) {2} second(s){default} to kill the survivors."
+	}
+
 	"LightVisualOn"
 	{
 		"en"			"Light Color Visual: ON"
@@ -658,6 +1050,48 @@
 		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}) [Tank #{2}]{olive}."
 	}
 
+	"MultipleMatchesBoomer"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Boomer #{1}) [Boomer #{2}]{olive}."
+	}
+
+	"MultipleMatchesCharger"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Charger #{1}) [Charger #{2}]{olive}."
+	}
+
+	"MultipleMatchesHunter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Hunter #{1}) [Hunter #{2}]{olive}."
+	}
+
+	"MultipleMatchesJockey"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Jockey #{1}) [Jockey #{2}]{olive}."
+	}
+
+	"MultipleMatchesSmoker"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Smoker #{1}) [Smoker #{2}]{olive}."
+	}
+
+	"MultipleMatchesSpitter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Spitter #{1}) [Spitter #{2}]{olive}."
+	}
+
+	"MultipleMatchesWitch"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Witch #{1}) [Witch #{2}]{olive}."
+	}
+
 	"NoAbilities"
 	{
 		"en"			"No abilities were found."
@@ -678,14 +1112,119 @@
 		"en"			"Tank"
 	}
 
+	"NoNameBoomer"
+	{
+		"en"			"Boomer"
+	}
+
+	"NoNameCharger"
+	{
+		"en"			"Charger"
+	}
+
+	"NoNameHunter"
+	{
+		"en"			"Hunter"
+	}
+
+	"NoNameJockey"
+	{
+		"en"			"Jockey"
+	}
+
+	"NoNameSmoker"
+	{
+		"en"			"Smoker"
+	}
+
+	"NoNameSpitter"
+	{
+		"en"			"Spitter"
+	}
+
+	"NoNameWitch"
+	{
+		"en"			"Witch"
+	}
+
 	"NoNote"
 	{
 		"en"			"No note found for this Mutant Tank."
 	}
 
+	"NoNoteBoomer"
+	{
+		"en"			"No note found for this Mutant Boomer."
+	}
+
+	"NoNoteCharger"
+	{
+		"en"			"No note found for this Mutant Charger."
+	}
+
+	"NoNoteHunter"
+	{
+		"en"			"No note found for this Mutant Hunter."
+	}
+
+	"NoNoteJockey"
+	{
+		"en"			"No note found for this Mutant Jockey."
+	}
+
+	"NoNoteSmoker"
+	{
+		"en"			"No note found for this Mutant Smoker."
+	}
+
+	"NoNoteSpitter"
+	{
+		"en"			"No note found for this Mutant Spitter."
+	}
+
+	"NoNoteWitch"
+	{
+		"en"			"No note found for this Mutant Witch."
+	}
+
 	"NoTypeAccess"
 	{
 		"en"			"You do not have access to this Mutant Tank type."
+	}
+
+	"NoTypeAccessBoomer"
+	{
+		"en"			"You do not have access to this Mutant Boomer type."
+	}
+
+	"NoTypeAccessCharger"
+	{
+		"en"			"You do not have access to this Mutant Charger type."
+	}
+
+	"NoTypeAccessHunter"
+	{
+		"en"			"You do not have access to this Mutant Hunter type."
+	}
+
+	"NoTypeAccessJockey"
+	{
+		"en"			"You do not have access to this Mutant Jockey type."
+	}
+
+	"NoTypeAccessSmoker"
+	{
+		"en"			"You do not have access to this Mutant Smoker type."
+	}
+
+	"NoTypeAccessSpitter"
+	{
+		"en"			"You do not have access to this Mutant Spitter type."
+	}
+
+	"NoTypeAccessWitch"
+	{
+		"en"			"You do not have access to this Mutant Witch type."
 	}
 
 	"OptionNo"
@@ -712,6 +1251,48 @@
 	{
 		"#format"		"{1:t},{2:i},{3:i}"
 		"en"			"You will spawn as{olive} {1}{yellow} (Tank #{2}) [Tank #{3}]{default} when you take control of the{mint} Tank{default}."
+	}
+
+	"PersonalTypeBoomer"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Boomer #{2}) [Boomer #{3}]{default} when you take control of the{mint} Boomer{default}."
+	}
+
+	"PersonalTypeCharger"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Charger #{2}) [Charger #{3}]{default} when you take control of the{mint} Charger{default}."
+	}
+
+	"PersonalTypeHunter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Hunter #{2}) [Hunter #{3}]{default} when you take control of the{mint} Hunter{default}."
+	}
+
+	"PersonalTypeJockey"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Jockey #{2}) [Jockey #{3}]{default} when you take control of the{mint} Jockey{default}."
+	}
+
+	"PersonalTypeSmoker"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Smoker #{2}) [Smoker #{3}]{default} when you take control of the{mint} Smoker{default}."
+	}
+
+	"PersonalTypeSpitter"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Spitter #{2}) [Spitter #{3}]{default} when you take control of the{mint} Spitter{default}."
+	}
+
+	"PersonalTypeWitch"
+	{
+		"#format"		"{1:t},{2:i},{3:i}"
+		"en"			"You will spawn as{olive} {1}{yellow} (Witch #{2}) [Witch #{3}]{default} when you take control of the{mint} Witch{default}."
 	}
 
 	"PitchVisualOn"
@@ -755,6 +1336,54 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"One type{yellow} (Tank #{1}) [Tank #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededBoomer"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Boomer #{1}) [Boomer #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededCharger"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Charger #{1}) [Charger #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededHunter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Hunter #{1}) [Hunter #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededJockey"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Jockey #{1}) [Jockey #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededSmoker"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Smoker #{1}) [Smoker #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededSpitter"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Spitter #{1}) [Spitter #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RequestSucceededWitch"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"One type{yellow} (Witch #{1}) [Witch #{2}]{mint} matched that name.{olive} Request succeeded!"
+	}
+
+	"RestCountdown"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"Survivors{default} have{yellow} {1} minute(s) {2} second(s){default} to rest."
 	}
 
 	"RewardAmmo"
@@ -868,6 +1497,105 @@
 		"en"			"speed boost"
 	}
 
+	"Rush"
+	{
+		"en"			"Welcome to{yellow} Tank Rush{mint}!"
+	}
+
+	"RushAll"
+	{
+		"en"			"Welcome to{yellow} Special Arena{mint}!"
+	}
+
+	"RushBoomer"
+	{
+		"en"			"Welcome to{yellow} Vomit Vault{mint}!"
+	}
+
+	"RushCharger"
+	{
+		"en"			"Welcome to{yellow} Meat Grinder{mint}!"
+	}
+
+	"RushHunter"
+	{
+		"en"			"Welcome to{yellow} Hunting Ground{mint}!"
+	}
+
+	"RushJockey"
+	{
+		"en"			"Welcome to{yellow} Amusement Park{mint}!"
+	}
+
+	"RushSmoker"
+	{
+		"en"			"Welcome to{yellow} Gas Chamber{mint}!"
+	}
+
+	"RushSpitter"
+	{
+		"en"			"Welcome to{yellow} Acid Rain{mint}!"
+	}
+
+	"RushWitch"
+	{
+		"en"			"Welcome to{yellow} Daycare Center{mint}!"
+	}
+
+	"RushWarning"
+	{
+		"#format"		"{1:i}"
+		"en"			"Tanks{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningAll"
+	{
+		"#format"		"{1:i}"
+		"en"			"Special Infected{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningBoomer"
+	{
+		"#format"		"{1:i}"
+		"en"			"Boomers{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningCharger"
+	{
+		"#format"		"{1:i}"
+		"en"			"Chargers{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningHunter"
+	{
+		"#format"		"{1:i}"
+		"en"			"Hunters{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningJockey"
+	{
+		"#format"		"{1:i}"
+		"en"			"Jockeys{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningSmoker"
+	{
+		"#format"		"{1:i}"
+		"en"			"Smokers{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningSpitter"
+	{
+		"#format"		"{1:i}"
+		"en"			"Spitters{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
+	"RushWarningWitch"
+	{
+		"#format"		"{1:i}"
+		"en"			"Witches{default} will begin spawning in{yellow} {1} second(s){default}!"
+	}
+
 	"ScreenVisualOn"
 	{
 		"en"			"Screen Visual: ON"
@@ -888,6 +1616,97 @@
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
 	}
 
+	"SpawnMessageBoomer"
+	{
+		"en"			"You spawned as a Mutant Boomer! You can now use the following:"
+	}
+
+	"SpawnMessageCharger"
+	{
+		"en"			"You spawned as a Mutant Charger! You can now use the following:"
+	}
+
+	"SpawnMessageHunter"
+	{
+		"en"			"You spawned as a Mutant Hunter! You can now use the following:"
+	}
+
+	"SpawnMessageJockey"
+	{
+		"en"			"You spawned as a Mutant Jockey! You can now use the following:"
+	}
+
+	"SpawnMessageSmoker"
+	{
+		"en"			"You spawned as a Mutant Smoker! You can now use the following:"
+	}
+
+	"SpawnMessageSpitter"
+	{
+		"en"			"You spawned as a Mutant Spitter! You can now use the following:"
+	}
+
+	"SpawnMessageWitch"
+	{
+		"en"			"You spawned as a Mutant Witch! You can now use the following:"
+	}
+
+	"SpawnNow"
+	{
+		"en"			"You can now spawn!"
+	}
+
+	"SpawnTimer"
+	{
+		"#format"		"{1:i}"
+		"en"			"You will be able to spawn in {1} second(s)!"
+	}
+
+	"SpawnWarning"
+	{
+		"en"			"Tanks are beginning to spawn..."
+	}
+
+	"SpawnWarningAll"
+	{
+		"en"			"Special Infected are beginning to spawn..."
+	}
+
+	"SpawnWarningBoomer"
+	{
+		"en"			"Boomers are beginning to spawn..."
+	}
+
+	"SpawnWarningCharger"
+	{
+		"en"			"Chargers are beginning to spawn..."
+	}
+
+	"SpawnWarningHunter"
+	{
+		"en"			"Hunters are beginning to spawn..."
+	}
+
+	"SpawnWarningJockey"
+	{
+		"en"			"Jockeys are beginning to spawn..."
+	}
+
+	"SpawnWarningSmoker"
+	{
+		"en"			"Smokers are beginning to spawn..."
+	}
+
+	"SpawnWarningSpitter"
+	{
+		"en"			"Spitters are beginning to spawn..."
+	}
+
+	"SpawnWarningWitch"
+	{
+		"en"			"Witches are beginning to spawn..."
+	}
+
 	"StartParsing"
 	{
 		"en"			"Parsing the config file..."
@@ -896,12 +1715,6 @@
 	"StillParsing"
 	{
 		"en"			"The plugin is still parsing the config file."
-	}
-
-	"TankDisabled"
-	{
-		"#format"		"{1:t},{2:i},{3:i}"
-		"en"			"{1}{yellow} (Tank #{2}) [Tank #{3}]{default} is disabled."
 	}
 
 	"TeammatesList"
@@ -930,6 +1743,46 @@
 	"VoicelineVisualOff"
 	{
 		"en"			"Looping Voiceline Visual: OFF"
+	}
+
+	"AllTypes"
+	{
+		"en"			"All Types"
+	}
+
+	"Bot-dependentTypes"
+	{
+		"en"			"Bot-dependent Types"
+	}
+
+	"CompetitiveTypes"
+	{
+		"en"			"Competitive Types"
+	}
+
+	"Human-dependentTypes"
+	{
+		"en"			"Human-dependent Types"
+	}
+
+	"IndoorTypes"
+	{
+		"en"			"Indoor Types"
+	}
+
+	"OutdoorTypes"
+	{
+		"en"			"Outdoor Types"
+	}
+
+	"SpawnableTypes"
+	{
+		"en"			"Spawnable Types"
+	}
+
+	"UnspawnableTypes"
+	{
+		"en"			"Unspawnable Types"
 	}
 
 	"Absorb"
@@ -3939,6 +4792,95 @@
 		"en"			"Quiet Ability"
 	}
 
+	"Recall"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} blinked to a random location!"
+	}
+
+	"Recall2"
+	{
+		"#format"		"{1:t},{2:i}"
+		"en"			"{olive}{1}{mint} recalled to{yellow} {2} second(s){mint} ago!"
+	}
+
+	"Recall3"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} is able to blink again!"
+	}
+
+	"RecallAmmo"
+	{
+		"en"			"You've used up all your recall blink ability's ammo."
+	}
+
+	"RecallAmmo2"
+	{
+		"en"			"You've used up all your recall rewind ability's ammo."
+	}
+
+	"RecallDetails"
+	{
+		"en"			"You time travel to annoy survivors."
+	}
+
+	"RecallHuman"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall blink ability!"
+	}
+
+	"RecallHuman2"
+	{
+		"en"			"Your recall blink ability failed to activate. Try again."
+	}
+
+	"RecallHuman3"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recall rewind ability!"
+	}
+
+	"RecallHuman4"
+	{
+		"en"			"Your recall rewind ability failed to activate. Try again."
+	}
+
+	"RecallHuman5"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your recall blink ability still needs another{yellow} {1} second(s){mint} to recharge."
+	}
+
+	"RecallHuman6"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your recall rewind ability still needs another{yellow} {1} second(s){mint} to recharge."
+	}
+
+	"RecallHuman7"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your recall blink ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+	}
+
+	"RecallHuman8"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your recall rewind ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+	}
+
+	"RecallMenu"
+	{
+		"en"			"Recall Ability Information"
+	}
+
+	"RecallMenu2"
+	{
+		"en"			"Recall Ability"
+	}
+
 	"Recoil"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -4067,7 +5009,7 @@
 
 	"RespawnAmmo"
 	{
-		"en"			"You've used up all your rock showers."
+		"en"			"You've used up all your respawns."
 	}
 
 	"RespawnDetails"

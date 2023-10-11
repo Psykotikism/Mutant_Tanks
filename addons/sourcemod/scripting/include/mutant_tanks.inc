@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.98"
+#define MT_VERSION "8.99"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -253,8 +253,10 @@ forward void MT_OnConfigsLoad(int mode);
  * @param type			The Mutant Tank type the config parser is currently on. (Used for Mutant Tank-specific settings.)
  * @param admin			Client index of an admin. (Used for admin-specific settings.)
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
+ * @param special		True if reading a special infected setting, false otherwise.
+ * @param specsection		The special section the config parser is currently on.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection);
 
 /**
  * Called when the Tank is passed on to another player or bot.
@@ -465,11 +467,12 @@ forward Action MT_OnTypeChosen(int &type, int tank);
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
+ * @param specType		Special Infected type.
  *
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_CanTypeSpawn(int type);
+native bool MT_CanTypeSpawn(int type, int specType);
 
 /**
  * Deafens a player.
@@ -505,11 +508,12 @@ native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
  *
  * @param type			Mutant Tank type.
+ * @param tank			Client index of the Tank if the type chosen is being applied directly, 0 otherwise.
  *
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_DoesTypeRequireHumans(int type);
+native bool MT_DoesTypeRequireHumans(int type, int tank = 0);
 
 /**
  * Returns the current access flags set by the core plugin.
@@ -694,11 +698,12 @@ native bool MT_HasAdminAccess(int admin);
  * Returns if a certain Mutant Tank type has a chance of spawning.
  *
  * @param type			Mutant Tank type.
+ * @param tank			Client index of the Tank.
  *
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_HasChanceToSpawn(int type);
+native bool MT_HasChanceToSpawn(int type, int tank);
 
 /**
  * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
@@ -743,11 +748,12 @@ native bool MT_IsCustomTankSupported(int tank);
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
+ * @param tank			Client index of the Tank.
  *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_IsFinaleType(int type);
+native bool MT_IsFinaleType(int type, int tank);
 
 /**
  * Returns if a Mutant Tank type has a glow outline.
@@ -773,11 +779,12 @@ native bool MT_IsGlowFlashing(int tank);
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
  *
  * @param type			Mutant Tank type.
+ * @param tank			Client index of the Tank.
  *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_IsNonFinaleType(int type);
+native bool MT_IsNonFinaleType(int type, int tank);
 
 /**
  * Returns if a Tank is idle.
@@ -808,11 +815,12 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * Returns if a certain Mutant Tank type is enabled.
  *
  * @param type			Mutant Tank type.
+ * @param tank			Client index of the Tank.
  *
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0 or less.
  **/
-native bool MT_IsTypeEnabled(int type);
+native bool MT_IsTypeEnabled(int type, int tank);
 
 /**
  * Logs a message.
@@ -1076,7 +1084,7 @@ forward void ST_Spawn(int client);
 #pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool MT_CanTankSpawn(int type)
 {
-	return MT_CanTypeSpawn(type);
+	return MT_CanTypeSpawn(type, (bIsSecondGame() ? 8 : 5));
 }
 
 /**
@@ -1090,7 +1098,7 @@ stock bool MT_CanTankSpawn(int type)
 #pragma deprecated Use the MT_IsFinaleType() native instead.
 stock bool MT_IsFinaleTank(int type)
 {
-	return MT_IsFinaleType(type);
+	return MT_IsFinaleType(type, 0);
 }
 
 /**
@@ -1167,7 +1175,7 @@ stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, i
 #pragma deprecated Use the MT_CanTypeSpawn() native instead.
 stock bool ST_SpawnEnabled(int type)
 {
-	return MT_CanTypeSpawn(type);
+	return MT_CanTypeSpawn(type, (bIsSecondGame() ? 8 : 5));
 }
 
 /**
@@ -1194,7 +1202,7 @@ stock bool ST_TankAllowed(int client)
 #pragma deprecated Use the MT_HasChanceToSpawn() native instead.
 stock bool ST_TankChance(int type)
 {
-	return MT_HasChanceToSpawn(type);
+	return MT_HasChanceToSpawn(type, 0);
 }
 
 /**
@@ -1265,7 +1273,7 @@ stock int ST_TankWave()
 #pragma deprecated Use the MT_IsTypeEnabled() native instead.
 stock bool ST_TypeEnabled(int type)
 {
-	return MT_IsTypeEnabled(type);
+	return MT_IsTypeEnabled(type, 0);
 }
 
 // Functions
@@ -1290,7 +1298,7 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");
-			vSetEdictFlags(iParticle, true);
+			vSetEdictFlags(iParticle, FL_EDICT_ALWAYS, true);
 
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, duration);
@@ -1308,7 +1316,7 @@ stock void vAttachParticle2(float pos[3], float angles[3], const char[] particle
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "Start");
-		vSetEdictFlags(iParticle, true);
+		vSetEdictFlags(iParticle, FL_EDICT_ALWAYS, true);
 
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle, duration);
@@ -1459,9 +1467,21 @@ stock void vMultiTargetFilters(bool toggle)
 			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
 			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
 			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
-			AddMultiTargetFilter("@mutants", bMutantFilter, "all Mutant Tanks", false);
-			AddMultiTargetFilter("@mtanks", bMutantFilter, "all Mutant Tanks", false);
-			AddMultiTargetFilter("@psytanks", bMutantFilter, "all Mutant Tanks", false);
+			AddMultiTargetFilter("@mutants", bMutantFilter, "all Mutant Infected", false);
+			AddMultiTargetFilter("@mtanks", bMutantTankFilter, "all Mutant Tanks", false);
+			AddMultiTargetFilter("@psytanks", bMutantTankFilter, "all Mutant Tanks", false);
+			AddMultiTargetFilter("@msmokers", bMutantSmokerFilter, "all Mutant Smokers", false);
+			AddMultiTargetFilter("@psysmokers", bMutantSmokerFilter, "all Mutant Smokers", false);
+			AddMultiTargetFilter("@mboomers", bMutantBoomerFilter, "all Mutant Boomers", false);
+			AddMultiTargetFilter("@psyboomers", bMutantBoomerFilter, "all Mutant Boomers", false);
+			AddMultiTargetFilter("@mhunters", bMutantHunterFilter, "all Mutant Hunters", false);
+			AddMultiTargetFilter("@psyhunters", bMutantHunterFilter, "all Mutant Hunters", false);
+			AddMultiTargetFilter("@mspitters", bMutantSpitterFilter, "all Mutant Spitters", false);
+			AddMultiTargetFilter("@psyspitters", bMutantSpitterFilter, "all Mutant Spitters", false);
+			AddMultiTargetFilter("@mjockeys", bMutantJockeyFilter, "all Mutant Jockeys", false);
+			AddMultiTargetFilter("@psyjockeys", bMutantJockeyFilter, "all Mutant Jockeys", false);
+			AddMultiTargetFilter("@mchargers", bMutantChargerFilter, "all Mutant Chargers", false);
+			AddMultiTargetFilter("@psychargers", bMutantChargerFilter, "all Mutant Chargers", false);
 		}
 		case false:
 		{
@@ -1475,8 +1495,20 @@ stock void vMultiTargetFilters(bool toggle)
 			RemoveMultiTargetFilter("@special", bSpecialFilter);
 			RemoveMultiTargetFilter("@infected", bInfectedFilter);
 			RemoveMultiTargetFilter("@mutants", bMutantFilter);
-			RemoveMultiTargetFilter("@mtanks", bMutantFilter);
-			RemoveMultiTargetFilter("@psytanks", bMutantFilter);
+			RemoveMultiTargetFilter("@mtanks", bMutantTankFilter);
+			RemoveMultiTargetFilter("@psytanks", bMutantTankFilter);
+			RemoveMultiTargetFilter("@msmokers", bMutantSmokerFilter);
+			RemoveMultiTargetFilter("@psysmokers", bMutantSmokerFilter);
+			RemoveMultiTargetFilter("@mboomers", bMutantBoomerFilter);
+			RemoveMultiTargetFilter("@psyboomers", bMutantBoomerFilter);
+			RemoveMultiTargetFilter("@mhunters", bMutantHunterFilter);
+			RemoveMultiTargetFilter("@psyhunters", bMutantHunterFilter);
+			RemoveMultiTargetFilter("@mspitters", bMutantSpitterFilter);
+			RemoveMultiTargetFilter("@psyspitters", bMutantSpitterFilter);
+			RemoveMultiTargetFilter("@mjockeys", bMutantJockeyFilter);
+			RemoveMultiTargetFilter("@psyjockeys", bMutantJockeyFilter);
+			RemoveMultiTargetFilter("@mchargers", bMutantChargerFilter);
+			RemoveMultiTargetFilter("@psychargers", bMutantChargerFilter);
 		}
 	}
 }
@@ -1486,13 +1518,13 @@ stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, 
 	int iPointPush = CreateEntityByName("point_push");
 	if (bIsValidEntity(iPointPush))
 	{
-		SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
 		DispatchKeyValueFloat(iPointPush, "magnitude", magnitude);
 		DispatchKeyValueFloat(iPointPush, "radius", radius);
 		DispatchKeyValue(iPointPush, "spawnflags", "8");
 
 		TeleportEntity(iPointPush, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iPointPush);
+		SetEntPropEnt(iPointPush, Prop_Data, "m_hOwnerEntity", tank);
 		AcceptEntityInput(iPointPush, "Enable");
 
 		iPointPush = EntIndexToEntRef(iPointPush);
@@ -1561,16 +1593,16 @@ stock void vSetAdrenalineTime(int survivor, float duration)
 	SetEntProp(survivor, Prop_Send, "m_bAdrenalineActive", (duration <= 0.0 ? 0 : 1), 1);
 }
 
-stock void vSetEdictFlags(int edict, bool mode)
+stock void vSetEdictFlags(int edict, int flags, bool remove)
 {
 	int iFlags = GetEdictFlags(edict);
-	if (mode && (iFlags & FL_EDICT_ALWAYS))
+	if (remove && (iFlags & flags))
 	{
-		SetEdictFlags(edict, (iFlags ^ FL_EDICT_ALWAYS));
+		SetEdictFlags(edict, (iFlags & ~flags));
 	}
-	else if (!mode && !(iFlags & FL_EDICT_ALWAYS))
+	else if (!remove && !(iFlags & flags))
 	{
-		SetEdictFlags(edict, (iFlags & FL_EDICT_ALWAYS));
+		SetEdictFlags(edict, iFlags|flags);
 	}
 }
 
@@ -1581,7 +1613,7 @@ stock void vSetEntityParent(int entity, int parent, bool owner = false)
 
 	if (owner)
 	{
-		SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", parent);
+		SetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity", parent);
 	}
 }
 
@@ -1628,7 +1660,7 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
 
-		SetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntPropEnt(iProp, Prop_Data, "m_hOwnerEntity", tank);
 		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", tank);
 		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 
@@ -1649,7 +1681,7 @@ void vBreakProp(DataPack pack)
 	int iProp = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	delete pack;
 
-	if (bIsValidEntity(iProp) && bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsValidEntity(iProp) && bIsInfected(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		AcceptEntityInput(iProp, "Break", iTank);
 	}
@@ -1868,6 +1900,16 @@ stock void MT_TE_SetupStopAllParticles(int entity)
 	TE_WriteFloat("m_flScale", 0.0);
 	TE_WriteFloat("m_flRadius", 0.0);
 	TE_WriteNum("m_nDamageType", 0);
+}
+
+stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float angles[3], const float velocity[3], const float direction[3], const float distance)
+{
+	float flPos[3];
+	flPos[0] = origin[0] + (direction[0] * distance);
+	flPos[1] = origin[1] + (direction[1] * distance);
+	flPos[2] = origin[2] + (direction[2] * distance);
+
+	TeleportEntity(tank, flPos, angles, velocity);
 }
 
 stock void MT_UnloadPlugin(Handle plugin = null)
@@ -2312,7 +2354,7 @@ stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_C
 
 stock bool bIsPlayerBurning(int player)
 {
-	return GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE;
+	return GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || (GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE);
 }
 
 stock bool bIsPlayerIdle(int survivor)
@@ -2590,6 +2632,70 @@ stock bool bIsVisiblePosition(float pos1[3], float pos2[3], int entity, int type
 	return true;
 }
 
+stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[3] = NULL_VECTOR, float targetPos[3] = NULL_VECTOR, float range = 0.0, float threshold = 0.73)
+{
+	switch (type)
+	{
+		case 0: return true;
+		case 1, 2:
+		{
+			float flPlayerPos[3], flTargetPos[3];
+
+			switch (IsNullVector(playerPos))
+			{
+				case true: GetClientEyePosition(player, flPlayerPos);
+				case false: vCopyVector(playerPos, flPlayerPos);
+			}
+
+			switch (IsNullVector(targetPos))
+			{
+				case true: GetClientEyePosition(target, flTargetPos);
+				case false: vCopyVector(targetPos, flTargetPos);
+			}
+
+			if (type == 2)
+			{
+				float flPlayerAngles[3];
+				GetClientEyeAngles(player, flPlayerAngles);
+				flPlayerAngles[0] = flPlayerAngles[2] = 0.0;
+
+				float flPlayerDirection[3]
+				GetAngleVectors(flPlayerAngles, flPlayerDirection, NULL_VECTOR, NULL_VECTOR);
+
+				float flDistance[3];
+				flDistance[0] = flTargetPos[0] - flPlayerPos[0];
+				flDistance[1] = flTargetPos[1] - flPlayerPos[1];
+				flDistance[2] = 0.0;
+				if (range != 0.0 && ((flDistance[0] * flDistance[0]) + (flDistance[1] * flDistance[1])) >= (range * range))
+				{
+					return false;
+				}
+
+				float flTargetDirection[3];
+				NormalizeVector(flDistance, flTargetDirection);
+				if (GetVectorDotProduct(flPlayerDirection, flTargetDirection) < threshold)
+				{
+					return false;
+				}
+			}
+
+			Handle hTrace = TR_TraceRayFilterEx(flPlayerPos, flTargetPos, MASK_PLAYERSOLID_BRUSHONLY, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer);
+			if (hTrace != null)
+			{
+				if (TR_DidHit(hTrace))
+				{
+					delete hTrace;
+					return false;
+				}
+
+				delete hTrace;
+			}
+		}
+	}
+
+	return true;
+}
+
 stock bool bIsVisibleToPosition(float pos1[3], float pos2[3], float range)
 {
 	float flPos[3], flAngles[3];
@@ -2696,6 +2802,97 @@ bool bJockeyFilter(const char[] pattern, ArrayList clients)
 }
 
 bool bMutantFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantBoomerFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantChargerFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantHunterFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantJockeyFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantSmokerFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantSpitterFilter(const char[] pattern, ArrayList clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_GetTankType(iPlayer) > 0)
+		{
+			clients.Push(iPlayer);
+		}
+	}
+
+	return true;
+}
+
+bool bMutantTankFilter(const char[] pattern, ArrayList clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -2889,6 +3086,21 @@ stock void vGetStringValue(const char[] key, const char[] setting1, const char[]
 			case 2: strcopy(buffer3, size3, value);
 			case 3: strcopy(buffer4, size4, value);
 		}
+	}
+}
+
+stock void vGetSubSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] teamVal = "", const char[] playerVal = "", const char[] specVal = "", const char[] typeVal = "")
+{
+	switch (apply)
+	{
+		case true:
+		{
+			char sPlayerVal[PLATFORM_MAX_PATH], sTypeVal[PLATFORM_MAX_PATH];
+			strcopy(sPlayerVal, sizeof sPlayerVal, ((teamVal[0] != '\0') ? teamVal : playerVal));
+			strcopy(sTypeVal, sizeof sTypeVal, ((specVal[0] != '\0') ? specVal : typeVal));
+			FormatEx(buffer, size, "%s", ((human && sPlayerVal[0] != '\0') ? sPlayerVal : sTypeVal));
+		}
+		case false: buffer[0] = '\0';
 	}
 }
 
@@ -3127,6 +3339,38 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 	return (overrideLevel == 1) ? -1.0 : 0.0;
 }
 
+stock float flGetSubSettingValue(bool apply, bool human, float teamVal, float playerVal, float specVal, float typeVal, int overrideLevel = 0, float overrideVal = 0.0)
+{
+	if (apply)
+	{
+		float flPlayerVal = overrideVal, flTypeVal = overrideVal;
+
+		switch (overrideLevel)
+		{
+			case 0:
+			{
+				flPlayerVal = (teamVal > overrideVal) ? teamVal : playerVal;
+				flTypeVal = (specVal > overrideVal) ? specVal : typeVal;
+				return (human && flPlayerVal > overrideVal) ? flPlayerVal : flTypeVal;
+			}
+			case 1:
+			{
+				flPlayerVal = (teamVal >= overrideVal) ? teamVal : playerVal;
+				flTypeVal = (specVal >= overrideVal) ? specVal : typeVal;
+				return (human && flPlayerVal >= overrideVal) ? flPlayerVal : flTypeVal;
+			}
+			case 2:
+			{
+				flPlayerVal = (teamVal != overrideVal) ? teamVal : playerVal;
+				flTypeVal = (specVal != overrideVal) ? specVal : typeVal;
+				return (human && flPlayerVal != overrideVal) ? flPlayerVal : flTypeVal;
+			}
+		}
+	}
+
+	return (overrideLevel == 1) ? -1.0 : 0.0;
+}
+
 stock float flGetTempHealth(int survivor, float decayRate)
 {
 	float flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
@@ -3219,13 +3463,13 @@ stock int iGetIdlePlayer(int bot)
 	return 0;
 }
 
-stock int iGetInfectedCount(bool human = false)
+stock int iGetInfectedCount(bool human = false, int flags = MT_CHECK_INGAME)
 {
 	bool bValidPlayer = false;
 	int iCount = 0;
 	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
 	{
-		bValidPlayer = human ? bIsHumanInfected(iSpecial) : bIsInfected(iSpecial);
+		bValidPlayer = human ? bIsHumanInfected(iSpecial, flags) : bIsInfected(iSpecial, flags);
 		if (bValidPlayer)
 		{
 			iCount++;
@@ -3233,6 +3477,40 @@ stock int iGetInfectedCount(bool human = false)
 	}
 
 	return iCount;
+}
+
+stock int iGetInfectedType(int client)
+{
+	if (bIsSmoker(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 1;
+	}
+	else if (bIsBoomer(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 2;
+	}
+	else if (bIsHunter(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 3;
+	}
+	else if (bIsSpitter(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 4;
+	}
+	else if (bIsJockey(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 5;
+	}
+	else if (bIsCharger(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return 6;
+	}
+	else if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return bIsSecondGame() ? 8 : 5;
+	}
+
+	return 0;
 }
 
 stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
@@ -3505,15 +3783,15 @@ stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
 	int[] iCommons = new int[2048];
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
-                if (bIsValidEntity(iCommon))
-                {
-        		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
-        		if (bIsVisibleToPosition(pos, flCommonPos, range))
-        		{
-        			iCommons[iCommonCount] = iCommon;
-        			iCommonCount++;
-        		}
-                }
+		if (bIsValidEntity(iCommon))
+		{
+			GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
+			if (bIsVisibleToPosition(pos, flCommonPos, range))
+			{
+				iCommons[iCommonCount] = iCommon;
+				iCommonCount++;
+			}
+		}
 	}
 
 	return (iCommonCount > 0) ? iCommons[GetRandomInt(0, (iCommonCount - 1))] : 0;
@@ -3582,6 +3860,22 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
+stock int iGetPlayerHealth(int client, float decayRate)
+{
+	int iHealth = GetEntProp(client, Prop_Data, "m_iHealth");
+	if (bIsInfected(client))
+	{
+		return iHealth;
+	}
+	else if (bIsSurvivor(client))
+	{
+		float flTempHealth = flGetTempHealth(client, decayRate);
+		return RoundToFloor(iHealth + flTempHealth);
+	}
+
+	return 0;
+}
+
 stock int iGetPlayerWaterLevel(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_nWaterLevel");
@@ -3590,6 +3884,21 @@ stock int iGetPlayerWaterLevel(int client)
 stock int iGetRandomColor(int color)
 {
 	return (color == -1 || color < 0 || color > 255) ? MT_GetRandomInt(0, 255) : color;
+}
+
+stock int iGetRandomPlayer(int flags = MT_CHECK_INGAME)
+{
+	int iPlayerCount = 0, iPlayers[MAXPLAYERS + 1];
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, flags))
+		{
+			iPlayers[iPlayerCount] = iPlayer;
+			iPlayerCount++;
+		}
+	}
+
+	return (iPlayerCount > 0) ? iPlayers[GetRandomInt(0, (iPlayerCount - 1))] : 0;
 }
 
 stock int iGetRandomSurvivor(int tank)
@@ -3606,7 +3915,7 @@ stock int iGetRandomSurvivor(int tank)
 		iSurvivorCount++;
 	}
 
-	return iSurvivors[MT_GetRandomInt(0, iSurvivorCount - 1)];
+	return (iSurvivorCount > 0) ? iSurvivors[GetRandomInt(0, (iSurvivorCount - 1))] : 0;
 }
 
 stock int iGetRandomTank(int tank)
@@ -3621,7 +3930,7 @@ stock int iGetRandomTank(int tank)
 		}
 	}
 
-	return iTanks[MT_GetRandomInt(0, iTankCount - 1)];
+	return (iTankCount > 0) ? iTanks[GetRandomInt(0, (iTankCount - 1))] : 0;
 }
 
 stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)
@@ -3675,6 +3984,38 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 			case 0: return (human && playerVal > overrideVal) ? playerVal : typeVal;
 			case 1: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
 			case 2: return (human && playerVal != overrideVal) ? playerVal : typeVal;
+		}
+	}
+
+	return (overrideLevel == 1) ? -1 : 0;
+}
+
+stock int iGetSubSettingValue(bool apply, bool human, int teamVal, int playerVal, int specVal, int typeVal, int overrideLevel = 0, int overrideVal = 0)
+{
+	if (apply)
+	{
+		int iPlayerVal = overrideVal, iTypeVal = overrideVal;
+
+		switch (overrideLevel)
+		{
+			case 0:
+			{
+				iPlayerVal = (teamVal > overrideVal) ? teamVal : playerVal;
+				iTypeVal = (specVal > overrideVal) ? specVal : typeVal;
+				return (human && iPlayerVal > overrideVal) ? iPlayerVal : iTypeVal;
+			}
+			case 1:
+			{
+				iPlayerVal = (teamVal >= overrideVal) ? teamVal : playerVal;
+				iTypeVal = (specVal >= overrideVal) ? specVal : typeVal;
+				return (human && iPlayerVal >= overrideVal) ? iPlayerVal : iTypeVal;
+			}
+			case 2:
+			{
+				iPlayerVal = (teamVal != overrideVal) ? teamVal : playerVal;
+				iTypeVal = (specVal != overrideVal) ? specVal : typeVal;
+				return (human && iPlayerVal != overrideVal) ? iPlayerVal : iTypeVal;
+			}
 		}
 	}
 
@@ -3753,7 +4094,7 @@ stock int iGetWitchCount()
 }
 
 // Limiters
-stock float flClamp(float value, float min, float max)
+stock float flClamp(float value, float min = 0.0, float max = 99999.0)
 {
 	if (value < min)
 	{
@@ -3767,7 +4108,7 @@ stock float flClamp(float value, float min, float max)
 	return value;
 }
 
-stock int iClamp(int value, int min, int max)
+stock int iClamp(int value, int min = 0, int max = 99999)
 {
 	if (value < min)
 	{
@@ -3793,7 +4134,7 @@ stock int iCreateParticle(int player, const char[] particlename, float pos[3], f
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");
-		vSetEdictFlags(iEffect, true);
+		vSetEdictFlags(iEffect, FL_EDICT_ALWAYS, true);
 
 		if (attachment[0] != '\0')
 		{

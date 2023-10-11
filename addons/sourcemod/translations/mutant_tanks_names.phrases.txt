@@ -19,9 +19,79 @@
 		"en"			"Absorber Tank"
 	}
 
+	"Boomer #1 Name"
+	{
+		"en"			"Absorber Boomer"
+	}
+
+	"Charger #1 Name"
+	{
+		"en"			"Absorber Charger"
+	}
+
+	"Hunter #1 Name"
+	{
+		"en"			"Absorber Hunter"
+	}
+
+	"Jockey #1 Name"
+	{
+		"en"			"Absorber Jockey"
+	}
+
+	"Smoker #1 Name"
+	{
+		"en"			"Absorber Smoker"
+	}
+
+	"Spitter #1 Name"
+	{
+		"en"			"Absorber Spitter"
+	}
+
+	"Witch #1 Name"
+	{
+		"en"			"Absorber Witch"
+	}
+
 	"Tank #1"
 	{
 		"en"			"{mint}This Tank can absorb most of the damage it receives."
+	}
+
+	"Boomer #1"
+	{
+		"en"			"{mint}This Boomer can absorb most of the damage it receives."
+	}
+
+	"Charger #1"
+	{
+		"en"			"{mint}This Charger can absorb most of the damage it receives."
+	}
+
+	"Hunter #1"
+	{
+		"en"			"{mint}This Hunter can absorb most of the damage it receives."
+	}
+
+	"Jockey #1"
+	{
+		"en"			"{mint}This Jockey can absorb most of the damage it receives."
+	}
+
+	"Smoker #1"
+	{
+		"en"			"{mint}This Smoker can absorb most of the damage it receives."
+	}
+
+	"Spitter #1"
+	{
+		"en"			"{mint}This Spitter can absorb most of the damage it receives."
+	}
+
+	"Witch #1"
+	{
+		"en"			"{mint}This Witch can absorb most of the damage it receives."
 	}
 
 	"Tank #2 Name"
@@ -29,9 +99,79 @@
 		"en"			"Acidic Tank"
 	}
 
+	"Boomer #2 Name"
+	{
+		"en"			"Acidic Boomer"
+	}
+
+	"Charger #2 Name"
+	{
+		"en"			"Acidic Charger"
+	}
+
+	"Hunter #2 Name"
+	{
+		"en"			"Acidic Hunter"
+	}
+
+	"Jockey #2 Name"
+	{
+		"en"			"Acidic Jockey"
+	}
+
+	"Smoker #2 Name"
+	{
+		"en"			"Acidic Smoker"
+	}
+
+	"Spitter #2 Name"
+	{
+		"en"			"Acidic Spitter"
+	}
+
+	"Witch #2 Name"
+	{
+		"en"			"Acidic Witch"
+	}
+
 	"Tank #2"
 	{
 		"en"			"{mint}This Tank can create acid puddles underneath survivors."
+	}
+
+	"Boomer #2"
+	{
+		"en"			"{mint}This Boomer can create acid puddles underneath survivors."
+	}
+
+	"Charger #2"
+	{
+		"en"			"{mint}This Charger can create acid puddles underneath survivors."
+	}
+
+	"Hunter #2"
+	{
+		"en"			"{mint}This Hunter can create acid puddles underneath survivors."
+	}
+
+	"Jockey #2"
+	{
+		"en"			"{mint}This Jockey can create acid puddles underneath survivors."
+	}
+
+	"Smoker #2"
+	{
+		"en"			"{mint}This Smoker can create acid puddles underneath survivors."
+	}
+
+	"Spitter #2"
+	{
+		"en"			"{mint}This Spitter can create acid puddles underneath survivors."
+	}
+
+	"Witch #2"
+	{
+		"en"			"{mint}This Witch can create acid puddles underneath survivors."
 	}
 
 	"Tank #3 Name"
@@ -39,9 +179,79 @@
 		"en"			"Aimless Tank"
 	}
 
+	"Boomer #3 Name"
+	{
+		"en"			"Aimless Boomer"
+	}
+
+	"Charger #3 Name"
+	{
+		"en"			"Aimless Charger"
+	}
+
+	"Hunter #3 Name"
+	{
+		"en"			"Aimless Hunter"
+	}
+
+	"Jockey #3 Name"
+	{
+		"en"			"Aimless Jockey"
+	}
+
+	"Smoker #3 Name"
+	{
+		"en"			"Aimless Smoker"
+	}
+
+	"Spitter #3 Name"
+	{
+		"en"			"Aimless Spitter"
+	}
+
+	"Witch #3 Name"
+	{
+		"en"			"Aimless Witch"
+	}
+
 	"Tank #3"
 	{
 		"en"			"{mint}This Tank can prevent survivors from aiming."
+	}
+
+	"Boomer #3"
+	{
+		"en"			"{mint}This Boomer can prevent survivors from aiming."
+	}
+
+	"Charger #3"
+	{
+		"en"			"{mint}This Charger can prevent survivors from aiming."
+	}
+
+	"Hunter #3"
+	{
+		"en"			"{mint}This Hunter can prevent survivors from aiming."
+	}
+
+	"Jockey #3"
+	{
+		"en"			"{mint}This Jockey can prevent survivors from aiming."
+	}
+
+	"Smoker #3"
+	{
+		"en"			"{mint}This Smoker can prevent survivors from aiming."
+	}
+
+	"Spitter #3"
+	{
+		"en"			"{mint}This Spitter can prevent survivors from aiming."
+	}
+
+	"Witch #3"
+	{
+		"en"			"{mint}This Witch can prevent survivors from aiming."
 	}
 
 	"Tank #4 Name"
@@ -49,9 +259,79 @@
 		"en"			"Ammo Tank"
 	}
 
+	"Boomer #4 Name"
+	{
+		"en"			"Ammo Boomer"
+	}
+
+	"Charger #4 Name"
+	{
+		"en"			"Ammo Charger"
+	}
+
+	"Hunter #4 Name"
+	{
+		"en"			"Ammo Hunter"
+	}
+
+	"Jockey #4 Name"
+	{
+		"en"			"Ammo Jockey"
+	}
+
+	"Smoker #4 Name"
+	{
+		"en"			"Ammo Smoker"
+	}
+
+	"Spitter #4 Name"
+	{
+		"en"			"Ammo Spitter"
+	}
+
+	"Witch #4 Name"
+	{
+		"en"			"Ammo Witch"
+	}
+
 	"Tank #4"
 	{
 		"en"			"{mint}This Tank can steal some or all of your ammunition."
+	}
+
+	"Boomer #4"
+	{
+		"en"			"{mint}This Boomer can steal some or all of your ammunition."
+	}
+
+	"Charger #4"
+	{
+		"en"			"{mint}This Charger can steal some or all of your ammunition."
+	}
+
+	"Hunter #4"
+	{
+		"en"			"{mint}This Hunter can steal some or all of your ammunition."
+	}
+
+	"Jockey #4"
+	{
+		"en"			"{mint}This Jockey can steal some or all of your ammunition."
+	}
+
+	"Smoker #4"
+	{
+		"en"			"{mint}This Smoker can steal some or all of your ammunition."
+	}
+
+	"Spitter #4"
+	{
+		"en"			"{mint}This Spitter can steal some or all of your ammunition."
+	}
+
+	"Witch #4"
+	{
+		"en"			"{mint}This Witch can steal some or all of your ammunition."
 	}
 
 	"Tank #5 Name"
@@ -59,9 +339,79 @@
 		"en"			"Blind Tank"
 	}
 
+	"Boomer #5 Name"
+	{
+		"en"			"Blind Boomer"
+	}
+
+	"Charger #5 Name"
+	{
+		"en"			"Blind Charger"
+	}
+
+	"Hunter #5 Name"
+	{
+		"en"			"Blind Hunter"
+	}
+
+	"Jockey #5 Name"
+	{
+		"en"			"Blind Jockey"
+	}
+
+	"Smoker #5 Name"
+	{
+		"en"			"Blind Smoker"
+	}
+
+	"Spitter #5 Name"
+	{
+		"en"			"Blind Spitter"
+	}
+
+	"Witch #5 Name"
+	{
+		"en"			"Blind Witch"
+	}
+
 	"Tank #5"
 	{
 		"en"			"{mint}This Tank can blind survivors."
+	}
+
+	"Boomer #5"
+	{
+		"en"			"{mint}This Boomer can blind survivors."
+	}
+
+	"Charger #5"
+	{
+		"en"			"{mint}This Charger can blind survivors."
+	}
+
+	"Hunter #5"
+	{
+		"en"			"{mint}This Hunter can blind survivors."
+	}
+
+	"Jockey #5"
+	{
+		"en"			"{mint}This Jockey can blind survivors."
+	}
+
+	"Smoker #5"
+	{
+		"en"			"{mint}This Smoker can blind survivors."
+	}
+
+	"Spitter #5"
+	{
+		"en"			"{mint}This Spitter can blind survivors."
+	}
+
+	"Witch #5"
+	{
+		"en"			"{mint}This Witch can blind survivors."
 	}
 
 	"Tank #6 Name"
@@ -69,9 +419,79 @@
 		"en"			"Bomber Tank"
 	}
 
+	"Boomer #6 Name"
+	{
+		"en"			"Bomber Boomer"
+	}
+
+	"Charger #6 Name"
+	{
+		"en"			"Bomber Charger"
+	}
+
+	"Hunter #6 Name"
+	{
+		"en"			"Bomber Hunter"
+	}
+
+	"Jockey #6 Name"
+	{
+		"en"			"Bomber Jockey"
+	}
+
+	"Smoker #6 Name"
+	{
+		"en"			"Bomber Smoker"
+	}
+
+	"Spitter #6 Name"
+	{
+		"en"			"Bomber Spitter"
+	}
+
+	"Witch #6 Name"
+	{
+		"en"			"Bomber Witch"
+	}
+
 	"Tank #6"
 	{
 		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
+	}
+
+	"Boomer #6"
+	{
+		"en"			"{mint}This Boomer can cause explosions and is immune to explosive damage."
+	}
+
+	"Charger #6"
+	{
+		"en"			"{mint}This Charger can cause explosions and is immune to explosive damage."
+	}
+
+	"Hunter #6"
+	{
+		"en"			"{mint}This Hunter can cause explosions and is immune to explosive damage."
+	}
+
+	"Jockey #6"
+	{
+		"en"			"{mint}This Jockey can cause explosions and is immune to explosive damage."
+	}
+
+	"Smoker #6"
+	{
+		"en"			"{mint}This Smoker can cause explosions and is immune to explosive damage."
+	}
+
+	"Spitter #6"
+	{
+		"en"			"{mint}This Spitter can cause explosions and is immune to explosive damage."
+	}
+
+	"Witch #6"
+	{
+		"en"			"{mint}This Witch can cause explosions and is immune to explosive damage."
 	}
 
 	"Tank #7 Name"
@@ -79,9 +499,79 @@
 		"en"			"Boomer Tank"
 	}
 
+	"Boomer #7 Name"
+	{
+		"en"			"Boomer Boomer"
+	}
+
+	"Charger #7 Name"
+	{
+		"en"			"Boomer Charger"
+	}
+
+	"Hunter #7 Name"
+	{
+		"en"			"Boomer Hunter"
+	}
+
+	"Jockey #7 Name"
+	{
+		"en"			"Boomer Jockey"
+	}
+
+	"Smoker #7 Name"
+	{
+		"en"			"Boomer Smoker"
+	}
+
+	"Spitter #7 Name"
+	{
+		"en"			"Boomer Spitter"
+	}
+
+	"Witch #7 Name"
+	{
+		"en"			"Boomer Witch"
+	}
+
 	"Tank #7"
 	{
 		"en"			"{mint}This Tank can spawn Boomers behind it and throw some at survivors too."
+	}
+
+	"Boomer #7"
+	{
+		"en"			"{mint}This Boomer can spawn Boomers behind it."
+	}
+
+	"Charger #7"
+	{
+		"en"			"{mint}This Charger can spawn Boomers behind it."
+	}
+
+	"Hunter #7"
+	{
+		"en"			"{mint}This Hunter can spawn Boomers behind it."
+	}
+
+	"Jockey #7"
+	{
+		"en"			"{mint}This Jockey can spawn Boomers behind it."
+	}
+
+	"Smoker #7"
+	{
+		"en"			"{mint}This Smoker can spawn Boomers behind it."
+	}
+
+	"Spitter #7"
+	{
+		"en"			"{mint}This Spitter can spawn Boomers behind it."
+	}
+
+	"Witch #7"
+	{
+		"en"			"{mint}This Witch can spawn Boomers behind it."
 	}
 
 	"Tank #8 Name"
@@ -89,9 +579,79 @@
 		"en"			"Bulletproof Tank"
 	}
 
+	"Boomer #8 Name"
+	{
+		"en"			"Bulletproof Boomer"
+	}
+
+	"Charger #8 Name"
+	{
+		"en"			"Bulletproof Charger"
+	}
+
+	"Hunter #8 Name"
+	{
+		"en"			"Bulletproof Hunter"
+	}
+
+	"Jockey #8 Name"
+	{
+		"en"			"Bulletproof Jockey"
+	}
+
+	"Smoker #8 Name"
+	{
+		"en"			"Bulletproof Smoker"
+	}
+
+	"Spitter #8 Name"
+	{
+		"en"			"Bulletproof Spitter"
+	}
+
+	"Witch #8 Name"
+	{
+		"en"			"Bulletproof Witch"
+	}
+
 	"Tank #8"
 	{
 		"en"			"{mint}This Tank is immune to bullet damage."
+	}
+
+	"Boomer #8"
+	{
+		"en"			"{mint}This Boomer is immune to bullet damage."
+	}
+
+	"Charger #8"
+	{
+		"en"			"{mint}This Charger is immune to bullet damage."
+	}
+
+	"Hunter #8"
+	{
+		"en"			"{mint}This Hunter is immune to bullet damage."
+	}
+
+	"Jockey #8"
+	{
+		"en"			"{mint}This Jockey is immune to bullet damage."
+	}
+
+	"Smoker #8"
+	{
+		"en"			"{mint}This Smoker is immune to bullet damage."
+	}
+
+	"Spitter #8"
+	{
+		"en"			"{mint}This Spitter is immune to bullet damage."
+	}
+
+	"Witch #8"
+	{
+		"en"			"{mint}This Witch is immune to bullet damage."
 	}
 
 	"Tank #9 Name"
@@ -99,9 +659,79 @@
 		"en"			"Burier Tank"
 	}
 
+	"Boomer #9 Name"
+	{
+		"en"			"Burier Boomer"
+	}
+
+	"Charger #9 Name"
+	{
+		"en"			"Burier Charger"
+	}
+
+	"Hunter #9 Name"
+	{
+		"en"			"Burier Hunter"
+	}
+
+	"Jockey #9 Name"
+	{
+		"en"			"Burier Jockey"
+	}
+
+	"Smoker #9 Name"
+	{
+		"en"			"Burier Smoker"
+	}
+
+	"Spitter #9 Name"
+	{
+		"en"			"Burier Spitter"
+	}
+
+	"Witch #9 Name"
+	{
+		"en"			"Burier Witch"
+	}
+
 	"Tank #9"
 	{
 		"en"			"{mint}This Tank can bury survivors."
+	}
+
+	"Boomer #9"
+	{
+		"en"			"{mint}This Boomer can bury survivors."
+	}
+
+	"Charger #9"
+	{
+		"en"			"{mint}This Charger can bury survivors."
+	}
+
+	"Hunter #9"
+	{
+		"en"			"{mint}This Hunter can bury survivors."
+	}
+
+	"Jockey #9"
+	{
+		"en"			"{mint}This Jockey can bury survivors."
+	}
+
+	"Smoker #9"
+	{
+		"en"			"{mint}This Smoker can bury survivors."
+	}
+
+	"Spitter #9"
+	{
+		"en"			"{mint}This Spitter can bury survivors."
+	}
+
+	"Witch #9"
+	{
+		"en"			"{mint}This Witch can bury survivors."
 	}
 
 	"Tank #10 Name"
@@ -109,9 +739,79 @@
 		"en"			"Car Tank"
 	}
 
+	"Boomer #10 Name"
+	{
+		"en"			"Car Boomer"
+	}
+
+	"Charger #10 Name"
+	{
+		"en"			"Car Charger"
+	}
+
+	"Hunter #10 Name"
+	{
+		"en"			"Car Hunter"
+	}
+
+	"Jockey #10 Name"
+	{
+		"en"			"Car Jockey"
+	}
+
+	"Smoker #10 Name"
+	{
+		"en"			"Car Smoker"
+	}
+
+	"Spitter #10 Name"
+	{
+		"en"			"Car Spitter"
+	}
+
+	"Witch #10 Name"
+	{
+		"en"			"Car Witch"
+	}
+
 	"Tank #10"
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
+	}
+
+	"Boomer #10"
+	{
+		"en"			"{mint}This Boomer can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Charger #10"
+	{
+		"en"			"{mint}This Charger can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Hunter #10"
+	{
+		"en"			"{mint}This Hunter can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Jockey #10"
+	{
+		"en"			"{mint}This Jockey can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Smoker #10"
+	{
+		"en"			"{mint}This Smoker can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Spitter #10"
+	{
+		"en"			"{mint}This Spitter can start car showers. The cars disappear after 30 seconds."
+	}
+
+	"Witch #10"
+	{
+		"en"			"{mint}This Witch can start car showers. The cars disappear after 30 seconds."
 	}
 
 	"Tank #11 Name"
@@ -119,9 +819,79 @@
 		"en"			"Charger Tank"
 	}
 
+	"Boomer #11 Name"
+	{
+		"en"			"Charger Boomer"
+	}
+
+	"Charger #11 Name"
+	{
+		"en"			"Charger Charger"
+	}
+
+	"Hunter #11 Name"
+	{
+		"en"			"Charger Hunter"
+	}
+
+	"Jockey #11 Name"
+	{
+		"en"			"Charger Jockey"
+	}
+
+	"Smoker #11 Name"
+	{
+		"en"			"Charger Smoker"
+	}
+
+	"Spitter #11 Name"
+	{
+		"en"			"Charger Spitter"
+	}
+
+	"Witch #11 Name"
+	{
+		"en"			"Charger Witch"
+	}
+
 	"Tank #11"
 	{
 		"en"			"{mint}This Tank can spawn Chargers behind it and throw some at survivors too."
+	}
+
+	"Boomer #11"
+	{
+		"en"			"{mint}This Boomer can spawn Chargers behind it."
+	}
+
+	"Charger #11"
+	{
+		"en"			"{mint}This Charger can spawn Chargers behind it."
+	}
+
+	"Hunter #11"
+	{
+		"en"			"{mint}This Hunter can spawn Chargers behind it."
+	}
+
+	"Jockey #11"
+	{
+		"en"			"{mint}This Jockey can spawn Chargers behind it."
+	}
+
+	"Smoker #11"
+	{
+		"en"			"{mint}This Smoker can spawn Chargers behind it."
+	}
+
+	"Spitter #11"
+	{
+		"en"			"{mint}This Spitter can spawn Chargers behind it."
+	}
+
+	"Witch #11"
+	{
+		"en"			"{mint}This Witch can spawn Chargers behind it."
 	}
 
 	"Tank #12 Name"
@@ -129,9 +899,79 @@
 		"en"			"Choker Tank"
 	}
 
+	"Boomer #12 Name"
+	{
+		"en"			"Choker Boomer"
+	}
+
+	"Charger #12 Name"
+	{
+		"en"			"Choker Charger"
+	}
+
+	"Hunter #12 Name"
+	{
+		"en"			"Choker Hunter"
+	}
+
+	"Jockey #12 Name"
+	{
+		"en"			"Choker Jockey"
+	}
+
+	"Smoker #12 Name"
+	{
+		"en"			"Choker Smoker"
+	}
+
+	"Spitter #12 Name"
+	{
+		"en"			"Choker Spitter"
+	}
+
+	"Witch #12 Name"
+	{
+		"en"			"Choker Witch"
+	}
+
 	"Tank #12"
 	{
 		"en"			"{mint}This Tank can choke survivors in the air."
+	}
+
+	"Boomer #12"
+	{
+		"en"			"{mint}This Boomer can choke survivors in the air."
+	}
+
+	"Charger #12"
+	{
+		"en"			"{mint}This Charger can choke survivors in the air."
+	}
+
+	"Hunter #12"
+	{
+		"en"			"{mint}This Hunter can choke survivors in the air."
+	}
+
+	"Jockey #12"
+	{
+		"en"			"{mint}This Jockey can choke survivors in the air."
+	}
+
+	"Smoker #12"
+	{
+		"en"			"{mint}This Smoker can choke survivors in the air."
+	}
+
+	"Spitter #12"
+	{
+		"en"			"{mint}This Spitter can choke survivors in the air."
+	}
+
+	"Witch #12"
+	{
+		"en"			"{mint}This Witch can choke survivors in the air."
 	}
 
 	"Tank #13 Name"
@@ -139,9 +979,79 @@
 		"en"			"Clone Tank"
 	}
 
+	"Boomer #13 Name"
+	{
+		"en"			"Clone Boomer"
+	}
+
+	"Charger #13 Name"
+	{
+		"en"			"Clone Charger"
+	}
+
+	"Hunter #13 Name"
+	{
+		"en"			"Clone Hunter"
+	}
+
+	"Jockey #13 Name"
+	{
+		"en"			"Clone Jockey"
+	}
+
+	"Smoker #13 Name"
+	{
+		"en"			"Clone Smoker"
+	}
+
+	"Spitter #13 Name"
+	{
+		"en"			"Clone Spitter"
+	}
+
+	"Witch #13 Name"
+	{
+		"en"			"Clone Witch"
+	}
+
 	"Tank #13"
 	{
 		"en"			"{mint}This Tank can spawn clones behind it and throw some at survivors too."
+	}
+
+	"Boomer #13"
+	{
+		"en"			"{mint}This Boomer can spawn clones behind it."
+	}
+
+	"Charger #13"
+	{
+		"en"			"{mint}This Charger can spawn clones behind it."
+	}
+
+	"Hunter #13"
+	{
+		"en"			"{mint}This Hunter can spawn clones behind it."
+	}
+
+	"Jockey #13"
+	{
+		"en"			"{mint}This Jockey can spawn clones behind it."
+	}
+
+	"Smoker #13"
+	{
+		"en"			"{mint}This Smoker can spawn clones behind it."
+	}
+
+	"Spitter #13"
+	{
+		"en"			"{mint}This Spitter can spawn clones behind it."
+	}
+
+	"Witch #13"
+	{
+		"en"			"{mint}This Witch can spawn clones behind it."
 	}
 
 	"Tank #14 Name"
@@ -149,9 +1059,79 @@
 		"en"			"Cloudy Tank"
 	}
 
+	"Boomer #14 Name"
+	{
+		"en"			"Cloudy Boomer"
+	}
+
+	"Charger #14 Name"
+	{
+		"en"			"Cloudy Charger"
+	}
+
+	"Hunter #14 Name"
+	{
+		"en"			"Cloudy Hunter"
+	}
+
+	"Jockey #14 Name"
+	{
+		"en"			"Cloudy Jockey"
+	}
+
+	"Smoker #14 Name"
+	{
+		"en"			"Cloudy Smoker"
+	}
+
+	"Spitter #14 Name"
+	{
+		"en"			"Cloudy Spitter"
+	}
+
+	"Witch #14 Name"
+	{
+		"en"			"Cloudy Witch"
+	}
+
 	"Tank #14"
 	{
 		"en"			"{mint}This Tank can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Boomer #14"
+	{
+		"en"			"{mint}This Boomer can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Charger #14"
+	{
+		"en"			"{mint}This Charger can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Hunter #14"
+	{
+		"en"			"{mint}This Hunter can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Jockey #14"
+	{
+		"en"			"{mint}This Jockey can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Smoker #14"
+	{
+		"en"			"{mint}This Smoker can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Spitter #14"
+	{
+		"en"			"{mint}This Spitter can emit clouds of smoke that damage survivors caught in them."
+	}
+
+	"Witch #14"
+	{
+		"en"			"{mint}This Witch can emit clouds of smoke that damage survivors caught in them."
 	}
 
 	"Tank #15 Name"
@@ -159,9 +1139,79 @@
 		"en"			"Dropper Tank"
 	}
 
+	"Boomer #15 Name"
+	{
+		"en"			"Dropper Boomer"
+	}
+
+	"Charger #15 Name"
+	{
+		"en"			"Dropper Charger"
+	}
+
+	"Hunter #15 Name"
+	{
+		"en"			"Dropper Hunter"
+	}
+
+	"Jockey #15 Name"
+	{
+		"en"			"Dropper Jockey"
+	}
+
+	"Smoker #15 Name"
+	{
+		"en"			"Dropper Smoker"
+	}
+
+	"Spitter #15 Name"
+	{
+		"en"			"Dropper Spitter"
+	}
+
+	"Witch #15 Name"
+	{
+		"en"			"Dropper Witch"
+	}
+
 	"Tank #15"
 	{
 		"en"			"{mint}This Tank can drop a random weapon upon death."
+	}
+
+	"Boomer #15"
+	{
+		"en"			"{mint}This Boomer can drop a random weapon upon death."
+	}
+
+	"Charger #15"
+	{
+		"en"			"{mint}This Charger can drop a random weapon upon death."
+	}
+
+	"Hunter #15"
+	{
+		"en"			"{mint}This Hunter can drop a random weapon upon death."
+	}
+
+	"Jockey #15"
+	{
+		"en"			"{mint}This Jockey can drop a random weapon upon death."
+	}
+
+	"Smoker #15"
+	{
+		"en"			"{mint}This Smoker can drop a random weapon upon death."
+	}
+
+	"Spitter #15"
+	{
+		"en"			"{mint}This Spitter can drop a random weapon upon death."
+	}
+
+	"Witch #15"
+	{
+		"en"			"{mint}This Witch can drop a random weapon upon death."
 	}
 
 	"Tank #16 Name"
@@ -169,9 +1219,79 @@
 		"en"			"Drugger Tank"
 	}
 
+	"Boomer #16 Name"
+	{
+		"en"			"Drugger Boomer"
+	}
+
+	"Charger #16 Name"
+	{
+		"en"			"Drugger Charger"
+	}
+
+	"Hunter #16 Name"
+	{
+		"en"			"Drugger Hunter"
+	}
+
+	"Jockey #16 Name"
+	{
+		"en"			"Drugger Jockey"
+	}
+
+	"Smoker #16 Name"
+	{
+		"en"			"Drugger Smoker"
+	}
+
+	"Spitter #16 Name"
+	{
+		"en"			"Drugger Spitter"
+	}
+
+	"Witch #16 Name"
+	{
+		"en"			"Drugger Witch"
+	}
+
 	"Tank #16"
 	{
 		"en"			"{mint}This Tank can drug survivors."
+	}
+
+	"Boomer #16"
+	{
+		"en"			"{mint}This Boomer can drug survivors."
+	}
+
+	"Charger #16"
+	{
+		"en"			"{mint}This Charger can drug survivors."
+	}
+
+	"Hunter #16"
+	{
+		"en"			"{mint}This Hunter can drug survivors."
+	}
+
+	"Jockey #16"
+	{
+		"en"			"{mint}This Jockey can drug survivors."
+	}
+
+	"Smoker #16"
+	{
+		"en"			"{mint}This Smoker can drug survivors."
+	}
+
+	"Spitter #16"
+	{
+		"en"			"{mint}This Spitter can drug survivors."
+	}
+
+	"Witch #16"
+	{
+		"en"			"{mint}This Witch can drug survivors."
 	}
 
 	"Tank #17 Name"
@@ -179,9 +1299,79 @@
 		"en"			"Drunk Tank"
 	}
 
+	"Boomer #17 Name"
+	{
+		"en"			"Drunk Boomer"
+	}
+
+	"Charger #17 Name"
+	{
+		"en"			"Drunk Charger"
+	}
+
+	"Hunter #17 Name"
+	{
+		"en"			"Drunk Hunter"
+	}
+
+	"Jockey #17 Name"
+	{
+		"en"			"Drunk Jockey"
+	}
+
+	"Smoker #17 Name"
+	{
+		"en"			"Drunk Smoker"
+	}
+
+	"Spitter #17 Name"
+	{
+		"en"			"Drunk Spitter"
+	}
+
+	"Witch #17 Name"
+	{
+		"en"			"Drunk Witch"
+	}
+
 	"Tank #17"
 	{
 		"en"			"{mint}This Tank can make survivors drunk."
+	}
+
+	"Boomer #17"
+	{
+		"en"			"{mint}This Boomer can make survivors drunk."
+	}
+
+	"Charger #17"
+	{
+		"en"			"{mint}This Charger can make survivors drunk."
+	}
+
+	"Hunter #17"
+	{
+		"en"			"{mint}This Hunter can make survivors drunk."
+	}
+
+	"Jockey #17"
+	{
+		"en"			"{mint}This Jockey can make survivors drunk."
+	}
+
+	"Smoker #17"
+	{
+		"en"			"{mint}This Smoker can make survivors drunk."
+	}
+
+	"Spitter #17"
+	{
+		"en"			"{mint}This Spitter can make survivors drunk."
+	}
+
+	"Witch #17"
+	{
+		"en"			"{mint}This Witch can make survivors drunk."
 	}
 
 	"Tank #18 Name"
@@ -189,9 +1379,79 @@
 		"en"			"Electric Tank"
 	}
 
+	"Boomer #18 Name"
+	{
+		"en"			"Electric Boomer"
+	}
+
+	"Charger #18 Name"
+	{
+		"en"			"Electric Charger"
+	}
+
+	"Hunter #18 Name"
+	{
+		"en"			"Electric Hunter"
+	}
+
+	"Jockey #18 Name"
+	{
+		"en"			"Electric Jockey"
+	}
+
+	"Smoker #18 Name"
+	{
+		"en"			"Electric Smoker"
+	}
+
+	"Spitter #18 Name"
+	{
+		"en"			"Electric Spitter"
+	}
+
+	"Witch #18 Name"
+	{
+		"en"			"Electric Witch"
+	}
+
 	"Tank #18"
 	{
 		"en"			"{mint}This Tank can electrocute survivors."
+	}
+
+	"Boomer #18"
+	{
+		"en"			"{mint}This Boomer can electrocute survivors."
+	}
+
+	"Charger #18"
+	{
+		"en"			"{mint}This Charger can electrocute survivors."
+	}
+
+	"Hunter #18"
+	{
+		"en"			"{mint}This Hunter can electrocute survivors."
+	}
+
+	"Jockey #18"
+	{
+		"en"			"{mint}This Jockey can electrocute survivors."
+	}
+
+	"Smoker #18"
+	{
+		"en"			"{mint}This Smoker can electrocute survivors."
+	}
+
+	"Spitter #18"
+	{
+		"en"			"{mint}This Spitter can electrocute survivors."
+	}
+
+	"Witch #18"
+	{
+		"en"			"{mint}This Witch can electrocute survivors."
 	}
 
 	"Tank #19 Name"
@@ -199,9 +1459,79 @@
 		"en"			"Enforcer Tank"
 	}
 
+	"Boomer #19 Name"
+	{
+		"en"			"Enforcer Boomer"
+	}
+
+	"Charger #19 Name"
+	{
+		"en"			"Enforcer Charger"
+	}
+
+	"Hunter #19 Name"
+	{
+		"en"			"Enforcer Hunter"
+	}
+
+	"Jockey #19 Name"
+	{
+		"en"			"Enforcer Jockey"
+	}
+
+	"Smoker #19 Name"
+	{
+		"en"			"Enforcer Smoker"
+	}
+
+	"Spitter #19 Name"
+	{
+		"en"			"Enforcer Spitter"
+	}
+
+	"Witch #19 Name"
+	{
+		"en"			"Enforcer Witch"
+	}
+
 	"Tank #19"
 	{
 		"en"			"{mint}This Tank can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Boomer #19"
+	{
+		"en"			"{mint}This Boomer can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Charger #19"
+	{
+		"en"			"{mint}This Charger can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Hunter #19"
+	{
+		"en"			"{mint}This Hunter can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Jockey #19"
+	{
+		"en"			"{mint}This Jockey can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Smoker #19"
+	{
+		"en"			"{mint}This Smoker can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Spitter #19"
+	{
+		"en"			"{mint}This Spitter can force survivors to equip a specific weapon slot for a certain period of time."
+	}
+
+	"Witch #19"
+	{
+		"en"			"{mint}This Witch can force survivors to equip a specific weapon slot for a certain period of time."
 	}
 
 	"Tank #20 Name"
@@ -209,9 +1539,79 @@
 		"en"			"Fast Tank"
 	}
 
+	"Boomer #20 Name"
+	{
+		"en"			"Fast Boomer"
+	}
+
+	"Charger #20 Name"
+	{
+		"en"			"Fast Charger"
+	}
+
+	"Hunter #20 Name"
+	{
+		"en"			"Fast Hunter"
+	}
+
+	"Jockey #20 Name"
+	{
+		"en"			"Fast Jockey"
+	}
+
+	"Smoker #20 Name"
+	{
+		"en"			"Fast Smoker"
+	}
+
+	"Spitter #20 Name"
+	{
+		"en"			"Fast Spitter"
+	}
+
+	"Witch #20 Name"
+	{
+		"en"			"Fast Witch"
+	}
+
 	"Tank #20"
 	{
 		"en"			"{mint}This Tank can run really fast like the Flash."
+	}
+
+	"Boomer #20"
+	{
+		"en"			"{mint}This Boomer can run really fast like the Flash."
+	}
+
+	"Charger #20"
+	{
+		"en"			"{mint}This Charger can run really fast like the Flash."
+	}
+
+	"Hunter #20"
+	{
+		"en"			"{mint}This Hunter can run really fast like the Flash."
+	}
+
+	"Jockey #20"
+	{
+		"en"			"{mint}This Jockey can run really fast like the Flash."
+	}
+
+	"Smoker #20"
+	{
+		"en"			"{mint}This Smoker can run really fast like the Flash."
+	}
+
+	"Spitter #20"
+	{
+		"en"			"{mint}This Spitter can run really fast like the Flash."
+	}
+
+	"Witch #20"
+	{
+		"en"			"{mint}This Witch can run really fast like the Flash."
 	}
 
 	"Tank #21 Name"
@@ -219,9 +1619,79 @@
 		"en"			"Fireproof Tank"
 	}
 
+	"Boomer #21 Name"
+	{
+		"en"			"Fireproof Boomer"
+	}
+
+	"Charger #21 Name"
+	{
+		"en"			"Fireproof Charger"
+	}
+
+	"Hunter #21 Name"
+	{
+		"en"			"Fireproof Hunter"
+	}
+
+	"Jockey #21 Name"
+	{
+		"en"			"Fireproof Jockey"
+	}
+
+	"Smoker #21 Name"
+	{
+		"en"			"Fireproof Smoker"
+	}
+
+	"Spitter #21 Name"
+	{
+		"en"			"Fireproof Spitter"
+	}
+
+	"Witch #21 Name"
+	{
+		"en"			"Fireproof Witch"
+	}
+
 	"Tank #21"
 	{
 		"en"			"{mint}This Tank can start fires and is immune to fire damage."
+	}
+
+	"Boomer #21"
+	{
+		"en"			"{mint}This Boomer can start fires and is immune to fire damage."
+	}
+
+	"Charger #21"
+	{
+		"en"			"{mint}This Charger can start fires and is immune to fire damage."
+	}
+
+	"Hunter #21"
+	{
+		"en"			"{mint}This Hunter can start fires and is immune to fire damage."
+	}
+
+	"Jockey #21"
+	{
+		"en"			"{mint}This Jockey can start fires and is immune to fire damage."
+	}
+
+	"Smoker #21"
+	{
+		"en"			"{mint}This Smoker can start fires and is immune to fire damage."
+	}
+
+	"Spitter #21"
+	{
+		"en"			"{mint}This Spitter can start fires and is immune to fire damage."
+	}
+
+	"Witch #21"
+	{
+		"en"			"{mint}This Witch can start fires and is immune to fire damage."
 	}
 
 	"Tank #22 Name"
@@ -229,9 +1699,79 @@
 		"en"			"Flinger Tank"
 	}
 
+	"Boomer #22 Name"
+	{
+		"en"			"Flinger Boomer"
+	}
+
+	"Charger #22 Name"
+	{
+		"en"			"Flinger Charger"
+	}
+
+	"Hunter #22 Name"
+	{
+		"en"			"Flinger Hunter"
+	}
+
+	"Jockey #22 Name"
+	{
+		"en"			"Flinger Jockey"
+	}
+
+	"Smoker #22 Name"
+	{
+		"en"			"Flinger Smoker"
+	}
+
+	"Spitter #22 Name"
+	{
+		"en"			"Flinger Spitter"
+	}
+
+	"Witch #22 Name"
+	{
+		"en"			"Flinger Witch"
+	}
+
 	"Tank #22"
 	{
 		"en"			"{mint}This Tank can fling survivors away or into the air."
+	}
+
+	"Boomer #22"
+	{
+		"en"			"{mint}This Boomer can fling survivors away or into the air."
+	}
+
+	"Charger #22"
+	{
+		"en"			"{mint}This Charger can fling survivors away or into the air."
+	}
+
+	"Hunter #22"
+	{
+		"en"			"{mint}This Hunter can fling survivors away or into the air."
+	}
+
+	"Jockey #22"
+	{
+		"en"			"{mint}This Jockey can fling survivors away or into the air."
+	}
+
+	"Smoker #22"
+	{
+		"en"			"{mint}This Smoker can fling survivors away or into the air."
+	}
+
+	"Spitter #22"
+	{
+		"en"			"{mint}This Spitter can fling survivors away or into the air."
+	}
+
+	"Witch #22"
+	{
+		"en"			"{mint}This Witch can fling survivors away or into the air."
 	}
 
 	"Tank #23 Name"
@@ -239,9 +1779,79 @@
 		"en"			"Flying Tank"
 	}
 
+	"Boomer #23 Name"
+	{
+		"en"			"Flying Boomer"
+	}
+
+	"Charger #23 Name"
+	{
+		"en"			"Flying Charger"
+	}
+
+	"Hunter #23 Name"
+	{
+		"en"			"Flying Hunter"
+	}
+
+	"Jockey #23 Name"
+	{
+		"en"			"Flying Jockey"
+	}
+
+	"Smoker #23 Name"
+	{
+		"en"			"Flying Smoker"
+	}
+
+	"Spitter #23 Name"
+	{
+		"en"			"Flying Spitter"
+	}
+
+	"Witch #23 Name"
+	{
+		"en"			"Flying Witch"
+	}
+
 	"Tank #23"
 	{
 		"en"			"{mint}This Tank flies around looking for victims."
+	}
+
+	"Boomer #23"
+	{
+		"en"			"{mint}This Boomer flies around looking for victims."
+	}
+
+	"Charger #23"
+	{
+		"en"			"{mint}This Charger flies around looking for victims."
+	}
+
+	"Hunter #23"
+	{
+		"en"			"{mint}This Hunter flies around looking for victims."
+	}
+
+	"Jockey #23"
+	{
+		"en"			"{mint}This Jockey flies around looking for victims."
+	}
+
+	"Smoker #23"
+	{
+		"en"			"{mint}This Smoker flies around looking for victims."
+	}
+
+	"Spitter #23"
+	{
+		"en"			"{mint}This Spitter flies around looking for victims."
+	}
+
+	"Witch #23"
+	{
+		"en"			"{mint}This Witch flies around looking for victims."
 	}
 
 	"Tank #24 Name"
@@ -249,9 +1859,79 @@
 		"en"			"Fragile Tank"
 	}
 
+	"Boomer #24 Name"
+	{
+		"en"			"Fragile Boomer"
+	}
+
+	"Charger #24 Name"
+	{
+		"en"			"Fragile Charger"
+	}
+
+	"Hunter #24 Name"
+	{
+		"en"			"Fragile Hunter"
+	}
+
+	"Jockey #24 Name"
+	{
+		"en"			"Fragile Jockey"
+	}
+
+	"Smoker #24 Name"
+	{
+		"en"			"Fragile Smoker"
+	}
+
+	"Spitter #24 Name"
+	{
+		"en"			"Fragile Spitter"
+	}
+
+	"Witch #24 Name"
+	{
+		"en"			"Fragile Witch"
+	}
+
 	"Tank #24"
 	{
 		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
+	}
+
+	"Boomer #24"
+	{
+		"en"			"{mint}This Boomer takes extra damage while dealing more damage and running faster."
+	}
+
+	"Charger #24"
+	{
+		"en"			"{mint}This Charger takes extra damage while dealing more damage and running faster."
+	}
+
+	"Hunter #24"
+	{
+		"en"			"{mint}This Hunter takes extra damage while dealing more damage and running faster."
+	}
+
+	"Jockey #24"
+	{
+		"en"			"{mint}This Jockey takes extra damage while dealing more damage and running faster."
+	}
+
+	"Smoker #24"
+	{
+		"en"			"{mint}This Smoker takes extra damage while dealing more damage and running faster."
+	}
+
+	"Spitter #24"
+	{
+		"en"			"{mint}This Spitter takes extra damage while dealing more damage and running faster."
+	}
+
+	"Witch #24"
+	{
+		"en"			"{mint}This Witch takes extra damage while dealing more damage and running faster."
 	}
 
 	"Tank #25 Name"
@@ -259,9 +1939,79 @@
 		"en"			"Ghost Tank"
 	}
 
+	"Boomer #25 Name"
+	{
+		"en"			"Ghost Boomer"
+	}
+
+	"Charger #25 Name"
+	{
+		"en"			"Ghost Charger"
+	}
+
+	"Hunter #25 Name"
+	{
+		"en"			"Ghost Hunter"
+	}
+
+	"Jockey #25 Name"
+	{
+		"en"			"Ghost Jockey"
+	}
+
+	"Smoker #25 Name"
+	{
+		"en"			"Ghost Smoker"
+	}
+
+	"Spitter #25 Name"
+	{
+		"en"			"Ghost Spitter"
+	}
+
+	"Witch #25 Name"
+	{
+		"en"			"Ghost Witch"
+	}
+
 	"Tank #25"
 	{
 		"en"			"{mint}This Tank can cloak itself and disarm survivors."
+	}
+
+	"Boomer #25"
+	{
+		"en"			"{mint}This Boomer can cloak itself and disarm survivors."
+	}
+
+	"Charger #25"
+	{
+		"en"			"{mint}This Charger can cloak itself and disarm survivors."
+	}
+
+	"Hunter #25"
+	{
+		"en"			"{mint}This Hunter can cloak itself and disarm survivors."
+	}
+
+	"Jockey #25"
+	{
+		"en"			"{mint}This Jockey can cloak itself and disarm survivors."
+	}
+
+	"Smoker #25"
+	{
+		"en"			"{mint}This Smoker can cloak itself and disarm survivors."
+	}
+
+	"Spitter #25"
+	{
+		"en"			"{mint}This Spitter can cloak itself and disarm survivors."
+	}
+
+	"Witch #25"
+	{
+		"en"			"{mint}This Witch can cloak itself and disarm survivors."
 	}
 
 	"Tank #26 Name"
@@ -269,9 +2019,79 @@
 		"en"			"Godly Tank"
 	}
 
+	"Boomer #26 Name"
+	{
+		"en"			"Godly Boomer"
+	}
+
+	"Charger #26 Name"
+	{
+		"en"			"Godly Charger"
+	}
+
+	"Hunter #26 Name"
+	{
+		"en"			"Godly Hunter"
+	}
+
+	"Jockey #26 Name"
+	{
+		"en"			"Godly Jockey"
+	}
+
+	"Smoker #26 Name"
+	{
+		"en"			"Godly Smoker"
+	}
+
+	"Spitter #26 Name"
+	{
+		"en"			"Godly Spitter"
+	}
+
+	"Witch #26 Name"
+	{
+		"en"			"Godly Witch"
+	}
+
 	"Tank #26"
 	{
 		"en"			"{mint}This Tank can gain temporary invincibility."
+	}
+
+	"Boomer #26"
+	{
+		"en"			"{mint}This Boomer can gain temporary invincibility."
+	}
+
+	"Charger #26"
+	{
+		"en"			"{mint}This Charger can gain temporary invincibility."
+	}
+
+	"Hunter #26"
+	{
+		"en"			"{mint}This Hunter can gain temporary invincibility."
+	}
+
+	"Jockey #26"
+	{
+		"en"			"{mint}This Jockey can gain temporary invincibility."
+	}
+
+	"Smoker #26"
+	{
+		"en"			"{mint}This Smoker can gain temporary invincibility."
+	}
+
+	"Spitter #26"
+	{
+		"en"			"{mint}This Spitter can gain temporary invincibility."
+	}
+
+	"Witch #26"
+	{
+		"en"			"{mint}This Witch can gain temporary invincibility."
 	}
 
 	"Tank #27 Name"
@@ -279,9 +2099,79 @@
 		"en"			"Gravity Tank"
 	}
 
+	"Boomer #27 Name"
+	{
+		"en"			"Gravity Boomer"
+	}
+
+	"Charger #27 Name"
+	{
+		"en"			"Gravity Charger"
+	}
+
+	"Hunter #27 Name"
+	{
+		"en"			"Gravity Hunter"
+	}
+
+	"Jockey #27 Name"
+	{
+		"en"			"Gravity Jockey"
+	}
+
+	"Smoker #27 Name"
+	{
+		"en"			"Gravity Smoker"
+	}
+
+	"Spitter #27 Name"
+	{
+		"en"			"Gravity Spitter"
+	}
+
+	"Witch #27 Name"
+	{
+		"en"			"Gravity Witch"
+	}
+
 	"Tank #27"
 	{
 		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Boomer #27"
+	{
+		"en"			"{mint}This Boomer can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Charger #27"
+	{
+		"en"			"{mint}This Charger can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Hunter #27"
+	{
+		"en"			"{mint}This Hunter can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Jockey #27"
+	{
+		"en"			"{mint}This Jockey can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Smoker #27"
+	{
+		"en"			"{mint}This Smoker can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Spitter #27"
+	{
+		"en"			"{mint}This Spitter can pull survivors and infected towards it and lower survivors' gravity."
+	}
+
+	"Witch #27"
+	{
+		"en"			"{mint}This Witch can pull survivors and infected towards it and lower survivors' gravity."
 	}
 
 	"Tank #28 Name"
@@ -289,9 +2179,79 @@
 		"en"			"Gunner Tank"
 	}
 
+	"Boomer #28 Name"
+	{
+		"en"			"Gunner Boomer"
+	}
+
+	"Charger #28 Name"
+	{
+		"en"			"Gunner Charger"
+	}
+
+	"Hunter #28 Name"
+	{
+		"en"			"Gunner Hunter"
+	}
+
+	"Jockey #28 Name"
+	{
+		"en"			"Gunner Jockey"
+	}
+
+	"Smoker #28 Name"
+	{
+		"en"			"Gunner Smoker"
+	}
+
+	"Spitter #28 Name"
+	{
+		"en"			"Gunner Spitter"
+	}
+
+	"Witch #28 Name"
+	{
+		"en"			"Gunner Witch"
+	}
+
 	"Tank #28"
 	{
 		"en"			"{mint}This Tank can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Boomer #28"
+	{
+		"en"			"{mint}This Boomer can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Charger #28"
+	{
+		"en"			"{mint}This Charger can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Hunter #28"
+	{
+		"en"			"{mint}This Hunter can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Jockey #28"
+	{
+		"en"			"{mint}This Jockey can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Smoker #28"
+	{
+		"en"			"{mint}This Smoker can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Spitter #28"
+	{
+		"en"			"{mint}This Spitter can arm itself with guns and fire gunshots at survivors."
+	}
+
+	"Witch #28"
+	{
+		"en"			"{mint}This Witch can arm itself with guns and fire gunshots at survivors."
 	}
 
 	"Tank #29 Name"
@@ -299,9 +2259,79 @@
 		"en"			"Healthy Tank"
 	}
 
+	"Boomer #29 Name"
+	{
+		"en"			"Healthy Boomer"
+	}
+
+	"Charger #29 Name"
+	{
+		"en"			"Healthy Charger"
+	}
+
+	"Hunter #29 Name"
+	{
+		"en"			"Healthy Hunter"
+	}
+
+	"Jockey #29 Name"
+	{
+		"en"			"Healthy Jockey"
+	}
+
+	"Smoker #29 Name"
+	{
+		"en"			"Healthy Smoker"
+	}
+
+	"Spitter #29 Name"
+	{
+		"en"			"Healthy Spitter"
+	}
+
+	"Witch #29 Name"
+	{
+		"en"			"Healthy Witch"
+	}
+
 	"Tank #29"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Boomer #29"
+	{
+		"en"			"{mint}This Boomer can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Charger #29"
+	{
+		"en"			"{mint}This Charger can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Hunter #29"
+	{
+		"en"			"{mint}This Hunter can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Jockey #29"
+	{
+		"en"			"{mint}This Jockey can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Smoker #29"
+	{
+		"en"			"{mint}This Smoker can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Spitter #29"
+	{
+		"en"			"{mint}This Spitter can give survivors temporary health, and it can absorb health from nearby infected."
+	}
+
+	"Witch #29"
+	{
+		"en"			"{mint}This Witch can give survivors temporary health, and it can absorb health from nearby infected."
 	}
 
 	"Tank #30 Name"
@@ -309,9 +2339,79 @@
 		"en"			"Hitter Tank"
 	}
 
+	"Boomer #30 Name"
+	{
+		"en"			"Hitter Boomer"
+	}
+
+	"Charger #30 Name"
+	{
+		"en"			"Hitter Charger"
+	}
+
+	"Hunter #30 Name"
+	{
+		"en"			"Hitter Hunter"
+	}
+
+	"Jockey #30 Name"
+	{
+		"en"			"Hitter Jockey"
+	}
+
+	"Smoker #30 Name"
+	{
+		"en"			"Hitter Smoker"
+	}
+
+	"Spitter #30 Name"
+	{
+		"en"			"Hitter Spitter"
+	}
+
+	"Witch #30 Name"
+	{
+		"en"			"Hitter Witch"
+	}
+
 	"Tank #30"
 	{
 		"en"			"{mint}This Tank can only be damaged by headshots."
+	}
+
+	"Boomer #30"
+	{
+		"en"			"{mint}This Boomer can only be damaged by headshots."
+	}
+
+	"Charger #30"
+	{
+		"en"			"{mint}This Charger can only be damaged by headshots."
+	}
+
+	"Hunter #30"
+	{
+		"en"			"{mint}This Hunter can only be damaged by headshots."
+	}
+
+	"Jockey #30"
+	{
+		"en"			"{mint}This Jockey can only be damaged by headshots."
+	}
+
+	"Smoker #30"
+	{
+		"en"			"{mint}This Smoker can only be damaged by headshots."
+	}
+
+	"Spitter #30"
+	{
+		"en"			"{mint}This Spitter can only be damaged by headshots."
+	}
+
+	"Witch #30"
+	{
+		"en"			"{mint}This Witch can only be damaged by headshots."
 	}
 
 	"Tank #31 Name"
@@ -319,9 +2419,79 @@
 		"en"			"Hunter Tank"
 	}
 
+	"Boomer #31 Name"
+	{
+		"en"			"Hunter Boomer"
+	}
+
+	"Charger #31 Name"
+	{
+		"en"			"Hunter Charger"
+	}
+
+	"Hunter #31 Name"
+	{
+		"en"			"Hunter Hunter"
+	}
+
+	"Jockey #31 Name"
+	{
+		"en"			"Hunter Jockey"
+	}
+
+	"Smoker #31 Name"
+	{
+		"en"			"Hunter Smoker"
+	}
+
+	"Spitter #31 Name"
+	{
+		"en"			"Hunter Spitter"
+	}
+
+	"Witch #31 Name"
+	{
+		"en"			"Hunter Witch"
+	}
+
 	"Tank #31"
 	{
 		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
+	}
+
+	"Boomer #31"
+	{
+		"en"			"{mint}This Boomer can spawn Hunters behind it."
+	}
+
+	"Charger #31"
+	{
+		"en"			"{mint}This Charger can spawn Hunters behind it."
+	}
+
+	"Hunter #31"
+	{
+		"en"			"{mint}This Hunter can spawn Hunters behind it."
+	}
+
+	"Jockey #31"
+	{
+		"en"			"{mint}This Jockey can spawn Hunters behind it."
+	}
+
+	"Smoker #31"
+	{
+		"en"			"{mint}This Smoker can spawn Hunters behind it."
+	}
+
+	"Spitter #31"
+	{
+		"en"			"{mint}This Spitter can spawn Hunters behind it."
+	}
+
+	"Witch #31"
+	{
+		"en"			"{mint}This Witch can spawn Hunters behind it."
 	}
 
 	"Tank #32 Name"
@@ -329,9 +2499,79 @@
 		"en"			"Hurtful Tank"
 	}
 
+	"Boomer #32 Name"
+	{
+		"en"			"Hurtful Boomer"
+	}
+
+	"Charger #32 Name"
+	{
+		"en"			"Hurtful Charger"
+	}
+
+	"Hunter #32 Name"
+	{
+		"en"			"Hurtful Hunter"
+	}
+
+	"Jockey #32 Name"
+	{
+		"en"			"Hurtful Jockey"
+	}
+
+	"Smoker #32 Name"
+	{
+		"en"			"Hurtful Smoker"
+	}
+
+	"Spitter #32 Name"
+	{
+		"en"			"Hurtful Spitter"
+	}
+
+	"Witch #32 Name"
+	{
+		"en"			"Hurtful Witch"
+	}
+
 	"Tank #32"
 	{
 		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
+	}
+
+	"Boomer #32"
+	{
+		"en"			"{mint}This Boomer can constantly hurt survivors for a certain period of time."
+	}
+
+	"Charger #32"
+	{
+		"en"			"{mint}This Charger can constantly hurt survivors for a certain period of time."
+	}
+
+	"Hunter #32"
+	{
+		"en"			"{mint}This Hunter can constantly hurt survivors for a certain period of time."
+	}
+
+	"Jockey #32"
+	{
+		"en"			"{mint}This Jockey can constantly hurt survivors for a certain period of time."
+	}
+
+	"Smoker #32"
+	{
+		"en"			"{mint}This Smoker can constantly hurt survivors for a certain period of time."
+	}
+
+	"Spitter #32"
+	{
+		"en"			"{mint}This Spitter can constantly hurt survivors for a certain period of time."
+	}
+
+	"Witch #32"
+	{
+		"en"			"{mint}This Witch can constantly hurt survivors for a certain period of time."
 	}
 
 	"Tank #33 Name"
@@ -339,9 +2579,79 @@
 		"en"			"Hypnotizer Tank"
 	}
 
+	"Boomer #33 Name"
+	{
+		"en"			"Hypnotizer Boomer"
+	}
+
+	"Charger #33 Name"
+	{
+		"en"			"Hypnotizer Charger"
+	}
+
+	"Hunter #33 Name"
+	{
+		"en"			"Hypnotizer Hunter"
+	}
+
+	"Jockey #33 Name"
+	{
+		"en"			"Hypnotizer Jockey"
+	}
+
+	"Smoker #33 Name"
+	{
+		"en"			"Hypnotizer Smoker"
+	}
+
+	"Spitter #33 Name"
+	{
+		"en"			"Hypnotizer Spitter"
+	}
+
+	"Witch #33 Name"
+	{
+		"en"			"Hypnotizer Witch"
+	}
+
 	"Tank #33"
 	{
 		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Boomer #33"
+	{
+		"en"			"{mint}This Boomer can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Charger #33"
+	{
+		"en"			"{mint}This Charger can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Hunter #33"
+	{
+		"en"			"{mint}This Hunter can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Jockey #33"
+	{
+		"en"			"{mint}This Jockey can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Smoker #33"
+	{
+		"en"			"{mint}This Smoker can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Spitter #33"
+	{
+		"en"			"{mint}This Spitter can hypnotize survivors to hurt themselves or their teammates."
+	}
+
+	"Witch #33"
+	{
+		"en"			"{mint}This Witch can hypnotize survivors to hurt themselves or their teammates."
 	}
 
 	"Tank #34 Name"
@@ -349,9 +2659,79 @@
 		"en"			"Icy Tank"
 	}
 
+	"Boomer #34 Name"
+	{
+		"en"			"Icy Boomer"
+	}
+
+	"Charger #34 Name"
+	{
+		"en"			"Icy Charger"
+	}
+
+	"Hunter #34 Name"
+	{
+		"en"			"Icy Hunter"
+	}
+
+	"Jockey #34 Name"
+	{
+		"en"			"Icy Jockey"
+	}
+
+	"Smoker #34 Name"
+	{
+		"en"			"Icy Smoker"
+	}
+
+	"Spitter #34 Name"
+	{
+		"en"			"Icy Spitter"
+	}
+
+	"Witch #34 Name"
+	{
+		"en"			"Icy Witch"
+	}
+
 	"Tank #34"
 	{
 		"en"			"{mint}This Tank can freeze survivors."
+	}
+
+	"Boomer #34"
+	{
+		"en"			"{mint}This Boomer can freeze survivors."
+	}
+
+	"Charger #34"
+	{
+		"en"			"{mint}This Charger can freeze survivors."
+	}
+
+	"Hunter #34"
+	{
+		"en"			"{mint}This Hunter can freeze survivors."
+	}
+
+	"Jockey #34"
+	{
+		"en"			"{mint}This Jockey can freeze survivors."
+	}
+
+	"Smoker #34"
+	{
+		"en"			"{mint}This Smoker can freeze survivors."
+	}
+
+	"Spitter #34"
+	{
+		"en"			"{mint}This Spitter can freeze survivors."
+	}
+
+	"Witch #34"
+	{
+		"en"			"{mint}This Witch can freeze survivors."
 	}
 
 	"Tank #35 Name"
@@ -359,9 +2739,79 @@
 		"en"			"Idler Tank"
 	}
 
+	"Boomer #35 Name"
+	{
+		"en"			"Idler Boomer"
+	}
+
+	"Charger #35 Name"
+	{
+		"en"			"Idler Charger"
+	}
+
+	"Hunter #35 Name"
+	{
+		"en"			"Idler Hunter"
+	}
+
+	"Jockey #35 Name"
+	{
+		"en"			"Idler Jockey"
+	}
+
+	"Smoker #35 Name"
+	{
+		"en"			"Idler Smoker"
+	}
+
+	"Spitter #35 Name"
+	{
+		"en"			"Idler Spitter"
+	}
+
+	"Witch #35 Name"
+	{
+		"en"			"Idler Witch"
+	}
+
 	"Tank #35"
 	{
 		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Boomer #35"
+	{
+		"en"			"{mint}This Boomer can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Charger #35"
+	{
+		"en"			"{mint}This Charger can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Hunter #35"
+	{
+		"en"			"{mint}This Hunter can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Jockey #35"
+	{
+		"en"			"{mint}This Jockey can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Smoker #35"
+	{
+		"en"			"{mint}This Smoker can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Spitter #35"
+	{
+		"en"			"{mint}This Spitter can make survivors go idle. (This doesn't affect bots.)"
+	}
+
+	"Witch #35"
+	{
+		"en"			"{mint}This Witch can make survivors go idle. (This doesn't affect bots.)"
 	}
 
 	"Tank #36 Name"
@@ -369,9 +2819,79 @@
 		"en"			"Inverter Tank"
 	}
 
+	"Boomer #36 Name"
+	{
+		"en"			"Inverter Boomer"
+	}
+
+	"Charger #36 Name"
+	{
+		"en"			"Inverter Charger"
+	}
+
+	"Hunter #36 Name"
+	{
+		"en"			"Inverter Hunter"
+	}
+
+	"Jockey #36 Name"
+	{
+		"en"			"Inverter Jockey"
+	}
+
+	"Smoker #36 Name"
+	{
+		"en"			"Inverter Smoker"
+	}
+
+	"Spitter #36 Name"
+	{
+		"en"			"Inverter Spitter"
+	}
+
+	"Witch #36 Name"
+	{
+		"en"			"Inverter Witch"
+	}
+
 	"Tank #36"
 	{
 		"en"			"{mint}This Tank can invert survivors' movement keys."
+	}
+
+	"Boomer #36"
+	{
+		"en"			"{mint}This Boomer can invert survivors' movement keys."
+	}
+
+	"Charger #36"
+	{
+		"en"			"{mint}This Charger can invert survivors' movement keys."
+	}
+
+	"Hunter #36"
+	{
+		"en"			"{mint}This Hunter can invert survivors' movement keys."
+	}
+
+	"Jockey #36"
+	{
+		"en"			"{mint}This Jockey can invert survivors' movement keys."
+	}
+
+	"Smoker #36"
+	{
+		"en"			"{mint}This Smoker can invert survivors' movement keys."
+	}
+
+	"Spitter #36"
+	{
+		"en"			"{mint}This Spitter can invert survivors' movement keys."
+	}
+
+	"Witch #36"
+	{
+		"en"			"{mint}This Witch can invert survivors' movement keys."
 	}
 
 	"Tank #37 Name"
@@ -379,9 +2899,79 @@
 		"en"			"Item Tank"
 	}
 
+	"Boomer #37 Name"
+	{
+		"en"			"Item Boomer"
+	}
+
+	"Charger #37 Name"
+	{
+		"en"			"Item Charger"
+	}
+
+	"Hunter #37 Name"
+	{
+		"en"			"Item Hunter"
+	}
+
+	"Jockey #37 Name"
+	{
+		"en"			"Item Jockey"
+	}
+
+	"Smoker #37 Name"
+	{
+		"en"			"Item Smoker"
+	}
+
+	"Spitter #37 Name"
+	{
+		"en"			"Item Spitter"
+	}
+
+	"Witch #37 Name"
+	{
+		"en"			"Item Witch"
+	}
+
 	"Tank #37"
 	{
 		"en"			"{mint}This Tank can give survivors items upon death."
+	}
+
+	"Boomer #37"
+	{
+		"en"			"{mint}This Boomer can give survivors items upon death."
+	}
+
+	"Charger #37"
+	{
+		"en"			"{mint}This Charger can give survivors items upon death."
+	}
+
+	"Hunter #37"
+	{
+		"en"			"{mint}This Hunter can give survivors items upon death."
+	}
+
+	"Jockey #37"
+	{
+		"en"			"{mint}This Jockey can give survivors items upon death."
+	}
+
+	"Smoker #37"
+	{
+		"en"			"{mint}This Smoker can give survivors items upon death."
+	}
+
+	"Spitter #37"
+	{
+		"en"			"{mint}This Spitter can give survivors items upon death."
+	}
+
+	"Witch #37"
+	{
+		"en"			"{mint}This Witch can give survivors items upon death."
 	}
 
 	"Tank #38 Name"
@@ -389,9 +2979,79 @@
 		"en"			"Jockey Tank"
 	}
 
+	"Boomer #38 Name"
+	{
+		"en"			"Jockey Boomer"
+	}
+
+	"Charger #38 Name"
+	{
+		"en"			"Jockey Charger"
+	}
+
+	"Hunter #38 Name"
+	{
+		"en"			"Jockey Hunter"
+	}
+
+	"Jockey #38 Name"
+	{
+		"en"			"Jockey Jockey"
+	}
+
+	"Smoker #38 Name"
+	{
+		"en"			"Jockey Smoker"
+	}
+
+	"Spitter #38 Name"
+	{
+		"en"			"Jockey Spitter"
+	}
+
+	"Witch #38 Name"
+	{
+		"en"			"Jockey Witch"
+	}
+
 	"Tank #38"
 	{
 		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
+	}
+
+	"Boomer #38"
+	{
+		"en"			"{mint}This Boomer can spawn Jockeys behind it."
+	}
+
+	"Charger #38"
+	{
+		"en"			"{mint}This Charger can spawn Jockeys behind it."
+	}
+
+	"Hunter #38"
+	{
+		"en"			"{mint}This Hunter can spawn Jockeys behind it."
+	}
+
+	"Jockey #38"
+	{
+		"en"			"{mint}This Jockey can spawn Jockeys behind it."
+	}
+
+	"Smoker #38"
+	{
+		"en"			"{mint}This Smoker can spawn Jockeys behind it."
+	}
+
+	"Spitter #38"
+	{
+		"en"			"{mint}This Spitter can spawn Jockeys behind it."
+	}
+
+	"Witch #38"
+	{
+		"en"			"{mint}This Witch can spawn Jockeys behind it."
 	}
 
 	"Tank #39 Name"
@@ -399,9 +3059,79 @@
 		"en"			"Jumper Tank"
 	}
 
+	"Boomer #39 Name"
+	{
+		"en"			"Jumper Boomer"
+	}
+
+	"Charger #39 Name"
+	{
+		"en"			"Jumper Charger"
+	}
+
+	"Hunter #39 Name"
+	{
+		"en"			"Jumper Hunter"
+	}
+
+	"Jockey #39 Name"
+	{
+		"en"			"Jumper Jockey"
+	}
+
+	"Smoker #39 Name"
+	{
+		"en"			"Jumper Smoker"
+	}
+
+	"Spitter #39 Name"
+	{
+		"en"			"Jumper Spitter"
+	}
+
+	"Witch #39 Name"
+	{
+		"en"			"Jumper Witch"
+	}
+
 	"Tank #39"
 	{
 		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Boomer #39"
+	{
+		"en"			"{mint}This Boomer can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Charger #39"
+	{
+		"en"			"{mint}This Charger can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Hunter #39"
+	{
+		"en"			"{mint}This Hunter can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Jockey #39"
+	{
+		"en"			"{mint}This Jockey can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Smoker #39"
+	{
+		"en"			"{mint}This Smoker can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Spitter #39"
+	{
+		"en"			"{mint}This Spitter can jump periodically and make survivors jump uncontrollably."
+	}
+
+	"Witch #39"
+	{
+		"en"			"{mint}This Witch can jump periodically and make survivors jump uncontrollably."
 	}
 
 	"Tank #40 Name"
@@ -409,9 +3139,79 @@
 		"en"			"Kamikaze Tank"
 	}
 
+	"Boomer #40 Name"
+	{
+		"en"			"Kamikaze Boomer"
+	}
+
+	"Charger #40 Name"
+	{
+		"en"			"Kamikaze Charger"
+	}
+
+	"Hunter #40 Name"
+	{
+		"en"			"Kamikaze Hunter"
+	}
+
+	"Jockey #40 Name"
+	{
+		"en"			"Kamikaze Jockey"
+	}
+
+	"Smoker #40 Name"
+	{
+		"en"			"Kamikaze Smoker"
+	}
+
+	"Spitter #40 Name"
+	{
+		"en"			"Kamikaze Spitter"
+	}
+
+	"Witch #40 Name"
+	{
+		"en"			"Kamikaze Witch"
+	}
+
 	"Tank #40"
 	{
 		"en"			"{mint}This Tank can kill itself along with a survivor victim."
+	}
+
+	"Boomer #40"
+	{
+		"en"			"{mint}This Boomer can kill itself along with a survivor victim."
+	}
+
+	"Charger #40"
+	{
+		"en"			"{mint}This Charger can kill itself along with a survivor victim."
+	}
+
+	"Hunter #40"
+	{
+		"en"			"{mint}This Hunter can kill itself along with a survivor victim."
+	}
+
+	"Jockey #40"
+	{
+		"en"			"{mint}This Jockey can kill itself along with a survivor victim."
+	}
+
+	"Smoker #40"
+	{
+		"en"			"{mint}This Smoker can kill itself along with a survivor victim."
+	}
+
+	"Spitter #40"
+	{
+		"en"			"{mint}This Spitter can kill itself along with a survivor victim."
+	}
+
+	"Witch #40"
+	{
+		"en"			"{mint}This Witch can kill itself along with a survivor victim."
 	}
 
 	"Tank #41 Name"
@@ -419,9 +3219,79 @@
 		"en"			"Lagger Tank"
 	}
 
+	"Boomer #41 Name"
+	{
+		"en"			"Lagger Boomer"
+	}
+
+	"Charger #41 Name"
+	{
+		"en"			"Lagger Charger"
+	}
+
+	"Hunter #41 Name"
+	{
+		"en"			"Lagger Hunter"
+	}
+
+	"Jockey #41 Name"
+	{
+		"en"			"Lagger Jockey"
+	}
+
+	"Smoker #41 Name"
+	{
+		"en"			"Lagger Smoker"
+	}
+
+	"Spitter #41 Name"
+	{
+		"en"			"Lagger Spitter"
+	}
+
+	"Witch #41 Name"
+	{
+		"en"			"Lagger Witch"
+	}
+
 	"Tank #41"
 	{
 		"en"			"{mint}This Tank can make survivors lag."
+	}
+
+	"Boomer #41"
+	{
+		"en"			"{mint}This Boomer can make survivors lag."
+	}
+
+	"Charger #41"
+	{
+		"en"			"{mint}This Charger can make survivors lag."
+	}
+
+	"Hunter #41"
+	{
+		"en"			"{mint}This Hunter can make survivors lag."
+	}
+
+	"Jockey #41"
+	{
+		"en"			"{mint}This Jockey can make survivors lag."
+	}
+
+	"Smoker #41"
+	{
+		"en"			"{mint}This Smoker can make survivors lag."
+	}
+
+	"Spitter #41"
+	{
+		"en"			"{mint}This Spitter can make survivors lag."
+	}
+
+	"Witch #41"
+	{
+		"en"			"{mint}This Witch can make survivors lag."
 	}
 
 	"Tank #42 Name"
@@ -429,9 +3299,79 @@
 		"en"			"Laser Tank"
 	}
 
+	"Boomer #42 Name"
+	{
+		"en"			"Laser Boomer"
+	}
+
+	"Charger #42 Name"
+	{
+		"en"			"Laser Charger"
+	}
+
+	"Hunter #42 Name"
+	{
+		"en"			"Laser Hunter"
+	}
+
+	"Jockey #42 Name"
+	{
+		"en"			"Laser Jockey"
+	}
+
+	"Smoker #42 Name"
+	{
+		"en"			"Laser Smoker"
+	}
+
+	"Spitter #42 Name"
+	{
+		"en"			"Laser Spitter"
+	}
+
+	"Witch #42 Name"
+	{
+		"en"			"Laser Witch"
+	}
+
 	"Tank #42"
 	{
 		"en"			"{mint}This Tank can shoot lasers at survivors."
+	}
+
+	"Boomer #42"
+	{
+		"en"			"{mint}This Boomer can shoot lasers at survivors."
+	}
+
+	"Charger #42"
+	{
+		"en"			"{mint}This Charger can shoot lasers at survivors."
+	}
+
+	"Hunter #42"
+	{
+		"en"			"{mint}This Hunter can shoot lasers at survivors."
+	}
+
+	"Jockey #42"
+	{
+		"en"			"{mint}This Jockey can shoot lasers at survivors."
+	}
+
+	"Smoker #42"
+	{
+		"en"			"{mint}This Smoker can shoot lasers at survivors."
+	}
+
+	"Spitter #42"
+	{
+		"en"			"{mint}This Spitter can shoot lasers at survivors."
+	}
+
+	"Witch #42"
+	{
+		"en"			"{mint}This Witch can shoot lasers at survivors."
 	}
 
 	"Tank #43 Name"
@@ -439,9 +3379,79 @@
 		"en"			"Leecher Tank"
 	}
 
+	"Boomer #43 Name"
+	{
+		"en"			"Leecher Boomer"
+	}
+
+	"Charger #43 Name"
+	{
+		"en"			"Leecher Charger"
+	}
+
+	"Hunter #43 Name"
+	{
+		"en"			"Leecher Hunter"
+	}
+
+	"Jockey #43 Name"
+	{
+		"en"			"Leecher Jockey"
+	}
+
+	"Smoker #43 Name"
+	{
+		"en"			"Leecher Smoker"
+	}
+
+	"Spitter #43 Name"
+	{
+		"en"			"Leecher Spitter"
+	}
+
+	"Witch #43 Name"
+	{
+		"en"			"Leecher Witch"
+	}
+
 	"Tank #43"
 	{
 		"en"			"{mint}This Tank can leech off health from survivors."
+	}
+
+	"Boomer #43"
+	{
+		"en"			"{mint}This Boomer can leech off health from survivors."
+	}
+
+	"Charger #43"
+	{
+		"en"			"{mint}This Charger can leech off health from survivors."
+	}
+
+	"Hunter #43"
+	{
+		"en"			"{mint}This Hunter can leech off health from survivors."
+	}
+
+	"Jockey #43"
+	{
+		"en"			"{mint}This Jockey can leech off health from survivors."
+	}
+
+	"Smoker #43"
+	{
+		"en"			"{mint}This Smoker can leech off health from survivors."
+	}
+
+	"Spitter #43"
+	{
+		"en"			"{mint}This Spitter can leech off health from survivors."
+	}
+
+	"Witch #43"
+	{
+		"en"			"{mint}This Witch can leech off health from survivors."
 	}
 
 	"Tank #44 Name"
@@ -449,9 +3459,79 @@
 		"en"			"Lightning Tank"
 	}
 
+	"Boomer #44 Name"
+	{
+		"en"			"Lightning Boomer"
+	}
+
+	"Charger #44 Name"
+	{
+		"en"			"Lightning Charger"
+	}
+
+	"Hunter #44 Name"
+	{
+		"en"			"Lightning Hunter"
+	}
+
+	"Jockey #44 Name"
+	{
+		"en"			"Lightning Jockey"
+	}
+
+	"Smoker #44 Name"
+	{
+		"en"			"Lightning Smoker"
+	}
+
+	"Spitter #44 Name"
+	{
+		"en"			"Lightning Spitter"
+	}
+
+	"Witch #44 Name"
+	{
+		"en"			"Lightning Witch"
+	}
+
 	"Tank #44"
 	{
 		"en"			"{mint}This Tank creates lightning storms."
+	}
+
+	"Boomer #44"
+	{
+		"en"			"{mint}This Boomer creates lightning storms."
+	}
+
+	"Charger #44"
+	{
+		"en"			"{mint}This Charger creates lightning storms."
+	}
+
+	"Hunter #44"
+	{
+		"en"			"{mint}This Hunter creates lightning storms."
+	}
+
+	"Jockey #44"
+	{
+		"en"			"{mint}This Jockey creates lightning storms."
+	}
+
+	"Smoker #44"
+	{
+		"en"			"{mint}This Smoker creates lightning storms."
+	}
+
+	"Spitter #44"
+	{
+		"en"			"{mint}This Spitter creates lightning storms."
+	}
+
+	"Witch #44"
+	{
+		"en"			"{mint}This Witch creates lightning storms."
 	}
 
 	"Tank #45 Name"
@@ -459,9 +3539,79 @@
 		"en"			"Medic Tank"
 	}
 
+	"Boomer #45 Name"
+	{
+		"en"			"Medic Boomer"
+	}
+
+	"Charger #45 Name"
+	{
+		"en"			"Medic Charger"
+	}
+
+	"Hunter #45 Name"
+	{
+		"en"			"Medic Hunter"
+	}
+
+	"Jockey #45 Name"
+	{
+		"en"			"Medic Jockey"
+	}
+
+	"Smoker #45 Name"
+	{
+		"en"			"Medic Smoker"
+	}
+
+	"Spitter #45 Name"
+	{
+		"en"			"Medic Spitter"
+	}
+
+	"Witch #45 Name"
+	{
+		"en"			"Medic Witch"
+	}
+
 	"Tank #45"
 	{
 		"en"			"{mint}This Tank can heal nearby special infected upon death."
+	}
+
+	"Boomer #45"
+	{
+		"en"			"{mint}This Boomer can heal nearby special infected upon death."
+	}
+
+	"Charger #45"
+	{
+		"en"			"{mint}This Charger can heal nearby special infected upon death."
+	}
+
+	"Hunter #45"
+	{
+		"en"			"{mint}This Hunter can heal nearby special infected upon death."
+	}
+
+	"Jockey #45"
+	{
+		"en"			"{mint}This Jockey can heal nearby special infected upon death."
+	}
+
+	"Smoker #45"
+	{
+		"en"			"{mint}This Smoker can heal nearby special infected upon death."
+	}
+
+	"Spitter #45"
+	{
+		"en"			"{mint}This Spitter can heal nearby special infected upon death."
+	}
+
+	"Witch #45"
+	{
+		"en"			"{mint}This Witch can heal nearby special infected upon death."
 	}
 
 	"Tank #46 Name"
@@ -469,9 +3619,79 @@
 		"en"			"Meteor Tank"
 	}
 
+	"Boomer #46 Name"
+	{
+		"en"			"Meteor Boomer"
+	}
+
+	"Charger #46 Name"
+	{
+		"en"			"Meteor Charger"
+	}
+
+	"Hunter #46 Name"
+	{
+		"en"			"Meteor Hunter"
+	}
+
+	"Jockey #46 Name"
+	{
+		"en"			"Meteor Jockey"
+	}
+
+	"Smoker #46 Name"
+	{
+		"en"			"Meteor Smoker"
+	}
+
+	"Spitter #46 Name"
+	{
+		"en"			"Meteor Spitter"
+	}
+
+	"Witch #46 Name"
+	{
+		"en"			"Meteor Witch"
+	}
+
 	"Tank #46"
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Boomer #46"
+	{
+		"en"			"{mint}This Boomer can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Charger #46"
+	{
+		"en"			"{mint}This Charger can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Hunter #46"
+	{
+		"en"			"{mint}This Hunter can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Jockey #46"
+	{
+		"en"			"{mint}This Jockey can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Smoker #46"
+	{
+		"en"			"{mint}This Smoker can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Spitter #46"
+	{
+		"en"			"{mint}This Spitter can start meteor showers with meteorites that burn and explode after a few seconds."
+	}
+
+	"Witch #46"
+	{
+		"en"			"{mint}This Witch can start meteor showers with meteorites that burn and explode after a few seconds."
 	}
 
 	"Tank #47 Name"
@@ -479,9 +3699,79 @@
 		"en"			"Necromancer Tank"
 	}
 
+	"Boomer #47 Name"
+	{
+		"en"			"Necromancer Boomer"
+	}
+
+	"Charger #47 Name"
+	{
+		"en"			"Necromancer Charger"
+	}
+
+	"Hunter #47 Name"
+	{
+		"en"			"Necromancer Hunter"
+	}
+
+	"Jockey #47 Name"
+	{
+		"en"			"Necromancer Jockey"
+	}
+
+	"Smoker #47 Name"
+	{
+		"en"			"Necromancer Smoker"
+	}
+
+	"Spitter #47 Name"
+	{
+		"en"			"Necromancer Spitter"
+	}
+
+	"Witch #47 Name"
+	{
+		"en"			"Necromancer Witch"
+	}
+
 	"Tank #47"
 	{
 		"en"			"{mint}This Tank can resurrect dead special infected."
+	}
+
+	"Boomer #47"
+	{
+		"en"			"{mint}This Boomer can resurrect dead special infected."
+	}
+
+	"Charger #47"
+	{
+		"en"			"{mint}This Charger can resurrect dead special infected."
+	}
+
+	"Hunter #47"
+	{
+		"en"			"{mint}This Hunter can resurrect dead special infected."
+	}
+
+	"Jockey #47"
+	{
+		"en"			"{mint}This Jockey can resurrect dead special infected."
+	}
+
+	"Smoker #47"
+	{
+		"en"			"{mint}This Smoker can resurrect dead special infected."
+	}
+
+	"Spitter #47"
+	{
+		"en"			"{mint}This Spitter can resurrect dead special infected."
+	}
+
+	"Witch #47"
+	{
+		"en"			"{mint}This Witch can resurrect dead special infected."
 	}
 
 	"Tank #48 Name"
@@ -489,9 +3779,79 @@
 		"en"			"Nullifier Tank"
 	}
 
+	"Boomer #48 Name"
+	{
+		"en"			"Nullifier Boomer"
+	}
+
+	"Charger #48 Name"
+	{
+		"en"			"Nullifier Charger"
+	}
+
+	"Hunter #48 Name"
+	{
+		"en"			"Nullifier Hunter"
+	}
+
+	"Jockey #48 Name"
+	{
+		"en"			"Nullifier Jockey"
+	}
+
+	"Smoker #48 Name"
+	{
+		"en"			"Nullifier Smoker"
+	}
+
+	"Spitter #48 Name"
+	{
+		"en"			"Nullifier Spitter"
+	}
+
+	"Witch #48 Name"
+	{
+		"en"			"Nullifier Witch"
+	}
+
 	"Tank #48"
 	{
 		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Boomer #48"
+	{
+		"en"			"{mint}This Boomer can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Charger #48"
+	{
+		"en"			"{mint}This Charger can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Hunter #48"
+	{
+		"en"			"{mint}This Hunter can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Jockey #48"
+	{
+		"en"			"{mint}This Jockey can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Smoker #48"
+	{
+		"en"			"{mint}This Smoker can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Spitter #48"
+	{
+		"en"			"{mint}This Spitter can nullify survivors' damage to protect itself from damage."
+	}
+
+	"Witch #48"
+	{
+		"en"			"{mint}This Witch can nullify survivors' damage to protect itself from damage."
 	}
 
 	"Tank #49 Name"
@@ -499,9 +3859,79 @@
 		"en"			"Omni Tank"
 	}
 
+	"Boomer #49 Name"
+	{
+		"en"			"Omni Boomer"
+	}
+
+	"Charger #49 Name"
+	{
+		"en"			"Omni Charger"
+	}
+
+	"Hunter #49 Name"
+	{
+		"en"			"Omni Hunter"
+	}
+
+	"Jockey #49 Name"
+	{
+		"en"			"Omni Jockey"
+	}
+
+	"Smoker #49 Name"
+	{
+		"en"			"Omni Smoker"
+	}
+
+	"Spitter #49 Name"
+	{
+		"en"			"Omni Spitter"
+	}
+
+	"Witch #49 Name"
+	{
+		"en"			"Omni Witch"
+	}
+
 	"Tank #49"
 	{
 		"en"			"{mint}This Tank can access other nearby Mutant Tanks' abilities."
+	}
+
+	"Boomer #49"
+	{
+		"en"			"{mint}This Boomer can access other nearby Mutant Boomers' abilities."
+	}
+
+	"Charger #49"
+	{
+		"en"			"{mint}This Charger can access other nearby Mutant Chargers' abilities."
+	}
+
+	"Hunter #49"
+	{
+		"en"			"{mint}This Hunter can access other nearby Mutant Hunters' abilities."
+	}
+
+	"Jockey #49"
+	{
+		"en"			"{mint}This Jockey can access other nearby Mutant Jockeys' abilities."
+	}
+
+	"Smoker #49"
+	{
+		"en"			"{mint}This Smoker can access other nearby Mutant Smokers' abilities."
+	}
+
+	"Spitter #49"
+	{
+		"en"			"{mint}This Spitter can access other nearby Mutant Spitters' abilities."
+	}
+
+	"Witch #49"
+	{
+		"en"			"{mint}This Witch can access other nearby Mutant Witches' abilities."
 	}
 
 	"Tank #50 Name"
@@ -509,9 +3939,79 @@
 		"en"			"Panic Tank"
 	}
 
+	"Boomer #50 Name"
+	{
+		"en"			"Panic Boomer"
+	}
+
+	"Charger #50 Name"
+	{
+		"en"			"Panic Charger"
+	}
+
+	"Hunter #50 Name"
+	{
+		"en"			"Panic Hunter"
+	}
+
+	"Jockey #50 Name"
+	{
+		"en"			"Panic Jockey"
+	}
+
+	"Smoker #50 Name"
+	{
+		"en"			"Panic Smoker"
+	}
+
+	"Spitter #50 Name"
+	{
+		"en"			"Panic Spitter"
+	}
+
+	"Witch #50 Name"
+	{
+		"en"			"Panic Witch"
+	}
+
 	"Tank #50"
 	{
 		"en"			"{mint}This Tank can start panic events with hordes of zombies."
+	}
+
+	"Boomer #50"
+	{
+		"en"			"{mint}This Boomer can start panic events with hordes of zombies."
+	}
+
+	"Charger #50"
+	{
+		"en"			"{mint}This Charger can start panic events with hordes of zombies."
+	}
+
+	"Hunter #50"
+	{
+		"en"			"{mint}This Hunter can start panic events with hordes of zombies."
+	}
+
+	"Jockey #50"
+	{
+		"en"			"{mint}This Jockey can start panic events with hordes of zombies."
+	}
+
+	"Smoker #50"
+	{
+		"en"			"{mint}This Smoker can start panic events with hordes of zombies."
+	}
+
+	"Spitter #50"
+	{
+		"en"			"{mint}This Spitter can start panic events with hordes of zombies."
+	}
+
+	"Witch #50"
+	{
+		"en"			"{mint}This Witch can start panic events with hordes of zombies."
 	}
 
 	"Tank #51 Name"
@@ -519,9 +4019,79 @@
 		"en"			"Pet Tank"
 	}
 
+	"Boomer #51 Name"
+	{
+		"en"			"Pet Boomer"
+	}
+
+	"Charger #51 Name"
+	{
+		"en"			"Pet Charger"
+	}
+
+	"Hunter #51 Name"
+	{
+		"en"			"Pet Hunter"
+	}
+
+	"Jockey #51 Name"
+	{
+		"en"			"Pet Jockey"
+	}
+
+	"Smoker #51 Name"
+	{
+		"en"			"Pet Smoker"
+	}
+
+	"Spitter #51 Name"
+	{
+		"en"			"Pet Spitter"
+	}
+
+	"Witch #51 Name"
+	{
+		"en"			"Pet Witch"
+	}
+
 	"Tank #51"
 	{
 		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
+	}
+
+	"Boomer #51"
+	{
+		"en"			"{mint}This Boomer is loyal to the survivors and loves to give hugs."
+	}
+
+	"Charger #51"
+	{
+		"en"			"{mint}This Charger is loyal to the survivors and loves to give hugs."
+	}
+
+	"Hunter #51"
+	{
+		"en"			"{mint}This Hunter is loyal to the survivors and loves to give hugs."
+	}
+
+	"Jockey #51"
+	{
+		"en"			"{mint}This Jockey is loyal to the survivors and loves to give hugs."
+	}
+
+	"Smoker #51"
+	{
+		"en"			"{mint}This Smoker is loyal to the survivors and loves to give hugs."
+	}
+
+	"Spitter #51"
+	{
+		"en"			"{mint}This Spitter is loyal to the survivors and loves to give hugs."
+	}
+
+	"Witch #51"
+	{
+		"en"			"{mint}This Witch is loyal to the survivors and loves to give hugs."
 	}
 
 	"Tank #52 Name"
@@ -529,9 +4099,79 @@
 		"en"			"Pimp Tank"
 	}
 
+	"Boomer #52 Name"
+	{
+		"en"			"Pimp Boomer"
+	}
+
+	"Charger #52 Name"
+	{
+		"en"			"Pimp Charger"
+	}
+
+	"Hunter #52 Name"
+	{
+		"en"			"Pimp Hunter"
+	}
+
+	"Jockey #52 Name"
+	{
+		"en"			"Pimp Jockey"
+	}
+
+	"Smoker #52 Name"
+	{
+		"en"			"Pimp Smoker"
+	}
+
+	"Spitter #52 Name"
+	{
+		"en"			"Pimp Spitter"
+	}
+
+	"Witch #52 Name"
+	{
+		"en"			"Pimp Witch"
+	}
+
 	"Tank #52"
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Boomer #52"
+	{
+		"en"			"{mint}This Boomer can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Charger #52"
+	{
+		"en"			"{mint}This Charger can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Hunter #52"
+	{
+		"en"			"{mint}This Hunter can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Jockey #52"
+	{
+		"en"			"{mint}This Jockey can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Smoker #52"
+	{
+		"en"			"{mint}This Smoker can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Spitter #52"
+	{
+		"en"			"{mint}This Spitter can pimp slap survivors repeatedly to show them who's boss."
+	}
+
+	"Witch #52"
+	{
+		"en"			"{mint}This Witch can pimp slap survivors repeatedly to show them who's boss."
 	}
 
 	"Tank #53 Name"
@@ -539,9 +4179,79 @@
 		"en"			"Platinum Tank"
 	}
 
+	"Boomer #53 Name"
+	{
+		"en"			"Platinum Boomer"
+	}
+
+	"Charger #53 Name"
+	{
+		"en"			"Platinum Charger"
+	}
+
+	"Hunter #53 Name"
+	{
+		"en"			"Platinum Hunter"
+	}
+
+	"Jockey #53 Name"
+	{
+		"en"			"Platinum Jockey"
+	}
+
+	"Smoker #53 Name"
+	{
+		"en"			"Platinum Smoker"
+	}
+
+	"Spitter #53 Name"
+	{
+		"en"			"Platinum Spitter"
+	}
+
+	"Witch #53 Name"
+	{
+		"en"			"Platinum Witch"
+	}
+
 	"Tank #53"
 	{
 		"en"			"{mint}This Tank is immune to melee damage."
+	}
+
+	"Boomer #53"
+	{
+		"en"			"{mint}This Boomer is immune to melee damage."
+	}
+
+	"Charger #53"
+	{
+		"en"			"{mint}This Charger is immune to melee damage."
+	}
+
+	"Hunter #53"
+	{
+		"en"			"{mint}This Hunter is immune to melee damage."
+	}
+
+	"Jockey #53"
+	{
+		"en"			"{mint}This Jockey is immune to melee damage."
+	}
+
+	"Smoker #53"
+	{
+		"en"			"{mint}This Smoker is immune to melee damage."
+	}
+
+	"Spitter #53"
+	{
+		"en"			"{mint}This Spitter is immune to melee damage."
+	}
+
+	"Witch #53"
+	{
+		"en"			"{mint}This Witch is immune to melee damage."
 	}
 
 	"Tank #54 Name"
@@ -549,9 +4259,79 @@
 		"en"			"Puke Tank"
 	}
 
+	"Boomer #54 Name"
+	{
+		"en"			"Puke Boomer"
+	}
+
+	"Charger #54 Name"
+	{
+		"en"			"Puke Charger"
+	}
+
+	"Hunter #54 Name"
+	{
+		"en"			"Puke Hunter"
+	}
+
+	"Jockey #54 Name"
+	{
+		"en"			"Puke Jockey"
+	}
+
+	"Smoker #54 Name"
+	{
+		"en"			"Puke Smoker"
+	}
+
+	"Spitter #54 Name"
+	{
+		"en"			"Puke Spitter"
+	}
+
+	"Witch #54 Name"
+	{
+		"en"			"Puke Witch"
+	}
+
 	"Tank #54"
 	{
 		"en"			"{mint}This Tank can puke on survivors."
+	}
+
+	"Boomer #54"
+	{
+		"en"			"{mint}This Boomer can puke on survivors."
+	}
+
+	"Charger #54"
+	{
+		"en"			"{mint}This Charger can puke on survivors."
+	}
+
+	"Hunter #54"
+	{
+		"en"			"{mint}This Hunter can puke on survivors."
+	}
+
+	"Jockey #54"
+	{
+		"en"			"{mint}This Jockey can puke on survivors."
+	}
+
+	"Smoker #54"
+	{
+		"en"			"{mint}This Smoker can puke on survivors."
+	}
+
+	"Spitter #54"
+	{
+		"en"			"{mint}This Spitter can puke on survivors."
+	}
+
+	"Witch #54"
+	{
+		"en"			"{mint}This Witch can puke on survivors."
 	}
 
 	"Tank #55 Name"
@@ -559,9 +4339,79 @@
 		"en"			"Pyromaniac Tank"
 	}
 
+	"Boomer #55 Name"
+	{
+		"en"			"Pyromaniac Boomer"
+	}
+
+	"Charger #55 Name"
+	{
+		"en"			"Pyromaniac Charger"
+	}
+
+	"Hunter #55 Name"
+	{
+		"en"			"Pyromaniac Hunter"
+	}
+
+	"Jockey #55 Name"
+	{
+		"en"			"Pyromaniac Jockey"
+	}
+
+	"Smoker #55 Name"
+	{
+		"en"			"Pyromaniac Smoker"
+	}
+
+	"Spitter #55 Name"
+	{
+		"en"			"Pyromaniac Spitter"
+	}
+
+	"Witch #55 Name"
+	{
+		"en"			"Pyromaniac Witch"
+	}
+
 	"Tank #55"
 	{
 		"en"			"{mint}This Tank gains a speed boost when set on fire."
+	}
+
+	"Boomer #55"
+	{
+		"en"			"{mint}This Boomer gains a speed boost when set on fire."
+	}
+
+	"Charger #55"
+	{
+		"en"			"{mint}This Charger gains a speed boost when set on fire."
+	}
+
+	"Hunter #55"
+	{
+		"en"			"{mint}This Hunter gains a speed boost when set on fire."
+	}
+
+	"Jockey #55"
+	{
+		"en"			"{mint}This Jockey gains a speed boost when set on fire."
+	}
+
+	"Smoker #55"
+	{
+		"en"			"{mint}This Smoker gains a speed boost when set on fire."
+	}
+
+	"Spitter #55"
+	{
+		"en"			"{mint}This Spitter gains a speed boost when set on fire."
+	}
+
+	"Witch #55"
+	{
+		"en"			"{mint}This Witch gains a speed boost when set on fire."
 	}
 
 	"Tank #56 Name"
@@ -569,719 +4419,5839 @@
 		"en"			"Quiet Tank"
 	}
 
+	"Boomer #56 Name"
+	{
+		"en"			"Quiet Boomer"
+	}
+
+	"Charger #56 Name"
+	{
+		"en"			"Quiet Charger"
+	}
+
+	"Hunter #56 Name"
+	{
+		"en"			"Quiet Hunter"
+	}
+
+	"Jockey #56 Name"
+	{
+		"en"			"Quiet Jockey"
+	}
+
+	"Smoker #56 Name"
+	{
+		"en"			"Quiet Smoker"
+	}
+
+	"Spitter #56 Name"
+	{
+		"en"			"Quiet Spitter"
+	}
+
+	"Witch #56 Name"
+	{
+		"en"			"Quiet Witch"
+	}
+
 	"Tank #56"
 	{
 		"en"			"{mint}This Tank can silence itself from survivors."
 	}
 
+	"Boomer #56"
+	{
+		"en"			"{mint}This Boomer can silence itself from survivors."
+	}
+
+	"Charger #56"
+	{
+		"en"			"{mint}This Charger can silence itself from survivors."
+	}
+
+	"Hunter #56"
+	{
+		"en"			"{mint}This Hunter can silence itself from survivors."
+	}
+
+	"Jockey #56"
+	{
+		"en"			"{mint}This Jockey can silence itself from survivors."
+	}
+
+	"Smoker #56"
+	{
+		"en"			"{mint}This Smoker can silence itself from survivors."
+	}
+
+	"Spitter #56"
+	{
+		"en"			"{mint}This Spitter can silence itself from survivors."
+	}
+
+	"Witch #56"
+	{
+		"en"			"{mint}This Witch can silence itself from survivors."
+	}
+
 	"Tank #57 Name"
 	{
-		"en"			"Recoil Tank"
+		"en"			"Recall Tank"
+	}
+
+	"Boomer #57 Name"
+	{
+		"en"			"Recall Boomer"
+	}
+
+	"Charger #57 Name"
+	{
+		"en"			"Recall Charger"
+	}
+
+	"Hunter #57 Name"
+	{
+		"en"			"Recall Hunter"
+	}
+
+	"Jockey #57 Name"
+	{
+		"en"			"Recall Jockey"
+	}
+
+	"Smoker #57 Name"
+	{
+		"en"			"Recall Smoker"
+	}
+
+	"Spitter #57 Name"
+	{
+		"en"			"Recall Spitter"
+	}
+
+	"Witch #57 Name"
+	{
+		"en"			"Recall Witch"
 	}
 
 	"Tank #57"
 	{
-		"en"			"{mint}This Tank can give survivors high gun recoil."
+		"en"			"{mint}This Tank can time travel to annoy survivors."
+	}
+
+	"Boomer #57"
+	{
+		"en"			"{mint}This Boomer can time travel to annoy survivors."
+	}
+
+	"Charger #57"
+	{
+		"en"			"{mint}This Charger can time travel to annoy survivors."
+	}
+
+	"Hunter #57"
+	{
+		"en"			"{mint}This Hunter can time travel to annoy survivors."
+	}
+
+	"Jockey #57"
+	{
+		"en"			"{mint}This Jockey can time travel to annoy survivors."
+	}
+
+	"Smoker #57"
+	{
+		"en"			"{mint}This Smoker can time travel to annoy survivors."
+	}
+
+	"Spitter #57"
+	{
+		"en"			"{mint}This Spitter can time travel to annoy survivors."
+	}
+
+	"Witch #57"
+	{
+		"en"			"{mint}This Witch can time travel to annoy survivors."
 	}
 
 	"Tank #58 Name"
 	{
-		"en"			"Regenerative Tank"
+		"en"			"Recoil Tank"
+	}
+
+	"Boomer #58 Name"
+	{
+		"en"			"Recoil Boomer"
+	}
+
+	"Charger #58 Name"
+	{
+		"en"			"Recoil Charger"
+	}
+
+	"Hunter #58 Name"
+	{
+		"en"			"Recoil Hunter"
+	}
+
+	"Jockey #58 Name"
+	{
+		"en"			"Recoil Jockey"
+	}
+
+	"Smoker #58 Name"
+	{
+		"en"			"Recoil Smoker"
+	}
+
+	"Spitter #58 Name"
+	{
+		"en"			"Recoil Spitter"
+	}
+
+	"Witch #58 Name"
+	{
+		"en"			"Recoil Witch"
 	}
 
 	"Tank #58"
 	{
-		"en"			"{mint}This Tank regenerates health every second."
+		"en"			"{mint}This Tank can give survivors high gun recoil."
+	}
+
+	"Boomer #58"
+	{
+		"en"			"{mint}This Boomer can give survivors high gun recoil."
+	}
+
+	"Charger #58"
+	{
+		"en"			"{mint}This Charger can give survivors high gun recoil."
+	}
+
+	"Hunter #58"
+	{
+		"en"			"{mint}This Hunter can give survivors high gun recoil."
+	}
+
+	"Jockey #58"
+	{
+		"en"			"{mint}This Jockey can give survivors high gun recoil."
+	}
+
+	"Smoker #58"
+	{
+		"en"			"{mint}This Smoker can give survivors high gun recoil."
+	}
+
+	"Spitter #58"
+	{
+		"en"			"{mint}This Spitter can give survivors high gun recoil."
+	}
+
+	"Witch #58"
+	{
+		"en"			"{mint}This Witch can give survivors high gun recoil."
 	}
 
 	"Tank #59 Name"
 	{
-		"en"			"Respawner Tank"
+		"en"			"Regenerative Tank"
+	}
+
+	"Boomer #59 Name"
+	{
+		"en"			"Regenerative Boomer"
+	}
+
+	"Charger #59 Name"
+	{
+		"en"			"Regenerative Charger"
+	}
+
+	"Hunter #59 Name"
+	{
+		"en"			"Regenerative Hunter"
+	}
+
+	"Jockey #59 Name"
+	{
+		"en"			"Regenerative Jockey"
+	}
+
+	"Smoker #59 Name"
+	{
+		"en"			"Regenerative Smoker"
+	}
+
+	"Spitter #59 Name"
+	{
+		"en"			"Regenerative Spitter"
+	}
+
+	"Witch #59 Name"
+	{
+		"en"			"Regenerative Witch"
 	}
 
 	"Tank #59"
 	{
-		"en"			"{mint}This Tank can respawn upon death."
+		"en"			"{mint}This Tank regenerates health every second."
+	}
+
+	"Boomer #59"
+	{
+		"en"			"{mint}This Boomer regenerates health every second."
+	}
+
+	"Charger #59"
+	{
+		"en"			"{mint}This Charger regenerates health every second."
+	}
+
+	"Hunter #59"
+	{
+		"en"			"{mint}This Hunter regenerates health every second."
+	}
+
+	"Jockey #59"
+	{
+		"en"			"{mint}This Jockey regenerates health every second."
+	}
+
+	"Smoker #59"
+	{
+		"en"			"{mint}This Smoker regenerates health every second."
+	}
+
+	"Spitter #59"
+	{
+		"en"			"{mint}This Spitter regenerates health every second."
+	}
+
+	"Witch #59"
+	{
+		"en"			"{mint}This Witch regenerates health every second."
 	}
 
 	"Tank #60 Name"
 	{
-		"en"			"Restarter Tank"
+		"en"			"Respawner Tank"
+	}
+
+	"Boomer #60 Name"
+	{
+		"en"			"Respawner Boomer"
+	}
+
+	"Charger #60 Name"
+	{
+		"en"			"Respawner Charger"
+	}
+
+	"Hunter #60 Name"
+	{
+		"en"			"Respawner Hunter"
+	}
+
+	"Jockey #60 Name"
+	{
+		"en"			"Respawner Jockey"
+	}
+
+	"Smoker #60 Name"
+	{
+		"en"			"Respawner Smoker"
+	}
+
+	"Spitter #60 Name"
+	{
+		"en"			"Respawner Spitter"
+	}
+
+	"Witch #60 Name"
+	{
+		"en"			"Respawner Witch"
 	}
 
 	"Tank #60"
 	{
-		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
+		"en"			"{mint}This Tank can respawn upon death."
+	}
+
+	"Boomer #60"
+	{
+		"en"			"{mint}This Boomer can respawn upon death."
+	}
+
+	"Charger #60"
+	{
+		"en"			"{mint}This Charger can respawn upon death."
+	}
+
+	"Hunter #60"
+	{
+		"en"			"{mint}This Hunter can respawn upon death."
+	}
+
+	"Jockey #60"
+	{
+		"en"			"{mint}This Jockey can respawn upon death."
+	}
+
+	"Smoker #60"
+	{
+		"en"			"{mint}This Smoker can respawn upon death."
+	}
+
+	"Spitter #60"
+	{
+		"en"			"{mint}This Spitter can respawn upon death."
+	}
+
+	"Witch #60"
+	{
+		"en"			"{mint}This Witch can respawn upon death."
 	}
 
 	"Tank #61 Name"
 	{
-		"en"			"Rock Tank"
+		"en"			"Restarter Tank"
+	}
+
+	"Boomer #61 Name"
+	{
+		"en"			"Restarter Boomer"
+	}
+
+	"Charger #61 Name"
+	{
+		"en"			"Restarter Charger"
+	}
+
+	"Hunter #61 Name"
+	{
+		"en"			"Restarter Hunter"
+	}
+
+	"Jockey #61 Name"
+	{
+		"en"			"Restarter Jockey"
+	}
+
+	"Smoker #61 Name"
+	{
+		"en"			"Restarter Smoker"
+	}
+
+	"Spitter #61 Name"
+	{
+		"en"			"Restarter Spitter"
+	}
+
+	"Witch #61 Name"
+	{
+		"en"			"Restarter Witch"
 	}
 
 	"Tank #61"
 	{
-		"en"			"{mint}This Tank can start rock showers."
+		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
+	}
+
+	"Boomer #61"
+	{
+		"en"			"{mint}This Boomer can force survivors to restart with a new loadout."
+	}
+
+	"Charger #61"
+	{
+		"en"			"{mint}This Charger can force survivors to restart with a new loadout."
+	}
+
+	"Hunter #61"
+	{
+		"en"			"{mint}This Hunter can force survivors to restart with a new loadout."
+	}
+
+	"Jockey #61"
+	{
+		"en"			"{mint}This Jockey can force survivors to restart with a new loadout."
+	}
+
+	"Smoker #61"
+	{
+		"en"			"{mint}This Smoker can force survivors to restart with a new loadout."
+	}
+
+	"Spitter #61"
+	{
+		"en"			"{mint}This Spitter can force survivors to restart with a new loadout."
+	}
+
+	"Witch #61"
+	{
+		"en"			"{mint}This Witch can force survivors to restart with a new loadout."
 	}
 
 	"Tank #62 Name"
 	{
-		"en"			"Rocketeer Tank"
+		"en"			"Rock Tank"
+	}
+
+	"Boomer #62 Name"
+	{
+		"en"			"Rock Boomer"
+	}
+
+	"Charger #62 Name"
+	{
+		"en"			"Rock Charger"
+	}
+
+	"Hunter #62 Name"
+	{
+		"en"			"Rock Hunter"
+	}
+
+	"Jockey #62 Name"
+	{
+		"en"			"Rock Jockey"
+	}
+
+	"Smoker #62 Name"
+	{
+		"en"			"Rock Smoker"
+	}
+
+	"Spitter #62 Name"
+	{
+		"en"			"Rock Spitter"
+	}
+
+	"Witch #62 Name"
+	{
+		"en"			"Rock Witch"
 	}
 
 	"Tank #62"
 	{
-		"en"			"{mint}This Tank can send survivors into space."
+		"en"			"{mint}This Tank can start rock showers."
+	}
+
+	"Boomer #62"
+	{
+		"en"			"{mint}This Boomer can start rock showers."
+	}
+
+	"Charger #62"
+	{
+		"en"			"{mint}This Charger can start rock showers."
+	}
+
+	"Hunter #62"
+	{
+		"en"			"{mint}This Hunter can start rock showers."
+	}
+
+	"Jockey #62"
+	{
+		"en"			"{mint}This Jockey can start rock showers."
+	}
+
+	"Smoker #62"
+	{
+		"en"			"{mint}This Smoker can start rock showers."
+	}
+
+	"Spitter #62"
+	{
+		"en"			"{mint}This Spitter can start rock showers."
+	}
+
+	"Witch #62"
+	{
+		"en"			"{mint}This Witch can start rock showers."
 	}
 
 	"Tank #63 Name"
 	{
-		"en"			"Self-throwing Tank"
+		"en"			"Rocketeer Tank"
+	}
+
+	"Boomer #63 Name"
+	{
+		"en"			"Rocketeer Boomer"
+	}
+
+	"Charger #63 Name"
+	{
+		"en"			"Rocketeer Charger"
+	}
+
+	"Hunter #63 Name"
+	{
+		"en"			"Rocketeer Hunter"
+	}
+
+	"Jockey #63 Name"
+	{
+		"en"			"Rocketeer Jockey"
+	}
+
+	"Smoker #63 Name"
+	{
+		"en"			"Rocketeer Smoker"
+	}
+
+	"Spitter #63 Name"
+	{
+		"en"			"Rocketeer Spitter"
+	}
+
+	"Witch #63 Name"
+	{
+		"en"			"Rocketeer Witch"
 	}
 
 	"Tank #63"
 	{
-		"en"			"{mint}This Tank can throw itself towards survivors."
+		"en"			"{mint}This Tank can send survivors into space."
+	}
+
+	"Boomer #63"
+	{
+		"en"			"{mint}This Boomer can send survivors into space."
+	}
+
+	"Charger #63"
+	{
+		"en"			"{mint}This Charger can send survivors into space."
+	}
+
+	"Hunter #63"
+	{
+		"en"			"{mint}This Hunter can send survivors into space."
+	}
+
+	"Jockey #63"
+	{
+		"en"			"{mint}This Jockey can send survivors into space."
+	}
+
+	"Smoker #63"
+	{
+		"en"			"{mint}This Smoker can send survivors into space."
+	}
+
+	"Spitter #63"
+	{
+		"en"			"{mint}This Spitter can send survivors into space."
+	}
+
+	"Witch #63"
+	{
+		"en"			"{mint}This Witch can send survivors into space."
 	}
 
 	"Tank #64 Name"
 	{
-		"en"			"Shaker Tank"
+		"en"			"Self-throwing Tank"
+	}
+
+	"Boomer #64 Name"
+	{
+		"en"			"Self-throwing Boomer"
+	}
+
+	"Charger #64 Name"
+	{
+		"en"			"Self-throwing Charger"
+	}
+
+	"Hunter #64 Name"
+	{
+		"en"			"Self-throwing Hunter"
+	}
+
+	"Jockey #64 Name"
+	{
+		"en"			"Self-throwing Jockey"
+	}
+
+	"Smoker #64 Name"
+	{
+		"en"			"Self-throwing Smoker"
+	}
+
+	"Spitter #64 Name"
+	{
+		"en"			"Self-throwing Spitter"
+	}
+
+	"Witch #64 Name"
+	{
+		"en"			"Self-throwing Witch"
 	}
 
 	"Tank #64"
 	{
-		"en"			"{mint}This Tank can shake survivors' screens."
+		"en"			"{mint}This Tank can throw itself towards survivors."
+	}
+
+	"Boomer #64"
+	{
+		"en"			"{mint}This Boomer can throw itself towards survivors."
+	}
+
+	"Charger #64"
+	{
+		"en"			"{mint}This Charger can throw itself towards survivors."
+	}
+
+	"Hunter #64"
+	{
+		"en"			"{mint}This Hunter can throw itself towards survivors."
+	}
+
+	"Jockey #64"
+	{
+		"en"			"{mint}This Jockey can throw itself towards survivors."
+	}
+
+	"Smoker #64"
+	{
+		"en"			"{mint}This Smoker can throw itself towards survivors."
+	}
+
+	"Spitter #64"
+	{
+		"en"			"{mint}This Spitter can throw itself towards survivors."
+	}
+
+	"Witch #64"
+	{
+		"en"			"{mint}This Witch can throw itself towards survivors."
 	}
 
 	"Tank #65 Name"
 	{
-		"en"			"Shield Tank"
+		"en"			"Shaker Tank"
+	}
+
+	"Boomer #65 Name"
+	{
+		"en"			"Shaker Boomer"
+	}
+
+	"Charger #65 Name"
+	{
+		"en"			"Shaker Charger"
+	}
+
+	"Hunter #65 Name"
+	{
+		"en"			"Shaker Hunter"
+	}
+
+	"Jockey #65 Name"
+	{
+		"en"			"Shaker Jockey"
+	}
+
+	"Smoker #65 Name"
+	{
+		"en"			"Shaker Smoker"
+	}
+
+	"Spitter #65 Name"
+	{
+		"en"			"Shaker Spitter"
+	}
+
+	"Witch #65 Name"
+	{
+		"en"			"Shaker Witch"
 	}
 
 	"Tank #65"
 	{
-		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
+		"en"			"{mint}This Tank can shake survivors' screens."
+	}
+
+	"Boomer #65"
+	{
+		"en"			"{mint}This Boomer can shake survivors' screens."
+	}
+
+	"Charger #65"
+	{
+		"en"			"{mint}This Charger can shake survivors' screens."
+	}
+
+	"Hunter #65"
+	{
+		"en"			"{mint}This Hunter can shake survivors' screens."
+	}
+
+	"Jockey #65"
+	{
+		"en"			"{mint}This Jockey can shake survivors' screens."
+	}
+
+	"Smoker #65"
+	{
+		"en"			"{mint}This Smoker can shake survivors' screens."
+	}
+
+	"Spitter #65"
+	{
+		"en"			"{mint}This Spitter can shake survivors' screens."
+	}
+
+	"Witch #65"
+	{
+		"en"			"{mint}This Witch can shake survivors' screens."
 	}
 
 	"Tank #66 Name"
 	{
-		"en"			"Shover Tank"
+		"en"			"Shield Tank"
+	}
+
+	"Boomer #66 Name"
+	{
+		"en"			"Shield Boomer"
+	}
+
+	"Charger #66 Name"
+	{
+		"en"			"Shield Charger"
+	}
+
+	"Hunter #66 Name"
+	{
+		"en"			"Shield Hunter"
+	}
+
+	"Jockey #66 Name"
+	{
+		"en"			"Shield Jockey"
+	}
+
+	"Smoker #66 Name"
+	{
+		"en"			"Shield Smoker"
+	}
+
+	"Spitter #66 Name"
+	{
+		"en"			"Shield Spitter"
+	}
+
+	"Witch #66 Name"
+	{
+		"en"			"Shield Witch"
 	}
 
 	"Tank #66"
 	{
-		"en"			"{mint}This Tank can shove survivors around."
+		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
+	}
+
+	"Boomer #66"
+	{
+		"en"			"{mint}This Boomer spawns with a shield."
+	}
+
+	"Charger #66"
+	{
+		"en"			"{mint}This Charger spawns with a shield."
+	}
+
+	"Hunter #66"
+	{
+		"en"			"{mint}This Hunter spawns with a shield."
+	}
+
+	"Jockey #66"
+	{
+		"en"			"{mint}This Jockey spawns with a shield."
+	}
+
+	"Smoker #66"
+	{
+		"en"			"{mint}This Smoker spawns with a shield."
+	}
+
+	"Spitter #66"
+	{
+		"en"			"{mint}This Spitter spawns with a shield."
+	}
+
+	"Witch #66"
+	{
+		"en"			"{mint}This Witch spawns with a shield."
 	}
 
 	"Tank #67 Name"
 	{
-		"en"			"Slow Tank"
+		"en"			"Shover Tank"
+	}
+
+	"Boomer #67 Name"
+	{
+		"en"			"Shover Boomer"
+	}
+
+	"Charger #67 Name"
+	{
+		"en"			"Shover Charger"
+	}
+
+	"Hunter #67 Name"
+	{
+		"en"			"Shover Hunter"
+	}
+
+	"Jockey #67 Name"
+	{
+		"en"			"Shover Jockey"
+	}
+
+	"Smoker #67 Name"
+	{
+		"en"			"Shover Smoker"
+	}
+
+	"Spitter #67 Name"
+	{
+		"en"			"Shover Spitter"
+	}
+
+	"Witch #67 Name"
+	{
+		"en"			"Shover Witch"
 	}
 
 	"Tank #67"
 	{
-		"en"			"{mint}This Tank can slow survivors down."
+		"en"			"{mint}This Tank can shove survivors around."
+	}
+
+	"Boomer #67"
+	{
+		"en"			"{mint}This Boomer can shove survivors around."
+	}
+
+	"Charger #67"
+	{
+		"en"			"{mint}This Charger can shove survivors around."
+	}
+
+	"Hunter #67"
+	{
+		"en"			"{mint}This Hunter can shove survivors around."
+	}
+
+	"Jockey #67"
+	{
+		"en"			"{mint}This Jockey can shove survivors around."
+	}
+
+	"Smoker #67"
+	{
+		"en"			"{mint}This Smoker can shove survivors around."
+	}
+
+	"Spitter #67"
+	{
+		"en"			"{mint}This Spitter can shove survivors around."
+	}
+
+	"Witch #67"
+	{
+		"en"			"{mint}This Witch can shove survivors around."
 	}
 
 	"Tank #68 Name"
 	{
-		"en"			"Smasher Tank"
+		"en"			"Slow Tank"
+	}
+
+	"Boomer #68 Name"
+	{
+		"en"			"Slow Boomer"
+	}
+
+	"Charger #68 Name"
+	{
+		"en"			"Slow Charger"
+	}
+
+	"Hunter #68 Name"
+	{
+		"en"			"Slow Hunter"
+	}
+
+	"Jockey #68 Name"
+	{
+		"en"			"Slow Jockey"
+	}
+
+	"Smoker #68 Name"
+	{
+		"en"			"Slow Smoker"
+	}
+
+	"Spitter #68 Name"
+	{
+		"en"			"Slow Spitter"
+	}
+
+	"Witch #68 Name"
+	{
+		"en"			"Slow Witch"
 	}
 
 	"Tank #68"
 	{
-		"en"			"{mint}This Tank can smash survivors to death."
+		"en"			"{mint}This Tank can slow survivors down."
+	}
+
+	"Boomer #68"
+	{
+		"en"			"{mint}This Boomer can slow survivors down."
+	}
+
+	"Charger #68"
+	{
+		"en"			"{mint}This Charger can slow survivors down."
+	}
+
+	"Hunter #68"
+	{
+		"en"			"{mint}This Hunter can slow survivors down."
+	}
+
+	"Jockey #68"
+	{
+		"en"			"{mint}This Jockey can slow survivors down."
+	}
+
+	"Smoker #68"
+	{
+		"en"			"{mint}This Smoker can slow survivors down."
+	}
+
+	"Spitter #68"
+	{
+		"en"			"{mint}This Spitter can slow survivors down."
+	}
+
+	"Witch #68"
+	{
+		"en"			"{mint}This Witch can slow survivors down."
 	}
 
 	"Tank #69 Name"
 	{
-		"en"			"Smiter Tank"
+		"en"			"Smasher Tank"
+	}
+
+	"Boomer #69 Name"
+	{
+		"en"			"Smasher Boomer"
+	}
+
+	"Charger #69 Name"
+	{
+		"en"			"Smasher Charger"
+	}
+
+	"Hunter #69 Name"
+	{
+		"en"			"Smasher Hunter"
+	}
+
+	"Jockey #69 Name"
+	{
+		"en"			"Smasher Jockey"
+	}
+
+	"Smoker #69 Name"
+	{
+		"en"			"Smasher Smoker"
+	}
+
+	"Spitter #69 Name"
+	{
+		"en"			"Smasher Spitter"
+	}
+
+	"Witch #69 Name"
+	{
+		"en"			"Smasher Witch"
 	}
 
 	"Tank #69"
 	{
-		"en"			"{mint}This Tank can smite survivors for an instant kill."
+		"en"			"{mint}This Tank can smash survivors to death."
+	}
+
+	"Boomer #69"
+	{
+		"en"			"{mint}This Boomer can smash survivors to death."
+	}
+
+	"Charger #69"
+	{
+		"en"			"{mint}This Charger can smash survivors to death."
+	}
+
+	"Hunter #69"
+	{
+		"en"			"{mint}This Hunter can smash survivors to death."
+	}
+
+	"Jockey #69"
+	{
+		"en"			"{mint}This Jockey can smash survivors to death."
+	}
+
+	"Smoker #69"
+	{
+		"en"			"{mint}This Smoker can smash survivors to death."
+	}
+
+	"Spitter #69"
+	{
+		"en"			"{mint}This Spitter can smash survivors to death."
+	}
+
+	"Witch #69"
+	{
+		"en"			"{mint}This Witch can smash survivors to death."
 	}
 
 	"Tank #70 Name"
 	{
-		"en"			"Smoker Tank"
+		"en"			"Smiter Tank"
+	}
+
+	"Boomer #70 Name"
+	{
+		"en"			"Smiter Boomer"
+	}
+
+	"Charger #70 Name"
+	{
+		"en"			"Smiter Charger"
+	}
+
+	"Hunter #70 Name"
+	{
+		"en"			"Smiter Hunter"
+	}
+
+	"Jockey #70 Name"
+	{
+		"en"			"Smiter Jockey"
+	}
+
+	"Smoker #70 Name"
+	{
+		"en"			"Smiter Smoker"
+	}
+
+	"Spitter #70 Name"
+	{
+		"en"			"Smiter Spitter"
+	}
+
+	"Witch #70 Name"
+	{
+		"en"			"Smiter Witch"
 	}
 
 	"Tank #70"
 	{
-		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can smite survivors for an instant kill."
+	}
+
+	"Boomer #70"
+	{
+		"en"			"{mint}This Boomer can smite survivors for an instant kill."
+	}
+
+	"Charger #70"
+	{
+		"en"			"{mint}This Charger can smite survivors for an instant kill."
+	}
+
+	"Hunter #70"
+	{
+		"en"			"{mint}This Hunter can smite survivors for an instant kill."
+	}
+
+	"Jockey #70"
+	{
+		"en"			"{mint}This Jockey can smite survivors for an instant kill."
+	}
+
+	"Smoker #70"
+	{
+		"en"			"{mint}This Smoker can smite survivors for an instant kill."
+	}
+
+	"Spitter #70"
+	{
+		"en"			"{mint}This Spitter can smite survivors for an instant kill."
+	}
+
+	"Witch #70"
+	{
+		"en"			"{mint}This Witch can smite survivors for an instant kill."
 	}
 
 	"Tank #71 Name"
 	{
-		"en"			"Spammer Tank"
+		"en"			"Smoker Tank"
+	}
+
+	"Boomer #71 Name"
+	{
+		"en"			"Smoker Boomer"
+	}
+
+	"Charger #71 Name"
+	{
+		"en"			"Smoker Charger"
+	}
+
+	"Hunter #71 Name"
+	{
+		"en"			"Smoker Hunter"
+	}
+
+	"Jockey #71 Name"
+	{
+		"en"			"Smoker Jockey"
+	}
+
+	"Smoker #71 Name"
+	{
+		"en"			"Smoker Smoker"
+	}
+
+	"Spitter #71 Name"
+	{
+		"en"			"Smoker Spitter"
+	}
+
+	"Witch #71 Name"
+	{
+		"en"			"Smoker Witch"
 	}
 
 	"Tank #71"
 	{
-		"en"			"{mint}This Tank can spam rocks at survivors."
+		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
+	}
+
+	"Boomer #71"
+	{
+		"en"			"{mint}This Boomer can spawn Smokers behind it."
+	}
+
+	"Charger #71"
+	{
+		"en"			"{mint}This Charger can spawn Smokers behind it."
+	}
+
+	"Hunter #71"
+	{
+		"en"			"{mint}This Hunter can spawn Smokers behind it."
+	}
+
+	"Jockey #71"
+	{
+		"en"			"{mint}This Jockey can spawn Smokers behind it."
+	}
+
+	"Smoker #71"
+	{
+		"en"			"{mint}This Smoker can spawn Smokers behind it."
+	}
+
+	"Spitter #71"
+	{
+		"en"			"{mint}This Spitter can spawn Smokers behind it."
+	}
+
+	"Witch #71"
+	{
+		"en"			"{mint}This Witch can spawn Smokers behind it."
 	}
 
 	"Tank #72 Name"
 	{
-		"en"			"Special Tank"
+		"en"			"Spammer Tank"
+	}
+
+	"Boomer #72 Name"
+	{
+		"en"			"Spammer Boomer"
+	}
+
+	"Charger #72 Name"
+	{
+		"en"			"Spammer Charger"
+	}
+
+	"Hunter #72 Name"
+	{
+		"en"			"Spammer Hunter"
+	}
+
+	"Jockey #72 Name"
+	{
+		"en"			"Spammer Jockey"
+	}
+
+	"Smoker #72 Name"
+	{
+		"en"			"Spammer Smoker"
+	}
+
+	"Spitter #72 Name"
+	{
+		"en"			"Spammer Spitter"
+	}
+
+	"Witch #72 Name"
+	{
+		"en"			"Spammer Witch"
 	}
 
 	"Tank #72"
 	{
-		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spam rocks at survivors."
+	}
+
+	"Boomer #72"
+	{
+		"en"			"{mint}This Boomer can spam rocks at survivors."
+	}
+
+	"Charger #72"
+	{
+		"en"			"{mint}This Charger can spam rocks at survivors."
+	}
+
+	"Hunter #72"
+	{
+		"en"			"{mint}This Hunter can spam rocks at survivors."
+	}
+
+	"Jockey #72"
+	{
+		"en"			"{mint}This Jockey can spam rocks at survivors."
+	}
+
+	"Smoker #72"
+	{
+		"en"			"{mint}This Smoker can spam rocks at survivors."
+	}
+
+	"Spitter #72"
+	{
+		"en"			"{mint}This Spitter can spam rocks at survivors."
+	}
+
+	"Witch #72"
+	{
+		"en"			"{mint}This Witch can spam rocks at survivors."
 	}
 
 	"Tank #73 Name"
 	{
-		"en"			"Spitter Tank"
+		"en"			"Special Tank"
+	}
+
+	"Boomer #73 Name"
+	{
+		"en"			"Special Boomer"
+	}
+
+	"Charger #73 Name"
+	{
+		"en"			"Special Charger"
+	}
+
+	"Hunter #73 Name"
+	{
+		"en"			"Special Hunter"
+	}
+
+	"Jockey #73 Name"
+	{
+		"en"			"Special Jockey"
+	}
+
+	"Smoker #73 Name"
+	{
+		"en"			"Special Smoker"
+	}
+
+	"Spitter #73 Name"
+	{
+		"en"			"Special Spitter"
+	}
+
+	"Witch #73 Name"
+	{
+		"en"			"Special Witch"
 	}
 
 	"Tank #73"
 	{
-		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
+	}
+
+	"Boomer #73"
+	{
+		"en"			"{mint}This Boomer can spawn random special infected behind it."
+	}
+
+	"Charger #73"
+	{
+		"en"			"{mint}This Charger can spawn random special infected behind it."
+	}
+
+	"Hunter #73"
+	{
+		"en"			"{mint}This Hunter can spawn random special infected behind it."
+	}
+
+	"Jockey #73"
+	{
+		"en"			"{mint}This Jockey can spawn random special infected behind it."
+	}
+
+	"Smoker #73"
+	{
+		"en"			"{mint}This Smoker can spawn random special infected behind it."
+	}
+
+	"Spitter #73"
+	{
+		"en"			"{mint}This Spitter can spawn random special infected behind it."
+	}
+
+	"Witch #73"
+	{
+		"en"			"{mint}This Witch can spawn random special infected behind it."
 	}
 
 	"Tank #74 Name"
 	{
-		"en"			"Splasher Tank"
+		"en"			"Spitter Tank"
+	}
+
+	"Boomer #74 Name"
+	{
+		"en"			"Spitter Boomer"
+	}
+
+	"Charger #74 Name"
+	{
+		"en"			"Spitter Charger"
+	}
+
+	"Hunter #74 Name"
+	{
+		"en"			"Spitter Hunter"
+	}
+
+	"Jockey #74 Name"
+	{
+		"en"			"Spitter Jockey"
+	}
+
+	"Smoker #74 Name"
+	{
+		"en"			"Spitter Smoker"
+	}
+
+	"Spitter #74 Name"
+	{
+		"en"			"Spitter Spitter"
+	}
+
+	"Witch #74 Name"
+	{
+		"en"			"Spitter Witch"
 	}
 
 	"Tank #74"
 	{
-		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
+		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
+	}
+
+	"Boomer #74"
+	{
+		"en"			"{mint}This Boomer can spawn Spitters behind it."
+	}
+
+	"Charger #74"
+	{
+		"en"			"{mint}This Charger can spawn Spitters behind it."
+	}
+
+	"Hunter #74"
+	{
+		"en"			"{mint}This Hunter can spawn Spitters behind it."
+	}
+
+	"Jockey #74"
+	{
+		"en"			"{mint}This Jockey can spawn Spitters behind it."
+	}
+
+	"Smoker #74"
+	{
+		"en"			"{mint}This Smoker can spawn Spitters behind it."
+	}
+
+	"Spitter #74"
+	{
+		"en"			"{mint}This Spitter can spawn Spitters behind it."
+	}
+
+	"Witch #74"
+	{
+		"en"			"{mint}This Witch can spawn Spitters behind it."
 	}
 
 	"Tank #75 Name"
 	{
-		"en"			"Splatter Tank"
+		"en"			"Splasher Tank"
+	}
+
+	"Boomer #75 Name"
+	{
+		"en"			"Splasher Boomer"
+	}
+
+	"Charger #75 Name"
+	{
+		"en"			"Splasher Charger"
+	}
+
+	"Hunter #75 Name"
+	{
+		"en"			"Splasher Hunter"
+	}
+
+	"Jockey #75 Name"
+	{
+		"en"			"Splasher Jockey"
+	}
+
+	"Smoker #75 Name"
+	{
+		"en"			"Splasher Smoker"
+	}
+
+	"Spitter #75 Name"
+	{
+		"en"			"Splasher Spitter"
+	}
+
+	"Witch #75 Name"
+	{
+		"en"			"Splasher Witch"
 	}
 
 	"Tank #75"
 	{
-		"en"			"{mint}This Tank can cover everyone's screens with splatters."
+		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
+	}
+
+	"Boomer #75"
+	{
+		"en"			"{mint}This Boomer can release a splash of damage within a certain radius."
+	}
+
+	"Charger #75"
+	{
+		"en"			"{mint}This Charger can release a splash of damage within a certain radius."
+	}
+
+	"Hunter #75"
+	{
+		"en"			"{mint}This Hunter can release a splash of damage within a certain radius."
+	}
+
+	"Jockey #75"
+	{
+		"en"			"{mint}This Jockey can release a splash of damage within a certain radius."
+	}
+
+	"Smoker #75"
+	{
+		"en"			"{mint}This Smoker can release a splash of damage within a certain radius."
+	}
+
+	"Spitter #75"
+	{
+		"en"			"{mint}This Spitter can release a splash of damage within a certain radius."
+	}
+
+	"Witch #75"
+	{
+		"en"			"{mint}This Witch can release a splash of damage within a certain radius."
 	}
 
 	"Tank #76 Name"
 	{
-		"en"			"Thrower Tank"
+		"en"			"Splatter Tank"
+	}
+
+	"Boomer #76 Name"
+	{
+		"en"			"Splatter Boomer"
+	}
+
+	"Charger #76 Name"
+	{
+		"en"			"Splatter Charger"
+	}
+
+	"Hunter #76 Name"
+	{
+		"en"			"Splatter Hunter"
+	}
+
+	"Jockey #76 Name"
+	{
+		"en"			"Splatter Jockey"
+	}
+
+	"Smoker #76 Name"
+	{
+		"en"			"Splatter Smoker"
+	}
+
+	"Spitter #76 Name"
+	{
+		"en"			"Splatter Spitter"
+	}
+
+	"Witch #76 Name"
+	{
+		"en"			"Splatter Witch"
 	}
 
 	"Tank #76"
 	{
-		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
+		"en"			"{mint}This Tank can cover everyone's screens with splatters."
+	}
+
+	"Boomer #76"
+	{
+		"en"			"{mint}This Boomer can cover everyone's screens with splatters."
+	}
+
+	"Charger #76"
+	{
+		"en"			"{mint}This Charger can cover everyone's screens with splatters."
+	}
+
+	"Hunter #76"
+	{
+		"en"			"{mint}This Hunter can cover everyone's screens with splatters."
+	}
+
+	"Jockey #76"
+	{
+		"en"			"{mint}This Jockey can cover everyone's screens with splatters."
+	}
+
+	"Smoker #76"
+	{
+		"en"			"{mint}This Smoker can cover everyone's screens with splatters."
+	}
+
+	"Spitter #76"
+	{
+		"en"			"{mint}This Spitter can cover everyone's screens with splatters."
+	}
+
+	"Witch #76"
+	{
+		"en"			"{mint}This Witch can cover everyone's screens with splatters."
 	}
 
 	"Tank #77 Name"
 	{
-		"en"			"Tracker Tank"
+		"en"			"Thrower Tank"
+	}
+
+	"Boomer #77 Name"
+	{
+		"en"			"Thrower Boomer"
+	}
+
+	"Charger #77 Name"
+	{
+		"en"			"Thrower Charger"
+	}
+
+	"Hunter #77 Name"
+	{
+		"en"			"Thrower Hunter"
+	}
+
+	"Jockey #77 Name"
+	{
+		"en"			"Thrower Jockey"
+	}
+
+	"Smoker #77 Name"
+	{
+		"en"			"Thrower Smoker"
+	}
+
+	"Spitter #77 Name"
+	{
+		"en"			"Thrower Spitter"
+	}
+
+	"Witch #77 Name"
+	{
+		"en"			"Thrower Witch"
 	}
 
 	"Tank #77"
 	{
-		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
+		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Boomer #77"
+	{
+		"en"			"{mint}This Boomer can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Charger #77"
+	{
+		"en"			"{mint}This Charger can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Hunter #77"
+	{
+		"en"			"{mint}This Hunter can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Jockey #77"
+	{
+		"en"			"{mint}This Jockey can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Smoker #77"
+	{
+		"en"			"{mint}This Smoker can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Spitter #77"
+	{
+		"en"			"{mint}This Spitter can throw cars, special infected, Tanks, Witches, and itself!"
+	}
+
+	"Witch #77"
+	{
+		"en"			"{mint}This Witch can throw cars, special infected, Tanks, Witches, and itself!"
 	}
 
 	"Tank #78 Name"
 	{
-		"en"			"Ultimate Tank"
+		"en"			"Tracker Tank"
+	}
+
+	"Boomer #78 Name"
+	{
+		"en"			"Tracker Boomer"
+	}
+
+	"Charger #78 Name"
+	{
+		"en"			"Tracker Charger"
+	}
+
+	"Hunter #78 Name"
+	{
+		"en"			"Tracker Hunter"
+	}
+
+	"Jockey #78 Name"
+	{
+		"en"			"Tracker Jockey"
+	}
+
+	"Smoker #78 Name"
+	{
+		"en"			"Tracker Smoker"
+	}
+
+	"Spitter #78 Name"
+	{
+		"en"			"Tracker Spitter"
+	}
+
+	"Witch #78 Name"
+	{
+		"en"			"Tracker Witch"
 	}
 
 	"Tank #78"
 	{
-		"en"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
+		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
+	}
+
+	"Boomer #78"
+	{
+		"en"			"{mint}This Boomer throws rocks which can track nearby survivors."
+	}
+
+	"Charger #78"
+	{
+		"en"			"{mint}This Charger throws rocks which can track nearby survivors."
+	}
+
+	"Hunter #78"
+	{
+		"en"			"{mint}This Hunter throws rocks which can track nearby survivors."
+	}
+
+	"Jockey #78"
+	{
+		"en"			"{mint}This Jockey throws rocks which can track nearby survivors."
+	}
+
+	"Smoker #78"
+	{
+		"en"			"{mint}This Smoker throws rocks which can track nearby survivors."
+	}
+
+	"Spitter #78"
+	{
+		"en"			"{mint}This Spitter throws rocks which can track nearby survivors."
+	}
+
+	"Witch #78"
+	{
+		"en"			"{mint}This Witch throws rocks which can track nearby survivors."
 	}
 
 	"Tank #79 Name"
 	{
-		"en"			"Undead Tank"
+		"en"			"Ultimate Tank"
+	}
+
+	"Boomer #79 Name"
+	{
+		"en"			"Ultimate Boomer"
+	}
+
+	"Charger #79 Name"
+	{
+		"en"			"Ultimate Charger"
+	}
+
+	"Hunter #79 Name"
+	{
+		"en"			"Ultimate Hunter"
+	}
+
+	"Jockey #79 Name"
+	{
+		"en"			"Ultimate Jockey"
+	}
+
+	"Smoker #79 Name"
+	{
+		"en"			"Ultimate Smoker"
+	}
+
+	"Spitter #79 Name"
+	{
+		"en"			"Ultimate Spitter"
+	}
+
+	"Witch #79 Name"
+	{
+		"en"			"Ultimate Witch"
 	}
 
 	"Tank #79"
 	{
-		"en"			"{mint}This Tank regains full HP when close to dying."
+		"en"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
+	}
+
+	"Boomer #79"
+	{
+		"en"			"{mint}This Boomer gains temporary godmode and damage boost when low on health."
+	}
+
+	"Charger #79"
+	{
+		"en"			"{mint}This Charger gains temporary godmode and damage boost when low on health."
+	}
+
+	"Hunter #79"
+	{
+		"en"			"{mint}This Hunter gains temporary godmode and damage boost when low on health."
+	}
+
+	"Jockey #79"
+	{
+		"en"			"{mint}This Jockey gains temporary godmode and damage boost when low on health."
+	}
+
+	"Smoker #79"
+	{
+		"en"			"{mint}This Smoker gains temporary godmode and damage boost when low on health."
+	}
+
+	"Spitter #79"
+	{
+		"en"			"{mint}This Spitter gains temporary godmode and damage boost when low on health."
+	}
+
+	"Witch #79"
+	{
+		"en"			"{mint}This Witch gains temporary godmode and damage boost when low on health."
 	}
 
 	"Tank #80 Name"
 	{
-		"en"			"Vampire Tank"
+		"en"			"Undead Tank"
+	}
+
+	"Boomer #80 Name"
+	{
+		"en"			"Undead Boomer"
+	}
+
+	"Charger #80 Name"
+	{
+		"en"			"Undead Charger"
+	}
+
+	"Hunter #80 Name"
+	{
+		"en"			"Undead Hunter"
+	}
+
+	"Jockey #80 Name"
+	{
+		"en"			"Undead Jockey"
+	}
+
+	"Smoker #80 Name"
+	{
+		"en"			"Undead Smoker"
+	}
+
+	"Spitter #80 Name"
+	{
+		"en"			"Undead Spitter"
+	}
+
+	"Witch #80 Name"
+	{
+		"en"			"Undead Witch"
 	}
 
 	"Tank #80"
 	{
-		"en"			"{mint}This Tank can steal health from survivors."
+		"en"			"{mint}This Tank regains full HP when close to dying."
+	}
+
+	"Boomer #80"
+	{
+		"en"			"{mint}This Boomer regains full HP when close to dying."
+	}
+
+	"Charger #80"
+	{
+		"en"			"{mint}This Charger regains full HP when close to dying."
+	}
+
+	"Hunter #80"
+	{
+		"en"			"{mint}This Hunter regains full HP when close to dying."
+	}
+
+	"Jockey #80"
+	{
+		"en"			"{mint}This Jockey regains full HP when close to dying."
+	}
+
+	"Smoker #80"
+	{
+		"en"			"{mint}This Smoker regains full HP when close to dying."
+	}
+
+	"Spitter #80"
+	{
+		"en"			"{mint}This Spitter regains full HP when close to dying."
+	}
+
+	"Witch #80"
+	{
+		"en"			"{mint}This Witch regains full HP when close to dying."
 	}
 
 	"Tank #81 Name"
 	{
-		"en"			"Visual Tank"
+		"en"			"Vampire Tank"
+	}
+
+	"Boomer #81 Name"
+	{
+		"en"			"Vampire Boomer"
+	}
+
+	"Charger #81 Name"
+	{
+		"en"			"Vampire Charger"
+	}
+
+	"Hunter #81 Name"
+	{
+		"en"			"Vampire Hunter"
+	}
+
+	"Jockey #81 Name"
+	{
+		"en"			"Vampire Jockey"
+	}
+
+	"Smoker #81 Name"
+	{
+		"en"			"Vampire Smoker"
+	}
+
+	"Spitter #81 Name"
+	{
+		"en"			"Vampire Spitter"
+	}
+
+	"Witch #81 Name"
+	{
+		"en"			"Vampire Witch"
 	}
 
 	"Tank #81"
 	{
-		"en"			"{mint}This Tank can change the FOV of survivors."
+		"en"			"{mint}This Tank can steal health from survivors."
+	}
+
+	"Boomer #81"
+	{
+		"en"			"{mint}This Boomer can steal health from survivors."
+	}
+
+	"Charger #81"
+	{
+		"en"			"{mint}This Charger can steal health from survivors."
+	}
+
+	"Hunter #81"
+	{
+		"en"			"{mint}This Hunter can steal health from survivors."
+	}
+
+	"Jockey #81"
+	{
+		"en"			"{mint}This Jockey can steal health from survivors."
+	}
+
+	"Smoker #81"
+	{
+		"en"			"{mint}This Smoker can steal health from survivors."
+	}
+
+	"Spitter #81"
+	{
+		"en"			"{mint}This Spitter can steal health from survivors."
+	}
+
+	"Witch #81"
+	{
+		"en"			"{mint}This Witch can steal health from survivors."
 	}
 
 	"Tank #82 Name"
 	{
-		"en"			"Warper Tank"
+		"en"			"Visual Tank"
+	}
+
+	"Boomer #82 Name"
+	{
+		"en"			"Visual Boomer"
+	}
+
+	"Charger #82 Name"
+	{
+		"en"			"Visual Charger"
+	}
+
+	"Hunter #82 Name"
+	{
+		"en"			"Visual Hunter"
+	}
+
+	"Jockey #82 Name"
+	{
+		"en"			"Visual Jockey"
+	}
+
+	"Smoker #82 Name"
+	{
+		"en"			"Visual Smoker"
+	}
+
+	"Spitter #82 Name"
+	{
+		"en"			"Visual Spitter"
+	}
+
+	"Witch #82 Name"
+	{
+		"en"			"Visual Witch"
 	}
 
 	"Tank #82"
 	{
-		"en"			"{mint}This Tank can warp to a random survivor."
+		"en"			"{mint}This Tank can change the FOV of survivors."
+	}
+
+	"Boomer #82"
+	{
+		"en"			"{mint}This Boomer can change the FOV of survivors."
+	}
+
+	"Charger #82"
+	{
+		"en"			"{mint}This Charger can change the FOV of survivors."
+	}
+
+	"Hunter #82"
+	{
+		"en"			"{mint}This Hunter can change the FOV of survivors."
+	}
+
+	"Jockey #82"
+	{
+		"en"			"{mint}This Jockey can change the FOV of survivors."
+	}
+
+	"Smoker #82"
+	{
+		"en"			"{mint}This Smoker can change the FOV of survivors."
+	}
+
+	"Spitter #82"
+	{
+		"en"			"{mint}This Spitter can change the FOV of survivors."
+	}
+
+	"Witch #82"
+	{
+		"en"			"{mint}This Witch can change the FOV of survivors."
 	}
 
 	"Tank #83 Name"
 	{
-		"en"			"Whirler Tank"
+		"en"			"Warper Tank"
+	}
+
+	"Boomer #83 Name"
+	{
+		"en"			"Warper Boomer"
+	}
+
+	"Charger #83 Name"
+	{
+		"en"			"Warper Charger"
+	}
+
+	"Hunter #83 Name"
+	{
+		"en"			"Warper Hunter"
+	}
+
+	"Jockey #83 Name"
+	{
+		"en"			"Warper Jockey"
+	}
+
+	"Smoker #83 Name"
+	{
+		"en"			"Warper Smoker"
+	}
+
+	"Spitter #83 Name"
+	{
+		"en"			"Warper Spitter"
+	}
+
+	"Witch #83 Name"
+	{
+		"en"			"Warper Witch"
 	}
 
 	"Tank #83"
 	{
-		"en"			"{mint}This Tank can make survivors whirl."
+		"en"			"{mint}This Tank can warp to a random survivor."
+	}
+
+	"Boomer #83"
+	{
+		"en"			"{mint}This Boomer can warp to a random survivor."
+	}
+
+	"Charger #83"
+	{
+		"en"			"{mint}This Charger can warp to a random survivor."
+	}
+
+	"Hunter #83"
+	{
+		"en"			"{mint}This Hunter can warp to a random survivor."
+	}
+
+	"Jockey #83"
+	{
+		"en"			"{mint}This Jockey can warp to a random survivor."
+	}
+
+	"Smoker #83"
+	{
+		"en"			"{mint}This Smoker can warp to a random survivor."
+	}
+
+	"Spitter #83"
+	{
+		"en"			"{mint}This Spitter can warp to a random survivor."
+	}
+
+	"Witch #83"
+	{
+		"en"			"{mint}This Witch can warp to a random survivor."
 	}
 
 	"Tank #84 Name"
 	{
-		"en"			"Witch Tank"
+		"en"			"Whirler Tank"
+	}
+
+	"Boomer #84 Name"
+	{
+		"en"			"Whirler Boomer"
+	}
+
+	"Charger #84 Name"
+	{
+		"en"			"Whirler Charger"
+	}
+
+	"Hunter #84 Name"
+	{
+		"en"			"Whirler Hunter"
+	}
+
+	"Jockey #84 Name"
+	{
+		"en"			"Whirler Jockey"
+	}
+
+	"Smoker #84 Name"
+	{
+		"en"			"Whirler Smoker"
+	}
+
+	"Spitter #84 Name"
+	{
+		"en"			"Whirler Spitter"
+	}
+
+	"Witch #84 Name"
+	{
+		"en"			"Whirler Witch"
 	}
 
 	"Tank #84"
 	{
-		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
+		"en"			"{mint}This Tank can make survivors whirl."
+	}
+
+	"Boomer #84"
+	{
+		"en"			"{mint}This Boomer can make survivors whirl."
+	}
+
+	"Charger #84"
+	{
+		"en"			"{mint}This Charger can make survivors whirl."
+	}
+
+	"Hunter #84"
+	{
+		"en"			"{mint}This Hunter can make survivors whirl."
+	}
+
+	"Jockey #84"
+	{
+		"en"			"{mint}This Jockey can make survivors whirl."
+	}
+
+	"Smoker #84"
+	{
+		"en"			"{mint}This Smoker can make survivors whirl."
+	}
+
+	"Spitter #84"
+	{
+		"en"			"{mint}This Spitter can make survivors whirl."
+	}
+
+	"Witch #84"
+	{
+		"en"			"{mint}This Witch can make survivors whirl."
 	}
 
 	"Tank #85 Name"
 	{
-		"en"			"Xiphos Tank"
+		"en"			"Witch Tank"
+	}
+
+	"Boomer #85 Name"
+	{
+		"en"			"Witch Boomer"
+	}
+
+	"Charger #85 Name"
+	{
+		"en"			"Witch Charger"
+	}
+
+	"Hunter #85 Name"
+	{
+		"en"			"Witch Hunter"
+	}
+
+	"Jockey #85 Name"
+	{
+		"en"			"Witch Jockey"
+	}
+
+	"Smoker #85 Name"
+	{
+		"en"			"Witch Smoker"
+	}
+
+	"Spitter #85 Name"
+	{
+		"en"			"Witch Spitter"
+	}
+
+	"Witch #85 Name"
+	{
+		"en"			"Witch Witch"
 	}
 
 	"Tank #85"
 	{
-		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
+		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
+	}
+
+	"Boomer #85"
+	{
+		"en"			"{mint}This Boomer can convert nearby common infected into Witches."
+	}
+
+	"Charger #85"
+	{
+		"en"			"{mint}This Charger can convert nearby common infected into Witches."
+	}
+
+	"Hunter #85"
+	{
+		"en"			"{mint}This Hunter can convert nearby common infected into Witches."
+	}
+
+	"Jockey #85"
+	{
+		"en"			"{mint}This Jockey can convert nearby common infected into Witches."
+	}
+
+	"Smoker #85"
+	{
+		"en"			"{mint}This Smoker can convert nearby common infected into Witches."
+	}
+
+	"Spitter #85"
+	{
+		"en"			"{mint}This Spitter can convert nearby common infected into Witches."
+	}
+
+	"Witch #85"
+	{
+		"en"			"{mint}This Witch can convert nearby common infected into Witches."
 	}
 
 	"Tank #86 Name"
 	{
-		"en"			"Yeller Tank"
+		"en"			"Xiphos Tank"
+	}
+
+	"Boomer #86 Name"
+	{
+		"en"			"Xiphos Boomer"
+	}
+
+	"Charger #86 Name"
+	{
+		"en"			"Xiphos Charger"
+	}
+
+	"Hunter #86 Name"
+	{
+		"en"			"Xiphos Hunter"
+	}
+
+	"Jockey #86 Name"
+	{
+		"en"			"Xiphos Jockey"
+	}
+
+	"Smoker #86 Name"
+	{
+		"en"			"Xiphos Smoker"
+	}
+
+	"Spitter #86 Name"
+	{
+		"en"			"Xiphos Spitter"
+	}
+
+	"Witch #86 Name"
+	{
+		"en"			"Xiphos Witch"
 	}
 
 	"Tank #86"
 	{
-		"en"			"{mint}This Tank can yell to defean survivors."
+		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
+	}
+
+	"Boomer #86"
+	{
+		"en"			"{mint}This Boomer can steal health from survivors and vice-versa."
+	}
+
+	"Charger #86"
+	{
+		"en"			"{mint}This Charger can steal health from survivors and vice-versa."
+	}
+
+	"Hunter #86"
+	{
+		"en"			"{mint}This Hunter can steal health from survivors and vice-versa."
+	}
+
+	"Jockey #86"
+	{
+		"en"			"{mint}This Jockey can steal health from survivors and vice-versa."
+	}
+
+	"Smoker #86"
+	{
+		"en"			"{mint}This Smoker can steal health from survivors and vice-versa."
+	}
+
+	"Spitter #86"
+	{
+		"en"			"{mint}This Spitter can steal health from survivors and vice-versa."
+	}
+
+	"Witch #86"
+	{
+		"en"			"{mint}This Witch can steal health from survivors and vice-versa."
 	}
 
 	"Tank #87 Name"
 	{
-		"en"			"Zombie Tank"
+		"en"			"Yeller Tank"
+	}
+
+	"Boomer #87 Name"
+	{
+		"en"			"Yeller Boomer"
+	}
+
+	"Charger #87 Name"
+	{
+		"en"			"Yeller Charger"
+	}
+
+	"Hunter #87 Name"
+	{
+		"en"			"Yeller Hunter"
+	}
+
+	"Jockey #87 Name"
+	{
+		"en"			"Yeller Jockey"
+	}
+
+	"Smoker #87 Name"
+	{
+		"en"			"Yeller Smoker"
+	}
+
+	"Spitter #87 Name"
+	{
+		"en"			"Yeller Spitter"
+	}
+
+	"Witch #87 Name"
+	{
+		"en"			"Yeller Witch"
 	}
 
 	"Tank #87"
 	{
-		"en"			"{mint}This Tank can create a mob of zombies within the area."
+		"en"			"{mint}This Tank can yell to defean survivors."
+	}
+
+	"Boomer #87"
+	{
+		"en"			"{mint}This Boomer can yell to defean survivors."
+	}
+
+	"Charger #87"
+	{
+		"en"			"{mint}This Charger can yell to defean survivors."
+	}
+
+	"Hunter #87"
+	{
+		"en"			"{mint}This Hunter can yell to defean survivors."
+	}
+
+	"Jockey #87"
+	{
+		"en"			"{mint}This Jockey can yell to defean survivors."
+	}
+
+	"Smoker #87"
+	{
+		"en"			"{mint}This Smoker can yell to defean survivors."
+	}
+
+	"Spitter #87"
+	{
+		"en"			"{mint}This Spitter can yell to defean survivors."
+	}
+
+	"Witch #87"
+	{
+		"en"			"{mint}This Witch can yell to defean survivors."
 	}
 
 	"Tank #88 Name"
 	{
-		"en"			"Armageddon Tank"
+		"en"			"Zombie Tank"
+	}
+
+	"Boomer #88 Name"
+	{
+		"en"			"Zombie Boomer"
+	}
+
+	"Charger #88 Name"
+	{
+		"en"			"Zombie Charger"
+	}
+
+	"Hunter #88 Name"
+	{
+		"en"			"Zombie Hunter"
+	}
+
+	"Jockey #88 Name"
+	{
+		"en"			"Zombie Jockey"
+	}
+
+	"Smoker #88 Name"
+	{
+		"en"			"Zombie Smoker"
+	}
+
+	"Spitter #88 Name"
+	{
+		"en"			"Zombie Spitter"
+	}
+
+	"Witch #88 Name"
+	{
+		"en"			"Zombie Witch"
 	}
 
 	"Tank #88"
 	{
-		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+		"en"			"{mint}This Tank can create a mob of zombies within the area."
+	}
+
+	"Boomer #88"
+	{
+		"en"			"{mint}This Boomer can create a mob of zombies within the area."
+	}
+
+	"Charger #88"
+	{
+		"en"			"{mint}This Charger can create a mob of zombies within the area."
+	}
+
+	"Hunter #88"
+	{
+		"en"			"{mint}This Hunter can create a mob of zombies within the area."
+	}
+
+	"Jockey #88"
+	{
+		"en"			"{mint}This Jockey can create a mob of zombies within the area."
+	}
+
+	"Smoker #88"
+	{
+		"en"			"{mint}This Smoker can create a mob of zombies within the area."
+	}
+
+	"Spitter #88"
+	{
+		"en"			"{mint}This Spitter can create a mob of zombies within the area."
+	}
+
+	"Witch #88"
+	{
+		"en"			"{mint}This Witch can create a mob of zombies within the area."
 	}
 
 	"Tank #89 Name"
 	{
-		"en"			"Boss Tank"
+		"en"			"Armageddon Tank"
+	}
+
+	"Boomer #89 Name"
+	{
+		"en"			"Armageddon Boomer"
+	}
+
+	"Charger #89 Name"
+	{
+		"en"			"Armageddon Charger"
+	}
+
+	"Hunter #89 Name"
+	{
+		"en"			"Armageddon Hunter"
+	}
+
+	"Jockey #89 Name"
+	{
+		"en"			"Armageddon Jockey"
+	}
+
+	"Smoker #89 Name"
+	{
+		"en"			"Armageddon Smoker"
+	}
+
+	"Spitter #89 Name"
+	{
+		"en"			"Armageddon Spitter"
+	}
+
+	"Witch #89 Name"
+	{
+		"en"			"Armageddon Witch"
 	}
 
 	"Tank #89"
 	{
-		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Boomer #89"
+	{
+		"en"			"{mint}This Boomer is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Charger #89"
+	{
+		"en"			"{mint}This Charger is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Hunter #89"
+	{
+		"en"			"{mint}This Hunter is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Jockey #89"
+	{
+		"en"			"{mint}This Jockey is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Smoker #89"
+	{
+		"en"			"{mint}This Smoker is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Spitter #89"
+	{
+		"en"			"{mint}This Spitter is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+	}
+
+	"Witch #89"
+	{
+		"en"			"{mint}This Witch is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 	}
 
 	"Tank #90 Name"
 	{
-		"en"			"Cobalt Tank"
+		"en"			"Boss Tank"
+	}
+
+	"Boomer #90 Name"
+	{
+		"en"			"Boss Boomer"
+	}
+
+	"Charger #90 Name"
+	{
+		"en"			"Boss Charger"
+	}
+
+	"Hunter #90 Name"
+	{
+		"en"			"Boss Hunter"
+	}
+
+	"Jockey #90 Name"
+	{
+		"en"			"Boss Jockey"
+	}
+
+	"Smoker #90 Name"
+	{
+		"en"			"Boss Smoker"
+	}
+
+	"Spitter #90 Name"
+	{
+		"en"			"Boss Spitter"
+	}
+
+	"Witch #90 Name"
+	{
+		"en"			"Boss Witch"
 	}
 
 	"Tank #90"
 	{
-		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Boomer #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Charger #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Hunter #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Jockey #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Smoker #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Spitter #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+	}
+
+	"Witch #90"
+	{
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 	}
 
 	"Tank #91 Name"
 	{
-		"en"			"Distraction Tank"
+		"en"			"Cobalt Tank"
+	}
+
+	"Boomer #91 Name"
+	{
+		"en"			"Cobalt Boomer"
+	}
+
+	"Charger #91 Name"
+	{
+		"en"			"Cobalt Charger"
+	}
+
+	"Hunter #91 Name"
+	{
+		"en"			"Cobalt Hunter"
+	}
+
+	"Jockey #91 Name"
+	{
+		"en"			"Cobalt Jockey"
+	}
+
+	"Smoker #91 Name"
+	{
+		"en"			"Cobalt Smoker"
+	}
+
+	"Spitter #91 Name"
+	{
+		"en"			"Cobalt Spitter"
+	}
+
+	"Witch #91 Name"
+	{
+		"en"			"Cobalt Witch"
 	}
 
 	"Tank #91"
 	{
-		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
+	}
+
+	"Boomer #91"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage and can run really fast."
+	}
+
+	"Charger #91"
+	{
+		"en"			"{mint}This Charger is immune to fire damage and can run really fast."
+	}
+
+	"Hunter #91"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage and can run really fast."
+	}
+
+	"Jockey #91"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage and can run really fast."
+	}
+
+	"Smoker #91"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage and can run really fast."
+	}
+
+	"Spitter #91"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage and can run really fast."
+	}
+
+	"Witch #91"
+	{
+		"en"			"{mint}This Witch is immune to fire damage and can run really fast."
 	}
 
 	"Tank #92 Name"
 	{
-		"en"			"Feedback Tank"
+		"en"			"Distraction Tank"
+	}
+
+	"Boomer #92 Name"
+	{
+		"en"			"Distraction Boomer"
+	}
+
+	"Charger #92 Name"
+	{
+		"en"			"Distraction Charger"
+	}
+
+	"Hunter #92 Name"
+	{
+		"en"			"Distraction Hunter"
+	}
+
+	"Jockey #92 Name"
+	{
+		"en"			"Distraction Jockey"
+	}
+
+	"Smoker #92 Name"
+	{
+		"en"			"Distraction Smoker"
+	}
+
+	"Spitter #92 Name"
+	{
+		"en"			"Distraction Spitter"
+	}
+
+	"Witch #92 Name"
+	{
+		"en"			"Distraction Witch"
 	}
 
 	"Tank #92"
 	{
-		"en"			"{mint}This Tank pushes survivors away."
+		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Boomer #92"
+	{
+		"en"			"{mint}This Boomer can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Charger #92"
+	{
+		"en"			"{mint}This Charger can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Hunter #92"
+	{
+		"en"			"{mint}This Hunter can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Jockey #92"
+	{
+		"en"			"{mint}This Jockey can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Smoker #92"
+	{
+		"en"			"{mint}This Smoker can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Spitter #92"
+	{
+		"en"			"{mint}This Spitter can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+	}
+
+	"Witch #92"
+	{
+		"en"			"{mint}This Witch can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 	}
 
 	"Tank #93 Name"
 	{
-		"en"			"Flash Tank"
+		"en"			"Feedback Tank"
+	}
+
+	"Boomer #93 Name"
+	{
+		"en"			"Feedback Boomer"
+	}
+
+	"Charger #93 Name"
+	{
+		"en"			"Feedback Charger"
+	}
+
+	"Hunter #93 Name"
+	{
+		"en"			"Feedback Hunter"
+	}
+
+	"Jockey #93 Name"
+	{
+		"en"			"Feedback Jockey"
+	}
+
+	"Smoker #93 Name"
+	{
+		"en"			"Feedback Smoker"
+	}
+
+	"Spitter #93 Name"
+	{
+		"en"			"Feedback Spitter"
+	}
+
+	"Witch #93 Name"
+	{
+		"en"			"Feedback Witch"
 	}
 
 	"Tank #93"
 	{
-		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
+		"en"			"{mint}This Tank pushes survivors away."
+	}
+
+	"Boomer #93"
+	{
+		"en"			"{mint}This Boomer pushes survivors away."
+	}
+
+	"Charger #93"
+	{
+		"en"			"{mint}This Charger pushes survivors away."
+	}
+
+	"Hunter #93"
+	{
+		"en"			"{mint}This Hunter pushes survivors away."
+	}
+
+	"Jockey #93"
+	{
+		"en"			"{mint}This Jockey pushes survivors away."
+	}
+
+	"Smoker #93"
+	{
+		"en"			"{mint}This Smoker pushes survivors away."
+	}
+
+	"Spitter #93"
+	{
+		"en"			"{mint}This Spitter pushes survivors away."
+	}
+
+	"Witch #93"
+	{
+		"en"			"{mint}This Witch pushes survivors away."
 	}
 
 	"Tank #94 Name"
 	{
-		"en"			"Goliath Tank"
+		"en"			"Flash Tank"
+	}
+
+	"Boomer #94 Name"
+	{
+		"en"			"Flash Boomer"
+	}
+
+	"Charger #94 Name"
+	{
+		"en"			"Flash Charger"
+	}
+
+	"Hunter #94 Name"
+	{
+		"en"			"Flash Hunter"
+	}
+
+	"Jockey #94 Name"
+	{
+		"en"			"Flash Jockey"
+	}
+
+	"Smoker #94 Name"
+	{
+		"en"			"Flash Smoker"
+	}
+
+	"Spitter #94 Name"
+	{
+		"en"			"Flash Spitter"
+	}
+
+	"Witch #94 Name"
+	{
+		"en"			"Flash Witch"
 	}
 
 	"Tank #94"
 	{
-		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Boomer #94"
+	{
+		"en"			"{mint}This Boomer can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Charger #94"
+	{
+		"en"			"{mint}This Charger can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Hunter #94"
+	{
+		"en"			"{mint}This Hunter can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Jockey #94"
+	{
+		"en"			"{mint}This Jockey can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Smoker #94"
+	{
+		"en"			"{mint}This Smoker can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Spitter #94"
+	{
+		"en"			"{mint}This Spitter can run really fast and slow down time around itself, all while having temporary invincibility."
+	}
+
+	"Witch #94"
+	{
+		"en"			"{mint}This Witch can run really fast and slow down time around itself, all while having temporary invincibility."
 	}
 
 	"Tank #95 Name"
 	{
-		"en"			"Hallucination Tank"
+		"en"			"Goliath Tank"
+	}
+
+	"Boomer #95 Name"
+	{
+		"en"			"Goliath Boomer"
+	}
+
+	"Charger #95 Name"
+	{
+		"en"			"Goliath Charger"
+	}
+
+	"Hunter #95 Name"
+	{
+		"en"			"Goliath Hunter"
+	}
+
+	"Jockey #95 Name"
+	{
+		"en"			"Goliath Jockey"
+	}
+
+	"Smoker #95 Name"
+	{
+		"en"			"Goliath Smoker"
+	}
+
+	"Spitter #95 Name"
+	{
+		"en"			"Goliath Spitter"
+	}
+
+	"Witch #95 Name"
+	{
+		"en"			"Goliath Witch"
 	}
 
 	"Tank #95"
 	{
-		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Boomer #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Charger #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Hunter #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Jockey #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Smoker #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Spitter #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+	}
+
+	"Witch #95"
+	{
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 	}
 
 	"Tank #96 Name"
 	{
-		"en"			"Meme Tank"
+		"en"			"Hallucination Tank"
+	}
+
+	"Boomer #96 Name"
+	{
+		"en"			"Hallucination Boomer"
+	}
+
+	"Charger #96 Name"
+	{
+		"en"			"Hallucination Charger"
+	}
+
+	"Hunter #96 Name"
+	{
+		"en"			"Hallucination Hunter"
+	}
+
+	"Jockey #96 Name"
+	{
+		"en"			"Hallucination Jockey"
+	}
+
+	"Smoker #96 Name"
+	{
+		"en"			"Hallucination Smoker"
+	}
+
+	"Spitter #96 Name"
+	{
+		"en"			"Hallucination Spitter"
+	}
+
+	"Witch #96 Name"
+	{
+		"en"			"Hallucination Witch"
 	}
 
 	"Tank #96"
 	{
-		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Boomer #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Charger #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Hunter #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Jockey #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Smoker #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Spitter #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+	}
+
+	"Witch #96"
+	{
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #97 Name"
 	{
-		"en"			"Mirage Tank"
+		"en"			"Meme Tank"
+	}
+
+	"Boomer #97 Name"
+	{
+		"en"			"Meme Boomer"
+	}
+
+	"Charger #97 Name"
+	{
+		"en"			"Meme Charger"
+	}
+
+	"Hunter #97 Name"
+	{
+		"en"			"Meme Hunter"
+	}
+
+	"Jockey #97 Name"
+	{
+		"en"			"Meme Jockey"
+	}
+
+	"Smoker #97 Name"
+	{
+		"en"			"Meme Smoker"
+	}
+
+	"Spitter #97 Name"
+	{
+		"en"			"Meme Spitter"
+	}
+
+	"Witch #97 Name"
+	{
+		"en"			"Meme Witch"
 	}
 
 	"Tank #97"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Boomer #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Charger #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Hunter #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Jockey #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Smoker #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Spitter #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+	}
+
+	"Witch #97"
+	{
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 	}
 
 	"Tank #98 Name"
 	{
-		"en"			"Poltergeist Tank"
+		"en"			"Mirage Tank"
+	}
+
+	"Boomer #98 Name"
+	{
+		"en"			"Mirage Boomer"
+	}
+
+	"Charger #98 Name"
+	{
+		"en"			"Mirage Charger"
+	}
+
+	"Hunter #98 Name"
+	{
+		"en"			"Mirage Hunter"
+	}
+
+	"Jockey #98 Name"
+	{
+		"en"			"Mirage Jockey"
+	}
+
+	"Smoker #98 Name"
+	{
+		"en"			"Mirage Smoker"
+	}
+
+	"Spitter #98 Name"
+	{
+		"en"			"Mirage Spitter"
+	}
+
+	"Witch #98 Name"
+	{
+		"en"			"Mirage Witch"
 	}
 
 	"Tank #98"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Boomer #98"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Charger #98"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Hunter #98"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Jockey #98"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Smoker #98"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Spitter #98"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs fast, and warps to survivors."
+	}
+
+	"Witch #98"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs fast, and warps to survivors."
 	}
 
 	"Tank #99 Name"
 	{
-		"en"			"Psychotic Tank"
+		"en"			"Poltergeist Tank"
+	}
+
+	"Boomer #99 Name"
+	{
+		"en"			"Poltergeist Boomer"
+	}
+
+	"Charger #99 Name"
+	{
+		"en"			"Poltergeist Charger"
+	}
+
+	"Hunter #99 Name"
+	{
+		"en"			"Poltergeist Hunter"
+	}
+
+	"Jockey #99 Name"
+	{
+		"en"			"Poltergeist Jockey"
+	}
+
+	"Smoker #99 Name"
+	{
+		"en"			"Poltergeist Smoker"
+	}
+
+	"Spitter #99 Name"
+	{
+		"en"			"Poltergeist Spitter"
+	}
+
+	"Witch #99 Name"
+	{
+		"en"			"Poltergeist Witch"
 	}
 
 	"Tank #99"
 	{
-		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Boomer #99"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Charger #99"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Hunter #99"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Jockey #99"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Smoker #99"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Spitter #99"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+	}
+
+	"Witch #99"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #100 Name"
 	{
-		"en"			"Reverse-Flash Tank"
+		"en"			"Psychotic Tank"
+	}
+
+	"Boomer #100 Name"
+	{
+		"en"			"Psychotic Boomer"
+	}
+
+	"Charger #100 Name"
+	{
+		"en"			"Psychotic Charger"
+	}
+
+	"Hunter #100 Name"
+	{
+		"en"			"Psychotic Hunter"
+	}
+
+	"Jockey #100 Name"
+	{
+		"en"			"Psychotic Jockey"
+	}
+
+	"Smoker #100 Name"
+	{
+		"en"			"Psychotic Smoker"
+	}
+
+	"Spitter #100 Name"
+	{
+		"en"			"Psychotic Spitter"
+	}
+
+	"Witch #100 Name"
+	{
+		"en"			"Psychotic Witch"
 	}
 
 	"Tank #100"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Boomer #100"
+	{
+		"en"			"{mint}This Boomer can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Charger #100"
+	{
+		"en"			"{mint}This Charger can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Hunter #100"
+	{
+		"en"			"{mint}This Hunter can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Jockey #100"
+	{
+		"en"			"{mint}This Jockey can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Smoker #100"
+	{
+		"en"			"{mint}This Smoker can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Spitter #100"
+	{
+		"en"			"{mint}This Spitter can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+	}
+
+	"Witch #100"
+	{
+		"en"			"{mint}This Witch can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
 	}
 
 	"Tank #101 Name"
 	{
-		"en"			"Spawner Tank"
+		"en"			"Reverse-Flash Tank"
+	}
+
+	"Boomer #101 Name"
+	{
+		"en"			"Reverse-Flash Boomer"
+	}
+
+	"Charger #101 Name"
+	{
+		"en"			"Reverse-Flash Charger"
+	}
+
+	"Hunter #101 Name"
+	{
+		"en"			"Reverse-Flash Hunter"
+	}
+
+	"Jockey #101 Name"
+	{
+		"en"			"Reverse-Flash Jockey"
+	}
+
+	"Smoker #101 Name"
+	{
+		"en"			"Reverse-Flash Smoker"
+	}
+
+	"Spitter #101 Name"
+	{
+		"en"			"Reverse-Flash Spitter"
+	}
+
+	"Witch #101 Name"
+	{
+		"en"			"Reverse-Flash Witch"
 	}
 
 	"Tank #101"
 	{
-		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Boomer #101"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Charger #101"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Hunter #101"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Jockey #101"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Smoker #101"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Spitter #101"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Witch #101"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #102 Name"
 	{
-		"en"			"Zoom Tank"
+		"en"			"Spawner Tank"
+	}
+
+	"Boomer #102 Name"
+	{
+		"en"			"Spawner Boomer"
+	}
+
+	"Charger #102 Name"
+	{
+		"en"			"Spawner Charger"
+	}
+
+	"Hunter #102 Name"
+	{
+		"en"			"Spawner Hunter"
+	}
+
+	"Jockey #102 Name"
+	{
+		"en"			"Spawner Jockey"
+	}
+
+	"Smoker #102 Name"
+	{
+		"en"			"Spawner Smoker"
+	}
+
+	"Spitter #102 Name"
+	{
+		"en"			"Spawner Spitter"
+	}
+
+	"Witch #102 Name"
+	{
+		"en"			"Spawner Witch"
 	}
 
 	"Tank #102"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Boomer #102"
+	{
+		"en"			"{mint}This Boomer spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Charger #102"
+	{
+		"en"			"{mint}This Charger spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Hunter #102"
+	{
+		"en"			"{mint}This Hunter spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Jockey #102"
+	{
+		"en"			"{mint}This Jockey spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Smoker #102"
+	{
+		"en"			"{mint}This Smoker spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Spitter #102"
+	{
+		"en"			"{mint}This Spitter spawns zombies behind clouds of smoke within the area."
+	}
+
+	"Witch #102"
+	{
+		"en"			"{mint}This Witch spawns zombies behind clouds of smoke within the area."
 	}
 
 	"Tank #103 Name"
 	{
-		"en"			"Trap Tank"
+		"en"			"Zoom Tank"
+	}
+
+	"Boomer #103 Name"
+	{
+		"en"			"Zoom Boomer"
+	}
+
+	"Charger #103 Name"
+	{
+		"en"			"Zoom Charger"
+	}
+
+	"Hunter #103 Name"
+	{
+		"en"			"Zoom Hunter"
+	}
+
+	"Jockey #103 Name"
+	{
+		"en"			"Zoom Jockey"
+	}
+
+	"Smoker #103 Name"
+	{
+		"en"			"Zoom Smoker"
+	}
+
+	"Spitter #103 Name"
+	{
+		"en"			"Zoom Spitter"
+	}
+
+	"Witch #103 Name"
+	{
+		"en"			"Zoom Witch"
 	}
 
 	"Tank #103"
 	{
-		"en"			"{mint}This Tank is not what it seems."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Boomer #103"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Charger #103"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Hunter #103"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Jockey #103"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Smoker #103"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Spitter #103"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Witch #103"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #104 Name"
 	{
-		"en"			"Dread Tank"
+		"en"			"Trap Tank"
+	}
+
+	"Boomer #104 Name"
+	{
+		"en"			"Trap Boomer"
+	}
+
+	"Charger #104 Name"
+	{
+		"en"			"Trap Charger"
+	}
+
+	"Hunter #104 Name"
+	{
+		"en"			"Trap Hunter"
+	}
+
+	"Jockey #104 Name"
+	{
+		"en"			"Trap Jockey"
+	}
+
+	"Smoker #104 Name"
+	{
+		"en"			"Trap Smoker"
+	}
+
+	"Spitter #104 Name"
+	{
+		"en"			"Trap Spitter"
+	}
+
+	"Witch #104 Name"
+	{
+		"en"			"Trap Witch"
 	}
 
 	"Tank #104"
 	{
-		"en"			"{mint}This Tank can partially blind survivors."
+		"en"			"{mint}This Tank is not what it seems."
+	}
+
+	"Boomer #104"
+	{
+		"en"			"{mint}This Boomer is not what it seems."
+	}
+
+	"Charger #104"
+	{
+		"en"			"{mint}This Charger is not what it seems."
+	}
+
+	"Hunter #104"
+	{
+		"en"			"{mint}This Hunter is not what it seems."
+	}
+
+	"Jockey #104"
+	{
+		"en"			"{mint}This Jockey is not what it seems."
+	}
+
+	"Smoker #104"
+	{
+		"en"			"{mint}This Smoker is not what it seems."
+	}
+
+	"Spitter #104"
+	{
+		"en"			"{mint}This Spitter is not what it seems."
+	}
+
+	"Witch #104"
+	{
+		"en"			"{mint}This Witch is not what it seems."
 	}
 
 	"Tank #105 Name"
 	{
-		"en"			"Rabid Tank"
+		"en"			"Dread Tank"
+	}
+
+	"Boomer #105 Name"
+	{
+		"en"			"Dread Boomer"
+	}
+
+	"Charger #105 Name"
+	{
+		"en"			"Dread Charger"
+	}
+
+	"Hunter #105 Name"
+	{
+		"en"			"Dread Hunter"
+	}
+
+	"Jockey #105 Name"
+	{
+		"en"			"Dread Jockey"
+	}
+
+	"Smoker #105 Name"
+	{
+		"en"			"Dread Smoker"
+	}
+
+	"Spitter #105 Name"
+	{
+		"en"			"Dread Spitter"
+	}
+
+	"Witch #105 Name"
+	{
+		"en"			"Dread Witch"
 	}
 
 	"Tank #105"
 	{
-		"en"			"{mint}This Tank can partially drug and hurt survivors."
+		"en"			"{mint}This Tank can partially blind survivors."
+	}
+
+	"Boomer #105"
+	{
+		"en"			"{mint}This Boomer can partially blind survivors."
+	}
+
+	"Charger #105"
+	{
+		"en"			"{mint}This Charger can partially blind survivors."
+	}
+
+	"Hunter #105"
+	{
+		"en"			"{mint}This Hunter can partially blind survivors."
+	}
+
+	"Jockey #105"
+	{
+		"en"			"{mint}This Jockey can partially blind survivors."
+	}
+
+	"Smoker #105"
+	{
+		"en"			"{mint}This Smoker can partially blind survivors."
+	}
+
+	"Spitter #105"
+	{
+		"en"			"{mint}This Spitter can partially blind survivors."
+	}
+
+	"Witch #105"
+	{
+		"en"			"{mint}This Witch can partially blind survivors."
 	}
 
 	"Tank #106 Name"
 	{
-		"en"			"Tremor Tank"
+		"en"			"Rabid Tank"
+	}
+
+	"Boomer #106 Name"
+	{
+		"en"			"Rabid Boomer"
+	}
+
+	"Charger #106 Name"
+	{
+		"en"			"Rabid Charger"
+	}
+
+	"Hunter #106 Name"
+	{
+		"en"			"Rabid Hunter"
+	}
+
+	"Jockey #106 Name"
+	{
+		"en"			"Rabid Jockey"
+	}
+
+	"Smoker #106 Name"
+	{
+		"en"			"Rabid Smoker"
+	}
+
+	"Spitter #106 Name"
+	{
+		"en"			"Rabid Spitter"
+	}
+
+	"Witch #106 Name"
+	{
+		"en"			"Rabid Witch"
 	}
 
 	"Tank #106"
 	{
-		"en"			"{mint}This Tank can hurl rocks at survivors."
+		"en"			"{mint}This Tank can partially drug and hurt survivors."
+	}
+
+	"Boomer #106"
+	{
+		"en"			"{mint}This Boomer can partially drug and hurt survivors."
+	}
+
+	"Charger #106"
+	{
+		"en"			"{mint}This Charger can partially drug and hurt survivors."
+	}
+
+	"Hunter #106"
+	{
+		"en"			"{mint}This Hunter can partially drug and hurt survivors."
+	}
+
+	"Jockey #106"
+	{
+		"en"			"{mint}This Jockey can partially drug and hurt survivors."
+	}
+
+	"Smoker #106"
+	{
+		"en"			"{mint}This Smoker can partially drug and hurt survivors."
+	}
+
+	"Spitter #106"
+	{
+		"en"			"{mint}This Spitter can partially drug and hurt survivors."
+	}
+
+	"Witch #106"
+	{
+		"en"			"{mint}This Witch can partially drug and hurt survivors."
 	}
 
 	"Tank #107 Name"
 	{
-		"en"			"Psyk0tik Tank"
+		"en"			"Tremor Tank"
+	}
+
+	"Boomer #107 Name"
+	{
+		"en"			"Tremor Boomer"
+	}
+
+	"Charger #107 Name"
+	{
+		"en"			"Tremor Charger"
+	}
+
+	"Hunter #107 Name"
+	{
+		"en"			"Tremor Hunter"
+	}
+
+	"Jockey #107 Name"
+	{
+		"en"			"Tremor Jockey"
+	}
+
+	"Smoker #107 Name"
+	{
+		"en"			"Tremor Smoker"
+	}
+
+	"Spitter #107 Name"
+	{
+		"en"			"Tremor Spitter"
+	}
+
+	"Witch #107 Name"
+	{
+		"en"			"Tremor Witch"
 	}
 
 	"Tank #107"
 	{
-		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
+		"en"			"{mint}This Tank can hurl rocks at survivors."
+	}
+
+	"Boomer #107"
+	{
+		"en"			"{mint}This Boomer can hurl rocks at survivors."
+	}
+
+	"Charger #107"
+	{
+		"en"			"{mint}This Charger can hurl rocks at survivors."
+	}
+
+	"Hunter #107"
+	{
+		"en"			"{mint}This Hunter can hurl rocks at survivors."
+	}
+
+	"Jockey #107"
+	{
+		"en"			"{mint}This Jockey can hurl rocks at survivors."
+	}
+
+	"Smoker #107"
+	{
+		"en"			"{mint}This Smoker can hurl rocks at survivors."
+	}
+
+	"Spitter #107"
+	{
+		"en"			"{mint}This Spitter can hurl rocks at survivors."
+	}
+
+	"Witch #107"
+	{
+		"en"			"{mint}This Witch can hurl rocks at survivors."
 	}
 
 	"Tank #108 Name"
 	{
-		"en"			"Apocalyptic Tank"
+		"en"			"Psyk0tik Tank"
+	}
+
+	"Boomer #108 Name"
+	{
+		"en"			"Psyk0tik Boomer"
+	}
+
+	"Charger #108 Name"
+	{
+		"en"			"Psyk0tik Charger"
+	}
+
+	"Hunter #108 Name"
+	{
+		"en"			"Psyk0tik Hunter"
+	}
+
+	"Jockey #108 Name"
+	{
+		"en"			"Psyk0tik Jockey"
+	}
+
+	"Smoker #108 Name"
+	{
+		"en"			"Psyk0tik Smoker"
+	}
+
+	"Spitter #108 Name"
+	{
+		"en"			"Psyk0tik Spitter"
+	}
+
+	"Witch #108 Name"
+	{
+		"en"			"Psyk0tik Witch"
 	}
 
 	"Tank #108"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Boomer #108"
+	{
+		"en"			"{mint}This Boomer does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Charger #108"
+	{
+		"en"			"{mint}This Charger does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Hunter #108"
+	{
+		"en"			"{mint}This Hunter does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Jockey #108"
+	{
+		"en"			"{mint}This Jockey does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Smoker #108"
+	{
+		"en"			"{mint}This Smoker does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Spitter #108"
+	{
+		"en"			"{mint}This Spitter does extra damage and runs really fast while cloaking itself and slowing survivors down."
+	}
+
+	"Witch #108"
+	{
+		"en"			"{mint}This Witch does extra damage and runs really fast while cloaking itself and slowing survivors down."
 	}
 
 	"Tank #109 Name"
 	{
-		"en"			"Darth Vader Tank"
+		"en"			"Apocalyptic Tank"
+	}
+
+	"Boomer #109 Name"
+	{
+		"en"			"Apocalyptic Boomer"
+	}
+
+	"Charger #109 Name"
+	{
+		"en"			"Apocalyptic Charger"
+	}
+
+	"Hunter #109 Name"
+	{
+		"en"			"Apocalyptic Hunter"
+	}
+
+	"Jockey #109 Name"
+	{
+		"en"			"Apocalyptic Jockey"
+	}
+
+	"Smoker #109 Name"
+	{
+		"en"			"Apocalyptic Smoker"
+	}
+
+	"Spitter #109 Name"
+	{
+		"en"			"Apocalyptic Spitter"
+	}
+
+	"Witch #109 Name"
+	{
+		"en"			"Apocalyptic Witch"
 	}
 
 	"Tank #109"
 	{
-		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
+		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Boomer #109"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Charger #109"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Hunter #109"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Jockey #109"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Smoker #109"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Spitter #109"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+	}
+
+	"Witch #109"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 	}
 
 	"Tank #110 Name"
 	{
-		"en"			"Drug Addict Tank"
+		"en"			"Darth Vader Tank"
+	}
+
+	"Boomer #110 Name"
+	{
+		"en"			"Darth Vader Boomer"
+	}
+
+	"Charger #110 Name"
+	{
+		"en"			"Darth Vader Charger"
+	}
+
+	"Hunter #110 Name"
+	{
+		"en"			"Darth Vader Hunter"
+	}
+
+	"Jockey #110 Name"
+	{
+		"en"			"Darth Vader Jockey"
+	}
+
+	"Smoker #110 Name"
+	{
+		"en"			"Darth Vader Smoker"
+	}
+
+	"Spitter #110 Name"
+	{
+		"en"			"Darth Vader Spitter"
+	}
+
+	"Witch #110 Name"
+	{
+		"en"			"Darth Vader Witch"
 	}
 
 	"Tank #110"
 	{
-		"en"			"{mint}This Tank has a contagious addiction."
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
+	}
+
+	"Boomer #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Boomer with the Force!"
+	}
+
+	"Charger #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Charger with the Force!"
+	}
+
+	"Hunter #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Hunter with the Force!"
+	}
+
+	"Jockey #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Jockey with the Force!"
+	}
+
+	"Smoker #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Smoker with the Force!"
+	}
+
+	"Spitter #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Spitter with the Force!"
+	}
+
+	"Witch #110"
+	{
+		"en"			"{mint}It's Darth Vader... And he is... A Mutant Witch with the Force!"
 	}
 
 	"Tank #111 Name"
 	{
-		"en"			"Godspeed Tank"
+		"en"			"Drug Addict Tank"
+	}
+
+	"Boomer #111 Name"
+	{
+		"en"			"Drug Addict Boomer"
+	}
+
+	"Charger #111 Name"
+	{
+		"en"			"Drug Addict Charger"
+	}
+
+	"Hunter #111 Name"
+	{
+		"en"			"Drug Addict Hunter"
+	}
+
+	"Jockey #111 Name"
+	{
+		"en"			"Drug Addict Jockey"
+	}
+
+	"Smoker #111 Name"
+	{
+		"en"			"Drug Addict Smoker"
+	}
+
+	"Spitter #111 Name"
+	{
+		"en"			"Drug Addict Spitter"
+	}
+
+	"Witch #111 Name"
+	{
+		"en"			"Drug Addict Witch"
 	}
 
 	"Tank #111"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank has a contagious addiction."
+	}
+
+	"Boomer #111"
+	{
+		"en"			"{mint}This Boomer has a contagious addiction."
+	}
+
+	"Charger #111"
+	{
+		"en"			"{mint}This Charger has a contagious addiction."
+	}
+
+	"Hunter #111"
+	{
+		"en"			"{mint}This Hunter has a contagious addiction."
+	}
+
+	"Jockey #111"
+	{
+		"en"			"{mint}This Jockey has a contagious addiction."
+	}
+
+	"Smoker #111"
+	{
+		"en"			"{mint}This Smoker has a contagious addiction."
+	}
+
+	"Spitter #111"
+	{
+		"en"			"{mint}This Spitter has a contagious addiction."
+	}
+
+	"Witch #111"
+	{
+		"en"			"{mint}This Witch has a contagious addiction."
 	}
 
 	"Tank #112 Name"
 	{
-		"en"			"Grim Reaper Tank"
+		"en"			"Godspeed Tank"
+	}
+
+	"Boomer #112 Name"
+	{
+		"en"			"Godspeed Boomer"
+	}
+
+	"Charger #112 Name"
+	{
+		"en"			"Godspeed Charger"
+	}
+
+	"Hunter #112 Name"
+	{
+		"en"			"Godspeed Hunter"
+	}
+
+	"Jockey #112 Name"
+	{
+		"en"			"Godspeed Jockey"
+	}
+
+	"Smoker #112 Name"
+	{
+		"en"			"Godspeed Smoker"
+	}
+
+	"Spitter #112 Name"
+	{
+		"en"			"Godspeed Spitter"
+	}
+
+	"Witch #112 Name"
+	{
+		"en"			"Godspeed Witch"
 	}
 
 	"Tank #112"
 	{
-		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Boomer #112"
+	{
+		"en"			"{mint}This Boomer is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Charger #112"
+	{
+		"en"			"{mint}This Charger is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Hunter #112"
+	{
+		"en"			"{mint}This Hunter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Jockey #112"
+	{
+		"en"			"{mint}This Jockey is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Smoker #112"
+	{
+		"en"			"{mint}This Smoker is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Spitter #112"
+	{
+		"en"			"{mint}This Spitter is immune to fire damage, runs really fast, and warps to survivors."
+	}
+
+	"Witch #112"
+	{
+		"en"			"{mint}This Witch is immune to fire damage, runs really fast, and warps to survivors."
 	}
 
 	"Tank #113 Name"
 	{
-		"en"			"Horde Tank"
+		"en"			"Grim Reaper Tank"
+	}
+
+	"Boomer #113 Name"
+	{
+		"en"			"Grim Reaper Boomer"
+	}
+
+	"Charger #113 Name"
+	{
+		"en"			"Grim Reaper Charger"
+	}
+
+	"Hunter #113 Name"
+	{
+		"en"			"Grim Reaper Hunter"
+	}
+
+	"Jockey #113 Name"
+	{
+		"en"			"Grim Reaper Jockey"
+	}
+
+	"Smoker #113 Name"
+	{
+		"en"			"Grim Reaper Smoker"
+	}
+
+	"Spitter #113 Name"
+	{
+		"en"			"Grim Reaper Spitter"
+	}
+
+	"Witch #113 Name"
+	{
+		"en"			"Grim Reaper Witch"
 	}
 
 	"Tank #113"
 	{
-		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
+		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Boomer #113"
+	{
+		"en"			"{mint}This Boomer runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Charger #113"
+	{
+		"en"			"{mint}This Charger runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Hunter #113"
+	{
+		"en"			"{mint}This Hunter runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Jockey #113"
+	{
+		"en"			"{mint}This Jockey runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Smoker #113"
+	{
+		"en"			"{mint}This Smoker runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Spitter #113"
+	{
+		"en"			"{mint}This Spitter runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+	}
+
+	"Witch #113"
+	{
+		"en"			"{mint}This Witch runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 	}
 
 	"Tank #114 Name"
 	{
-		"en"			"Hulk Tank"
+		"en"			"Horde Tank"
+	}
+
+	"Boomer #114 Name"
+	{
+		"en"			"Horde Boomer"
+	}
+
+	"Charger #114 Name"
+	{
+		"en"			"Horde Charger"
+	}
+
+	"Hunter #114 Name"
+	{
+		"en"			"Horde Hunter"
+	}
+
+	"Jockey #114 Name"
+	{
+		"en"			"Horde Jockey"
+	}
+
+	"Smoker #114 Name"
+	{
+		"en"			"Horde Smoker"
+	}
+
+	"Spitter #114 Name"
+	{
+		"en"			"Horde Spitter"
+	}
+
+	"Witch #114 Name"
+	{
+		"en"			"Horde Witch"
 	}
 
 	"Tank #114"
 	{
-		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Boomer #114"
+	{
+		"en"			"{mint}This Boomer can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Charger #114"
+	{
+		"en"			"{mint}This Charger can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Hunter #114"
+	{
+		"en"			"{mint}This Hunter can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Jockey #114"
+	{
+		"en"			"{mint}This Jockey can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Smoker #114"
+	{
+		"en"			"{mint}This Smoker can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Spitter #114"
+	{
+		"en"			"{mint}This Spitter can start panic events and puke on survivors to help prolong them."
+	}
+
+	"Witch #114"
+	{
+		"en"			"{mint}This Witch can start panic events and puke on survivors to help prolong them."
 	}
 
 	"Tank #115 Name"
 	{
-		"en"			"Ninja Tank"
+		"en"			"Hulk Tank"
+	}
+
+	"Boomer #115 Name"
+	{
+		"en"			"Hulk Boomer"
+	}
+
+	"Charger #115 Name"
+	{
+		"en"			"Hulk Charger"
+	}
+
+	"Hunter #115 Name"
+	{
+		"en"			"Hulk Hunter"
+	}
+
+	"Jockey #115 Name"
+	{
+		"en"			"Hulk Jockey"
+	}
+
+	"Smoker #115 Name"
+	{
+		"en"			"Hulk Smoker"
+	}
+
+	"Spitter #115 Name"
+	{
+		"en"			"Hulk Spitter"
+	}
+
+	"Witch #115 Name"
+	{
+		"en"			"Hulk Witch"
 	}
 
 	"Tank #115"
 	{
-		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+	}
+
+	"Boomer #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Boomer has most of the abilities of the Hulk!"
+	}
+
+	"Charger #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Charger has most of the abilities of the Hulk!"
+	}
+
+	"Hunter #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Hunter has most of the abilities of the Hulk!"
+	}
+
+	"Jockey #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Jockey has most of the abilities of the Hulk!"
+	}
+
+	"Smoker #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Smoker has most of the abilities of the Hulk!"
+	}
+
+	"Spitter #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Spitter has most of the abilities of the Hulk!"
+	}
+
+	"Witch #115"
+	{
+		"en"			"{mint}Meet the Incredible Hulk! This Witch has most of the abilities of the Hulk!"
 	}
 
 	"Tank #116 Name"
 	{
-		"en"			"Zen Tank"
+		"en"			"Ninja Tank"
+	}
+
+	"Boomer #116 Name"
+	{
+		"en"			"Ninja Boomer"
+	}
+
+	"Charger #116 Name"
+	{
+		"en"			"Ninja Charger"
+	}
+
+	"Hunter #116 Name"
+	{
+		"en"			"Ninja Hunter"
+	}
+
+	"Jockey #116 Name"
+	{
+		"en"			"Ninja Jockey"
+	}
+
+	"Smoker #116 Name"
+	{
+		"en"			"Ninja Smoker"
+	}
+
+	"Spitter #116 Name"
+	{
+		"en"			"Ninja Spitter"
+	}
+
+	"Witch #116 Name"
+	{
+		"en"			"Ninja Witch"
 	}
 
 	"Tank #116"
 	{
-		"en"			"{mint}This Tank is too busy meditating to care about you."
+		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Boomer #116"
+	{
+		"en"			"{mint}This Boomer can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Charger #116"
+	{
+		"en"			"{mint}This Charger can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Hunter #116"
+	{
+		"en"			"{mint}This Hunter can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Jockey #116"
+	{
+		"en"			"{mint}This Jockey can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Smoker #116"
+	{
+		"en"			"{mint}This Smoker can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Spitter #116"
+	{
+		"en"			"{mint}This Spitter can teleport, move around silently, and cloak itself. Be very careful!"
+	}
+
+	"Witch #116"
+	{
+		"en"			"{mint}This Witch can teleport, move around silently, and cloak itself. Be very careful!"
 	}
 
 	"Tank #117 Name"
 	{
-		"en"			"The Boss (1st Form)"
+		"en"			"Zen Tank"
+	}
+
+	"Boomer #117 Name"
+	{
+		"en"			"Zen Boomer"
+	}
+
+	"Charger #117 Name"
+	{
+		"en"			"Zen Charger"
+	}
+
+	"Hunter #117 Name"
+	{
+		"en"			"Zen Hunter"
+	}
+
+	"Jockey #117 Name"
+	{
+		"en"			"Zen Jockey"
+	}
+
+	"Smoker #117 Name"
+	{
+		"en"			"Zen Smoker"
+	}
+
+	"Spitter #117 Name"
+	{
+		"en"			"Zen Spitter"
+	}
+
+	"Witch #117 Name"
+	{
+		"en"			"Zen Witch"
 	}
 
 	"Tank #117"
 	{
-		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
+		"en"			"{mint}This Tank is too busy meditating to care about you."
+	}
+
+	"Boomer #117"
+	{
+		"en"			"{mint}This Boomer is too busy meditating to care about you."
+	}
+
+	"Charger #117"
+	{
+		"en"			"{mint}This Charger is too busy meditating to care about you."
+	}
+
+	"Hunter #117"
+	{
+		"en"			"{mint}This Hunter is too busy meditating to care about you."
+	}
+
+	"Jockey #117"
+	{
+		"en"			"{mint}This Jockey is too busy meditating to care about you."
+	}
+
+	"Smoker #117"
+	{
+		"en"			"{mint}This Smoker is too busy meditating to care about you."
+	}
+
+	"Spitter #117"
+	{
+		"en"			"{mint}This Spitter is too busy meditating to care about you."
+	}
+
+	"Witch #117"
+	{
+		"en"			"{mint}This Witch is too busy meditating to care about you."
 	}
 
 	"Tank #118 Name"
 	{
-		"en"			"Steel Overlord (2nd Form)"
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Boomer #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Charger #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Hunter #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Jockey #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Smoker #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Spitter #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
+	}
+
+	"Witch #118 Name"
+	{
+		"en"			"The Boss (1st Form)"
 	}
 
 	"Tank #118"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
+	}
+
+	"Boomer #118"
+	{
+		"en"			"{mint}This Boomer periodically warps to survivors."
+	}
+
+	"Charger #118"
+	{
+		"en"			"{mint}This Charger periodically warps to survivors."
+	}
+
+	"Hunter #118"
+	{
+		"en"			"{mint}This Hunter periodically warps to survivors."
+	}
+
+	"Jockey #118"
+	{
+		"en"			"{mint}This Jockey periodically warps to survivors."
+	}
+
+	"Smoker #118"
+	{
+		"en"			"{mint}This Smoker periodically warps to survivors."
+	}
+
+	"Spitter #118"
+	{
+		"en"			"{mint}This Spitter periodically warps to survivors."
+	}
+
+	"Witch #118"
+	{
+		"en"			"{mint}This Witch periodically warps to survivors."
 	}
 
 	"Tank #119 Name"
 	{
-		"en"			"Night Stalker (3rd Form)"
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Boomer #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Charger #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Hunter #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Jockey #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Smoker #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Spitter #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
+	}
+
+	"Witch #119 Name"
+	{
+		"en"			"Steel Overlord (2nd Form)"
 	}
 
 	"Tank #119"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Boomer #119"
+	{
+		"en"			"{mint}This Boomer runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Charger #119"
+	{
+		"en"			"{mint}This Charger runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Hunter #119"
+	{
+		"en"			"{mint}This Hunter runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Jockey #119"
+	{
+		"en"			"{mint}This Jockey runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Smoker #119"
+	{
+		"en"			"{mint}This Smoker runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Spitter #119"
+	{
+		"en"			"{mint}This Spitter runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
+	}
+
+	"Witch #119"
+	{
+		"en"			"{mint}This Witch runs a little faster, is immune to melee, is a bit stronger than usual, can change survivors' gravity, and periodically warps to survivors."
 	}
 
 	"Tank #120 Name"
 	{
-		"en"			"Spirit of Fire (4th Form)"
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Boomer #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Charger #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Hunter #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Jockey #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Smoker #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Spitter #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
+	}
+
+	"Witch #120 Name"
+	{
+		"en"			"Night Stalker (3rd Form)"
 	}
 
 	"Tank #120"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Boomer #120"
+	{
+		"en"			"{mint}This Boomer runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Charger #120"
+	{
+		"en"			"{mint}This Charger runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Hunter #120"
+	{
+		"en"			"{mint}This Hunter runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Jockey #120"
+	{
+		"en"			"{mint}This Jockey runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Smoker #120"
+	{
+		"en"			"{mint}This Smoker runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Spitter #120"
+	{
+		"en"			"{mint}This Spitter runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+
+	"Witch #120"
+	{
+		"en"			"{mint}This Witch runs a little faster, is immune to fire, is a bit weaker than usual, can blind survivors, can go invisible, and periodically warps to survivors."
 	}
 
 	"Tank #121 Name"
 	{
-		"en"			"Randomizer Tank"
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Boomer #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Charger #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Hunter #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Jockey #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Smoker #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Spitter #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
+	}
+
+	"Witch #121 Name"
+	{
+		"en"			"Spirit of Fire (4th Form)"
 	}
 
 	"Tank #121"
 	{
-		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Boomer #121"
+	{
+		"en"			"{mint}This Boomer runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Charger #121"
+	{
+		"en"			"{mint}This Charger runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Hunter #121"
+	{
+		"en"			"{mint}This Hunter runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Jockey #121"
+	{
+		"en"			"{mint}This Jockey runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Smoker #121"
+	{
+		"en"			"{mint}This Smoker runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Spitter #121"
+	{
+		"en"			"{mint}This Spitter runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+
+	"Witch #121"
+	{
+		"en"			"{mint}This Witch runs a little faster, is immune to fire, is stronger than usual, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 	}
 
 	"Tank #122 Name"
 	{
-		"en"			"Shapeshifter Tank"
+		"en"			"Randomizer Tank"
+	}
+
+	"Boomer #122 Name"
+	{
+		"en"			"Randomizer Boomer"
+	}
+
+	"Charger #122 Name"
+	{
+		"en"			"Randomizer Charger"
+	}
+
+	"Hunter #122 Name"
+	{
+		"en"			"Randomizer Hunter"
+	}
+
+	"Jockey #122 Name"
+	{
+		"en"			"Randomizer Jockey"
+	}
+
+	"Smoker #122 Name"
+	{
+		"en"			"Randomizer Smoker"
+	}
+
+	"Spitter #122 Name"
+	{
+		"en"			"Randomizer Spitter"
+	}
+
+	"Witch #122 Name"
+	{
+		"en"			"Randomizer Witch"
 	}
 
 	"Tank #122"
 	{
-		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
+		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
+	}
+
+	"Boomer #122"
+	{
+		"en"			"{mint}This Boomer randomly switches into different Mutant Boomer types and deals increased damage. Be careful..."
+	}
+
+	"Charger #122"
+	{
+		"en"			"{mint}This Charger randomly switches into different Mutant Charger types and deals increased damage. Be careful..."
+	}
+
+	"Hunter #122"
+	{
+		"en"			"{mint}This Hunter randomly switches into different Mutant Hunter types and deals increased damage. Be careful..."
+	}
+
+	"Jockey #122"
+	{
+		"en"			"{mint}This Jockey randomly switches into different Mutant Jockey types and deals increased damage. Be careful..."
+	}
+
+	"Smoker #122"
+	{
+		"en"			"{mint}This Smoker randomly switches into different Mutant Smoker types and deals increased damage. Be careful..."
+	}
+
+	"Spitter #122"
+	{
+		"en"			"{mint}This Spitter randomly switches into different Mutant Spitter types and deals increased damage. Be careful..."
+	}
+
+	"Witch #122"
+	{
+		"en"			"{mint}This Witch randomly switches into different Mutant Witch types and deals increased damage. Be careful..."
 	}
 
 	"Tank #123 Name"
 	{
-		"en"			"Flashbanger Tank"
+		"en"			"Shapeshifter Tank"
+	}
+
+	"Boomer #123 Name"
+	{
+		"en"			"Shapeshifter Boomer"
+	}
+
+	"Charger #123 Name"
+	{
+		"en"			"Shapeshifter Charger"
+	}
+
+	"Hunter #123 Name"
+	{
+		"en"			"Shapeshifter Hunter"
+	}
+
+	"Jockey #123 Name"
+	{
+		"en"			"Shapeshifter Jockey"
+	}
+
+	"Smoker #123 Name"
+	{
+		"en"			"Shapeshifter Smoker"
+	}
+
+	"Spitter #123 Name"
+	{
+		"en"			"Shapeshifter Spitter"
+	}
+
+	"Witch #123 Name"
+	{
+		"en"			"Shapeshifter Witch"
 	}
 
 	"Tank #123"
 	{
-		"en"			"{mint}This Tank causes flashbangs which staggers it and anyone affected by its attacks."
+		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
+	}
+
+	"Boomer #123"
+	{
+		"en"			"{mint}This Boomer can shapeshift into different Mutant Boomer types. Don't underestimate it..."
+	}
+
+	"Charger #123"
+	{
+		"en"			"{mint}This Charger can shapeshift into different Mutant Charger types. Don't underestimate it..."
+	}
+
+	"Hunter #123"
+	{
+		"en"			"{mint}This Hunter can shapeshift into different Mutant Hunter types. Don't underestimate it..."
+	}
+
+	"Jockey #123"
+	{
+		"en"			"{mint}This Jockey can shapeshift into different Mutant Jockey types. Don't underestimate it..."
+	}
+
+	"Smoker #123"
+	{
+		"en"			"{mint}This Smoker can shapeshift into different Mutant Smoker types. Don't underestimate it..."
+	}
+
+	"Spitter #123"
+	{
+		"en"			"{mint}This Spitter can shapeshift into different Mutant Spitter types. Don't underestimate it..."
+	}
+
+	"Witch #123"
+	{
+		"en"			"{mint}This Witch can shapeshift into different Mutant Witch types. Don't underestimate it..."
 	}
 
 	"Tank #124 Name"
 	{
-		"en"			"Mudman Tank"
+		"en"			"Flashbanger Tank"
+	}
+
+	"Boomer #124 Name"
+	{
+		"en"			"Flashbanger Boomer"
+	}
+
+	"Charger #124 Name"
+	{
+		"en"			"Flashbanger Charger"
+	}
+
+	"Hunter #124 Name"
+	{
+		"en"			"Flashbanger Hunter"
+	}
+
+	"Jockey #124 Name"
+	{
+		"en"			"Flashbanger Jockey"
+	}
+
+	"Smoker #124 Name"
+	{
+		"en"			"Flashbanger Smoker"
+	}
+
+	"Spitter #124 Name"
+	{
+		"en"			"Flashbanger Spitter"
+	}
+
+	"Witch #124 Name"
+	{
+		"en"			"Flashbanger Witch"
 	}
 
 	"Tank #124"
 	{
-		"en"			"{mint}This Tank is as annoying as any mudman."
+		"en"			"{mint}This Tank causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Boomer #124"
+	{
+		"en"			"{mint}This Boomer causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Charger #124"
+	{
+		"en"			"{mint}This Charger causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Hunter #124"
+	{
+		"en"			"{mint}This Hunter causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Jockey #124"
+	{
+		"en"			"{mint}This Jockey causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Smoker #124"
+	{
+		"en"			"{mint}This Smoker causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Spitter #124"
+	{
+		"en"			"{mint}This Spitter causes flashbangs which staggers it and anyone affected by its attacks."
+	}
+
+	"Witch #124"
+	{
+		"en"			"{mint}This Witch causes flashbangs which staggers it and anyone affected by its attacks."
 	}
 
 	"Tank #125 Name"
 	{
-		"en"			"Endgame Tank"
+		"en"			"Mudman Tank"
+	}
+
+	"Boomer #125 Name"
+	{
+		"en"			"Mudman Boomer"
+	}
+
+	"Charger #125 Name"
+	{
+		"en"			"Mudman Charger"
+	}
+
+	"Hunter #125 Name"
+	{
+		"en"			"Mudman Hunter"
+	}
+
+	"Jockey #125 Name"
+	{
+		"en"			"Mudman Jockey"
+	}
+
+	"Smoker #125 Name"
+	{
+		"en"			"Mudman Smoker"
+	}
+
+	"Spitter #125 Name"
+	{
+		"en"			"Mudman Spitter"
+	}
+
+	"Witch #125 Name"
+	{
+		"en"			"Mudman Witch"
 	}
 
 	"Tank #125"
 	{
-		"en"			"{mint}Goodbye everyone!"
+		"en"			"{mint}This Tank is as annoying as any mudman."
+	}
+
+	"Boomer #125"
+	{
+		"en"			"{mint}This Boomer is as annoying as any mudman."
+	}
+
+	"Charger #125"
+	{
+		"en"			"{mint}This Charger is as annoying as any mudman."
+	}
+
+	"Hunter #125"
+	{
+		"en"			"{mint}This Hunter is as annoying as any mudman."
+	}
+
+	"Jockey #125"
+	{
+		"en"			"{mint}This Jockey is as annoying as any mudman."
+	}
+
+	"Smoker #125"
+	{
+		"en"			"{mint}This Smoker is as annoying as any mudman."
+	}
+
+	"Spitter #125"
+	{
+		"en"			"{mint}This Spitter is as annoying as any mudman."
+	}
+
+	"Witch #125"
+	{
+		"en"			"{mint}This Witch is as annoying as any mudman."
 	}
 
 	"Tank #126 Name"
 	{
-		"en"			"Playful Tank"
+		"en"			"Endgame Tank"
+	}
+
+	"Boomer #126 Name"
+	{
+		"en"			"Endgame Boomer"
+	}
+
+	"Charger #126 Name"
+	{
+		"en"			"Endgame Charger"
+	}
+
+	"Hunter #126 Name"
+	{
+		"en"			"Endgame Hunter"
+	}
+
+	"Jockey #126 Name"
+	{
+		"en"			"Endgame Jockey"
+	}
+
+	"Smoker #126 Name"
+	{
+		"en"			"Endgame Smoker"
+	}
+
+	"Spitter #126 Name"
+	{
+		"en"			"Endgame Spitter"
+	}
+
+	"Witch #126 Name"
+	{
+		"en"			"Endgame Witch"
 	}
 
 	"Tank #126"
 	{
-		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Boomer #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Charger #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Hunter #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Jockey #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Smoker #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Spitter #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
+	}
+
+	"Witch #126"
+	{
+		"en"			"{mint}Goodbye everyone!"
 	}
 
 	"Tank #127 Name"
 	{
-		"en"			"Annoying Tank"
+		"en"			"Playful Tank"
+	}
+
+	"Boomer #127 Name"
+	{
+		"en"			"Playful Boomer"
+	}
+
+	"Charger #127 Name"
+	{
+		"en"			"Playful Charger"
+	}
+
+	"Hunter #127 Name"
+	{
+		"en"			"Playful Hunter"
+	}
+
+	"Jockey #127 Name"
+	{
+		"en"			"Playful Jockey"
+	}
+
+	"Smoker #127 Name"
+	{
+		"en"			"Playful Smoker"
+	}
+
+	"Spitter #127 Name"
+	{
+		"en"			"Playful Spitter"
+	}
+
+	"Witch #127 Name"
+	{
+		"en"			"Playful Witch"
 	}
 
 	"Tank #127"
 	{
+		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+	}
+
+	"Boomer #127"
+	{
+		"en"			"{mint}This Boomer doesn't do any damage. It just wants to play!"
+	}
+
+	"Charger #127"
+	{
+		"en"			"{mint}This Charger doesn't do any damage. It just wants to play!"
+	}
+
+	"Hunter #127"
+	{
+		"en"			"{mint}This Hunter doesn't do any damage. It just wants to play!"
+	}
+
+	"Jockey #127"
+	{
+		"en"			"{mint}This Jockey doesn't do any damage. It just wants to play!"
+	}
+
+	"Smoker #127"
+	{
+		"en"			"{mint}This Smoker doesn't do any damage. It just wants to play!"
+	}
+
+	"Spitter #127"
+	{
+		"en"			"{mint}This Spitter doesn't do any damage. It just wants to play!"
+	}
+
+	"Witch #127"
+	{
+		"en"			"{mint}This Witch doesn't do any damage. It just wants to play!"
+	}
+
+	"Tank #128 Name"
+	{
+		"en"			"Annoying Tank"
+	}
+
+	"Boomer #128 Name"
+	{
+		"en"			"Annoying Boomer"
+	}
+
+	"Charger #128 Name"
+	{
+		"en"			"Annoying Charger"
+	}
+
+	"Hunter #128 Name"
+	{
+		"en"			"Annoying Hunter"
+	}
+
+	"Jockey #128 Name"
+	{
+		"en"			"Annoying Jockey"
+	}
+
+	"Smoker #128 Name"
+	{
+		"en"			"Annoying Smoker"
+	}
+
+	"Spitter #128 Name"
+	{
+		"en"			"Annoying Spitter"
+	}
+
+	"Witch #128 Name"
+	{
+		"en"			"Annoying Witch"
+	}
+
+	"Tank #128"
+	{
 		"en"			"{mint}This Tank just won't go away."
+	}
+
+	"Boomer #128"
+	{
+		"en"			"{mint}This Boomer just won't go away."
+	}
+
+	"Charger #128"
+	{
+		"en"			"{mint}This Charger just won't go away."
+	}
+
+	"Hunter #128"
+	{
+		"en"			"{mint}This Hunter just won't go away."
+	}
+
+	"Jockey #128"
+	{
+		"en"			"{mint}This Jockey just won't go away."
+	}
+
+	"Smoker #128"
+	{
+		"en"			"{mint}This Smoker just won't go away."
+	}
+
+	"Spitter #128"
+	{
+		"en"			"{mint}This Spitter just won't go away."
+	}
+
+	"Witch #128"
+	{
+		"en"			"{mint}This Witch just won't go away."
 	}
 
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
@@ -1294,6 +10264,76 @@
 	// "STEAM_0:1:23456789"
 	// {
 	//	"en"			"{mint}This Tank is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer Name"
+	// {
+	//	"en"			"Boomer"
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer"
+	// {
+	//	"en"			"{mint}This Boomer is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger Name"
+	// {
+	//	"en"			"Charger"
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger"
+	// {
+	//	"en"			"{mint}This Charger is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter Name"
+	// {
+	//	"en"			"Hunter"
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter"
+	// {
+	//	"en"			"{mint}This Hunter is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey Name"
+	// {
+	//	"en"			"Jockey"
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey"
+	// {
+	//	"en"			"{mint}This Jockey is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker Name"
+	// {
+	//	"en"			"Smoker"
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker"
+	// {
+	//	"en"			"{mint}This Smoker is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter Name"
+	// {
+	//	"en"			"Spitter"
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter"
+	// {
+	//	"en"			"{mint}This Spitter is controlled by someone."
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch Name"
+	// {
+	//	"en"			"Witch"
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch"
+	// {
+	//	"en"			"{mint}This Witch is controlled by someone."
 	// }
 	// --
 	// Add Tank Note phrases for your own Mutant Tanks below!

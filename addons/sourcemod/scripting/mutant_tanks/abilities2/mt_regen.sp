@@ -86,6 +86,30 @@ enum struct esRegenPlayer
 
 esRegenPlayer g_esRegenPlayer[MAXPLAYERS + 1];
 
+enum struct esRegenTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flRegenChance;
+	float g_flRegenInterval;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRegenAbility;
+	int g_iRegenCooldown;
+	int g_iRegenDuration;
+	int g_iRegenHealth;
+	int g_iRegenLimit;
+	int g_iRegenMessage;
+	int g_iRequiresHumans;
+}
+
+esRegenTeammate g_esRegenTeammate[MAXPLAYERS + 1];
+
 enum struct esRegenAbility
 {
 	float g_flCloseAreasOnly;
@@ -111,6 +135,30 @@ enum struct esRegenAbility
 }
 
 esRegenAbility g_esRegenAbility[MT_MAXTYPES + 1];
+
+enum struct esRegenSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flRegenChance;
+	float g_flRegenInterval;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRegenAbility;
+	int g_iRegenCooldown;
+	int g_iRegenDuration;
+	int g_iRegenHealth;
+	int g_iRegenLimit;
+	int g_iRegenMessage;
+	int g_iRequiresHumans;
+}
+
+esRegenSpecial g_esRegenSpecial[MT_MAXTYPES + 1];
 
 enum struct esRegenCache
 {
@@ -349,7 +397,7 @@ void vRegenCombineAbilities(int tank, int type, const float random, const char[]
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility != 2)
 	{
 		g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -413,8 +461,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esRegenAbility[iIndex].g_iAccessFlags = 0;
 				g_esRegenAbility[iIndex].g_flCloseAreasOnly = 0.0;
@@ -435,86 +482,164 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRegenAbility[iIndex].g_iRegenHealth = 1;
 				g_esRegenAbility[iIndex].g_flRegenInterval = 1.0;
 				g_esRegenAbility[iIndex].g_iRegenLimit = MT_MAXHEALTH;
+
+				g_esRegenSpecial[iIndex].g_iComboAbility = -1;
+				g_esRegenSpecial[iIndex].g_iHumanAbility = -1;
+				g_esRegenSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esRegenSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esRegenSpecial[iIndex].g_iHumanDuration = -1;
+				g_esRegenSpecial[iIndex].g_iHumanMode = -1;
+				g_esRegenSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esRegenSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esRegenSpecial[iIndex].g_iRegenAbility = -1;
+				g_esRegenSpecial[iIndex].g_iRegenMessage = -1;
+				g_esRegenSpecial[iIndex].g_flRegenChance = -1.0;
+				g_esRegenSpecial[iIndex].g_iRegenCooldown = -1;
+				g_esRegenSpecial[iIndex].g_iRegenDuration = -1;
+				g_esRegenSpecial[iIndex].g_iRegenHealth = -1;
+				g_esRegenSpecial[iIndex].g_flRegenInterval = -1.0;
+				g_esRegenSpecial[iIndex].g_iRegenLimit = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esRegenPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esRegenPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esRegenPlayer[iPlayer].g_iComboAbility = 0;
-					g_esRegenPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esRegenPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esRegenPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esRegenPlayer[iPlayer].g_iHumanDuration = 0;
-					g_esRegenPlayer[iPlayer].g_iHumanMode = 0;
-					g_esRegenPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esRegenPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esRegenPlayer[iPlayer].g_iRegenAbility = 0;
-					g_esRegenPlayer[iPlayer].g_iRegenMessage = 0;
-					g_esRegenPlayer[iPlayer].g_flRegenChance = 0.0;
-					g_esRegenPlayer[iPlayer].g_iRegenCooldown = 0;
-					g_esRegenPlayer[iPlayer].g_iRegenDuration = 0;
-					g_esRegenPlayer[iPlayer].g_iRegenHealth = 0;
-					g_esRegenPlayer[iPlayer].g_flRegenInterval = 0.0;
-					g_esRegenPlayer[iPlayer].g_iRegenLimit = 0;
-				}
+				g_esRegenPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esRegenPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esRegenPlayer[iPlayer].g_iComboAbility = -1;
+				g_esRegenPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esRegenPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esRegenPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esRegenPlayer[iPlayer].g_iHumanDuration = -1;
+				g_esRegenPlayer[iPlayer].g_iHumanMode = -1;
+				g_esRegenPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esRegenPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esRegenPlayer[iPlayer].g_iRegenAbility = -1;
+				g_esRegenPlayer[iPlayer].g_iRegenMessage = -1;
+				g_esRegenPlayer[iPlayer].g_flRegenChance = -1.0;
+				g_esRegenPlayer[iPlayer].g_iRegenCooldown = -1;
+				g_esRegenPlayer[iPlayer].g_iRegenDuration = -1;
+				g_esRegenPlayer[iPlayer].g_iRegenHealth = -1;
+				g_esRegenPlayer[iPlayer].g_flRegenInterval = -1.0;
+				g_esRegenPlayer[iPlayer].g_iRegenLimit = -1;
+
+				g_esRegenTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esRegenTeammate[iPlayer].g_iComboAbility = -1;
+				g_esRegenTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esRegenTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esRegenTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esRegenTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esRegenTeammate[iPlayer].g_iHumanMode = -1;
+				g_esRegenTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esRegenTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esRegenTeammate[iPlayer].g_iRegenAbility = -1;
+				g_esRegenTeammate[iPlayer].g_iRegenMessage = -1;
+				g_esRegenTeammate[iPlayer].g_flRegenChance = -1.0;
+				g_esRegenTeammate[iPlayer].g_iRegenCooldown = -1;
+				g_esRegenTeammate[iPlayer].g_iRegenDuration = -1;
+				g_esRegenTeammate[iPlayer].g_iRegenHealth = -1;
+				g_esRegenTeammate[iPlayer].g_flRegenInterval = -1.0;
+				g_esRegenTeammate[iPlayer].g_iRegenLimit = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRegenConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vRegenConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esRegenPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esRegenPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esRegenPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esRegenPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenPlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esRegenPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esRegenPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esRegenPlayer[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenPlayer[admin].g_iRegenAbility, value, 0, 1);
-		g_esRegenPlayer[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenPlayer[admin].g_iRegenMessage, value, 0, 1);
-		g_esRegenPlayer[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenPlayer[admin].g_flRegenChance, value, 0.0, 100.0);
-		g_esRegenPlayer[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenPlayer[admin].g_iRegenCooldown, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenPlayer[admin].g_iRegenDuration, value, 0, 99999);
-		g_esRegenPlayer[admin].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenPlayer[admin].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esRegenPlayer[admin].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenPlayer[admin].g_flRegenInterval, value, 0.1, 99999.0);
-		g_esRegenPlayer[admin].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenPlayer[admin].g_iRegenLimit, value, 1, MT_MAXHEALTH);
-		g_esRegenPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esRegenTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRegenTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esRegenTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esRegenTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esRegenTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esRegenTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esRegenTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esRegenTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRegenTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esRegenTeammate[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenTeammate[admin].g_iRegenAbility, value, -1, 1);
+			g_esRegenTeammate[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenTeammate[admin].g_iRegenMessage, value, -1, 1);
+			g_esRegenTeammate[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenTeammate[admin].g_flRegenChance, value, -1.0, 100.0);
+			g_esRegenTeammate[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenTeammate[admin].g_iRegenCooldown, value, -1, 99999);
+			g_esRegenTeammate[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenTeammate[admin].g_iRegenDuration, value, -1, 99999);
+			g_esRegenTeammate[admin].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenTeammate[admin].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			g_esRegenTeammate[admin].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenTeammate[admin].g_flRegenInterval, value, -1.0, 99999.0);
+			g_esRegenTeammate[admin].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenTeammate[admin].g_iRegenLimit, value, -1, MT_MAXHEALTH);
+		}
+		else
+		{
+			g_esRegenPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRegenPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esRegenPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esRegenPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esRegenPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esRegenPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenPlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esRegenPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esRegenPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRegenPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esRegenPlayer[admin].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenPlayer[admin].g_iRegenAbility, value, -1, 1);
+			g_esRegenPlayer[admin].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenPlayer[admin].g_iRegenMessage, value, -1, 1);
+			g_esRegenPlayer[admin].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenPlayer[admin].g_flRegenChance, value, -1.0, 100.0);
+			g_esRegenPlayer[admin].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenPlayer[admin].g_iRegenCooldown, value, -1, 99999);
+			g_esRegenPlayer[admin].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenPlayer[admin].g_iRegenDuration, value, -1, 99999);
+			g_esRegenPlayer[admin].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenPlayer[admin].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			g_esRegenPlayer[admin].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenPlayer[admin].g_flRegenInterval, value, -1.0, 99999.0);
+			g_esRegenPlayer[admin].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenPlayer[admin].g_iRegenLimit, value, -1, MT_MAXHEALTH);
+			g_esRegenPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esRegenAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esRegenAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenAbility[type].g_iComboAbility, value, 0, 1);
-		g_esRegenAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esRegenAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esRegenAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esRegenAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esRegenAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenAbility[type].g_iHumanMode, value, 0, 1);
-		g_esRegenAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esRegenAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esRegenAbility[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenAbility[type].g_iRegenAbility, value, 0, 1);
-		g_esRegenAbility[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenAbility[type].g_iRegenMessage, value, 0, 1);
-		g_esRegenAbility[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenAbility[type].g_flRegenChance, value, 0.0, 100.0);
-		g_esRegenAbility[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenAbility[type].g_iRegenCooldown, value, 0, 99999);
-		g_esRegenAbility[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenAbility[type].g_iRegenDuration, value, 0, 99999);
-		g_esRegenAbility[type].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenAbility[type].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_esRegenAbility[type].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenAbility[type].g_flRegenInterval, value, 0.1, 99999.0);
-		g_esRegenAbility[type].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenAbility[type].g_iRegenLimit, value, 1, MT_MAXHEALTH);
-		g_esRegenAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esRegenSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRegenSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esRegenSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esRegenSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esRegenSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esRegenSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esRegenSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esRegenSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRegenSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esRegenSpecial[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenSpecial[type].g_iRegenAbility, value, -1, 1);
+			g_esRegenSpecial[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenSpecial[type].g_iRegenMessage, value, -1, 1);
+			g_esRegenSpecial[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenSpecial[type].g_flRegenChance, value, -1.0, 100.0);
+			g_esRegenSpecial[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenSpecial[type].g_iRegenCooldown, value, -1, 99999);
+			g_esRegenSpecial[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenSpecial[type].g_iRegenDuration, value, -1, 99999);
+			g_esRegenSpecial[type].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenSpecial[type].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			g_esRegenSpecial[type].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenSpecial[type].g_flRegenInterval, value, -1.0, 99999.0);
+			g_esRegenSpecial[type].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenSpecial[type].g_iRegenLimit, value, -1, MT_MAXHEALTH);
+		}
+		else
+		{
+			g_esRegenAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esRegenAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esRegenAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esRegenAbility[type].g_iComboAbility, value, -1, 1);
+			g_esRegenAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esRegenAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esRegenAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esRegenAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esRegenAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esRegenAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esRegenAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esRegenAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esRegenAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esRegenAbility[type].g_iHumanMode, value, -1, 1);
+			g_esRegenAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esRegenAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esRegenAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esRegenAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esRegenAbility[type].g_iRegenAbility = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRegenAbility[type].g_iRegenAbility, value, -1, 1);
+			g_esRegenAbility[type].g_iRegenMessage = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRegenAbility[type].g_iRegenMessage, value, -1, 1);
+			g_esRegenAbility[type].g_flRegenChance = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esRegenAbility[type].g_flRegenChance, value, -1.0, 100.0);
+			g_esRegenAbility[type].g_iRegenCooldown = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenCooldown", "Regen Cooldown", "Regen_Cooldown", "cooldown", g_esRegenAbility[type].g_iRegenCooldown, value, -1, 99999);
+			g_esRegenAbility[type].g_iRegenDuration = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenDuration", "Regen Duration", "Regen_Duration", "duration", g_esRegenAbility[type].g_iRegenDuration, value, -1, 99999);
+			g_esRegenAbility[type].g_iRegenHealth = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esRegenAbility[type].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+			g_esRegenAbility[type].g_flRegenInterval = flGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esRegenAbility[type].g_flRegenInterval, value, -1.0, 99999.0);
+			g_esRegenAbility[type].g_iRegenLimit = iGetKeyValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esRegenAbility[type].g_iRegenLimit, value, -1, MT_MAXHEALTH);
+			g_esRegenAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_REGEN_SECTION, MT_REGEN_SECTION2, MT_REGEN_SECTION3, MT_REGEN_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 	}
 }
 
@@ -524,25 +649,49 @@ void vRegenSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esRegenCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flCloseAreasOnly, g_esRegenAbility[type].g_flCloseAreasOnly);
-	g_esRegenCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iComboAbility, g_esRegenAbility[type].g_iComboAbility);
-	g_esRegenCache[tank].g_flRegenChance = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flRegenChance, g_esRegenAbility[type].g_flRegenChance);
-	g_esRegenCache[tank].g_flRegenInterval = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flRegenInterval, g_esRegenAbility[type].g_flRegenInterval);
-	g_esRegenCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanAbility, g_esRegenAbility[type].g_iHumanAbility);
-	g_esRegenCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanAmmo, g_esRegenAbility[type].g_iHumanAmmo);
-	g_esRegenCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanCooldown, g_esRegenAbility[type].g_iHumanCooldown);
-	g_esRegenCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanDuration, g_esRegenAbility[type].g_iHumanDuration);
-	g_esRegenCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanMode, g_esRegenAbility[type].g_iHumanMode);
-	g_esRegenCache[tank].g_iRegenAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenAbility[type].g_iRegenAbility);
-	g_esRegenCache[tank].g_iRegenCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenAbility[type].g_iRegenCooldown);
-	g_esRegenCache[tank].g_iRegenDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenAbility[type].g_iRegenDuration);
-	g_esRegenCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenAbility[type].g_iRegenHealth, 2);
-	g_esRegenCache[tank].g_iRegenLimit = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenAbility[type].g_iRegenLimit);
-	g_esRegenCache[tank].g_iRegenMessage = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenAbility[type].g_iRegenMessage);
-	g_esRegenCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flOpenAreasOnly, g_esRegenAbility[type].g_flOpenAreasOnly);
-	g_esRegenCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRequiresHumans, g_esRegenAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esRegenPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esRegenCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_flCloseAreasOnly, g_esRegenPlayer[tank].g_flCloseAreasOnly, g_esRegenSpecial[type].g_flCloseAreasOnly, g_esRegenAbility[type].g_flCloseAreasOnly, 1);
+		g_esRegenCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iComboAbility, g_esRegenPlayer[tank].g_iComboAbility, g_esRegenSpecial[type].g_iComboAbility, g_esRegenAbility[type].g_iComboAbility, 1);
+		g_esRegenCache[tank].g_flRegenChance = flGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_flRegenChance, g_esRegenPlayer[tank].g_flRegenChance, g_esRegenSpecial[type].g_flRegenChance, g_esRegenAbility[type].g_flRegenChance, 1);
+		g_esRegenCache[tank].g_flRegenInterval = flGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_flRegenInterval, g_esRegenPlayer[tank].g_flRegenInterval, g_esRegenSpecial[type].g_flRegenInterval, g_esRegenAbility[type].g_flRegenInterval, 1);
+		g_esRegenCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iHumanAbility, g_esRegenPlayer[tank].g_iHumanAbility, g_esRegenSpecial[type].g_iHumanAbility, g_esRegenAbility[type].g_iHumanAbility, 1);
+		g_esRegenCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iHumanAmmo, g_esRegenPlayer[tank].g_iHumanAmmo, g_esRegenSpecial[type].g_iHumanAmmo, g_esRegenAbility[type].g_iHumanAmmo, 1);
+		g_esRegenCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iHumanCooldown, g_esRegenPlayer[tank].g_iHumanCooldown, g_esRegenSpecial[type].g_iHumanCooldown, g_esRegenAbility[type].g_iHumanCooldown, 1);
+		g_esRegenCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iHumanDuration, g_esRegenPlayer[tank].g_iHumanDuration, g_esRegenSpecial[type].g_iHumanDuration, g_esRegenAbility[type].g_iHumanDuration, 1);
+		g_esRegenCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iHumanMode, g_esRegenPlayer[tank].g_iHumanMode, g_esRegenSpecial[type].g_iHumanMode, g_esRegenAbility[type].g_iHumanMode, 1);
+		g_esRegenCache[tank].g_iRegenAbility = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenAbility, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenSpecial[type].g_iRegenAbility, g_esRegenAbility[type].g_iRegenAbility, 1);
+		g_esRegenCache[tank].g_iRegenCooldown = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenCooldown, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenSpecial[type].g_iRegenCooldown, g_esRegenAbility[type].g_iRegenCooldown, 1);
+		g_esRegenCache[tank].g_iRegenDuration = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenDuration, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenSpecial[type].g_iRegenDuration, g_esRegenAbility[type].g_iRegenDuration, 1);
+		g_esRegenCache[tank].g_iRegenHealth = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenHealth, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenSpecial[type].g_iRegenHealth, g_esRegenAbility[type].g_iRegenHealth, 2, 1);
+		g_esRegenCache[tank].g_iRegenLimit = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenLimit, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenSpecial[type].g_iRegenLimit, g_esRegenAbility[type].g_iRegenLimit, 1);
+		g_esRegenCache[tank].g_iRegenMessage = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRegenMessage, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenSpecial[type].g_iRegenMessage, g_esRegenAbility[type].g_iRegenMessage, 1);
+		g_esRegenCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_flOpenAreasOnly, g_esRegenPlayer[tank].g_flOpenAreasOnly, g_esRegenSpecial[type].g_flOpenAreasOnly, g_esRegenAbility[type].g_flOpenAreasOnly, 1);
+		g_esRegenCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esRegenTeammate[tank].g_iRequiresHumans, g_esRegenPlayer[tank].g_iRequiresHumans, g_esRegenSpecial[type].g_iRequiresHumans, g_esRegenAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esRegenCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flCloseAreasOnly, g_esRegenAbility[type].g_flCloseAreasOnly, 1);
+		g_esRegenCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iComboAbility, g_esRegenAbility[type].g_iComboAbility, 1);
+		g_esRegenCache[tank].g_flRegenChance = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flRegenChance, g_esRegenAbility[type].g_flRegenChance, 1);
+		g_esRegenCache[tank].g_flRegenInterval = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flRegenInterval, g_esRegenAbility[type].g_flRegenInterval, 1);
+		g_esRegenCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanAbility, g_esRegenAbility[type].g_iHumanAbility, 1);
+		g_esRegenCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanAmmo, g_esRegenAbility[type].g_iHumanAmmo, 1);
+		g_esRegenCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanCooldown, g_esRegenAbility[type].g_iHumanCooldown, 1);
+		g_esRegenCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanDuration, g_esRegenAbility[type].g_iHumanDuration, 1);
+		g_esRegenCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iHumanMode, g_esRegenAbility[type].g_iHumanMode, 1);
+		g_esRegenCache[tank].g_iRegenAbility = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenAbility, g_esRegenAbility[type].g_iRegenAbility, 1);
+		g_esRegenCache[tank].g_iRegenCooldown = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenCooldown, g_esRegenAbility[type].g_iRegenCooldown, 1);
+		g_esRegenCache[tank].g_iRegenDuration = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenDuration, g_esRegenAbility[type].g_iRegenDuration, 1);
+		g_esRegenCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenHealth, g_esRegenAbility[type].g_iRegenHealth, 2, 1);
+		g_esRegenCache[tank].g_iRegenLimit = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenLimit, g_esRegenAbility[type].g_iRegenLimit, 1);
+		g_esRegenCache[tank].g_iRegenMessage = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRegenMessage, g_esRegenAbility[type].g_iRegenMessage, 1);
+		g_esRegenCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flOpenAreasOnly, g_esRegenAbility[type].g_flOpenAreasOnly, 1);
+		g_esRegenCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_iRequiresHumans, g_esRegenAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -576,7 +725,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vRegenCopyStats2(iBot, iTank);
 			vRemoveRegen(iBot);
@@ -586,7 +735,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vRegenCopyStats2(iTank, iBot);
 			vRemoveRegen(iTank);
@@ -617,7 +766,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esRegenCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iComboAbility == 0 && !g_esRegenPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esRegenCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iComboAbility == 0 && !g_esRegenPlayer[tank].g_bActivated)
 	{
 		vRegenAbility(tank);
 	}
@@ -631,7 +780,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType, tank) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -639,7 +788,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esRegenCache[tank].g_iRegenAbility == 1 && g_esRegenCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esRegenCache[tank].g_iHumanMode)
 			{
@@ -697,7 +846,7 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esRegenCache[tank].g_iHumanMode == 1 && g_esRegenPlayer[tank].g_bActivated && (g_esRegenPlayer[tank].g_iCooldown == -1 || g_esRegenPlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esRegenCache[tank].g_iHumanMode == 1 && g_esRegenPlayer[tank].g_bActivated && (g_esRegenPlayer[tank].g_iCooldown == -1 || g_esRegenPlayer[tank].g_iCooldown <= GetTime()))
 		{
 			vRegenReset2(tank);
 			vRegenReset3(tank);
@@ -721,14 +870,14 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vRegen(int tank, int pos = -1)
 {
-	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > GetTime())
+	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown >= GetTime())
 	{
 		return;
 	}
 
 	g_esRegenPlayer[tank].g_bActivated = true;
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
 	{
 		g_esRegenPlayer[tank].g_iAmmoCount++;
 
@@ -748,39 +897,42 @@ void vRegen(int tank, int pos = -1)
 
 void vRegen2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType, tank) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esRegenCache[tank].g_flRegenInterval;
-	DataPack dpRegen;
-	CreateDataTimer(flInterval, tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpRegen.WriteCell(GetClientUserId(tank));
-	dpRegen.WriteCell(g_esRegenPlayer[tank].g_iTankType);
-	dpRegen.WriteCell(GetTime());
-	dpRegen.WriteCell(pos);
+	if (flInterval > 0.0)
+	{
+		DataPack dpRegen;
+		CreateDataTimer(flInterval, tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpRegen.WriteCell(GetClientUserId(tank));
+		dpRegen.WriteCell(g_esRegenPlayer[tank].g_iTankType);
+		dpRegen.WriteCell(GetTime());
+		dpRegen.WriteCell(pos);
+	}
 }
 
 void vRegenAbility(int tank)
 {
-	if ((g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
+	if ((g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esRegenCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esRegenCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[tank].g_iTankType, tank) || (g_esRegenCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esRegenCache[tank].g_flRegenChance)
 		{
 			vRegen(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenAmmo");
 	}
@@ -826,9 +978,9 @@ void vRegenReset2(int tank)
 void vRegenReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esRegenCache[tank].g_iRegenCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1 && g_esRegenCache[tank].g_iHumanMode == 0 && g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1 && g_esRegenCache[tank].g_iHumanMode == 0 && g_esRegenPlayer[tank].g_iAmmoCount < g_esRegenCache[tank].g_iHumanAmmo && g_esRegenCache[tank].g_iHumanAmmo > 0) ? g_esRegenCache[tank].g_iHumanCooldown : iCooldown;
 	g_esRegenPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown > iTime)
+	if (g_esRegenPlayer[tank].g_iCooldown != -1 && g_esRegenPlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman5", (g_esRegenPlayer[tank].g_iCooldown - iTime));
 	}
@@ -839,7 +991,7 @@ void tTimerRegenCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esRegenCache[iTank].g_iRegenAbility == 0 || g_esRegenPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esRegenCache[iTank].g_iRegenAbility == 0 || g_esRegenPlayer[iTank].g_bActivated)
 	{
 		return;
 	}
@@ -853,14 +1005,14 @@ Action tTimerRegen(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esRegenCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRegenCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[iTank].g_iTankType) || (g_esRegenCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esRegenPlayer[iTank].g_iTankType || g_esRegenCache[iTank].g_iRegenAbility == 0 || !g_esRegenPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esRegenCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRegenCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRegenPlayer[iTank].g_iTankType, iTank) || (g_esRegenCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRegenCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRegenAbility[g_esRegenPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRegenPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esRegenPlayer[iTank].g_iTankType || g_esRegenCache[iTank].g_iRegenAbility == 0 || !g_esRegenPlayer[iTank].g_bActivated)
 	{
 		vRegenReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	bool bHuman = bIsTank(iTank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsInfected(iTank, MT_CHECK_FAKECLIENT);
 	int iTime = pack.ReadCell(), iCurrentTime = GetTime(), iPos = pack.ReadCell(),
 		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esRegenCache[iTank].g_iRegenDuration;
 	iDuration = (bHuman && g_esRegenCache[iTank].g_iHumanAbility == 1) ? g_esRegenCache[iTank].g_iHumanDuration : iDuration;
@@ -876,7 +1028,7 @@ Action tTimerRegen(Handle timer, DataPack pack)
 		iExtraHealth = (iHealth + g_esRegenCache[iTank].g_iRegenHealth),
 		iMaxHealth = MT_TankMaxHealth(iTank, 1),
 		iLeftover = (iExtraHealth > MT_MAXHEALTH) ? (iExtraHealth - MT_MAXHEALTH) : iExtraHealth,
-		iNewHealth = (iExtraHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealth,
+		iNewHealth = iClamp(iExtraHealth, 1, MT_MAXHEALTH),
 		iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth,
 		iRealHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2,
 		iFinalHealth = (g_esRegenCache[iTank].g_iRegenHealth >= 1 && iRealHealth >= g_esRegenCache[iTank].g_iRegenLimit) ? g_esRegenCache[iTank].g_iRegenLimit : iRealHealth,

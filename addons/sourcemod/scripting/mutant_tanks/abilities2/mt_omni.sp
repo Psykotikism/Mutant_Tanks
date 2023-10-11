@@ -49,6 +49,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
+
 #define MT_OMNI_SECTION "omniability"
 #define MT_OMNI_SECTION2 "omni ability"
 #define MT_OMNI_SECTION3 "omni_ability"
@@ -80,12 +84,38 @@ enum struct esOmniPlayer
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iOmniSight;
 	int g_iOmniType;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
 esOmniPlayer g_esOmniPlayer[MAXPLAYERS + 1];
+
+enum struct esOmniTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOmniChance;
+	float g_flOmniRange;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iOmniAbility;
+	int g_iOmniCooldown;
+	int g_iOmniDuration;
+	int g_iOmniMessage;
+	int g_iOmniMode;
+	int g_iOmniSight;
+	int g_iOmniType;
+	int g_iRequiresHumans;
+}
+
+esOmniTeammate g_esOmniTeammate[MAXPLAYERS + 1];
 
 enum struct esOmniAbility
 {
@@ -107,10 +137,35 @@ enum struct esOmniAbility
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iOmniSight;
 	int g_iRequiresHumans;
 }
 
 esOmniAbility g_esOmniAbility[MT_MAXTYPES + 1];
+
+enum struct esOmniSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOmniChance;
+	float g_flOmniRange;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iOmniAbility;
+	int g_iOmniCooldown;
+	int g_iOmniDuration;
+	int g_iOmniMessage;
+	int g_iOmniMode;
+	int g_iOmniSight;
+	int g_iRequiresHumans;
+}
+
+esOmniSpecial g_esOmniSpecial[MT_MAXTYPES + 1];
 
 enum struct esOmniCache
 {
@@ -130,6 +185,7 @@ enum struct esOmniCache
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iOmniSight;
 	int g_iRequiresHumans;
 }
 
@@ -152,6 +208,7 @@ enum struct esOmni
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iOmniSight;
 	int g_iRequiresHumans;
 }
 
@@ -349,7 +406,7 @@ void vOmniPlayerRunCmd(int client)
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
-	if (!MT_IsTankSupported(client) || !g_esOmniPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esOmni[client].g_iHumanMode == 1) || g_esOmniPlayer[client].g_iDuration == -1)
+	if (!MT_IsTankSupported(client) || !g_esOmniPlayer[client].g_bActivated || (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esOmni[client].g_iHumanMode == 1) || g_esOmniPlayer[client].g_iDuration == -1)
 	{
 #if defined MT_ABILITIES_MAIN2
 		return;
@@ -359,9 +416,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 
 	int iTime = GetTime();
-	if (g_esOmniPlayer[client].g_iDuration < iTime)
+	if (g_esOmniPlayer[client].g_iDuration <= iTime)
 	{
-		if (g_esOmniPlayer[client].g_iCooldown == -1 || g_esOmniPlayer[client].g_iCooldown < iTime)
+		if (g_esOmniPlayer[client].g_iCooldown == -1 || g_esOmniPlayer[client].g_iCooldown <= iTime)
 		{
 			vOmniReset3(client);
 		}
@@ -400,7 +457,7 @@ void vOmniCombineAbilities(int tank, int type, const float random, const char[] 
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility != 2)
 	{
 		g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -464,8 +521,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esOmniAbility[iIndex].g_iAccessFlags = 0;
 				g_esOmniAbility[iIndex].g_flCloseAreasOnly = 0.0;
@@ -485,83 +541,166 @@ public void MT_OnConfigsLoad(int mode)
 				g_esOmniAbility[iIndex].g_iOmniDuration = 5;
 				g_esOmniAbility[iIndex].g_iOmniMode = 0;
 				g_esOmniAbility[iIndex].g_flOmniRange = 500.0;
+				g_esOmniAbility[iIndex].g_iOmniSight = 0;
+
+				g_esOmniSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esOmniSpecial[iIndex].g_iComboAbility = -1;
+				g_esOmniSpecial[iIndex].g_iHumanAbility = -1;
+				g_esOmniSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esOmniSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esOmniSpecial[iIndex].g_iHumanDuration = -1;
+				g_esOmniSpecial[iIndex].g_iHumanMode = -1;
+				g_esOmniSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esOmniSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esOmniSpecial[iIndex].g_iOmniAbility = -1;
+				g_esOmniSpecial[iIndex].g_iOmniMessage = -1;
+				g_esOmniSpecial[iIndex].g_flOmniChance = -1.0;
+				g_esOmniSpecial[iIndex].g_iOmniCooldown = -1;
+				g_esOmniSpecial[iIndex].g_iOmniDuration = -1;
+				g_esOmniSpecial[iIndex].g_iOmniMode = -1;
+				g_esOmniSpecial[iIndex].g_flOmniRange = -1.0;
+				g_esOmniSpecial[iIndex].g_iOmniSight = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esOmniPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esOmniPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esOmniPlayer[iPlayer].g_iComboAbility = 0;
-					g_esOmniPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esOmniPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esOmniPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esOmniPlayer[iPlayer].g_iHumanDuration = 0;
-					g_esOmniPlayer[iPlayer].g_iHumanMode = 0;
-					g_esOmniPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esOmniPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esOmniPlayer[iPlayer].g_iOmniAbility = 0;
-					g_esOmniPlayer[iPlayer].g_iOmniMessage = 0;
-					g_esOmniPlayer[iPlayer].g_flOmniChance = 0.0;
-					g_esOmniPlayer[iPlayer].g_iOmniCooldown = 0;
-					g_esOmniPlayer[iPlayer].g_iOmniDuration = 0;
-					g_esOmniPlayer[iPlayer].g_iOmniMode = 0;
-					g_esOmniPlayer[iPlayer].g_flOmniRange = 0.0;
-				}
+				g_esOmniPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esOmniPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esOmniPlayer[iPlayer].g_iComboAbility = -1;
+				g_esOmniPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esOmniPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esOmniPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esOmniPlayer[iPlayer].g_iHumanDuration = -1;
+				g_esOmniPlayer[iPlayer].g_iHumanMode = -1;
+				g_esOmniPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esOmniPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esOmniPlayer[iPlayer].g_iOmniAbility = -1;
+				g_esOmniPlayer[iPlayer].g_iOmniMessage = -1;
+				g_esOmniPlayer[iPlayer].g_flOmniChance = -1.0;
+				g_esOmniPlayer[iPlayer].g_iOmniCooldown = -1;
+				g_esOmniPlayer[iPlayer].g_iOmniDuration = -1;
+				g_esOmniPlayer[iPlayer].g_iOmniMode = -1;
+				g_esOmniPlayer[iPlayer].g_flOmniRange = -1.0;
+				g_esOmniPlayer[iPlayer].g_iOmniSight = -1;
+
+				g_esOmniTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esOmniTeammate[iPlayer].g_iComboAbility = -1;
+				g_esOmniTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esOmniTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esOmniTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esOmniTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esOmniTeammate[iPlayer].g_iHumanMode = -1;
+				g_esOmniTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esOmniTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esOmniTeammate[iPlayer].g_iOmniAbility = -1;
+				g_esOmniTeammate[iPlayer].g_iOmniMessage = -1;
+				g_esOmniTeammate[iPlayer].g_flOmniChance = -1.0;
+				g_esOmniTeammate[iPlayer].g_iOmniCooldown = -1;
+				g_esOmniTeammate[iPlayer].g_iOmniDuration = -1;
+				g_esOmniTeammate[iPlayer].g_iOmniMode = -1;
+				g_esOmniTeammate[iPlayer].g_flOmniRange = -1.0;
+				g_esOmniTeammate[iPlayer].g_iOmniSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vOmniConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vOmniConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esOmniPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esOmniPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esOmniPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esOmniPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esOmniPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esOmniPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniPlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esOmniPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esOmniPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esOmniPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esOmniPlayer[admin].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniPlayer[admin].g_iOmniAbility, value, 0, 1);
-		g_esOmniPlayer[admin].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniPlayer[admin].g_iOmniMessage, value, 0, 1);
-		g_esOmniPlayer[admin].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniPlayer[admin].g_flOmniChance, value, 0.0, 100.0);
-		g_esOmniPlayer[admin].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniPlayer[admin].g_iOmniCooldown, value, 0, 99999);
-		g_esOmniPlayer[admin].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniPlayer[admin].g_iOmniDuration, value, 0, 99999);
-		g_esOmniPlayer[admin].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniPlayer[admin].g_iOmniMode, value, 0, 1);
-		g_esOmniPlayer[admin].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniPlayer[admin].g_flOmniRange, value, 1.0, 99999.0);
-		g_esOmniPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esOmniTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esOmniTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esOmniTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esOmniTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esOmniTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esOmniTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esOmniTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esOmniTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esOmniTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esOmniTeammate[admin].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniTeammate[admin].g_iOmniAbility, value, -1, 1);
+			g_esOmniTeammate[admin].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniTeammate[admin].g_iOmniMessage, value, -1, 1);
+			g_esOmniTeammate[admin].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniTeammate[admin].g_flOmniChance, value, -1.0, 100.0);
+			g_esOmniTeammate[admin].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniTeammate[admin].g_iOmniCooldown, value, -1, 99999);
+			g_esOmniTeammate[admin].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniTeammate[admin].g_iOmniDuration, value, -1, 99999);
+			g_esOmniTeammate[admin].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniTeammate[admin].g_iOmniMode, value, -1, 1);
+			g_esOmniTeammate[admin].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniTeammate[admin].g_flOmniRange, value, -1.0, 99999.0);
+			g_esOmniTeammate[admin].g_iOmniSight = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniSight", "Omni Sight", "Omni_Sight", "sight", g_esOmniTeammate[admin].g_iOmniSight, value, -1, 2);
+		}
+		else
+		{
+			g_esOmniPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esOmniPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esOmniPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esOmniPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esOmniPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esOmniPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniPlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esOmniPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniPlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esOmniPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esOmniPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esOmniPlayer[admin].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniPlayer[admin].g_iOmniAbility, value, -1, 1);
+			g_esOmniPlayer[admin].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniPlayer[admin].g_iOmniMessage, value, -1, 1);
+			g_esOmniPlayer[admin].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniPlayer[admin].g_flOmniChance, value, -1.0, 100.0);
+			g_esOmniPlayer[admin].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniPlayer[admin].g_iOmniCooldown, value, -1, 99999);
+			g_esOmniPlayer[admin].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniPlayer[admin].g_iOmniDuration, value, -1, 99999);
+			g_esOmniPlayer[admin].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniPlayer[admin].g_iOmniMode, value, -1, 1);
+			g_esOmniPlayer[admin].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniPlayer[admin].g_flOmniRange, value, -1.0, 99999.0);
+			g_esOmniPlayer[admin].g_iOmniSight = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniSight", "Omni Sight", "Omni_Sight", "sight", g_esOmniPlayer[admin].g_iOmniSight, value, -1, 2);
+			g_esOmniPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esOmniAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esOmniAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniAbility[type].g_iComboAbility, value, 0, 1);
-		g_esOmniAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esOmniAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esOmniAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esOmniAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esOmniAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniAbility[type].g_iHumanMode, value, 0, 1);
-		g_esOmniAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esOmniAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esOmniAbility[type].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniAbility[type].g_iOmniAbility, value, 0, 1);
-		g_esOmniAbility[type].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniAbility[type].g_iOmniMessage, value, 0, 1);
-		g_esOmniAbility[type].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniAbility[type].g_flOmniChance, value, 0.0, 100.0);
-		g_esOmniAbility[type].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniAbility[type].g_iOmniCooldown, value, 0, 99999);
-		g_esOmniAbility[type].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniAbility[type].g_iOmniDuration, value, 0, 99999);
-		g_esOmniAbility[type].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniAbility[type].g_iOmniMode, value, 0, 1);
-		g_esOmniAbility[type].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniAbility[type].g_flOmniRange, value, 1.0, 99999.0);
-		g_esOmniAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esOmniSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esOmniSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esOmniSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esOmniSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esOmniSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esOmniSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esOmniSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esOmniSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esOmniSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esOmniSpecial[type].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniSpecial[type].g_iOmniAbility, value, -1, 1);
+			g_esOmniSpecial[type].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniSpecial[type].g_iOmniMessage, value, -1, 1);
+			g_esOmniSpecial[type].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniSpecial[type].g_flOmniChance, value, -1.0, 100.0);
+			g_esOmniSpecial[type].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniSpecial[type].g_iOmniCooldown, value, -1, 99999);
+			g_esOmniSpecial[type].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniSpecial[type].g_iOmniDuration, value, -1, 99999);
+			g_esOmniSpecial[type].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniSpecial[type].g_iOmniMode, value, -1, 1);
+			g_esOmniSpecial[type].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniSpecial[type].g_flOmniRange, value, -1.0, 99999.0);
+			g_esOmniSpecial[type].g_iOmniSight = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniSight", "Omni Sight", "Omni_Sight", "sight", g_esOmniSpecial[type].g_iOmniSight, value, -1, 2);
+		}
+		else
+		{
+			g_esOmniAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esOmniAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esOmniAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esOmniAbility[type].g_iComboAbility, value, -1, 1);
+			g_esOmniAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esOmniAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esOmniAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esOmniAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esOmniAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esOmniAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esOmniAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esOmniAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esOmniAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esOmniAbility[type].g_iHumanMode, value, -1, 1);
+			g_esOmniAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esOmniAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esOmniAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esOmniAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esOmniAbility[type].g_iOmniAbility = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esOmniAbility[type].g_iOmniAbility, value, -1, 1);
+			g_esOmniAbility[type].g_iOmniMessage = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esOmniAbility[type].g_iOmniMessage, value, -1, 1);
+			g_esOmniAbility[type].g_flOmniChance = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esOmniAbility[type].g_flOmniChance, value, -1.0, 100.0);
+			g_esOmniAbility[type].g_iOmniCooldown = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniCooldown", "Omni Cooldown", "Omni_Cooldown", "cooldown", g_esOmniAbility[type].g_iOmniCooldown, value, -1, 99999);
+			g_esOmniAbility[type].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniAbility[type].g_iOmniDuration, value, -1, 99999);
+			g_esOmniAbility[type].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniAbility[type].g_iOmniMode, value, -1, 1);
+			g_esOmniAbility[type].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniAbility[type].g_flOmniRange, value, -1.0, 99999.0);
+			g_esOmniAbility[type].g_iOmniSight = iGetKeyValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "OmniSight", "Omni Sight", "Omni_Sight", "sight", g_esOmniAbility[type].g_iOmniSight, value, -1, 2);
+			g_esOmniAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTION, MT_OMNI_SECTION2, MT_OMNI_SECTION3, MT_OMNI_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		}
 	}
 }
 
@@ -571,44 +710,92 @@ void vOmniSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esOmniCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniAbility[type].g_flCloseAreasOnly);
-	g_esOmniCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniAbility[type].g_iComboAbility);
-	g_esOmniCache[tank].g_flOmniChance = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance);
-	g_esOmniCache[tank].g_flOmniRange = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[type].g_flOmniRange);
-	g_esOmniCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[type].g_iHumanAbility);
-	g_esOmniCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[type].g_iHumanAmmo);
-	g_esOmniCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[type].g_iHumanCooldown);
-	g_esOmniCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[type].g_iHumanDuration);
-	g_esOmniCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[type].g_iHumanMode);
-	g_esOmniCache[tank].g_iOmniAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[type].g_iOmniAbility);
-	g_esOmniCache[tank].g_iOmniCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[type].g_iOmniCooldown);
-	g_esOmniCache[tank].g_iOmniDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[type].g_iOmniDuration);
-	g_esOmniCache[tank].g_iOmniMessage = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[type].g_iOmniMessage);
-	g_esOmniCache[tank].g_iOmniMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[type].g_iOmniMode);
-	g_esOmniCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniAbility[type].g_flOpenAreasOnly);
-	g_esOmniCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esOmniPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flCloseAreasOnly, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniSpecial[type].g_flCloseAreasOnly, g_esOmniAbility[type].g_flCloseAreasOnly, 1);
+		g_esOmniCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iComboAbility, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniSpecial[type].g_iComboAbility, g_esOmniAbility[type].g_iComboAbility, 1);
+		g_esOmniCache[tank].g_flOmniChance = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniChance, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniSpecial[type].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance, 1);
+		g_esOmniCache[tank].g_flOmniRange = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOmniRange, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniSpecial[type].g_flOmniRange, g_esOmniAbility[type].g_flOmniRange, 1);
+		g_esOmniCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAbility, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniSpecial[type].g_iHumanAbility, g_esOmniAbility[type].g_iHumanAbility, 1);
+		g_esOmniCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanAmmo, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniSpecial[type].g_iHumanAmmo, g_esOmniAbility[type].g_iHumanAmmo, 1);
+		g_esOmniCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanCooldown, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniSpecial[type].g_iHumanCooldown, g_esOmniAbility[type].g_iHumanCooldown, 1);
+		g_esOmniCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanDuration, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniSpecial[type].g_iHumanDuration, g_esOmniAbility[type].g_iHumanDuration, 1);
+		g_esOmniCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iHumanMode, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniSpecial[type].g_iHumanMode, g_esOmniAbility[type].g_iHumanMode, 1);
+		g_esOmniCache[tank].g_iOmniAbility = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniAbility, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniSpecial[type].g_iOmniAbility, g_esOmniAbility[type].g_iOmniAbility, 1);
+		g_esOmniCache[tank].g_iOmniCooldown = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniCooldown, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniSpecial[type].g_iOmniCooldown, g_esOmniAbility[type].g_iOmniCooldown, 1);
+		g_esOmniCache[tank].g_iOmniDuration = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniDuration, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniSpecial[type].g_iOmniDuration, g_esOmniAbility[type].g_iOmniDuration, 1);
+		g_esOmniCache[tank].g_iOmniMessage = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMessage, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniSpecial[type].g_iOmniMessage, g_esOmniAbility[type].g_iOmniMessage, 1);
+		g_esOmniCache[tank].g_iOmniMode = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniMode, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniSpecial[type].g_iOmniMode, g_esOmniAbility[type].g_iOmniMode, 1);
+		g_esOmniCache[tank].g_iOmniSight = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iOmniSight, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniSpecial[type].g_iOmniSight, g_esOmniAbility[type].g_iOmniSight, 1);
+		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_flOpenAreasOnly, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniSpecial[type].g_flOpenAreasOnly, g_esOmniAbility[type].g_flOpenAreasOnly, 1);
+		g_esOmniCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esOmniTeammate[tank].g_iRequiresHumans, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniSpecial[type].g_iRequiresHumans, g_esOmniAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esOmniCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flCloseAreasOnly, g_esOmniAbility[type].g_flCloseAreasOnly, 1);
+		g_esOmniCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iComboAbility, g_esOmniAbility[type].g_iComboAbility, 1);
+		g_esOmniCache[tank].g_flOmniChance = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance, 1);
+		g_esOmniCache[tank].g_flOmniRange = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[type].g_flOmniRange, 1);
+		g_esOmniCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[type].g_iHumanAbility, 1);
+		g_esOmniCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[type].g_iHumanAmmo, 1);
+		g_esOmniCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[type].g_iHumanCooldown, 1);
+		g_esOmniCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[type].g_iHumanDuration, 1);
+		g_esOmniCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[type].g_iHumanMode, 1);
+		g_esOmniCache[tank].g_iOmniAbility = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[type].g_iOmniAbility, 1);
+		g_esOmniCache[tank].g_iOmniCooldown = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[type].g_iOmniCooldown, 1);
+		g_esOmniCache[tank].g_iOmniDuration = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[type].g_iOmniDuration, 1);
+		g_esOmniCache[tank].g_iOmniMessage = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[type].g_iOmniMessage, 1);
+		g_esOmniCache[tank].g_iOmniMode = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[type].g_iOmniMode, 1);
+		g_esOmniCache[tank].g_iOmniSight = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniAbility[type].g_iOmniSight, 1);
+		g_esOmniCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOpenAreasOnly, g_esOmniAbility[type].g_flOpenAreasOnly, 1);
+		g_esOmniCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 void vCacheOriginalSettings(int tank)
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	int iType = (g_esOmniPlayer[tank].g_iOmniType > 0) ? g_esOmniPlayer[tank].g_iOmniType : g_esOmniPlayer[tank].g_iTankType;
-	g_esOmni[tank].g_flOmniChance = flGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[iType].g_flOmniChance);
-	g_esOmni[tank].g_flOmniRange = flGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[iType].g_flOmniRange);
-	g_esOmni[tank].g_iAccessFlags = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iAccessFlags, g_esOmniAbility[iType].g_iAccessFlags);
-	g_esOmni[tank].g_iHumanAbility = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[iType].g_iHumanAbility);
-	g_esOmni[tank].g_iHumanAmmo = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[iType].g_iHumanAmmo);
-	g_esOmni[tank].g_iHumanCooldown = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[iType].g_iHumanCooldown);
-	g_esOmni[tank].g_iHumanDuration = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[iType].g_iHumanDuration);
-	g_esOmni[tank].g_iHumanMode = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[iType].g_iHumanMode);
-	g_esOmni[tank].g_iOmniAbility = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility);
-	g_esOmni[tank].g_iOmniCooldown = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[iType].g_iOmniCooldown);
-	g_esOmni[tank].g_iOmniDuration = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[iType].g_iOmniDuration);
-	g_esOmni[tank].g_iOmniMessage = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[iType].g_iOmniMessage);
-	g_esOmni[tank].g_iOmniMode = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[iType].g_iOmniMode);
-	g_esOmni[tank].g_iRequiresHumans = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[iType].g_iRequiresHumans);
+
+	if (bIsSpecialInfected(tank))
+	{
+		g_esOmni[tank].g_flOmniChance = flGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_flOmniChance, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniSpecial[iType].g_flOmniChance, g_esOmniAbility[iType].g_flOmniChance, 1);
+		g_esOmni[tank].g_flOmniRange = flGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_flOmniRange, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniSpecial[iType].g_flOmniRange, g_esOmniAbility[iType].g_flOmniRange, 1);
+		g_esOmni[tank].g_iHumanAbility = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iHumanAbility, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniSpecial[iType].g_iHumanAbility, g_esOmniAbility[iType].g_iHumanAbility, 1);
+		g_esOmni[tank].g_iHumanAmmo = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iHumanAmmo, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniSpecial[iType].g_iHumanAmmo, g_esOmniAbility[iType].g_iHumanAmmo, 1);
+		g_esOmni[tank].g_iHumanCooldown = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iHumanCooldown, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniSpecial[iType].g_iHumanCooldown, g_esOmniAbility[iType].g_iHumanCooldown, 1);
+		g_esOmni[tank].g_iHumanDuration = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iHumanDuration, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniSpecial[iType].g_iHumanDuration, g_esOmniAbility[iType].g_iHumanDuration, 1);
+		g_esOmni[tank].g_iHumanMode = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iHumanMode, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniSpecial[iType].g_iHumanMode, g_esOmniAbility[iType].g_iHumanMode, 1);
+		g_esOmni[tank].g_iOmniAbility = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniAbility, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniSpecial[iType].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility, 1);
+		g_esOmni[tank].g_iOmniCooldown = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniCooldown, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniSpecial[iType].g_iOmniCooldown, g_esOmniAbility[iType].g_iOmniCooldown, 1);
+		g_esOmni[tank].g_iOmniDuration = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniDuration, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniSpecial[iType].g_iOmniDuration, g_esOmniAbility[iType].g_iOmniDuration, 1);
+		g_esOmni[tank].g_iOmniMessage = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniMessage, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniSpecial[iType].g_iOmniMessage, g_esOmniAbility[iType].g_iOmniMessage, 1);
+		g_esOmni[tank].g_iOmniMode = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniMode, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniSpecial[iType].g_iOmniMode, g_esOmniAbility[iType].g_iOmniMode, 1);
+		g_esOmni[tank].g_iOmniSight = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iOmniSight, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniSpecial[iType].g_iOmniSight, g_esOmniAbility[iType].g_iOmniSight, 1);
+		g_esOmni[tank].g_iRequiresHumans = iGetSubSettingValue(true, bHuman, g_esOmniTeammate[tank].g_iRequiresHumans, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniSpecial[iType].g_iRequiresHumans, g_esOmniAbility[iType].g_iRequiresHumans, 1);
+		g_esOmni[tank].g_iAccessFlags = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iAccessFlags, g_esOmniAbility[iType].g_iAccessFlags, 1);
+	}
+	else
+	{
+		g_esOmni[tank].g_flOmniChance = flGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[iType].g_flOmniChance, 1);
+		g_esOmni[tank].g_flOmniRange = flGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_flOmniRange, g_esOmniAbility[iType].g_flOmniRange, 1);
+		g_esOmni[tank].g_iHumanAbility = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanAbility, g_esOmniAbility[iType].g_iHumanAbility, 1);
+		g_esOmni[tank].g_iHumanAmmo = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanAmmo, g_esOmniAbility[iType].g_iHumanAmmo, 1);
+		g_esOmni[tank].g_iHumanCooldown = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanCooldown, g_esOmniAbility[iType].g_iHumanCooldown, 1);
+		g_esOmni[tank].g_iHumanDuration = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanDuration, g_esOmniAbility[iType].g_iHumanDuration, 1);
+		g_esOmni[tank].g_iHumanMode = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iHumanMode, g_esOmniAbility[iType].g_iHumanMode, 1);
+		g_esOmni[tank].g_iOmniAbility = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniAbility, g_esOmniAbility[iType].g_iOmniAbility, 1);
+		g_esOmni[tank].g_iOmniCooldown = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniCooldown, g_esOmniAbility[iType].g_iOmniCooldown, 1);
+		g_esOmni[tank].g_iOmniDuration = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniDuration, g_esOmniAbility[iType].g_iOmniDuration, 1);
+		g_esOmni[tank].g_iOmniMessage = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniMessage, g_esOmniAbility[iType].g_iOmniMessage, 1);
+		g_esOmni[tank].g_iOmniMode = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniMode, g_esOmniAbility[iType].g_iOmniMode, 1);
+		g_esOmni[tank].g_iOmniSight = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iOmniSight, g_esOmniAbility[iType].g_iOmniSight, 1);
+		g_esOmni[tank].g_iRequiresHumans = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iRequiresHumans, g_esOmniAbility[iType].g_iRequiresHumans, 1);
+		g_esOmni[tank].g_iAccessFlags = iGetSettingValue(true, bHuman, g_esOmniPlayer[tank].g_iAccessFlags, g_esOmniAbility[iType].g_iAccessFlags, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -642,7 +829,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vOmniCopyStats2(iBot, iTank);
 			vRemoveOmni(iBot);
@@ -652,7 +839,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vOmniCopyStats2(iTank, iBot);
 			vRemoveOmni(iTank);
@@ -678,12 +865,12 @@ void vOmniAbilityActivated(int tank)
 public void MT_OnAbilityActivated(int tank)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmni[tank].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)) || g_esOmni[tank].g_iHumanAbility == 0))
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmni[tank].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)) || g_esOmni[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esOmni[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esOmni[tank].g_iOmniAbility == 1 && g_esOmniCache[tank].g_iComboAbility == 0 && !g_esOmniPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esOmni[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esOmni[tank].g_iOmniAbility == 1 && g_esOmniCache[tank].g_iComboAbility == 0 && !g_esOmniPlayer[tank].g_bActivated)
 	{
 		vOmniAbility(tank);
 	}
@@ -697,7 +884,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -705,7 +892,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esOmni[tank].g_iOmniAbility == 1 && g_esOmni[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esOmni[tank].g_iHumanMode)
 			{
@@ -764,7 +951,7 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esOmni[tank].g_iHumanMode == 1 && g_esOmniPlayer[tank].g_bActivated && (g_esOmniPlayer[tank].g_iCooldown == -1 || g_esOmniPlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esOmni[tank].g_iHumanMode == 1 && g_esOmniPlayer[tank].g_bActivated && (g_esOmniPlayer[tank].g_iCooldown == -1 || g_esOmniPlayer[tank].g_iCooldown <= GetTime()))
 		{
 			vOmniReset2(tank);
 			vOmniReset3(tank);
@@ -784,19 +971,19 @@ public void MT_OnPostTankSpawn(int tank)
 void vOmni(int tank, int pos = -1)
 {
 	int iTime = GetTime();
-	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime)
+	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= iTime)
 	{
 		return;
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esOmniCache[tank].g_iOmniDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1) ? g_esOmniCache[tank].g_iHumanDuration : iDuration;
+	iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1) ? g_esOmniCache[tank].g_iHumanDuration : iDuration;
 	g_esOmniPlayer[tank].g_bActivated = true;
 	g_esOmniPlayer[tank].g_iDuration = (iTime + iDuration);
 
 	vOmni2(tank, pos);
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1)
 	{
 		g_esOmniPlayer[tank].g_iAmmoCount++;
 
@@ -814,7 +1001,7 @@ void vOmni(int tank, int pos = -1)
 
 void vOmni2(int tank, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -831,7 +1018,7 @@ void vOmni2(int tank, int pos = -1)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && iTank != tank)
 		{
 			GetClientAbsOrigin(iTank, flTankPos2);
-			if (GetVectorDistance(flTankPos, flTankPos2) <= flRange && g_esOmniCache[iTank].g_iOmniAbility == 0)
+			if (GetVectorDistance(flTankPos, flTankPos2) <= flRange && bIsVisibleToPlayer(tank, iTank, g_esOmni[tank].g_iOmniSight, .range = flRange) && g_esOmniCache[iTank].g_iOmniAbility == 0)
 			{
 				iTypes[iTypeCount + 1] = MT_GetTankType(iTank);
 				iTypeCount++;
@@ -842,14 +1029,16 @@ void vOmni2(int tank, int pos = -1)
 	if (iTypeCount > 0)
 	{
 		MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
+		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	}
 	else
 	{
-		int iMaxType = MT_GetMaxType();
+		int iMaxType = MT_GetMaxType(), iType = iGetInfectedType(tank);
 		iTypeCount = 0;
 		for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
 		{
-			if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
+			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iType) || MT_DoesTypeRequireHumans(iIndex, tank) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
 			{
 				continue;
 			}
@@ -861,13 +1050,15 @@ void vOmni2(int tank, int pos = -1)
 		if (iTypeCount > 0)
 		{
 			MT_SetTankType(tank, iTypes[MT_GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
+			vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
+			EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		}
 	}
 }
 
 void vOmniAbility(int tank)
 {
-	if ((g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
+	if ((g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esOmniCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esOmniCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esOmniPlayer[tank].g_iTankType, tank) || (g_esOmniCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esOmniCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -878,12 +1069,12 @@ void vOmniAbility(int tank)
 		{
 			vOmni(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniAmmo");
 	}
@@ -906,6 +1097,7 @@ void vOmniCopyStats2(int oldTank, int newTank)
 	g_esOmni[newTank].g_iOmniDuration = g_esOmni[oldTank].g_iOmniDuration;
 	g_esOmni[newTank].g_iOmniMessage = g_esOmni[oldTank].g_iOmniMessage;
 	g_esOmni[newTank].g_iOmniMode = g_esOmni[oldTank].g_iOmniMode;
+	g_esOmni[newTank].g_iOmniSight = g_esOmni[oldTank].g_iOmniSight;
 	g_esOmni[newTank].g_iRequiresHumans = g_esOmni[oldTank].g_iRequiresHumans;
 }
 
@@ -935,6 +1127,8 @@ void vOmniReset2(int tank)
 	g_esOmniPlayer[tank].g_iDuration = -1;
 
 	MT_SetTankType(tank, g_esOmniPlayer[tank].g_iOmniType, !!g_esOmni[tank].g_iOmniMode);
+	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
+	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	g_esOmniPlayer[tank].g_iOmniType = 0;
 
 	if (g_esOmni[tank].g_iOmniMessage == 1)
@@ -949,9 +1143,9 @@ void vOmniReset2(int tank)
 void vOmniReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esOmniAbility[g_esOmniPlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esOmni[tank].g_iOmniCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1 && g_esOmniPlayer[tank].g_iAmmoCount < g_esOmni[tank].g_iHumanAmmo && g_esOmni[tank].g_iHumanAmmo > 0) ? g_esOmni[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esOmni[tank].g_iHumanAbility == 1 && g_esOmniPlayer[tank].g_iAmmoCount < g_esOmni[tank].g_iHumanAmmo && g_esOmni[tank].g_iHumanAmmo > 0) ? g_esOmni[tank].g_iHumanCooldown : iCooldown;
 	g_esOmniPlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown > iTime)
+	if (g_esOmniPlayer[tank].g_iCooldown != -1 && g_esOmniPlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "OmniHuman5", (g_esOmniPlayer[tank].g_iCooldown - iTime));
 	}
@@ -960,7 +1154,7 @@ void vOmniReset3(int tank)
 void tTimerOmniCombo(Handle timer, DataPack pack)
 {
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esOmniAbility[g_esOmniPlayer[iTank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esOmniPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esOmniCache[iTank].g_iOmniAbility == 0 || g_esOmniPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esOmniAbility[g_esOmniPlayer[iTank].g_iTankType].g_iAccessFlags, g_esOmniPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esOmniPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esOmniCache[iTank].g_iOmniAbility == 0 || g_esOmniPlayer[iTank].g_bActivated)
 	{
 		return;
 	}

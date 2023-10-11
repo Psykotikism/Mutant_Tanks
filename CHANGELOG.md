@@ -1,44 +1,146 @@
 # Changelog
 
-## Version 8.98 (August 10, 2023)
+## Version 8.99 (October 10, 2023)
 
 ### Bug Fixes
 
-#### Core Plugin
-- Fixed the `Health` and `Refill` rewards not rewarding recipients with health properly. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
+#### General
+- Fixed array index errors.
+- Fixed some props being created multiple times and crashing the server.
+- Fixed cooldowns not being applied properly.
 
 #### Config Files
-- Fixed custom config Mutant Tank types overlapping with main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
+- Fixed the config parser not reading specified sections.
+- Fixed custom config Mutant Tank types not overriding main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
+- Fixed settings not being read properly for human-controlled infected in competitive modes.
 
-#### Settings
-- Fixed the `Reward Visual` setting's limit. (Thanks to `swofleswof` for testing and reporting!)
+#### Game Data
+- Fixed some incorrect offsets for Linux. (Thanks to `Krufftys Killers` for reporting!)
 
 #### Abilities
-- Gunner: Fixed an error that caused the server to crash. (Thanks to `Mi.Cura` for testing and reporting!)
-- Item, Kamikaze, Rocket, Smash, Smite: Fixed survivor ragdolls being erased by all Mutant Tank types. (Thanks to `George Rex` for reporting!) [Fixed in `v8.97`.]
-- Throw: Fixed Mutant Tank types not being able to throw cars and special infected. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
+- Fixed the `Close Areas Only` setting not working for several abilities.
+- Clone: Fixed an issue with the ability cloning the same type in some scenarios. (Thanks to `SpannerV2` for testing and reporting!)
+- Fragile: Fixed the `Fragile Speed Boost` setting not working. (Thanks to `PVNDV` for testing and reporting!)
+- Track: Fixed the `Combo Speed` setting not overriding the `Track Speed` setting. (Thanks to `PVNDV` for testing and reporting!)
 
 ### Changes
 
-#### Core Plugin
-- The godmode reward now prevents recipients from being pinned by any special infected.
+#### General
+- Most of Mutant Tanks' features can now be applied to the other special infected. (Requested by several people over the years.)
+	- The mutation continues to adapt to accommodate different strains of the virus...
+- Mutant Tanks and its sub-plugins now properly support the [`[L4D2] Tank Rush 2`](https://forums.alliedmods.net/showthread.php?t=234840) plugin. (Requested by `Tank Rush`.) [Thanks to `Carl Sagan` for the code!]
 
-#### ConVars
-- Added the `mt_configfile` convar. (Requested by `zonbarbar`.)
-- Added a lock mechanism to enforce temporary values across maps for the core plugin's convars. (Thanks to `NgBUCKWANGS` for the code!)
-	- Use `-l-` in front of the new value to enforce that value for the convar. (Example: `mt_configfile "-l-myconfig.cfg"`)
-	- Use `-u-` in front of the new value to allow the convar to accept new values. (Example: `mt_configfile "-u-myconfig.cfg"`)
+#### Core Plugin
+- Added the following target filters to let admins target Mutant Tanks:
+	- `@msmokers`
+	- `@psysmokers`
+	- `@mboomers`
+	- `@psyboomers`
+	- `@mhunters`
+	- `@psyhunters`
+	- `@mspitters`
+	- `@psyspitters`
+	- `@mjockeys`
+	- `@psyjockeys`
+	- `@mchargers`
+	- `@psychargers`
+- The `@mutants` target filter can now target all types of Mutant Infected.
+- Players can no longer see healthbars of Mutant Infected through solid objects.
+
+#### Commands
+- Added the `sm_mt_edit` command to allow admins to temporarily modify settings in-game.
 
 #### Game Data
 - Added signatures for the following functions:
-	- `CTerrorPlayer::GrabVictimWithTongue`
-	- `CTerrorPlayer::OnLeptOnSurvivor`
-	- `CTerrorPlayer::OnPouncedOnSurvivor`
-	- `CTerrorPlayer::OnStartCarryingVictim`
-	- `CTerrorPlayer::QueuePummelVictim`
+	- `CBaseAbility::CreateForPlayer`
+	- `CClaw::OnSwingEnd`
+	- `CCSPlayer::State_Transition`
+	- `CTerrorPlayer::BecomeGhost`
+	- `CTerrorPlayer::OnRevived`
+	- `CTerrorPlayer::PlayerZombieAbortControl`
+	- `CTerrorPlayer::SetClass`
+	- `CTerrorWeapon::StartAttackTimer`
+	- `ZombieManager::SpawnBoomer<Vector>` (L4D1)
+	- `ZombieManager::SpawnHunter<Vector>` (L4D1)
+	- `ZombieManager::SpawnSmoker<Vector>` (L4D1)
+	- `ZombieManager::SpawnSpecial<Vector>` (L4D2)
+- Added signatures and offsets for the following functions:
+	- `CTerrorPlayer::FireBullet` (L4D2)
+	- `CTraceBulletEntityEnumerator::PerformMultiTrace`
+- Added offsets for the `CBasePlayer::Weapon_ShootPosition` function.
+- Replaced the `CThrow::ActivateAbility` function with the `CBaseAbility::ActivateAbility` function.
 
 #### Settings
-- Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
+- Changed the minimum value of every setting from `0/0.0/0.1/1.0` to `-1/-1.0`.
+	- Use `-1/-1.0` to allow overrides for Mutant Special Infected.
+	- Use `0/0.0` to disable the setting for Mutant Special Infected.
+- Added the `Ghost Bullets Reward` setting under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections. (Thanks to `epzminion` for the code!)
+- Added the `Boss Effects` setting under the `Tank #->Boss` and `STEAM_ID->Boss` sections. (Requested by `SpannerV2`.)
+- Added the `Bullet Fix` setting under the `Plugin Settings->General` section. (Thanks to `Xutax_Kamay` for the code!)
+- Added the `Intangible Body` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `Tank Rush`.)
+- Added the `Throw Rock` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections.
+- Added the `Rush` section under the `Plugin Settings` section which allows to configure settings for the `Tank Rush 2` mode. (Requested by `Tank Rush`.) [Thanks to `Carl Sagan` for the code!]
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
+- Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
+- Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+
+#### Natives & Forwards
+- The `MT_OnConfigsLoaded` forward now has two more parameters.
+- The following natives now each have a second parameter:
+	- `MT_CanTypeSpawn`
+	- `MT_DoesTypeRequireHumans`
+	- `MT_HasChanceToSpawn`
+	- `MT_IsFinaleType`
+	- `MT_IsNonFinaleType`
+	- `MT_IsTypeEnabled`
+
+#### Abilities
+- Added the `Ability Sight` setting for several abilities.
+- Changed the minimum value of every setting for every ability from `0/0.0/0.1/1.0` to `-1/-1.0`.
+	- Use `-1/-1.0` to allow overrides for Mutant Special Infected.
+	- Use `0/0.0` to disable the setting for Mutant Special Infected.
+- Added the `Recall` ability. (Thanks to `Lux` and `Silvers` for helping with some of the code!)
+- Absorb: Added the `Absorb Convert Percentage` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Aimless: Added the `Aimless Gunshots` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Ammo
+	- Added the `Ammo Type` setting to add more flexibility.
+	- Increased the maximum limit of the `Ammo Count` setting from `25` to `100`.
+	- Reworked the `Ammo Count` setting to take away a specified amount of ammunition from survivors instead of setting survivors' ammunition to a specified amount.
+- Bury: Optimized the code for preventing survivors from attacking while buried.
+- Choke: Optimized the code for preventing survivors from attacking while being choked.
+- Drop: Added the `Drop Count` setting.
+- Electric: Added the `Electric Stun Speed` setting.
+- Ghost: Added the `Ghost Fade Phase` setting.
+- Gravity: Added the `Gravity Flags` setting.
+- Hit: Added sound effect.
+- Hypno
+	- Added the `Hypno Color` setting.
+	- Added the `Hypno View` setting.
+- Ice: Survivor victims can no longer move or attack while frozen.
+- Kamikaze: Added the `Kamikaze Mode` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Leech: Added visual effect.
+- Medic
+	- Added the `Human Rock Cooldown` setting. (Thanks to `Angelace113` for suggesting and testing!)
+	- Added the `Medic Rock Break` setting. (Thanks to `Angelace113` for suggesting and testing!)
+	- Added the `Medic Rock Chance` setting. (Thanks to `Angelace113` for suggesting and testing!)
+	- Added the `Medic Rock Cooldown` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Necro: Added visual and sound effects.
+- Omni: Added visual and sound effects.
+- Pimp: Added visual effect.
+- Pyro: Added the `Pyro Fire Divisor` setting.
+- Respawn: Added sound effect.
+- Restart: Added visual and sound effects.
+- Rocket: Added the `Rocket Mode` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Shield: Added the `Shield Convert Percentage` setting.
+- Smash: Added the `Smash Mode` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Smite: Added the `Smite Mode` setting. (Thanks to `Angelace113` for suggesting and testing!)
+- Splash: Added visual effect.
+- Undead
+	- The Tank now gets extinguished and has the vomit effect removed when its health resets.
+	- Added sound effect.
 
 ### Files
 
@@ -53,6 +155,93 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+
+## Version 8.98 (August 10, 2023)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>Core Plugin</summary>
+
+#### Core Plugin
+- Fixed the `Health` and `Refill` rewards not rewarding recipients with health properly. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
+</details>
+<details>
+	<summary>Config Files</summary>
+
+#### Config Files
+- Fixed custom config Mutant Tank types overlapping with main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
+</details>
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Fixed the `Reward Visual` setting's limit. (Thanks to `swofleswof` for testing and reporting!)
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gunner: Fixed an error that caused the server to crash. (Thanks to `Mi.Cura` for testing and reporting!)
+- Item, Kamikaze, Rocket, Smash, Smite: Fixed survivor ragdolls being erased by all Mutant Tank types. (Thanks to `George Rex` for reporting!) [Fixed in `v8.97`.]
+- Throw: Fixed Mutant Tank types not being able to throw cars and special infected. (Thanks to `xcd222` for reporting!) [Fixed in `v8.97`.]
+</details>
+
+### Changes
+<details>
+	<summary>Core Plugin</summary>
+
+#### Core Plugin
+- The godmode reward now prevents recipients from being pinned by any special infected.
+</details>
+<details>
+	<summary>ConVars</summary>
+
+#### ConVars
+- Added the `mt_configfile` convar. (Requested by `zonbarbar`.)
+- Added a lock mechanism to enforce temporary values across maps for the core plugin's convars. (Thanks to `NgBUCKWANGS` for the code!)
+	- Use `-l-` in front of the new value to enforce that value for the convar. (Example: `mt_configfile "-l-myconfig.cfg"`)
+	- Use `-u-` in front of the new value to allow the convar to accept new values. (Example: `mt_configfile "-u-myconfig.cfg"`)
+</details>
+<details>
+	<summary>Game Data</summary>
+
+#### Game Data
+- Added signatures for the following functions:
+	- `CTerrorPlayer::GrabVictimWithTongue`
+	- `CTerrorPlayer::OnLeptOnSurvivor`
+	- `CTerrorPlayer::OnPouncedOnSurvivor`
+	- `CTerrorPlayer::OnStartCarryingVictim`
+	- `CTerrorPlayer::QueuePummelVictim`
+</details>
+<details>
+	<summary>Settings</summary>
+
+#### Settings
+- Added the `Prioritize Throws` setting under the `Plugin Settings->Competitive` and `Tank #->Competitive` sections. (Requested by `xcd222`.) [Thanks to `Silvers` for the help!]
+</details>
+
+### Files
+<details>
+	<summary>General</summary>
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+- Updated updater file.
+</details>
+</details>
 
 ## Version 8.97 (May 21, 2023)
 <details>
@@ -118,15 +307,6 @@
 - Updated the `Stack Limits` setting to accept an `8th` value.
 </details>
 <details>
-	<summary>Abilities</summary>
-
-#### Abilities
-- Gravity
-	- Added the `Gravity Radius` setting.
-	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
-	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
-</details>
-<details>
 	<summary>Translations</summary>
 
 #### Translations
@@ -134,6 +314,15 @@
 - Updated Simplified Chinese translations.
 - Updated Hungarian translations.
 - Updated Russian translations.
+</details>
+<details>
+	<summary>Abilities</summary>
+
+#### Abilities
+- Gravity
+	- Added the `Gravity Radius` setting.
+	- Added the `Gravity Rock Break` setting. (Thanks to `JustMadMan` for the idea!)
+	- Added the `Gravity Rock Chance` setting. (Thanks to `JustMadMan` for the idea!)
 </details>
 
 ### Files
@@ -3531,7 +3720,7 @@
 
 1. The output of the `sm_st_config` command is now printed in chat instead of console to avoid overloading the buffer.
 2. Added the `Omni`, `Xiphos`, and `Yell` abilities.
-3. The `ST_GetTankName()` native now has a third argument.
+3. The `ST_GetTankName()` native now has a third parameter.
 4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings->Waves` section.
 5. Added the `Detect Plugins` setting under the `Plugin Settings->General` section.
 6. Added the `Display Health Type` setting under the `Plugin Settings->General` section.
@@ -3593,12 +3782,12 @@
 1. All `Ability Effect` and `Ability Message` settings now take in bit flags instead of strings.
 2. Several settings now take in bit flags instead of strings.
 3. All global variables are now initialized after the `AskPluginLoad2()` forward.
-4. The `ST_IsTankSupported()` native's second argument now takes in bit flags instead of strings.
+4. The `ST_IsTankSupported()` native's second parameter now takes in bit flags instead of strings.
 5. Renamed the `Flash` ability to `Fast` ability.
 6. Renamed the `Stun` ability to `Slow` ability.
 7. Renamed the `ST_OnPreset()` forward to `ST_OnPostTankSpawn()`.
 8. Added the `sm_st_config` command.
-9. Added a second argument to the `ST_OnChangeType()` forward.
+9. Added a second parameter to the `ST_OnChangeType()` forward.
 10. Added the `ST_IsFinaleTank()` native.
 11. Added the `Ultimate` ability. (Requested by `foquaxticity`.)
 12. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by `FatalOE71`.)
@@ -4940,7 +5129,7 @@
 	<summary>Click to expand!</summary>
 
 1. Added the `Hypno Mode` KeyValue to decide whether hypnotized survivors can only hurt themselves or other teammates.
-2. The `Hypno` ability now uses OnTakeDamage instead of TraceAttack and supports multiple damage types.
+2. The `Hypno` ability now uses `OnTakeDamage` instead of `TraceAttack` and supports multiple damage types.
 3. The `Hypno` ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
 4. The `Hypno` ability no longer kills hypnotized survivors when they kill the Super Tank that hypnotized them.
 5. The bullet (gunshot) damage done onto a Super Tank by its hypnotized victim will now have `1`/`10` of it inflicted upon the hypnotized victim.

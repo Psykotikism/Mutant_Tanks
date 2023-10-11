@@ -94,6 +94,35 @@ enum struct esFragilePlayer
 
 esFragilePlayer g_esFragilePlayer[MAXPLAYERS + 1];
 
+enum struct esFragileTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flFragileBulletMultiplier;
+	float g_flFragileChance;
+	float g_flFragileDamageBoost;
+	float g_flFragileExplosiveMultiplier;
+	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
+	float g_flFragileMeleeMultiplier;
+	float g_flFragileSpeedBoost;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iFragileAbility;
+	int g_iFragileCooldown;
+	int g_iFragileDuration;
+	int g_iFragileMessage;
+	int g_iFragileMode;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esFragileTeammate g_esFragileTeammate[MAXPLAYERS + 1];
+
 enum struct esFragileAbility
 {
 	float g_flCloseAreasOnly;
@@ -125,6 +154,35 @@ enum struct esFragileAbility
 }
 
 esFragileAbility g_esFragileAbility[MT_MAXTYPES + 1];
+
+enum struct esFragileSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flFragileBulletMultiplier;
+	float g_flFragileChance;
+	float g_flFragileDamageBoost;
+	float g_flFragileExplosiveMultiplier;
+	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
+	float g_flFragileMeleeMultiplier;
+	float g_flFragileSpeedBoost;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iFragileAbility;
+	int g_iFragileCooldown;
+	int g_iFragileDuration;
+	int g_iFragileMessage;
+	int g_iFragileMode;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+}
+
+esFragileSpecial g_esFragileSpecial[MT_MAXTYPES + 1];
 
 enum struct esFragileCache
 {
@@ -361,7 +419,7 @@ void vFragilePlayerRunCmd(int client)
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
-	if (!MT_IsTankSupported(client) || !g_esFragilePlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esFragileCache[client].g_iHumanMode == 1) || g_esFragilePlayer[client].g_iDuration == -1)
+	if (!MT_IsTankSupported(client) || !g_esFragilePlayer[client].g_bActivated || (bIsInfected(client, MT_CHECK_FAKECLIENT) && g_esFragileCache[client].g_iHumanMode == 1) || g_esFragilePlayer[client].g_iDuration == -1)
 	{
 #if defined MT_ABILITIES_MAIN
 		return;
@@ -371,9 +429,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 
 	int iTime = GetTime();
-	if (g_esFragilePlayer[client].g_iDuration < iTime)
+	if (g_esFragilePlayer[client].g_iDuration <= iTime)
 	{
-		if (g_esFragilePlayer[client].g_iCooldown == -1 || g_esFragilePlayer[client].g_iCooldown < iTime)
+		if (g_esFragilePlayer[client].g_iCooldown == -1 || g_esFragilePlayer[client].g_iCooldown <= iTime)
 		{
 			vFragileReset3(client);
 		}
@@ -454,7 +512,8 @@ Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
-			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+			bool bCaught = bIsSurvivorCaught(victim);
+			if ((bIsSpecialInfected(attacker) && (bCaught || (!bCaught && (damagetype & DMG_CLUB)) || (bIsSpitter(attacker) && StrEqual(sClassname, "insect_swarm")))) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				switch (g_esFragileCache[attacker].g_iFragileMode)
 				{
@@ -501,7 +560,7 @@ void vFragileCombineAbilities(int tank, int type, const float random, const char
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility != 2)
 	{
 		g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -565,8 +624,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esFragileAbility[iIndex].g_iAccessFlags = 0;
 				g_esFragileAbility[iIndex].g_iImmunityFlags = 0;
@@ -593,104 +651,203 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFragileAbility[iIndex].g_flFragileMeleeMultiplier = 1.5;
 				g_esFragileAbility[iIndex].g_iFragileMode = 0;
 				g_esFragileAbility[iIndex].g_flFragileSpeedBoost = 1.0;
+
+				g_esFragileSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esFragileSpecial[iIndex].g_iComboAbility = -1;
+				g_esFragileSpecial[iIndex].g_iHumanAbility = -1;
+				g_esFragileSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esFragileSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esFragileSpecial[iIndex].g_iHumanDuration = -1;
+				g_esFragileSpecial[iIndex].g_iHumanMode = -1;
+				g_esFragileSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esFragileSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esFragileSpecial[iIndex].g_iFragileAbility = -1;
+				g_esFragileSpecial[iIndex].g_iFragileMessage = -1;
+				g_esFragileSpecial[iIndex].g_flFragileBulletMultiplier = -1.0;
+				g_esFragileSpecial[iIndex].g_flFragileChance = -1.0;
+				g_esFragileSpecial[iIndex].g_iFragileCooldown = -1;
+				g_esFragileSpecial[iIndex].g_flFragileDamageBoost = -1.0;
+				g_esFragileSpecial[iIndex].g_iFragileDuration = -1;
+				g_esFragileSpecial[iIndex].g_flFragileExplosiveMultiplier = -1.0;
+				g_esFragileSpecial[iIndex].g_flFragileFireMultiplier = -1.0;
+				g_esFragileSpecial[iIndex].g_flFragileHittableMultiplier = -1.0;
+				g_esFragileSpecial[iIndex].g_flFragileMeleeMultiplier = -1.0;
+				g_esFragileSpecial[iIndex].g_iFragileMode = -1;
+				g_esFragileSpecial[iIndex].g_flFragileSpeedBoost = -1.0;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esFragilePlayer[iPlayer].g_iAccessFlags = 0;
-					g_esFragilePlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esFragilePlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esFragilePlayer[iPlayer].g_iComboAbility = 0;
-					g_esFragilePlayer[iPlayer].g_iHumanAbility = 0;
-					g_esFragilePlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esFragilePlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esFragilePlayer[iPlayer].g_iHumanDuration = 0;
-					g_esFragilePlayer[iPlayer].g_iHumanMode = 0;
-					g_esFragilePlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esFragilePlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esFragilePlayer[iPlayer].g_iFragileAbility = 0;
-					g_esFragilePlayer[iPlayer].g_iFragileMessage = 0;
-					g_esFragilePlayer[iPlayer].g_flFragileBulletMultiplier = 0.0;
-					g_esFragilePlayer[iPlayer].g_flFragileChance = 0.0;
-					g_esFragilePlayer[iPlayer].g_iFragileCooldown = 0;
-					g_esFragilePlayer[iPlayer].g_flFragileDamageBoost = 0.0;
-					g_esFragilePlayer[iPlayer].g_iFragileDuration = 0;
-					g_esFragilePlayer[iPlayer].g_flFragileExplosiveMultiplier = 0.0;
-					g_esFragilePlayer[iPlayer].g_flFragileFireMultiplier = 0.0;
-					g_esFragilePlayer[iPlayer].g_flFragileHittableMultiplier = 0.0;
-					g_esFragilePlayer[iPlayer].g_flFragileMeleeMultiplier = 0.0;
-					g_esFragilePlayer[iPlayer].g_iFragileMode = 0;
-					g_esFragilePlayer[iPlayer].g_flFragileSpeedBoost = 0.0;
-				}
+				g_esFragilePlayer[iPlayer].g_iAccessFlags = -1;
+				g_esFragilePlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esFragilePlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esFragilePlayer[iPlayer].g_iComboAbility = -1;
+				g_esFragilePlayer[iPlayer].g_iHumanAbility = -1;
+				g_esFragilePlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esFragilePlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esFragilePlayer[iPlayer].g_iHumanDuration = -1;
+				g_esFragilePlayer[iPlayer].g_iHumanMode = -1;
+				g_esFragilePlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esFragilePlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esFragilePlayer[iPlayer].g_iFragileAbility = -1;
+				g_esFragilePlayer[iPlayer].g_iFragileMessage = -1;
+				g_esFragilePlayer[iPlayer].g_flFragileBulletMultiplier = -1.0;
+				g_esFragilePlayer[iPlayer].g_flFragileChance = -1.0;
+				g_esFragilePlayer[iPlayer].g_iFragileCooldown = -1;
+				g_esFragilePlayer[iPlayer].g_flFragileDamageBoost = -1.0;
+				g_esFragilePlayer[iPlayer].g_iFragileDuration = -1;
+				g_esFragilePlayer[iPlayer].g_flFragileExplosiveMultiplier = -1.0;
+				g_esFragilePlayer[iPlayer].g_flFragileFireMultiplier = -1.0;
+				g_esFragilePlayer[iPlayer].g_flFragileHittableMultiplier = -1.0;
+				g_esFragilePlayer[iPlayer].g_flFragileMeleeMultiplier = -1.0;
+				g_esFragilePlayer[iPlayer].g_iFragileMode = -1;
+				g_esFragilePlayer[iPlayer].g_flFragileSpeedBoost = -1.0;
+
+				g_esFragileTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esFragileTeammate[iPlayer].g_iComboAbility = -1;
+				g_esFragileTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esFragileTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esFragileTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esFragileTeammate[iPlayer].g_iHumanDuration = -1;
+				g_esFragileTeammate[iPlayer].g_iHumanMode = -1;
+				g_esFragileTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esFragileTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esFragileTeammate[iPlayer].g_iFragileAbility = -1;
+				g_esFragileTeammate[iPlayer].g_iFragileMessage = -1;
+				g_esFragileTeammate[iPlayer].g_flFragileBulletMultiplier = -1.0;
+				g_esFragileTeammate[iPlayer].g_flFragileChance = -1.0;
+				g_esFragileTeammate[iPlayer].g_iFragileCooldown = -1;
+				g_esFragileTeammate[iPlayer].g_flFragileDamageBoost = -1.0;
+				g_esFragileTeammate[iPlayer].g_iFragileDuration = -1;
+				g_esFragileTeammate[iPlayer].g_flFragileExplosiveMultiplier = -1.0;
+				g_esFragileTeammate[iPlayer].g_flFragileFireMultiplier = -1.0;
+				g_esFragileTeammate[iPlayer].g_flFragileHittableMultiplier = -1.0;
+				g_esFragileTeammate[iPlayer].g_flFragileMeleeMultiplier = -1.0;
+				g_esFragileTeammate[iPlayer].g_iFragileMode = -1;
+				g_esFragileTeammate[iPlayer].g_flFragileSpeedBoost = -1.0;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFragileConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vFragileConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esFragilePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragilePlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esFragilePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragilePlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esFragilePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragilePlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esFragilePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragilePlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esFragilePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragilePlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esFragilePlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragilePlayer[admin].g_iHumanDuration, value, 0, 99999);
-		g_esFragilePlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragilePlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esFragilePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragilePlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esFragilePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragilePlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esFragilePlayer[admin].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragilePlayer[admin].g_iFragileAbility, value, 0, 1);
-		g_esFragilePlayer[admin].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragilePlayer[admin].g_iFragileMessage, value, 0, 1);
-		g_esFragilePlayer[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragilePlayer[admin].g_flFragileBulletMultiplier, value, 1.0, 99999.0);
-		g_esFragilePlayer[admin].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragilePlayer[admin].g_flFragileChance, value, 0.0, 100.0);
-		g_esFragilePlayer[admin].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragilePlayer[admin].g_iFragileCooldown, value, 0, 99999);
-		g_esFragilePlayer[admin].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragilePlayer[admin].g_flFragileDamageBoost, value, 0.1, 99999.0);
-		g_esFragilePlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragilePlayer[admin].g_iFragileDuration, value, 0, 99999);
-		g_esFragilePlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragilePlayer[admin].g_flFragileExplosiveMultiplier, value, 1.0, 99999.0);
-		g_esFragilePlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragilePlayer[admin].g_flFragileFireMultiplier, value, 1.0, 99999.0);
-		g_esFragilePlayer[admin].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragilePlayer[admin].g_flFragileHittableMultiplier, value, 1.0, 99999.0);
-		g_esFragilePlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragilePlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 99999.0);
-		g_esFragilePlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragilePlayer[admin].g_iFragileMode, value, 0, 1);
-		g_esFragilePlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragilePlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
-		g_esFragilePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFragilePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esFragileTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragileTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragileTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esFragileTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragileTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esFragileTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragileTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esFragileTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragileTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esFragileTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragileTeammate[admin].g_iHumanDuration, value, -1, 99999);
+			g_esFragileTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragileTeammate[admin].g_iHumanMode, value, -1, 1);
+			g_esFragileTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragileTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragileTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esFragileTeammate[admin].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragileTeammate[admin].g_iFragileAbility, value, -1, 1);
+			g_esFragileTeammate[admin].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragileTeammate[admin].g_iFragileMessage, value, -1, 1);
+			g_esFragileTeammate[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragileTeammate[admin].g_flFragileBulletMultiplier, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragileTeammate[admin].g_flFragileChance, value, -1.0, 100.0);
+			g_esFragileTeammate[admin].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragileTeammate[admin].g_iFragileCooldown, value, -1, 99999);
+			g_esFragileTeammate[admin].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragileTeammate[admin].g_flFragileDamageBoost, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragileTeammate[admin].g_iFragileDuration, value, -1, 99999);
+			g_esFragileTeammate[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragileTeammate[admin].g_flFragileExplosiveMultiplier, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragileTeammate[admin].g_flFragileFireMultiplier, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragileTeammate[admin].g_flFragileHittableMultiplier, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragileTeammate[admin].g_flFragileMeleeMultiplier, value, -1.0, 99999.0);
+			g_esFragileTeammate[admin].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragileTeammate[admin].g_iFragileMode, value, -1, 1);
+			g_esFragileTeammate[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragileTeammate[admin].g_flFragileSpeedBoost, value, -1.0, 3.0);
+		}
+		else
+		{
+			g_esFragilePlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragilePlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragilePlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esFragilePlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragilePlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esFragilePlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragilePlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esFragilePlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragilePlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esFragilePlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragilePlayer[admin].g_iHumanDuration, value, -1, 99999);
+			g_esFragilePlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragilePlayer[admin].g_iHumanMode, value, -1, 1);
+			g_esFragilePlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragilePlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragilePlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esFragilePlayer[admin].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragilePlayer[admin].g_iFragileAbility, value, -1, 1);
+			g_esFragilePlayer[admin].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragilePlayer[admin].g_iFragileMessage, value, -1, 1);
+			g_esFragilePlayer[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragilePlayer[admin].g_flFragileBulletMultiplier, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragilePlayer[admin].g_flFragileChance, value, -1.0, 100.0);
+			g_esFragilePlayer[admin].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragilePlayer[admin].g_iFragileCooldown, value, -1, 99999);
+			g_esFragilePlayer[admin].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragilePlayer[admin].g_flFragileDamageBoost, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragilePlayer[admin].g_iFragileDuration, value, -1, 99999);
+			g_esFragilePlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragilePlayer[admin].g_flFragileExplosiveMultiplier, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragilePlayer[admin].g_flFragileFireMultiplier, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragilePlayer[admin].g_flFragileHittableMultiplier, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragilePlayer[admin].g_flFragileMeleeMultiplier, value, -1.0, 99999.0);
+			g_esFragilePlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragilePlayer[admin].g_iFragileMode, value, -1, 1);
+			g_esFragilePlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragilePlayer[admin].g_flFragileSpeedBoost, value, -1.0, 3.0);
+			g_esFragilePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esFragilePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esFragileAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragileAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esFragileAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragileAbility[type].g_iComboAbility, value, 0, 1);
-		g_esFragileAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragileAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esFragileAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragileAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esFragileAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragileAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esFragileAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragileAbility[type].g_iHumanDuration, value, 0, 99999);
-		g_esFragileAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragileAbility[type].g_iHumanMode, value, 0, 1);
-		g_esFragileAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragileAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esFragileAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragileAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esFragileAbility[type].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragileAbility[type].g_iFragileAbility, value, 0, 1);
-		g_esFragileAbility[type].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragileAbility[type].g_iFragileMessage, value, 0, 1);
-		g_esFragileAbility[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragileAbility[type].g_flFragileBulletMultiplier, value, 1.0, 99999.0);
-		g_esFragileAbility[type].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragileAbility[type].g_flFragileChance, value, 0.0, 100.0);
-		g_esFragileAbility[type].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragileAbility[type].g_iFragileCooldown, value, 0, 99999);
-		g_esFragileAbility[type].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragileAbility[type].g_flFragileDamageBoost, value, 0.1, 99999.0);
-		g_esFragileAbility[type].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragileAbility[type].g_iFragileDuration, value, 0, 99999);
-		g_esFragileAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragileAbility[type].g_flFragileExplosiveMultiplier, value, 1.0, 99999.0);
-		g_esFragileAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragileAbility[type].g_flFragileFireMultiplier, value, 1.0, 99999.0);
-		g_esFragileAbility[type].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragileAbility[type].g_flFragileHittableMultiplier, value, 1.0, 99999.0);
-		g_esFragileAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragileAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 99999.0);
-		g_esFragileAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragileAbility[type].g_iFragileMode, value, 0, 1);
-		g_esFragileAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragileAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
-		g_esFragileAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esFragileAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esFragileSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragileSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragileSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esFragileSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragileSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esFragileSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragileSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esFragileSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragileSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esFragileSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragileSpecial[type].g_iHumanDuration, value, -1, 99999);
+			g_esFragileSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragileSpecial[type].g_iHumanMode, value, -1, 1);
+			g_esFragileSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragileSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragileSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esFragileSpecial[type].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragileSpecial[type].g_iFragileAbility, value, -1, 1);
+			g_esFragileSpecial[type].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragileSpecial[type].g_iFragileMessage, value, -1, 1);
+			g_esFragileSpecial[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragileSpecial[type].g_flFragileBulletMultiplier, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragileSpecial[type].g_flFragileChance, value, -1.0, 100.0);
+			g_esFragileSpecial[type].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragileSpecial[type].g_iFragileCooldown, value, -1, 99999);
+			g_esFragileSpecial[type].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragileSpecial[type].g_flFragileDamageBoost, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragileSpecial[type].g_iFragileDuration, value, -1, 99999);
+			g_esFragileSpecial[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragileSpecial[type].g_flFragileExplosiveMultiplier, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragileSpecial[type].g_flFragileFireMultiplier, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragileSpecial[type].g_flFragileHittableMultiplier, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragileSpecial[type].g_flFragileMeleeMultiplier, value, -1.0, 99999.0);
+			g_esFragileSpecial[type].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragileSpecial[type].g_iFragileMode, value, -1, 1);
+			g_esFragileSpecial[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragileSpecial[type].g_flFragileSpeedBoost, value, -1.0, 3.0);
+		}
+		else
+		{
+			g_esFragileAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFragileAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFragileAbility[type].g_iComboAbility, value, -1, 1);
+			g_esFragileAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFragileAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esFragileAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFragileAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esFragileAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFragileAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esFragileAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFragileAbility[type].g_iHumanDuration, value, -1, 99999);
+			g_esFragileAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFragileAbility[type].g_iHumanMode, value, -1, 1);
+			g_esFragileAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFragileAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFragileAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esFragileAbility[type].g_iFragileAbility = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFragileAbility[type].g_iFragileAbility, value, -1, 1);
+			g_esFragileAbility[type].g_iFragileMessage = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFragileAbility[type].g_iFragileMessage, value, -1, 1);
+			g_esFragileAbility[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esFragileAbility[type].g_flFragileBulletMultiplier, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_flFragileChance = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esFragileAbility[type].g_flFragileChance, value, -1.0, 100.0);
+			g_esFragileAbility[type].g_iFragileCooldown = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileCooldown", "Fragile Cooldown", "Fragile_Cooldown", "cooldown", g_esFragileAbility[type].g_iFragileCooldown, value, -1, 99999);
+			g_esFragileAbility[type].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esFragileAbility[type].g_flFragileDamageBoost, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_iFragileDuration = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esFragileAbility[type].g_iFragileDuration, value, -1, 99999);
+			g_esFragileAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esFragileAbility[type].g_flFragileExplosiveMultiplier, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esFragileAbility[type].g_flFragileFireMultiplier, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esFragileAbility[type].g_flFragileHittableMultiplier, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragileAbility[type].g_flFragileMeleeMultiplier, value, -1.0, 99999.0);
+			g_esFragileAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragileAbility[type].g_iFragileMode, value, -1, 1);
+			g_esFragileAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragileAbility[type].g_flFragileSpeedBoost, value, -1.0, 3.0);
+			g_esFragileAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esFragileAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTION, MT_FRAGILE_SECTION2, MT_FRAGILE_SECTION3, MT_FRAGILE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -700,28 +857,57 @@ void vFragileSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esFragileCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileAbility[type].g_flCloseAreasOnly);
-	g_esFragileCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileAbility[type].g_iComboAbility);
-	g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileAbility[type].g_flFragileBulletMultiplier);
-	g_esFragileCache[tank].g_flFragileChance = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileAbility[type].g_flFragileChance);
-	g_esFragileCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileAbility[type].g_flFragileDamageBoost);
-	g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileAbility[type].g_flFragileExplosiveMultiplier);
-	g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileAbility[type].g_flFragileFireMultiplier);
-	g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileAbility[type].g_flFragileHittableMultiplier);
-	g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileAbility[type].g_flFragileMeleeMultiplier);
-	g_esFragileCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileAbility[type].g_iFragileAbility);
-	g_esFragileCache[tank].g_iFragileCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileAbility[type].g_iFragileCooldown);
-	g_esFragileCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileAbility[type].g_iFragileDuration);
-	g_esFragileCache[tank].g_iFragileMessage = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileAbility[type].g_iFragileMessage);
-	g_esFragileCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileAbility[type].g_iHumanAbility);
-	g_esFragileCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileAbility[type].g_iHumanAmmo);
-	g_esFragileCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileAbility[type].g_iHumanCooldown);
-	g_esFragileCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileAbility[type].g_iHumanDuration);
-	g_esFragileCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileAbility[type].g_iHumanMode);
-	g_esFragileCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileAbility[type].g_flOpenAreasOnly);
-	g_esFragileCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esFragilePlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flCloseAreasOnly, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileSpecial[tank].g_flCloseAreasOnly, g_esFragileAbility[type].g_flCloseAreasOnly, 1);
+		g_esFragileCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iComboAbility, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileSpecial[tank].g_iComboAbility, g_esFragileAbility[type].g_iComboAbility, 1);
+		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileBulletMultiplier, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileSpecial[tank].g_flFragileBulletMultiplier, g_esFragileAbility[type].g_flFragileBulletMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileChance = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileChance, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileSpecial[tank].g_flFragileChance, g_esFragileAbility[type].g_flFragileChance, 1);
+		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileDamageBoost, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileSpecial[tank].g_flFragileDamageBoost, g_esFragileAbility[type].g_flFragileDamageBoost, 1);
+		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileExplosiveMultiplier, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileSpecial[tank].g_flFragileExplosiveMultiplier, g_esFragileAbility[type].g_flFragileExplosiveMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileFireMultiplier, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileSpecial[tank].g_flFragileFireMultiplier, g_esFragileAbility[type].g_flFragileFireMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileHittableMultiplier, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileSpecial[tank].g_flFragileHittableMultiplier, g_esFragileAbility[type].g_flFragileHittableMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileMeleeMultiplier, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileSpecial[tank].g_flFragileMeleeMultiplier, g_esFragileAbility[type].g_flFragileMeleeMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flFragileSpeedBoost, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileSpecial[tank].g_flFragileSpeedBoost, g_esFragileAbility[type].g_flFragileSpeedBoost, 1);
+		g_esFragileCache[tank].g_iFragileAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileAbility, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileSpecial[tank].g_iFragileAbility, g_esFragileAbility[type].g_iFragileAbility, 1);
+		g_esFragileCache[tank].g_iFragileCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileCooldown, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileSpecial[tank].g_iFragileCooldown, g_esFragileAbility[type].g_iFragileCooldown, 1);
+		g_esFragileCache[tank].g_iFragileDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileDuration, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileSpecial[tank].g_iFragileDuration, g_esFragileAbility[type].g_iFragileDuration, 1);
+		g_esFragileCache[tank].g_iFragileMessage = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iFragileMessage, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileSpecial[tank].g_iFragileMessage, g_esFragileAbility[type].g_iFragileMessage, 1);
+		g_esFragileCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAbility, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileSpecial[tank].g_iHumanAbility, g_esFragileAbility[type].g_iHumanAbility, 1);
+		g_esFragileCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanAmmo, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileSpecial[tank].g_iHumanAmmo, g_esFragileAbility[type].g_iHumanAmmo, 1);
+		g_esFragileCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanCooldown, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileSpecial[tank].g_iHumanCooldown, g_esFragileAbility[type].g_iHumanCooldown, 1);
+		g_esFragileCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanDuration, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileSpecial[tank].g_iHumanDuration, g_esFragileAbility[type].g_iHumanDuration, 1);
+		g_esFragileCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iHumanMode, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileSpecial[tank].g_iHumanMode, g_esFragileAbility[type].g_iHumanMode, 1);
+		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_flOpenAreasOnly, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileSpecial[tank].g_flOpenAreasOnly, g_esFragileAbility[type].g_flOpenAreasOnly, 1);
+		g_esFragileCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFragileTeammate[tank].g_iRequiresHumans, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileSpecial[tank].g_iRequiresHumans, g_esFragileAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esFragileCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flCloseAreasOnly, g_esFragileAbility[type].g_flCloseAreasOnly, 1);
+		g_esFragileCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iComboAbility, g_esFragileAbility[type].g_iComboAbility, 1);
+		g_esFragileCache[tank].g_flFragileBulletMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileBulletMultiplier, g_esFragileAbility[type].g_flFragileBulletMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileChance = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileChance, g_esFragileAbility[type].g_flFragileChance, 1);
+		g_esFragileCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileDamageBoost, g_esFragileAbility[type].g_flFragileDamageBoost, 1);
+		g_esFragileCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileExplosiveMultiplier, g_esFragileAbility[type].g_flFragileExplosiveMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileFireMultiplier, g_esFragileAbility[type].g_flFragileFireMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileHittableMultiplier, g_esFragileAbility[type].g_flFragileHittableMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileMeleeMultiplier, g_esFragileAbility[type].g_flFragileMeleeMultiplier, 1);
+		g_esFragileCache[tank].g_flFragileSpeedBoost = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flFragileSpeedBoost, g_esFragileAbility[type].g_flFragileSpeedBoost, 1);
+		g_esFragileCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileAbility, g_esFragileAbility[type].g_iFragileAbility, 1);
+		g_esFragileCache[tank].g_iFragileCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileCooldown, g_esFragileAbility[type].g_iFragileCooldown, 1);
+		g_esFragileCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileDuration, g_esFragileAbility[type].g_iFragileDuration, 1);
+		g_esFragileCache[tank].g_iFragileMessage = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iFragileMessage, g_esFragileAbility[type].g_iFragileMessage, 1);
+		g_esFragileCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAbility, g_esFragileAbility[type].g_iHumanAbility, 1);
+		g_esFragileCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanAmmo, g_esFragileAbility[type].g_iHumanAmmo, 1);
+		g_esFragileCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanCooldown, g_esFragileAbility[type].g_iHumanCooldown, 1);
+		g_esFragileCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanDuration, g_esFragileAbility[type].g_iHumanDuration, 1);
+		g_esFragileCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iHumanMode, g_esFragileAbility[type].g_iHumanMode, 1);
+		g_esFragileCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_flOpenAreasOnly, g_esFragileAbility[type].g_flOpenAreasOnly, 1);
+		g_esFragileCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esFragilePlayer[tank].g_iRequiresHumans, g_esFragileAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN
@@ -753,7 +939,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esFragilePlayer[iTank].g_bActivated)
+		if (bIsInfected(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esFragilePlayer[iTank].g_bActivated)
 		{
 			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(iTank, 1.0, true) : 1.0));
 		}
@@ -770,7 +956,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vFragileCopyStats2(iBot, iTank);
 			vRemoveFragile(iBot);
@@ -780,7 +966,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vFragileCopyStats2(iTank, iBot);
 			vRemoveFragile(iTank);
@@ -811,7 +997,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFragileCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iComboAbility == 0 && !g_esFragilePlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esFragileCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iComboAbility == 0 && !g_esFragilePlayer[tank].g_bActivated)
 	{
 		vFragileAbility(tank);
 	}
@@ -825,7 +1011,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -833,7 +1019,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		if ((button & MT_MAIN_KEY) && g_esFragileCache[tank].g_iFragileAbility == 1 && g_esFragileCache[tank].g_iHumanAbility == 1)
 		{
 			int iTime = GetTime();
-			bool bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime;
+			bool bRecharging = g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= iTime;
 
 			switch (g_esFragileCache[tank].g_iHumanMode)
 			{
@@ -890,7 +1076,7 @@ public void MT_OnButtonReleased(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
 	{
-		if ((button & MT_MAIN_KEY) && g_esFragileCache[tank].g_iHumanMode == 1 && g_esFragilePlayer[tank].g_bActivated && (g_esFragilePlayer[tank].g_iCooldown == -1 || g_esFragilePlayer[tank].g_iCooldown < GetTime()))
+		if ((button & MT_MAIN_KEY) && g_esFragileCache[tank].g_iHumanMode == 1 && g_esFragilePlayer[tank].g_bActivated && (g_esFragilePlayer[tank].g_iCooldown == -1 || g_esFragilePlayer[tank].g_iCooldown <= GetTime()))
 		{
 			vFragileReset2(tank);
 			vFragileReset3(tank);
@@ -915,17 +1101,17 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 void vFragile(int tank, int pos = -1)
 {
 	int iTime = GetTime();
-	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime)
+	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= iTime)
 	{
 		return;
 	}
 
 	int iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 5, pos)) : g_esFragileCache[tank].g_iFragileDuration;
-	iDuration = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1) ? g_esFragileCache[tank].g_iHumanDuration : iDuration;
+	iDuration = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1) ? g_esFragileCache[tank].g_iHumanDuration : iDuration;
 	g_esFragilePlayer[tank].g_bActivated = true;
 	g_esFragilePlayer[tank].g_iDuration = (iTime + iDuration);
 
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
 	{
 		g_esFragilePlayer[tank].g_iAmmoCount++;
 
@@ -943,23 +1129,23 @@ void vFragile(int tank, int pos = -1)
 
 void vFragileAbility(int tank)
 {
-	if ((g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
+	if ((g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esFragileCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esFragileCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esFragilePlayer[tank].g_iTankType, tank) || (g_esFragileCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFragileCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esFragileCache[tank].g_flFragileChance)
 		{
 			vFragile(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileAmmo");
 	}
@@ -1010,9 +1196,9 @@ void vFragileReset2(int tank)
 void vFragileReset3(int tank)
 {
 	int iTime = GetTime(), iPos = g_esFragileAbility[g_esFragilePlayer[tank].g_iTankType].g_iComboPosition, iCooldown = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, iPos)) : g_esFragileCache[tank].g_iFragileCooldown;
-	iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1 && g_esFragileCache[tank].g_iHumanMode == 0 && g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0) ? g_esFragileCache[tank].g_iHumanCooldown : iCooldown;
+	iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esFragileCache[tank].g_iHumanAbility == 1 && g_esFragileCache[tank].g_iHumanMode == 0 && g_esFragilePlayer[tank].g_iAmmoCount < g_esFragileCache[tank].g_iHumanAmmo && g_esFragileCache[tank].g_iHumanAmmo > 0) ? g_esFragileCache[tank].g_iHumanCooldown : iCooldown;
 	g_esFragilePlayer[tank].g_iCooldown = (iTime + iCooldown);
-	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown > iTime)
+	if (g_esFragilePlayer[tank].g_iCooldown != -1 && g_esFragilePlayer[tank].g_iCooldown >= iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman5", (g_esFragilePlayer[tank].g_iCooldown - iTime));
 	}
@@ -1023,7 +1209,7 @@ void tTimerFragileCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFragileAbility[g_esFragilePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFragilePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFragileCache[iTank].g_iFragileAbility == 0 || g_esFragilePlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFragileAbility[g_esFragilePlayer[iTank].g_iTankType].g_iAccessFlags, g_esFragilePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFragilePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esFragileCache[iTank].g_iFragileAbility == 0 || g_esFragilePlayer[iTank].g_bActivated)
 	{
 		return;
 	}
