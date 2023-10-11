@@ -50,6 +50,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
+#define PARTICLE_BLOOD "boomer_explode_D"
+
 #define MT_PIMP_SECTION "pimpability"
 #define MT_PIMP_SECTION2 "pimp ability"
 #define MT_PIMP_SECTION3 "pimp_ability"
@@ -89,12 +91,42 @@ enum struct esPimpPlayer
 	int g_iPimpHitMode;
 	int g_iPimpMessage;
 	int g_iPimpRangeCooldown;
+	int g_iPimpSight;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
 esPimpPlayer g_esPimpPlayer[MAXPLAYERS + 1];
+
+enum struct esPimpTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flPimpChance;
+	float g_flPimpInterval;
+	float g_flPimpRange;
+	float g_flPimpRangeChance;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
+	int g_iPimpAbility;
+	int g_iPimpCooldown;
+	int g_iPimpDamage;
+	int g_iPimpDuration;
+	int g_iPimpEffect;
+	int g_iPimpHit;
+	int g_iPimpHitMode;
+	int g_iPimpMessage;
+	int g_iPimpRangeCooldown;
+	int g_iPimpSight;
+	int g_iRequiresHumans;
+}
+
+esPimpTeammate g_esPimpTeammate[MAXPLAYERS + 1];
 
 enum struct esPimpAbility
 {
@@ -121,10 +153,40 @@ enum struct esPimpAbility
 	int g_iPimpHitMode;
 	int g_iPimpMessage;
 	int g_iPimpRangeCooldown;
+	int g_iPimpSight;
 	int g_iRequiresHumans;
 }
 
 esPimpAbility g_esPimpAbility[MT_MAXTYPES + 1];
+
+enum struct esPimpSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flPimpChance;
+	float g_flPimpInterval;
+	float g_flPimpRange;
+	float g_flPimpRangeChance;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanRangeCooldown;
+	int g_iPimpAbility;
+	int g_iPimpCooldown;
+	int g_iPimpDamage;
+	int g_iPimpDuration;
+	int g_iPimpEffect;
+	int g_iPimpHit;
+	int g_iPimpHitMode;
+	int g_iPimpMessage;
+	int g_iPimpRangeCooldown;
+	int g_iPimpSight;
+	int g_iRequiresHumans;
+}
+
+esPimpSpecial g_esPimpSpecial[MT_MAXTYPES + 1];
 
 enum struct esPimpCache
 {
@@ -149,6 +211,7 @@ enum struct esPimpCache
 	int g_iPimpHitMode;
 	int g_iPimpMessage;
 	int g_iPimpRangeCooldown;
+	int g_iPimpSight;
 	int g_iRequiresHumans;
 }
 
@@ -356,10 +419,14 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		if (bIsValidEntity(inflictor))
+		{
+			GetEntityClassname(inflictor, sClassname, sizeof sClassname);
+		}
+
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esPimpCache[attacker].g_iPimpHitMode == 0 || g_esPimpCache[attacker].g_iPimpHitMode == 1) && bIsSurvivor(victim) && g_esPimpCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esPimpAbility[g_esPimpPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPimpPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPimpPlayer[attacker].g_iTankType, g_esPimpAbility[g_esPimpPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[victim].g_iImmunityFlags))
@@ -367,7 +434,8 @@ Action OnPimpTakeDamage(int victim, int &attacker, int &inflictor, float &damage
 				return Plugin_Continue;
 			}
 
-			if (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
+			bool bCaught = bIsSurvivorCaught(victim);
+			if ((bIsSpecialInfected(attacker) && (bCaught || (!bCaught && (damagetype & DMG_CLUB)) || (bIsSpitter(attacker) && StrEqual(sClassname, "insect_swarm")))) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vPimpHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esPimpCache[attacker].g_flPimpChance, g_esPimpCache[attacker].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
@@ -416,7 +484,7 @@ void vPimpCombineAbilities(int tank, int type, const float random, const char[] 
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility != 2)
 	{
 		return;
 	}
@@ -508,8 +576,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esPimpAbility[iIndex].g_iAccessFlags = 0;
 				g_esPimpAbility[iIndex].g_iImmunityFlags = 0;
@@ -534,101 +601,204 @@ public void MT_OnConfigsLoad(int mode)
 				g_esPimpAbility[iIndex].g_flPimpRange = 150.0;
 				g_esPimpAbility[iIndex].g_flPimpRangeChance = 15.0;
 				g_esPimpAbility[iIndex].g_iPimpRangeCooldown = 0;
+				g_esPimpAbility[iIndex].g_iPimpSight = 0;
+
+				g_esPimpSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esPimpSpecial[iIndex].g_iComboAbility = -1;
+				g_esPimpSpecial[iIndex].g_iHumanAbility = -1;
+				g_esPimpSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esPimpSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esPimpSpecial[iIndex].g_iHumanRangeCooldown = -1;
+				g_esPimpSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esPimpSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esPimpSpecial[iIndex].g_iPimpAbility = -1;
+				g_esPimpSpecial[iIndex].g_iPimpEffect = -1;
+				g_esPimpSpecial[iIndex].g_iPimpMessage = -1;
+				g_esPimpSpecial[iIndex].g_flPimpChance = -1.0;
+				g_esPimpSpecial[iIndex].g_iPimpCooldown = -1;
+				g_esPimpSpecial[iIndex].g_iPimpDamage = -1;
+				g_esPimpSpecial[iIndex].g_iPimpDuration = -1;
+				g_esPimpSpecial[iIndex].g_iPimpHit = -1;
+				g_esPimpSpecial[iIndex].g_iPimpHitMode = -1;
+				g_esPimpSpecial[iIndex].g_flPimpInterval = -1.0;
+				g_esPimpSpecial[iIndex].g_flPimpRange = -1.0;
+				g_esPimpSpecial[iIndex].g_flPimpRangeChance = -1.0;
+				g_esPimpSpecial[iIndex].g_iPimpRangeCooldown = -1;
+				g_esPimpSpecial[iIndex].g_iPimpSight = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esPimpPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esPimpPlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esPimpPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esPimpPlayer[iPlayer].g_iComboAbility = 0;
-					g_esPimpPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esPimpPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esPimpPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esPimpPlayer[iPlayer].g_iHumanRangeCooldown = 0;
-					g_esPimpPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esPimpPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpAbility = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpEffect = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpMessage = 0;
-					g_esPimpPlayer[iPlayer].g_flPimpChance = 0.0;
-					g_esPimpPlayer[iPlayer].g_iPimpCooldown = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpDamage = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpDuration = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpHit = 0;
-					g_esPimpPlayer[iPlayer].g_iPimpHitMode = 0;
-					g_esPimpPlayer[iPlayer].g_flPimpInterval = 0.0;
-					g_esPimpPlayer[iPlayer].g_flPimpRange = 0.0;
-					g_esPimpPlayer[iPlayer].g_flPimpRangeChance = 0.0;
-					g_esPimpPlayer[iPlayer].g_iPimpRangeCooldown = 0;
-				}
+				g_esPimpPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esPimpPlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esPimpPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esPimpPlayer[iPlayer].g_iComboAbility = -1;
+				g_esPimpPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esPimpPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esPimpPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esPimpPlayer[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esPimpPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esPimpPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpAbility = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpEffect = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpMessage = -1;
+				g_esPimpPlayer[iPlayer].g_flPimpChance = -1.0;
+				g_esPimpPlayer[iPlayer].g_iPimpCooldown = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpDamage = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpDuration = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpHit = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpHitMode = -1;
+				g_esPimpPlayer[iPlayer].g_flPimpInterval = -1.0;
+				g_esPimpPlayer[iPlayer].g_flPimpRange = -1.0;
+				g_esPimpPlayer[iPlayer].g_flPimpRangeChance = -1.0;
+				g_esPimpPlayer[iPlayer].g_iPimpRangeCooldown = -1;
+				g_esPimpPlayer[iPlayer].g_iPimpSight = -1;
+
+				g_esPimpTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esPimpTeammate[iPlayer].g_iComboAbility = -1;
+				g_esPimpTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esPimpTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esPimpTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esPimpTeammate[iPlayer].g_iHumanRangeCooldown = -1;
+				g_esPimpTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esPimpTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpAbility = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpEffect = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpMessage = -1;
+				g_esPimpTeammate[iPlayer].g_flPimpChance = -1.0;
+				g_esPimpTeammate[iPlayer].g_iPimpCooldown = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpDamage = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpDuration = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpHit = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpHitMode = -1;
+				g_esPimpTeammate[iPlayer].g_flPimpInterval = -1.0;
+				g_esPimpTeammate[iPlayer].g_flPimpRange = -1.0;
+				g_esPimpTeammate[iPlayer].g_flPimpRangeChance = -1.0;
+				g_esPimpTeammate[iPlayer].g_iPimpRangeCooldown = -1;
+				g_esPimpTeammate[iPlayer].g_iPimpSight = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPimpConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vPimpConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esPimpPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esPimpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esPimpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPimpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esPimpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esPimpPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpPlayer[admin].g_iHumanRangeCooldown, value, 0, 99999);
-		g_esPimpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esPimpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPimpPlayer[admin].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpPlayer[admin].g_iPimpAbility, value, 0, 1);
-		g_esPimpPlayer[admin].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpPlayer[admin].g_iPimpEffect, value, 0, 7);
-		g_esPimpPlayer[admin].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpPlayer[admin].g_iPimpMessage, value, 0, 3);
-		g_esPimpPlayer[admin].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpPlayer[admin].g_flPimpChance, value, 0.0, 100.0);
-		g_esPimpPlayer[admin].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpPlayer[admin].g_iPimpCooldown, value, 0, 99999);
-		g_esPimpPlayer[admin].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpPlayer[admin].g_iPimpDamage, value, 0, 99999);
-		g_esPimpPlayer[admin].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpPlayer[admin].g_iPimpDuration, value, 1, 99999);
-		g_esPimpPlayer[admin].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpPlayer[admin].g_iPimpHit, value, 0, 1);
-		g_esPimpPlayer[admin].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpPlayer[admin].g_iPimpHitMode, value, 0, 2);
-		g_esPimpPlayer[admin].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpPlayer[admin].g_flPimpInterval, value, 0.1, 99999.0);
-		g_esPimpPlayer[admin].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpPlayer[admin].g_flPimpRange, value, 1.0, 99999.0);
-		g_esPimpPlayer[admin].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpPlayer[admin].g_flPimpRangeChance, value, 0.0, 100.0);
-		g_esPimpPlayer[admin].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpPlayer[admin].g_iPimpRangeCooldown, value, 0, 99999);
-		g_esPimpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esPimpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esPimpTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esPimpTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esPimpTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esPimpTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esPimpTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esPimpTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esPimpTeammate[admin].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpTeammate[admin].g_iPimpAbility, value, -1, 1);
+			g_esPimpTeammate[admin].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpTeammate[admin].g_iPimpEffect, value, -1, 7);
+			g_esPimpTeammate[admin].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpTeammate[admin].g_iPimpMessage, value, -1, 3);
+			g_esPimpTeammate[admin].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpTeammate[admin].g_flPimpChance, value, -1.0, 100.0);
+			g_esPimpTeammate[admin].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpTeammate[admin].g_iPimpCooldown, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpTeammate[admin].g_iPimpDamage, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpTeammate[admin].g_iPimpDuration, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpTeammate[admin].g_iPimpHit, value, -1, 1);
+			g_esPimpTeammate[admin].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpTeammate[admin].g_iPimpHitMode, value, -1, 2);
+			g_esPimpTeammate[admin].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpTeammate[admin].g_flPimpInterval, value, -1.0, 99999.0);
+			g_esPimpTeammate[admin].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpTeammate[admin].g_flPimpRange, value, -1.0, 99999.0);
+			g_esPimpTeammate[admin].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpTeammate[admin].g_flPimpRangeChance, value, -1.0, 100.0);
+			g_esPimpTeammate[admin].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpTeammate[admin].g_iPimpRangeCooldown, value, -1, 99999);
+			g_esPimpTeammate[admin].g_iPimpSight = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpSight", "Pimp Sight", "Pimp_Sight", "sight", g_esPimpTeammate[admin].g_iPimpSight, value, -1, 2);
+		}
+		else
+		{
+			g_esPimpPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esPimpPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esPimpPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esPimpPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpPlayer[admin].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esPimpPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esPimpPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esPimpPlayer[admin].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpPlayer[admin].g_iPimpAbility, value, -1, 1);
+			g_esPimpPlayer[admin].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpPlayer[admin].g_iPimpEffect, value, -1, 7);
+			g_esPimpPlayer[admin].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpPlayer[admin].g_iPimpMessage, value, -1, 3);
+			g_esPimpPlayer[admin].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpPlayer[admin].g_flPimpChance, value, -1.0, 100.0);
+			g_esPimpPlayer[admin].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpPlayer[admin].g_iPimpCooldown, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpPlayer[admin].g_iPimpDamage, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpPlayer[admin].g_iPimpDuration, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpPlayer[admin].g_iPimpHit, value, -1, 1);
+			g_esPimpPlayer[admin].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpPlayer[admin].g_iPimpHitMode, value, -1, 2);
+			g_esPimpPlayer[admin].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpPlayer[admin].g_flPimpInterval, value, -1.0, 99999.0);
+			g_esPimpPlayer[admin].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpPlayer[admin].g_flPimpRange, value, -1.0, 99999.0);
+			g_esPimpPlayer[admin].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpPlayer[admin].g_flPimpRangeChance, value, -1.0, 100.0);
+			g_esPimpPlayer[admin].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpPlayer[admin].g_iPimpRangeCooldown, value, -1, 99999);
+			g_esPimpPlayer[admin].g_iPimpSight = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpSight", "Pimp Sight", "Pimp_Sight", "sight", g_esPimpPlayer[admin].g_iPimpSight, value, -1, 2);
+			g_esPimpPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esPimpPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esPimpAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esPimpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpAbility[type].g_iComboAbility, value, 0, 1);
-		g_esPimpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esPimpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esPimpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esPimpAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpAbility[type].g_iHumanRangeCooldown, value, 0, 99999);
-		g_esPimpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esPimpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esPimpAbility[type].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpAbility[type].g_iPimpAbility, value, 0, 1);
-		g_esPimpAbility[type].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpAbility[type].g_iPimpEffect, value, 0, 7);
-		g_esPimpAbility[type].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpAbility[type].g_iPimpMessage, value, 0, 3);
-		g_esPimpAbility[type].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpAbility[type].g_flPimpChance, value, 0.0, 100.0);
-		g_esPimpAbility[type].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpAbility[type].g_iPimpCooldown, value, 0, 99999);
-		g_esPimpAbility[type].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpAbility[type].g_iPimpDamage, value, 0, 99999);
-		g_esPimpAbility[type].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpAbility[type].g_iPimpDuration, value, 1, 99999);
-		g_esPimpAbility[type].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpAbility[type].g_iPimpHit, value, 0, 1);
-		g_esPimpAbility[type].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpAbility[type].g_iPimpHitMode, value, 0, 2);
-		g_esPimpAbility[type].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpAbility[type].g_flPimpInterval, value, 0.1, 99999.0);
-		g_esPimpAbility[type].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpAbility[type].g_flPimpRange, value, 1.0, 99999.0);
-		g_esPimpAbility[type].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpAbility[type].g_flPimpRangeChance, value, 0.0, 100.0);
-		g_esPimpAbility[type].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpAbility[type].g_iPimpRangeCooldown, value, 0, 99999);
-		g_esPimpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esPimpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esPimpSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esPimpSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esPimpSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esPimpSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esPimpSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esPimpSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esPimpSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esPimpSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esPimpSpecial[type].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpSpecial[type].g_iPimpAbility, value, -1, 1);
+			g_esPimpSpecial[type].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpSpecial[type].g_iPimpEffect, value, -1, 7);
+			g_esPimpSpecial[type].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpSpecial[type].g_iPimpMessage, value, -1, 3);
+			g_esPimpSpecial[type].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpSpecial[type].g_flPimpChance, value, -1.0, 100.0);
+			g_esPimpSpecial[type].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpSpecial[type].g_iPimpCooldown, value, -1, 99999);
+			g_esPimpSpecial[type].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpSpecial[type].g_iPimpDamage, value, -1, 99999);
+			g_esPimpSpecial[type].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpSpecial[type].g_iPimpDuration, value, -1, 99999);
+			g_esPimpSpecial[type].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpSpecial[type].g_iPimpHit, value, -1, 1);
+			g_esPimpSpecial[type].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpSpecial[type].g_iPimpHitMode, value, -1, 2);
+			g_esPimpSpecial[type].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpSpecial[type].g_flPimpInterval, value, -1.0, 99999.0);
+			g_esPimpSpecial[type].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpSpecial[type].g_flPimpRange, value, -1.0, 99999.0);
+			g_esPimpSpecial[type].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpSpecial[type].g_flPimpRangeChance, value, -1.0, 100.0);
+			g_esPimpSpecial[type].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpSpecial[type].g_iPimpRangeCooldown, value, -1, 99999);
+			g_esPimpSpecial[type].g_iPimpSight = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpSight", "Pimp Sight", "Pimp_Sight", "sight", g_esPimpSpecial[type].g_iPimpSight, value, -1, 2);
+		}
+		else
+		{
+			g_esPimpAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esPimpAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esPimpAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPimpAbility[type].g_iComboAbility, value, -1, 1);
+			g_esPimpAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPimpAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esPimpAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPimpAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esPimpAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPimpAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esPimpAbility[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esPimpAbility[type].g_iHumanRangeCooldown, value, -1, 99999);
+			g_esPimpAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPimpAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esPimpAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPimpAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esPimpAbility[type].g_iPimpAbility = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPimpAbility[type].g_iPimpAbility, value, -1, 1);
+			g_esPimpAbility[type].g_iPimpEffect = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPimpAbility[type].g_iPimpEffect, value, -1, 7);
+			g_esPimpAbility[type].g_iPimpMessage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPimpAbility[type].g_iPimpMessage, value, -1, 3);
+			g_esPimpAbility[type].g_flPimpChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_esPimpAbility[type].g_flPimpChance, value, -1.0, 100.0);
+			g_esPimpAbility[type].g_iPimpCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpCooldown", "Pimp Cooldown", "Pimp_Cooldown", "cooldown", g_esPimpAbility[type].g_iPimpCooldown, value, -1, 99999);
+			g_esPimpAbility[type].g_iPimpDamage = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_esPimpAbility[type].g_iPimpDamage, value, -1, 99999);
+			g_esPimpAbility[type].g_iPimpDuration = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_esPimpAbility[type].g_iPimpDuration, value, -1, 99999);
+			g_esPimpAbility[type].g_iPimpHit = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_esPimpAbility[type].g_iPimpHit, value, -1, 1);
+			g_esPimpAbility[type].g_iPimpHitMode = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_esPimpAbility[type].g_iPimpHitMode, value, -1, 2);
+			g_esPimpAbility[type].g_flPimpInterval = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_esPimpAbility[type].g_flPimpInterval, value, -1.0, 99999.0);
+			g_esPimpAbility[type].g_flPimpRange = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_esPimpAbility[type].g_flPimpRange, value, -1.0, 99999.0);
+			g_esPimpAbility[type].g_flPimpRangeChance = flGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_esPimpAbility[type].g_flPimpRangeChance, value, -1.0, 100.0);
+			g_esPimpAbility[type].g_iPimpRangeCooldown = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpRangeCooldown", "Pimp Range Cooldown", "Pimp_Range_Cooldown", "rangecooldown", g_esPimpAbility[type].g_iPimpRangeCooldown, value, -1, 99999);
+			g_esPimpAbility[type].g_iPimpSight = iGetKeyValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "PimpSight", "Pimp Sight", "Pimp_Sight", "sight", g_esPimpAbility[type].g_iPimpSight, value, -1, 2);
+			g_esPimpAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esPimpAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_PIMP_SECTION, MT_PIMP_SECTION2, MT_PIMP_SECTION3, MT_PIMP_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -638,29 +808,59 @@ void vPimpSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esPimpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flCloseAreasOnly, g_esPimpAbility[type].g_flCloseAreasOnly);
-	g_esPimpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iComboAbility, g_esPimpAbility[type].g_iComboAbility);
-	g_esPimpCache[tank].g_flPimpChance = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpChance, g_esPimpAbility[type].g_flPimpChance);
-	g_esPimpCache[tank].g_flPimpInterval = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpInterval, g_esPimpAbility[type].g_flPimpInterval);
-	g_esPimpCache[tank].g_flPimpRange = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpRange, g_esPimpAbility[type].g_flPimpRange);
-	g_esPimpCache[tank].g_flPimpRangeChance = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpRangeChance, g_esPimpAbility[type].g_flPimpRangeChance);
-	g_esPimpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanAbility, g_esPimpAbility[type].g_iHumanAbility);
-	g_esPimpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanAmmo, g_esPimpAbility[type].g_iHumanAmmo);
-	g_esPimpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanCooldown, g_esPimpAbility[type].g_iHumanCooldown);
-	g_esPimpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanRangeCooldown, g_esPimpAbility[type].g_iHumanRangeCooldown);
-	g_esPimpCache[tank].g_iPimpAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpAbility, g_esPimpAbility[type].g_iPimpAbility);
-	g_esPimpCache[tank].g_iPimpCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpCooldown, g_esPimpAbility[type].g_iPimpCooldown);
-	g_esPimpCache[tank].g_iPimpDamage = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpDamage, g_esPimpAbility[type].g_iPimpDamage);
-	g_esPimpCache[tank].g_iPimpDuration = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpDuration, g_esPimpAbility[type].g_iPimpDuration);
-	g_esPimpCache[tank].g_iPimpEffect = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpEffect, g_esPimpAbility[type].g_iPimpEffect);
-	g_esPimpCache[tank].g_iPimpHit = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpHit, g_esPimpAbility[type].g_iPimpHit);
-	g_esPimpCache[tank].g_iPimpHitMode = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpHitMode, g_esPimpAbility[type].g_iPimpHitMode);
-	g_esPimpCache[tank].g_iPimpMessage = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpMessage, g_esPimpAbility[type].g_iPimpMessage);
-	g_esPimpCache[tank].g_iPimpRangeCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpRangeCooldown, g_esPimpAbility[type].g_iPimpRangeCooldown);
-	g_esPimpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flOpenAreasOnly, g_esPimpAbility[type].g_flOpenAreasOnly);
-	g_esPimpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iRequiresHumans, g_esPimpAbility[type].g_iRequiresHumans);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esPimpPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esPimpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flCloseAreasOnly, g_esPimpPlayer[tank].g_flCloseAreasOnly, g_esPimpSpecial[type].g_flCloseAreasOnly, g_esPimpAbility[type].g_flCloseAreasOnly, 1);
+		g_esPimpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iComboAbility, g_esPimpPlayer[tank].g_iComboAbility, g_esPimpSpecial[type].g_iComboAbility, g_esPimpAbility[type].g_iComboAbility, 1);
+		g_esPimpCache[tank].g_flPimpChance = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flPimpChance, g_esPimpPlayer[tank].g_flPimpChance, g_esPimpSpecial[type].g_flPimpChance, g_esPimpAbility[type].g_flPimpChance, 1);
+		g_esPimpCache[tank].g_flPimpInterval = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flPimpInterval, g_esPimpPlayer[tank].g_flPimpInterval, g_esPimpSpecial[type].g_flPimpInterval, g_esPimpAbility[type].g_flPimpInterval, 1);
+		g_esPimpCache[tank].g_flPimpRange = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flPimpRange, g_esPimpPlayer[tank].g_flPimpRange, g_esPimpSpecial[type].g_flPimpRange, g_esPimpAbility[type].g_flPimpRange, 1);
+		g_esPimpCache[tank].g_flPimpRangeChance = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flPimpRangeChance, g_esPimpPlayer[tank].g_flPimpRangeChance, g_esPimpSpecial[type].g_flPimpRangeChance, g_esPimpAbility[type].g_flPimpRangeChance, 1);
+		g_esPimpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iHumanAbility, g_esPimpPlayer[tank].g_iHumanAbility, g_esPimpSpecial[type].g_iHumanAbility, g_esPimpAbility[type].g_iHumanAbility, 1);
+		g_esPimpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iHumanAmmo, g_esPimpPlayer[tank].g_iHumanAmmo, g_esPimpSpecial[type].g_iHumanAmmo, g_esPimpAbility[type].g_iHumanAmmo, 1);
+		g_esPimpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iHumanCooldown, g_esPimpPlayer[tank].g_iHumanCooldown, g_esPimpSpecial[type].g_iHumanCooldown, g_esPimpAbility[type].g_iHumanCooldown, 1);
+		g_esPimpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iHumanRangeCooldown, g_esPimpPlayer[tank].g_iHumanRangeCooldown, g_esPimpSpecial[type].g_iHumanRangeCooldown, g_esPimpAbility[type].g_iHumanRangeCooldown, 1);
+		g_esPimpCache[tank].g_iPimpAbility = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpAbility, g_esPimpPlayer[tank].g_iPimpAbility, g_esPimpSpecial[type].g_iPimpAbility, g_esPimpAbility[type].g_iPimpAbility, 1);
+		g_esPimpCache[tank].g_iPimpCooldown = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpCooldown, g_esPimpPlayer[tank].g_iPimpCooldown, g_esPimpSpecial[type].g_iPimpCooldown, g_esPimpAbility[type].g_iPimpCooldown, 1);
+		g_esPimpCache[tank].g_iPimpDamage = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpDamage, g_esPimpPlayer[tank].g_iPimpDamage, g_esPimpSpecial[type].g_iPimpDamage, g_esPimpAbility[type].g_iPimpDamage, 1);
+		g_esPimpCache[tank].g_iPimpDuration = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpDuration, g_esPimpPlayer[tank].g_iPimpDuration, g_esPimpSpecial[type].g_iPimpDuration, g_esPimpAbility[type].g_iPimpDuration, 1);
+		g_esPimpCache[tank].g_iPimpEffect = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpEffect, g_esPimpPlayer[tank].g_iPimpEffect, g_esPimpSpecial[type].g_iPimpEffect, g_esPimpAbility[type].g_iPimpEffect, 1);
+		g_esPimpCache[tank].g_iPimpHit = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpHit, g_esPimpPlayer[tank].g_iPimpHit, g_esPimpSpecial[type].g_iPimpHit, g_esPimpAbility[type].g_iPimpHit, 1);
+		g_esPimpCache[tank].g_iPimpHitMode = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpHitMode, g_esPimpPlayer[tank].g_iPimpHitMode, g_esPimpSpecial[type].g_iPimpHitMode, g_esPimpAbility[type].g_iPimpHitMode, 1);
+		g_esPimpCache[tank].g_iPimpMessage = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpMessage, g_esPimpPlayer[tank].g_iPimpMessage, g_esPimpSpecial[type].g_iPimpMessage, g_esPimpAbility[type].g_iPimpMessage, 1);
+		g_esPimpCache[tank].g_iPimpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpRangeCooldown, g_esPimpPlayer[tank].g_iPimpRangeCooldown, g_esPimpSpecial[type].g_iPimpRangeCooldown, g_esPimpAbility[type].g_iPimpRangeCooldown, 1);
+		g_esPimpCache[tank].g_iPimpSight = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iPimpSight, g_esPimpPlayer[tank].g_iPimpSight, g_esPimpSpecial[type].g_iPimpSight, g_esPimpAbility[type].g_iPimpSight, 1);
+		g_esPimpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_flOpenAreasOnly, g_esPimpPlayer[tank].g_flOpenAreasOnly, g_esPimpSpecial[type].g_flOpenAreasOnly, g_esPimpAbility[type].g_flOpenAreasOnly, 1);
+		g_esPimpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esPimpTeammate[tank].g_iRequiresHumans, g_esPimpPlayer[tank].g_iRequiresHumans, g_esPimpSpecial[type].g_iRequiresHumans, g_esPimpAbility[type].g_iRequiresHumans, 1);
+	}
+	else
+	{
+		g_esPimpCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flCloseAreasOnly, g_esPimpAbility[type].g_flCloseAreasOnly, 1);
+		g_esPimpCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iComboAbility, g_esPimpAbility[type].g_iComboAbility, 1);
+		g_esPimpCache[tank].g_flPimpChance = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpChance, g_esPimpAbility[type].g_flPimpChance, 1);
+		g_esPimpCache[tank].g_flPimpInterval = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpInterval, g_esPimpAbility[type].g_flPimpInterval, 1);
+		g_esPimpCache[tank].g_flPimpRange = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpRange, g_esPimpAbility[type].g_flPimpRange, 1);
+		g_esPimpCache[tank].g_flPimpRangeChance = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flPimpRangeChance, g_esPimpAbility[type].g_flPimpRangeChance, 1);
+		g_esPimpCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanAbility, g_esPimpAbility[type].g_iHumanAbility, 1);
+		g_esPimpCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanAmmo, g_esPimpAbility[type].g_iHumanAmmo, 1);
+		g_esPimpCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanCooldown, g_esPimpAbility[type].g_iHumanCooldown, 1);
+		g_esPimpCache[tank].g_iHumanRangeCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iHumanRangeCooldown, g_esPimpAbility[type].g_iHumanRangeCooldown, 1);
+		g_esPimpCache[tank].g_iPimpAbility = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpAbility, g_esPimpAbility[type].g_iPimpAbility, 1);
+		g_esPimpCache[tank].g_iPimpCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpCooldown, g_esPimpAbility[type].g_iPimpCooldown, 1);
+		g_esPimpCache[tank].g_iPimpDamage = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpDamage, g_esPimpAbility[type].g_iPimpDamage, 1);
+		g_esPimpCache[tank].g_iPimpDuration = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpDuration, g_esPimpAbility[type].g_iPimpDuration, 1);
+		g_esPimpCache[tank].g_iPimpEffect = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpEffect, g_esPimpAbility[type].g_iPimpEffect, 1);
+		g_esPimpCache[tank].g_iPimpHit = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpHit, g_esPimpAbility[type].g_iPimpHit, 1);
+		g_esPimpCache[tank].g_iPimpHitMode = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpHitMode, g_esPimpAbility[type].g_iPimpHitMode, 1);
+		g_esPimpCache[tank].g_iPimpMessage = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpMessage, g_esPimpAbility[type].g_iPimpMessage, 1);
+		g_esPimpCache[tank].g_iPimpRangeCooldown = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpRangeCooldown, g_esPimpAbility[type].g_iPimpRangeCooldown, 1);
+		g_esPimpCache[tank].g_iPimpSight = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iPimpSight, g_esPimpAbility[type].g_iPimpSight, 1);
+		g_esPimpCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_flOpenAreasOnly, g_esPimpAbility[type].g_flOpenAreasOnly, 1);
+		g_esPimpCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPimpPlayer[tank].g_iRequiresHumans, g_esPimpAbility[type].g_iRequiresHumans, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -694,7 +894,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vPimpCopyStats2(iBot, iTank);
 			vRemovePimp(iBot);
@@ -704,7 +904,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vPimpCopyStats2(iTank, iBot);
 			vRemovePimp(iTank);
@@ -716,6 +916,16 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemovePimp(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_now_it"))
+	{
+		bool bExploded = event.GetBool("exploded");
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
+			iBoomerId = event.GetInt("attacker"), iBoomer = GetClientOfUserId(iBoomerId);
+		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
+		{
+			vPimpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esPimpCache[iBoomer].g_flPimpChance, g_esPimpCache[iBoomer].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -735,7 +945,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esPimpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esPimpCache[tank].g_iPimpAbility == 1 && g_esPimpCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esPimpCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esPimpCache[tank].g_iPimpAbility == 1 && g_esPimpCache[tank].g_iComboAbility == 0)
 	{
 		vPimpAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -749,7 +959,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType, tank) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -758,7 +968,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			int iTime = GetTime();
 
-			switch (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown < iTime)
+			switch (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown <= iTime)
 			{
 				case true: vPimpAbility(tank, GetRandomFloat(0.1, 100.0));
 				case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpHuman3", (g_esPimpPlayer[tank].g_iRangeCooldown - iTime));
@@ -783,12 +993,12 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 void vPimpAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType, tank) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPimpPlayer[tank].g_bFailed = false;
 		g_esPimpPlayer[tank].g_bNoAmmo = false;
@@ -803,7 +1013,7 @@ void vPimpAbility(int tank, float random, int pos = -1)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPimpPlayer[tank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange && bIsVisibleToPlayer(tank, iSurvivor, g_esPimpCache[tank].g_iPimpSight, .range = flRange))
 				{
 					vPimpHit(iSurvivor, tank, random, flChance, g_esPimpCache[tank].g_iPimpAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
 
@@ -814,13 +1024,13 @@ void vPimpAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
+			if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpHuman4");
 			}
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpAmmo");
 	}
@@ -828,20 +1038,20 @@ void vPimpAbility(int tank, float random, int pos = -1)
 
 void vPimpHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPimpPlayer[tank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esPimpCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esPimpCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[tank].g_iTankType, tank) || (g_esPimpCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPimpPlayer[tank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	int iTime = GetTime();
-	if (((flags & MT_ATTACK_RANGE) && g_esPimpPlayer[tank].g_iRangeCooldown != -1 && g_esPimpPlayer[tank].g_iRangeCooldown > iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esPimpPlayer[tank].g_iCooldown != -1 && g_esPimpPlayer[tank].g_iCooldown > iTime))
+	if (((flags & MT_ATTACK_RANGE) && g_esPimpPlayer[tank].g_iRangeCooldown != -1 && g_esPimpPlayer[tank].g_iRangeCooldown >= iTime) || (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && g_esPimpPlayer[tank].g_iCooldown != -1 && g_esPimpPlayer[tank].g_iCooldown >= iTime))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
+		if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE) || (g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0))
 		{
 			if (random <= chance && !g_esPimpPlayer[survivor].g_bAffected)
 			{
@@ -849,9 +1059,9 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 				g_esPimpPlayer[survivor].g_iOwner = tank;
 
 				int iCooldown = -1;
-				if ((flags & MT_ATTACK_RANGE) && (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown < iTime))
+				if ((flags & MT_ATTACK_RANGE) && (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown <= iTime))
 				{
-					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
+					if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1)
 					{
 						g_esPimpPlayer[tank].g_iAmmoCount++;
 
@@ -859,34 +1069,37 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 					}
 
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 11, pos)) : g_esPimpCache[tank].g_iPimpRangeCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0) ? g_esPimpCache[tank].g_iHumanRangeCooldown : iCooldown;
+					iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && g_esPimpPlayer[tank].g_iAmmoCount < g_esPimpCache[tank].g_iHumanAmmo && g_esPimpCache[tank].g_iHumanAmmo > 0) ? g_esPimpCache[tank].g_iHumanRangeCooldown : iCooldown;
 					g_esPimpPlayer[tank].g_iRangeCooldown = (iTime + iCooldown);
-					if (g_esPimpPlayer[tank].g_iRangeCooldown != -1 && g_esPimpPlayer[tank].g_iRangeCooldown > iTime)
+					if (g_esPimpPlayer[tank].g_iRangeCooldown != -1 && g_esPimpPlayer[tank].g_iRangeCooldown >= iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpHuman5", (g_esPimpPlayer[tank].g_iRangeCooldown - iTime));
 					}
 				}
-				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esPimpPlayer[tank].g_iCooldown == -1 || g_esPimpPlayer[tank].g_iCooldown < iTime))
+				else if (((flags & MT_ATTACK_CLAW) || (flags & MT_ATTACK_MELEE)) && (g_esPimpPlayer[tank].g_iCooldown == -1 || g_esPimpPlayer[tank].g_iCooldown <= iTime))
 				{
 					iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esPimpCache[tank].g_iPimpCooldown;
-					iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1) ? g_esPimpCache[tank].g_iHumanCooldown : iCooldown;
+					iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1) ? g_esPimpCache[tank].g_iHumanCooldown : iCooldown;
 					g_esPimpPlayer[tank].g_iCooldown = (iTime + iCooldown);
-					if (g_esPimpPlayer[tank].g_iCooldown != -1 && g_esPimpPlayer[tank].g_iCooldown > iTime)
+					if (g_esPimpPlayer[tank].g_iCooldown != -1 && g_esPimpPlayer[tank].g_iCooldown >= iTime)
 					{
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "PimpHuman5", (g_esPimpPlayer[tank].g_iCooldown - iTime));
 					}
 				}
 
 				float flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 6, pos) : g_esPimpCache[tank].g_flPimpInterval;
-				DataPack dpPimp;
-				CreateDataTimer(flInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpPimp.WriteCell(GetClientUserId(survivor));
-				dpPimp.WriteCell(GetClientUserId(tank));
-				dpPimp.WriteCell(g_esPimpPlayer[tank].g_iTankType);
-				dpPimp.WriteCell(messages);
-				dpPimp.WriteCell(enabled);
-				dpPimp.WriteCell(pos);
-				dpPimp.WriteCell(iTime);
+				if (flInterval > 0.0)
+				{
+					DataPack dpPimp;
+					CreateDataTimer(flInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					dpPimp.WriteCell(GetClientUserId(survivor));
+					dpPimp.WriteCell(GetClientUserId(tank));
+					dpPimp.WriteCell(g_esPimpPlayer[tank].g_iTankType);
+					dpPimp.WriteCell(messages);
+					dpPimp.WriteCell(enabled);
+					dpPimp.WriteCell(pos);
+					dpPimp.WriteCell(iTime);
+				}
 
 				vScreenEffect(survivor, tank, g_esPimpCache[tank].g_iPimpEffect, flags);
 
@@ -898,9 +1111,9 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pimp", LANG_SERVER, sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown < iTime))
+			else if ((flags & MT_ATTACK_RANGE) && (g_esPimpPlayer[tank].g_iRangeCooldown == -1 || g_esPimpPlayer[tank].g_iRangeCooldown <= iTime))
 			{
-				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && !g_esPimpPlayer[tank].g_bFailed)
+				if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && !g_esPimpPlayer[tank].g_bFailed)
 				{
 					g_esPimpPlayer[tank].g_bFailed = true;
 
@@ -908,7 +1121,7 @@ void vPimpHit(int survivor, int tank, float random, float chance, int enabled, i
 				}
 			}
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && !g_esPimpPlayer[tank].g_bNoAmmo)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPimpCache[tank].g_iHumanAbility == 1 && !g_esPimpPlayer[tank].g_bNoAmmo)
 		{
 			g_esPimpPlayer[tank].g_bNoAmmo = true;
 
@@ -946,7 +1159,7 @@ void vPimpReset()
 		{
 			vPimpReset3(iPlayer);
 
-			g_esPimpPlayer[iPlayer].g_iOwner = 0;
+			g_esPimpPlayer[iPlayer].g_iOwner = -1;
 		}
 	}
 }
@@ -978,7 +1191,7 @@ void tTimerPimpCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPimpCache[iTank].g_iPimpAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPimpCache[iTank].g_iPimpAbility == 0)
 	{
 		return;
 	}
@@ -999,7 +1212,7 @@ void tTimerPimpCombo2(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esPimpCache[iTank].g_iPimpHit == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esPimpCache[iTank].g_iPimpHit == 0)
 	{
 		return;
 	}
@@ -1008,7 +1221,7 @@ void tTimerPimpCombo2(Handle timer, DataPack pack)
 	int iPos = pack.ReadCell();
 	char sClassname[32];
 	pack.ReadString(sClassname, sizeof sClassname);
-	if ((g_esPimpCache[iTank].g_iPimpHitMode == 0 || g_esPimpCache[iTank].g_iPimpHitMode == 1) && (StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
+	if ((g_esPimpCache[iTank].g_iPimpHitMode == 0 || g_esPimpCache[iTank].g_iPimpHitMode == 1) && (bIsSpecialInfected(iTank) || StrEqual(sClassname[7], "tank_claw") || StrEqual(sClassname, "tank_rock")))
 	{
 		vPimpHit(iSurvivor, iTank, flRandom, flChance, g_esPimpCache[iTank].g_iPimpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
 	}
@@ -1032,7 +1245,7 @@ Action tTimerPimp(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esPimpCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esPimpCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[iTank].g_iTankType) || (g_esPimpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPimpPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPimpPlayer[iTank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags) || !g_esPimpPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esPimpCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esPimpCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esPimpPlayer[iTank].g_iTankType, iTank) || (g_esPimpCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esPimpCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPimpPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPimpPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esPimpPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPimpPlayer[iTank].g_iTankType, g_esPimpAbility[g_esPimpPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPimpPlayer[iSurvivor].g_iImmunityFlags) || !g_esPimpPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
 
@@ -1042,7 +1255,7 @@ Action tTimerPimp(Handle timer, DataPack pack)
 	int iPimpEnabled = pack.ReadCell(), iPos = pack.ReadCell(),
 		iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 5, iPos)) : g_esPimpCache[iTank].g_iPimpDuration,
 		iTime = pack.ReadCell();
-	if (iPimpEnabled == 0 || (iTime + iDuration) < GetTime() || !g_esPimpPlayer[iSurvivor].g_bAffected)
+	if (iPimpEnabled == 0 || (iTime + iDuration) <= GetTime() || !g_esPimpPlayer[iSurvivor].g_bAffected)
 	{
 		vPimpReset2(iSurvivor, iTank, iMessage);
 
@@ -1053,6 +1266,7 @@ Action tTimerPimp(Handle timer, DataPack pack)
 	if (flDamage > 0.0)
 	{
 		SlapPlayer(iSurvivor, RoundToNearest(MT_GetScaledDamage(flDamage)), true);
+		vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.1);
 	}
 
 	return Plugin_Continue;

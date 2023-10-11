@@ -34,9 +34,79 @@
 		"chi"			"默认坦克"
 	}
 
+	"MTDefaultItemBoomer"
+	{
+		"chi"			"默认胖子"
+	}
+
+	"MTDefaultItemCharger"
+	{
+		"chi"			"默认牛"
+	}
+
+	"MTDefaultItemHunter"
+	{
+		"chi"			"默认猎人"
+	}
+
+	"MTDefaultItemJockey"
+	{
+		"chi"			"默认猴子"
+	}
+
+	"MTDefaultItemSmoker"
+	{
+		"chi"			"默认烟鬼"
+	}
+
+	"MTDefaultItemSpitter"
+	{
+		"chi"			"默认口水"
+	}
+
+	"MTDefaultItemWitch"
+	{
+		"chi"			"默认女巫"
+	}
+
 	"MTFavoriteMenu"
 	{
 		"chi"			"使用你喜爱的突变坦克类型？"
+	}
+
+	"MTFavoriteMenuBoomer"
+	{
+		"chi"			"使用你喜爱的突变胖子类型？"
+	}
+
+	"MTFavoriteMenuCharger"
+	{
+		"chi"			"使用你喜爱的突变牛类型？"
+	}
+
+	"MTFavoriteMenuHunter"
+	{
+		"chi"			"使用你喜爱的突变猎人类型？"
+	}
+
+	"MTFavoriteMenuJockey"
+	{
+		"chi"			"使用你喜爱的突变猴子类型？"
+	}
+
+	"MTFavoriteMenuSmoker"
+	{
+		"chi"			"使用你喜爱的突变烟鬼类型？"
+	}
+
+	"MTFavoriteMenuSpitter"
+	{
+		"chi"			"使用你喜爱的突变口水类型？"
+	}
+
+	"MTFavoriteMenuWitch"
+	{
+		"chi"			"使用你喜爱的突变女巫类型？"
 	}
 
 	"MTInfoMenu"
@@ -44,9 +114,84 @@
 		"chi"			"突变坦克信息"
 	}
 
+	"MTItem"
+	{
+		"chi"			"{1} (坦克 #{2}) [坦克 #{3}]"
+	}
+
+	"MTItemBoomer"
+	{
+		"chi"			"{1} (胖子 #{2}) [胖子 #{3}]"
+	}
+
+	"MTItemCharger"
+	{
+		"chi"			"{1} (牛 #{2}) [牛 #{3}]"
+	}
+
+	"MTItemHunter"
+	{
+		"chi"			"{1} (猎人 #{2}) [猎人 #{3}]"
+	}
+
+	"MTItemJockey"
+	{
+		"chi"			"{1} (猴子 #{2}) [猴子 #{3}]"
+	}
+
+	"MTItemSmoker"
+	{
+		"chi"			"{1} (烟鬼 #{2}) [烟鬼 #{3}]"
+	}
+
+	"MTItemSpitter"
+	{
+		"chi"			"{1} (口水 #{2}) [口水 #{3}]"
+	}
+
+	"MTItemWitch"
+	{
+		"chi"			"{1} (女巫 #{2}) [女巫 #{3}]"
+	}
+
 	"MTListMenu"
 	{
 		"chi"			"突变坦克清单"
+	}
+
+	"MTListMenuBoomer"
+	{
+		"chi"			"突变胖子清单"
+	}
+
+	"MTListMenuCharger"
+	{
+		"chi"			"突变牛清单"
+	}
+
+	"MTListMenuHunter"
+	{
+		"chi"			"突变猎人清单"
+	}
+
+	"MTListMenuJockey"
+	{
+		"chi"			"突变猴子清单"
+	}
+
+	"MTListMenuSmoker"
+	{
+		"chi"			"突变烟鬼清单"
+	}
+
+	"MTListMenuSpitter"
+	{
+		"chi"			"突变口水清单"
+	}
+
+	"MTListMenuWitch"
+	{
+		"chi"			"突变女巫清单"
 	}
 
 	"MTPathMenu"
@@ -72,11 +217,6 @@
 	"MTSettingsItem"
 	{
 		"chi"			"插件设置"
-	}
-
-	"MTTankItem"
-	{
-		"chi"			"{1} (坦克 #{2}) [坦克 #{3}]"
 	}
 
 	"MTVersionMenu"
@@ -349,6 +489,41 @@
 		"chi"			"你的突变坦克类型已变更。"
 	}
 
+	"ChangeTypeBoomer"
+	{
+		"chi"			"你的突变胖子类型已变更。"
+	}
+
+	"ChangeTypeCharger"
+	{
+		"chi"			"你的突变牛类型已变更。"
+	}
+
+	"ChangeTypeHunter"
+	{
+		"chi"			"你的突变猎人类型已变更。"
+	}
+
+	"ChangeTypeJockey"
+	{
+		"chi"			"你的突变猴子类型已变更。"
+	}
+
+	"ChangeTypeSmoker"
+	{
+		"chi"			"你的突变烟鬼类型已变更。"
+	}
+
+	"ChangeTypeSpitter"
+	{
+		"chi"			"你的突变口水类型已变更。"
+	}
+
+	"ChangeTypeWitch"
+	{
+		"chi"			"你的突变女巫类型已变更。"
+	}
+
 	"CheckConsole"
 	{
 		"chi"			"完整的输出信息请查看控制台。"
@@ -419,6 +594,61 @@
 		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛！"
 	}
 
+	"DespawnCanceled"
+	{
+		"chi"			"你打消了消失的念头！"
+	}
+
+	"DespawnNow"
+	{
+		"chi"			"你选择了消失！"
+	}
+
+	"DespawnTimer"
+	{
+		"chi"			"你将在 {1} 秒后消失！"
+	}
+
+	"DisabledType"
+	{
+		"chi"			"{1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeBoomer"
+	{
+		"chi"			"{1}{yellow} (胖子 #{2}) [胖子 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeCharger"
+	{
+		"chi"			"{1}{yellow} (牛 #{2}) [牛 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeHunter"
+	{
+		"chi"			"{1}{yellow} (猎人 #{2}) [猎人 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeJockey"
+	{
+		"chi"			"{1}{yellow} (猴子 #{2}) [猴子 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeSmoker"
+	{
+		"chi"			"{1}{yellow} (烟鬼 #{2}) [烟鬼 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeSpitter"
+	{
+		"chi"			"{1}{yellow} (口水 #{2}) [口水 #{3}]{default} 已禁用。"
+	}
+
+	"DisabledTypeWitch"
+	{
+		"chi"			"{1}{yellow} (女巫 #{2}) [女巫 #{3}]{default} 已禁用。"
+	}
+
 	"ErrorParsing"
 	{
 		"chi"			"解析文件 \"{1}\" 时出错。 错误信息： {2}。"
@@ -439,6 +669,41 @@
 		"chi"			"你选择不使用自己喜爱的坦克类型。"
 	}
 
+	"FavoriteUnusedBoomer"
+	{
+		"chi"			"你选择不使用自己喜爱的胖子类型。"
+	}
+
+	"FavoriteUnusedCharger"
+	{
+		"chi"			"你选择不使用自己喜爱的牛类型。"
+	}
+
+	"FavoriteUnusedHunter"
+	{
+		"chi"			"你选择不使用自己喜爱的猎人类型。"
+	}
+
+	"FavoriteUnusedJockey"
+	{
+		"chi"			"你选择不使用自己喜爱的猴子类型。"
+	}
+
+	"FavoriteUnusedSmoker"
+	{
+		"chi"			"你选择不使用自己喜爱的烟鬼类型。"
+	}
+
+	"FavoriteUnusedSpitter"
+	{
+		"chi"			"你选择不使用自己喜爱的口水类型。"
+	}
+
+	"FavoriteUnusedWitch"
+	{
+		"chi"			"你选择不使用自己喜爱的女巫类型。"
+	}
+
 	"GeneralDetails"
 	{
 		"chi"			"突变坦克让坦克对抗更加多姿多彩！"
@@ -454,9 +719,59 @@
 		"chi"			"发光轮廓： 关"
 	}
 
+	"HardcoreModeOn"
+	{
+		"chi"			"硬核{default} 模式{olive} 已启用{default}！"
+	}
+
+	"HardcoreModeOff"
+	{
+		"chi"			"硬核{default} 模式{olive} 已禁用{default}！"
+	}
+
+	"HardcoreModeWarning"
+	{
+		"chi"			"在硬核模式下,你只有一次生存机会！"
+	}
+
 	"HumanCooldown"
 	{
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型。"
+	}
+
+	"HumanCooldownBoomer"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变胖子类型。"
+	}
+
+	"HumanCooldownCharger"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变牛类型。"
+	}
+
+	"HumanCooldownHunter"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变猎人类型。"
+	}
+
+	"HumanCooldownJockey"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变猴子类型。"
+	}
+
+	"HumanCooldownSmoker"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变烟鬼类型。"
+	}
+
+	"HumanCooldownSpitter"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变口水类型。"
+	}
+
+	"HumanCooldownWitch"
+	{
+		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变女巫类型。"
 	}
 
 	"HumanTag"
@@ -564,6 +879,51 @@
 		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}！{yellow} MVP：{mint} {3}"
 	}
 
+	"KillCountdown"
+	{
+		"chi"			"坦克{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownAll"
+	{
+		"chi"			"特殊感染者{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownBoomer"
+	{
+		"chi"			"胖子{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownCharger"
+	{
+		"chi"			"牛{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownHunter"
+	{
+		"chi"			"猎人{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownJockey"
+	{
+		"chi"			"猴子{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownSmoker"
+	{
+		"chi"			"烟鬼{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownSpitter"
+	{
+		"chi"			"口水{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
+	"KillCountdownWitch"
+	{
+		"chi"			"女巫{default} 有{yellow} {1} 分 {2} 秒{default} 来猎杀幸存者。"
+	}
+
 	"LightVisualOn"
 	{
 		"chi"			"灯颜色： 开"
@@ -589,6 +949,41 @@
 		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (坦克 #{1}) [坦克 #{2}]{olive}。"
 	}
 
+	"MultipleMatchesBoomer"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (胖子 #{1}) [胖子 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesCharger"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (牛 #{1}) [牛 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesHunter"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (猎人 #{1}) [猎人 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesJockey"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (猴子 #{1}) [猴子 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesSmoker"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (烟鬼 #{1}) [烟鬼 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesSpitter"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (口水 #{1}) [口水 #{2}]{olive}。"
+	}
+
+	"MultipleMatchesWitch"
+	{
+		"chi"			"该名称与多种类型相匹配。{olive} 选择一个随机匹配项{yellow} (女巫 #{1}) [女巫 #{2}]{olive}。"
+	}
+
 	"NoAbilities"
 	{
 		"chi"			"找不到此能力。"
@@ -609,14 +1004,119 @@
 		"chi"			"坦克"
 	}
 
+	"NoNameBoomer"
+	{
+		"chi"			"胖子"
+	}
+
+	"NoNameCharger"
+	{
+		"chi"			"牛"
+	}
+
+	"NoNameHunter"
+	{
+		"chi"			"猎人"
+	}
+
+	"NoNameJockey"
+	{
+		"chi"			"猴子"
+	}
+
+	"NoNameSmoker"
+	{
+		"chi"			"烟鬼"
+	}
+
+	"NoNameSpitter"
+	{
+		"chi"			"口水"
+	}
+
+	"NoNameWitch"
+	{
+		"chi"			"女巫"
+	}
+
 	"NoNote"
 	{
 		"chi"			"找不到该突变坦克的注释文本。"
 	}
 
+	"NoNoteBoomer"
+	{
+		"chi"			"找不到该突变胖子的注释文本。"
+	}
+
+	"NoNoteCharger"
+	{
+		"chi"			"找不到该突变牛的注释文本。"
+	}
+
+	"NoNoteHunter"
+	{
+		"chi"			"找不到该突变猎人的注释文本。"
+	}
+
+	"NoNoteJockey"
+	{
+		"chi"			"找不到该突变猴子的注释文本。"
+	}
+
+	"NoNoteSmoker"
+	{
+		"chi"			"找不到该突变烟鬼的注释文本。"
+	}
+
+	"NoNoteSpitter"
+	{
+		"chi"			"找不到该突变口水的注释文本。"
+	}
+
+	"NoNoteWitch"
+	{
+		"chi"			"找不到该突变女巫的注释文本。"
+	}
+
 	"NoTypeAccess"
 	{
 		"chi"			"你无权使用此突变坦克类型。"
+	}
+
+	"NoTypeAccessBoomer"
+	{
+		"chi"			"你无权使用此突变胖子类型。"
+	}
+
+	"NoTypeAccessCharger"
+	{
+		"chi"			"你无权使用此突变牛类型。"
+	}
+
+	"NoTypeAccessHunter"
+	{
+		"chi"			"你无权使用此突变猎人类型。"
+	}
+
+	"NoTypeAccessJockey"
+	{
+		"chi"			"你无权使用此突变猴子类型。"
+	}
+
+	"NoTypeAccessSmoker"
+	{
+		"chi"			"你无权使用此突变烟鬼类型。"
+	}
+
+	"NoTypeAccessSpitter"
+	{
+		"chi"			"你无权使用此突变口水类型。"
+	}
+
+	"NoTypeAccessWitch"
+	{
+		"chi"			"你无权使用此突变女巫类型。"
 	}
 
 	"OptionNo"
@@ -642,6 +1142,41 @@
 	"PersonalType"
 	{
 		"chi"			"当你控制{mint} 坦克{default} 时， 将以{olive} {1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeBoomer"
+	{
+		"chi"			"当你控制{mint} 胖子{default} 时， 将以{olive} {1}{yellow} (胖子 #{2}) [胖子 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeCharger"
+	{
+		"chi"			"当你控制{mint} 牛{default} 时， 将以{olive} {1}{yellow} (牛 #{2}) [牛 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeHunter"
+	{
+		"chi"			"当你控制{mint} 猎人{default} 时， 将以{olive} {1}{yellow} (猎人 #{2}) [猎人 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeJockey"
+	{
+		"chi"			"当你控制{mint} 猴子{default} 时， 将以{olive} {1}{yellow} (猴子 #{2}) [猴子 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeSmoker"
+	{
+		"chi"			"当你控制{mint} 烟鬼{default} 时， 将以{olive} {1}{yellow} (烟鬼 #{2}) [烟鬼 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeSpitter"
+	{
+		"chi"			"当你控制{mint} 口水{default} 时， 将以{olive} {1}{yellow} (口水 #{2}) [口水 #{3}]{default} 的身份出现。"
+	}
+
+	"PersonalTypeWitch"
+	{
+		"chi"			"当你控制{mint} 女巫{default} 时， 将以{olive} {1}{yellow} (女巫 #{2}) [女巫 #{3}]{default} 的身份出现。"
 	}
 
 	"PitchVisualOn"
@@ -682,6 +1217,46 @@
 	"RequestSucceeded"
 	{
 		"chi"			"一种名称{yellow} (坦克 #{1}) [坦克 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededBoomer"
+	{
+		"chi"			"一种名称{yellow} (胖子 #{1}) [胖子 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededCharger"
+	{
+		"chi"			"一种名称{yellow} (牛 #{1}) [牛 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededHunter"
+	{
+		"chi"			"一种名称{yellow} (猎人 #{1}) [猎人 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededJockey"
+	{
+		"chi"			"一种名称{yellow} (猴子 #{1}) [猴子 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededSmoker"
+	{
+		"chi"			"一种名称{yellow} (烟鬼 #{1}) [烟鬼 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededSpitter"
+	{
+		"chi"			"一种名称{yellow} (口水 #{1}) [口水 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RequestSucceededWitch"
+	{
+		"chi"			"一种名称{yellow} (女巫 #{1}) [女巫 #{2}]{mint} 与该名称匹配。{olive} 请求成功！"
+	}
+
+	"RestCountdown"
+	{
+		"chi"			"幸存者{default} 有{yellow} {1} 分钟 {2} 秒{default} 的休息时间。"
 	}
 
 	"RewardAmmo"
@@ -771,7 +1346,7 @@
 
 	"RewardShared"
 	{
-		"chi"			"{1}{default} 分享他的{yellow} {2}{default} 给{mint} 你{default}!"
+		"chi"			"{1}{default} 分享他的{yellow} {2}{default} 给{mint} 你{default}！"
 	}
 
 	"RewardSolo"
@@ -782,6 +1357,96 @@
 	"RewardSpeedBoost"
 	{
 		"chi"			"速度加成"
+	}
+
+	"Rush"
+	{
+		"chi"			"欢迎来到{yellow} 坦克冲锋{mint}！"
+	}
+
+	"RushAll"
+	{
+		"chi"			"欢迎来到{yellow} 特殊竞技场{mint}！"
+	}
+
+	"RushBoomer"
+	{
+		"chi"			"欢迎来到{yellow} 呕吐派对{mint}！"
+	}
+
+	"RushCharger"
+	{
+		"chi"			"欢迎来到{yellow} 绞肉场{mint}！"
+	}
+
+	"RushHunter"
+	{
+		"chi"			"欢迎来到{yellow} 狩猎场{mint}！"
+	}
+
+	"RushJockey"
+	{
+		"chi"			"欢迎来到{yellow} 游乐园{mint}！"
+	}
+
+	"RushSmoker"
+	{
+		"chi"			"欢迎来到{yellow} 毒气室{mint}！"
+	}
+
+	"RushSpitter"
+	{
+		"chi"			"欢迎来到{yellow} 酸雨地{mint}！"
+	}
+
+	"RushWitch"
+	{
+		"chi"			"欢迎来到{yellow} 托儿所{mint}！"
+	}
+
+	"RushWarning"
+	{
+		"chi"			"坦克{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningAll"
+	{
+		"chi"			"特殊感染者{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningBoomer"
+	{
+		"chi"			"胖子{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningCharger"
+	{
+		"chi"			"牛{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningHunter"
+	{
+		"chi"			"猎人{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningJockey"
+	{
+		"chi"			"猴子{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningSmoker"
+	{
+		"chi"			"烟鬼{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningSpitter"
+	{
+		"chi"			"口水{default} 将在{yellow} {1} 秒{default}后生成！"
+	}
+
+	"RushWarningWitch"
+	{
+		"chi"			"女巫{default} 将在{yellow} {1} 秒{default}后生成！"
 	}
 
 	"ScreenVisualOn"
@@ -804,6 +1469,96 @@
 		"chi"			"你变成突变坦克了！你可以使用以下功能："
 	}
 
+	"SpawnMessageBoomer"
+	{
+		"chi"			"你变成突变胖子了！你可以使用以下功能："
+	}
+
+	"SpawnMessageCharger"
+	{
+		"chi"			"你变成突变牛了！你可以使用以下功能："
+	}
+
+	"SpawnMessageHunter"
+	{
+		"chi"			"你变成突变猎人了！你可以使用以下功能："
+	}
+
+	"SpawnMessageJockey"
+	{
+		"chi"			"你变成突变猴子了！你可以使用以下功能："
+	}
+
+	"SpawnMessageSmoker"
+	{
+		"chi"			"你变成突变烟鬼了！你可以使用以下功能："
+	}
+
+	"SpawnMessageSpitter"
+	{
+		"chi"			"你变成突变口水了！你可以使用以下功能："
+	}
+
+	"SpawnMessageWitch"
+	{
+		"chi"			"你变成突变女巫了！你可以使用以下功能："
+	}
+
+	"SpawnNow"
+	{
+		"chi"			"你现在可以出现了！"
+	}
+
+	"SpawnTimer"
+	{
+		"chi"			"你将在 {1} 秒后出现！"
+	}
+
+	"SpawnWarning"
+	{
+		"chi"			"坦克开始生成了。。。"
+	}
+
+	"SpawnWarningAll"
+	{
+		"chi"			"特殊感染者开始生成了。。。"
+	}
+
+	"SpawnWarningBoomer"
+	{
+		"chi"			"胖子开始生成了。。。"
+	}
+
+	"SpawnWarningCharger"
+	{
+		"chi"			"牛开始生成了。。。"
+	}
+
+	"SpawnWarningHunter"
+	{
+		"chi"			"猎人开始生成了。。。"
+	}
+
+	"SpawnWarningJockey"
+	{
+		"chi"			"猴子开始生成了。。。"
+	}
+
+	"SpawnWarningSmoker"
+	{
+		"chi"			"烟鬼开始生成了。。。"
+	}
+
+	"SpawnWarningSpitter"
+	{
+		"chi"			"口水开始生成了。。。"
+	}
+
+	"SpawnWarningWitch"
+	{
+		"chi"			"女巫开始生成了。。。"
+	}
+
 	"StartParsing"
 	{
 		"chi"			"正在解析配置文件。。。"
@@ -812,11 +1567,6 @@
 	"StillParsing"
 	{
 		"chi"			"插件还在解析配置文件。"
-	}
-
-	"TankDisabled"
-	{
-		"chi"			"{1}{yellow} (坦克 #{2}) [坦克 #{3}]{default} 已禁用。"
 	}
 
 	"TeammatesList"
@@ -842,6 +1592,46 @@
 	"VoicelineVisualOff"
 	{
 		"chi"			"循环声音线： 关"
+	}
+
+	"AllTypes"
+	{
+		"chi"			"全部类型"
+	}
+
+	"Bot-dependentTypes"
+	{
+		"chi"			"依赖BOT类型"
+	}
+
+	"CompetitiveTypes"
+	{
+		"chi"			"对抗类型"
+	}
+
+	"Human-dependentTypes"
+	{
+		"chi"			"依赖玩家类型"
+	}
+
+	"IndoorTypes"
+	{
+		"chi"			"室内类型"
+	}
+
+	"OutdoorTypes"
+	{
+		"chi"			"室外类型"
+	}
+
+	"SpawnableTypes"
+	{
+		"chi"			"可生成类型"
+	}
+
+	"UnspawnableTypes"
+	{
+		"chi"			"不可生成类型"
 	}
 
 	"Absorb"
@@ -3604,6 +4394,86 @@
 		"chi"			"沉默能力"
 	}
 
+	"Recall"
+	{
+		"chi"			"{olive}{1}{mint} 眨眼间就穿梭到一个随机位置上！"
+	}
+
+	"Recall2"
+	{
+		"chi"			"{olive}{1}{mint} 穿梭回去{yellow} {2} 秒{mint} 前！"
+	}
+
+	"Recall3"
+	{
+		"chi"			"{olive}{1}{mint} 可以再次使用穿梭能力了！"
+	}
+
+	"RecallAmmo"
+	{
+		"chi"			"你的时空穿梭能力次数已用完。"
+	}
+
+	"RecallAmmo2"
+	{
+		"chi"			"你的时空回溯能力次数已用完。"
+	}
+
+	"RecallDetails"
+	{
+		"chi"			"使用时间旅行的能力去惹恼幸存者。"
+	}
+
+	"RecallHuman"
+	{
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次时空穿梭能力！"
+	}
+
+	"RecallHuman2"
+	{
+		"chi"			"你的 穿梭能力 能力未能激活， 请重试。"
+	}
+
+	"RecallHuman3"
+	{
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次时空回溯能力！"
+	}
+
+	"RecallHuman4"
+	{
+		"chi"			"你的 回溯能力 能力未能激活， 请重试。"
+	}
+
+	"RecallHuman5"
+	{
+		"chi"			"你的时空穿梭能力还需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"RecallHuman6"
+	{
+		"chi"			"你的时空回溯能力还需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"RecallHuman7"
+	{
+		"chi"			"你的时空穿梭能力已结束,需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"RecallHuman8"
+	{
+		"chi"			"你的时空回溯能力已结束,需要充能{yellow} {1} 秒{mint}。"
+	}
+
+	"RecallMenu"
+	{
+		"chi"			"回溯能力信息"
+	}
+
+	"RecallMenu2"
+	{
+		"chi"			"回溯能力"
+	}
+
 	"Recoil"
 	{
 		"chi"			"{olive}{1}{mint} 给予{olive} {2}{mint} 强大的后坐力！"
@@ -4346,12 +5216,12 @@
 
 	"Splatter"
 	{
-		"chi"			"{olive}{1}{mint} 的喷溅物正在遮挡{olive} {2}{mint} 的屏幕!"
+		"chi"			"{olive}{1}{mint} 的喷溅物正在遮挡{olive} {2}{mint} 的屏幕！"
 	}
 
 	"Splatter2"
 	{
-		"chi"			"{olive}{1}{mint} 不再被喷溅物遮挡{mint}!"
+		"chi"			"{olive}{1}{mint} 不再被喷溅物遮挡{mint}！"
 	}
 
 	"SplatterAmmo"

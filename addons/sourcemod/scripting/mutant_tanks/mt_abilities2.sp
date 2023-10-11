@@ -10,7 +10,7 @@
  **/
 
 #define MT_ABILITIES_MAIN2
-#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-19), 2: Only include second half (20-38), 3: ALL
+#define MT_ABILITIES_GROUP2 3 // 0: NONE, 1: Only include first half (1-20), 2: Only include second half (21-39), 3: ALL
 #define MT_ABILITIES_COMPILER_MESSAGE2 1 // 0: NONE, 1: Display warning messages about excluded abilities, 2: Display error messages about excluded abilities
 
 #include <sourcemod>
@@ -46,6 +46,7 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#tryinclude "mutant_tanks/abilities2/mt_puke.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_pyro.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_quiet.sp"
+	#tryinclude "mutant_tanks/abilities2/mt_recall.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_recoil.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_regen.sp"
 	#tryinclude "mutant_tanks/abilities2/mt_respawn.sp"
@@ -111,6 +112,9 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_QUIET
 		#warning The "Quiet" (mt_quiet.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RECALL
+		#warning The "Recall" (mt_recall.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_RECOIL
 		#warning The "Recoil" (mt_recoil.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -227,6 +231,9 @@ bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 	#endif
 	#if !defined MT_MENU_QUIET
 		#error The "Quiet" (mt_quiet.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
+	#endif
+	#if !defined MT_MENU_RECALL
+		#error The "Recall" (mt_recall.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
 	#endif
 	#if !defined MT_MENU_RECOIL
 		#error The "Recoil" (mt_recoil.sp) ability is missing from the "scripting/mutant_tanks/abilities2" folder.
@@ -533,6 +540,9 @@ public void MT_OnDisplayMenu(Menu menu)
 #if defined MT_MENU_QUIET
 	vQuietDisplayMenu(menu);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallDisplayMenu(menu);
+#endif
 #if defined MT_MENU_RECOIL
 	vRecoilDisplayMenu(menu);
 #endif
@@ -650,6 +660,9 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietMenuItemSelected(client, info);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallMenuItemSelected(client, info);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilMenuItemSelected(client, info);
@@ -769,6 +782,9 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 #if defined MT_MENU_QUIET
 	vQuietMenuItemDisplayed(client, info, buffer, size);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallMenuItemDisplayed(client, info, buffer, size);
+#endif
 #if defined MT_MENU_RECOIL
 	vRecoilMenuItemDisplayed(client, info, buffer, size);
 #endif
@@ -867,6 +883,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 #if defined MT_MENU_PYRO
 	vPyroPlayerRunCmd(client);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallPlayerRunCmd(client);
+#endif
 #if defined MT_MENU_SHIELD
 	vShieldPlayerRunCmd(client);
 #endif
@@ -910,6 +929,9 @@ public void MT_OnPluginCheck(ArrayList list)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietPluginCheck(list);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallPluginCheck(list);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilPluginCheck(list);
@@ -1029,6 +1051,9 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 #if defined MT_MENU_QUIET
 	vQuietAbilityCheck(list, list2, list3, list4);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallAbilityCheck(list, list2, list3, list4);
+#endif
 #if defined MT_MENU_RECOIL
 	vRecoilAbilityCheck(list, list2, list3, list4);
 #endif
@@ -1115,7 +1140,7 @@ public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, 
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 #if defined MT_MENU_MEDIC
-	vMedicCombineAbilities(tank, type, random, combo);
+	vMedicCombineAbilities(tank, type, random, combo, weapon);
 #endif
 #if defined MT_MENU_METEOR
 	vMeteorCombineAbilities(tank, type, random, combo);
@@ -1259,6 +1284,9 @@ public void MT_OnConfigsLoad(int mode)
 #if defined MT_MENU_QUIET
 	vQuietConfigsLoad(mode);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallConfigsLoad(mode);
+#endif
 #if defined MT_MENU_RECOIL
 	vRecoilConfigsLoad(mode);
 #endif
@@ -1342,121 +1370,124 @@ public void MT_OnConfigsLoad(int mode)
 #endif
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 {
 #if defined MT_MENU_MEDIC
-	vMedicConfigsLoaded(subsection, key, value, type, admin, mode);
+	vMedicConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_METEOR
-	vMeteorConfigsLoaded(subsection, key, value, type, admin, mode);
+	vMeteorConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_MINION
-	vMinionConfigsLoaded(subsection, key, value, type, admin, mode);
+	vMinionConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_NECRO
-	vNecroConfigsLoaded(subsection, key, value, type, admin, mode);
+	vNecroConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_NULLIFY
-	vNullifyConfigsLoaded(subsection, key, value, type, admin, mode);
+	vNullifyConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_OMNI
-	vOmniConfigsLoaded(subsection, key, value, type, admin, mode);
+	vOmniConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_PANIC
-	vPanicConfigsLoaded(subsection, key, value, type, admin, mode);
+	vPanicConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_PIMP
-	vPimpConfigsLoaded(subsection, key, value, type, admin, mode);
+	vPimpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_PUKE
-	vPukeConfigsLoaded(subsection, key, value, type, admin, mode);
+	vPukeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_PYRO
-	vPyroConfigsLoaded(subsection, key, value, type, admin, mode);
+	vPyroConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_QUIET
-	vQuietConfigsLoaded(subsection, key, value, type, admin, mode);
+	vQuietConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_RECOIL
-	vRecoilConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRecoilConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_REGEN
-	vRegenConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRegenConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_RESPAWN
-	vRespawnConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRespawnConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_RESTART
-	vRestartConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRestartConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_ROCK
-	vRockConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRockConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_ROCKET
-	vRocketConfigsLoaded(subsection, key, value, type, admin, mode);
+	vRocketConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SHAKE
-	vShakeConfigsLoaded(subsection, key, value, type, admin, mode);
+	vShakeConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SHIELD
-	vShieldConfigsLoaded(subsection, key, value, type, admin, mode);
+	vShieldConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SHOVE
-	vShoveConfigsLoaded(subsection, key, value, type, admin, mode);
+	vShoveConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SLOW
-	vSlowConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSlowConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SMASH
-	vSmashConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSmashConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SMITE
-	vSmiteConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSmiteConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SPAM
-	vSpamConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSpamConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SPLASH
-	vSplashConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSplashConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_SPLATTER
-	vSplatterConfigsLoaded(subsection, key, value, type, admin, mode);
+	vSplatterConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_THROW
-	vThrowConfigsLoaded(subsection, key, value, type, admin, mode);
+	vThrowConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_TRACK
-	vTrackConfigsLoaded(subsection, key, value, type, admin, mode);
+	vTrackConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_ULTIMATE
-	vUltimateConfigsLoaded(subsection, key, value, type, admin, mode);
+	vUltimateConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_UNDEAD
-	vUndeadConfigsLoaded(subsection, key, value, type, admin, mode);
+	vUndeadConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_VAMPIRE
-	vVampireConfigsLoaded(subsection, key, value, type, admin, mode);
+	vVampireConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_VISION
-	vVisionConfigsLoaded(subsection, key, value, type, admin, mode);
+	vVisionConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_WARP
-	vWarpConfigsLoaded(subsection, key, value, type, admin, mode);
+	vWarpConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_WHIRL
-	vWhirlConfigsLoaded(subsection, key, value, type, admin, mode);
+	vWhirlConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_WITCH
-	vWitchConfigsLoaded(subsection, key, value, type, admin, mode);
+	vWitchConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_XIPHOS
-	vXiphosConfigsLoaded(subsection, key, value, type, admin, mode);
+	vXiphosConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_YELL
-	vYellConfigsLoaded(subsection, key, value, type, admin, mode);
+	vYellConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 #if defined MT_MENU_ZOMBIE
-	vZombieConfigsLoaded(subsection, key, value, type, admin, mode);
+	vZombieConfigsLoaded(subsection, key, value, type, admin, mode, special, specsection);
 #endif
 }
 
@@ -1494,6 +1525,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietSettingsCached(tank, apply, type);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallSettingsCached(tank, apply, type);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilSettingsCached(tank, apply, type);
@@ -1612,6 +1646,9 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietCopyStats(oldTank, newTank);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallCopyStats(oldTank, newTank);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilCopyStats(oldTank, newTank);
@@ -1735,6 +1772,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 #if defined MT_MENU_QUIET
 	vQuietEventFired(event, name);
 #endif
+#if defined MT_MENU_RECALL
+	vRecallEventFired(event, name);
+#endif
 #if defined MT_MENU_RECOIL
 	vRecoilEventFired(event, name);
 #endif
@@ -1851,6 +1891,9 @@ public void MT_OnButtonPressed(int tank, int button)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietButtonPressed(tank, button);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallButtonPressed(tank, button);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilButtonPressed(tank, button);
@@ -2006,6 +2049,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietChangeType(tank, oldType);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallChangeType(tank, oldType);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilChangeType(tank, oldType);
@@ -2165,6 +2211,9 @@ public void MT_OnRockThrow(int tank, int rock)
 
 public void MT_OnRockBreak(int tank, int rock)
 {
+#if defined MT_MENU_MEDIC
+	vMedicRockBreak(tank, rock);
+#endif
 #if defined MT_MENU_TRACK
 	vTrackRockBreak(rock);
 #endif
@@ -2207,6 +2256,9 @@ void vAbilityMenu(int client, const char[] name)
 #endif
 #if defined MT_MENU_QUIET
 	vQuietMenu(client, name, 0);
+#endif
+#if defined MT_MENU_RECALL
+	vRecallMenu(client, name, 0);
 #endif
 #if defined MT_MENU_RECOIL
 	vRecoilMenu(client, name, 0);
@@ -2388,6 +2440,15 @@ void vAbilityPlayer(int type, int client)
 		case 0: vQuietClientPutInServer(client);
 		case 2: vQuietClientDisconnect_Post(client);
 		case 3: vQuietAbilityActivated(client);
+	}
+#endif
+#if defined MT_MENU_RECALL
+	switch (type)
+	{
+		case 0: vRecallClientPutInServer(client);
+		case 2: vRecallClientDisconnect_Post(client);
+		case 3: vRecallAbilityActivated(client);
+		case 4: vRecallPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_RECOIL
@@ -2690,6 +2751,13 @@ void vAbilitySetup(int type)
 	{
 		case 1: vQuietMapStart();
 		case 2: vQuietMapEnd();
+	}
+#endif
+#if defined MT_MENU_RECALL
+	switch (type)
+	{
+		case 1: vRecallMapStart();
+		case 2: vRecallMapEnd();
 	}
 #endif
 #if defined MT_MENU_RECOIL

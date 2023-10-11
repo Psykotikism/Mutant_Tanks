@@ -19,9 +19,79 @@
 		"hu"			"Elnyelő Tank"
 	}
 
+	"Boomer #1 Name"
+	{
+		"hu"			"Elnyelő Pukkancs"
+	}
+
+	"Charger #1 Name"
+	{
+		"hu"			"Elnyelő Rohanó"
+	}
+
+	"Hunter #1 Name"
+	{
+		"hu"			"Elnyelő Vadász"
+	}
+
+	"Jockey #1 Name"
+	{
+		"hu"			"Elnyelő Zsoké"
+	}
+
+	"Smoker #1 Name"
+	{
+		"hu"			"Elnyelő Füstös"
+	}
+
+	"Spitter #1 Name"
+	{
+		"hu"			"Elnyelő Köpködő"
+	}
+
+	"Witch #1 Name"
+	{
+		"hu"			"Elnyelő Boszorka"
+	}
+
 	"Tank #1"
 	{
 		"hu"			"{mint}Ez a Tank elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Boomer #1"
+	{
+		"hu"			"{mint}Ez a Pukkancs elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Charger #1"
+	{
+		"hu"			"{mint}Ez a Rohanó elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Hunter #1"
+	{
+		"hu"			"{mint}Ez a Vadász elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Jockey #1"
+	{
+		"hu"			"{mint}Ez a Zsoké elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Smoker #1"
+	{
+		"hu"			"{mint}Ez a Füstös elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Spitter #1"
+	{
+		"hu"			"{mint}Ez a Köpködő elnyeli a sebzések nagy részét amit kap."
+	}
+
+	"Witch #1"
+	{
+		"hu"			"{mint}Ez a Boszorka elnyeli a sebzések nagy részét amit kap."
 	}
 
 	"Tank #2 Name"
@@ -29,9 +99,79 @@
 		"hu"			"Savas Tank"
 	}
 
+	"Boomer #2 Name"
+	{
+		"hu"			"Savas Pukkancs"
+	}
+
+	"Charger #2 Name"
+	{
+		"hu"			"Savas Rohanó"
+	}
+
+	"Hunter #2 Name"
+	{
+		"hu"			"Savas Vadász"
+	}
+
+	"Jockey #2 Name"
+	{
+		"hu"			"Savas Zsoké"
+	}
+
+	"Smoker #2 Name"
+	{
+		"hu"			"Savas Füstös"
+	}
+
+	"Spitter #2 Name"
+	{
+		"hu"			"Savas Köpködő"
+	}
+
+	"Witch #2 Name"
+	{
+		"hu"			"Savas Boszorka"
+	}
+
 	"Tank #2"
 	{
 		"hu"			"{mint}Ez a Tank savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Boomer #2"
+	{
+		"hu"			"{mint}Ez a Pukkancs savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Charger #2"
+	{
+		"hu"			"{mint}Ez a Rohanó savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Hunter #2"
+	{
+		"hu"			"{mint}Ez a Vadász savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Jockey #2"
+	{
+		"hu"			"{mint}Ez a Zsoké savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Smoker #2"
+	{
+		"hu"			"{mint}Ez a Füstös savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Spitter #2"
+	{
+		"hu"			"{mint}Ez a Köpködő savas pocsolyákat hozhat létre a túlélők alatt."
+	}
+
+	"Witch #2"
+	{
+		"hu"			"{mint}Ez a Boszorka savas pocsolyákat hozhat létre a túlélők alatt."
 	}
 
 	"Tank #3 Name"
@@ -39,9 +179,79 @@
 		"hu"			"Céltalan Tank"
 	}
 
+	"Boomer #3 Name"
+	{
+		"hu"			"Céltalan Pukkancs"
+	}
+
+	"Charger #3 Name"
+	{
+		"hu"			"Céltalan Rohanó"
+	}
+
+	"Hunter #3 Name"
+	{
+		"hu"			"Céltalan Vadász"
+	}
+
+	"Jockey #3 Name"
+	{
+		"hu"			"Céltalan Zsoké"
+	}
+
+	"Smoker #3 Name"
+	{
+		"hu"			"Céltalan Füstös"
+	}
+
+	"Spitter #3 Name"
+	{
+		"hu"			"Céltalan Köpködő"
+	}
+
+	"Witch #3 Name"
+	{
+		"hu"			"Céltalan Boszorka"
+	}
+
 	"Tank #3"
 	{
 		"hu"			"{mint}Ez a Tank megakadályozza a túlélőket a célzásban."
+	}
+
+	"Boomer #3"
+	{
+		"hu"			"{mint}Ez a Pukkancs megakadályozza a túlélőket a célzásban."
+	}
+
+	"Charger #3"
+	{
+		"hu"			"{mint}Ez a Rohanó megakadályozza a túlélőket a célzásban."
+	}
+
+	"Hunter #3"
+	{
+		"hu"			"{mint}Ez a Vadász megakadályozza a túlélőket a célzásban."
+	}
+
+	"Jockey #3"
+	{
+		"hu"			"{mint}Ez a Zsoké megakadályozza a túlélőket a célzásban."
+	}
+
+	"Smoker #3"
+	{
+		"hu"			"{mint}Ez a Füstös megakadályozza a túlélőket a célzásban."
+	}
+
+	"Spitter #3"
+	{
+		"hu"			"{mint}Ez a Köpködő megakadályozza a túlélőket a célzásban."
+	}
+
+	"Witch #3"
+	{
+		"hu"			"{mint}Ez a Boszorka megakadályozza a túlélőket a célzásban."
 	}
 
 	"Tank #4 Name"
@@ -49,9 +259,79 @@
 		"hu"			"Lőszer Tank"
 	}
 
+	"Boomer #4 Name"
+	{
+		"hu"			"Lőszer Pukkancs"
+	}
+
+	"Charger #4 Name"
+	{
+		"hu"			"Lőszer Rohanó"
+	}
+
+	"Hunter #4 Name"
+	{
+		"hu"			"Lőszer Vadász"
+	}
+
+	"Jockey #4 Name"
+	{
+		"hu"			"Lőszer Zsoké"
+	}
+
+	"Smoker #4 Name"
+	{
+		"hu"			"Lőszer Füstös"
+	}
+
+	"Spitter #4 Name"
+	{
+		"hu"			"Lőszer Köpködő"
+	}
+
+	"Witch #4 Name"
+	{
+		"hu"			"Lőszer Boszorka"
+	}
+
 	"Tank #4"
 	{
 		"hu"			"{mint}Ez a Tank ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Boomer #4"
+	{
+		"hu"			"{mint}Ez a Pukkancs ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Charger #4"
+	{
+		"hu"			"{mint}Ez a Rohanó ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Hunter #4"
+	{
+		"hu"			"{mint}Ez a Vadász ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Jockey #4"
+	{
+		"hu"			"{mint}Ez a Zsoké ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Smoker #4"
+	{
+		"hu"			"{mint}Ez a Füstös ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Spitter #4"
+	{
+		"hu"			"{mint}Ez a Köpködő ellophat tőled egy kis lőszert, vagy az egészet."
+	}
+
+	"Witch #4"
+	{
+		"hu"			"{mint}Ez a Boszorka ellophat tőled egy kis lőszert, vagy az egészet."
 	}
 
 	"Tank #5 Name"
@@ -59,9 +339,79 @@
 		"hu"			"Vak Tank"
 	}
 
+	"Boomer #5 Name"
+	{
+		"hu"			"Vak Pukkancs"
+	}
+
+	"Charger #5 Name"
+	{
+		"hu"			"Vak Rohanó"
+	}
+
+	"Hunter #5 Name"
+	{
+		"hu"			"Vak Vadász"
+	}
+
+	"Jockey #5 Name"
+	{
+		"hu"			"Vak Zsoké"
+	}
+
+	"Smoker #5 Name"
+	{
+		"hu"			"Vak Füstös"
+	}
+
+	"Spitter #5 Name"
+	{
+		"hu"			"Vak Köpködő"
+	}
+
+	"Witch #5 Name"
+	{
+		"hu"			"Vak Boszorka"
+	}
+
 	"Tank #5"
 	{
 		"hu"			"{mint}Ez a Tank megvakíthatja a túlélőket."
+	}
+
+	"Boomer #5"
+	{
+		"hu"			"{mint}Ez a Pukkancs megvakíthatja a túlélőket."
+	}
+
+	"Charger #5"
+	{
+		"hu"			"{mint}Ez a Rohanó megvakíthatja a túlélőket."
+	}
+
+	"Hunter #5"
+	{
+		"hu"			"{mint}Ez a Vadász megvakíthatja a túlélőket."
+	}
+
+	"Jockey #5"
+	{
+		"hu"			"{mint}Ez a Zsoké megvakíthatja a túlélőket."
+	}
+
+	"Smoker #5"
+	{
+		"hu"			"{mint}Ez a Füstös megvakíthatja a túlélőket."
+	}
+
+	"Spitter #5"
+	{
+		"hu"			"{mint}Ez a Köpködő megvakíthatja a túlélőket."
+	}
+
+	"Witch #5"
+	{
+		"hu"			"{mint}Ez a Boszorka megvakíthatja a túlélőket."
 	}
 
 	"Tank #6 Name"
@@ -69,9 +419,79 @@
 		"hu"			"Bombázó Tank"
 	}
 
+	"Boomer #6 Name"
+	{
+		"hu"			"Bombázó Pukkancs"
+	}
+
+	"Charger #6 Name"
+	{
+		"hu"			"Bombázó Rohanó"
+	}
+
+	"Hunter #6 Name"
+	{
+		"hu"			"Bombázó Vadász"
+	}
+
+	"Jockey #6 Name"
+	{
+		"hu"			"Bombázó Zsoké"
+	}
+
+	"Smoker #6 Name"
+	{
+		"hu"			"Bombázó Füstös"
+	}
+
+	"Spitter #6 Name"
+	{
+		"hu"			"Bombázó Köpködő"
+	}
+
+	"Witch #6 Name"
+	{
+		"hu"			"Bombázó Boszorka"
+	}
+
 	"Tank #6"
 	{
 		"hu"			"{mint}Ez a Tank robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Boomer #6"
+	{
+		"hu"			"{mint}Ez a Pukkancs robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Charger #6"
+	{
+		"hu"			"{mint}Ez a Rohanó robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Hunter #6"
+	{
+		"hu"			"{mint}Ez a Vadász robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Jockey #6"
+	{
+		"hu"			"{mint}Ez a Zsoké robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Smoker #6"
+	{
+		"hu"			"{mint}Ez a Füstös robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Spitter #6"
+	{
+		"hu"			"{mint}Ez a Köpködő robbanásokat okozhat és immunis a robbanásokra."
+	}
+
+	"Witch #6"
+	{
+		"hu"			"{mint}Ez a Boszorka robbanásokat okozhat és immunis a robbanásokra."
 	}
 
 	"Tank #7 Name"
@@ -79,9 +499,79 @@
 		"hu"			"Pukkancs Tank"
 	}
 
+	"Boomer #7 Name"
+	{
+		"hu"			"Pukkancs Pukkancs"
+	}
+
+	"Charger #7 Name"
+	{
+		"hu"			"Pukkancs Rohanó"
+	}
+
+	"Hunter #7 Name"
+	{
+		"hu"			"Pukkancs Vadász"
+	}
+
+	"Jockey #7 Name"
+	{
+		"hu"			"Pukkancs Zsoké"
+	}
+
+	"Smoker #7 Name"
+	{
+		"hu"			"Pukkancs Füstös"
+	}
+
+	"Spitter #7 Name"
+	{
+		"hu"			"Pukkancs Köpködő"
+	}
+
+	"Witch #7 Name"
+	{
+		"hu"			"Pukkancs Boszorka"
+	}
+
 	"Tank #7"
 	{
 		"hu"			"{mint}Ez a Tank pukkancsokat hozhat létre, és dobhat is párat a túlélők felé."
+	}
+
+	"Boomer #7"
+	{
+		"hu"			"{mint}Ez a Pukkancs pukkancsokat hozhat létre."
+	}
+
+	"Charger #7"
+	{
+		"hu"			"{mint}Ez a Rohanó pukkancsokat hozhat létre."
+	}
+
+	"Hunter #7"
+	{
+		"hu"			"{mint}Ez a Vadász pukkancsokat hozhat létre."
+	}
+
+	"Jockey #7"
+	{
+		"hu"			"{mint}Ez a Zsoké pukkancsokat hozhat létre."
+	}
+
+	"Smoker #7"
+	{
+		"hu"			"{mint}Ez a Füstös pukkancsokat hozhat létre."
+	}
+
+	"Spitter #7"
+	{
+		"hu"			"{mint}Ez a Köpködő pukkancsokat hozhat létre."
+	}
+
+	"Witch #7"
+	{
+		"hu"			"{mint}Ez a Boszorka pukkancsokat hozhat létre."
 	}
 
 	"Tank #8 Name"
@@ -89,9 +579,79 @@
 		"hu"			"Golyóálló Tank"
 	}
 
+	"Boomer #8 Name"
+	{
+		"hu"			"Golyóálló Pukkancs"
+	}
+
+	"Charger #8 Name"
+	{
+		"hu"			"Golyóálló Rohanó"
+	}
+
+	"Hunter #8 Name"
+	{
+		"hu"			"Golyóálló Vadász"
+	}
+
+	"Jockey #8 Name"
+	{
+		"hu"			"Golyóálló Zsoké"
+	}
+
+	"Smoker #8 Name"
+	{
+		"hu"			"Golyóálló Füstös"
+	}
+
+	"Spitter #8 Name"
+	{
+		"hu"			"Golyóálló Köpködő"
+	}
+
+	"Witch #8 Name"
+	{
+		"hu"			"Golyóálló Boszorka"
+	}
+
 	"Tank #8"
 	{
 		"hu"			"{mint}Ez a Tank immunis a lőszer sebzésre."
+	}
+
+	"Boomer #8"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a lőszer sebzésre."
+	}
+
+	"Charger #8"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a lőszer sebzésre."
+	}
+
+	"Hunter #8"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a lőszer sebzésre."
+	}
+
+	"Jockey #8"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a lőszer sebzésre."
+	}
+
+	"Smoker #8"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a lőszer sebzésre."
+	}
+
+	"Spitter #8"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a lőszer sebzésre."
+	}
+
+	"Witch #8"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a lőszer sebzésre."
 	}
 
 	"Tank #9 Name"
@@ -99,9 +659,79 @@
 		"hu"			"Eltemető Tank"
 	}
 
+	"Boomer #9 Name"
+	{
+		"hu"			"Eltemető Pukkancs"
+	}
+
+	"Charger #9 Name"
+	{
+		"hu"			"Eltemető Rohanó"
+	}
+
+	"Hunter #9 Name"
+	{
+		"hu"			"Eltemető Vadász"
+	}
+
+	"Jockey #9 Name"
+	{
+		"hu"			"Eltemető Zsoké"
+	}
+
+	"Smoker #9 Name"
+	{
+		"hu"			"Eltemető Füstös"
+	}
+
+	"Spitter #9 Name"
+	{
+		"hu"			"Eltemető Köpködő"
+	}
+
+	"Witch #9 Name"
+	{
+		"hu"			"Eltemető Boszorka"
+	}
+
 	"Tank #9"
 	{
 		"hu"			"{mint}Ez a Tank eltemetheti a túlélőket."
+	}
+
+	"Boomer #9"
+	{
+		"hu"			"{mint}Ez a Pukkancs eltemetheti a túlélőket."
+	}
+
+	"Charger #9"
+	{
+		"hu"			"{mint}Ez a Rohanó eltemetheti a túlélőket."
+	}
+
+	"Hunter #9"
+	{
+		"hu"			"{mint}Ez a Vadász eltemetheti a túlélőket."
+	}
+
+	"Jockey #9"
+	{
+		"hu"			"{mint}Ez a Zsoké eltemetheti a túlélőket."
+	}
+
+	"Smoker #9"
+	{
+		"hu"			"{mint}Ez a Füstös eltemetheti a túlélőket."
+	}
+
+	"Spitter #9"
+	{
+		"hu"			"{mint}Ez a Köpködő eltemetheti a túlélőket."
+	}
+
+	"Witch #9"
+	{
+		"hu"			"{mint}Ez a Boszorka eltemetheti a túlélőket."
 	}
 
 	"Tank #10 Name"
@@ -109,9 +739,79 @@
 		"hu"			"Autó Tank"
 	}
 
+	"Boomer #10 Name"
+	{
+		"hu"			"Autó Pukkancs"
+	}
+
+	"Charger #10 Name"
+	{
+		"hu"			"Autó Rohanó"
+	}
+
+	"Hunter #10 Name"
+	{
+		"hu"			"Autó Vadász"
+	}
+
+	"Jockey #10 Name"
+	{
+		"hu"			"Autó Zsoké"
+	}
+
+	"Smoker #10 Name"
+	{
+		"hu"			"Autó Füstös"
+	}
+
+	"Spitter #10 Name"
+	{
+		"hu"			"Autó Köpködő"
+	}
+
+	"Witch #10 Name"
+	{
+		"hu"			"Autó Boszorka"
+	}
+
 	"Tank #10"
 	{
-		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
+		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után."
+	}
+
+	"Boomer #10"
+	{
+		"hu"			"{mint}Ez a Pukkancs autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Charger #10"
+	{
+		"hu"			"{mint}Ez a Rohanó autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Hunter #10"
+	{
+		"hu"			"{mint}Ez a Vadász autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Jockey #10"
+	{
+		"hu"			"{mint}Ez a Zsoké autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Smoker #10"
+	{
+		"hu"			"{mint}Ez a Füstös autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Spitter #10"
+	{
+		"hu"			"{mint}Ez a Köpködő autókat záporokat indít. Az autók eltűnnek 30mp után."
+	}
+
+	"Witch #10"
+	{
+		"hu"			"{mint}Ez a Boszorka autókat záporokat indít. Az autók eltűnnek 30mp után."
 	}
 
 	"Tank #11 Name"
@@ -119,9 +819,79 @@
 		"hu"			"Rohanó Tank"
 	}
 
+	"Boomer #11 Name"
+	{
+		"hu"			"Rohanó Pukkancs"
+	}
+
+	"Charger #11 Name"
+	{
+		"hu"			"Rohanó Rohanó"
+	}
+
+	"Hunter #11 Name"
+	{
+		"hu"			"Rohanó Vadász"
+	}
+
+	"Jockey #11 Name"
+	{
+		"hu"			"Rohanó Zsoké"
+	}
+
+	"Smoker #11 Name"
+	{
+		"hu"			"Rohanó Füstös"
+	}
+
+	"Spitter #11 Name"
+	{
+		"hu"			"Rohanó Köpködő"
+	}
+
+	"Witch #11 Name"
+	{
+		"hu"			"Rohanó Boszorka"
+	}
+
 	"Tank #11"
 	{
 		"hu"			"{mint}Ez a Tank rohanókat hozhat létre, és dobhat is párat a túlélők felé."
+	}
+
+	"Boomer #11"
+	{
+		"hu"			"{mint}Ez a Pukkancs rohanókat hozhat létre."
+	}
+
+	"Charger #11"
+	{
+		"hu"			"{mint}Ez a Rohanó rohanókat hozhat létre."
+	}
+
+	"Hunter #11"
+	{
+		"hu"			"{mint}Ez a Vadász rohanókat hozhat létre."
+	}
+
+	"Jockey #11"
+	{
+		"hu"			"{mint}Ez a Zsoké rohanókat hozhat létre."
+	}
+
+	"Smoker #11"
+	{
+		"hu"			"{mint}Ez a Füstös rohanókat hozhat létre."
+	}
+
+	"Spitter #11"
+	{
+		"hu"			"{mint}Ez a Köpködő rohanókat hozhat létre."
+	}
+
+	"Witch #11"
+	{
+		"hu"			"{mint}Ez a Boszorka rohanókat hozhat létre."
 	}
 
 	"Tank #12 Name"
@@ -129,9 +899,79 @@
 		"hu"			"Elzáró Tank"
 	}
 
+	"Boomer #12 Name"
+	{
+		"hu"			"Elzáró Pukkancs"
+	}
+
+	"Charger #12 Name"
+	{
+		"hu"			"Elzáró Rohanó"
+	}
+
+	"Hunter #12 Name"
+	{
+		"hu"			"Elzáró Vadász"
+	}
+
+	"Jockey #12 Name"
+	{
+		"hu"			"Elzáró Zsoké"
+	}
+
+	"Smoker #12 Name"
+	{
+		"hu"			"Elzáró Füstös"
+	}
+
+	"Spitter #12 Name"
+	{
+		"hu"			"Elzáró Köpködő"
+	}
+
+	"Witch #12 Name"
+	{
+		"hu"			"Elzáró Boszorka"
+	}
+
 	"Tank #12"
 	{
 		"hu"			"{mint}Ez a Tank fojtogatja a túlélőket a levegőben."
+	}
+
+	"Boomer #12"
+	{
+		"hu"			"{mint}Ez a Pukkancs fojtogatja a túlélőket a levegőben."
+	}
+
+	"Charger #12"
+	{
+		"hu"			"{mint}Ez a Rohanó fojtogatja a túlélőket a levegőben."
+	}
+
+	"Hunter #12"
+	{
+		"hu"			"{mint}Ez a Vadász fojtogatja a túlélőket a levegőben."
+	}
+
+	"Jockey #12"
+	{
+		"hu"			"{mint}Ez a Zsoké fojtogatja a túlélőket a levegőben."
+	}
+
+	"Smoker #12"
+	{
+		"hu"			"{mint}Ez a Füstös fojtogatja a túlélőket a levegőben."
+	}
+
+	"Spitter #12"
+	{
+		"hu"			"{mint}Ez a Köpködő fojtogatja a túlélőket a levegőben."
+	}
+
+	"Witch #12"
+	{
+		"hu"			"{mint}Ez a Boszorka fojtogatja a túlélőket a levegőben."
 	}
 
 	"Tank #13 Name"
@@ -139,9 +979,79 @@
 		"hu"			"Klón Tank"
 	}
 
+	"Boomer #13 Name"
+	{
+		"hu"			"Klón Pukkancs"
+	}
+
+	"Charger #13 Name"
+	{
+		"hu"			"Klón Rohanó"
+	}
+
+	"Hunter #13 Name"
+	{
+		"hu"			"Klón Vadász"
+	}
+
+	"Jockey #13 Name"
+	{
+		"hu"			"Klón Zsoké"
+	}
+
+	"Smoker #13 Name"
+	{
+		"hu"			"Klón Füstös"
+	}
+
+	"Spitter #13 Name"
+	{
+		"hu"			"Klón Köpködő"
+	}
+
+	"Witch #13 Name"
+	{
+		"hu"			"Klón Boszorka"
+	}
+
 	"Tank #13"
 	{
 		"hu"			"{mint}Ez a Tank klónokat hozhat létre, és dobhat is párat a túlélők felé."
+	}
+
+	"Boomer #13"
+	{
+		"hu"			"{mint}Ez a Pukkancs klónokat hozhat létre."
+	}
+
+	"Charger #13"
+	{
+		"hu"			"{mint}Ez a Rohanó klónokat hozhat létre."
+	}
+
+	"Hunter #13"
+	{
+		"hu"			"{mint}Ez a Vadász klónokat hozhat létre."
+	}
+
+	"Jockey #13"
+	{
+		"hu"			"{mint}Ez a Zsoké klónokat hozhat létre."
+	}
+
+	"Smoker #13"
+	{
+		"hu"			"{mint}Ez a Füstös klónokat hozhat létre."
+	}
+
+	"Spitter #13"
+	{
+		"hu"			"{mint}Ez a Köpködő klónokat hozhat létre."
+	}
+
+	"Witch #13"
+	{
+		"hu"			"{mint}Ez a Boszorka klónokat hozhat létre."
 	}
 
 	"Tank #14 Name"
@@ -149,9 +1059,79 @@
 		"hu"			"Felhős Tank"
 	}
 
+	"Boomer #14 Name"
+	{
+		"hu"			"Felhős Pukkancs"
+	}
+
+	"Charger #14 Name"
+	{
+		"hu"			"Felhős Rohanó"
+	}
+
+	"Hunter #14 Name"
+	{
+		"hu"			"Felhős Vadász"
+	}
+
+	"Jockey #14 Name"
+	{
+		"hu"			"Felhős Zsoké"
+	}
+
+	"Smoker #14 Name"
+	{
+		"hu"			"Felhős Füstös"
+	}
+
+	"Spitter #14 Name"
+	{
+		"hu"			"Felhős Köpködő"
+	}
+
+	"Witch #14 Name"
+	{
+		"hu"			"Felhős Boszorka"
+	}
+
 	"Tank #14"
 	{
 		"hu"			"{mint}Ez a Tank füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Boomer #14"
+	{
+		"hu"			"{mint}Ez a Pukkancs füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Charger #14"
+	{
+		"hu"			"{mint}Ez a Rohanó füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Hunter #14"
+	{
+		"hu"			"{mint}Ez a Vadász füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Jockey #14"
+	{
+		"hu"			"{mint}Ez a Zsoké füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Smoker #14"
+	{
+		"hu"			"{mint}Ez a Füstös füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Spitter #14"
+	{
+		"hu"			"{mint}Ez a Köpködő füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
+	}
+
+	"Witch #14"
+	{
+		"hu"			"{mint}Ez a Boszorka füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
 	}
 
 	"Tank #15 Name"
@@ -159,9 +1139,79 @@
 		"hu"			"Dobó Tank"
 	}
 
+	"Boomer #15 Name"
+	{
+		"hu"			"Dobó Pukkancs"
+	}
+
+	"Charger #15 Name"
+	{
+		"hu"			"Dobó Rohanó"
+	}
+
+	"Hunter #15 Name"
+	{
+		"hu"			"Dobó Vadász"
+	}
+
+	"Jockey #15 Name"
+	{
+		"hu"			"Dobó Zsoké"
+	}
+
+	"Smoker #15 Name"
+	{
+		"hu"			"Dobó Füstös"
+	}
+
+	"Spitter #15 Name"
+	{
+		"hu"			"Dobó Köpködő"
+	}
+
+	"Witch #15 Name"
+	{
+		"hu"			"Dobó Boszorka"
+	}
+
 	"Tank #15"
 	{
 		"hu"			"{mint}Ez a Tank véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Boomer #15"
+	{
+		"hu"			"{mint}Ez a Pukkancs véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Charger #15"
+	{
+		"hu"			"{mint}Ez a Rohanó véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Hunter #15"
+	{
+		"hu"			"{mint}Ez a Vadász véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Jockey #15"
+	{
+		"hu"			"{mint}Ez a Zsoké véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Smoker #15"
+	{
+		"hu"			"{mint}Ez a Füstös véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Spitter #15"
+	{
+		"hu"			"{mint}Ez a Köpködő véletlenszerű fegyvereket dob a halála után."
+	}
+
+	"Witch #15"
+	{
+		"hu"			"{mint}Ez a Boszorka véletlenszerű fegyvereket dob a halála után."
 	}
 
 	"Tank #16 Name"
@@ -169,9 +1219,79 @@
 		"hu"			"Drogozó Tank"
 	}
 
+	"Boomer #16 Name"
+	{
+		"hu"			"Drogozó Pukkancs"
+	}
+
+	"Charger #16 Name"
+	{
+		"hu"			"Drogozó Rohanó"
+	}
+
+	"Hunter #16 Name"
+	{
+		"hu"			"Drogozó Vadász"
+	}
+
+	"Jockey #16 Name"
+	{
+		"hu"			"Drogozó Zsoké"
+	}
+
+	"Smoker #16 Name"
+	{
+		"hu"			"Drogozó Füstös"
+	}
+
+	"Spitter #16 Name"
+	{
+		"hu"			"Drogozó Köpködő"
+	}
+
+	"Witch #16 Name"
+	{
+		"hu"			"Drogozó Boszorka"
+	}
+
 	"Tank #16"
 	{
 		"hu"			"{mint}Ez a Tank bedrogozhatja a túlélőket."
+	}
+
+	"Boomer #16"
+	{
+		"hu"			"{mint}Ez a Pukkancs bedrogozhatja a túlélőket."
+	}
+
+	"Charger #16"
+	{
+		"hu"			"{mint}Ez a Rohanó bedrogozhatja a túlélőket."
+	}
+
+	"Hunter #16"
+	{
+		"hu"			"{mint}Ez a Vadász bedrogozhatja a túlélőket."
+	}
+
+	"Jockey #16"
+	{
+		"hu"			"{mint}Ez a Zsoké bedrogozhatja a túlélőket."
+	}
+
+	"Smoker #16"
+	{
+		"hu"			"{mint}Ez a Füstös bedrogozhatja a túlélőket."
+	}
+
+	"Spitter #16"
+	{
+		"hu"			"{mint}Ez a Köpködő bedrogozhatja a túlélőket."
+	}
+
+	"Witch #16"
+	{
+		"hu"			"{mint}Ez a Boszorka bedrogozhatja a túlélőket."
 	}
 
 	"Tank #17 Name"
@@ -179,9 +1299,79 @@
 		"hu"			"Részeg Tank"
 	}
 
+	"Boomer #17 Name"
+	{
+		"hu"			"Részeg Pukkancs"
+	}
+
+	"Charger #17 Name"
+	{
+		"hu"			"Részeg Rohanó"
+	}
+
+	"Hunter #17 Name"
+	{
+		"hu"			"Részeg Vadász"
+	}
+
+	"Jockey #17 Name"
+	{
+		"hu"			"Részeg Zsoké"
+	}
+
+	"Smoker #17 Name"
+	{
+		"hu"			"Részeg Füstös"
+	}
+
+	"Spitter #17 Name"
+	{
+		"hu"			"Részeg Köpködő"
+	}
+
+	"Witch #17 Name"
+	{
+		"hu"			"Részeg Boszorka"
+	}
+
 	"Tank #17"
 	{
 		"hu"			"{mint}Ez a Tank részeggé teheti a túlélőket."
+	}
+
+	"Boomer #17"
+	{
+		"hu"			"{mint}Ez a Pukkancs részeggé teheti a túlélőket."
+	}
+
+	"Charger #17"
+	{
+		"hu"			"{mint}Ez a Rohanó részeggé teheti a túlélőket."
+	}
+
+	"Hunter #17"
+	{
+		"hu"			"{mint}Ez a Vadász részeggé teheti a túlélőket."
+	}
+
+	"Jockey #17"
+	{
+		"hu"			"{mint}Ez a Zsoké részeggé teheti a túlélőket."
+	}
+
+	"Smoker #17"
+	{
+		"hu"			"{mint}Ez a Füstös részeggé teheti a túlélőket."
+	}
+
+	"Spitter #17"
+	{
+		"hu"			"{mint}Ez a Köpködő részeggé teheti a túlélőket."
+	}
+
+	"Witch #17"
+	{
+		"hu"			"{mint}Ez a Boszorka részeggé teheti a túlélőket."
 	}
 
 	"Tank #18 Name"
@@ -189,9 +1379,79 @@
 		"hu"			"Elektromos Tank"
 	}
 
+	"Boomer #18 Name"
+	{
+		"hu"			"Elektromos Pukkancs"
+	}
+
+	"Charger #18 Name"
+	{
+		"hu"			"Elektromos Rohanó"
+	}
+
+	"Hunter #18 Name"
+	{
+		"hu"			"Elektromos Vadász"
+	}
+
+	"Jockey #18 Name"
+	{
+		"hu"			"Elektromos Zsoké"
+	}
+
+	"Smoker #18 Name"
+	{
+		"hu"			"Elektromos Füstös"
+	}
+
+	"Spitter #18 Name"
+	{
+		"hu"			"Elektromos Köpködő"
+	}
+
+	"Witch #18 Name"
+	{
+		"hu"			"Elektromos Boszorka"
+	}
+
 	"Tank #18"
 	{
 		"hu"			"{mint}Ez a Tank megrázhatja a túlélőket."
+	}
+
+	"Boomer #18"
+	{
+		"hu"			"{mint}Ez a Pukkancs megrázhatja a túlélőket."
+	}
+
+	"Charger #18"
+	{
+		"hu"			"{mint}Ez a Rohanó megrázhatja a túlélőket."
+	}
+
+	"Hunter #18"
+	{
+		"hu"			"{mint}Ez a Vadász megrázhatja a túlélőket."
+	}
+
+	"Jockey #18"
+	{
+		"hu"			"{mint}Ez a Zsoké megrázhatja a túlélőket."
+	}
+
+	"Smoker #18"
+	{
+		"hu"			"{mint}Ez a Füstös megrázhatja a túlélőket."
+	}
+
+	"Spitter #18"
+	{
+		"hu"			"{mint}Ez a Köpködő megrázhatja a túlélőket."
+	}
+
+	"Witch #18"
+	{
+		"hu"			"{mint}Ez a Boszorka megrázhatja a túlélőket."
 	}
 
 	"Tank #19 Name"
@@ -199,9 +1459,79 @@
 		"hu"			"Végrehajtó Tank"
 	}
 
+	"Boomer #19 Name"
+	{
+		"hu"			"Végrehajtó Pukkancs"
+	}
+
+	"Charger #19 Name"
+	{
+		"hu"			"Végrehajtó Rohanó"
+	}
+
+	"Hunter #19 Name"
+	{
+		"hu"			"Végrehajtó Vadász"
+	}
+
+	"Jockey #19 Name"
+	{
+		"hu"			"Végrehajtó Zsoké"
+	}
+
+	"Smoker #19 Name"
+	{
+		"hu"			"Végrehajtó Füstös"
+	}
+
+	"Spitter #19 Name"
+	{
+		"hu"			"Végrehajtó Köpködő"
+	}
+
+	"Witch #19 Name"
+	{
+		"hu"			"Végrehajtó Boszorka"
+	}
+
 	"Tank #19"
 	{
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Boomer #19"
+	{
+		"hu"			"{mint}Ez a Pukkancs ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Charger #19"
+	{
+		"hu"			"{mint}Ez a Rohanó ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Hunter #19"
+	{
+		"hu"			"{mint}Ez a Vadász ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Jockey #19"
+	{
+		"hu"			"{mint}Ez a Zsoké ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Smoker #19"
+	{
+		"hu"			"{mint}Ez a Füstös ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Spitter #19"
+	{
+		"hu"			"{mint}Ez a Köpködő ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
+	}
+
+	"Witch #19"
+	{
+		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
 	}
 
 	"Tank #20 Name"
@@ -209,9 +1539,79 @@
 		"hu"			"Gyors Tank"
 	}
 
+	"Boomer #20 Name"
+	{
+		"hu"			"Gyors Pukkancs"
+	}
+
+	"Charger #20 Name"
+	{
+		"hu"			"Gyors Rohanó"
+	}
+
+	"Hunter #20 Name"
+	{
+		"hu"			"Gyors Vadász"
+	}
+
+	"Jockey #20 Name"
+	{
+		"hu"			"Gyors Zsoké"
+	}
+
+	"Smoker #20 Name"
+	{
+		"hu"			"Gyors Füstös"
+	}
+
+	"Spitter #20 Name"
+	{
+		"hu"			"Gyors Köpködő"
+	}
+
+	"Witch #20 Name"
+	{
+		"hu"			"Gyors Boszorka"
+	}
+
 	"Tank #20"
 	{
 		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash."
+	}
+
+	"Boomer #20"
+	{
+		"hu"			"{mint}Ez a Pukkancs olyan gyorsan fut mint Flash."
+	}
+
+	"Charger #20"
+	{
+		"hu"			"{mint}Ez a Rohanó olyan gyorsan fut mint Flash."
+	}
+
+	"Hunter #20"
+	{
+		"hu"			"{mint}Ez a Vadász olyan gyorsan fut mint Flash."
+	}
+
+	"Jockey #20"
+	{
+		"hu"			"{mint}Ez a Zsoké olyan gyorsan fut mint Flash."
+	}
+
+	"Smoker #20"
+	{
+		"hu"			"{mint}Ez a Füstös olyan gyorsan fut mint Flash."
+	}
+
+	"Spitter #20"
+	{
+		"hu"			"{mint}Ez a Köpködő olyan gyorsan fut mint Flash."
+	}
+
+	"Witch #20"
+	{
+		"hu"			"{mint}Ez a Boszorka olyan gyorsan fut mint Flash."
 	}
 
 	"Tank #21 Name"
@@ -219,9 +1619,79 @@
 		"hu"			"Tűzálló Tank"
 	}
 
+	"Boomer #21 Name"
+	{
+		"hu"			"Tűzálló Pukkancs"
+	}
+
+	"Charger #21 Name"
+	{
+		"hu"			"Tűzálló Rohanó"
+	}
+
+	"Hunter #21 Name"
+	{
+		"hu"			"Tűzálló Vadász"
+	}
+
+	"Jockey #21 Name"
+	{
+		"hu"			"Tűzálló Zsoké"
+	}
+
+	"Smoker #21 Name"
+	{
+		"hu"			"Tűzálló Füstös"
+	}
+
+	"Spitter #21 Name"
+	{
+		"hu"			"Tűzálló Köpködő"
+	}
+
+	"Witch #21 Name"
+	{
+		"hu"			"Tűzálló Boszorka"
+	}
+
 	"Tank #21"
 	{
 		"hu"			"{mint}Ez a Tank tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Boomer #21"
+	{
+		"hu"			"{mint}Ez a Pukkancs tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Charger #21"
+	{
+		"hu"			"{mint}Ez a Rohanó tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Hunter #21"
+	{
+		"hu"			"{mint}Ez a Vadász tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Jockey #21"
+	{
+		"hu"			"{mint}Ez a Zsoké tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Smoker #21"
+	{
+		"hu"			"{mint}Ez a Füstös tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Spitter #21"
+	{
+		"hu"			"{mint}Ez a Köpködő tüzeket hozhat létre és immunis a tűzre."
+	}
+
+	"Witch #21"
+	{
+		"hu"			"{mint}Ez a Boszorka tüzeket hozhat létre és immunis a tűzre."
 	}
 
 	"Tank #22 Name"
@@ -229,9 +1699,79 @@
 		"hu"			"Hajító Tank"
 	}
 
+	"Boomer #22 Name"
+	{
+		"hu"			"Hajító Pukkancs"
+	}
+
+	"Charger #22 Name"
+	{
+		"hu"			"Hajító Rohanó"
+	}
+
+	"Hunter #22 Name"
+	{
+		"hu"			"Hajító Vadász"
+	}
+
+	"Jockey #22 Name"
+	{
+		"hu"			"Hajító Zsoké"
+	}
+
+	"Smoker #22 Name"
+	{
+		"hu"			"Hajító Füstös"
+	}
+
+	"Spitter #22 Name"
+	{
+		"hu"			"Hajító Köpködő"
+	}
+
+	"Witch #22 Name"
+	{
+		"hu"			"Hajító Boszorka"
+	}
+
 	"Tank #22"
 	{
 		"hu"			"{mint}Ez a Tank elhajítja a túlélőket a levegőbe."
+	}
+
+	"Boomer #22"
+	{
+		"hu"			"{mint}Ez a Pukkancs elhajítja a túlélőket a levegőbe."
+	}
+
+	"Charger #22"
+	{
+		"hu"			"{mint}Ez a Rohanó elhajítja a túlélőket a levegőbe."
+	}
+
+	"Hunter #22"
+	{
+		"hu"			"{mint}Ez a Vadász elhajítja a túlélőket a levegőbe."
+	}
+
+	"Jockey #22"
+	{
+		"hu"			"{mint}Ez a Zsoké elhajítja a túlélőket a levegőbe."
+	}
+
+	"Smoker #22"
+	{
+		"hu"			"{mint}Ez a Füstös elhajítja a túlélőket a levegőbe."
+	}
+
+	"Spitter #22"
+	{
+		"hu"			"{mint}Ez a Köpködő elhajítja a túlélőket a levegőbe."
+	}
+
+	"Witch #22"
+	{
+		"hu"			"{mint}Ez a Boszorka elhajítja a túlélőket a levegőbe."
 	}
 
 	"Tank #23 Name"
@@ -239,9 +1779,79 @@
 		"hu"			"Repülő Tank"
 	}
 
+	"Boomer #23 Name"
+	{
+		"hu"			"Repülő Pukkancs"
+	}
+
+	"Charger #23 Name"
+	{
+		"hu"			"Repülő Rohanó"
+	}
+
+	"Hunter #23 Name"
+	{
+		"hu"			"Repülő Vadász"
+	}
+
+	"Jockey #23 Name"
+	{
+		"hu"			"Repülő Zsoké"
+	}
+
+	"Smoker #23 Name"
+	{
+		"hu"			"Repülő Füstös"
+	}
+
+	"Spitter #23 Name"
+	{
+		"hu"			"Repülő Köpködő"
+	}
+
+	"Witch #23 Name"
+	{
+		"hu"			"Repülő Boszorka"
+	}
+
 	"Tank #23"
 	{
 		"hu"			"{mint}Ez a Tank körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Boomer #23"
+	{
+		"hu"			"{mint}Ez a Pukkancs körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Charger #23"
+	{
+		"hu"			"{mint}Ez a Rohanó körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Hunter #23"
+	{
+		"hu"			"{mint}Ez a Vadász körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Jockey #23"
+	{
+		"hu"			"{mint}Ez a Zsoké körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Smoker #23"
+	{
+		"hu"			"{mint}Ez a Füstös körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Spitter #23"
+	{
+		"hu"			"{mint}Ez a Köpködő körbe-körbe repül, áldozatokat keresve."
+	}
+
+	"Witch #23"
+	{
+		"hu"			"{mint}Ez a Boszorka körbe-körbe repül, áldozatokat keresve."
 	}
 
 	"Tank #24 Name"
@@ -249,9 +1859,79 @@
 		"hu"			"Törékeny Tank"
 	}
 
+	"Boomer #24 Name"
+	{
+		"hu"			"Törékeny Pukkancs"
+	}
+
+	"Charger #24 Name"
+	{
+		"hu"			"Törékeny Rohanó"
+	}
+
+	"Hunter #24 Name"
+	{
+		"hu"			"Törékeny Vadász"
+	}
+
+	"Jockey #24 Name"
+	{
+		"hu"			"Törékeny Zsoké"
+	}
+
+	"Smoker #24 Name"
+	{
+		"hu"			"Törékeny Füstös"
+	}
+
+	"Spitter #24 Name"
+	{
+		"hu"			"Törékeny Köpködő"
+	}
+
+	"Witch #24 Name"
+	{
+		"hu"			"Törékeny Boszorka"
+	}
+
 	"Tank #24"
 	{
 		"hu"			"{mint}Ez a Tank érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Boomer #24"
+	{
+		"hu"			"{mint}Ez a Pukkancs érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Charger #24"
+	{
+		"hu"			"{mint}Ez a Rohanó érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Hunter #24"
+	{
+		"hu"			"{mint}Ez a Vadász érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Jockey #24"
+	{
+		"hu"			"{mint}Ez a Zsoké érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Smoker #24"
+	{
+		"hu"			"{mint}Ez a Füstös érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Spitter #24"
+	{
+		"hu"			"{mint}Ez a Köpködő érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
+	}
+
+	"Witch #24"
+	{
+		"hu"			"{mint}Ez a Boszorka érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
 	}
 
 	"Tank #25 Name"
@@ -259,9 +1939,79 @@
 		"hu"			"Szellem Tank"
 	}
 
+	"Boomer #25 Name"
+	{
+		"hu"			"Szellem Pukkancs"
+	}
+
+	"Charger #25 Name"
+	{
+		"hu"			"Szellem Rohanó"
+	}
+
+	"Hunter #25 Name"
+	{
+		"hu"			"Szellem Vadász"
+	}
+
+	"Jockey #25 Name"
+	{
+		"hu"			"Szellem Zsoké"
+	}
+
+	"Smoker #25 Name"
+	{
+		"hu"			"Szellem Füstös"
+	}
+
+	"Spitter #25 Name"
+	{
+		"hu"			"Szellem Köpködő"
+	}
+
+	"Witch #25 Name"
+	{
+		"hu"			"Szellem Boszorka"
+	}
+
 	"Tank #25"
 	{
 		"hu"			"{mint}Ez a Tank álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Boomer #25"
+	{
+		"hu"			"{mint}Ez a Pukkancs álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Charger #25"
+	{
+		"hu"			"{mint}Ez a Rohanó álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Hunter #25"
+	{
+		"hu"			"{mint}Ez a Vadász álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Jockey #25"
+	{
+		"hu"			"{mint}Ez a Zsoké álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Smoker #25"
+	{
+		"hu"			"{mint}Ez a Füstös álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Spitter #25"
+	{
+		"hu"			"{mint}Ez a Köpködő álcázhatja magát és lefegyverezheti a túlélőket."
+	}
+
+	"Witch #25"
+	{
+		"hu"			"{mint}Ez a Boszorka álcázhatja magát és lefegyverezheti a túlélőket."
 	}
 
 	"Tank #26 Name"
@@ -269,9 +2019,79 @@
 		"hu"			"Isteni Tank"
 	}
 
+	"Boomer #26 Name"
+	{
+		"hu"			"Isteni Pukkancs"
+	}
+
+	"Charger #26 Name"
+	{
+		"hu"			"Isteni Rohanó"
+	}
+
+	"Hunter #26 Name"
+	{
+		"hu"			"Isteni Vadász"
+	}
+
+	"Jockey #26 Name"
+	{
+		"hu"			"Isteni Zsoké"
+	}
+
+	"Smoker #26 Name"
+	{
+		"hu"			"Isteni Füstös"
+	}
+
+	"Spitter #26 Name"
+	{
+		"hu"			"Isteni Köpködő"
+	}
+
+	"Witch #26 Name"
+	{
+		"hu"			"Isteni Boszorka"
+	}
+
 	"Tank #26"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Boomer #26"
+	{
+		"hu"			"{mint}Ez a Pukkancs ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Charger #26"
+	{
+		"hu"			"{mint}Ez a Rohanó ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Hunter #26"
+	{
+		"hu"			"{mint}Ez a Vadász ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Jockey #26"
+	{
+		"hu"			"{mint}Ez a Zsoké ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Smoker #26"
+	{
+		"hu"			"{mint}Ez a Füstös ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Spitter #26"
+	{
+		"hu"			"{mint}Ez a Köpködő ideiglenes legyőzhetetlenséget kaphat."
+	}
+
+	"Witch #26"
+	{
+		"hu"			"{mint}Ez a Boszorka ideiglenes legyőzhetetlenséget kaphat."
 	}
 
 	"Tank #27 Name"
@@ -279,9 +2099,79 @@
 		"hu"			"Gravitációs Tank"
 	}
 
+	"Boomer #27 Name"
+	{
+		"hu"			"Gravitációs Pukkancs"
+	}
+
+	"Charger #27 Name"
+	{
+		"hu"			"Gravitációs Rohanó"
+	}
+
+	"Hunter #27 Name"
+	{
+		"hu"			"Gravitációs Vadász"
+	}
+
+	"Jockey #27 Name"
+	{
+		"hu"			"Gravitációs Zsoké"
+	}
+
+	"Smoker #27 Name"
+	{
+		"hu"			"Gravitációs Füstös"
+	}
+
+	"Spitter #27 Name"
+	{
+		"hu"			"Gravitációs Köpködő"
+	}
+
+	"Witch #27 Name"
+	{
+		"hu"			"Gravitációs Boszorka"
+	}
+
 	"Tank #27"
 	{
 		"hu"			"{mint}Ez a Tank magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Boomer #27"
+	{
+		"hu"			"{mint}Ez a Pukkancs magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Charger #27"
+	{
+		"hu"			"{mint}Ez a Rohanó magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Hunter #27"
+	{
+		"hu"			"{mint}Ez a Vadász magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Jockey #27"
+	{
+		"hu"			"{mint}Ez a Zsoké magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Smoker #27"
+	{
+		"hu"			"{mint}Ez a Füstös magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Spitter #27"
+	{
+		"hu"			"{mint}Ez a Köpködő magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
+	}
+
+	"Witch #27"
+	{
+		"hu"			"{mint}Ez a Boszorka magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
 	}
 
 	"Tank #28 Name"
@@ -289,9 +2179,79 @@
 		"hu"			"Tüzér Tank"
 	}
 
+	"Boomer #28 Name"
+	{
+		"hu"			"Tüzér Pukkancs"
+	}
+
+	"Charger #28 Name"
+	{
+		"hu"			"Tüzér Rohanó"
+	}
+
+	"Hunter #28 Name"
+	{
+		"hu"			"Tüzér Vadász"
+	}
+
+	"Jockey #28 Name"
+	{
+		"hu"			"Tüzér Zsoké"
+	}
+
+	"Smoker #28 Name"
+	{
+		"hu"			"Tüzér Füstös"
+	}
+
+	"Spitter #28 Name"
+	{
+		"hu"			"Tüzér Köpködő"
+	}
+
+	"Witch #28 Name"
+	{
+		"hu"			"Tüzér Boszorka"
+	}
+
 	"Tank #28"
 	{
-		"hu"			"{mint}Ez a tank képes felfegyverkezni és lövéseket leadni a túlélőkre."
+		"hu"			"{mint}Ez a Tank képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Boomer #28"
+	{
+		"hu"			"{mint}Ez a Pukkancs képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Charger #28"
+	{
+		"hu"			"{mint}Ez a Rohanó képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Hunter #28"
+	{
+		"hu"			"{mint}Ez a Vadász képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Jockey #28"
+	{
+		"hu"			"{mint}Ez a Zsoké képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Smoker #28"
+	{
+		"hu"			"{mint}Ez a Füstös képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Spitter #28"
+	{
+		"hu"			"{mint}Ez a Köpködő képes felfegyverkezni és lövéseket leadni a túlélőkre."
+	}
+
+	"Witch #28"
+	{
+		"hu"			"{mint}Ez a Boszorka képes felfegyverkezni és lövéseket leadni a túlélőkre."
 	}
 
 	"Tank #29 Name"
@@ -299,9 +2259,79 @@
 		"hu"			"Egészséges Tank"
 	}
 
+	"Boomer #29 Name"
+	{
+		"hu"			"Egészséges Pukkancs"
+	}
+
+	"Charger #29 Name"
+	{
+		"hu"			"Egészséges Rohanó"
+	}
+
+	"Hunter #29 Name"
+	{
+		"hu"			"Egészséges Vadász"
+	}
+
+	"Jockey #29 Name"
+	{
+		"hu"			"Egészséges Zsoké"
+	}
+
+	"Smoker #29 Name"
+	{
+		"hu"			"Egészséges Füstös"
+	}
+
+	"Spitter #29 Name"
+	{
+		"hu"			"Egészséges Köpködő"
+	}
+
+	"Witch #29 Name"
+	{
+		"hu"			"Egészséges Boszorka"
+	}
+
 	"Tank #29"
 	{
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Boomer #29"
+	{
+		"hu"			"{mint}Ez a Pukkancs ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Charger #29"
+	{
+		"hu"			"{mint}Ez a Rohanó ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Hunter #29"
+	{
+		"hu"			"{mint}Ez a Vadász ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Jockey #29"
+	{
+		"hu"			"{mint}Ez a Zsoké ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Smoker #29"
+	{
+		"hu"			"{mint}Ez a Füstös ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Spitter #29"
+	{
+		"hu"			"{mint}Ez a Köpködő ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
+	}
+
+	"Witch #29"
+	{
+		"hu"			"{mint}Ez a Boszorka ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
 	}
 
 	"Tank #30 Name"
@@ -309,9 +2339,79 @@
 		"hu"			"Ütős Tank"
 	}
 
+	"Boomer #30 Name"
+	{
+		"hu"			"Ütős Pukkancs"
+	}
+
+	"Charger #30 Name"
+	{
+		"hu"			"Ütős Rohanó"
+	}
+
+	"Hunter #30 Name"
+	{
+		"hu"			"Ütős Vadász"
+	}
+
+	"Jockey #30 Name"
+	{
+		"hu"			"Ütős Zsoké"
+	}
+
+	"Smoker #30 Name"
+	{
+		"hu"			"Ütős Füstös"
+	}
+
+	"Spitter #30 Name"
+	{
+		"hu"			"Ütős Köpködő"
+	}
+
+	"Witch #30 Name"
+	{
+		"hu"			"Ütős Boszorka"
+	}
+
 	"Tank #30"
 	{
-		"hu"			"{mint}Ezt a Tankot csak a fejlövés sebzi."
+		"hu"			"{mint}Ez a Tank csak a fejlövés sebzi."
+	}
+
+	"Boomer #30"
+	{
+		"hu"			"{mint}Ez a Pukkancs csak a fejlövés sebzi."
+	}
+
+	"Charger #30"
+	{
+		"hu"			"{mint}Ez a Rohanó csak a fejlövés sebzi."
+	}
+
+	"Hunter #30"
+	{
+		"hu"			"{mint}Ez a Vadász csak a fejlövés sebzi."
+	}
+
+	"Jockey #30"
+	{
+		"hu"			"{mint}Ez a Zsoké csak a fejlövés sebzi."
+	}
+
+	"Smoker #30"
+	{
+		"hu"			"{mint}Ez a Füstös csak a fejlövés sebzi."
+	}
+
+	"Spitter #30"
+	{
+		"hu"			"{mint}Ez a Köpködő csak a fejlövés sebzi."
+	}
+
+	"Witch #30"
+	{
+		"hu"			"{mint}Ez a Boszorka csak a fejlövés sebzi."
 	}
 
 	"Tank #31 Name"
@@ -319,9 +2419,79 @@
 		"hu"			"Vadász Tank"
 	}
 
+	"Boomer #31 Name"
+	{
+		"hu"			"Vadász Pukkancs"
+	}
+
+	"Charger #31 Name"
+	{
+		"hu"			"Vadász Rohanó"
+	}
+
+	"Hunter #31 Name"
+	{
+		"hu"			"Vadász Vadász"
+	}
+
+	"Jockey #31 Name"
+	{
+		"hu"			"Vadász Zsoké"
+	}
+
+	"Smoker #31 Name"
+	{
+		"hu"			"Vadász Füstös"
+	}
+
+	"Spitter #31 Name"
+	{
+		"hu"			"Vadász Köpködő"
+	}
+
+	"Witch #31 Name"
+	{
+		"hu"			"Vadász Boszorka"
+	}
+
 	"Tank #31"
 	{
 		"hu"			"{mint}Ez a Tank Vadászokat hozhat létre, és dobhat is párat a túlélők felé."
+	}
+
+	"Boomer #31"
+	{
+		"hu"			"{mint}Ez a Pukkancs Vadászokat hozhat létre."
+	}
+
+	"Charger #31"
+	{
+		"hu"			"{mint}Ez a Rohanó Vadászokat hozhat létre."
+	}
+
+	"Hunter #31"
+	{
+		"hu"			"{mint}Ez a Vadász Vadászokat hozhat létre."
+	}
+
+	"Jockey #31"
+	{
+		"hu"			"{mint}Ez a Zsoké Vadászokat hozhat létre."
+	}
+
+	"Smoker #31"
+	{
+		"hu"			"{mint}Ez a Füstös Vadászokat hozhat létre."
+	}
+
+	"Spitter #31"
+	{
+		"hu"			"{mint}Ez a Köpködő Vadászokat hozhat létre."
+	}
+
+	"Witch #31"
+	{
+		"hu"			"{mint}Ez a Boszorka Vadászokat hozhat létre."
 	}
 
 	"Tank #32 Name"
@@ -329,9 +2499,79 @@
 		"hu"			"Bántó Tank"
 	}
 
+	"Boomer #32 Name"
+	{
+		"hu"			"Bántó Pukkancs"
+	}
+
+	"Charger #32 Name"
+	{
+		"hu"			"Bántó Rohanó"
+	}
+
+	"Hunter #32 Name"
+	{
+		"hu"			"Bántó Vadász"
+	}
+
+	"Jockey #32 Name"
+	{
+		"hu"			"Bántó Zsoké"
+	}
+
+	"Smoker #32 Name"
+	{
+		"hu"			"Bántó Füstös"
+	}
+
+	"Spitter #32 Name"
+	{
+		"hu"			"Bántó Köpködő"
+	}
+
+	"Witch #32 Name"
+	{
+		"hu"			"Bántó Boszorka"
+	}
+
 	"Tank #32"
 	{
 		"hu"			"{mint}Ez a Tank folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Boomer #32"
+	{
+		"hu"			"{mint}Ez a Pukkancs folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Charger #32"
+	{
+		"hu"			"{mint}Ez a Rohanó folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Hunter #32"
+	{
+		"hu"			"{mint}Ez a Vadász folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Jockey #32"
+	{
+		"hu"			"{mint}Ez a Zsoké folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Smoker #32"
+	{
+		"hu"			"{mint}Ez a Füstös folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Spitter #32"
+	{
+		"hu"			"{mint}Ez a Köpködő folyamatosan bántja a túlélőket egy bizonyos időn belül."
+	}
+
+	"Witch #32"
+	{
+		"hu"			"{mint}Ez a Boszorka folyamatosan bántja a túlélőket egy bizonyos időn belül."
 	}
 
 	"Tank #33 Name"
@@ -339,9 +2579,79 @@
 		"hu"			"Hipnotizáló Tank"
 	}
 
+	"Boomer #33 Name"
+	{
+		"hu"			"Hipnotizáló Pukkancs"
+	}
+
+	"Charger #33 Name"
+	{
+		"hu"			"Hipnotizáló Rohanó"
+	}
+
+	"Hunter #33 Name"
+	{
+		"hu"			"Hipnotizáló Vadász"
+	}
+
+	"Jockey #33 Name"
+	{
+		"hu"			"Hipnotizáló Zsoké"
+	}
+
+	"Smoker #33 Name"
+	{
+		"hu"			"Hipnotizáló Füstös"
+	}
+
+	"Spitter #33 Name"
+	{
+		"hu"			"Hipnotizáló Köpködő"
+	}
+
+	"Witch #33 Name"
+	{
+		"hu"			"Hipnotizáló Boszorka"
+	}
+
 	"Tank #33"
 	{
 		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Boomer #33"
+	{
+		"hu"			"{mint}Ez a Pukkancs hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Charger #33"
+	{
+		"hu"			"{mint}Ez a Rohanó hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Hunter #33"
+	{
+		"hu"			"{mint}Ez a Vadász hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Jockey #33"
+	{
+		"hu"			"{mint}Ez a Zsoké hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Smoker #33"
+	{
+		"hu"			"{mint}Ez a Füstös hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Spitter #33"
+	{
+		"hu"			"{mint}Ez a Köpködő hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
+	}
+
+	"Witch #33"
+	{
+		"hu"			"{mint}Ez a Boszorka hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat támadják."
 	}
 
 	"Tank #34 Name"
@@ -349,9 +2659,79 @@
 		"hu"			"Fagyos Tank"
 	}
 
+	"Boomer #34 Name"
+	{
+		"hu"			"Fagyos Pukkancs"
+	}
+
+	"Charger #34 Name"
+	{
+		"hu"			"Fagyos Rohanó"
+	}
+
+	"Hunter #34 Name"
+	{
+		"hu"			"Fagyos Vadász"
+	}
+
+	"Jockey #34 Name"
+	{
+		"hu"			"Fagyos Zsoké"
+	}
+
+	"Smoker #34 Name"
+	{
+		"hu"			"Fagyos Füstös"
+	}
+
+	"Spitter #34 Name"
+	{
+		"hu"			"Fagyos Köpködő"
+	}
+
+	"Witch #34 Name"
+	{
+		"hu"			"Fagyos Boszorka"
+	}
+
 	"Tank #34"
 	{
 		"hu"			"{mint}Ez a Tank megfagyasztja a túlélőket."
+	}
+
+	"Boomer #34"
+	{
+		"hu"			"{mint}Ez a Pukkancs megfagyasztja a túlélőket."
+	}
+
+	"Charger #34"
+	{
+		"hu"			"{mint}Ez a Rohanó megfagyasztja a túlélőket."
+	}
+
+	"Hunter #34"
+	{
+		"hu"			"{mint}Ez a Vadász megfagyasztja a túlélőket."
+	}
+
+	"Jockey #34"
+	{
+		"hu"			"{mint}Ez a Zsoké megfagyasztja a túlélőket."
+	}
+
+	"Smoker #34"
+	{
+		"hu"			"{mint}Ez a Füstös megfagyasztja a túlélőket."
+	}
+
+	"Spitter #34"
+	{
+		"hu"			"{mint}Ez a Köpködő megfagyasztja a túlélőket."
+	}
+
+	"Witch #34"
+	{
+		"hu"			"{mint}Ez a Boszorka megfagyasztja a túlélőket."
 	}
 
 	"Tank #35 Name"
@@ -359,9 +2739,79 @@
 		"hu"			"Tétlen Tank"
 	}
 
+	"Boomer #35 Name"
+	{
+		"hu"			"Tétlen Pukkancs"
+	}
+
+	"Charger #35 Name"
+	{
+		"hu"			"Tétlen Rohanó"
+	}
+
+	"Hunter #35 Name"
+	{
+		"hu"			"Tétlen Vadász"
+	}
+
+	"Jockey #35 Name"
+	{
+		"hu"			"Tétlen Zsoké"
+	}
+
+	"Smoker #35 Name"
+	{
+		"hu"			"Tétlen Füstös"
+	}
+
+	"Spitter #35 Name"
+	{
+		"hu"			"Tétlen Köpködő"
+	}
+
+	"Witch #35 Name"
+	{
+		"hu"			"Tétlen Boszorka"
+	}
+
 	"Tank #35"
 	{
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Boomer #35"
+	{
+		"hu"			"{mint}Ez a Pukkancs ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Charger #35"
+	{
+		"hu"			"{mint}Ez a Rohanó ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Hunter #35"
+	{
+		"hu"			"{mint}Ez a Vadász ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Jockey #35"
+	{
+		"hu"			"{mint}Ez a Zsoké ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Smoker #35"
+	{
+		"hu"			"{mint}Ez a Füstös ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Spitter #35"
+	{
+		"hu"			"{mint}Ez a Köpködő ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
+	}
+
+	"Witch #35"
+	{
+		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
 	}
 
 	"Tank #36 Name"
@@ -369,9 +2819,79 @@
 		"hu"			"Felcserélő Tank"
 	}
 
+	"Boomer #36 Name"
+	{
+		"hu"			"Felcserélő Pukkancs"
+	}
+
+	"Charger #36 Name"
+	{
+		"hu"			"Felcserélő Rohanó"
+	}
+
+	"Hunter #36 Name"
+	{
+		"hu"			"Felcserélő Vadász"
+	}
+
+	"Jockey #36 Name"
+	{
+		"hu"			"Felcserélő Zsoké"
+	}
+
+	"Smoker #36 Name"
+	{
+		"hu"			"Felcserélő Füstös"
+	}
+
+	"Spitter #36 Name"
+	{
+		"hu"			"Felcserélő Köpködő"
+	}
+
+	"Witch #36 Name"
+	{
+		"hu"			"Felcserélő Boszorka"
+	}
+
 	"Tank #36"
 	{
 		"hu"			"{mint}Ez a Tank felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Boomer #36"
+	{
+		"hu"			"{mint}Ez a Pukkancs felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Charger #36"
+	{
+		"hu"			"{mint}Ez a Rohanó felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Hunter #36"
+	{
+		"hu"			"{mint}Ez a Vadász felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Jockey #36"
+	{
+		"hu"			"{mint}Ez a Zsoké felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Smoker #36"
+	{
+		"hu"			"{mint}Ez a Füstös felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Spitter #36"
+	{
+		"hu"			"{mint}Ez a Köpködő felcserélheti a túlélők irányítási gombjait."
+	}
+
+	"Witch #36"
+	{
+		"hu"			"{mint}Ez a Boszorka felcserélheti a túlélők irányítási gombjait."
 	}
 
 	"Tank #37 Name"
@@ -379,9 +2899,79 @@
 		"hu"			"Áru Tank"
 	}
 
+	"Boomer #37 Name"
+	{
+		"hu"			"Áru Pukkancs"
+	}
+
+	"Charger #37 Name"
+	{
+		"hu"			"Áru Rohanó"
+	}
+
+	"Hunter #37 Name"
+	{
+		"hu"			"Áru Vadász"
+	}
+
+	"Jockey #37 Name"
+	{
+		"hu"			"Áru Zsoké"
+	}
+
+	"Smoker #37 Name"
+	{
+		"hu"			"Áru Füstös"
+	}
+
+	"Spitter #37 Name"
+	{
+		"hu"			"Áru Köpködő"
+	}
+
+	"Witch #37 Name"
+	{
+		"hu"			"Áru Boszorka"
+	}
+
 	"Tank #37"
 	{
 		"hu"			"{mint}Ez a Tank árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Boomer #37"
+	{
+		"hu"			"{mint}Ez a Pukkancs árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Charger #37"
+	{
+		"hu"			"{mint}Ez a Rohanó árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Hunter #37"
+	{
+		"hu"			"{mint}Ez a Vadász árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Jockey #37"
+	{
+		"hu"			"{mint}Ez a Zsoké árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Smoker #37"
+	{
+		"hu"			"{mint}Ez a Füstös árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Spitter #37"
+	{
+		"hu"			"{mint}Ez a Köpködő árukat adhat a túlélőknek miután meghalt."
+	}
+
+	"Witch #37"
+	{
+		"hu"			"{mint}Ez a Boszorka árukat adhat a túlélőknek miután meghalt."
 	}
 
 	"Tank #38 Name"
@@ -389,9 +2979,79 @@
 		"hu"			"Zsoké Tank"
 	}
 
+	"Boomer #38 Name"
+	{
+		"hu"			"Zsoké Pukkancs"
+	}
+
+	"Charger #38 Name"
+	{
+		"hu"			"Zsoké Rohanó"
+	}
+
+	"Hunter #38 Name"
+	{
+		"hu"			"Zsoké Vadász"
+	}
+
+	"Jockey #38 Name"
+	{
+		"hu"			"Zsoké Zsoké"
+	}
+
+	"Smoker #38 Name"
+	{
+		"hu"			"Zsoké Füstös"
+	}
+
+	"Spitter #38 Name"
+	{
+		"hu"			"Zsoké Köpködő"
+	}
+
+	"Witch #38 Name"
+	{
+		"hu"			"Zsoké Boszorka"
+	}
+
 	"Tank #38"
 	{
 		"hu"			"{mint}Ez a Tank Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Boomer #38"
+	{
+		"hu"			"{mint}Ez a Pukkancs Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Charger #38"
+	{
+		"hu"			"{mint}Ez a Rohanó Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Hunter #38"
+	{
+		"hu"			"{mint}Ez a Vadász Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Jockey #38"
+	{
+		"hu"			"{mint}Ez a Zsoké Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Smoker #38"
+	{
+		"hu"			"{mint}Ez a Füstös Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Spitter #38"
+	{
+		"hu"			"{mint}Ez a Köpködő Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
+	}
+
+	"Witch #38"
+	{
+		"hu"			"{mint}Ez a Boszorka Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
 	}
 
 	"Tank #39 Name"
@@ -399,9 +3059,79 @@
 		"hu"			"Ugró Tank"
 	}
 
+	"Boomer #39 Name"
+	{
+		"hu"			"Ugró Pukkancs"
+	}
+
+	"Charger #39 Name"
+	{
+		"hu"			"Ugró Rohanó"
+	}
+
+	"Hunter #39 Name"
+	{
+		"hu"			"Ugró Vadász"
+	}
+
+	"Jockey #39 Name"
+	{
+		"hu"			"Ugró Zsoké"
+	}
+
+	"Smoker #39 Name"
+	{
+		"hu"			"Ugró Füstös"
+	}
+
+	"Spitter #39 Name"
+	{
+		"hu"			"Ugró Köpködő"
+	}
+
+	"Witch #39 Name"
+	{
+		"hu"			"Ugró Boszorka"
+	}
+
 	"Tank #39"
 	{
 		"hu"			"{mint}Ez a Tank időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Boomer #39"
+	{
+		"hu"			"{mint}Ez a Pukkancs időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Charger #39"
+	{
+		"hu"			"{mint}Ez a Rohanó időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Hunter #39"
+	{
+		"hu"			"{mint}Ez a Vadász időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Jockey #39"
+	{
+		"hu"			"{mint}Ez a Zsoké időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Smoker #39"
+	{
+		"hu"			"{mint}Ez a Füstös időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Spitter #39"
+	{
+		"hu"			"{mint}Ez a Köpködő időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
+	}
+
+	"Witch #39"
+	{
+		"hu"			"{mint}Ez a Boszorka időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
 	}
 
 	"Tank #40 Name"
@@ -409,9 +3139,79 @@
 		"hu"			"Öngyilkos Tank"
 	}
 
+	"Boomer #40 Name"
+	{
+		"hu"			"Öngyilkos Pukkancs"
+	}
+
+	"Charger #40 Name"
+	{
+		"hu"			"Öngyilkos Rohanó"
+	}
+
+	"Hunter #40 Name"
+	{
+		"hu"			"Öngyilkos Vadász"
+	}
+
+	"Jockey #40 Name"
+	{
+		"hu"			"Öngyilkos Zsoké"
+	}
+
+	"Smoker #40 Name"
+	{
+		"hu"			"Öngyilkos Füstös"
+	}
+
+	"Spitter #40 Name"
+	{
+		"hu"			"Öngyilkos Köpködő"
+	}
+
+	"Witch #40 Name"
+	{
+		"hu"			"Öngyilkos Boszorka"
+	}
+
 	"Tank #40"
 	{
 		"hu"			"{mint}Ez a Tank megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Boomer #40"
+	{
+		"hu"			"{mint}Ez a Pukkancs megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Charger #40"
+	{
+		"hu"			"{mint}Ez a Rohanó megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Hunter #40"
+	{
+		"hu"			"{mint}Ez a Vadász megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Jockey #40"
+	{
+		"hu"			"{mint}Ez a Zsoké megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Smoker #40"
+	{
+		"hu"			"{mint}Ez a Füstös megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Spitter #40"
+	{
+		"hu"			"{mint}Ez a Köpködő megölheti magát, vihet egy túlélő áldozatot is."
+	}
+
+	"Witch #40"
+	{
+		"hu"			"{mint}Ez a Boszorka megölheti magát, vihet egy túlélő áldozatot is."
 	}
 
 	"Tank #41 Name"
@@ -419,9 +3219,79 @@
 		"hu"			"Késleltető Tank"
 	}
 
+	"Boomer #41 Name"
+	{
+		"hu"			"Késleltető Pukkancs"
+	}
+
+	"Charger #41 Name"
+	{
+		"hu"			"Késleltető Rohanó"
+	}
+
+	"Hunter #41 Name"
+	{
+		"hu"			"Késleltető Vadász"
+	}
+
+	"Jockey #41 Name"
+	{
+		"hu"			"Késleltető Zsoké"
+	}
+
+	"Smoker #41 Name"
+	{
+		"hu"			"Késleltető Füstös"
+	}
+
+	"Spitter #41 Name"
+	{
+		"hu"			"Késleltető Köpködő"
+	}
+
+	"Witch #41 Name"
+	{
+		"hu"			"Késleltető Boszorka"
+	}
+
 	"Tank #41"
 	{
 		"hu"			"{mint}Ez a Tank késleltetheti a túlélőket."
+	}
+
+	"Boomer #41"
+	{
+		"hu"			"{mint}Ez a Pukkancs késleltetheti a túlélőket."
+	}
+
+	"Charger #41"
+	{
+		"hu"			"{mint}Ez a Rohanó késleltetheti a túlélőket."
+	}
+
+	"Hunter #41"
+	{
+		"hu"			"{mint}Ez a Vadász késleltetheti a túlélőket."
+	}
+
+	"Jockey #41"
+	{
+		"hu"			"{mint}Ez a Zsoké késleltetheti a túlélőket."
+	}
+
+	"Smoker #41"
+	{
+		"hu"			"{mint}Ez a Füstös késleltetheti a túlélőket."
+	}
+
+	"Spitter #41"
+	{
+		"hu"			"{mint}Ez a Köpködő késleltetheti a túlélőket."
+	}
+
+	"Witch #41"
+	{
+		"hu"			"{mint}Ez a Boszorka késleltetheti a túlélőket."
 	}
 
 	"Tank #42 Name"
@@ -429,9 +3299,79 @@
 		"hu"			"Lézer Tank"
 	}
 
+	"Boomer #42 Name"
+	{
+		"hu"			"Lézer Pukkancs"
+	}
+
+	"Charger #42 Name"
+	{
+		"hu"			"Lézer Rohanó"
+	}
+
+	"Hunter #42 Name"
+	{
+		"hu"			"Lézer Vadász"
+	}
+
+	"Jockey #42 Name"
+	{
+		"hu"			"Lézer Zsoké"
+	}
+
+	"Smoker #42 Name"
+	{
+		"hu"			"Lézer Füstös"
+	}
+
+	"Spitter #42 Name"
+	{
+		"hu"			"Lézer Köpködő"
+	}
+
+	"Witch #42 Name"
+	{
+		"hu"			"Lézer Boszorka"
+	}
+
 	"Tank #42"
 	{
 		"hu"			"{mint}Ez a Tank lézereket lőhet a túlélők felé."
+	}
+
+	"Boomer #42"
+	{
+		"hu"			"{mint}Ez a Pukkancs lézereket lőhet a túlélők felé."
+	}
+
+	"Charger #42"
+	{
+		"hu"			"{mint}Ez a Rohanó lézereket lőhet a túlélők felé."
+	}
+
+	"Hunter #42"
+	{
+		"hu"			"{mint}Ez a Vadász lézereket lőhet a túlélők felé."
+	}
+
+	"Jockey #42"
+	{
+		"hu"			"{mint}Ez a Zsoké lézereket lőhet a túlélők felé."
+	}
+
+	"Smoker #42"
+	{
+		"hu"			"{mint}Ez a Füstös lézereket lőhet a túlélők felé."
+	}
+
+	"Spitter #42"
+	{
+		"hu"			"{mint}Ez a Köpködő lézereket lőhet a túlélők felé."
+	}
+
+	"Witch #42"
+	{
+		"hu"			"{mint}Ez a Boszorka lézereket lőhet a túlélők felé."
 	}
 
 	"Tank #43 Name"
@@ -439,9 +3379,79 @@
 		"hu"			"Pióca Tank"
 	}
 
+	"Boomer #43 Name"
+	{
+		"hu"			"Pióca Pukkancs"
+	}
+
+	"Charger #43 Name"
+	{
+		"hu"			"Pióca Rohanó"
+	}
+
+	"Hunter #43 Name"
+	{
+		"hu"			"Pióca Vadász"
+	}
+
+	"Jockey #43 Name"
+	{
+		"hu"			"Pióca Zsoké"
+	}
+
+	"Smoker #43 Name"
+	{
+		"hu"			"Pióca Füstös"
+	}
+
+	"Spitter #43 Name"
+	{
+		"hu"			"Pióca Köpködő"
+	}
+
+	"Witch #43 Name"
+	{
+		"hu"			"Pióca Boszorka"
+	}
+
 	"Tank #43"
 	{
 		"hu"			"{mint}Ez a Tank életet szívhat el a túlélőktől."
+	}
+
+	"Boomer #43"
+	{
+		"hu"			"{mint}Ez a Pukkancs életet szívhat el a túlélőktől."
+	}
+
+	"Charger #43"
+	{
+		"hu"			"{mint}Ez a Rohanó életet szívhat el a túlélőktől."
+	}
+
+	"Hunter #43"
+	{
+		"hu"			"{mint}Ez a Vadász életet szívhat el a túlélőktől."
+	}
+
+	"Jockey #43"
+	{
+		"hu"			"{mint}Ez a Zsoké életet szívhat el a túlélőktől."
+	}
+
+	"Smoker #43"
+	{
+		"hu"			"{mint}Ez a Füstös életet szívhat el a túlélőktől."
+	}
+
+	"Spitter #43"
+	{
+		"hu"			"{mint}Ez a Köpködő életet szívhat el a túlélőktől."
+	}
+
+	"Witch #43"
+	{
+		"hu"			"{mint}Ez a Boszorka életet szívhat el a túlélőktől."
 	}
 
 	"Tank #44 Name"
@@ -449,9 +3459,79 @@
 		"hu"			"Villám Tank"
 	}
 
+	"Boomer #44 Name"
+	{
+		"hu"			"Villám Pukkancs"
+	}
+
+	"Charger #44 Name"
+	{
+		"hu"			"Villám Rohanó"
+	}
+
+	"Hunter #44 Name"
+	{
+		"hu"			"Villám Vadász"
+	}
+
+	"Jockey #44 Name"
+	{
+		"hu"			"Villám Zsoké"
+	}
+
+	"Smoker #44 Name"
+	{
+		"hu"			"Villám Füstös"
+	}
+
+	"Spitter #44 Name"
+	{
+		"hu"			"Villám Köpködő"
+	}
+
+	"Witch #44 Name"
+	{
+		"hu"			"Villám Boszorka"
+	}
+
 	"Tank #44"
 	{
 		"hu"			"{mint}Ez a Tank villám viharokat indít."
+	}
+
+	"Boomer #44"
+	{
+		"hu"			"{mint}Ez a Pukkancs villám viharokat indít."
+	}
+
+	"Charger #44"
+	{
+		"hu"			"{mint}Ez a Rohanó villám viharokat indít."
+	}
+
+	"Hunter #44"
+	{
+		"hu"			"{mint}Ez a Vadász villám viharokat indít."
+	}
+
+	"Jockey #44"
+	{
+		"hu"			"{mint}Ez a Zsoké villám viharokat indít."
+	}
+
+	"Smoker #44"
+	{
+		"hu"			"{mint}Ez a Füstös villám viharokat indít."
+	}
+
+	"Spitter #44"
+	{
+		"hu"			"{mint}Ez a Köpködő villám viharokat indít."
+	}
+
+	"Witch #44"
+	{
+		"hu"			"{mint}Ez a Boszorka villám viharokat indít."
 	}
 
 	"Tank #45 Name"
@@ -459,9 +3539,79 @@
 		"hu"			"Gyógyító Tank"
 	}
 
+	"Boomer #45 Name"
+	{
+		"hu"			"Gyógyító Pukkancs"
+	}
+
+	"Charger #45 Name"
+	{
+		"hu"			"Gyógyító Rohanó"
+	}
+
+	"Hunter #45 Name"
+	{
+		"hu"			"Gyógyító Vadász"
+	}
+
+	"Jockey #45 Name"
+	{
+		"hu"			"Gyógyító Zsoké"
+	}
+
+	"Smoker #45 Name"
+	{
+		"hu"			"Gyógyító Füstös"
+	}
+
+	"Spitter #45 Name"
+	{
+		"hu"			"Gyógyító Köpködő"
+	}
+
+	"Witch #45 Name"
+	{
+		"hu"			"Gyógyító Boszorka"
+	}
+
 	"Tank #45"
 	{
 		"hu"			"{mint}Ez a Tank gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Boomer #45"
+	{
+		"hu"			"{mint}Ez a Pukkancs gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Charger #45"
+	{
+		"hu"			"{mint}Ez a Rohanó gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Hunter #45"
+	{
+		"hu"			"{mint}Ez a Vadász gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Jockey #45"
+	{
+		"hu"			"{mint}Ez a Zsoké gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Smoker #45"
+	{
+		"hu"			"{mint}Ez a Füstös gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Spitter #45"
+	{
+		"hu"			"{mint}Ez a Köpködő gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
+	}
+
+	"Witch #45"
+	{
+		"hu"			"{mint}Ez a Boszorka gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
 	}
 
 	"Tank #46 Name"
@@ -469,9 +3619,79 @@
 		"hu"			"Meteor Tank"
 	}
 
+	"Boomer #46 Name"
+	{
+		"hu"			"Meteor Pukkancs"
+	}
+
+	"Charger #46 Name"
+	{
+		"hu"			"Meteor Rohanó"
+	}
+
+	"Hunter #46 Name"
+	{
+		"hu"			"Meteor Vadász"
+	}
+
+	"Jockey #46 Name"
+	{
+		"hu"			"Meteor Zsoké"
+	}
+
+	"Smoker #46 Name"
+	{
+		"hu"			"Meteor Füstös"
+	}
+
+	"Spitter #46 Name"
+	{
+		"hu"			"Meteor Köpködő"
+	}
+
+	"Witch #46 Name"
+	{
+		"hu"			"Meteor Boszorka"
+	}
+
 	"Tank #46"
 	{
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Boomer #46"
+	{
+		"hu"			"{mint}Ez a Pukkancs meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Charger #46"
+	{
+		"hu"			"{mint}Ez a Rohanó meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Hunter #46"
+	{
+		"hu"			"{mint}Ez a Vadász meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Jockey #46"
+	{
+		"hu"			"{mint}Ez a Zsoké meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Smoker #46"
+	{
+		"hu"			"{mint}Ez a Füstös meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Spitter #46"
+	{
+		"hu"			"{mint}Ez a Köpködő meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
+	}
+
+	"Witch #46"
+	{
+		"hu"			"{mint}Ez a Boszorka meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
 	}
 
 	"Tank #47 Name"
@@ -479,9 +3699,79 @@
 		"hu"			"Nekromanta Tank"
 	}
 
+	"Boomer #47 Name"
+	{
+		"hu"			"Nekromanta Pukkancs"
+	}
+
+	"Charger #47 Name"
+	{
+		"hu"			"Nekromanta Rohanó"
+	}
+
+	"Hunter #47 Name"
+	{
+		"hu"			"Nekromanta Vadász"
+	}
+
+	"Jockey #47 Name"
+	{
+		"hu"			"Nekromanta Zsoké"
+	}
+
+	"Smoker #47 Name"
+	{
+		"hu"			"Nekromanta Füstös"
+	}
+
+	"Spitter #47 Name"
+	{
+		"hu"			"Nekromanta Köpködő"
+	}
+
+	"Witch #47 Name"
+	{
+		"hu"			"Nekromanta Boszorka"
+	}
+
 	"Tank #47"
 	{
 		"hu"			"{mint}Ez a Tank visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Boomer #47"
+	{
+		"hu"			"{mint}Ez a Pukkancs visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Charger #47"
+	{
+		"hu"			"{mint}Ez a Rohanó visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Hunter #47"
+	{
+		"hu"			"{mint}Ez a Vadász visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Jockey #47"
+	{
+		"hu"			"{mint}Ez a Zsoké visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Smoker #47"
+	{
+		"hu"			"{mint}Ez a Füstös visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Spitter #47"
+	{
+		"hu"			"{mint}Ez a Köpködő visszahozhatja a halott speciális fertőzötteket."
+	}
+
+	"Witch #47"
+	{
+		"hu"			"{mint}Ez a Boszorka visszahozhatja a halott speciális fertőzötteket."
 	}
 
 	"Tank #48 Name"
@@ -489,9 +3779,79 @@
 		"hu"			"Hatástalanító Tank"
 	}
 
+	"Boomer #48 Name"
+	{
+		"hu"			"Hatástalanító Pukkancs"
+	}
+
+	"Charger #48 Name"
+	{
+		"hu"			"Hatástalanító Rohanó"
+	}
+
+	"Hunter #48 Name"
+	{
+		"hu"			"Hatástalanító Vadász"
+	}
+
+	"Jockey #48 Name"
+	{
+		"hu"			"Hatástalanító Zsoké"
+	}
+
+	"Smoker #48 Name"
+	{
+		"hu"			"Hatástalanító Füstös"
+	}
+
+	"Spitter #48 Name"
+	{
+		"hu"			"Hatástalanító Köpködő"
+	}
+
+	"Witch #48 Name"
+	{
+		"hu"			"Hatástalanító Boszorka"
+	}
+
 	"Tank #48"
 	{
 		"hu"			"{mint}Ez a Tank hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Boomer #48"
+	{
+		"hu"			"{mint}Ez a Pukkancs hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Charger #48"
+	{
+		"hu"			"{mint}Ez a Rohanó hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Hunter #48"
+	{
+		"hu"			"{mint}Ez a Vadász hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Jockey #48"
+	{
+		"hu"			"{mint}Ez a Zsoké hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Smoker #48"
+	{
+		"hu"			"{mint}Ez a Füstös hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Spitter #48"
+	{
+		"hu"			"{mint}Ez a Köpködő hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
+	}
+
+	"Witch #48"
+	{
+		"hu"			"{mint}Ez a Boszorka hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
 	}
 
 	"Tank #49 Name"
@@ -499,9 +3859,79 @@
 		"hu"			"Mindenható Tank"
 	}
 
+	"Boomer #49 Name"
+	{
+		"hu"			"Mindenható Pukkancs"
+	}
+
+	"Charger #49 Name"
+	{
+		"hu"			"Mindenható Rohanó"
+	}
+
+	"Hunter #49 Name"
+	{
+		"hu"			"Mindenható Vadász"
+	}
+
+	"Jockey #49 Name"
+	{
+		"hu"			"Mindenható Zsoké"
+	}
+
+	"Smoker #49 Name"
+	{
+		"hu"			"Mindenható Füstös"
+	}
+
+	"Spitter #49 Name"
+	{
+		"hu"			"Mindenható Köpködő"
+	}
+
+	"Witch #49 Name"
+	{
+		"hu"			"Mindenható Boszorka"
+	}
+
 	"Tank #49"
 	{
 		"hu"			"{mint}Ez a Tank hozzáfér a többi közel lévő Mutáns Tank képességeihez."
+	}
+
+	"Boomer #49"
+	{
+		"hu"			"{mint}Ez a Pukkancs hozzáfér a többi közel lévő Mutáns Pukkancs képességeihez."
+	}
+
+	"Charger #49"
+	{
+		"hu"			"{mint}Ez a Rohanó hozzáfér a többi közel lévő Mutáns Rohanó képességeihez."
+	}
+
+	"Hunter #49"
+	{
+		"hu"			"{mint}Ez a Vadász hozzáfér a többi közel lévő Mutáns Vadász képességeihez."
+	}
+
+	"Jockey #49"
+	{
+		"hu"			"{mint}Ez a Zsoké hozzáfér a többi közel lévő Mutáns Zsoké képességeihez."
+	}
+
+	"Smoker #49"
+	{
+		"hu"			"{mint}Ez a Füstös hozzáfér a többi közel lévő Mutáns Füstös képességeihez."
+	}
+
+	"Spitter #49"
+	{
+		"hu"			"{mint}Ez a Köpködő hozzáfér a többi közel lévő Mutáns Köpködő képességeihez."
+	}
+
+	"Witch #49"
+	{
+		"hu"			"{mint}Ez a Boszorka hozzáfér a többi közel lévő Mutáns Boszorka képességeihez."
 	}
 
 	"Tank #50 Name"
@@ -509,9 +3939,79 @@
 		"hu"			"Pánik Tank"
 	}
 
+	"Boomer #50 Name"
+	{
+		"hu"			"Pánik Pukkancs"
+	}
+
+	"Charger #50 Name"
+	{
+		"hu"			"Pánik Rohanó"
+	}
+
+	"Hunter #50 Name"
+	{
+		"hu"			"Pánik Vadász"
+	}
+
+	"Jockey #50 Name"
+	{
+		"hu"			"Pánik Zsoké"
+	}
+
+	"Smoker #50 Name"
+	{
+		"hu"			"Pánik Füstös"
+	}
+
+	"Spitter #50 Name"
+	{
+		"hu"			"Pánik Köpködő"
+	}
+
+	"Witch #50 Name"
+	{
+		"hu"			"Pánik Boszorka"
+	}
+
 	"Tank #50"
 	{
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Boomer #50"
+	{
+		"hu"			"{mint}Ez a Pukkancs pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Charger #50"
+	{
+		"hu"			"{mint}Ez a Rohanó pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Hunter #50"
+	{
+		"hu"			"{mint}Ez a Vadász pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Jockey #50"
+	{
+		"hu"			"{mint}Ez a Zsoké pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Smoker #50"
+	{
+		"hu"			"{mint}Ez a Füstös pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Spitter #50"
+	{
+		"hu"			"{mint}Ez a Köpködő pánik eseményt indíthat, nagyon sok zombival."
+	}
+
+	"Witch #50"
+	{
+		"hu"			"{mint}Ez a Boszorka pánik eseményt indíthat, nagyon sok zombival."
 	}
 
 	"Tank #51 Name"
@@ -519,9 +4019,79 @@
 		"hu"			"Háziállat Tank"
 	}
 
+	"Boomer #51 Name"
+	{
+		"hu"			"Háziállat Pukkancs"
+	}
+
+	"Charger #51 Name"
+	{
+		"hu"			"Háziállat Rohanó"
+	}
+
+	"Hunter #51 Name"
+	{
+		"hu"			"Háziállat Vadász"
+	}
+
+	"Jockey #51 Name"
+	{
+		"hu"			"Háziállat Zsoké"
+	}
+
+	"Smoker #51 Name"
+	{
+		"hu"			"Háziállat Füstös"
+	}
+
+	"Spitter #51 Name"
+	{
+		"hu"			"Háziállat Köpködő"
+	}
+
+	"Witch #51 Name"
+	{
+		"hu"			"Háziállat Boszorka"
+	}
+
 	"Tank #51"
 	{
 		"hu"			"{mint}Ez a Tank lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Boomer #51"
+	{
+		"hu"			"{mint}Ez a Pukkancs lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Charger #51"
+	{
+		"hu"			"{mint}Ez a Rohanó lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Hunter #51"
+	{
+		"hu"			"{mint}Ez a Vadász lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Jockey #51"
+	{
+		"hu"			"{mint}Ez a Zsoké lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Smoker #51"
+	{
+		"hu"			"{mint}Ez a Füstös lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Spitter #51"
+	{
+		"hu"			"{mint}Ez a Köpködő lojális a túlélőkhöz és szeret öleléseket adni."
+	}
+
+	"Witch #51"
+	{
+		"hu"			"{mint}Ez a Boszorka lojális a túlélőkhöz és szeret öleléseket adni."
 	}
 
 	"Tank #52 Name"
@@ -529,9 +4099,79 @@
 		"hu"			"Csapdosó Tank"
 	}
 
+	"Boomer #52 Name"
+	{
+		"hu"			"Csapdosó Pukkancs"
+	}
+
+	"Charger #52 Name"
+	{
+		"hu"			"Csapdosó Rohanó"
+	}
+
+	"Hunter #52 Name"
+	{
+		"hu"			"Csapdosó Vadász"
+	}
+
+	"Jockey #52 Name"
+	{
+		"hu"			"Csapdosó Zsoké"
+	}
+
+	"Smoker #52 Name"
+	{
+		"hu"			"Csapdosó Füstös"
+	}
+
+	"Spitter #52 Name"
+	{
+		"hu"			"Csapdosó Köpködő"
+	}
+
+	"Witch #52 Name"
+	{
+		"hu"			"Csapdosó Boszorka"
+	}
+
 	"Tank #52"
 	{
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Boomer #52"
+	{
+		"hu"			"{mint}Ez a Pukkancs folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Charger #52"
+	{
+		"hu"			"{mint}Ez a Rohanó folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Hunter #52"
+	{
+		"hu"			"{mint}Ez a Vadász folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Jockey #52"
+	{
+		"hu"			"{mint}Ez a Zsoké folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Smoker #52"
+	{
+		"hu"			"{mint}Ez a Füstös folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Spitter #52"
+	{
+		"hu"			"{mint}Ez a Köpködő folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
+	}
+
+	"Witch #52"
+	{
+		"hu"			"{mint}Ez a Boszorka folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
 	}
 
 	"Tank #53 Name"
@@ -539,9 +4179,79 @@
 		"hu"			"Platina Tank"
 	}
 
+	"Boomer #53 Name"
+	{
+		"hu"			"Platina Pukkancs"
+	}
+
+	"Charger #53 Name"
+	{
+		"hu"			"Platina Rohanó"
+	}
+
+	"Hunter #53 Name"
+	{
+		"hu"			"Platina Vadász"
+	}
+
+	"Jockey #53 Name"
+	{
+		"hu"			"Platina Zsoké"
+	}
+
+	"Smoker #53 Name"
+	{
+		"hu"			"Platina Füstös"
+	}
+
+	"Spitter #53 Name"
+	{
+		"hu"			"Platina Köpködő"
+	}
+
+	"Witch #53 Name"
+	{
+		"hu"			"Platina Boszorka"
+	}
+
 	"Tank #53"
 	{
 		"hu"			"{mint}Ez a Tank immunis a közelharci sebzésre."
+	}
+
+	"Boomer #53"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a közelharci sebzésre."
+	}
+
+	"Charger #53"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a közelharci sebzésre."
+	}
+
+	"Hunter #53"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a közelharci sebzésre."
+	}
+
+	"Jockey #53"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a közelharci sebzésre."
+	}
+
+	"Smoker #53"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a közelharci sebzésre."
+	}
+
+	"Spitter #53"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a közelharci sebzésre."
+	}
+
+	"Witch #53"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a közelharci sebzésre."
 	}
 
 	"Tank #54 Name"
@@ -549,9 +4259,79 @@
 		"hu"			"Hányó Tank"
 	}
 
+	"Boomer #54 Name"
+	{
+		"hu"			"Hányó Pukkancs"
+	}
+
+	"Charger #54 Name"
+	{
+		"hu"			"Hányó Rohanó"
+	}
+
+	"Hunter #54 Name"
+	{
+		"hu"			"Hányó Vadász"
+	}
+
+	"Jockey #54 Name"
+	{
+		"hu"			"Hányó Zsoké"
+	}
+
+	"Smoker #54 Name"
+	{
+		"hu"			"Hányó Füstös"
+	}
+
+	"Spitter #54 Name"
+	{
+		"hu"			"Hányó Köpködő"
+	}
+
+	"Witch #54 Name"
+	{
+		"hu"			"Hányó Boszorka"
+	}
+
 	"Tank #54"
 	{
 		"hu"			"{mint}Ez a Tank lehányhatja a túlélőket."
+	}
+
+	"Boomer #54"
+	{
+		"hu"			"{mint}Ez a Pukkancs lehányhatja a túlélőket."
+	}
+
+	"Charger #54"
+	{
+		"hu"			"{mint}Ez a Rohanó lehányhatja a túlélőket."
+	}
+
+	"Hunter #54"
+	{
+		"hu"			"{mint}Ez a Vadász lehányhatja a túlélőket."
+	}
+
+	"Jockey #54"
+	{
+		"hu"			"{mint}Ez a Zsoké lehányhatja a túlélőket."
+	}
+
+	"Smoker #54"
+	{
+		"hu"			"{mint}Ez a Füstös lehányhatja a túlélőket."
+	}
+
+	"Spitter #54"
+	{
+		"hu"			"{mint}Ez a Köpködő lehányhatja a túlélőket."
+	}
+
+	"Witch #54"
+	{
+		"hu"			"{mint}Ez a Boszorka lehányhatja a túlélőket."
 	}
 
 	"Tank #55 Name"
@@ -559,9 +4339,79 @@
 		"hu"			"Piromániás Tank"
 	}
 
+	"Boomer #55 Name"
+	{
+		"hu"			"Piromániás Pukkancs"
+	}
+
+	"Charger #55 Name"
+	{
+		"hu"			"Piromániás Rohanó"
+	}
+
+	"Hunter #55 Name"
+	{
+		"hu"			"Piromániás Vadász"
+	}
+
+	"Jockey #55 Name"
+	{
+		"hu"			"Piromániás Zsoké"
+	}
+
+	"Smoker #55 Name"
+	{
+		"hu"			"Piromániás Füstös"
+	}
+
+	"Spitter #55 Name"
+	{
+		"hu"			"Piromániás Köpködő"
+	}
+
+	"Witch #55 Name"
+	{
+		"hu"			"Piromániás Boszorka"
+	}
+
 	"Tank #55"
 	{
-		"hu"			"{mint}Ez Tank gyorsabb lesz ha felgyújtják."
+		"hu"			"{mint}Ez a Tank gyorsabb lesz ha felgyújtják."
+	}
+
+	"Boomer #55"
+	{
+		"hu"			"{mint}Ez a Pukkancs gyorsabb lesz ha felgyújtják."
+	}
+
+	"Charger #55"
+	{
+		"hu"			"{mint}Ez a Rohanó gyorsabb lesz ha felgyújtják."
+	}
+
+	"Hunter #55"
+	{
+		"hu"			"{mint}Ez a Vadász gyorsabb lesz ha felgyújtják."
+	}
+
+	"Jockey #55"
+	{
+		"hu"			"{mint}Ez a Zsoké gyorsabb lesz ha felgyújtják."
+	}
+
+	"Smoker #55"
+	{
+		"hu"			"{mint}Ez a Füstös gyorsabb lesz ha felgyújtják."
+	}
+
+	"Spitter #55"
+	{
+		"hu"			"{mint}Ez a Köpködő gyorsabb lesz ha felgyújtják."
+	}
+
+	"Witch #55"
+	{
+		"hu"			"{mint}Ez a Boszorka gyorsabb lesz ha felgyújtják."
 	}
 
 	"Tank #56 Name"
@@ -569,719 +4419,5839 @@
 		"hu"			"Csendes Tank"
 	}
 
+	"Boomer #56 Name"
+	{
+		"hu"			"Csendes Pukkancs"
+	}
+
+	"Charger #56 Name"
+	{
+		"hu"			"Csendes Rohanó"
+	}
+
+	"Hunter #56 Name"
+	{
+		"hu"			"Csendes Vadász"
+	}
+
+	"Jockey #56 Name"
+	{
+		"hu"			"Csendes Zsoké"
+	}
+
+	"Smoker #56 Name"
+	{
+		"hu"			"Csendes Füstös"
+	}
+
+	"Spitter #56 Name"
+	{
+		"hu"			"Csendes Köpködő"
+	}
+
+	"Witch #56 Name"
+	{
+		"hu"			"Csendes Boszorka"
+	}
+
 	"Tank #56"
 	{
 		"hu"			"{mint}Ez a Tank lenémíthatja magát a túlélők elől."
 	}
 
+	"Boomer #56"
+	{
+		"hu"			"{mint}Ez a Pukkancs lenémíthatja magát a túlélők elől."
+	}
+
+	"Charger #56"
+	{
+		"hu"			"{mint}Ez a Rohanó lenémíthatja magát a túlélők elől."
+	}
+
+	"Hunter #56"
+	{
+		"hu"			"{mint}Ez a Vadász lenémíthatja magát a túlélők elől."
+	}
+
+	"Jockey #56"
+	{
+		"hu"			"{mint}Ez a Zsoké lenémíthatja magát a túlélők elől."
+	}
+
+	"Smoker #56"
+	{
+		"hu"			"{mint}Ez a Füstös lenémíthatja magát a túlélők elől."
+	}
+
+	"Spitter #56"
+	{
+		"hu"			"{mint}Ez a Köpködő lenémíthatja magát a túlélők elől."
+	}
+
+	"Witch #56"
+	{
+		"hu"			"{mint}Ez a Boszorka lenémíthatja magát a túlélők elől."
+	}
+
 	"Tank #57 Name"
 	{
-		"hu"			"Visszarúgó Tank"
+		"hu"			"Visszahívás Tank"
+	}
+
+	"Boomer #57 Name"
+	{
+		"hu"			"Visszahívás Pukkancs"
+	}
+
+	"Charger #57 Name"
+	{
+		"hu"			"Visszahívás Rohanó"
+	}
+
+	"Hunter #57 Name"
+	{
+		"hu"			"Visszahívás Vadász"
+	}
+
+	"Jockey #57 Name"
+	{
+		"hu"			"Visszahívás Zsoké"
+	}
+
+	"Smoker #57 Name"
+	{
+		"hu"			"Visszahívás Füstös"
+	}
+
+	"Spitter #57 Name"
+	{
+		"hu"			"Visszahívás Köpködő"
+	}
+
+	"Witch #57 Name"
+	{
+		"hu"			"Visszahívás Boszorka"
 	}
 
 	"Tank #57"
 	{
-		"hu"			"{mint}Ez a Tank erős visszarúgást adhat a túlélőknek."
+		"hu"			"{mint}Ez a Tank képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Boomer #57"
+	{
+		"hu"			"{mint}Ez a Pukkancs képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Charger #57"
+	{
+		"hu"			"{mint}Ez a Rohanó képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Hunter #57"
+	{
+		"hu"			"{mint}Ez a Vadász képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Jockey #57"
+	{
+		"hu"			"{mint}Ez a Zsoké képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Smoker #57"
+	{
+		"hu"			"{mint}Ez a Füstös képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Spitter #57"
+	{
+		"hu"			"{mint}Ez a Köpködő képes az időutazásra, ezzel bosszantva a túlélőket."
+	}
+
+	"Witch #57"
+	{
+		"hu"			"{mint}Ez a Boszorka képes az időutazásra, ezzel bosszantva a túlélőket."
 	}
 
 	"Tank #58 Name"
 	{
-		"hu"			"Regeneráló Tank"
+		"hu"			"Visszarúgó Tank"
+	}
+
+	"Boomer #58 Name"
+	{
+		"hu"			"Visszarúgó Pukkancs"
+	}
+
+	"Charger #58 Name"
+	{
+		"hu"			"Visszarúgó Rohanó"
+	}
+
+	"Hunter #58 Name"
+	{
+		"hu"			"Visszarúgó Vadász"
+	}
+
+	"Jockey #58 Name"
+	{
+		"hu"			"Visszarúgó Zsoké"
+	}
+
+	"Smoker #58 Name"
+	{
+		"hu"			"Visszarúgó Füstös"
+	}
+
+	"Spitter #58 Name"
+	{
+		"hu"			"Visszarúgó Köpködő"
+	}
+
+	"Witch #58 Name"
+	{
+		"hu"			"Visszarúgó Boszorka"
 	}
 
 	"Tank #58"
 	{
-		"hu"			"{mint}Ez a Tank életerőt regenerál minden másodpercben."
+		"hu"			"{mint}Ez a Tank erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Boomer #58"
+	{
+		"hu"			"{mint}Ez a Pukkancs erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Charger #58"
+	{
+		"hu"			"{mint}Ez a Rohanó erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Hunter #58"
+	{
+		"hu"			"{mint}Ez a Vadász erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Jockey #58"
+	{
+		"hu"			"{mint}Ez a Zsoké erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Smoker #58"
+	{
+		"hu"			"{mint}Ez a Füstös erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Spitter #58"
+	{
+		"hu"			"{mint}Ez a Köpködő erős visszarúgást adhat a túlélőknek."
+	}
+
+	"Witch #58"
+	{
+		"hu"			"{mint}Ez a Boszorka erős visszarúgást adhat a túlélőknek."
 	}
 
 	"Tank #59 Name"
 	{
-		"hu"			"Újjászülető Tank"
+		"hu"			"Regeneráló Tank"
+	}
+
+	"Boomer #59 Name"
+	{
+		"hu"			"Regeneráló Pukkancs"
+	}
+
+	"Charger #59 Name"
+	{
+		"hu"			"Regeneráló Rohanó"
+	}
+
+	"Hunter #59 Name"
+	{
+		"hu"			"Regeneráló Vadász"
+	}
+
+	"Jockey #59 Name"
+	{
+		"hu"			"Regeneráló Zsoké"
+	}
+
+	"Smoker #59 Name"
+	{
+		"hu"			"Regeneráló Füstös"
+	}
+
+	"Spitter #59 Name"
+	{
+		"hu"			"Regeneráló Köpködő"
+	}
+
+	"Witch #59 Name"
+	{
+		"hu"			"Regeneráló Boszorka"
 	}
 
 	"Tank #59"
 	{
-		"hu"			"{mint}Ez a Tank újjászülethet a halála pillanatában."
+		"hu"			"{mint}Ez a Tank életerőt regenerál minden másodpercben."
+	}
+
+	"Boomer #59"
+	{
+		"hu"			"{mint}Ez a Pukkancs életerőt regenerál minden másodpercben."
+	}
+
+	"Charger #59"
+	{
+		"hu"			"{mint}Ez a Rohanó életerőt regenerál minden másodpercben."
+	}
+
+	"Hunter #59"
+	{
+		"hu"			"{mint}Ez a Vadász életerőt regenerál minden másodpercben."
+	}
+
+	"Jockey #59"
+	{
+		"hu"			"{mint}Ez a Zsoké életerőt regenerál minden másodpercben."
+	}
+
+	"Smoker #59"
+	{
+		"hu"			"{mint}Ez a Füstös életerőt regenerál minden másodpercben."
+	}
+
+	"Spitter #59"
+	{
+		"hu"			"{mint}Ez a Köpködő életerőt regenerál minden másodpercben."
+	}
+
+	"Witch #59"
+	{
+		"hu"			"{mint}Ez a Boszorka életerőt regenerál minden másodpercben."
 	}
 
 	"Tank #60 Name"
 	{
-		"hu"			"Újraindító Tank"
+		"hu"			"Újjászülető Tank"
+	}
+
+	"Boomer #60 Name"
+	{
+		"hu"			"Újjászülető Pukkancs"
+	}
+
+	"Charger #60 Name"
+	{
+		"hu"			"Újjászülető Rohanó"
+	}
+
+	"Hunter #60 Name"
+	{
+		"hu"			"Újjászülető Vadász"
+	}
+
+	"Jockey #60 Name"
+	{
+		"hu"			"Újjászülető Zsoké"
+	}
+
+	"Smoker #60 Name"
+	{
+		"hu"			"Újjászülető Füstös"
+	}
+
+	"Spitter #60 Name"
+	{
+		"hu"			"Újjászülető Köpködő"
+	}
+
+	"Witch #60 Name"
+	{
+		"hu"			"Újjászülető Boszorka"
 	}
 
 	"Tank #60"
 	{
-		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+		"hu"			"{mint}Ez a Tank újjászülethet a halála pillanatában."
+	}
+
+	"Boomer #60"
+	{
+		"hu"			"{mint}Ez a Pukkancs újjászülethet a halála pillanatában."
+	}
+
+	"Charger #60"
+	{
+		"hu"			"{mint}Ez a Rohanó újjászülethet a halála pillanatában."
+	}
+
+	"Hunter #60"
+	{
+		"hu"			"{mint}Ez a Vadász újjászülethet a halála pillanatában."
+	}
+
+	"Jockey #60"
+	{
+		"hu"			"{mint}Ez a Zsoké újjászülethet a halála pillanatában."
+	}
+
+	"Smoker #60"
+	{
+		"hu"			"{mint}Ez a Füstös újjászülethet a halála pillanatában."
+	}
+
+	"Spitter #60"
+	{
+		"hu"			"{mint}Ez a Köpködő újjászülethet a halála pillanatában."
+	}
+
+	"Witch #60"
+	{
+		"hu"			"{mint}Ez a Boszorka újjászülethet a halála pillanatában."
 	}
 
 	"Tank #61 Name"
 	{
-		"hu"			"Szikla Tank"
+		"hu"			"Újraindító Tank"
+	}
+
+	"Boomer #61 Name"
+	{
+		"hu"			"Újraindító Pukkancs"
+	}
+
+	"Charger #61 Name"
+	{
+		"hu"			"Újraindító Rohanó"
+	}
+
+	"Hunter #61 Name"
+	{
+		"hu"			"Újraindító Vadász"
+	}
+
+	"Jockey #61 Name"
+	{
+		"hu"			"Újraindító Zsoké"
+	}
+
+	"Smoker #61 Name"
+	{
+		"hu"			"Újraindító Füstös"
+	}
+
+	"Spitter #61 Name"
+	{
+		"hu"			"Újraindító Köpködő"
+	}
+
+	"Witch #61 Name"
+	{
+		"hu"			"Újraindító Boszorka"
 	}
 
 	"Tank #61"
 	{
-		"hu"			"{mint}Ez a Tank szikla záporokat indít."
+		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Boomer #61"
+	{
+		"hu"			"{mint}Ez a Pukkancs ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Charger #61"
+	{
+		"hu"			"{mint}Ez a Rohanó ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Hunter #61"
+	{
+		"hu"			"{mint}Ez a Vadász ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Jockey #61"
+	{
+		"hu"			"{mint}Ez a Zsoké ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Smoker #61"
+	{
+		"hu"			"{mint}Ez a Füstös ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Spitter #61"
+	{
+		"hu"			"{mint}Ez a Köpködő ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
+	}
+
+	"Witch #61"
+	{
+		"hu"			"{mint}Ez a Boszorka ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
 	}
 
 	"Tank #62 Name"
 	{
-		"hu"			"Rakétaszakértő Tank"
+		"hu"			"Szikla Tank"
+	}
+
+	"Boomer #62 Name"
+	{
+		"hu"			"Szikla Pukkancs"
+	}
+
+	"Charger #62 Name"
+	{
+		"hu"			"Szikla Rohanó"
+	}
+
+	"Hunter #62 Name"
+	{
+		"hu"			"Szikla Vadász"
+	}
+
+	"Jockey #62 Name"
+	{
+		"hu"			"Szikla Zsoké"
+	}
+
+	"Smoker #62 Name"
+	{
+		"hu"			"Szikla Füstös"
+	}
+
+	"Spitter #62 Name"
+	{
+		"hu"			"Szikla Köpködő"
+	}
+
+	"Witch #62 Name"
+	{
+		"hu"			"Szikla Boszorka"
 	}
 
 	"Tank #62"
 	{
-		"hu"			"{mint}Ez a Tank az űrbe küldheti a túlélőket."
+		"hu"			"{mint}Ez a Tank szikla záporokat indít."
+	}
+
+	"Boomer #62"
+	{
+		"hu"			"{mint}Ez a Pukkancs szikla záporokat indít."
+	}
+
+	"Charger #62"
+	{
+		"hu"			"{mint}Ez a Rohanó szikla záporokat indít."
+	}
+
+	"Hunter #62"
+	{
+		"hu"			"{mint}Ez a Vadász szikla záporokat indít."
+	}
+
+	"Jockey #62"
+	{
+		"hu"			"{mint}Ez a Zsoké szikla záporokat indít."
+	}
+
+	"Smoker #62"
+	{
+		"hu"			"{mint}Ez a Füstös szikla záporokat indít."
+	}
+
+	"Spitter #62"
+	{
+		"hu"			"{mint}Ez a Köpködő szikla záporokat indít."
+	}
+
+	"Witch #62"
+	{
+		"hu"			"{mint}Ez a Boszorka szikla záporokat indít."
 	}
 
 	"Tank #63 Name"
 	{
-		"hu"			"Öndobó Tank"
+		"hu"			"Rakétaszakértő Tank"
+	}
+
+	"Boomer #63 Name"
+	{
+		"hu"			"Rakétaszakértő Pukkancs"
+	}
+
+	"Charger #63 Name"
+	{
+		"hu"			"Rakétaszakértő Rohanó"
+	}
+
+	"Hunter #63 Name"
+	{
+		"hu"			"Rakétaszakértő Vadász"
+	}
+
+	"Jockey #63 Name"
+	{
+		"hu"			"Rakétaszakértő Zsoké"
+	}
+
+	"Smoker #63 Name"
+	{
+		"hu"			"Rakétaszakértő Füstös"
+	}
+
+	"Spitter #63 Name"
+	{
+		"hu"			"Rakétaszakértő Köpködő"
+	}
+
+	"Witch #63 Name"
+	{
+		"hu"			"Rakétaszakértő Boszorka"
 	}
 
 	"Tank #63"
 	{
-		"hu"			"{mint}Ez a Tank eldobhatja magát a túlélők felé."
+		"hu"			"{mint}Ez a Tank az űrbe küldheti a túlélőket."
+	}
+
+	"Boomer #63"
+	{
+		"hu"			"{mint}Ez a Pukkancs az űrbe küldheti a túlélőket."
+	}
+
+	"Charger #63"
+	{
+		"hu"			"{mint}Ez a Rohanó az űrbe küldheti a túlélőket."
+	}
+
+	"Hunter #63"
+	{
+		"hu"			"{mint}Ez a Vadász az űrbe küldheti a túlélőket."
+	}
+
+	"Jockey #63"
+	{
+		"hu"			"{mint}Ez a Zsoké az űrbe küldheti a túlélőket."
+	}
+
+	"Smoker #63"
+	{
+		"hu"			"{mint}Ez a Füstös az űrbe küldheti a túlélőket."
+	}
+
+	"Spitter #63"
+	{
+		"hu"			"{mint}Ez a Köpködő az űrbe küldheti a túlélőket."
+	}
+
+	"Witch #63"
+	{
+		"hu"			"{mint}Ez a Boszorka az űrbe küldheti a túlélőket."
 	}
 
 	"Tank #64 Name"
 	{
-		"hu"			"Rázó Tank"
+		"hu"			"Öndobó Tank"
+	}
+
+	"Boomer #64 Name"
+	{
+		"hu"			"Öndobó Pukkancs"
+	}
+
+	"Charger #64 Name"
+	{
+		"hu"			"Öndobó Rohanó"
+	}
+
+	"Hunter #64 Name"
+	{
+		"hu"			"Öndobó Vadász"
+	}
+
+	"Jockey #64 Name"
+	{
+		"hu"			"Öndobó Zsoké"
+	}
+
+	"Smoker #64 Name"
+	{
+		"hu"			"Öndobó Füstös"
+	}
+
+	"Spitter #64 Name"
+	{
+		"hu"			"Öndobó Köpködő"
+	}
+
+	"Witch #64 Name"
+	{
+		"hu"			"Öndobó Boszorka"
 	}
 
 	"Tank #64"
 	{
-		"hu"			"{mint}Ez a Tank megrázza a túlélők képernyőjét."
+		"hu"			"{mint}Ez a Tank eldobhatja magát a túlélők felé."
+	}
+
+	"Boomer #64"
+	{
+		"hu"			"{mint}Ez a Pukkancs eldobhatja magát a túlélők felé."
+	}
+
+	"Charger #64"
+	{
+		"hu"			"{mint}Ez a Rohanó eldobhatja magát a túlélők felé."
+	}
+
+	"Hunter #64"
+	{
+		"hu"			"{mint}Ez a Vadász eldobhatja magát a túlélők felé."
+	}
+
+	"Jockey #64"
+	{
+		"hu"			"{mint}Ez a Zsoké eldobhatja magát a túlélők felé."
+	}
+
+	"Smoker #64"
+	{
+		"hu"			"{mint}Ez a Füstös eldobhatja magát a túlélők felé."
+	}
+
+	"Spitter #64"
+	{
+		"hu"			"{mint}Ez a Köpködő eldobhatja magát a túlélők felé."
+	}
+
+	"Witch #64"
+	{
+		"hu"			"{mint}Ez a Boszorka eldobhatja magát a túlélők felé."
 	}
 
 	"Tank #65 Name"
 	{
-		"hu"			"Pajzs Tank"
+		"hu"			"Rázó Tank"
+	}
+
+	"Boomer #65 Name"
+	{
+		"hu"			"Rázó Pukkancs"
+	}
+
+	"Charger #65 Name"
+	{
+		"hu"			"Rázó Rohanó"
+	}
+
+	"Hunter #65 Name"
+	{
+		"hu"			"Rázó Vadász"
+	}
+
+	"Jockey #65 Name"
+	{
+		"hu"			"Rázó Zsoké"
+	}
+
+	"Smoker #65 Name"
+	{
+		"hu"			"Rázó Füstös"
+	}
+
+	"Spitter #65 Name"
+	{
+		"hu"			"Rázó Köpködő"
+	}
+
+	"Witch #65 Name"
+	{
+		"hu"			"Rázó Boszorka"
 	}
 
 	"Tank #65"
 	{
-		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
+		"hu"			"{mint}Ez a Tank megrázza a túlélők képernyőjét."
+	}
+
+	"Boomer #65"
+	{
+		"hu"			"{mint}Ez a Pukkancs megrázza a túlélők képernyőjét."
+	}
+
+	"Charger #65"
+	{
+		"hu"			"{mint}Ez a Rohanó megrázza a túlélők képernyőjét."
+	}
+
+	"Hunter #65"
+	{
+		"hu"			"{mint}Ez a Vadász megrázza a túlélők képernyőjét."
+	}
+
+	"Jockey #65"
+	{
+		"hu"			"{mint}Ez a Zsoké megrázza a túlélők képernyőjét."
+	}
+
+	"Smoker #65"
+	{
+		"hu"			"{mint}Ez a Füstös megrázza a túlélők képernyőjét."
+	}
+
+	"Spitter #65"
+	{
+		"hu"			"{mint}Ez a Köpködő megrázza a túlélők képernyőjét."
+	}
+
+	"Witch #65"
+	{
+		"hu"			"{mint}Ez a Boszorka megrázza a túlélők képernyőjét."
 	}
 
 	"Tank #66 Name"
 	{
-		"hu"			"Lökő Tank"
+		"hu"			"Pajzs Tank"
+	}
+
+	"Boomer #66 Name"
+	{
+		"hu"			"Pajzs Pukkancs"
+	}
+
+	"Charger #66 Name"
+	{
+		"hu"			"Pajzs Rohanó"
+	}
+
+	"Hunter #66 Name"
+	{
+		"hu"			"Pajzs Vadász"
+	}
+
+	"Jockey #66 Name"
+	{
+		"hu"			"Pajzs Zsoké"
+	}
+
+	"Smoker #66 Name"
+	{
+		"hu"			"Pajzs Füstös"
+	}
+
+	"Spitter #66 Name"
+	{
+		"hu"			"Pajzs Köpködő"
+	}
+
+	"Witch #66 Name"
+	{
+		"hu"			"Pajzs Boszorka"
 	}
 
 	"Tank #66"
 	{
-		"hu"			"{mint}Ez a Tank mindenhova lökdösi a túlélőket."
+		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
+	}
+
+	"Boomer #66"
+	{
+		"hu"			"{mint}Ez a Pukkancs egy pajzzsal születik."
+	}
+
+	"Charger #66"
+	{
+		"hu"			"{mint}Ez a Rohanó egy pajzzsal születik."
+	}
+
+	"Hunter #66"
+	{
+		"hu"			"{mint}Ez a Vadász egy pajzzsal születik."
+	}
+
+	"Jockey #66"
+	{
+		"hu"			"{mint}Ez a Zsoké egy pajzzsal születik."
+	}
+
+	"Smoker #66"
+	{
+		"hu"			"{mint}Ez a Füstös egy pajzzsal születik."
+	}
+
+	"Spitter #66"
+	{
+		"hu"			"{mint}Ez a Köpködő egy pajzzsal születik."
+	}
+
+	"Witch #66"
+	{
+		"hu"			"{mint}Ez a Boszorka egy pajzzsal születik."
 	}
 
 	"Tank #67 Name"
 	{
-		"hu"			"Lassú Tank"
+		"hu"			"Lökő Tank"
+	}
+
+	"Boomer #67 Name"
+	{
+		"hu"			"Lökő Pukkancs"
+	}
+
+	"Charger #67 Name"
+	{
+		"hu"			"Lökő Rohanó"
+	}
+
+	"Hunter #67 Name"
+	{
+		"hu"			"Lökő Vadász"
+	}
+
+	"Jockey #67 Name"
+	{
+		"hu"			"Lökő Zsoké"
+	}
+
+	"Smoker #67 Name"
+	{
+		"hu"			"Lökő Füstös"
+	}
+
+	"Spitter #67 Name"
+	{
+		"hu"			"Lökő Köpködő"
+	}
+
+	"Witch #67 Name"
+	{
+		"hu"			"Lökő Boszorka"
 	}
 
 	"Tank #67"
 	{
-		"hu"			"{mint}Ez a Tank letudja lassítani a túlélőket."
+		"hu"			"{mint}Ez a Tank mindenhova lökdösi a túlélőket."
+	}
+
+	"Boomer #67"
+	{
+		"hu"			"{mint}Ez a Pukkancs mindenhova lökdösi a túlélőket."
+	}
+
+	"Charger #67"
+	{
+		"hu"			"{mint}Ez a Rohanó mindenhova lökdösi a túlélőket."
+	}
+
+	"Hunter #67"
+	{
+		"hu"			"{mint}Ez a Vadász mindenhova lökdösi a túlélőket."
+	}
+
+	"Jockey #67"
+	{
+		"hu"			"{mint}Ez a Zsoké mindenhova lökdösi a túlélőket."
+	}
+
+	"Smoker #67"
+	{
+		"hu"			"{mint}Ez a Füstös mindenhova lökdösi a túlélőket."
+	}
+
+	"Spitter #67"
+	{
+		"hu"			"{mint}Ez a Köpködő mindenhova lökdösi a túlélőket."
+	}
+
+	"Witch #67"
+	{
+		"hu"			"{mint}Ez a Boszorka mindenhova lökdösi a túlélőket."
 	}
 
 	"Tank #68 Name"
 	{
-		"hu"			"Zúzó Tank"
+		"hu"			"Lassú Tank"
+	}
+
+	"Boomer #68 Name"
+	{
+		"hu"			"Lassú Pukkancs"
+	}
+
+	"Charger #68 Name"
+	{
+		"hu"			"Lassú Rohanó"
+	}
+
+	"Hunter #68 Name"
+	{
+		"hu"			"Lassú Vadász"
+	}
+
+	"Jockey #68 Name"
+	{
+		"hu"			"Lassú Zsoké"
+	}
+
+	"Smoker #68 Name"
+	{
+		"hu"			"Lassú Füstös"
+	}
+
+	"Spitter #68 Name"
+	{
+		"hu"			"Lassú Köpködő"
+	}
+
+	"Witch #68 Name"
+	{
+		"hu"			"Lassú Boszorka"
 	}
 
 	"Tank #68"
 	{
-		"hu"			"{mint}Ez a Tank a halálba tudja zúzni a túlélőket."
+		"hu"			"{mint}Ez a Tank letudja lassítani a túlélőket."
+	}
+
+	"Boomer #68"
+	{
+		"hu"			"{mint}Ez a Pukkancs letudja lassítani a túlélőket."
+	}
+
+	"Charger #68"
+	{
+		"hu"			"{mint}Ez a Rohanó letudja lassítani a túlélőket."
+	}
+
+	"Hunter #68"
+	{
+		"hu"			"{mint}Ez a Vadász letudja lassítani a túlélőket."
+	}
+
+	"Jockey #68"
+	{
+		"hu"			"{mint}Ez a Zsoké letudja lassítani a túlélőket."
+	}
+
+	"Smoker #68"
+	{
+		"hu"			"{mint}Ez a Füstös letudja lassítani a túlélőket."
+	}
+
+	"Spitter #68"
+	{
+		"hu"			"{mint}Ez a Köpködő letudja lassítani a túlélőket."
+	}
+
+	"Witch #68"
+	{
+		"hu"			"{mint}Ez a Boszorka letudja lassítani a túlélőket."
 	}
 
 	"Tank #69 Name"
 	{
-		"hu"			"Lecsapó Tank"
+		"hu"			"Zúzó Tank"
+	}
+
+	"Boomer #69 Name"
+	{
+		"hu"			"Zúzó Pukkancs"
+	}
+
+	"Charger #69 Name"
+	{
+		"hu"			"Zúzó Rohanó"
+	}
+
+	"Hunter #69 Name"
+	{
+		"hu"			"Zúzó Vadász"
+	}
+
+	"Jockey #69 Name"
+	{
+		"hu"			"Zúzó Zsoké"
+	}
+
+	"Smoker #69 Name"
+	{
+		"hu"			"Zúzó Füstös"
+	}
+
+	"Spitter #69 Name"
+	{
+		"hu"			"Zúzó Köpködő"
+	}
+
+	"Witch #69 Name"
+	{
+		"hu"			"Zúzó Boszorka"
 	}
 
 	"Tank #69"
 	{
-		"hu"			"{mint}Ez a Tank letudja csapni a túlélőket, ezzel azonnali halált okozva."
+		"hu"			"{mint}Ez a Tank a halálba tudja zúzni a túlélőket."
+	}
+
+	"Boomer #69"
+	{
+		"hu"			"{mint}Ez a Pukkancs a halálba tudja zúzni a túlélőket."
+	}
+
+	"Charger #69"
+	{
+		"hu"			"{mint}Ez a Rohanó a halálba tudja zúzni a túlélőket."
+	}
+
+	"Hunter #69"
+	{
+		"hu"			"{mint}Ez a Vadász a halálba tudja zúzni a túlélőket."
+	}
+
+	"Jockey #69"
+	{
+		"hu"			"{mint}Ez a Zsoké a halálba tudja zúzni a túlélőket."
+	}
+
+	"Smoker #69"
+	{
+		"hu"			"{mint}Ez a Füstös a halálba tudja zúzni a túlélőket."
+	}
+
+	"Spitter #69"
+	{
+		"hu"			"{mint}Ez a Köpködő a halálba tudja zúzni a túlélőket."
+	}
+
+	"Witch #69"
+	{
+		"hu"			"{mint}Ez a Boszorka a halálba tudja zúzni a túlélőket."
 	}
 
 	"Tank #70 Name"
 	{
-		"hu"			"Füstös Tank"
+		"hu"			"Lecsapó Tank"
+	}
+
+	"Boomer #70 Name"
+	{
+		"hu"			"Lecsapó Pukkancs"
+	}
+
+	"Charger #70 Name"
+	{
+		"hu"			"Lecsapó Rohanó"
+	}
+
+	"Hunter #70 Name"
+	{
+		"hu"			"Lecsapó Vadász"
+	}
+
+	"Jockey #70 Name"
+	{
+		"hu"			"Lecsapó Zsoké"
+	}
+
+	"Smoker #70 Name"
+	{
+		"hu"			"Lecsapó Füstös"
+	}
+
+	"Spitter #70 Name"
+	{
+		"hu"			"Lecsapó Köpködő"
+	}
+
+	"Witch #70 Name"
+	{
+		"hu"			"Lecsapó Boszorka"
 	}
 
 	"Tank #70"
 	{
-		"hu"			"{mint}Ez a Tank tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+		"hu"			"{mint}Ez a Tank letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Boomer #70"
+	{
+		"hu"			"{mint}Ez a Pukkancs letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Charger #70"
+	{
+		"hu"			"{mint}Ez a Rohanó letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Hunter #70"
+	{
+		"hu"			"{mint}Ez a Vadász letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Jockey #70"
+	{
+		"hu"			"{mint}Ez a Zsoké letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Smoker #70"
+	{
+		"hu"			"{mint}Ez a Füstös letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Spitter #70"
+	{
+		"hu"			"{mint}Ez a Köpködő letudja csapni a túlélőket, ezzel azonnali halált okozva."
+	}
+
+	"Witch #70"
+	{
+		"hu"			"{mint}Ez a Boszorka letudja csapni a túlélőket, ezzel azonnali halált okozva."
 	}
 
 	"Tank #71 Name"
 	{
-		"hu"			"Kéretlen Tank"
+		"hu"			"Füstös Tank"
+	}
+
+	"Boomer #71 Name"
+	{
+		"hu"			"Füstös Pukkancs"
+	}
+
+	"Charger #71 Name"
+	{
+		"hu"			"Füstös Rohanó"
+	}
+
+	"Hunter #71 Name"
+	{
+		"hu"			"Füstös Vadász"
+	}
+
+	"Jockey #71 Name"
+	{
+		"hu"			"Füstös Zsoké"
+	}
+
+	"Smoker #71 Name"
+	{
+		"hu"			"Füstös Füstös"
+	}
+
+	"Spitter #71 Name"
+	{
+		"hu"			"Füstös Köpködő"
+	}
+
+	"Witch #71 Name"
+	{
+		"hu"			"Füstös Boszorka"
 	}
 
 	"Tank #71"
 	{
-		"hu"			"{mint}Ez a Tank folyamatosan sziklákat dobál a túlélők felé."
+		"hu"			"{mint}Ez a Tank tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Boomer #71"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Charger #71"
+	{
+		"hu"			"{mint}Ez a Rohanó tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Hunter #71"
+	{
+		"hu"			"{mint}Ez a Vadász tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Jockey #71"
+	{
+		"hu"			"{mint}Ez a Zsoké tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Smoker #71"
+	{
+		"hu"			"{mint}Ez a Füstös tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Spitter #71"
+	{
+		"hu"			"{mint}Ez a Köpködő tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Witch #71"
+	{
+		"hu"			"{mint}Ez a Boszorka tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
 	}
 
 	"Tank #72 Name"
 	{
-		"hu"			"Speciális Tank"
+		"hu"			"Kéretlen Tank"
+	}
+
+	"Boomer #72 Name"
+	{
+		"hu"			"Kéretlen Pukkancs"
+	}
+
+	"Charger #72 Name"
+	{
+		"hu"			"Kéretlen Rohanó"
+	}
+
+	"Hunter #72 Name"
+	{
+		"hu"			"Kéretlen Vadász"
+	}
+
+	"Jockey #72 Name"
+	{
+		"hu"			"Kéretlen Zsoké"
+	}
+
+	"Smoker #72 Name"
+	{
+		"hu"			"Kéretlen Füstös"
+	}
+
+	"Spitter #72 Name"
+	{
+		"hu"			"Kéretlen Köpködő"
+	}
+
+	"Witch #72 Name"
+	{
+		"hu"			"Kéretlen Boszorka"
 	}
 
 	"Tank #72"
 	{
-		"hu"			"{mint}Ez a Tank tud létrehozni véletlenszerű speciális fertőzötteket, és dobni is egy párat a túlélők felé."
+		"hu"			"{mint}Ez a Tank folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Boomer #72"
+	{
+		"hu"			"{mint}Ez a Pukkancs folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Charger #72"
+	{
+		"hu"			"{mint}Ez a Rohanó folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Hunter #72"
+	{
+		"hu"			"{mint}Ez a Vadász folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Jockey #72"
+	{
+		"hu"			"{mint}Ez a Zsoké folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Smoker #72"
+	{
+		"hu"			"{mint}Ez a Füstös folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Spitter #72"
+	{
+		"hu"			"{mint}Ez a Köpködő folyamatosan sziklákat dobál a túlélők felé."
+	}
+
+	"Witch #72"
+	{
+		"hu"			"{mint}Ez a Boszorka folyamatosan sziklákat dobál a túlélők felé."
 	}
 
 	"Tank #73 Name"
 	{
-		"hu"			"köpködő Tank"
+		"hu"			"Speciális Tank"
+	}
+
+	"Boomer #73 Name"
+	{
+		"hu"			"Speciális Pukkancs"
+	}
+
+	"Charger #73 Name"
+	{
+		"hu"			"Speciális Rohanó"
+	}
+
+	"Hunter #73 Name"
+	{
+		"hu"			"Speciális Vadász"
+	}
+
+	"Jockey #73 Name"
+	{
+		"hu"			"Speciális Zsoké"
+	}
+
+	"Smoker #73 Name"
+	{
+		"hu"			"Speciális Füstös"
+	}
+
+	"Spitter #73 Name"
+	{
+		"hu"			"Speciális Köpködő"
+	}
+
+	"Witch #73 Name"
+	{
+		"hu"			"Speciális Boszorka"
 	}
 
 	"Tank #73"
 	{
-		"hu"			"{mint}Ez a Tank tud Köpködőket létrehozni, és dobni is egy párat a túlélők felé."
+		"hu"			"{mint}Ez a Tank tud létrehozni véletlenszerű speciális fertőzötteket, és dobni is egy párat a túlélők felé."
+	}
+
+	"Boomer #73"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Charger #73"
+	{
+		"hu"			"{mint}Ez a Rohanó tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Hunter #73"
+	{
+		"hu"			"{mint}Ez a Vadász tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Jockey #73"
+	{
+		"hu"			"{mint}Ez a Zsoké tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Smoker #73"
+	{
+		"hu"			"{mint}Ez a Füstös tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Spitter #73"
+	{
+		"hu"			"{mint}Ez a Köpködő tud létrehozni véletlenszerű speciális fertőzötteket."
+	}
+
+	"Witch #73"
+	{
+		"hu"			"{mint}Ez a Boszorka tud létrehozni véletlenszerű speciális fertőzötteket."
 	}
 
 	"Tank #74 Name"
 	{
-		"hu"			"Területsebző Tank"
+		"hu"			"köpködő Tank"
+	}
+
+	"Boomer #74 Name"
+	{
+		"hu"			"köpködő Pukkancs"
+	}
+
+	"Charger #74 Name"
+	{
+		"hu"			"köpködő Rohanó"
+	}
+
+	"Hunter #74 Name"
+	{
+		"hu"			"köpködő Vadász"
+	}
+
+	"Jockey #74 Name"
+	{
+		"hu"			"köpködő Zsoké"
+	}
+
+	"Smoker #74 Name"
+	{
+		"hu"			"köpködő Füstös"
+	}
+
+	"Spitter #74 Name"
+	{
+		"hu"			"köpködő Köpködő"
+	}
+
+	"Witch #74 Name"
+	{
+		"hu"			"köpködő Boszorka"
 	}
 
 	"Tank #74"
 	{
-		"hu"			"{mint}Ez a Tank területi sebzést okoz egy bizonyos távolságon belül."
+		"hu"			"{mint}Ez a Tank tud Köpködőket létrehozni, és dobni is egy párat a túlélők felé."
+	}
+
+	"Boomer #74"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud Köpködőket létrehozni."
+	}
+
+	"Charger #74"
+	{
+		"hu"			"{mint}Ez a Rohanó tud Köpködőket létrehozni."
+	}
+
+	"Hunter #74"
+	{
+		"hu"			"{mint}Ez a Vadász tud Köpködőket létrehozni."
+	}
+
+	"Jockey #74"
+	{
+		"hu"			"{mint}Ez a Zsoké tud Köpködőket létrehozni."
+	}
+
+	"Smoker #74"
+	{
+		"hu"			"{mint}Ez a Füstös tud Köpködőket létrehozni."
+	}
+
+	"Spitter #74"
+	{
+		"hu"			"{mint}Ez a Köpködő tud Köpködőket létrehozni."
+	}
+
+	"Witch #74"
+	{
+		"hu"			"{mint}Ez a Boszorka tud Köpködőket létrehozni."
 	}
 
 	"Tank #75 Name"
 	{
-		"hu"			"Fröcskölő Tank"
+		"hu"			"Területsebző Tank"
+	}
+
+	"Boomer #75 Name"
+	{
+		"hu"			"Területsebző Pukkancs"
+	}
+
+	"Charger #75 Name"
+	{
+		"hu"			"Területsebző Rohanó"
+	}
+
+	"Hunter #75 Name"
+	{
+		"hu"			"Területsebző Vadász"
+	}
+
+	"Jockey #75 Name"
+	{
+		"hu"			"Területsebző Zsoké"
+	}
+
+	"Smoker #75 Name"
+	{
+		"hu"			"Területsebző Füstös"
+	}
+
+	"Spitter #75 Name"
+	{
+		"hu"			"Területsebző Köpködő"
+	}
+
+	"Witch #75 Name"
+	{
+		"hu"			"Területsebző Boszorka"
 	}
 
 	"Tank #75"
 	{
-		"hu"			"{mint}Ez a Tank mindenki képernyőjét befröcsköli."
+		"hu"			"{mint}Ez a Tank területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Boomer #75"
+	{
+		"hu"			"{mint}Ez a Pukkancs területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Charger #75"
+	{
+		"hu"			"{mint}Ez a Rohanó területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Hunter #75"
+	{
+		"hu"			"{mint}Ez a Vadász területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Jockey #75"
+	{
+		"hu"			"{mint}Ez a Zsoké területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Smoker #75"
+	{
+		"hu"			"{mint}Ez a Füstös területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Spitter #75"
+	{
+		"hu"			"{mint}Ez a Köpködő területi sebzést okoz egy bizonyos távolságon belül."
+	}
+
+	"Witch #75"
+	{
+		"hu"			"{mint}Ez a Boszorka területi sebzést okoz egy bizonyos távolságon belül."
 	}
 
 	"Tank #76 Name"
 	{
-		"hu"			"Eldobó Tank"
+		"hu"			"Fröcskölő Tank"
+	}
+
+	"Boomer #76 Name"
+	{
+		"hu"			"Fröcskölő Pukkancs"
+	}
+
+	"Charger #76 Name"
+	{
+		"hu"			"Fröcskölő Rohanó"
+	}
+
+	"Hunter #76 Name"
+	{
+		"hu"			"Fröcskölő Vadász"
+	}
+
+	"Jockey #76 Name"
+	{
+		"hu"			"Fröcskölő Zsoké"
+	}
+
+	"Smoker #76 Name"
+	{
+		"hu"			"Fröcskölő Füstös"
+	}
+
+	"Spitter #76 Name"
+	{
+		"hu"			"Fröcskölő Köpködő"
+	}
+
+	"Witch #76 Name"
+	{
+		"hu"			"Fröcskölő Boszorka"
 	}
 
 	"Tank #76"
 	{
-		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+		"hu"			"{mint}Ez a Tank mindenki képernyőjét befröcsköli."
+	}
+
+	"Boomer #76"
+	{
+		"hu"			"{mint}Ez a Pukkancs mindenki képernyőjét befröcsköli."
+	}
+
+	"Charger #76"
+	{
+		"hu"			"{mint}Ez a Rohanó mindenki képernyőjét befröcsköli."
+	}
+
+	"Hunter #76"
+	{
+		"hu"			"{mint}Ez a Vadász mindenki képernyőjét befröcsköli."
+	}
+
+	"Jockey #76"
+	{
+		"hu"			"{mint}Ez a Zsoké mindenki képernyőjét befröcsköli."
+	}
+
+	"Smoker #76"
+	{
+		"hu"			"{mint}Ez a Füstös mindenki képernyőjét befröcsköli."
+	}
+
+	"Spitter #76"
+	{
+		"hu"			"{mint}Ez a Köpködő mindenki képernyőjét befröcsköli."
+	}
+
+	"Witch #76"
+	{
+		"hu"			"{mint}Ez a Boszorka mindenki képernyőjét befröcsköli."
 	}
 
 	"Tank #77 Name"
 	{
-		"hu"			"Követő Tank"
+		"hu"			"Eldobó Tank"
+	}
+
+	"Boomer #77 Name"
+	{
+		"hu"			"Eldobó Pukkancs"
+	}
+
+	"Charger #77 Name"
+	{
+		"hu"			"Eldobó Rohanó"
+	}
+
+	"Hunter #77 Name"
+	{
+		"hu"			"Eldobó Vadász"
+	}
+
+	"Jockey #77 Name"
+	{
+		"hu"			"Eldobó Zsoké"
+	}
+
+	"Smoker #77 Name"
+	{
+		"hu"			"Eldobó Füstös"
+	}
+
+	"Spitter #77 Name"
+	{
+		"hu"			"Eldobó Köpködő"
+	}
+
+	"Witch #77 Name"
+	{
+		"hu"			"Eldobó Boszorka"
 	}
 
 	"Tank #77"
 	{
-		"hu"			"{mint}Ez a Tank olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Boomer #77"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Charger #77"
+	{
+		"hu"			"{mint}Ez a Rohanó tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Hunter #77"
+	{
+		"hu"			"{mint}Ez a Vadász tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Jockey #77"
+	{
+		"hu"			"{mint}Ez a Zsoké tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Smoker #77"
+	{
+		"hu"			"{mint}Ez a Füstös tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Spitter #77"
+	{
+		"hu"			"{mint}Ez a Köpködő tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
+	}
+
+	"Witch #77"
+	{
+		"hu"			"{mint}Ez a Boszorka tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
 	}
 
 	"Tank #78 Name"
 	{
-		"hu"			"Végső Tank"
+		"hu"			"Követő Tank"
+	}
+
+	"Boomer #78 Name"
+	{
+		"hu"			"Követő Pukkancs"
+	}
+
+	"Charger #78 Name"
+	{
+		"hu"			"Követő Rohanó"
+	}
+
+	"Hunter #78 Name"
+	{
+		"hu"			"Követő Vadász"
+	}
+
+	"Jockey #78 Name"
+	{
+		"hu"			"Követő Zsoké"
+	}
+
+	"Smoker #78 Name"
+	{
+		"hu"			"Követő Füstös"
+	}
+
+	"Spitter #78 Name"
+	{
+		"hu"			"Követő Köpködő"
+	}
+
+	"Witch #78 Name"
+	{
+		"hu"			"Követő Boszorka"
 	}
 
 	"Tank #78"
 	{
-		"hu"			"{mint}Ez a Tank ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+		"hu"			"{mint}Ez a Tank olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Boomer #78"
+	{
+		"hu"			"{mint}Ez a Pukkancs olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Charger #78"
+	{
+		"hu"			"{mint}Ez a Rohanó olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Hunter #78"
+	{
+		"hu"			"{mint}Ez a Vadász olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Jockey #78"
+	{
+		"hu"			"{mint}Ez a Zsoké olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Smoker #78"
+	{
+		"hu"			"{mint}Ez a Füstös olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Spitter #78"
+	{
+		"hu"			"{mint}Ez a Köpködő olyan sziklákat dob, ami követi a közelben lévő túlélőket."
+	}
+
+	"Witch #78"
+	{
+		"hu"			"{mint}Ez a Boszorka olyan sziklákat dob, ami követi a közelben lévő túlélőket."
 	}
 
 	"Tank #79 Name"
 	{
-		"hu"			"Halhatatlan Tank"
+		"hu"			"Végső Tank"
+	}
+
+	"Boomer #79 Name"
+	{
+		"hu"			"Végső Pukkancs"
+	}
+
+	"Charger #79 Name"
+	{
+		"hu"			"Végső Rohanó"
+	}
+
+	"Hunter #79 Name"
+	{
+		"hu"			"Végső Vadász"
+	}
+
+	"Jockey #79 Name"
+	{
+		"hu"			"Végső Zsoké"
+	}
+
+	"Smoker #79 Name"
+	{
+		"hu"			"Végső Füstös"
+	}
+
+	"Spitter #79 Name"
+	{
+		"hu"			"Végső Köpködő"
+	}
+
+	"Witch #79 Name"
+	{
+		"hu"			"Végső Boszorka"
 	}
 
 	"Tank #79"
 	{
-		"hu"			"{mint}Ez a Tank visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+		"hu"			"{mint}Ez a Tank ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Boomer #79"
+	{
+		"hu"			"{mint}Ez a Pukkancs ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Charger #79"
+	{
+		"hu"			"{mint}Ez a Rohanó ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Hunter #79"
+	{
+		"hu"			"{mint}Ez a Vadász ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Jockey #79"
+	{
+		"hu"			"{mint}Ez a Zsoké ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Smoker #79"
+	{
+		"hu"			"{mint}Ez a Füstös ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Spitter #79"
+	{
+		"hu"			"{mint}Ez a Köpködő ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
+	}
+
+	"Witch #79"
+	{
+		"hu"			"{mint}Ez a Boszorka ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
 	}
 
 	"Tank #80 Name"
 	{
-		"hu"			"Vámpír Tank"
+		"hu"			"Halhatatlan Tank"
+	}
+
+	"Boomer #80 Name"
+	{
+		"hu"			"Halhatatlan Pukkancs"
+	}
+
+	"Charger #80 Name"
+	{
+		"hu"			"Halhatatlan Rohanó"
+	}
+
+	"Hunter #80 Name"
+	{
+		"hu"			"Halhatatlan Vadász"
+	}
+
+	"Jockey #80 Name"
+	{
+		"hu"			"Halhatatlan Zsoké"
+	}
+
+	"Smoker #80 Name"
+	{
+		"hu"			"Halhatatlan Füstös"
+	}
+
+	"Spitter #80 Name"
+	{
+		"hu"			"Halhatatlan Köpködő"
+	}
+
+	"Witch #80 Name"
+	{
+		"hu"			"Halhatatlan Boszorka"
 	}
 
 	"Tank #80"
 	{
-		"hu"			"{mint}Ez a Tank életerőt lophat a túlélőktől."
+		"hu"			"{mint}Ez a Tank visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Boomer #80"
+	{
+		"hu"			"{mint}Ez a Pukkancs visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Charger #80"
+	{
+		"hu"			"{mint}Ez a Rohanó visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Hunter #80"
+	{
+		"hu"			"{mint}Ez a Vadász visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Jockey #80"
+	{
+		"hu"			"{mint}Ez a Zsoké visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Smoker #80"
+	{
+		"hu"			"{mint}Ez a Füstös visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Spitter #80"
+	{
+		"hu"			"{mint}Ez a Köpködő visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
+	}
+
+	"Witch #80"
+	{
+		"hu"			"{mint}Ez a Boszorka visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
 	}
 
 	"Tank #81 Name"
 	{
-		"hu"			"Vizuális Tank"
+		"hu"			"Vámpír Tank"
+	}
+
+	"Boomer #81 Name"
+	{
+		"hu"			"Vámpír Pukkancs"
+	}
+
+	"Charger #81 Name"
+	{
+		"hu"			"Vámpír Rohanó"
+	}
+
+	"Hunter #81 Name"
+	{
+		"hu"			"Vámpír Vadász"
+	}
+
+	"Jockey #81 Name"
+	{
+		"hu"			"Vámpír Zsoké"
+	}
+
+	"Smoker #81 Name"
+	{
+		"hu"			"Vámpír Füstös"
+	}
+
+	"Spitter #81 Name"
+	{
+		"hu"			"Vámpír Köpködő"
+	}
+
+	"Witch #81 Name"
+	{
+		"hu"			"Vámpír Boszorka"
 	}
 
 	"Tank #81"
 	{
-		"hu"			"{mint}Ez a Tank megváltoztatja a túlélők látómezejét."
+		"hu"			"{mint}Ez a Tank életerőt lophat a túlélőktől."
+	}
+
+	"Boomer #81"
+	{
+		"hu"			"{mint}Ez a Pukkancs életerőt lophat a túlélőktől."
+	}
+
+	"Charger #81"
+	{
+		"hu"			"{mint}Ez a Rohanó életerőt lophat a túlélőktől."
+	}
+
+	"Hunter #81"
+	{
+		"hu"			"{mint}Ez a Vadász életerőt lophat a túlélőktől."
+	}
+
+	"Jockey #81"
+	{
+		"hu"			"{mint}Ez a Zsoké életerőt lophat a túlélőktől."
+	}
+
+	"Smoker #81"
+	{
+		"hu"			"{mint}Ez a Füstös életerőt lophat a túlélőktől."
+	}
+
+	"Spitter #81"
+	{
+		"hu"			"{mint}Ez a Köpködő életerőt lophat a túlélőktől."
+	}
+
+	"Witch #81"
+	{
+		"hu"			"{mint}Ez a Boszorka életerőt lophat a túlélőktől."
 	}
 
 	"Tank #82 Name"
 	{
-		"hu"			"Teleportáló Tank"
+		"hu"			"Vizuális Tank"
+	}
+
+	"Boomer #82 Name"
+	{
+		"hu"			"Vizuális Pukkancs"
+	}
+
+	"Charger #82 Name"
+	{
+		"hu"			"Vizuális Rohanó"
+	}
+
+	"Hunter #82 Name"
+	{
+		"hu"			"Vizuális Vadász"
+	}
+
+	"Jockey #82 Name"
+	{
+		"hu"			"Vizuális Zsoké"
+	}
+
+	"Smoker #82 Name"
+	{
+		"hu"			"Vizuális Füstös"
+	}
+
+	"Spitter #82 Name"
+	{
+		"hu"			"Vizuális Köpködő"
+	}
+
+	"Witch #82 Name"
+	{
+		"hu"			"Vizuális Boszorka"
 	}
 
 	"Tank #82"
 	{
-		"hu"			"{mint}Ez a Tank véletlenszerűen egy túlélőhöz teleportál."
+		"hu"			"{mint}Ez a Tank megváltoztatja a túlélők látómezejét."
+	}
+
+	"Boomer #82"
+	{
+		"hu"			"{mint}Ez a Pukkancs megváltoztatja a túlélők látómezejét."
+	}
+
+	"Charger #82"
+	{
+		"hu"			"{mint}Ez a Rohanó megváltoztatja a túlélők látómezejét."
+	}
+
+	"Hunter #82"
+	{
+		"hu"			"{mint}Ez a Vadász megváltoztatja a túlélők látómezejét."
+	}
+
+	"Jockey #82"
+	{
+		"hu"			"{mint}Ez a Zsoké megváltoztatja a túlélők látómezejét."
+	}
+
+	"Smoker #82"
+	{
+		"hu"			"{mint}Ez a Füstös megváltoztatja a túlélők látómezejét."
+	}
+
+	"Spitter #82"
+	{
+		"hu"			"{mint}Ez a Köpködő megváltoztatja a túlélők látómezejét."
+	}
+
+	"Witch #82"
+	{
+		"hu"			"{mint}Ez a Boszorka megváltoztatja a túlélők látómezejét."
 	}
 
 	"Tank #83 Name"
 	{
-		"hu"			"Örvénylő Tank"
+		"hu"			"Teleportáló Tank"
+	}
+
+	"Boomer #83 Name"
+	{
+		"hu"			"Teleportáló Pukkancs"
+	}
+
+	"Charger #83 Name"
+	{
+		"hu"			"Teleportáló Rohanó"
+	}
+
+	"Hunter #83 Name"
+	{
+		"hu"			"Teleportáló Vadász"
+	}
+
+	"Jockey #83 Name"
+	{
+		"hu"			"Teleportáló Zsoké"
+	}
+
+	"Smoker #83 Name"
+	{
+		"hu"			"Teleportáló Füstös"
+	}
+
+	"Spitter #83 Name"
+	{
+		"hu"			"Teleportáló Köpködő"
+	}
+
+	"Witch #83 Name"
+	{
+		"hu"			"Teleportáló Boszorka"
 	}
 
 	"Tank #83"
 	{
-		"hu"			"{mint}Ez a Tank megpörgeti a túlélőket."
+		"hu"			"{mint}Ez a Tank véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Boomer #83"
+	{
+		"hu"			"{mint}Ez a Pukkancs véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Charger #83"
+	{
+		"hu"			"{mint}Ez a Rohanó véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Hunter #83"
+	{
+		"hu"			"{mint}Ez a Vadász véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Jockey #83"
+	{
+		"hu"			"{mint}Ez a Zsoké véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Smoker #83"
+	{
+		"hu"			"{mint}Ez a Füstös véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Spitter #83"
+	{
+		"hu"			"{mint}Ez a Köpködő véletlenszerűen egy túlélőhöz teleportál."
+	}
+
+	"Witch #83"
+	{
+		"hu"			"{mint}Ez a Boszorka véletlenszerűen egy túlélőhöz teleportál."
 	}
 
 	"Tank #84 Name"
 	{
-		"hu"			"Boszorka Tank"
+		"hu"			"Örvénylő Tank"
+	}
+
+	"Boomer #84 Name"
+	{
+		"hu"			"Örvénylő Pukkancs"
+	}
+
+	"Charger #84 Name"
+	{
+		"hu"			"Örvénylő Rohanó"
+	}
+
+	"Hunter #84 Name"
+	{
+		"hu"			"Örvénylő Vadász"
+	}
+
+	"Jockey #84 Name"
+	{
+		"hu"			"Örvénylő Zsoké"
+	}
+
+	"Smoker #84 Name"
+	{
+		"hu"			"Örvénylő Füstös"
+	}
+
+	"Spitter #84 Name"
+	{
+		"hu"			"Örvénylő Köpködő"
+	}
+
+	"Witch #84 Name"
+	{
+		"hu"			"Örvénylő Boszorka"
 	}
 
 	"Tank #84"
 	{
-		"hu"			"{mint}Ez a Tank Boszorkává alakítja a közeli fertőzötteket, és dob is párat a túlélők felé."
+		"hu"			"{mint}Ez a Tank megpörgeti a túlélőket."
+	}
+
+	"Boomer #84"
+	{
+		"hu"			"{mint}Ez a Pukkancs megpörgeti a túlélőket."
+	}
+
+	"Charger #84"
+	{
+		"hu"			"{mint}Ez a Rohanó megpörgeti a túlélőket."
+	}
+
+	"Hunter #84"
+	{
+		"hu"			"{mint}Ez a Vadász megpörgeti a túlélőket."
+	}
+
+	"Jockey #84"
+	{
+		"hu"			"{mint}Ez a Zsoké megpörgeti a túlélőket."
+	}
+
+	"Smoker #84"
+	{
+		"hu"			"{mint}Ez a Füstös megpörgeti a túlélőket."
+	}
+
+	"Spitter #84"
+	{
+		"hu"			"{mint}Ez a Köpködő megpörgeti a túlélőket."
+	}
+
+	"Witch #84"
+	{
+		"hu"			"{mint}Ez a Boszorka megpörgeti a túlélőket."
 	}
 
 	"Tank #85 Name"
 	{
-		"hu"			"Xiphos Tank"
+		"hu"			"Boszorka Tank"
+	}
+
+	"Boomer #85 Name"
+	{
+		"hu"			"Boszorka Pukkancs"
+	}
+
+	"Charger #85 Name"
+	{
+		"hu"			"Boszorka Rohanó"
+	}
+
+	"Hunter #85 Name"
+	{
+		"hu"			"Boszorka Vadász"
+	}
+
+	"Jockey #85 Name"
+	{
+		"hu"			"Boszorka Zsoké"
+	}
+
+	"Smoker #85 Name"
+	{
+		"hu"			"Boszorka Füstös"
+	}
+
+	"Spitter #85 Name"
+	{
+		"hu"			"Boszorka Köpködő"
+	}
+
+	"Witch #85 Name"
+	{
+		"hu"			"Boszorka Boszorka"
 	}
 
 	"Tank #85"
 	{
-		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
+		"hu"			"{mint}Ez a Tank Boszorkává alakítja a közeli fertőzötteket, és dob is párat a túlélők felé."
+	}
+
+	"Boomer #85"
+	{
+		"hu"			"{mint}Ez a Pukkancs Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Charger #85"
+	{
+		"hu"			"{mint}Ez a Rohanó Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Hunter #85"
+	{
+		"hu"			"{mint}Ez a Vadász Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Jockey #85"
+	{
+		"hu"			"{mint}Ez a Zsoké Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Smoker #85"
+	{
+		"hu"			"{mint}Ez a Füstös Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Spitter #85"
+	{
+		"hu"			"{mint}Ez a Köpködő Boszorkává alakítja a közeli fertőzötteket."
+	}
+
+	"Witch #85"
+	{
+		"hu"			"{mint}Ez a Boszorka Boszorkává alakítja a közeli fertőzötteket."
 	}
 
 	"Tank #86 Name"
 	{
-		"hu"			"Üvöltő Tank"
+		"hu"			"Xiphos Tank"
+	}
+
+	"Boomer #86 Name"
+	{
+		"hu"			"Xiphos Pukkancs"
+	}
+
+	"Charger #86 Name"
+	{
+		"hu"			"Xiphos Rohanó"
+	}
+
+	"Hunter #86 Name"
+	{
+		"hu"			"Xiphos Vadász"
+	}
+
+	"Jockey #86 Name"
+	{
+		"hu"			"Xiphos Zsoké"
+	}
+
+	"Smoker #86 Name"
+	{
+		"hu"			"Xiphos Füstös"
+	}
+
+	"Spitter #86 Name"
+	{
+		"hu"			"Xiphos Köpködő"
+	}
+
+	"Witch #86 Name"
+	{
+		"hu"			"Xiphos Boszorka"
 	}
 
 	"Tank #86"
 	{
-		"hu"			"{mint}Ez a Tank tud üvölteni, így megsüketítve a túlélőket."
+		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Boomer #86"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Charger #86"
+	{
+		"hu"			"{mint}Ez a Rohanó tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Hunter #86"
+	{
+		"hu"			"{mint}Ez a Vadász tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Jockey #86"
+	{
+		"hu"			"{mint}Ez a Zsoké tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Smoker #86"
+	{
+		"hu"			"{mint}Ez a Füstös tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Spitter #86"
+	{
+		"hu"			"{mint}Ez a Köpködő tud életerőt lopni a túlélőktől és fordítva."
+	}
+
+	"Witch #86"
+	{
+		"hu"			"{mint}Ez a Boszorka tud életerőt lopni a túlélőktől és fordítva."
 	}
 
 	"Tank #87 Name"
 	{
-		"hu"			"Zombi Tank"
+		"hu"			"Üvöltő Tank"
+	}
+
+	"Boomer #87 Name"
+	{
+		"hu"			"Üvöltő Pukkancs"
+	}
+
+	"Charger #87 Name"
+	{
+		"hu"			"Üvöltő Rohanó"
+	}
+
+	"Hunter #87 Name"
+	{
+		"hu"			"Üvöltő Vadász"
+	}
+
+	"Jockey #87 Name"
+	{
+		"hu"			"Üvöltő Zsoké"
+	}
+
+	"Smoker #87 Name"
+	{
+		"hu"			"Üvöltő Füstös"
+	}
+
+	"Spitter #87 Name"
+	{
+		"hu"			"Üvöltő Köpködő"
+	}
+
+	"Witch #87 Name"
+	{
+		"hu"			"Üvöltő Boszorka"
 	}
 
 	"Tank #87"
 	{
-		"hu"			"{mint}Ez a Tank hordákat hoz létre."
+		"hu"			"{mint}Ez a Tank tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Boomer #87"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Charger #87"
+	{
+		"hu"			"{mint}Ez a Rohanó tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Hunter #87"
+	{
+		"hu"			"{mint}Ez a Vadász tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Jockey #87"
+	{
+		"hu"			"{mint}Ez a Zsoké tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Smoker #87"
+	{
+		"hu"			"{mint}Ez a Füstös tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Spitter #87"
+	{
+		"hu"			"{mint}Ez a Köpködő tud üvölteni, így megsüketítve a túlélőket."
+	}
+
+	"Witch #87"
+	{
+		"hu"			"{mint}Ez a Boszorka tud üvölteni, így megsüketítve a túlélőket."
 	}
 
 	"Tank #88 Name"
 	{
-		"hu"			"Armageddon Tank"
+		"hu"			"Zombi Tank"
+	}
+
+	"Boomer #88 Name"
+	{
+		"hu"			"Zombi Pukkancs"
+	}
+
+	"Charger #88 Name"
+	{
+		"hu"			"Zombi Rohanó"
+	}
+
+	"Hunter #88 Name"
+	{
+		"hu"			"Zombi Vadász"
+	}
+
+	"Jockey #88 Name"
+	{
+		"hu"			"Zombi Zsoké"
+	}
+
+	"Smoker #88 Name"
+	{
+		"hu"			"Zombi Füstös"
+	}
+
+	"Spitter #88 Name"
+	{
+		"hu"			"Zombi Köpködő"
+	}
+
+	"Witch #88 Name"
+	{
+		"hu"			"Zombi Boszorka"
 	}
 
 	"Tank #88"
 	{
-		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+		"hu"			"{mint}Ez a Tank hordákat hoz létre."
+	}
+
+	"Boomer #88"
+	{
+		"hu"			"{mint}Ez a Pukkancs hordákat hoz létre."
+	}
+
+	"Charger #88"
+	{
+		"hu"			"{mint}Ez a Rohanó hordákat hoz létre."
+	}
+
+	"Hunter #88"
+	{
+		"hu"			"{mint}Ez a Vadász hordákat hoz létre."
+	}
+
+	"Jockey #88"
+	{
+		"hu"			"{mint}Ez a Zsoké hordákat hoz létre."
+	}
+
+	"Smoker #88"
+	{
+		"hu"			"{mint}Ez a Füstös hordákat hoz létre."
+	}
+
+	"Spitter #88"
+	{
+		"hu"			"{mint}Ez a Köpködő hordákat hoz létre."
+	}
+
+	"Witch #88"
+	{
+		"hu"			"{mint}Ez a Boszorka hordákat hoz létre."
 	}
 
 	"Tank #89 Name"
 	{
-		"hu"			"Főnök Tank"
+		"hu"			"Armageddon Tank"
+	}
+
+	"Boomer #89 Name"
+	{
+		"hu"			"Armageddon Pukkancs"
+	}
+
+	"Charger #89 Name"
+	{
+		"hu"			"Armageddon Rohanó"
+	}
+
+	"Hunter #89 Name"
+	{
+		"hu"			"Armageddon Vadász"
+	}
+
+	"Jockey #89 Name"
+	{
+		"hu"			"Armageddon Zsoké"
+	}
+
+	"Smoker #89 Name"
+	{
+		"hu"			"Armageddon Füstös"
+	}
+
+	"Spitter #89 Name"
+	{
+		"hu"			"Armageddon Köpködő"
+	}
+
+	"Witch #89 Name"
+	{
+		"hu"			"Armageddon Boszorka"
 	}
 
 	"Tank #89"
 	{
-		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Boomer #89"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Charger #89"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Hunter #89"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Jockey #89"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Smoker #89"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Spitter #89"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
+	}
+
+	"Witch #89"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
 	}
 
 	"Tank #90 Name"
 	{
-		"hu"			"Kobalt Tank"
+		"hu"			"Főnök Tank"
+	}
+
+	"Boomer #90 Name"
+	{
+		"hu"			"Főnök Pukkancs"
+	}
+
+	"Charger #90 Name"
+	{
+		"hu"			"Főnök Rohanó"
+	}
+
+	"Hunter #90 Name"
+	{
+		"hu"			"Főnök Vadász"
+	}
+
+	"Jockey #90 Name"
+	{
+		"hu"			"Főnök Zsoké"
+	}
+
+	"Smoker #90 Name"
+	{
+		"hu"			"Főnök Füstös"
+	}
+
+	"Spitter #90 Name"
+	{
+		"hu"			"Főnök Köpködő"
+	}
+
+	"Witch #90 Name"
+	{
+		"hu"			"Főnök Boszorka"
 	}
 
 	"Tank #90"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre és nagyon gyorsan fut."
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Boomer #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Charger #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Hunter #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Jockey #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Smoker #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Spitter #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
+	}
+
+	"Witch #90"
+	{
+		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
 	}
 
 	"Tank #91 Name"
 	{
-		"hu"			"Elterelő Tank"
+		"hu"			"Kobalt Tank"
+	}
+
+	"Boomer #91 Name"
+	{
+		"hu"			"Kobalt Pukkancs"
+	}
+
+	"Charger #91 Name"
+	{
+		"hu"			"Kobalt Rohanó"
+	}
+
+	"Hunter #91 Name"
+	{
+		"hu"			"Kobalt Vadász"
+	}
+
+	"Jockey #91 Name"
+	{
+		"hu"			"Kobalt Zsoké"
+	}
+
+	"Smoker #91 Name"
+	{
+		"hu"			"Kobalt Füstös"
+	}
+
+	"Spitter #91 Name"
+	{
+		"hu"			"Kobalt Köpködő"
+	}
+
+	"Witch #91 Name"
+	{
+		"hu"			"Kobalt Boszorka"
 	}
 
 	"Tank #91"
 	{
-		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+		"hu"			"{mint}Ez a Tank immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Boomer #91"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Charger #91"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Hunter #91"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Jockey #91"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Smoker #91"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Spitter #91"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre és nagyon gyorsan fut."
+	}
+
+	"Witch #91"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre és nagyon gyorsan fut."
 	}
 
 	"Tank #92 Name"
 	{
-		"hu"			"Visszaverő Tank"
+		"hu"			"Elterelő Tank"
+	}
+
+	"Boomer #92 Name"
+	{
+		"hu"			"Elterelő Pukkancs"
+	}
+
+	"Charger #92 Name"
+	{
+		"hu"			"Elterelő Rohanó"
+	}
+
+	"Hunter #92 Name"
+	{
+		"hu"			"Elterelő Vadász"
+	}
+
+	"Jockey #92 Name"
+	{
+		"hu"			"Elterelő Zsoké"
+	}
+
+	"Smoker #92 Name"
+	{
+		"hu"			"Elterelő Füstös"
+	}
+
+	"Spitter #92 Name"
+	{
+		"hu"			"Elterelő Köpködő"
+	}
+
+	"Witch #92 Name"
+	{
+		"hu"			"Elterelő Boszorka"
 	}
 
 	"Tank #92"
 	{
-		"hu"			"{mint}Ez a Tank ellöki magától a túlélőket."
+		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Boomer #92"
+	{
+		"hu"			"{mint}Ez a Pukkancs időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Charger #92"
+	{
+		"hu"			"{mint}Ez a Rohanó időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Hunter #92"
+	{
+		"hu"			"{mint}Ez a Vadász időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Jockey #92"
+	{
+		"hu"			"{mint}Ez a Zsoké időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Smoker #92"
+	{
+		"hu"			"{mint}Ez a Füstös időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Spitter #92"
+	{
+		"hu"			"{mint}Ez a Köpködő időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
+	}
+
+	"Witch #92"
+	{
+		"hu"			"{mint}Ez a Boszorka időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #93 Name"
 	{
-		"hu"			"Flash Tank"
+		"hu"			"Visszaverő Tank"
+	}
+
+	"Boomer #93 Name"
+	{
+		"hu"			"Visszaverő Pukkancs"
+	}
+
+	"Charger #93 Name"
+	{
+		"hu"			"Visszaverő Rohanó"
+	}
+
+	"Hunter #93 Name"
+	{
+		"hu"			"Visszaverő Vadász"
+	}
+
+	"Jockey #93 Name"
+	{
+		"hu"			"Visszaverő Zsoké"
+	}
+
+	"Smoker #93 Name"
+	{
+		"hu"			"Visszaverő Füstös"
+	}
+
+	"Spitter #93 Name"
+	{
+		"hu"			"Visszaverő Köpködő"
+	}
+
+	"Witch #93 Name"
+	{
+		"hu"			"Visszaverő Boszorka"
 	}
 
 	"Tank #93"
 	{
-		"hu"			"{mint}Ez a Tank nagyon gyorsan tud futni, elektromosságot dob a túlélőkre, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+		"hu"			"{mint}Ez a Tank ellöki magától a túlélőket."
+	}
+
+	"Boomer #93"
+	{
+		"hu"			"{mint}Ez a Pukkancs ellöki magától a túlélőket."
+	}
+
+	"Charger #93"
+	{
+		"hu"			"{mint}Ez a Rohanó ellöki magától a túlélőket."
+	}
+
+	"Hunter #93"
+	{
+		"hu"			"{mint}Ez a Vadász ellöki magától a túlélőket."
+	}
+
+	"Jockey #93"
+	{
+		"hu"			"{mint}Ez a Zsoké ellöki magától a túlélőket."
+	}
+
+	"Smoker #93"
+	{
+		"hu"			"{mint}Ez a Füstös ellöki magától a túlélőket."
+	}
+
+	"Spitter #93"
+	{
+		"hu"			"{mint}Ez a Köpködő ellöki magától a túlélőket."
+	}
+
+	"Witch #93"
+	{
+		"hu"			"{mint}Ez a Boszorka ellöki magától a túlélőket."
 	}
 
 	"Tank #94 Name"
 	{
-		"hu"			"Góliát Tank"
+		"hu"			"Flash Tank"
+	}
+
+	"Boomer #94 Name"
+	{
+		"hu"			"Flash Pukkancs"
+	}
+
+	"Charger #94 Name"
+	{
+		"hu"			"Flash Rohanó"
+	}
+
+	"Hunter #94 Name"
+	{
+		"hu"			"Flash Vadász"
+	}
+
+	"Jockey #94 Name"
+	{
+		"hu"			"Flash Zsoké"
+	}
+
+	"Smoker #94 Name"
+	{
+		"hu"			"Flash Füstös"
+	}
+
+	"Spitter #94 Name"
+	{
+		"hu"			"Flash Köpködő"
+	}
+
+	"Witch #94 Name"
+	{
+		"hu"			"Flash Boszorka"
 	}
 
 	"Tank #94"
 	{
-		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+		"hu"			"{mint}Ez a Tank nagyon gyorsan tud futni, elektromosságot dob a túlélőkre, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Boomer #94"
+	{
+		"hu"			"{mint}Ez a Pukkancs nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Charger #94"
+	{
+		"hu"			"{mint}Ez a Rohanó nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Hunter #94"
+	{
+		"hu"			"{mint}Ez a Vadász nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Jockey #94"
+	{
+		"hu"			"{mint}Ez a Zsoké nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Smoker #94"
+	{
+		"hu"			"{mint}Ez a Füstös nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Spitter #94"
+	{
+		"hu"			"{mint}Ez a Köpködő nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+	}
+
+	"Witch #94"
+	{
+		"hu"			"{mint}Ez a Boszorka nagyon gyorsan tud futni, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
 	}
 
 	"Tank #95 Name"
 	{
-		"hu"			"Hallucináció Tank"
+		"hu"			"Góliát Tank"
+	}
+
+	"Boomer #95 Name"
+	{
+		"hu"			"Góliát Pukkancs"
+	}
+
+	"Charger #95 Name"
+	{
+		"hu"			"Góliát Rohanó"
+	}
+
+	"Hunter #95 Name"
+	{
+		"hu"			"Góliát Vadász"
+	}
+
+	"Jockey #95 Name"
+	{
+		"hu"			"Góliát Zsoké"
+	}
+
+	"Smoker #95 Name"
+	{
+		"hu"			"Góliát Füstös"
+	}
+
+	"Spitter #95 Name"
+	{
+		"hu"			"Góliát Köpködő"
+	}
+
+	"Witch #95 Name"
+	{
+		"hu"			"Góliát Boszorka"
 	}
 
 	"Tank #95"
 	{
-		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Boomer #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Charger #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Hunter #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Jockey #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Smoker #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Spitter #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
+	}
+
+	"Witch #95"
+	{
+		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
 	}
 
 	"Tank #96 Name"
 	{
-		"hu"			"Mém Tank"
+		"hu"			"Hallucináció Tank"
+	}
+
+	"Boomer #96 Name"
+	{
+		"hu"			"Hallucináció Pukkancs"
+	}
+
+	"Charger #96 Name"
+	{
+		"hu"			"Hallucináció Rohanó"
+	}
+
+	"Hunter #96 Name"
+	{
+		"hu"			"Hallucináció Vadász"
+	}
+
+	"Jockey #96 Name"
+	{
+		"hu"			"Hallucináció Zsoké"
+	}
+
+	"Smoker #96 Name"
+	{
+		"hu"			"Hallucináció Füstös"
+	}
+
+	"Spitter #96 Name"
+	{
+		"hu"			"Hallucináció Köpködő"
+	}
+
+	"Witch #96 Name"
+	{
+		"hu"			"Hallucináció Boszorka"
 	}
 
 	"Tank #96"
 	{
-		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Boomer #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Charger #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Hunter #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Jockey #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Smoker #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Spitter #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Witch #96"
+	{
+		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #97 Name"
 	{
-		"hu"			"Káprázat Tank"
+		"hu"			"Mém Tank"
+	}
+
+	"Boomer #97 Name"
+	{
+		"hu"			"Mém Pukkancs"
+	}
+
+	"Charger #97 Name"
+	{
+		"hu"			"Mém Rohanó"
+	}
+
+	"Hunter #97 Name"
+	{
+		"hu"			"Mém Vadász"
+	}
+
+	"Jockey #97 Name"
+	{
+		"hu"			"Mém Zsoké"
+	}
+
+	"Smoker #97 Name"
+	{
+		"hu"			"Mém Füstös"
+	}
+
+	"Spitter #97 Name"
+	{
+		"hu"			"Mém Köpködő"
+	}
+
+	"Witch #97 Name"
+	{
+		"hu"			"Mém Boszorka"
 	}
 
 	"Tank #97"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Boomer #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Charger #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Hunter #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Jockey #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Smoker #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Spitter #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
+	}
+
+	"Witch #97"
+	{
+		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
 	}
 
 	"Tank #98 Name"
 	{
-		"hu"			"Kísértet Tank"
+		"hu"			"Káprázat Tank"
+	}
+
+	"Boomer #98 Name"
+	{
+		"hu"			"Káprázat Pukkancs"
+	}
+
+	"Charger #98 Name"
+	{
+		"hu"			"Káprázat Rohanó"
+	}
+
+	"Hunter #98 Name"
+	{
+		"hu"			"Káprázat Vadász"
+	}
+
+	"Jockey #98 Name"
+	{
+		"hu"			"Káprázat Zsoké"
+	}
+
+	"Smoker #98 Name"
+	{
+		"hu"			"Káprázat Füstös"
+	}
+
+	"Spitter #98 Name"
+	{
+		"hu"			"Káprázat Köpködő"
+	}
+
+	"Witch #98 Name"
+	{
+		"hu"			"Káprázat Boszorka"
 	}
 
 	"Tank #98"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Boomer #98"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Charger #98"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Hunter #98"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Jockey #98"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Smoker #98"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Spitter #98"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
+	}
+
+	"Witch #98"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #99 Name"
 	{
-		"hu"			"Elmebeteg Tank"
+		"hu"			"Kísértet Tank"
+	}
+
+	"Boomer #99 Name"
+	{
+		"hu"			"Kísértet Pukkancs"
+	}
+
+	"Charger #99 Name"
+	{
+		"hu"			"Kísértet Rohanó"
+	}
+
+	"Hunter #99 Name"
+	{
+		"hu"			"Kísértet Vadász"
+	}
+
+	"Jockey #99 Name"
+	{
+		"hu"			"Kísértet Zsoké"
+	}
+
+	"Smoker #99 Name"
+	{
+		"hu"			"Kísértet Füstös"
+	}
+
+	"Spitter #99 Name"
+	{
+		"hu"			"Kísértet Köpködő"
+	}
+
+	"Witch #99 Name"
+	{
+		"hu"			"Kísértet Boszorka"
 	}
 
 	"Tank #99"
 	{
-		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Boomer #99"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Charger #99"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Hunter #99"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Jockey #99"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Smoker #99"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Spitter #99"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
+	}
+
+	"Witch #99"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #100 Name"
 	{
-		"hu"			"Fordító Tank"
+		"hu"			"Elmebeteg Tank"
+	}
+
+	"Boomer #100 Name"
+	{
+		"hu"			"Elmebeteg Pukkancs"
+	}
+
+	"Charger #100 Name"
+	{
+		"hu"			"Elmebeteg Rohanó"
+	}
+
+	"Hunter #100 Name"
+	{
+		"hu"			"Elmebeteg Vadász"
+	}
+
+	"Jockey #100 Name"
+	{
+		"hu"			"Elmebeteg Zsoké"
+	}
+
+	"Smoker #100 Name"
+	{
+		"hu"			"Elmebeteg Füstös"
+	}
+
+	"Spitter #100 Name"
+	{
+		"hu"			"Elmebeteg Köpködő"
+	}
+
+	"Witch #100 Name"
+	{
+		"hu"			"Elmebeteg Boszorka"
 	}
 
 	"Tank #100"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Boomer #100"
+	{
+		"hu"			"{mint}Ez a Pukkancs ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Charger #100"
+	{
+		"hu"			"{mint}Ez a Rohanó ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Hunter #100"
+	{
+		"hu"			"{mint}Ez a Vadász ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Jockey #100"
+	{
+		"hu"			"{mint}Ez a Zsoké ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Smoker #100"
+	{
+		"hu"			"{mint}Ez a Füstös ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Spitter #100"
+	{
+		"hu"			"{mint}Ez a Köpködő ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+	}
+
+	"Witch #100"
+	{
+		"hu"			"{mint}Ez a Boszorka ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
 	}
 
 	"Tank #101 Name"
 	{
-		"hu"			"Létrehozó Tank"
+		"hu"			"Fordító Tank"
+	}
+
+	"Boomer #101 Name"
+	{
+		"hu"			"Fordító Pukkancs"
+	}
+
+	"Charger #101 Name"
+	{
+		"hu"			"Fordító Rohanó"
+	}
+
+	"Hunter #101 Name"
+	{
+		"hu"			"Fordító Vadász"
+	}
+
+	"Jockey #101 Name"
+	{
+		"hu"			"Fordító Zsoké"
+	}
+
+	"Smoker #101 Name"
+	{
+		"hu"			"Fordító Füstös"
+	}
+
+	"Spitter #101 Name"
+	{
+		"hu"			"Fordító Köpködő"
+	}
+
+	"Witch #101 Name"
+	{
+		"hu"			"Fordító Boszorka"
 	}
 
 	"Tank #101"
 	{
-		"hu"			"{mint}Ez a Tank zombikat hoz létre egy füstfelhő mögött."
+		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Boomer #101"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Charger #101"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Hunter #101"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Jockey #101"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Smoker #101"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Spitter #101"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Witch #101"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
 
 	"Tank #102 Name"
 	{
-		"hu"			"Közelítő Tank"
+		"hu"			"Létrehozó Tank"
+	}
+
+	"Boomer #102 Name"
+	{
+		"hu"			"Létrehozó Pukkancs"
+	}
+
+	"Charger #102 Name"
+	{
+		"hu"			"Létrehozó Rohanó"
+	}
+
+	"Hunter #102 Name"
+	{
+		"hu"			"Létrehozó Vadász"
+	}
+
+	"Jockey #102 Name"
+	{
+		"hu"			"Létrehozó Zsoké"
+	}
+
+	"Smoker #102 Name"
+	{
+		"hu"			"Létrehozó Füstös"
+	}
+
+	"Spitter #102 Name"
+	{
+		"hu"			"Létrehozó Köpködő"
+	}
+
+	"Witch #102 Name"
+	{
+		"hu"			"Létrehozó Boszorka"
 	}
 
 	"Tank #102"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+		"hu"			"{mint}Ez a Tank zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Boomer #102"
+	{
+		"hu"			"{mint}Ez a Pukkancs zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Charger #102"
+	{
+		"hu"			"{mint}Ez a Rohanó zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Hunter #102"
+	{
+		"hu"			"{mint}Ez a Vadász zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Jockey #102"
+	{
+		"hu"			"{mint}Ez a Zsoké zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Smoker #102"
+	{
+		"hu"			"{mint}Ez a Füstös zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Spitter #102"
+	{
+		"hu"			"{mint}Ez a Köpködő zombikat hoz létre egy füstfelhő mögött."
+	}
+
+	"Witch #102"
+	{
+		"hu"			"{mint}Ez a Boszorka zombikat hoz létre egy füstfelhő mögött."
 	}
 
 	"Tank #103 Name"
 	{
-		"hu"			"Csapda Tank"
+		"hu"			"Közelítő Tank"
+	}
+
+	"Boomer #103 Name"
+	{
+		"hu"			"Közelítő Pukkancs"
+	}
+
+	"Charger #103 Name"
+	{
+		"hu"			"Közelítő Rohanó"
+	}
+
+	"Hunter #103 Name"
+	{
+		"hu"			"Közelítő Vadász"
+	}
+
+	"Jockey #103 Name"
+	{
+		"hu"			"Közelítő Zsoké"
+	}
+
+	"Smoker #103 Name"
+	{
+		"hu"			"Közelítő Füstös"
+	}
+
+	"Spitter #103 Name"
+	{
+		"hu"			"Közelítő Köpködő"
+	}
+
+	"Witch #103 Name"
+	{
+		"hu"			"Közelítő Boszorka"
 	}
 
 	"Tank #103"
 	{
-		"hu"			"{mint}Ez a Tank nem az aminek látszik."
+		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Boomer #103"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Charger #103"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Hunter #103"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Jockey #103"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Smoker #103"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Spitter #103"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
+	}
+
+	"Witch #103"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
 
 	"Tank #104 Name"
 	{
-		"hu"			"Félelemkeltő Tank"
+		"hu"			"Csapda Tank"
+	}
+
+	"Boomer #104 Name"
+	{
+		"hu"			"Csapda Pukkancs"
+	}
+
+	"Charger #104 Name"
+	{
+		"hu"			"Csapda Rohanó"
+	}
+
+	"Hunter #104 Name"
+	{
+		"hu"			"Csapda Vadász"
+	}
+
+	"Jockey #104 Name"
+	{
+		"hu"			"Csapda Zsoké"
+	}
+
+	"Smoker #104 Name"
+	{
+		"hu"			"Csapda Füstös"
+	}
+
+	"Spitter #104 Name"
+	{
+		"hu"			"Csapda Köpködő"
+	}
+
+	"Witch #104 Name"
+	{
+		"hu"			"Csapda Boszorka"
 	}
 
 	"Tank #104"
 	{
-		"hu"			"{mint}Ez a Tank megtudja részben vakítani a túlélőket."
+		"hu"			"{mint}Ez a Tank nem az aminek látszik."
+	}
+
+	"Boomer #104"
+	{
+		"hu"			"{mint}Ez a Pukkancs nem az aminek látszik."
+	}
+
+	"Charger #104"
+	{
+		"hu"			"{mint}Ez a Rohanó nem az aminek látszik."
+	}
+
+	"Hunter #104"
+	{
+		"hu"			"{mint}Ez a Vadász nem az aminek látszik."
+	}
+
+	"Jockey #104"
+	{
+		"hu"			"{mint}Ez a Zsoké nem az aminek látszik."
+	}
+
+	"Smoker #104"
+	{
+		"hu"			"{mint}Ez a Füstös nem az aminek látszik."
+	}
+
+	"Spitter #104"
+	{
+		"hu"			"{mint}Ez a Köpködő nem az aminek látszik."
+	}
+
+	"Witch #104"
+	{
+		"hu"			"{mint}Ez a Boszorka nem az aminek látszik."
 	}
 
 	"Tank #105 Name"
 	{
-		"hu"			"Fanatikus Tank"
+		"hu"			"Félelemkeltő Tank"
+	}
+
+	"Boomer #105 Name"
+	{
+		"hu"			"Félelemkeltő Pukkancs"
+	}
+
+	"Charger #105 Name"
+	{
+		"hu"			"Félelemkeltő Rohanó"
+	}
+
+	"Hunter #105 Name"
+	{
+		"hu"			"Félelemkeltő Vadász"
+	}
+
+	"Jockey #105 Name"
+	{
+		"hu"			"Félelemkeltő Zsoké"
+	}
+
+	"Smoker #105 Name"
+	{
+		"hu"			"Félelemkeltő Füstös"
+	}
+
+	"Spitter #105 Name"
+	{
+		"hu"			"Félelemkeltő Köpködő"
+	}
+
+	"Witch #105 Name"
+	{
+		"hu"			"Félelemkeltő Boszorka"
 	}
 
 	"Tank #105"
 	{
-		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
+		"hu"			"{mint}Ez a Tank megtudja részben vakítani a túlélőket."
+	}
+
+	"Boomer #105"
+	{
+		"hu"			"{mint}Ez a Pukkancs megtudja részben vakítani a túlélőket."
+	}
+
+	"Charger #105"
+	{
+		"hu"			"{mint}Ez a Rohanó megtudja részben vakítani a túlélőket."
+	}
+
+	"Hunter #105"
+	{
+		"hu"			"{mint}Ez a Vadász megtudja részben vakítani a túlélőket."
+	}
+
+	"Jockey #105"
+	{
+		"hu"			"{mint}Ez a Zsoké megtudja részben vakítani a túlélőket."
+	}
+
+	"Smoker #105"
+	{
+		"hu"			"{mint}Ez a Füstös megtudja részben vakítani a túlélőket."
+	}
+
+	"Spitter #105"
+	{
+		"hu"			"{mint}Ez a Köpködő megtudja részben vakítani a túlélőket."
+	}
+
+	"Witch #105"
+	{
+		"hu"			"{mint}Ez a Boszorka megtudja részben vakítani a túlélőket."
 	}
 
 	"Tank #106 Name"
 	{
-		"hu"			"Remegő Tank"
+		"hu"			"Fanatikus Tank"
+	}
+
+	"Boomer #106 Name"
+	{
+		"hu"			"Fanatikus Pukkancs"
+	}
+
+	"Charger #106 Name"
+	{
+		"hu"			"Fanatikus Rohanó"
+	}
+
+	"Hunter #106 Name"
+	{
+		"hu"			"Fanatikus Vadász"
+	}
+
+	"Jockey #106 Name"
+	{
+		"hu"			"Fanatikus Zsoké"
+	}
+
+	"Smoker #106 Name"
+	{
+		"hu"			"Fanatikus Füstös"
+	}
+
+	"Spitter #106 Name"
+	{
+		"hu"			"Fanatikus Köpködő"
+	}
+
+	"Witch #106 Name"
+	{
+		"hu"			"Fanatikus Boszorka"
 	}
 
 	"Tank #106"
 	{
-		"hu"			"{mint}Ez a Tank odadobja a sziklákat a túlélőkre."
+		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Boomer #106"
+	{
+		"hu"			"{mint}Ez a Pukkancs részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Charger #106"
+	{
+		"hu"			"{mint}Ez a Rohanó részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Hunter #106"
+	{
+		"hu"			"{mint}Ez a Vadász részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Jockey #106"
+	{
+		"hu"			"{mint}Ez a Zsoké részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Smoker #106"
+	{
+		"hu"			"{mint}Ez a Füstös részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Spitter #106"
+	{
+		"hu"			"{mint}Ez a Köpködő részben bedrogozza és bántja a túlélőket."
+	}
+
+	"Witch #106"
+	{
+		"hu"			"{mint}Ez a Boszorka részben bedrogozza és bántja a túlélőket."
 	}
 
 	"Tank #107 Name"
 	{
-		"hu"			"Elmeb3teg Tank"
+		"hu"			"Remegő Tank"
+	}
+
+	"Boomer #107 Name"
+	{
+		"hu"			"Remegő Pukkancs"
+	}
+
+	"Charger #107 Name"
+	{
+		"hu"			"Remegő Rohanó"
+	}
+
+	"Hunter #107 Name"
+	{
+		"hu"			"Remegő Vadász"
+	}
+
+	"Jockey #107 Name"
+	{
+		"hu"			"Remegő Zsoké"
+	}
+
+	"Smoker #107 Name"
+	{
+		"hu"			"Remegő Füstös"
+	}
+
+	"Spitter #107 Name"
+	{
+		"hu"			"Remegő Köpködő"
+	}
+
+	"Witch #107 Name"
+	{
+		"hu"			"Remegő Boszorka"
 	}
 
 	"Tank #107"
 	{
-		"hu"			"{mint}Ez a Tank extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+		"hu"			"{mint}Ez a Tank odadobja a sziklákat a túlélőkre."
+	}
+
+	"Boomer #107"
+	{
+		"hu"			"{mint}Ez a Pukkancs odadobja a sziklákat a túlélőkre."
+	}
+
+	"Charger #107"
+	{
+		"hu"			"{mint}Ez a Rohanó odadobja a sziklákat a túlélőkre."
+	}
+
+	"Hunter #107"
+	{
+		"hu"			"{mint}Ez a Vadász odadobja a sziklákat a túlélőkre."
+	}
+
+	"Jockey #107"
+	{
+		"hu"			"{mint}Ez a Zsoké odadobja a sziklákat a túlélőkre."
+	}
+
+	"Smoker #107"
+	{
+		"hu"			"{mint}Ez a Füstös odadobja a sziklákat a túlélőkre."
+	}
+
+	"Spitter #107"
+	{
+		"hu"			"{mint}Ez a Köpködő odadobja a sziklákat a túlélőkre."
+	}
+
+	"Witch #107"
+	{
+		"hu"			"{mint}Ez a Boszorka odadobja a sziklákat a túlélőkre."
 	}
 
 	"Tank #108 Name"
 	{
-		"hu"			"Apokalipszis Tank"
+		"hu"			"Elmeb3teg Tank"
+	}
+
+	"Boomer #108 Name"
+	{
+		"hu"			"Elmeb3teg Pukkancs"
+	}
+
+	"Charger #108 Name"
+	{
+		"hu"			"Elmeb3teg Rohanó"
+	}
+
+	"Hunter #108 Name"
+	{
+		"hu"			"Elmeb3teg Vadász"
+	}
+
+	"Jockey #108 Name"
+	{
+		"hu"			"Elmeb3teg Zsoké"
+	}
+
+	"Smoker #108 Name"
+	{
+		"hu"			"Elmeb3teg Füstös"
+	}
+
+	"Spitter #108 Name"
+	{
+		"hu"			"Elmeb3teg Köpködő"
+	}
+
+	"Witch #108 Name"
+	{
+		"hu"			"Elmeb3teg Boszorka"
 	}
 
 	"Tank #108"
 	{
-		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+		"hu"			"{mint}Ez a Tank extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Boomer #108"
+	{
+		"hu"			"{mint}Ez a Pukkancs extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Charger #108"
+	{
+		"hu"			"{mint}Ez a Rohanó extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Hunter #108"
+	{
+		"hu"			"{mint}Ez a Vadász extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Jockey #108"
+	{
+		"hu"			"{mint}Ez a Zsoké extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Smoker #108"
+	{
+		"hu"			"{mint}Ez a Füstös extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Spitter #108"
+	{
+		"hu"			"{mint}Ez a Köpködő extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+	}
+
+	"Witch #108"
+	{
+		"hu"			"{mint}Ez a Boszorka extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
 	}
 
 	"Tank #109 Name"
 	{
-		"hu"			"Darth Vader Tank"
+		"hu"			"Apokalipszis Tank"
+	}
+
+	"Boomer #109 Name"
+	{
+		"hu"			"Apokalipszis Pukkancs"
+	}
+
+	"Charger #109 Name"
+	{
+		"hu"			"Apokalipszis Rohanó"
+	}
+
+	"Hunter #109 Name"
+	{
+		"hu"			"Apokalipszis Vadász"
+	}
+
+	"Jockey #109 Name"
+	{
+		"hu"			"Apokalipszis Zsoké"
+	}
+
+	"Smoker #109 Name"
+	{
+		"hu"			"Apokalipszis Füstös"
+	}
+
+	"Spitter #109 Name"
+	{
+		"hu"			"Apokalipszis Köpködő"
+	}
+
+	"Witch #109 Name"
+	{
+		"hu"			"Apokalipszis Boszorka"
 	}
 
 	"Tank #109"
 	{
-		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
+		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Boomer #109"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Charger #109"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Hunter #109"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Jockey #109"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Smoker #109"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Spitter #109"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
+	}
+
+	"Witch #109"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
 	}
 
 	"Tank #110 Name"
 	{
-		"hu"			"Drog Szenvedélye Tank"
+		"hu"			"Darth Vader Tank"
+	}
+
+	"Boomer #110 Name"
+	{
+		"hu"			"Darth Vader Pukkancs"
+	}
+
+	"Charger #110 Name"
+	{
+		"hu"			"Darth Vader Rohanó"
+	}
+
+	"Hunter #110 Name"
+	{
+		"hu"			"Darth Vader Vadász"
+	}
+
+	"Jockey #110 Name"
+	{
+		"hu"			"Darth Vader Zsoké"
+	}
+
+	"Smoker #110 Name"
+	{
+		"hu"			"Darth Vader Füstös"
+	}
+
+	"Spitter #110 Name"
+	{
+		"hu"			"Darth Vader Köpködő"
+	}
+
+	"Witch #110 Name"
+	{
+		"hu"			"Darth Vader Boszorka"
 	}
 
 	"Tank #110"
 	{
-		"hu"			"{mint}Ennek a Tanknak fertőző a szenvedélye."
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
+	}
+
+	"Boomer #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Pukkancs az erővel!"
+	}
+
+	"Charger #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Rohanó az erővel!"
+	}
+
+	"Hunter #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Vadász az erővel!"
+	}
+
+	"Jockey #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Zsoké az erővel!"
+	}
+
+	"Smoker #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Füstös az erővel!"
+	}
+
+	"Spitter #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Köpködő az erővel!"
+	}
+
+	"Witch #110"
+	{
+		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Boszorka az erővel!"
 	}
 
 	"Tank #111 Name"
 	{
-		"hu"			"SokSzerencsét Tank"
+		"hu"			"Drog Szenvedélye Tank"
+	}
+
+	"Boomer #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Pukkancs"
+	}
+
+	"Charger #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Rohanó"
+	}
+
+	"Hunter #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Vadász"
+	}
+
+	"Jockey #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Zsoké"
+	}
+
+	"Smoker #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Füstös"
+	}
+
+	"Spitter #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Köpködő"
+	}
+
+	"Witch #111 Name"
+	{
+		"hu"			"Drog Szenvedélye Boszorka"
 	}
 
 	"Tank #111"
 	{
-		"hu"			"{mint}Ez a tank immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+		"hu"			"{mint}Ennek a Tanknak fertőző a szenvedélye."
+	}
+
+	"Boomer #111"
+	{
+		"hu"			"{mint}Ennek a Pukkancsnak fertőző a szenvedélye."
+	}
+
+	"Charger #111"
+	{
+		"hu"			"{mint}Ennek a Rohanónak fertőző a szenvedélye."
+	}
+
+	"Hunter #111"
+	{
+		"hu"			"{mint}Ennek a Vadásznak fertőző a szenvedélye."
+	}
+
+	"Jockey #111"
+	{
+		"hu"			"{mint}Ennek a Zsokénak fertőző a szenvedélye."
+	}
+
+	"Smoker #111"
+	{
+		"hu"			"{mint}Ennek a Füstösnak fertőző a szenvedélye."
+	}
+
+	"Spitter #111"
+	{
+		"hu"			"{mint}Ennek a Köpködőnak fertőző a szenvedélye."
+	}
+
+	"Witch #111"
+	{
+		"hu"			"{mint}Ennek a Boszorkanak fertőző a szenvedélye."
 	}
 
 	"Tank #112 Name"
 	{
-		"hu"			"Zord Kaszás Tank"
+		"hu"			"SokSzerencsét Tank"
+	}
+
+	"Boomer #112 Name"
+	{
+		"hu"			"SokSzerencsét Pukkancs"
+	}
+
+	"Charger #112 Name"
+	{
+		"hu"			"SokSzerencsét Rohanó"
+	}
+
+	"Hunter #112 Name"
+	{
+		"hu"			"SokSzerencsét Vadász"
+	}
+
+	"Jockey #112 Name"
+	{
+		"hu"			"SokSzerencsét Zsoké"
+	}
+
+	"Smoker #112 Name"
+	{
+		"hu"			"SokSzerencsét Füstös"
+	}
+
+	"Spitter #112 Name"
+	{
+		"hu"			"SokSzerencsét Köpködő"
+	}
+
+	"Witch #112 Name"
+	{
+		"hu"			"SokSzerencsét Boszorka"
 	}
 
 	"Tank #112"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Boomer #112"
+	{
+		"hu"			"{mint}Ez a Pukkancs immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Charger #112"
+	{
+		"hu"			"{mint}Ez a Rohanó immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Hunter #112"
+	{
+		"hu"			"{mint}Ez a Vadász immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Jockey #112"
+	{
+		"hu"			"{mint}Ez a Zsoké immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Smoker #112"
+	{
+		"hu"			"{mint}Ez a Füstös immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Spitter #112"
+	{
+		"hu"			"{mint}Ez a Köpködő immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
+	}
+
+	"Witch #112"
+	{
+		"hu"			"{mint}Ez a Boszorka immunis a tűzre, nagyon gyorsan fut, és a túlélőkhöz tud teleportálni."
 	}
 
 	"Tank #113 Name"
 	{
-		"hu"			"Horda Tank"
+		"hu"			"Zord Kaszás Tank"
+	}
+
+	"Boomer #113 Name"
+	{
+		"hu"			"Zord Kaszás Pukkancs"
+	}
+
+	"Charger #113 Name"
+	{
+		"hu"			"Zord Kaszás Rohanó"
+	}
+
+	"Hunter #113 Name"
+	{
+		"hu"			"Zord Kaszás Vadász"
+	}
+
+	"Jockey #113 Name"
+	{
+		"hu"			"Zord Kaszás Zsoké"
+	}
+
+	"Smoker #113 Name"
+	{
+		"hu"			"Zord Kaszás Füstös"
+	}
+
+	"Spitter #113 Name"
+	{
+		"hu"			"Zord Kaszás Köpködő"
+	}
+
+	"Witch #113 Name"
+	{
+		"hu"			"Zord Kaszás Boszorka"
 	}
 
 	"Tank #113"
 	{
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Boomer #113"
+	{
+		"hu"			"{mint}Ez a Pukkancs egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Charger #113"
+	{
+		"hu"			"{mint}Ez a Rohanó egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Hunter #113"
+	{
+		"hu"			"{mint}Ez a Vadász egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Jockey #113"
+	{
+		"hu"			"{mint}Ez a Zsoké egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Smoker #113"
+	{
+		"hu"			"{mint}Ez a Füstös egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Spitter #113"
+	{
+		"hu"			"{mint}Ez a Köpködő egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
+	}
+
+	"Witch #113"
+	{
+		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 	}
 
 	"Tank #114 Name"
 	{
-		"hu"			"Hulk Tank"
+		"hu"			"Horda Tank"
+	}
+
+	"Boomer #114 Name"
+	{
+		"hu"			"Horda Pukkancs"
+	}
+
+	"Charger #114 Name"
+	{
+		"hu"			"Horda Rohanó"
+	}
+
+	"Hunter #114 Name"
+	{
+		"hu"			"Horda Vadász"
+	}
+
+	"Jockey #114 Name"
+	{
+		"hu"			"Horda Zsoké"
+	}
+
+	"Smoker #114 Name"
+	{
+		"hu"			"Horda Füstös"
+	}
+
+	"Spitter #114 Name"
+	{
+		"hu"			"Horda Köpködő"
+	}
+
+	"Witch #114 Name"
+	{
+		"hu"			"Horda Boszorka"
 	}
 
 	"Tank #114"
 	{
-		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
+		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Boomer #114"
+	{
+		"hu"			"{mint}Ez a Pukkancs pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Charger #114"
+	{
+		"hu"			"{mint}Ez a Rohanó pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Hunter #114"
+	{
+		"hu"			"{mint}Ez a Vadász pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Jockey #114"
+	{
+		"hu"			"{mint}Ez a Zsoké pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Smoker #114"
+	{
+		"hu"			"{mint}Ez a Füstös pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Spitter #114"
+	{
+		"hu"			"{mint}Ez a Köpködő pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+	}
+
+	"Witch #114"
+	{
+		"hu"			"{mint}Ez a Boszorka pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
 	}
 
 	"Tank #115 Name"
 	{
-		"hu"			"Nindzsa Tank"
+		"hu"			"Hulk Tank"
+	}
+
+	"Boomer #115 Name"
+	{
+		"hu"			"Hulk Pukkancs"
+	}
+
+	"Charger #115 Name"
+	{
+		"hu"			"Hulk Rohanó"
+	}
+
+	"Hunter #115 Name"
+	{
+		"hu"			"Hulk Vadász"
+	}
+
+	"Jockey #115 Name"
+	{
+		"hu"			"Hulk Zsoké"
+	}
+
+	"Smoker #115 Name"
+	{
+		"hu"			"Hulk Füstös"
+	}
+
+	"Spitter #115 Name"
+	{
+		"hu"			"Hulk Köpködő"
+	}
+
+	"Witch #115 Name"
+	{
+		"hu"			"Hulk Boszorka"
 	}
 
 	"Tank #115"
 	{
-		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Boomer #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Pukkancsnak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Charger #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Rohanónak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Hunter #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Vadásznak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Jockey #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Zsokénak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Smoker #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Füstösnak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Spitter #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Köpködőnak nagyrészt olyan képességei vannak mint Hulk-nak!"
+	}
+
+	"Witch #115"
+	{
+		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Boszorkanak nagyrészt olyan képességei vannak mint Hulk-nak!"
 	}
 
 	"Tank #116 Name"
 	{
-		"hu"			"Zen Tank"
+		"hu"			"Nindzsa Tank"
+	}
+
+	"Boomer #116 Name"
+	{
+		"hu"			"Nindzsa Pukkancs"
+	}
+
+	"Charger #116 Name"
+	{
+		"hu"			"Nindzsa Rohanó"
+	}
+
+	"Hunter #116 Name"
+	{
+		"hu"			"Nindzsa Vadász"
+	}
+
+	"Jockey #116 Name"
+	{
+		"hu"			"Nindzsa Zsoké"
+	}
+
+	"Smoker #116 Name"
+	{
+		"hu"			"Nindzsa Füstös"
+	}
+
+	"Spitter #116 Name"
+	{
+		"hu"			"Nindzsa Köpködő"
+	}
+
+	"Witch #116 Name"
+	{
+		"hu"			"Nindzsa Boszorka"
 	}
 
 	"Tank #116"
 	{
-		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Boomer #116"
+	{
+		"hu"			"{mint}Ez a Pukkancs tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Charger #116"
+	{
+		"hu"			"{mint}Ez a Rohanó tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Hunter #116"
+	{
+		"hu"			"{mint}Ez a Vadász tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Jockey #116"
+	{
+		"hu"			"{mint}Ez a Zsoké tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Smoker #116"
+	{
+		"hu"			"{mint}Ez a Füstös tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Spitter #116"
+	{
+		"hu"			"{mint}Ez a Köpködő tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
+	}
+
+	"Witch #116"
+	{
+		"hu"			"{mint}Ez a Boszorka tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 	}
 
 	"Tank #117 Name"
 	{
-		"hu"			"A Főnök (1. Alak)"
+		"hu"			"Zen Tank"
+	}
+
+	"Boomer #117 Name"
+	{
+		"hu"			"Zen Pukkancs"
+	}
+
+	"Charger #117 Name"
+	{
+		"hu"			"Zen Rohanó"
+	}
+
+	"Hunter #117 Name"
+	{
+		"hu"			"Zen Vadász"
+	}
+
+	"Jockey #117 Name"
+	{
+		"hu"			"Zen Zsoké"
+	}
+
+	"Smoker #117 Name"
+	{
+		"hu"			"Zen Füstös"
+	}
+
+	"Spitter #117 Name"
+	{
+		"hu"			"Zen Köpködő"
+	}
+
+	"Witch #117 Name"
+	{
+		"hu"			"Zen Boszorka"
 	}
 
 	"Tank #117"
 	{
-		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
+		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Boomer #117"
+	{
+		"hu"			"{mint}Ez a Pukkancs éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Charger #117"
+	{
+		"hu"			"{mint}Ez a Rohanó éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Hunter #117"
+	{
+		"hu"			"{mint}Ez a Vadász éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Jockey #117"
+	{
+		"hu"			"{mint}Ez a Zsoké éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Smoker #117"
+	{
+		"hu"			"{mint}Ez a Füstös éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Spitter #117"
+	{
+		"hu"			"{mint}Ez a Köpködő éppen meditál, túl elfoglalt hogy foglalkozzon veled."
+	}
+
+	"Witch #117"
+	{
+		"hu"			"{mint}Ez a Boszorka éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 	}
 
 	"Tank #118 Name"
 	{
-		"hu"			"Acél Hűbérúr (2. Alak)"
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Boomer #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Charger #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Hunter #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Jockey #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Smoker #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Spitter #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
+	}
+
+	"Witch #118 Name"
+	{
+		"hu"			"A Főnök (1. Alak)"
 	}
 
 	"Tank #118"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Boomer #118"
+	{
+		"hu"			"{mint}Ez a Pukkancs időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Charger #118"
+	{
+		"hu"			"{mint}Ez a Rohanó időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Hunter #118"
+	{
+		"hu"			"{mint}Ez a Vadász időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Jockey #118"
+	{
+		"hu"			"{mint}Ez a Zsoké időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Smoker #118"
+	{
+		"hu"			"{mint}Ez a Füstös időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Spitter #118"
+	{
+		"hu"			"{mint}Ez a Köpködő időszakosan teleportál egy túlélőkhöz."
+	}
+
+	"Witch #118"
+	{
+		"hu"			"{mint}Ez a Boszorka időszakosan teleportál egy túlélőkhöz."
 	}
 
 	"Tank #119 Name"
 	{
-		"hu"			"Éjjeli Orvvadász (3. Alak)"
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Boomer #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Charger #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Hunter #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Jockey #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Smoker #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Spitter #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
+	}
+
+	"Witch #119 Name"
+	{
+		"hu"			"Acél Hűbérúr (2. Alak)"
 	}
 
 	"Tank #119"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Boomer #119"
+	{
+		"hu"			"{mint}Ez a Pukkancs egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Charger #119"
+	{
+		"hu"			"{mint}Ez a Rohanó egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Hunter #119"
+	{
+		"hu"			"{mint}Ez a Vadász egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Jockey #119"
+	{
+		"hu"			"{mint}Ez a Zsoké egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Smoker #119"
+	{
+		"hu"			"{mint}Ez a Füstös egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Spitter #119"
+	{
+		"hu"			"{mint}Ez a Köpködő egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Witch #119"
+	{
+		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #120 Name"
 	{
-		"hu"			"Tűz Szelleme (4. Alak)"
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Boomer #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Charger #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Hunter #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Jockey #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Smoker #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Spitter #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
+	}
+
+	"Witch #120 Name"
+	{
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
 	}
 
 	"Tank #120"
 	{
-		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Boomer #120"
+	{
+		"hu"			"{mint}Ez a Pukkancs egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Charger #120"
+	{
+		"hu"			"{mint}Ez a Rohanó egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Hunter #120"
+	{
+		"hu"			"{mint}Ez a Vadász egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Jockey #120"
+	{
+		"hu"			"{mint}Ez a Zsoké egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Smoker #120"
+	{
+		"hu"			"{mint}Ez a Füstös egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Spitter #120"
+	{
+		"hu"			"{mint}Ez a Köpködő egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Witch #120"
+	{
+		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #121 Name"
 	{
-		"hu"			"Randomizáló Tank"
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Boomer #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Charger #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Hunter #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Jockey #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Smoker #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Spitter #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
+	}
+
+	"Witch #121 Name"
+	{
+		"hu"			"Tűz Szelleme (4. Alak)"
 	}
 
 	"Tank #121"
 	{
-		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
+		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Boomer #121"
+	{
+		"hu"			"{mint}Ez a Pukkancs egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Charger #121"
+	{
+		"hu"			"{mint}Ez a Rohanó egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Hunter #121"
+	{
+		"hu"			"{mint}Ez a Vadász egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Jockey #121"
+	{
+		"hu"			"{mint}Ez a Zsoké egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Smoker #121"
+	{
+		"hu"			"{mint}Ez a Füstös egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Spitter #121"
+	{
+		"hu"			"{mint}Ez a Köpködő egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
+	}
+
+	"Witch #121"
+	{
+		"hu"			"{mint}Ez a Boszorka egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 	}
 
 	"Tank #122 Name"
 	{
-		"hu"			"Alakváltó Tank"
+		"hu"			"Randomizáló Tank"
+	}
+
+	"Boomer #122 Name"
+	{
+		"hu"			"Randomizáló Pukkancs"
+	}
+
+	"Charger #122 Name"
+	{
+		"hu"			"Randomizáló Rohanó"
+	}
+
+	"Hunter #122 Name"
+	{
+		"hu"			"Randomizáló Vadász"
+	}
+
+	"Jockey #122 Name"
+	{
+		"hu"			"Randomizáló Zsoké"
+	}
+
+	"Smoker #122 Name"
+	{
+		"hu"			"Randomizáló Füstös"
+	}
+
+	"Spitter #122 Name"
+	{
+		"hu"			"Randomizáló Köpködő"
+	}
+
+	"Witch #122 Name"
+	{
+		"hu"			"Randomizáló Boszorka"
 	}
 
 	"Tank #122"
 	{
-		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
+		"hu"			"{mint}Ez a Tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Boomer #122"
+	{
+		"hu"			"{mint}Ez a Pukkancs véletlenszerűen átalakul egy másik típusú Mutáns Pukkancská, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Charger #122"
+	{
+		"hu"			"{mint}Ez a Rohanó véletlenszerűen átalakul egy másik típusú Mutáns Rohanóká, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Hunter #122"
+	{
+		"hu"			"{mint}Ez a Vadász véletlenszerűen átalakul egy másik típusú Mutáns Vadászká, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Jockey #122"
+	{
+		"hu"			"{mint}Ez a Zsoké véletlenszerűen átalakul egy másik típusú Mutáns Zsokéká, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Smoker #122"
+	{
+		"hu"			"{mint}Ez a Füstös véletlenszerűen átalakul egy másik típusú Mutáns Füstöská, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Spitter #122"
+	{
+		"hu"			"{mint}Ez a Köpködő véletlenszerűen átalakul egy másik típusú Mutáns Köpködőká, a sebzése megnő. Légy óvatos..."
+	}
+
+	"Witch #122"
+	{
+		"hu"			"{mint}Ez a Boszorka véletlenszerűen átalakul egy másik típusú Mutáns Boszorkaká, a sebzése megnő. Légy óvatos..."
 	}
 
 	"Tank #123 Name"
 	{
-		"hu"			"Villanó Tank"
+		"hu"			"Alakváltó Tank"
+	}
+
+	"Boomer #123 Name"
+	{
+		"hu"			"Alakváltó Pukkancs"
+	}
+
+	"Charger #123 Name"
+	{
+		"hu"			"Alakváltó Rohanó"
+	}
+
+	"Hunter #123 Name"
+	{
+		"hu"			"Alakváltó Vadász"
+	}
+
+	"Jockey #123 Name"
+	{
+		"hu"			"Alakváltó Zsoké"
+	}
+
+	"Smoker #123 Name"
+	{
+		"hu"			"Alakváltó Füstös"
+	}
+
+	"Spitter #123 Name"
+	{
+		"hu"			"Alakváltó Köpködő"
+	}
+
+	"Witch #123 Name"
+	{
+		"hu"			"Alakváltó Boszorka"
 	}
 
 	"Tank #123"
 	{
-		"hu"			"{mint}Ez a tank villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+		"hu"			"{mint}Ez a Tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
+	}
+
+	"Boomer #123"
+	{
+		"hu"			"{mint}Ez a Pukkancs át tud alakulni egy másik típusú Mutáns Pukkancská. Ne becsüld le..."
+	}
+
+	"Charger #123"
+	{
+		"hu"			"{mint}Ez a Rohanó át tud alakulni egy másik típusú Mutáns Rohanóká. Ne becsüld le..."
+	}
+
+	"Hunter #123"
+	{
+		"hu"			"{mint}Ez a Vadász át tud alakulni egy másik típusú Mutáns Vadászká. Ne becsüld le..."
+	}
+
+	"Jockey #123"
+	{
+		"hu"			"{mint}Ez a Zsoké át tud alakulni egy másik típusú Mutáns Zsokéká. Ne becsüld le..."
+	}
+
+	"Smoker #123"
+	{
+		"hu"			"{mint}Ez a Füstös át tud alakulni egy másik típusú Mutáns Füstöská. Ne becsüld le..."
+	}
+
+	"Spitter #123"
+	{
+		"hu"			"{mint}Ez a Köpködő át tud alakulni egy másik típusú Mutáns Köpködőká. Ne becsüld le..."
+	}
+
+	"Witch #123"
+	{
+		"hu"			"{mint}Ez a Boszorka át tud alakulni egy másik típusú Mutáns Boszorkaká. Ne becsüld le..."
 	}
 
 	"Tank #124 Name"
 	{
-		"hu"			"Mocsárember Tank"
+		"hu"			"Villanó Tank"
+	}
+
+	"Boomer #124 Name"
+	{
+		"hu"			"Villanó Pukkancs"
+	}
+
+	"Charger #124 Name"
+	{
+		"hu"			"Villanó Rohanó"
+	}
+
+	"Hunter #124 Name"
+	{
+		"hu"			"Villanó Vadász"
+	}
+
+	"Jockey #124 Name"
+	{
+		"hu"			"Villanó Zsoké"
+	}
+
+	"Smoker #124 Name"
+	{
+		"hu"			"Villanó Füstös"
+	}
+
+	"Spitter #124 Name"
+	{
+		"hu"			"Villanó Köpködő"
+	}
+
+	"Witch #124 Name"
+	{
+		"hu"			"Villanó Boszorka"
 	}
 
 	"Tank #124"
 	{
-		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
+		"hu"			"{mint}Ez a Tank villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Boomer #124"
+	{
+		"hu"			"{mint}Ez a Pukkancs villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Charger #124"
+	{
+		"hu"			"{mint}Ez a Rohanó villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Hunter #124"
+	{
+		"hu"			"{mint}Ez a Vadász villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Jockey #124"
+	{
+		"hu"			"{mint}Ez a Zsoké villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Smoker #124"
+	{
+		"hu"			"{mint}Ez a Füstös villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Spitter #124"
+	{
+		"hu"			"{mint}Ez a Köpködő villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
+	}
+
+	"Witch #124"
+	{
+		"hu"			"{mint}Ez a Boszorka villanásokat okoz, amitől ő maga, de mindenki más is megbénul akit megsebez."
 	}
 
 	"Tank #125 Name"
 	{
-		"hu"			"Végjáték Tank"
+		"hu"			"Mocsárember Tank"
+	}
+
+	"Boomer #125 Name"
+	{
+		"hu"			"Mocsárember Pukkancs"
+	}
+
+	"Charger #125 Name"
+	{
+		"hu"			"Mocsárember Rohanó"
+	}
+
+	"Hunter #125 Name"
+	{
+		"hu"			"Mocsárember Vadász"
+	}
+
+	"Jockey #125 Name"
+	{
+		"hu"			"Mocsárember Zsoké"
+	}
+
+	"Smoker #125 Name"
+	{
+		"hu"			"Mocsárember Füstös"
+	}
+
+	"Spitter #125 Name"
+	{
+		"hu"			"Mocsárember Köpködő"
+	}
+
+	"Witch #125 Name"
+	{
+		"hu"			"Mocsárember Boszorka"
 	}
 
 	"Tank #125"
 	{
-		"hu"			"{mint}Viszlát mindenki!"
+		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Boomer #125"
+	{
+		"hu"			"{mint}Ez a Pukkancs ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Charger #125"
+	{
+		"hu"			"{mint}Ez a Rohanó ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Hunter #125"
+	{
+		"hu"			"{mint}Ez a Vadász ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Jockey #125"
+	{
+		"hu"			"{mint}Ez a Zsoké ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Smoker #125"
+	{
+		"hu"			"{mint}Ez a Füstös ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Spitter #125"
+	{
+		"hu"			"{mint}Ez a Köpködő ugyanolyan bosszantó mint bármelyik sárember."
+	}
+
+	"Witch #125"
+	{
+		"hu"			"{mint}Ez a Boszorka ugyanolyan bosszantó mint bármelyik sárember."
 	}
 
 	"Tank #126 Name"
 	{
-		"hu"			"Játékos Tank"
+		"hu"			"Végjáték Tank"
+	}
+
+	"Boomer #126 Name"
+	{
+		"hu"			"Végjáték Pukkancs"
+	}
+
+	"Charger #126 Name"
+	{
+		"hu"			"Végjáték Rohanó"
+	}
+
+	"Hunter #126 Name"
+	{
+		"hu"			"Végjáték Vadász"
+	}
+
+	"Jockey #126 Name"
+	{
+		"hu"			"Végjáték Zsoké"
+	}
+
+	"Smoker #126 Name"
+	{
+		"hu"			"Végjáték Füstös"
+	}
+
+	"Spitter #126 Name"
+	{
+		"hu"			"Végjáték Köpködő"
+	}
+
+	"Witch #126 Name"
+	{
+		"hu"			"Végjáték Boszorka"
 	}
 
 	"Tank #126"
 	{
-		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Boomer #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Charger #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Hunter #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Jockey #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Smoker #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Spitter #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
+	}
+
+	"Witch #126"
+	{
+		"hu"			"{mint}Viszlát mindenki!"
 	}
 
 	"Tank #127 Name"
 	{
-		"hu"			"Bosszantó Tank"
+		"hu"			"Játékos Tank"
+	}
+
+	"Boomer #127 Name"
+	{
+		"hu"			"Játékos Pukkancs"
+	}
+
+	"Charger #127 Name"
+	{
+		"hu"			"Játékos Rohanó"
+	}
+
+	"Hunter #127 Name"
+	{
+		"hu"			"Játékos Vadász"
+	}
+
+	"Jockey #127 Name"
+	{
+		"hu"			"Játékos Zsoké"
+	}
+
+	"Smoker #127 Name"
+	{
+		"hu"			"Játékos Füstös"
+	}
+
+	"Spitter #127 Name"
+	{
+		"hu"			"Játékos Köpködő"
+	}
+
+	"Witch #127 Name"
+	{
+		"hu"			"Játékos Boszorka"
 	}
 
 	"Tank #127"
 	{
+		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Boomer #127"
+	{
+		"hu"			"{mint}Ez a Pukkancs nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Charger #127"
+	{
+		"hu"			"{mint}Ez a Rohanó nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Hunter #127"
+	{
+		"hu"			"{mint}Ez a Vadász nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Jockey #127"
+	{
+		"hu"			"{mint}Ez a Zsoké nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Smoker #127"
+	{
+		"hu"			"{mint}Ez a Füstös nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Spitter #127"
+	{
+		"hu"			"{mint}Ez a Köpködő nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Witch #127"
+	{
+		"hu"			"{mint}Ez a Boszorka nem okoz sebzést. Csak játszani szeretne!"
+	}
+
+	"Tank #128 Name"
+	{
+		"hu"			"Bosszantó Tank"
+	}
+
+	"Boomer #128 Name"
+	{
+		"hu"			"Bosszantó Pukkancs"
+	}
+
+	"Charger #128 Name"
+	{
+		"hu"			"Bosszantó Rohanó"
+	}
+
+	"Hunter #128 Name"
+	{
+		"hu"			"Bosszantó Vadász"
+	}
+
+	"Jockey #128 Name"
+	{
+		"hu"			"Bosszantó Zsoké"
+	}
+
+	"Smoker #128 Name"
+	{
+		"hu"			"Bosszantó Füstös"
+	}
+
+	"Spitter #128 Name"
+	{
+		"hu"			"Bosszantó Köpködő"
+	}
+
+	"Witch #128 Name"
+	{
+		"hu"			"Bosszantó Boszorka"
+	}
+
+	"Tank #128"
+	{
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el."
+	}
+
+	"Boomer #128"
+	{
+		"hu"			"{mint}Ez a Pukkancs egyszerűen csak nem megy el."
+	}
+
+	"Charger #128"
+	{
+		"hu"			"{mint}Ez a Rohanó egyszerűen csak nem megy el."
+	}
+
+	"Hunter #128"
+	{
+		"hu"			"{mint}Ez a Vadász egyszerűen csak nem megy el."
+	}
+
+	"Jockey #128"
+	{
+		"hu"			"{mint}Ez a Zsoké egyszerűen csak nem megy el."
+	}
+
+	"Smoker #128"
+	{
+		"hu"			"{mint}Ez a Füstös egyszerűen csak nem megy el."
+	}
+
+	"Spitter #128"
+	{
+		"hu"			"{mint}Ez a Köpködő egyszerűen csak nem megy el."
+	}
+
+	"Witch #128"
+	{
+		"hu"			"{mint}Ez a Boszorka egyszerűen csak nem megy el."
 	}
 
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
@@ -1293,7 +10263,77 @@
 	//
 	// "STEAM_0:1:23456789"
 	// {
-	//	"hu"			"{mint}Ezt a Tankot valaki irányítja."
+	//	"hu"			"{mint}Ez a Tank valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer Name"
+	// {
+	//	"hu"			"Pukkancs"
+	// }
+	//
+	// "STEAM_0:1:23456789 Boomer"
+	// {
+	//	"hu"			"{mint}Ez a Pukkancs valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger Name"
+	// {
+	//	"hu"			"Rohanó"
+	// }
+	//
+	// "STEAM_0:1:23456789 Charger"
+	// {
+	//	"hu"			"{mint}Ez a Rohanó valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter Name"
+	// {
+	//	"hu"			"Vadász"
+	// }
+	//
+	// "STEAM_0:1:23456789 Hunter"
+	// {
+	//	"hu"			"{mint}Ez a Vadász valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey Name"
+	// {
+	//	"hu"			"Zsoké"
+	// }
+	//
+	// "STEAM_0:1:23456789 Jockey"
+	// {
+	//	"hu"			"{mint}Ez a Zsoké valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker Name"
+	// {
+	//	"hu"			"Füstös"
+	// }
+	//
+	// "STEAM_0:1:23456789 Smoker"
+	// {
+	//	"hu"			"{mint}Ez a Füstös valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter Name"
+	// {
+	//	"hu"			"Köpködő"
+	// }
+	//
+	// "STEAM_0:1:23456789 Spitter"
+	// {
+	//	"hu"			"{mint}Ez a Köpködő valaki irányítja."
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch Name"
+	// {
+	//	"hu"			"Boszorka"
+	// }
+	//
+	// "STEAM_0:1:23456789 Witch"
+	// {
+	//	"hu"			"{mint}Ez a Boszorka valaki irányítja."
 	// }
 	// --
 	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!

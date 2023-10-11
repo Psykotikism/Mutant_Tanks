@@ -85,6 +85,29 @@ enum struct esWitchPlayer
 
 esWitchPlayer g_esWitchPlayer[MAXPLAYERS + 1];
 
+enum struct esWitchTeammate
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flWitchChance;
+	float g_flWitchDamage;
+	float g_flWitchLifetime;
+	float g_flWitchRange;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+	int g_iWitchAbility;
+	int g_iWitchAmount;
+	int g_iWitchCooldown;
+	int g_iWitchMessage;
+	int g_iWitchRemove;
+}
+
+esWitchTeammate g_esWitchTeammate[MAXPLAYERS + 1];
+
 enum struct esWitchAbility
 {
 	float g_flCloseAreasOnly;
@@ -110,6 +133,29 @@ enum struct esWitchAbility
 }
 
 esWitchAbility g_esWitchAbility[MT_MAXTYPES + 1];
+
+enum struct esWitchSpecial
+{
+	float g_flCloseAreasOnly;
+	float g_flOpenAreasOnly;
+	float g_flWitchChance;
+	float g_flWitchDamage;
+	float g_flWitchLifetime;
+	float g_flWitchRange;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iRequiresHumans;
+	int g_iWitchAbility;
+	int g_iWitchAmount;
+	int g_iWitchCooldown;
+	int g_iWitchMessage;
+	int g_iWitchRemove;
+}
+
+esWitchSpecial g_esWitchSpecial[MT_MAXTYPES + 1];
 
 enum struct esWitchCache
 {
@@ -378,7 +424,7 @@ void vWitchCombineAbilities(int tank, int type, const float random, const char[]
 public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 #endif
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility != 2)
+	if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility != 2)
 	{
 		g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
@@ -442,8 +488,7 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		case 1:
 		{
-			int iMaxType = MT_GetMaxType();
-			for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esWitchAbility[iIndex].g_iAccessFlags = 0;
 				g_esWitchAbility[iIndex].g_iImmunityFlags = 0;
@@ -464,86 +509,161 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWitchAbility[iIndex].g_flWitchLifetime = 0.0;
 				g_esWitchAbility[iIndex].g_flWitchRange = 500.0;
 				g_esWitchAbility[iIndex].g_iWitchRemove = 1;
+
+				g_esWitchSpecial[iIndex].g_flCloseAreasOnly = -1.0;
+				g_esWitchSpecial[iIndex].g_iComboAbility = -1;
+				g_esWitchSpecial[iIndex].g_iHumanAbility = -1;
+				g_esWitchSpecial[iIndex].g_iHumanAmmo = -1;
+				g_esWitchSpecial[iIndex].g_iHumanCooldown = -1;
+				g_esWitchSpecial[iIndex].g_flOpenAreasOnly = -1.0;
+				g_esWitchSpecial[iIndex].g_iRequiresHumans = -1;
+				g_esWitchSpecial[iIndex].g_iWitchAbility = -1;
+				g_esWitchSpecial[iIndex].g_iWitchMessage = -1;
+				g_esWitchSpecial[iIndex].g_iWitchAmount = -1;
+				g_esWitchSpecial[iIndex].g_flWitchChance = -1.0;
+				g_esWitchSpecial[iIndex].g_iWitchCooldown = -1;
+				g_esWitchSpecial[iIndex].g_flWitchDamage = -1.0;
+				g_esWitchSpecial[iIndex].g_flWitchLifetime = -1.0;
+				g_esWitchSpecial[iIndex].g_flWitchRange = -1.0;
+				g_esWitchSpecial[iIndex].g_iWitchRemove = -1;
 			}
 		}
 		case 3:
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer))
-				{
-					g_esWitchPlayer[iPlayer].g_iAccessFlags = 0;
-					g_esWitchPlayer[iPlayer].g_iImmunityFlags = 0;
-					g_esWitchPlayer[iPlayer].g_flCloseAreasOnly = 0.0;
-					g_esWitchPlayer[iPlayer].g_iComboAbility = 0;
-					g_esWitchPlayer[iPlayer].g_iHumanAbility = 0;
-					g_esWitchPlayer[iPlayer].g_iHumanAmmo = 0;
-					g_esWitchPlayer[iPlayer].g_iHumanCooldown = 0;
-					g_esWitchPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
-					g_esWitchPlayer[iPlayer].g_iRequiresHumans = 0;
-					g_esWitchPlayer[iPlayer].g_iWitchAbility = 0;
-					g_esWitchPlayer[iPlayer].g_iWitchMessage = 0;
-					g_esWitchPlayer[iPlayer].g_iWitchAmount = 0;
-					g_esWitchPlayer[iPlayer].g_flWitchChance = 0.0;
-					g_esWitchPlayer[iPlayer].g_iWitchCooldown = 0;
-					g_esWitchPlayer[iPlayer].g_flWitchDamage = 0.0;
-					g_esWitchPlayer[iPlayer].g_flWitchLifetime = 0.0;
-					g_esWitchPlayer[iPlayer].g_flWitchRange = 0.0;
-					g_esWitchPlayer[iPlayer].g_iWitchRemove = 0;
-				}
+				g_esWitchPlayer[iPlayer].g_iAccessFlags = -1;
+				g_esWitchPlayer[iPlayer].g_iImmunityFlags = -1;
+				g_esWitchPlayer[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esWitchPlayer[iPlayer].g_iComboAbility = -1;
+				g_esWitchPlayer[iPlayer].g_iHumanAbility = -1;
+				g_esWitchPlayer[iPlayer].g_iHumanAmmo = -1;
+				g_esWitchPlayer[iPlayer].g_iHumanCooldown = -1;
+				g_esWitchPlayer[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esWitchPlayer[iPlayer].g_iRequiresHumans = -1;
+				g_esWitchPlayer[iPlayer].g_iWitchAbility = -1;
+				g_esWitchPlayer[iPlayer].g_iWitchMessage = -1;
+				g_esWitchPlayer[iPlayer].g_iWitchAmount = -1;
+				g_esWitchPlayer[iPlayer].g_flWitchChance = -1.0;
+				g_esWitchPlayer[iPlayer].g_iWitchCooldown = -1;
+				g_esWitchPlayer[iPlayer].g_flWitchDamage = -1.0;
+				g_esWitchPlayer[iPlayer].g_flWitchLifetime = -1.0;
+				g_esWitchPlayer[iPlayer].g_flWitchRange = -1.0;
+				g_esWitchPlayer[iPlayer].g_iWitchRemove = -1;
+
+				g_esWitchTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
+				g_esWitchTeammate[iPlayer].g_iComboAbility = -1;
+				g_esWitchTeammate[iPlayer].g_iHumanAbility = -1;
+				g_esWitchTeammate[iPlayer].g_iHumanAmmo = -1;
+				g_esWitchTeammate[iPlayer].g_iHumanCooldown = -1;
+				g_esWitchTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
+				g_esWitchTeammate[iPlayer].g_iRequiresHumans = -1;
+				g_esWitchTeammate[iPlayer].g_iWitchAbility = -1;
+				g_esWitchTeammate[iPlayer].g_iWitchMessage = -1;
+				g_esWitchTeammate[iPlayer].g_iWitchAmount = -1;
+				g_esWitchTeammate[iPlayer].g_flWitchChance = -1.0;
+				g_esWitchTeammate[iPlayer].g_iWitchCooldown = -1;
+				g_esWitchTeammate[iPlayer].g_flWitchDamage = -1.0;
+				g_esWitchTeammate[iPlayer].g_flWitchLifetime = -1.0;
+				g_esWitchTeammate[iPlayer].g_flWitchRange = -1.0;
+				g_esWitchTeammate[iPlayer].g_iWitchRemove = -1;
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWitchConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+void vWitchConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
 #endif
 {
-	if (mode == 3 && bIsValidClient(admin))
+	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
-		g_esWitchPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchPlayer[admin].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esWitchPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchPlayer[admin].g_iComboAbility, value, 0, 1);
-		g_esWitchPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esWitchPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchPlayer[admin].g_iHumanAmmo, value, 0, 99999);
-		g_esWitchPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchPlayer[admin].g_iHumanCooldown, value, 0, 99999);
-		g_esWitchPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchPlayer[admin].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esWitchPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esWitchPlayer[admin].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchPlayer[admin].g_iWitchAbility, value, 0, 1);
-		g_esWitchPlayer[admin].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchPlayer[admin].g_iWitchMessage, value, 0, 1);
-		g_esWitchPlayer[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchPlayer[admin].g_iWitchAmount, value, 1, 25);
-		g_esWitchPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchPlayer[admin].g_flWitchChance, value, 0.0, 100.0);
-		g_esWitchPlayer[admin].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchPlayer[admin].g_iWitchCooldown, value, 0, 99999);
-		g_esWitchPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchPlayer[admin].g_flWitchDamage, value, 0.0, 99999.0);
-		g_esWitchPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchPlayer[admin].g_flWitchLifetime, value, 0.0, 99999.0);
-		g_esWitchPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchPlayer[admin].g_flWitchRange, value, 1.0, 99999.0);
-		g_esWitchPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchPlayer[admin].g_iWitchRemove, value, 0, 1);
-		g_esWitchPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWitchPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esWitchTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWitchTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchTeammate[admin].g_iComboAbility, value, -1, 1);
+			g_esWitchTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchTeammate[admin].g_iHumanAbility, value, -1, 2);
+			g_esWitchTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchTeammate[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esWitchTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchTeammate[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esWitchTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWitchTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchTeammate[admin].g_iRequiresHumans, value, -1, 32);
+			g_esWitchTeammate[admin].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchTeammate[admin].g_iWitchAbility, value, -1, 1);
+			g_esWitchTeammate[admin].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchTeammate[admin].g_iWitchMessage, value, -1, 1);
+			g_esWitchTeammate[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchTeammate[admin].g_iWitchAmount, value, -1, 25);
+			g_esWitchTeammate[admin].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchTeammate[admin].g_flWitchChance, value, -1.0, 100.0);
+			g_esWitchTeammate[admin].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchTeammate[admin].g_iWitchCooldown, value, -1, 99999);
+			g_esWitchTeammate[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchTeammate[admin].g_flWitchDamage, value, -1.0, 99999.0);
+			g_esWitchTeammate[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchTeammate[admin].g_flWitchLifetime, value, -1.0, 99999.0);
+			g_esWitchTeammate[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchTeammate[admin].g_flWitchRange, value, -1.0, 99999.0);
+			g_esWitchTeammate[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchTeammate[admin].g_iWitchRemove, value, -1, 1);
+		}
+		else
+		{
+			g_esWitchPlayer[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchPlayer[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWitchPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchPlayer[admin].g_iComboAbility, value, -1, 1);
+			g_esWitchPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchPlayer[admin].g_iHumanAbility, value, -1, 2);
+			g_esWitchPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchPlayer[admin].g_iHumanAmmo, value, -1, 99999);
+			g_esWitchPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchPlayer[admin].g_iHumanCooldown, value, -1, 99999);
+			g_esWitchPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchPlayer[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWitchPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchPlayer[admin].g_iRequiresHumans, value, -1, 32);
+			g_esWitchPlayer[admin].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchPlayer[admin].g_iWitchAbility, value, -1, 1);
+			g_esWitchPlayer[admin].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchPlayer[admin].g_iWitchMessage, value, -1, 1);
+			g_esWitchPlayer[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchPlayer[admin].g_iWitchAmount, value, -1, 25);
+			g_esWitchPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchPlayer[admin].g_flWitchChance, value, -1.0, 100.0);
+			g_esWitchPlayer[admin].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchPlayer[admin].g_iWitchCooldown, value, -1, 99999);
+			g_esWitchPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchPlayer[admin].g_flWitchDamage, value, -1.0, 99999.0);
+			g_esWitchPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchPlayer[admin].g_flWitchLifetime, value, -1.0, 99999.0);
+			g_esWitchPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchPlayer[admin].g_flWitchRange, value, -1.0, 99999.0);
+			g_esWitchPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchPlayer[admin].g_iWitchRemove, value, -1, 1);
+			g_esWitchPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esWitchPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esWitchAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchAbility[type].g_flCloseAreasOnly, value, 0.0, 99999.0);
-		g_esWitchAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchAbility[type].g_iComboAbility, value, 0, 1);
-		g_esWitchAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esWitchAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchAbility[type].g_iHumanAmmo, value, 0, 99999);
-		g_esWitchAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchAbility[type].g_iHumanCooldown, value, 0, 99999);
-		g_esWitchAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchAbility[type].g_flOpenAreasOnly, value, 0.0, 99999.0);
-		g_esWitchAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esWitchAbility[type].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchAbility[type].g_iWitchAbility, value, 0, 1);
-		g_esWitchAbility[type].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchAbility[type].g_iWitchMessage, value, 0, 1);
-		g_esWitchAbility[type].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchAbility[type].g_iWitchAmount, value, 1, 25);
-		g_esWitchAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchAbility[type].g_flWitchChance, value, 0.0, 100.0);
-		g_esWitchAbility[type].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchAbility[type].g_iWitchCooldown, value, 0, 99999);
-		g_esWitchAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchAbility[type].g_flWitchDamage, value, 0.0, 99999.0);
-		g_esWitchAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchAbility[type].g_flWitchLifetime, value, 0.0, 99999.0);
-		g_esWitchAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchAbility[type].g_flWitchRange, value, 1.0, 99999.0);
-		g_esWitchAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchAbility[type].g_iWitchRemove, value, 0, 1);
-		g_esWitchAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
-		g_esWitchAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		if (special && specsection[0] != '\0')
+		{
+			g_esWitchSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWitchSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchSpecial[type].g_iComboAbility, value, -1, 1);
+			g_esWitchSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchSpecial[type].g_iHumanAbility, value, -1, 2);
+			g_esWitchSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchSpecial[type].g_iHumanAmmo, value, -1, 99999);
+			g_esWitchSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchSpecial[type].g_iHumanCooldown, value, -1, 99999);
+			g_esWitchSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWitchSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchSpecial[type].g_iRequiresHumans, value, -1, 32);
+			g_esWitchSpecial[type].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchSpecial[type].g_iWitchAbility, value, -1, 1);
+			g_esWitchSpecial[type].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchSpecial[type].g_iWitchMessage, value, -1, 1);
+			g_esWitchSpecial[type].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchSpecial[type].g_iWitchAmount, value, -1, 25);
+			g_esWitchSpecial[type].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchSpecial[type].g_flWitchChance, value, -1.0, 100.0);
+			g_esWitchSpecial[type].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchSpecial[type].g_iWitchCooldown, value, -1, 99999);
+			g_esWitchSpecial[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchSpecial[type].g_flWitchDamage, value, -1.0, 99999.0);
+			g_esWitchSpecial[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchSpecial[type].g_flWitchLifetime, value, -1.0, 99999.0);
+			g_esWitchSpecial[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchSpecial[type].g_flWitchRange, value, -1.0, 99999.0);
+			g_esWitchSpecial[type].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchSpecial[type].g_iWitchRemove, value, -1, 1);
+		}
+		else
+		{
+			g_esWitchAbility[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWitchAbility[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
+			g_esWitchAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWitchAbility[type].g_iComboAbility, value, -1, 1);
+			g_esWitchAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWitchAbility[type].g_iHumanAbility, value, -1, 2);
+			g_esWitchAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWitchAbility[type].g_iHumanAmmo, value, -1, 99999);
+			g_esWitchAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWitchAbility[type].g_iHumanCooldown, value, -1, 99999);
+			g_esWitchAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWitchAbility[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
+			g_esWitchAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWitchAbility[type].g_iRequiresHumans, value, -1, 32);
+			g_esWitchAbility[type].g_iWitchAbility = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWitchAbility[type].g_iWitchAbility, value, -1, 1);
+			g_esWitchAbility[type].g_iWitchMessage = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWitchAbility[type].g_iWitchMessage, value, -1, 1);
+			g_esWitchAbility[type].g_iWitchAmount = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esWitchAbility[type].g_iWitchAmount, value, -1, 25);
+			g_esWitchAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esWitchAbility[type].g_flWitchChance, value, -1.0, 100.0);
+			g_esWitchAbility[type].g_iWitchCooldown = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchCooldown", "Witch Cooldown", "Witch_Cooldown", "cooldown", g_esWitchAbility[type].g_iWitchCooldown, value, -1, 99999);
+			g_esWitchAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esWitchAbility[type].g_flWitchDamage, value, -1.0, 99999.0);
+			g_esWitchAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchAbility[type].g_flWitchLifetime, value, -1.0, 99999.0);
+			g_esWitchAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchAbility[type].g_flWitchRange, value, -1.0, 99999.0);
+			g_esWitchAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchAbility[type].g_iWitchRemove, value, -1, 1);
+			g_esWitchAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+			g_esWitchAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTION, MT_WITCH_SECTION2, MT_WITCH_SECTION3, MT_WITCH_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+		}
 	}
 }
 
@@ -553,24 +673,47 @@ void vWitchSettingsCached(int tank, bool apply, int type)
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	g_esWitchCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly);
-	g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility);
-	g_esWitchCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance);
-	g_esWitchCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage);
-	g_esWitchCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime);
-	g_esWitchCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange);
-	g_esWitchCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility);
-	g_esWitchCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo);
-	g_esWitchCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown);
-	g_esWitchCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchAbility[type].g_flOpenAreasOnly);
-	g_esWitchCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans);
-	g_esWitchCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility);
-	g_esWitchCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount);
-	g_esWitchCache[tank].g_iWitchCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown);
-	g_esWitchCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage);
-	g_esWitchCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove);
+	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
 	g_esWitchPlayer[tank].g_iTankType = apply ? type : 0;
+
+	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flCloseAreasOnly, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchSpecial[type].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly, 1);
+		g_esWitchCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iComboAbility, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchSpecial[type].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility, 1);
+		g_esWitchCache[tank].g_flWitchChance = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchChance, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchSpecial[type].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance, 1);
+		g_esWitchCache[tank].g_flWitchDamage = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchDamage, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchSpecial[type].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage, 1);
+		g_esWitchCache[tank].g_flWitchLifetime = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchLifetime, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchSpecial[type].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime, 1);
+		g_esWitchCache[tank].g_flWitchRange = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flWitchRange, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchSpecial[type].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange, 1);
+		g_esWitchCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAbility, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchSpecial[type].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility, 1);
+		g_esWitchCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanAmmo, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchSpecial[type].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo, 1);
+		g_esWitchCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iHumanCooldown, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchSpecial[type].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown, 1);
+		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_flOpenAreasOnly, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchSpecial[type].g_flOpenAreasOnly, g_esWitchAbility[type].g_flOpenAreasOnly, 1);
+		g_esWitchCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iRequiresHumans, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchSpecial[type].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans, 1);
+		g_esWitchCache[tank].g_iWitchAbility = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAbility, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchSpecial[type].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility, 1);
+		g_esWitchCache[tank].g_iWitchAmount = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchAmount, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchSpecial[type].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount, 1);
+		g_esWitchCache[tank].g_iWitchCooldown = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchCooldown, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchSpecial[type].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown, 1);
+		g_esWitchCache[tank].g_iWitchMessage = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchMessage, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchSpecial[type].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage, 1);
+		g_esWitchCache[tank].g_iWitchRemove = iGetSubSettingValue(apply, bHuman, g_esWitchTeammate[tank].g_iWitchRemove, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchSpecial[type].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove, 1);
+	}
+	else
+	{
+		g_esWitchCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flCloseAreasOnly, g_esWitchAbility[type].g_flCloseAreasOnly, 1);
+		g_esWitchCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iComboAbility, g_esWitchAbility[type].g_iComboAbility, 1);
+		g_esWitchCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchChance, g_esWitchAbility[type].g_flWitchChance, 1);
+		g_esWitchCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchDamage, g_esWitchAbility[type].g_flWitchDamage, 1);
+		g_esWitchCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchLifetime, g_esWitchAbility[type].g_flWitchLifetime, 1);
+		g_esWitchCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flWitchRange, g_esWitchAbility[type].g_flWitchRange, 1);
+		g_esWitchCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAbility, g_esWitchAbility[type].g_iHumanAbility, 1);
+		g_esWitchCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanAmmo, g_esWitchAbility[type].g_iHumanAmmo, 1);
+		g_esWitchCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iHumanCooldown, g_esWitchAbility[type].g_iHumanCooldown, 1);
+		g_esWitchCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_flOpenAreasOnly, g_esWitchAbility[type].g_flOpenAreasOnly, 1);
+		g_esWitchCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iRequiresHumans, g_esWitchAbility[type].g_iRequiresHumans, 1);
+		g_esWitchCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAbility, g_esWitchAbility[type].g_iWitchAbility, 1);
+		g_esWitchCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchAmount, g_esWitchAbility[type].g_iWitchAmount, 1);
+		g_esWitchCache[tank].g_iWitchCooldown = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchCooldown, g_esWitchAbility[type].g_iWitchCooldown, 1);
+		g_esWitchCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchMessage, g_esWitchAbility[type].g_iWitchMessage, 1);
+		g_esWitchCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esWitchPlayer[tank].g_iWitchRemove, g_esWitchAbility[type].g_iWitchRemove, 1);
+	}
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -604,7 +747,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-		if (bIsValidClient(iBot) && bIsTank(iTank))
+		if (bIsValidClient(iBot) && bIsInfected(iTank))
 		{
 			vWitchCopyStats2(iBot, iTank);
 			vRemoveWitch(iBot);
@@ -614,7 +757,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsValidClient(iTank) && bIsTank(iBot))
+		if (bIsValidClient(iTank) && bIsInfected(iBot))
 		{
 			vWitchCopyStats2(iTank, iBot);
 			vRemoveWitch(iTank);
@@ -651,7 +794,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esWitchCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esWitchCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esWitchCache[tank].g_iWitchAbility == 1 && g_esWitchCache[tank].g_iComboAbility == 0)
 	{
 		vWitchAbility(tank);
 	}
@@ -665,7 +808,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -674,7 +817,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			int iTime = GetTime();
 
-			switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+			switch (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= iTime)
 			{
 				case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman3", (g_esWitchPlayer[tank].g_iCooldown - iTime));
 				case false: vWitchAbility(tank);
@@ -709,7 +852,7 @@ public void MT_OnPostTankSpawn(int tank)
 void vWitch(int tank, int pos = -1)
 {
 	int iTime = GetTime();
-	if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+	if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= iTime)
 	{
 		return;
 	}
@@ -725,7 +868,7 @@ void vWitch(int tank, int pos = -1)
 			GetClientAbsOrigin(tank, flTankPos);
 			GetEntPropVector(iInfected, Prop_Data, "m_vecOrigin", flInfectedPos);
 			GetEntPropVector(iInfected, Prop_Data, "m_angRotation", flInfectedAngles);
-			if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
+			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange && bIsVisibleToPosition(flTankPos, flInfectedPos, flRange))
 			{
 				bConverted = true;
 
@@ -738,9 +881,9 @@ void vWitch(int tank, int pos = -1)
 	if (bConverted)
 	{
 		int iCooldown = -1;
-		if (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown < iTime)
+		if (g_esWitchPlayer[tank].g_iCooldown == -1 || g_esWitchPlayer[tank].g_iCooldown <= iTime)
 		{
-			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
+			if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
 			{
 				g_esWitchPlayer[tank].g_iAmmoCount++;
 
@@ -748,9 +891,9 @@ void vWitch(int tank, int pos = -1)
 			}
 
 			iCooldown = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 2, pos)) : g_esWitchCache[tank].g_iWitchCooldown;
-			iCooldown = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? g_esWitchCache[tank].g_iHumanCooldown : iCooldown;
+			iCooldown = (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1 && g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0) ? g_esWitchCache[tank].g_iHumanCooldown : iCooldown;
 			g_esWitchPlayer[tank].g_iCooldown = (iTime + iCooldown);
-			if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > iTime)
+			if (g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= iTime)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman4", (g_esWitchPlayer[tank].g_iCooldown - iTime));
 			}
@@ -768,7 +911,7 @@ void vWitch(int tank, int pos = -1)
 
 void vWitch2(int tank, float pos[3], float angles[3])
 {
-	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -790,23 +933,23 @@ void vWitch2(int tank, float pos[3], float angles[3])
 
 void vWitchAbility(int tank)
 {
-	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown > GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
+	if ((g_esWitchPlayer[tank].g_iCooldown != -1 && g_esWitchPlayer[tank].g_iCooldown >= GetTime()) || bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0))
+	if (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || (g_esWitchPlayer[tank].g_iAmmoCount < g_esWitchCache[tank].g_iHumanAmmo && g_esWitchCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esWitchCache[tank].g_flWitchChance)
 		{
 			vWitch(tank);
 		}
-		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
+		else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchHuman2");
 		}
 	}
-	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
+	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esWitchCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "WitchAmmo");
 	}
@@ -816,7 +959,7 @@ void vWitchRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esWitchCache[tank].g_iWitchAbility == 1)
 	{
-		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
+		if (bIsAreaNarrow(tank, g_esWitchCache[tank].g_flOpenAreasOnly) || bIsAreaWide(tank, g_esWitchCache[tank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esWitchPlayer[tank].g_iTankType, tank) || (g_esWitchCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esWitchCache[tank].g_iRequiresHumans) || (bIsInfected(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esWitchAbility[g_esWitchPlayer[tank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[tank].g_iAccessFlags)) || g_esWitchCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -871,7 +1014,7 @@ void tTimerWitchCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWitchPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esWitchCache[iTank].g_iWitchAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esWitchAbility[g_esWitchPlayer[iTank].g_iTankType].g_iAccessFlags, g_esWitchPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esWitchPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || g_esWitchCache[iTank].g_iWitchAbility == 0)
 	{
 		return;
 	}
