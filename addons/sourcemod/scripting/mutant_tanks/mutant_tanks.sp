@@ -12865,7 +12865,7 @@ void vKnockbackTank(int tank, int survivor, int damagetype)
 	}
 }
 
-void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type = 5)
+void vLifeLeech(int survivor, int type, int damagetype = 0, int tank = 0)
 {
 	if (!bIsSurvivor(survivor) || bIsSurvivorDisabled(survivor) || (bIsInfected(tank) && (bIsPlayerIncapacitated(tank) || bIsCustomTank(tank))) || (damagetype != 0 && !(damagetype & DMG_CLUB) && !(damagetype & DMG_SLASH)))
 	{
@@ -12887,32 +12887,7 @@ void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type = 5)
 		return;
 	}
 
-	float flTempHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
-	int iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth");
-	if (g_esPlayer[survivor].g_iReviveCount > 0 || g_esPlayer[survivor].g_bLastLife[0])
-	{
-		switch ((flTempHealth + iLeech) > iMaxHealth)
-		{
-			case true: vSetTempHealth(survivor, float(iMaxHealth));
-			case false: vSetTempHealth(survivor, (flTempHealth + iLeech));
-		}
-	}
-	else
-	{
-		switch ((iHealth + iLeech) > iMaxHealth)
-		{
-			case true: SetEntProp(survivor, Prop_Data, "m_iHealth", iMaxHealth);
-			case false: SetEntProp(survivor, Prop_Data, "m_iHealth", (iHealth + iLeech));
-		}
-
-		float flHealth = (flTempHealth - iLeech);
-		vSetTempHealth(survivor, ((flHealth < 0.0) ? 0.0 : flHealth));
-	}
-
-	if ((iHealth + flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue)) > iMaxHealth)
-	{
-		vSetTempHealth(survivor, float(iMaxHealth - iHealth));
-	}
+	vRegenSurvivorHealth(survivor, iLeech);
 }
 
 void vLightProp(int tank, int light, float origin[3], float angles[3])
@@ -13222,6 +13197,36 @@ void vQueueTank(int admin, int specType, int type, bool mode = true, bool log = 
 	char sType[5];
 	IntToString(type, sType, sizeof sType);
 	vSetupTankSpawn(admin, specType, sType, mode, log);
+}
+
+void vRegenSurvivorHealth(int survivor, int extra)
+{
+	float flTempHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
+	int iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth"), iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth");
+	if (g_esPlayer[survivor].g_iReviveCount > 0 || g_esPlayer[survivor].g_bLastLife[0])
+	{
+		switch ((flTempHealth + extra) > iMaxHealth)
+		{
+			case true: vSetTempHealth(survivor, float(iMaxHealth));
+			case false: vSetTempHealth(survivor, (flTempHealth + extra));
+		}
+	}
+	else
+	{
+		switch ((iHealth + extra) > iMaxHealth)
+		{
+			case true: SetEntProp(survivor, Prop_Data, "m_iHealth", iMaxHealth);
+			case false: SetEntProp(survivor, Prop_Data, "m_iHealth", (iHealth + extra));
+		}
+
+		float flHealth = (flTempHealth - extra);
+		vSetTempHealth(survivor, ((flHealth < 0.0) ? 0.0 : flHealth));
+	}
+
+	if ((iHealth + flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue)) > iMaxHealth)
+	{
+		vSetTempHealth(survivor, float(iMaxHealth - iHealth));
+	}
 }
 
 void vRegularSpawn(int specType = 0)
@@ -16947,6 +16952,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 				char sKey[128], sValue[PLATFORM_MAX_PATH];
 				strcopy(sKey, sizeof sKey, key);
 				ReplaceString(sKey, sizeof sKey, " ", "");
+
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 
@@ -20406,13 +20412,9 @@ Action OnPlayerTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				return Plugin_Handled;
 			}
 
-			if (bIsSurvivor(attacker) && (damagetype & DMG_BURN) && (victim == attacker || (bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iBlazeHealth == 1)) || (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iBlazeHealth == 1))))
+			if (bIsSurvivor(attacker) && (damagetype & DMG_BURN) && ((bIsDeveloper(victim, 4) || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[victim].g_iBlazeHealth == 1)) || (bIsDeveloper(attacker, 4) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_HEALTH) && g_esPlayer[attacker].g_iBlazeHealth == 1))))
 			{
-				int iHealth = GetEntProp(victim, Prop_Data, "m_iHealth"),
-					iMaxHealth = GetEntProp(victim, Prop_Data, "m_iMaxHealth"),
-					iNewHealth = iClamp((iHealth + RoundToNearest(damage / 2.0)), iHealth, iMaxHealth);
-
-				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
+				vRegenSurvivorHealth(victim, RoundToNearest(damage / 2.0));
 
 				return Plugin_Handled;
 			}
@@ -20791,7 +20793,7 @@ void OnPlayerTakeDamagePost(int victim, int attacker, int inflictor, float damag
 		{
 			if (bIsSurvivor(attacker) && g_esGeneral.g_iInfectedHealth[victim] > GetEntProp(victim, Prop_Data, "m_iHealth"))
 			{
-				vLifeLeech(attacker, damagetype, victim);
+				vLifeLeech(attacker, 5, damagetype, victim);
 			}
 
 			if (bIsInfected(victim))
@@ -26924,7 +26926,7 @@ Action tTimerRegenerateHealth(Handle timer)
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		vLifeLeech(iSurvivor, .type = 7);
+		vLifeLeech(iSurvivor, 7);
 	}
 
 	return Plugin_Continue;
