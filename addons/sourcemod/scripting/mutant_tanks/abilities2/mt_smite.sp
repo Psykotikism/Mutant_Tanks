@@ -63,12 +63,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esSmitePlayer
 {
+	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSmiteChance;
+	float g_flSmiteCountdown;
 	float g_flSmiteRange;
 	float g_flSmiteRangeChance;
 
@@ -81,6 +83,7 @@ enum struct esSmitePlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iSmiteAbility;
@@ -103,6 +106,7 @@ enum struct esSmiteTeammate
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSmiteChance;
+	float g_flSmiteCountdown;
 	float g_flSmiteRange;
 	float g_flSmiteRangeChance;
 
@@ -131,6 +135,7 @@ enum struct esSmiteAbility
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSmiteChance;
+	float g_flSmiteCountdown;
 	float g_flSmiteRange;
 	float g_flSmiteRangeChance;
 
@@ -161,6 +166,7 @@ enum struct esSmiteSpecial
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSmiteChance;
+	float g_flSmiteCountdown;
 	float g_flSmiteRange;
 	float g_flSmiteRangeChance;
 
@@ -189,6 +195,7 @@ enum struct esSmiteCache
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flSmiteChance;
+	float g_flSmiteCountdown;
 	float g_flSmiteRange;
 	float g_flSmiteRangeChance;
 
@@ -256,7 +263,7 @@ public void OnClientPutInServer(int client)
 #endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnSmiteTakeDamage);
-	vRemoveSmite(client);
+	vSmiteReset2(client);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -265,7 +272,7 @@ void vSmiteClientDisconnect_Post(int client)
 public void OnClientDisconnect_Post(int client)
 #endif
 {
-	vRemoveSmite(client);
+	vSmiteReset2(client);
 }
 
 #if defined MT_ABILITIES_MAIN2
@@ -622,6 +629,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSmiteAbility[iIndex].g_iSmiteBody = 1;
 				g_esSmiteAbility[iIndex].g_flSmiteChance = 33.3;
 				g_esSmiteAbility[iIndex].g_iSmiteCooldown = 0;
+				g_esSmiteAbility[iIndex].g_flSmiteCountdown = 0.0;
 				g_esSmiteAbility[iIndex].g_iSmiteHit = 0;
 				g_esSmiteAbility[iIndex].g_iSmiteHitMode = 0;
 				g_esSmiteAbility[iIndex].g_iSmiteMode = 1;
@@ -644,6 +652,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSmiteSpecial[iIndex].g_iSmiteBody = -1;
 				g_esSmiteSpecial[iIndex].g_flSmiteChance = -1.0;
 				g_esSmiteSpecial[iIndex].g_iSmiteCooldown = -1;
+				g_esSmiteSpecial[iIndex].g_flSmiteCountdown = -1.0;
 				g_esSmiteSpecial[iIndex].g_iSmiteHit = -1;
 				g_esSmiteSpecial[iIndex].g_iSmiteHitMode = -1;
 				g_esSmiteSpecial[iIndex].g_iSmiteMode = -1;
@@ -673,6 +682,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSmitePlayer[iPlayer].g_iSmiteBody = -1;
 				g_esSmitePlayer[iPlayer].g_flSmiteChance = -1.0;
 				g_esSmitePlayer[iPlayer].g_iSmiteCooldown = -1;
+				g_esSmitePlayer[iPlayer].g_flSmiteCountdown = -1.0;
 				g_esSmitePlayer[iPlayer].g_iSmiteHit = -1;
 				g_esSmitePlayer[iPlayer].g_iSmiteHitMode = -1;
 				g_esSmitePlayer[iPlayer].g_iSmiteMode = -1;
@@ -695,6 +705,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSmiteTeammate[iPlayer].g_iSmiteBody = -1;
 				g_esSmiteTeammate[iPlayer].g_flSmiteChance = -1.0;
 				g_esSmiteTeammate[iPlayer].g_iSmiteCooldown = -1;
+				g_esSmiteTeammate[iPlayer].g_flSmiteCountdown = -1.0;
 				g_esSmiteTeammate[iPlayer].g_iSmiteHit = -1;
 				g_esSmiteTeammate[iPlayer].g_iSmiteHitMode = -1;
 				g_esSmiteTeammate[iPlayer].g_iSmiteMode = -1;
@@ -728,16 +739,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteTeammate[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteTeammate[admin].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteTeammate[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteTeammate[admin].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteTeammate[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteTeammate[admin].g_iSmiteMessage, value, -1, 3);
+			g_esSmiteTeammate[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteTeammate[admin].g_iSmiteSight, value, -1, 2);
 			g_esSmiteTeammate[admin].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteTeammate[admin].g_iSmiteBody, value, -1, 1);
 			g_esSmiteTeammate[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteTeammate[admin].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteTeammate[admin].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteTeammate[admin].g_iSmiteCooldown, value, -1, 99999);
+			g_esSmiteTeammate[admin].g_flSmiteCountdown = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCountdown", "Smite Countdown", "Smite_Countdown", "countdown", g_esSmiteTeammate[admin].g_flSmiteCountdown, value, -1.0, 99999.0);
 			g_esSmiteTeammate[admin].g_iSmiteHit = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esSmiteTeammate[admin].g_iSmiteHit, value, -1, 1);
 			g_esSmiteTeammate[admin].g_iSmiteHitMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esSmiteTeammate[admin].g_iSmiteHitMode, value, -1, 2);
 			g_esSmiteTeammate[admin].g_iSmiteMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteMode", "Smite Mode", "Smite_Mode", "mode", g_esSmiteTeammate[admin].g_iSmiteMode, value, -1, 3);
 			g_esSmiteTeammate[admin].g_flSmiteRange = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esSmiteTeammate[admin].g_flSmiteRange, value, -1.0, 99999.0);
 			g_esSmiteTeammate[admin].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esSmiteTeammate[admin].g_flSmiteRangeChance, value, -1.0, 100.0);
 			g_esSmiteTeammate[admin].g_iSmiteRangeCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeCooldown", "Smite Range Cooldown", "Smite_Range_Cooldown", "rangecooldown", g_esSmiteTeammate[admin].g_iSmiteRangeCooldown, value, -1, 99999);
-			g_esSmiteTeammate[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteSight", "Smite Sight", "Smite_Sight", "sight", g_esSmiteTeammate[admin].g_iSmiteSight, value, -1, 2);
 		}
 		else
 		{
@@ -752,16 +764,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmitePlayer[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmitePlayer[admin].g_iSmiteAbility, value, -1, 1);
 			g_esSmitePlayer[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmitePlayer[admin].g_iSmiteEffect, value, -1, 7);
 			g_esSmitePlayer[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmitePlayer[admin].g_iSmiteMessage, value, -1, 3);
+			g_esSmitePlayer[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmitePlayer[admin].g_iSmiteSight, value, -1, 2);
 			g_esSmitePlayer[admin].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmitePlayer[admin].g_iSmiteBody, value, -1, 1);
 			g_esSmitePlayer[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmitePlayer[admin].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmitePlayer[admin].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmitePlayer[admin].g_iSmiteCooldown, value, -1, 99999);
+			g_esSmitePlayer[admin].g_flSmiteCountdown = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCountdown", "Smite Countdown", "Smite_Countdown", "countdown", g_esSmitePlayer[admin].g_flSmiteCountdown, value, -1.0, 99999.0);
 			g_esSmitePlayer[admin].g_iSmiteHit = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esSmitePlayer[admin].g_iSmiteHit, value, -1, 1);
 			g_esSmitePlayer[admin].g_iSmiteHitMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esSmitePlayer[admin].g_iSmiteHitMode, value, -1, 2);
 			g_esSmitePlayer[admin].g_iSmiteMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteMode", "Smite Mode", "Smite_Mode", "mode", g_esSmitePlayer[admin].g_iSmiteMode, value, -1, 3);
 			g_esSmitePlayer[admin].g_flSmiteRange = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esSmitePlayer[admin].g_flSmiteRange, value, -1.0, 99999.0);
 			g_esSmitePlayer[admin].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esSmitePlayer[admin].g_flSmiteRangeChance, value, -1.0, 100.0);
 			g_esSmitePlayer[admin].g_iSmiteRangeCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeCooldown", "Smite Range Cooldown", "Smite_Range_Cooldown", "rangecooldown", g_esSmitePlayer[admin].g_iSmiteRangeCooldown, value, -1, 99999);
-			g_esSmitePlayer[admin].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteSight", "Smite Sight", "Smite_Sight", "sight", g_esSmitePlayer[admin].g_iSmiteSight, value, -1, 2);
 			g_esSmitePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esSmitePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -782,16 +795,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteSpecial[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteSpecial[type].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteSpecial[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteSpecial[type].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteSpecial[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteSpecial[type].g_iSmiteMessage, value, -1, 3);
+			g_esSmiteSpecial[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteSpecial[type].g_iSmiteSight, value, -1, 2);
 			g_esSmiteSpecial[type].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteSpecial[type].g_iSmiteBody, value, -1, 1);
 			g_esSmiteSpecial[type].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteSpecial[type].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteSpecial[type].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteSpecial[type].g_iSmiteCooldown, value, -1, 99999);
+			g_esSmiteSpecial[type].g_flSmiteCountdown = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCountdown", "Smite Countdown", "Smite_Countdown", "countdown", g_esSmiteSpecial[type].g_flSmiteCountdown, value, -1.0, 99999.0);
 			g_esSmiteSpecial[type].g_iSmiteHit = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esSmiteSpecial[type].g_iSmiteHit, value, -1, 1);
 			g_esSmiteSpecial[type].g_iSmiteHitMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esSmiteSpecial[type].g_iSmiteHitMode, value, -1, 2);
 			g_esSmiteSpecial[type].g_iSmiteMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteMode", "Smite Mode", "Smite_Mode", "mode", g_esSmiteSpecial[type].g_iSmiteMode, value, -1, 3);
 			g_esSmiteSpecial[type].g_flSmiteRange = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esSmiteSpecial[type].g_flSmiteRange, value, -1.0, 99999.0);
 			g_esSmiteSpecial[type].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esSmiteSpecial[type].g_flSmiteRangeChance, value, -1.0, 100.0);
 			g_esSmiteSpecial[type].g_iSmiteRangeCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeCooldown", "Smite Range Cooldown", "Smite_Range_Cooldown", "rangecooldown", g_esSmiteSpecial[type].g_iSmiteRangeCooldown, value, -1, 99999);
-			g_esSmiteSpecial[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteSight", "Smite Sight", "Smite_Sight", "sight", g_esSmiteSpecial[type].g_iSmiteSight, value, -1, 2);
 		}
 		else
 		{
@@ -806,16 +820,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSmiteAbility[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSmiteAbility[type].g_iSmiteAbility, value, -1, 1);
 			g_esSmiteAbility[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSmiteAbility[type].g_iSmiteEffect, value, -1, 7);
 			g_esSmiteAbility[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSmiteAbility[type].g_iSmiteMessage, value, -1, 3);
+			g_esSmiteAbility[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSmiteAbility[type].g_iSmiteSight, value, -1, 2);
 			g_esSmiteAbility[type].g_iSmiteBody = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esSmiteAbility[type].g_iSmiteBody, value, -1, 1);
 			g_esSmiteAbility[type].g_flSmiteChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esSmiteAbility[type].g_flSmiteChance, value, -1.0, 100.0);
 			g_esSmiteAbility[type].g_iSmiteCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCooldown", "Smite Cooldown", "Smite_Cooldown", "cooldown", g_esSmiteAbility[type].g_iSmiteCooldown, value, -1, 99999);
+			g_esSmiteAbility[type].g_flSmiteCountdown = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteCountdown", "Smite Countdown", "Smite_Countdown", "countdown", g_esSmiteAbility[type].g_flSmiteCountdown, value, -1.0, 99999.0);
 			g_esSmiteAbility[type].g_iSmiteHit = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esSmiteAbility[type].g_iSmiteHit, value, -1, 1);
 			g_esSmiteAbility[type].g_iSmiteHitMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esSmiteAbility[type].g_iSmiteHitMode, value, -1, 2);
 			g_esSmiteAbility[type].g_iSmiteMode = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteMode", "Smite Mode", "Smite_Mode", "mode", g_esSmiteAbility[type].g_iSmiteMode, value, -1, 3);
 			g_esSmiteAbility[type].g_flSmiteRange = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esSmiteAbility[type].g_flSmiteRange, value, -1.0, 99999.0);
 			g_esSmiteAbility[type].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esSmiteAbility[type].g_flSmiteRangeChance, value, -1.0, 100.0);
 			g_esSmiteAbility[type].g_iSmiteRangeCooldown = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteRangeCooldown", "Smite Range Cooldown", "Smite_Range_Cooldown", "rangecooldown", g_esSmiteAbility[type].g_iSmiteRangeCooldown, value, -1, 99999);
-			g_esSmiteAbility[type].g_iSmiteSight = iGetKeyValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "SmiteSight", "Smite Sight", "Smite_Sight", "sight", g_esSmiteAbility[type].g_iSmiteSight, value, -1, 2);
 			g_esSmiteAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esSmiteAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SMITE_SECTION, MT_SMITE_SECTION2, MT_SMITE_SECTION3, MT_SMITE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -836,6 +851,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flCloseAreasOnly, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteSpecial[type].g_flCloseAreasOnly, g_esSmiteAbility[type].g_flCloseAreasOnly, 1);
 		g_esSmiteCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iComboAbility, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteSpecial[type].g_iComboAbility, g_esSmiteAbility[type].g_iComboAbility, 1);
 		g_esSmiteCache[tank].g_flSmiteChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteChance, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteSpecial[type].g_flSmiteChance, g_esSmiteAbility[type].g_flSmiteChance, 1);
+		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteCountdown, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteSpecial[type].g_flSmiteCountdown, g_esSmiteAbility[type].g_flSmiteCountdown, 1);
 		g_esSmiteCache[tank].g_flSmiteRange = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRange, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteSpecial[type].g_flSmiteRange, g_esSmiteAbility[type].g_flSmiteRange, 1);
 		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_flSmiteRangeChance, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteSpecial[type].g_flSmiteRangeChance, g_esSmiteAbility[type].g_flSmiteRangeChance, 1);
 		g_esSmiteCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSmiteTeammate[tank].g_iHumanAbility, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteSpecial[type].g_iHumanAbility, g_esSmiteAbility[type].g_iHumanAbility, 1);
@@ -860,6 +876,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esSmiteCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flCloseAreasOnly, g_esSmiteAbility[type].g_flCloseAreasOnly, 1);
 		g_esSmiteCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iComboAbility, g_esSmiteAbility[type].g_iComboAbility, 1);
 		g_esSmiteCache[tank].g_flSmiteChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteAbility[type].g_flSmiteChance, 1);
+		g_esSmiteCache[tank].g_flSmiteCountdown = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteCountdown, g_esSmiteAbility[type].g_flSmiteCountdown, 1);
 		g_esSmiteCache[tank].g_flSmiteRange = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRange, g_esSmiteAbility[type].g_flSmiteRange, 1);
 		g_esSmiteCache[tank].g_flSmiteRangeChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteRangeChance, g_esSmiteAbility[type].g_flSmiteRangeChance, 1);
 		g_esSmiteCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_iHumanAbility, g_esSmiteAbility[type].g_iHumanAbility, 1);
@@ -916,6 +933,15 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vSmiteCopyStats2(iBot, iTank);
 			vRemoveSmite(iBot);
+		}
+	}
+	else if (StrEqual(name, "heal_success"))
+	{
+		int iSurvivorId = event.GetInt("subject"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor))
+		{
+			g_esSmitePlayer[iSurvivor].g_bAffected = false;
+			g_esSmitePlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -1021,7 +1047,35 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveSmite(tank);
 }
 
-void vSmite(int survivor)
+void vSmite(int tank, int survivor, int messages, int flags)
+{
+	vSmite2(survivor);
+	vScreenEffect(survivor, tank, g_esSmiteCache[tank].g_iSmiteEffect, flags);
+
+	switch (g_esSmiteCache[tank].g_iSmiteMode)
+	{
+		case 0, 3:
+		{
+			switch (MT_GetRandomInt(1, 2))
+			{
+				case 1: ForcePlayerSuicide(survivor);
+				case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+			}
+		}
+		case 1: ForcePlayerSuicide(survivor);
+		case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+	}
+
+	if (g_esSmiteCache[tank].g_iSmiteMessage & messages)
+	{
+		char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Smite", sTankName, survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Smite", LANG_SERVER, sTankName, survivor);
+	}
+}
+
+void vSmite2(int survivor)
 {
 	float flPos[3], flStartPos[3];
 	int iColor[4] = {255, 255, 255, 255};
@@ -1137,29 +1191,21 @@ void vSmiteHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
-				vSmite(survivor);
-				vScreenEffect(survivor, tank, g_esSmiteCache[tank].g_iSmiteEffect, flags);
-
-				switch (g_esSmiteCache[tank].g_iSmiteMode)
+				if (g_esSmiteCache[tank].g_flSmiteCountdown > 0.0)
 				{
-					case 0, 3:
-					{
-						switch (MT_GetRandomInt(1, 2))
-						{
-							case 1: ForcePlayerSuicide(survivor);
-							case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
-						}
-					}
-					case 1: ForcePlayerSuicide(survivor);
-					case 2: vDamagePlayer(survivor, tank, float(GetEntProp(survivor, Prop_Data, "m_iHealth")));
+					g_esSmitePlayer[survivor].g_bAffected = true;
+					g_esSmitePlayer[survivor].g_iOwner = tank;
+
+					DataPack dpSmite;
+					CreateDataTimer(g_esSmiteCache[tank].g_flSmiteCountdown, tTimerSmite, dpSmite, TIMER_FLAG_NO_MAPCHANGE);
+					dpSmite.WriteCell(GetClientUserId(survivor));
+					dpSmite.WriteCell(GetClientUserId(tank));
+					dpSmite.WriteCell(messages);
+					dpSmite.WriteCell(flags);
 				}
-
-				if (g_esSmiteCache[tank].g_iSmiteMessage & messages)
+				else
 				{
-					char sTankName[33];
-					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Smite", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Smite", LANG_SERVER, sTankName, survivor);
+					vSmite(tank, survivor, messages, flags);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esSmitePlayer[tank].g_iRangeCooldown == -1 || g_esSmitePlayer[tank].g_iRangeCooldown <= iTime))
@@ -1190,11 +1236,16 @@ void vSmiteCopyStats2(int oldTank, int newTank)
 
 void vRemoveSmite(int tank)
 {
-	g_esSmitePlayer[tank].g_bFailed = false;
-	g_esSmitePlayer[tank].g_bNoAmmo = false;
-	g_esSmitePlayer[tank].g_iAmmoCount = 0;
-	g_esSmitePlayer[tank].g_iCooldown = -1;
-	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esNullifyPlayer[iSurvivor].g_bAffected && g_esNullifyPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esNullifyPlayer[iSurvivor].g_bAffected = false;
+			g_esNullifyPlayer[iSurvivor].g_iOwner = -1;
+		}
+	}
+
+	vSmiteReset2(tank);
 }
 
 void vSmiteReset()
@@ -1203,9 +1254,49 @@ void vSmiteReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vRemoveSmite(iPlayer);
+			vSmiteReset2(iPlayer);
+
+			g_esSmitePlayer[iPlayer].g_iOwner = -1;
 		}
 	}
+}
+
+void vSmiteReset2(int tank)
+{
+	g_esSmitePlayer[tank].g_bFailed = false;
+	g_esSmitePlayer[tank].g_bNoAmmo = false;
+	g_esSmitePlayer[tank].g_iAmmoCount = 0;
+	g_esSmitePlayer[tank].g_iCooldown = -1;
+	g_esSmitePlayer[tank].g_iRangeCooldown = -1;
+}
+
+void tTimerSmite(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	{
+		g_esSmitePlayer[iSurvivor].g_bAffected = false;
+		g_esSmitePlayer[iSurvivor].g_iOwner = -1;
+
+		return;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
+	{
+		g_esSmitePlayer[iSurvivor].g_bAffected = false;
+		g_esSmitePlayer[iSurvivor].g_iOwner = -1;
+
+		return;
+	}
+
+	int iMessage = pack.ReadCell(), iFlags = pack.ReadCell();
+	g_esSmitePlayer[iSurvivor].g_bAffected = false;
+	g_esSmitePlayer[iSurvivor].g_iOwner = -1;
+
+	vSmite(iTank, iSurvivor, iMessage, iFlags);
 }
 
 void tTimerSmiteCombo(Handle timer, DataPack pack)

@@ -222,8 +222,11 @@ public void OnClientDisconnect(int client)
 {
 	if (bIsSpecialInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esMinionPlayer[client].g_bMinion)
 	{
-		g_esMinionPlayer[g_esMinionPlayer[client].g_iOwner].g_iCount--;
-		g_esMinionPlayer[client].g_iOwner = 0;
+		if (g_esMinionPlayer[client].g_iOwner > 0)
+		{
+			g_esMinionPlayer[g_esMinionPlayer[client].g_iOwner].g_iCount--;
+			g_esMinionPlayer[client].g_iOwner = -1;
+		}
 
 		vRemoveMinion(client);
 	}
@@ -741,6 +744,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveMinion(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vMinionReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -766,7 +773,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsCustomTankSupported(iOwner) && g_esMinionPlayer[iInfected].g_iOwner == iOwner)
 				{
 					g_esMinionPlayer[iInfected].g_bMinion = false;
-					g_esMinionPlayer[iInfected].g_iOwner = 0;
+					g_esMinionPlayer[iInfected].g_iOwner = -1;
 
 					if (g_esMinionCache[iOwner].g_iMinionAbility == 1)
 					{
@@ -789,10 +796,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vMinionReset();
 	}
 }
 
@@ -1037,7 +1040,7 @@ void vRemoveMinions(int tank)
 		{
 			if (g_esMinionPlayer[iMinion].g_iOwner == tank)
 			{
-				g_esMinionPlayer[iMinion].g_iOwner = 0;
+				g_esMinionPlayer[iMinion].g_iOwner = -1;
 
 				if (g_esMinionPlayer[iMinion].g_bMinion && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{

@@ -22,7 +22,7 @@
 #define MT_AUTHOR "Psyk0tik"
 #define MT_AUTHOR2 "Crasher_3637"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.99"
+#define MT_VERSION "9.0"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MT_URL2 "https://github.com/Psykotikism/Mutant_Tanks"
 
@@ -2292,6 +2292,11 @@ stock bool bIsEntityGrounded(int entity)
 	return bIsValidEntity(iGround, true, -1);
 }
 
+stock bool bIsFinalMap()
+{
+	return (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
+}
+
 stock bool bIsGunWeapon(int survivor)
 {
 	int iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
@@ -2350,6 +2355,11 @@ stock bool bIsInfectedGhost(int infected)
 stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(jockey, flags) && bIsSecondGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+}
+
+stock bool bIsNormalMap()
+{
+	return FindEntityByClassname(-1, "info_changelevel") != -1 || FindEntityByClassname(-1, "trigger_changelevel") != -1 || (FindEntityByClassname(-1, "trigger_finale") == -1 && FindEntityByClassname(-1, "finale_trigger") == -1);
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -2513,7 +2523,26 @@ stock bool bIsPlayerStuck(int client = 0, float min[3] = {0.0, 0.0, 0.0}, float 
 	}
 
 	TR_TraceHullFilter(flOrigin, flOrigin, flMin, flMax, MASK_PLAYERSOLID, bTraceRayDontHitSelfAndSolid);
+	return TR_GetEntityIndex() != -1;
+}
 
+stock bool bIsPlayerStuckInEntity(int entity, int client = 0, float min[3] = {0.0, 0.0, 0.0}, float max[3] = {0.0, 0.0, 0.0}, float pos[3] = {0.0, 0.0, 0.0})
+{
+	float flMin[3], flMax[3], flOrigin[3];
+	if (client > 0)
+	{
+		GetClientMins(client, flMin);
+		GetClientMaxs(client, flMax);
+		GetClientAbsOrigin(client, flOrigin);
+	}
+	else
+	{
+		vCopyVector(min, flMin);
+		vCopyVector(max, flMax);
+		vCopyVector(pos, flOrigin);
+	}
+
+	TR_TraceHullFilter(flOrigin, flOrigin, flMin, flMax, MASK_ALL, bTraceRayHitEntity, entity);
 	return TR_DidHit();
 }
 
@@ -2696,21 +2725,20 @@ stock bool bIsVisibleToPlayer(int player, int target, int type, float playerPos[
 	return true;
 }
 
-stock bool bIsVisibleToPosition(float pos1[3], float pos2[3], float range)
+stock bool bIsVisibleToPosition(int entity, float pos1[3], float pos2[3], float range)
 {
 	float flPos[3], flAngles[3];
 	MakeVectorFromPoints(pos1, pos2, flPos);
 	GetVectorAngles(flPos, flAngles);
 
-	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_ALL, RayType_Infinite, bTraceRayDontHitSelfAndSolid);
+	Handle hTrace = TR_TraceRayFilterEx(pos1, flAngles, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSolid, entity);
 	if (hTrace != null)
 	{
 		if (TR_DidHit(hTrace))
 		{
-			float flStart[3];
-			TR_GetEndPosition(flStart, hTrace);
+			TR_GetEndPosition(flPos, hTrace);
 
-			if (GetVectorDistance(pos1, pos2) <= range)
+			if (GetVectorDistance(flPos, pos2) <= range)
 			{
 				delete hTrace;
 				return true;
@@ -2986,6 +3014,11 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 public bool bTraceRayDontHitSelfAndSolid(int entity, int mask)
 {
 	return entity > MaxClients;
+}
+
+public bool bTraceRayHitEntity(int entity, int mask, any data)
+{
+	return entity == data;
 }
 
 // Getters
@@ -3786,7 +3819,7 @@ stock int iGetNearestCommonInfected(int tank, float pos[3], float range)
 		if (bIsValidEntity(iCommon))
 		{
 			GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flCommonPos);
-			if (bIsVisibleToPosition(pos, flCommonPos, range))
+			if (bIsVisibleToPosition(iCommon, pos, flCommonPos, range))
 			{
 				iCommons[iCommonCount] = iCommon;
 				iCommonCount++;
@@ -3807,7 +3840,7 @@ stock int iGetNearestSpecialInfected(int tank, float pos[3], float range)
 		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && tank != iSpecial)
 		{
 			GetClientEyePosition(iSpecial, flInfectedPos);
-			if (bIsVisibleToPosition(pos, flInfectedPos, range))
+			if (bIsVisibleToPosition(iSpecial, pos, flInfectedPos, range))
 			{
 				iSpecials[iInfectedCount] = iSpecial;
 				iInfectedCount++;
@@ -3835,7 +3868,7 @@ stock int iGetNearestSurvivor(int tank, float pos[3], float range, bool noHumans
 			}
 
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
-			if (bIsVisibleToPosition(pos, flSurvivorPos, range))
+			if (bIsVisibleToPosition(iSurvivor, pos, flSurvivorPos, range))
 			{
 				iSurvivors[iSurvivorCount] = iSurvivor;
 				iSurvivorCount++;
@@ -3933,7 +3966,7 @@ stock int iGetRandomTank(int tank)
 	return (iTankCount > 0) ? iTanks[GetRandomInt(0, (iTankCount - 1))] : 0;
 }
 
-stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity = 0, bool offset = false, int type)
+stock int iGetRayHitPos(float pos[3], float angles[3], float hitpos[3], int entity, bool offset, int type)
 {
 	Handle hTrace = null;
 

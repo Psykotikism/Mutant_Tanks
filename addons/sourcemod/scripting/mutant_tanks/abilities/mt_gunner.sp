@@ -990,6 +990,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveGunner(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vGunnerReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -1038,10 +1042,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vGunnerReset();
 	}
 }
 
@@ -1490,15 +1490,15 @@ void vGunner4(int tank, int target, int drone, float pos[3], float origin[3])
 
 			if (bIsSurvivor(target))
 			{
-				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, drone);
+				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndInfected, drone);
 			}
 			else if (bIsInfected(target) && tank != target)
 			{
-				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, drone);
+				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, drone);
 			}
 			else if (bIsCommonInfected(target))
 			{
-				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, drone);
+				TR_TraceRayFilter(origin, flAngles2, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, drone);
 			}
 
 			if (TR_DidHit())

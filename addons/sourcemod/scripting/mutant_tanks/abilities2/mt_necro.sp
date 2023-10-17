@@ -205,6 +205,8 @@ void vNecroMapStart()
 public void OnMapStart()
 #endif
 {
+	PrecacheSound(SOUND_ELECTRICITY, true);
+
 	vNecroReset();
 }
 
@@ -223,8 +225,6 @@ void vNecroClientDisconnect_Post(int client)
 public void OnClientDisconnect_Post(int client)
 #endif
 {
-	PrecacheSound(SOUND_ELECTRICITY, true);
-
 	vRemoveNecro(client);
 }
 
@@ -595,11 +595,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNecroTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esNecroTeammate[admin].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroTeammate[admin].g_iNecroAbility, value, -1, 1);
 			g_esNecroTeammate[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroTeammate[admin].g_iNecroMessage, value, -1, 1);
+			g_esNecroTeammate[admin].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroTeammate[admin].g_iNecroSight, value, -1, 2);
 			g_esNecroTeammate[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroTeammate[admin].g_flNecroChance, value, -1.0, 100.0);
 			g_esNecroTeammate[admin].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroTeammate[admin].g_iNecroCooldown, value, -1, 99999);
 			g_esNecroTeammate[admin].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroTeammate[admin].g_iNecroDuration, value, -1, 99999);
 			g_esNecroTeammate[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroTeammate[admin].g_flNecroRange, value, -1.0, 99999.0);
-			g_esNecroTeammate[admin].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroSight", "Necro Sight", "Necro_Sight", "sight", g_esNecroTeammate[admin].g_iNecroSight, value, -1, 2);
 		}
 		else
 		{
@@ -614,11 +614,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNecroPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esNecroPlayer[admin].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroPlayer[admin].g_iNecroAbility, value, -1, 1);
 			g_esNecroPlayer[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroPlayer[admin].g_iNecroMessage, value, -1, 1);
+			g_esNecroPlayer[admin].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroPlayer[admin].g_iNecroSight, value, -1, 2);
 			g_esNecroPlayer[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroPlayer[admin].g_flNecroChance, value, -1.0, 100.0);
 			g_esNecroPlayer[admin].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroPlayer[admin].g_iNecroCooldown, value, -1, 99999);
 			g_esNecroPlayer[admin].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroPlayer[admin].g_iNecroDuration, value, -1, 99999);
 			g_esNecroPlayer[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroPlayer[admin].g_flNecroRange, value, -1.0, 99999.0);
-			g_esNecroPlayer[admin].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroSight", "Necro Sight", "Necro_Sight", "sight", g_esNecroPlayer[admin].g_iNecroSight, value, -1, 2);
 			g_esNecroPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		}
 	}
@@ -638,11 +638,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNecroSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esNecroSpecial[type].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroSpecial[type].g_iNecroAbility, value, -1, 1);
 			g_esNecroSpecial[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroSpecial[type].g_iNecroMessage, value, -1, 1);
+			g_esNecroSpecial[type].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroSpecial[type].g_iNecroSight, value, -1, 2);
 			g_esNecroSpecial[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroSpecial[type].g_flNecroChance, value, -1.0, 100.0);
 			g_esNecroSpecial[type].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroSpecial[type].g_iNecroCooldown, value, -1, 99999);
 			g_esNecroSpecial[type].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroSpecial[type].g_iNecroDuration, value, -1, 99999);
 			g_esNecroSpecial[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroSpecial[type].g_flNecroRange, value, -1.0, 99999.0);
-			g_esNecroSpecial[type].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroSight", "Necro Sight", "Necro_Sight", "sight", g_esNecroSpecial[type].g_iNecroSight, value, -1, 2);
 		}
 		else
 		{
@@ -657,11 +657,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esNecroAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esNecroAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esNecroAbility[type].g_iNecroAbility = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esNecroAbility[type].g_iNecroAbility, value, -1, 1);
 			g_esNecroAbility[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroAbility[type].g_iNecroMessage, value, -1, 1);
+			g_esNecroAbility[type].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esNecroAbility[type].g_iNecroSight, value, -1, 2);
 			g_esNecroAbility[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroAbility[type].g_flNecroChance, value, -1.0, 100.0);
 			g_esNecroAbility[type].g_iNecroCooldown = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroCooldown", "Necro Cooldown", "Necro_Cooldown", "cooldown", g_esNecroAbility[type].g_iNecroCooldown, value, -1, 99999);
 			g_esNecroAbility[type].g_iNecroDuration = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroDuration", "Necro Duration", "Necro_Duration", "duration", g_esNecroAbility[type].g_iNecroDuration, value, -1, 99999);
 			g_esNecroAbility[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroAbility[type].g_flNecroRange, value, -1.0, 99999.0);
-			g_esNecroAbility[type].g_iNecroSight = iGetKeyValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "NecroSight", "Necro Sight", "Necro_Sight", "sight", g_esNecroAbility[type].g_iNecroSight, value, -1, 2);
 			g_esNecroAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTION, MT_NECRO_SECTION2, MT_NECRO_SECTION3, MT_NECRO_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 		}
 	}
@@ -753,6 +753,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveNecro(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vNecroReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -770,10 +774,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveNecro(iTank);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vNecroReset();
 	}
 }
 

@@ -753,6 +753,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveWitch(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vWitchReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -776,10 +780,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveWitches(iTank);
 			vRemoveWitch(iTank);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vWitchReset();
 	}
 }
 
@@ -860,19 +860,19 @@ void vWitch(int tank, int pos = -1)
 	bool bConverted = false;
 	float flTankPos[3], flInfectedPos[3], flInfectedAngles[3],
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esWitchCache[tank].g_flWitchRange;
-	int iInfected = -1;
-	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
+	int iCommon = -1;
+	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		if (iGetWitchCount() < g_esWitchCache[tank].g_iWitchAmount)
 		{
 			GetClientAbsOrigin(tank, flTankPos);
-			GetEntPropVector(iInfected, Prop_Data, "m_vecOrigin", flInfectedPos);
-			GetEntPropVector(iInfected, Prop_Data, "m_angRotation", flInfectedAngles);
-			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange && bIsVisibleToPosition(flTankPos, flInfectedPos, flRange))
+			GetEntPropVector(iCommon, Prop_Data, "m_vecOrigin", flInfectedPos);
+			GetEntPropVector(iCommon, Prop_Data, "m_angRotation", flInfectedAngles);
+			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange && bIsVisibleToPosition(iCommon, flTankPos, flInfectedPos, flRange))
 			{
 				bConverted = true;
 
-				RemoveEntity(iInfected);
+				RemoveEntity(iCommon);
 				vWitch2(tank, flInfectedPos, flInfectedAngles);
 			}
 		}

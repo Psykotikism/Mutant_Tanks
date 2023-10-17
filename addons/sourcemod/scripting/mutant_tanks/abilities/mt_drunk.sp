@@ -702,6 +702,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkTeammate[admin].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkTeammate[admin].g_iDrunkAbility, value, -1, 1);
 			g_esDrunkTeammate[admin].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkTeammate[admin].g_iDrunkEffect, value, -1, 7);
 			g_esDrunkTeammate[admin].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkTeammate[admin].g_iDrunkMessage, value, -1, 3);
+			g_esDrunkTeammate[admin].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrunkTeammate[admin].g_iDrunkSight, value, -1, 2);
 			g_esDrunkTeammate[admin].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkTeammate[admin].g_flDrunkChance, value, -1.0, 100.0);
 			g_esDrunkTeammate[admin].g_iDrunkCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkCooldown", "Drunk Cooldown", "Drunk_Cooldown", "cooldown", g_esDrunkTeammate[admin].g_iDrunkCooldown, value, -1, 99999);
 			g_esDrunkTeammate[admin].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkTeammate[admin].g_iDrunkDuration, value, -1, 99999);
@@ -710,7 +711,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkTeammate[admin].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkTeammate[admin].g_flDrunkRange, value, -1.0, 99999.0);
 			g_esDrunkTeammate[admin].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkTeammate[admin].g_flDrunkRangeChance, value, -1.0, 100.0);
 			g_esDrunkTeammate[admin].g_iDrunkRangeCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeCooldown", "Drunk Range Cooldown", "Drunk_Range_Cooldown", "rangecooldown", g_esDrunkTeammate[admin].g_iDrunkRangeCooldown, value, -1, 99999);
-			g_esDrunkTeammate[admin].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSight", "Drunk Sight", "Drunk_Sight", "sight", g_esDrunkTeammate[admin].g_iDrunkSight, value, -1, 2);
 			g_esDrunkTeammate[admin].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkTeammate[admin].g_flDrunkSpeedInterval, value, -1.0, 99999.0);
 			g_esDrunkTeammate[admin].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkTeammate[admin].g_flDrunkTurnInterval, value, -1.0, 99999.0);
 		}
@@ -727,6 +727,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkPlayer[admin].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkPlayer[admin].g_iDrunkAbility, value, -1, 1);
 			g_esDrunkPlayer[admin].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkPlayer[admin].g_iDrunkEffect, value, -1, 7);
 			g_esDrunkPlayer[admin].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkPlayer[admin].g_iDrunkMessage, value, -1, 3);
+			g_esDrunkPlayer[admin].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrunkPlayer[admin].g_iDrunkSight, value, -1, 2);
 			g_esDrunkPlayer[admin].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkPlayer[admin].g_flDrunkChance, value, -1.0, 100.0);
 			g_esDrunkPlayer[admin].g_iDrunkCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkCooldown", "Drunk Cooldown", "Drunk_Cooldown", "cooldown", g_esDrunkPlayer[admin].g_iDrunkCooldown, value, -1, 99999);
 			g_esDrunkPlayer[admin].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkPlayer[admin].g_iDrunkDuration, value, -1, 99999);
@@ -735,7 +736,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkPlayer[admin].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkPlayer[admin].g_flDrunkRange, value, -1.0, 99999.0);
 			g_esDrunkPlayer[admin].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkPlayer[admin].g_flDrunkRangeChance, value, -1.0, 100.0);
 			g_esDrunkPlayer[admin].g_iDrunkRangeCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeCooldown", "Drunk Range Cooldown", "Drunk_Range_Cooldown", "rangecooldown", g_esDrunkPlayer[admin].g_iDrunkRangeCooldown, value, -1, 99999);
-			g_esDrunkPlayer[admin].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSight", "Drunk Sight", "Drunk_Sight", "sight", g_esDrunkPlayer[admin].g_iDrunkSight, value, -1, 2);
 			g_esDrunkPlayer[admin].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkPlayer[admin].g_flDrunkSpeedInterval, value, -1.0, 99999.0);
 			g_esDrunkPlayer[admin].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkPlayer[admin].g_flDrunkTurnInterval, value, -1.0, 99999.0);
 			g_esDrunkPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -758,6 +758,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkSpecial[type].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkSpecial[type].g_iDrunkAbility, value, -1, 1);
 			g_esDrunkSpecial[type].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkSpecial[type].g_iDrunkEffect, value, -1, 7);
 			g_esDrunkSpecial[type].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkSpecial[type].g_iDrunkMessage, value, -1, 3);
+			g_esDrunkSpecial[type].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrunkSpecial[type].g_iDrunkSight, value, -1, 2);
 			g_esDrunkSpecial[type].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkSpecial[type].g_flDrunkChance, value, -1.0, 100.0);
 			g_esDrunkSpecial[type].g_iDrunkCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkCooldown", "Drunk Cooldown", "Drunk_Cooldown", "cooldown", g_esDrunkSpecial[type].g_iDrunkCooldown, value, -1, 99999);
 			g_esDrunkSpecial[type].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkSpecial[type].g_iDrunkDuration, value, -1, 99999);
@@ -766,7 +767,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkSpecial[type].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkSpecial[type].g_flDrunkRange, value, -1.0, 99999.0);
 			g_esDrunkSpecial[type].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkSpecial[type].g_flDrunkRangeChance, value, -1.0, 100.0);
 			g_esDrunkSpecial[type].g_iDrunkRangeCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeCooldown", "Drunk Range Cooldown", "Drunk_Range_Cooldown", "rangecooldown", g_esDrunkSpecial[type].g_iDrunkRangeCooldown, value, -1, 99999);
-			g_esDrunkSpecial[type].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSight", "Drunk Sight", "Drunk_Sight", "sight", g_esDrunkSpecial[type].g_iDrunkSight, value, -1, 2);
 			g_esDrunkSpecial[type].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkSpecial[type].g_flDrunkSpeedInterval, value, -1.0, 99999.0);
 			g_esDrunkSpecial[type].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkSpecial[type].g_flDrunkTurnInterval, value, -1.0, 99999.0);
 		}
@@ -783,6 +783,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkAbility[type].g_iDrunkAbility = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esDrunkAbility[type].g_iDrunkAbility, value, -1, 1);
 			g_esDrunkAbility[type].g_iDrunkEffect = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esDrunkAbility[type].g_iDrunkEffect, value, -1, 7);
 			g_esDrunkAbility[type].g_iDrunkMessage = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esDrunkAbility[type].g_iDrunkMessage, value, -1, 3);
+			g_esDrunkAbility[type].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esDrunkAbility[type].g_iDrunkSight, value, -1, 2);
 			g_esDrunkAbility[type].g_flDrunkChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_esDrunkAbility[type].g_flDrunkChance, value, -1.0, 100.0);
 			g_esDrunkAbility[type].g_iDrunkCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkCooldown", "Drunk Cooldown", "Drunk_Cooldown", "cooldown", g_esDrunkAbility[type].g_iDrunkCooldown, value, -1, 99999);
 			g_esDrunkAbility[type].g_iDrunkDuration = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_esDrunkAbility[type].g_iDrunkDuration, value, -1, 99999);
@@ -791,7 +792,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esDrunkAbility[type].g_flDrunkRange = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_esDrunkAbility[type].g_flDrunkRange, value, -1.0, 99999.0);
 			g_esDrunkAbility[type].g_flDrunkRangeChance = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_esDrunkAbility[type].g_flDrunkRangeChance, value, -1.0, 100.0);
 			g_esDrunkAbility[type].g_iDrunkRangeCooldown = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkRangeCooldown", "Drunk Range Cooldown", "Drunk_Range_Cooldown", "rangecooldown", g_esDrunkAbility[type].g_iDrunkRangeCooldown, value, -1, 99999);
-			g_esDrunkAbility[type].g_iDrunkSight = iGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSight", "Drunk Sight", "Drunk_Sight", "sight", g_esDrunkAbility[type].g_iDrunkSight, value, -1, 2);
 			g_esDrunkAbility[type].g_flDrunkSpeedInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_esDrunkAbility[type].g_flDrunkSpeedInterval, value, -1.0, 99999.0);
 			g_esDrunkAbility[type].g_flDrunkTurnInterval = flGetKeyValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_esDrunkAbility[type].g_flDrunkTurnInterval, value, -1.0, 99999.0);
 			g_esDrunkAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUNK_SECTION, MT_DRUNK_SECTION2, MT_DRUNK_SECTION3, MT_DRUNK_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
@@ -913,6 +913,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveDrunk(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vDrunkReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -940,10 +944,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vDrunkHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esDrunkCache[iBoomer].g_flDrunkChance, g_esDrunkCache[iBoomer].g_iDrunkHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vDrunkReset();
 	}
 }
 
@@ -1172,7 +1172,7 @@ void vRemoveDrunk(int tank)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esDrunkPlayer[iSurvivor].g_bAffected && g_esDrunkPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esDrunkPlayer[iSurvivor].g_bAffected = false;
-			g_esDrunkPlayer[iSurvivor].g_iOwner = 0;
+			g_esDrunkPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1195,7 +1195,7 @@ void vDrunkReset()
 void vDrunkReset2(int survivor, int tank, int messages)
 {
 	g_esDrunkPlayer[survivor].g_bAffected = false;
-	g_esDrunkPlayer[survivor].g_iOwner = 0;
+	g_esDrunkPlayer[survivor].g_iOwner = -1;
 
 	if (g_esDrunkCache[tank].g_iDrunkMessage & messages)
 	{
@@ -1264,7 +1264,7 @@ Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || !g_esDrunkPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		return Plugin_Stop;
 	}
@@ -1298,7 +1298,7 @@ Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esDrunkPlayer[iSurvivor].g_bAffected = false;
-		g_esDrunkPlayer[iSurvivor].g_iOwner = 0;
+		g_esDrunkPlayer[iSurvivor].g_iOwner = -1;
 
 		return Plugin_Stop;
 	}

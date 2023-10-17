@@ -710,6 +710,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowTeammate[admin].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowTeammate[admin].g_iSlowAbility, value, -1, 1);
 			g_esSlowTeammate[admin].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowTeammate[admin].g_iSlowEffect, value, -1, 7);
 			g_esSlowTeammate[admin].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowTeammate[admin].g_iSlowMessage, value, -1, 3);
+			g_esSlowTeammate[admin].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSlowTeammate[admin].g_iSlowSight, value, -1, 2);
 			g_esSlowTeammate[admin].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowTeammate[admin].g_flSlowChance, value, -1.0, 100.0);
 			g_esSlowTeammate[admin].g_iSlowCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowCooldown", "Slow Cooldown", "Slow_Cooldown", "cooldown", g_esSlowTeammate[admin].g_iSlowCooldown, value, -1, 99999);
 			g_esSlowTeammate[admin].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowTeammate[admin].g_flSlowDuration, value, -1.0, 99999.0);
@@ -719,7 +720,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowTeammate[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowTeammate[admin].g_flSlowRange, value, -1.0, 99999.0);
 			g_esSlowTeammate[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowTeammate[admin].g_flSlowRangeChance, value, -1.0, 100.0);
 			g_esSlowTeammate[admin].g_iSlowRangeCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeCooldown", "Slow Range Cooldown", "Slow_Range_Cooldown", "rangecooldown", g_esSlowTeammate[admin].g_iSlowRangeCooldown, value, -1, 99999);
-			g_esSlowTeammate[admin].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSight", "Slow Sight", "Slow_Sight", "sight", g_esSlowTeammate[admin].g_iSlowSight, value, -1, 2);
 			g_esSlowTeammate[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowTeammate[admin].g_flSlowSpeed, value, -1.0, 0.99);
 		}
 		else
@@ -735,6 +735,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowPlayer[admin].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowPlayer[admin].g_iSlowAbility, value, -1, 1);
 			g_esSlowPlayer[admin].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowPlayer[admin].g_iSlowEffect, value, -1, 7);
 			g_esSlowPlayer[admin].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowPlayer[admin].g_iSlowMessage, value, -1, 3);
+			g_esSlowPlayer[admin].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSlowPlayer[admin].g_iSlowSight, value, -1, 2);
 			g_esSlowPlayer[admin].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowPlayer[admin].g_flSlowChance, value, -1.0, 100.0);
 			g_esSlowPlayer[admin].g_iSlowCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowCooldown", "Slow Cooldown", "Slow_Cooldown", "cooldown", g_esSlowPlayer[admin].g_iSlowCooldown, value, -1, 99999);
 			g_esSlowPlayer[admin].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowPlayer[admin].g_flSlowDuration, value, -1.0, 99999.0);
@@ -744,7 +745,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowPlayer[admin].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowPlayer[admin].g_flSlowRange, value, -1.0, 99999.0);
 			g_esSlowPlayer[admin].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowPlayer[admin].g_flSlowRangeChance, value, -1.0, 100.0);
 			g_esSlowPlayer[admin].g_iSlowRangeCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeCooldown", "Slow Range Cooldown", "Slow_Range_Cooldown", "rangecooldown", g_esSlowPlayer[admin].g_iSlowRangeCooldown, value, -1, 99999);
-			g_esSlowPlayer[admin].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSight", "Slow Sight", "Slow_Sight", "sight", g_esSlowPlayer[admin].g_iSlowSight, value, -1, 2);
 			g_esSlowPlayer[admin].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowPlayer[admin].g_flSlowSpeed, value, -1.0, 0.99);
 			g_esSlowPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esSlowPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -766,6 +766,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowSpecial[type].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowSpecial[type].g_iSlowAbility, value, -1, 1);
 			g_esSlowSpecial[type].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowSpecial[type].g_iSlowEffect, value, -1, 7);
 			g_esSlowSpecial[type].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowSpecial[type].g_iSlowMessage, value, -1, 3);
+			g_esSlowSpecial[type].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSlowSpecial[type].g_iSlowSight, value, -1, 2);
 			g_esSlowSpecial[type].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowSpecial[type].g_flSlowChance, value, -1.0, 100.0);
 			g_esSlowSpecial[type].g_iSlowCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowCooldown", "Slow Cooldown", "Slow_Cooldown", "cooldown", g_esSlowSpecial[type].g_iSlowCooldown, value, -1, 99999);
 			g_esSlowSpecial[type].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowSpecial[type].g_flSlowDuration, value, -1.0, 99999.0);
@@ -775,7 +776,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowSpecial[type].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowSpecial[type].g_flSlowRange, value, -1.0, 99999.0);
 			g_esSlowSpecial[type].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowSpecial[type].g_flSlowRangeChance, value, -1.0, 100.0);
 			g_esSlowSpecial[type].g_iSlowRangeCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeCooldown", "Slow Range Cooldown", "Slow_Range_Cooldown", "rangecooldown", g_esSlowSpecial[type].g_iSlowRangeCooldown, value, -1, 99999);
-			g_esSlowSpecial[type].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSight", "Slow Sight", "Slow_Sight", "sight", g_esSlowSpecial[type].g_iSlowSight, value, -1, 2);
 			g_esSlowSpecial[type].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowSpecial[type].g_flSlowSpeed, value, -1.0, 0.99);
 		}
 		else
@@ -791,6 +791,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowAbility[type].g_iSlowAbility = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSlowAbility[type].g_iSlowAbility, value, -1, 1);
 			g_esSlowAbility[type].g_iSlowEffect = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSlowAbility[type].g_iSlowEffect, value, -1, 7);
 			g_esSlowAbility[type].g_iSlowMessage = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSlowAbility[type].g_iSlowMessage, value, -1, 3);
+			g_esSlowAbility[type].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSlowAbility[type].g_iSlowSight, value, -1, 2);
 			g_esSlowAbility[type].g_flSlowChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esSlowAbility[type].g_flSlowChance, value, -1.0, 100.0);
 			g_esSlowAbility[type].g_iSlowCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowCooldown", "Slow Cooldown", "Slow_Cooldown", "cooldown", g_esSlowAbility[type].g_iSlowCooldown, value, -1, 99999);
 			g_esSlowAbility[type].g_flSlowDuration = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esSlowAbility[type].g_flSlowDuration, value, -1.0, 99999.0);
@@ -800,7 +801,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esSlowAbility[type].g_flSlowRange = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esSlowAbility[type].g_flSlowRange, value, -1.0, 99999.0);
 			g_esSlowAbility[type].g_flSlowRangeChance = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esSlowAbility[type].g_flSlowRangeChance, value, -1.0, 100.0);
 			g_esSlowAbility[type].g_iSlowRangeCooldown = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowRangeCooldown", "Slow Range Cooldown", "Slow_Range_Cooldown", "rangecooldown", g_esSlowAbility[type].g_iSlowRangeCooldown, value, -1, 99999);
-			g_esSlowAbility[type].g_iSlowSight = iGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSight", "Slow Sight", "Slow_Sight", "sight", g_esSlowAbility[type].g_iSlowSight, value, -1, 2);
 			g_esSlowAbility[type].g_flSlowSpeed = flGetKeyValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esSlowAbility[type].g_flSlowSpeed, value, -1.0, 0.99);
 			g_esSlowAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esSlowAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SLOW_SECTION, MT_SLOW_SECTION2, MT_SLOW_SECTION3, MT_SLOW_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -921,6 +921,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveSlow(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vSlowReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -952,10 +956,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vSlowHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esSlowCache[iBoomer].g_flSlowChance, g_esSlowCache[iBoomer].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vSlowReset();
 	}
 }
 
@@ -1220,7 +1220,7 @@ void vSlowReset2(int tank)
 void vStopSlow(int survivor, bool all = true)
 {
 	g_esSlowPlayer[survivor].g_bAffected = false;
-	g_esSlowPlayer[survivor].g_iOwner = 0;
+	g_esSlowPlayer[survivor].g_iOwner = -1;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(survivor, 1.0, true) : 1.0));
 	SetEntPropFloat(survivor, Prop_Send, "m_flStepSize", MT_STEP_DEFAULTSIZE);
@@ -1284,7 +1284,7 @@ void tTimerStopSlow(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_esSlowPlayer[iSurvivor].g_bAffected = false;
-		g_esSlowPlayer[iSurvivor].g_iOwner = 0;
+		g_esSlowPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}

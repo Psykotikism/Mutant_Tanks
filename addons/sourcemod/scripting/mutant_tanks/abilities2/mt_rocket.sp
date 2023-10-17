@@ -72,6 +72,7 @@ enum struct esRocketPlayer
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRocketChance;
+	float g_flRocketCountdown;
 	float g_flRocketDelay;
 	float g_flRocketRange;
 	float g_flRocketRangeChance;
@@ -108,6 +109,7 @@ enum struct esRocketTeammate
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRocketChance;
+	float g_flRocketCountdown;
 	float g_flRocketDelay;
 	float g_flRocketRange;
 	float g_flRocketRangeChance;
@@ -137,6 +139,7 @@ enum struct esRocketAbility
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRocketChance;
+	float g_flRocketCountdown;
 	float g_flRocketDelay;
 	float g_flRocketRange;
 	float g_flRocketRangeChance;
@@ -168,6 +171,7 @@ enum struct esRocketSpecial
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRocketChance;
+	float g_flRocketCountdown;
 	float g_flRocketDelay;
 	float g_flRocketRange;
 	float g_flRocketRangeChance;
@@ -197,6 +201,7 @@ enum struct esRocketCache
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
 	float g_flRocketChance;
+	float g_flRocketCountdown;
 	float g_flRocketDelay;
 	float g_flRocketRange;
 	float g_flRocketRangeChance;
@@ -634,6 +639,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketAbility[iIndex].g_iRocketBody = 1;
 				g_esRocketAbility[iIndex].g_flRocketChance = 33.3;
 				g_esRocketAbility[iIndex].g_iRocketCooldown = 0;
+				g_esRocketAbility[iIndex].g_flRocketCountdown = 0.0;
 				g_esRocketAbility[iIndex].g_flRocketDelay = 1.0;
 				g_esRocketAbility[iIndex].g_iRocketHit = 0;
 				g_esRocketAbility[iIndex].g_iRocketHitMode = 0;
@@ -657,6 +663,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketSpecial[iIndex].g_iRocketBody = -1;
 				g_esRocketSpecial[iIndex].g_flRocketChance = -1.0;
 				g_esRocketSpecial[iIndex].g_iRocketCooldown = -1;
+				g_esRocketSpecial[iIndex].g_flRocketCountdown = 0.0;
 				g_esRocketSpecial[iIndex].g_flRocketDelay = -1.0;
 				g_esRocketSpecial[iIndex].g_iRocketHit = -1;
 				g_esRocketSpecial[iIndex].g_iRocketHitMode = -1;
@@ -687,6 +694,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketPlayer[iPlayer].g_iRocketBody = -1;
 				g_esRocketPlayer[iPlayer].g_flRocketChance = -1.0;
 				g_esRocketPlayer[iPlayer].g_iRocketCooldown = -1;
+				g_esRocketPlayer[iPlayer].g_flRocketCountdown = 0.0;
 				g_esRocketPlayer[iPlayer].g_flRocketDelay = -1.0;
 				g_esRocketPlayer[iPlayer].g_iRocketHit = -1;
 				g_esRocketPlayer[iPlayer].g_iRocketHitMode = -1;
@@ -710,6 +718,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esRocketTeammate[iPlayer].g_iRocketBody = -1;
 				g_esRocketTeammate[iPlayer].g_flRocketChance = -1.0;
 				g_esRocketTeammate[iPlayer].g_iRocketCooldown = -1;
+				g_esRocketTeammate[iPlayer].g_flRocketCountdown = 0.0;
 				g_esRocketTeammate[iPlayer].g_flRocketDelay = -1.0;
 				g_esRocketTeammate[iPlayer].g_iRocketHit = -1;
 				g_esRocketTeammate[iPlayer].g_iRocketHitMode = -1;
@@ -744,9 +753,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketTeammate[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketTeammate[admin].g_iRocketAbility, value, -1, 1);
 			g_esRocketTeammate[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketTeammate[admin].g_iRocketEffect, value, -1, 7);
 			g_esRocketTeammate[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketTeammate[admin].g_iRocketMessage, value, -1, 3);
+			g_esRocketTeammate[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketTeammate[admin].g_iRocketSight, value, -1, 2);
 			g_esRocketTeammate[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketTeammate[admin].g_iRocketBody, value, -1, 1);
 			g_esRocketTeammate[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketTeammate[admin].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketTeammate[admin].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketTeammate[admin].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketTeammate[admin].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketTeammate[admin].g_flRocketCountdown, value, -1.0, 99999.0);
 			g_esRocketTeammate[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketTeammate[admin].g_flRocketDelay, value, -1.0, 99999.0);
 			g_esRocketTeammate[admin].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketTeammate[admin].g_iRocketHit, value, -1, 1);
 			g_esRocketTeammate[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketTeammate[admin].g_iRocketHitMode, value, -1, 2);
@@ -754,7 +765,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketTeammate[admin].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketTeammate[admin].g_flRocketRange, value, -1.0, 99999.0);
 			g_esRocketTeammate[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketTeammate[admin].g_flRocketRangeChance, value, -1.0, 100.0);
 			g_esRocketTeammate[admin].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketTeammate[admin].g_iRocketRangeCooldown, value, -1, 99999);
-			g_esRocketTeammate[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketSight", "Rocket Sight", "Rocket_Sight", "sight", g_esRocketTeammate[admin].g_iRocketSight, value, -1, 2);
 		}
 		else
 		{
@@ -769,9 +779,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketPlayer[admin].g_iRocketAbility, value, -1, 1);
 			g_esRocketPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketPlayer[admin].g_iRocketEffect, value, -1, 7);
 			g_esRocketPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketPlayer[admin].g_iRocketMessage, value, -1, 3);
+			g_esRocketPlayer[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketPlayer[admin].g_iRocketSight, value, -1, 2);
 			g_esRocketPlayer[admin].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketPlayer[admin].g_iRocketBody, value, -1, 1);
 			g_esRocketPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketPlayer[admin].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketPlayer[admin].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketPlayer[admin].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketPlayer[admin].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketPlayer[admin].g_flRocketCountdown, value, -1.0, 99999.0);
 			g_esRocketPlayer[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketPlayer[admin].g_flRocketDelay, value, -1.0, 99999.0);
 			g_esRocketPlayer[admin].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketPlayer[admin].g_iRocketHit, value, -1, 1);
 			g_esRocketPlayer[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketPlayer[admin].g_iRocketHitMode, value, -1, 2);
@@ -779,7 +791,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketPlayer[admin].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketPlayer[admin].g_flRocketRange, value, -1.0, 99999.0);
 			g_esRocketPlayer[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketPlayer[admin].g_flRocketRangeChance, value, -1.0, 100.0);
 			g_esRocketPlayer[admin].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketPlayer[admin].g_iRocketRangeCooldown, value, -1, 99999);
-			g_esRocketPlayer[admin].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketSight", "Rocket Sight", "Rocket_Sight", "sight", g_esRocketPlayer[admin].g_iRocketSight, value, -1, 2);
 			g_esRocketPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esRocketPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -800,9 +811,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketSpecial[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketSpecial[type].g_iRocketAbility, value, -1, 1);
 			g_esRocketSpecial[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketSpecial[type].g_iRocketEffect, value, -1, 7);
 			g_esRocketSpecial[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketSpecial[type].g_iRocketMessage, value, -1, 3);
+			g_esRocketSpecial[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketSpecial[type].g_iRocketSight, value, -1, 2);
 			g_esRocketSpecial[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketSpecial[type].g_iRocketBody, value, -1, 1);
 			g_esRocketSpecial[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketSpecial[type].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketSpecial[type].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketSpecial[type].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketSpecial[type].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketSpecial[type].g_flRocketCountdown, value, -1.0, 99999.0);
 			g_esRocketSpecial[type].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketSpecial[type].g_flRocketDelay, value, -1.0, 99999.0);
 			g_esRocketSpecial[type].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketSpecial[type].g_iRocketHit, value, -1, 1);
 			g_esRocketSpecial[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketSpecial[type].g_iRocketHitMode, value, -1, 2);
@@ -810,7 +823,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketSpecial[type].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketSpecial[type].g_flRocketRange, value, -1.0, 99999.0);
 			g_esRocketSpecial[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketSpecial[type].g_flRocketRangeChance, value, -1.0, 100.0);
 			g_esRocketSpecial[type].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketSpecial[type].g_iRocketRangeCooldown, value, -1, 99999);
-			g_esRocketSpecial[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketSight", "Rocket Sight", "Rocket_Sight", "sight", g_esRocketSpecial[type].g_iRocketSight, value, -1, 2);
 		}
 		else
 		{
@@ -825,9 +837,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketAbility[type].g_iRocketAbility = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esRocketAbility[type].g_iRocketAbility, value, -1, 1);
 			g_esRocketAbility[type].g_iRocketEffect = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esRocketAbility[type].g_iRocketEffect, value, -1, 7);
 			g_esRocketAbility[type].g_iRocketMessage = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esRocketAbility[type].g_iRocketMessage, value, -1, 3);
+			g_esRocketAbility[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esRocketAbility[type].g_iRocketSight, value, -1, 2);
 			g_esRocketAbility[type].g_iRocketBody = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketBody", "Rocket Body", "Rocket_Body", "body", g_esRocketAbility[type].g_iRocketBody, value, -1, 1);
 			g_esRocketAbility[type].g_flRocketChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esRocketAbility[type].g_flRocketChance, value, -1.0, 100.0);
 			g_esRocketAbility[type].g_iRocketCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCooldown", "Rocket Cooldown", "Rocket_Cooldown", "cooldown", g_esRocketAbility[type].g_iRocketCooldown, value, -1, 99999);
+			g_esRocketAbility[type].g_flRocketCountdown = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketCountdown", "Rocket Countdown", "Rocket_Countdown", "countdown", g_esRocketAbility[type].g_flRocketCountdown, value, -1.0, 99999.0);
 			g_esRocketAbility[type].g_flRocketDelay = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esRocketAbility[type].g_flRocketDelay, value, -1.0, 99999.0);
 			g_esRocketAbility[type].g_iRocketHit = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esRocketAbility[type].g_iRocketHit, value, -1, 1);
 			g_esRocketAbility[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esRocketAbility[type].g_iRocketHitMode, value, -1, 2);
@@ -835,7 +849,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esRocketAbility[type].g_flRocketRange = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esRocketAbility[type].g_flRocketRange, value, -1.0, 99999.0);
 			g_esRocketAbility[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esRocketAbility[type].g_flRocketRangeChance, value, -1.0, 100.0);
 			g_esRocketAbility[type].g_iRocketRangeCooldown = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketRangeCooldown", "Rocket Range Cooldown", "Rocket_Range_Cooldown", "rangecooldown", g_esRocketAbility[type].g_iRocketRangeCooldown, value, -1, 99999);
-			g_esRocketAbility[type].g_iRocketSight = iGetKeyValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "RocketSight", "Rocket Sight", "Rocket_Sight", "sight", g_esRocketAbility[type].g_iRocketSight, value, -1, 2);
 			g_esRocketAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esRocketAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ROCKET_SECTION, MT_ROCKET_SECTION2, MT_ROCKET_SECTION3, MT_ROCKET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -856,6 +869,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flCloseAreasOnly, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketSpecial[type].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
 		g_esRocketCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_iComboAbility, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketSpecial[type].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
 		g_esRocketCache[tank].g_flRocketChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketChance, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketSpecial[type].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
+		g_esRocketCache[tank].g_flRocketCountdown = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketCountdown, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketSpecial[type].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
 		g_esRocketCache[tank].g_flRocketDelay = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketDelay, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketSpecial[type].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
 		g_esRocketCache[tank].g_flRocketRange = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRange, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketSpecial[type].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
 		g_esRocketCache[tank].g_flRocketRangeChance = flGetSubSettingValue(apply, bHuman, g_esRocketTeammate[tank].g_flRocketRangeChance, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketSpecial[type].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
@@ -881,6 +895,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 		g_esRocketCache[tank].g_flCloseAreasOnly = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flCloseAreasOnly, g_esRocketAbility[type].g_flCloseAreasOnly, 1);
 		g_esRocketCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_iComboAbility, g_esRocketAbility[type].g_iComboAbility, 1);
 		g_esRocketCache[tank].g_flRocketChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketChance, g_esRocketAbility[type].g_flRocketChance, 1);
+		g_esRocketCache[tank].g_flRocketCountdown = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketCountdown, g_esRocketAbility[type].g_flRocketCountdown, 1);
 		g_esRocketCache[tank].g_flRocketDelay = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketDelay, g_esRocketAbility[type].g_flRocketDelay, 1);
 		g_esRocketCache[tank].g_flRocketRange = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRange, g_esRocketAbility[type].g_flRocketRange, 1);
 		g_esRocketCache[tank].g_flRocketRangeChance = flGetSettingValue(apply, bHuman, g_esRocketPlayer[tank].g_flRocketRangeChance, g_esRocketAbility[type].g_flRocketRangeChance, 1);
@@ -955,6 +970,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRocket(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vRocketReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -982,10 +1001,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRocketHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esRocketCache[iBoomer].g_flRocketChance, g_esRocketCache[iBoomer].g_iRocketHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vRocketReset();
 	}
 }
 
@@ -1056,6 +1071,28 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveRocket(tank);
+}
+
+void vRocket(int tank, int survivor, int enabled, int messages, int pos = -1)
+{
+	float flDelay = (pos != -1) ? 0.1 : g_esRocketCache[tank].g_flRocketDelay;
+	if (flDelay > 0.0)
+	{
+		DataPack dpRocketLaunch;
+		CreateDataTimer(flDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
+		dpRocketLaunch.WriteCell(GetClientUserId(survivor));
+		dpRocketLaunch.WriteCell(GetClientUserId(tank));
+		dpRocketLaunch.WriteCell(g_esRocketPlayer[tank].g_iTankType);
+		dpRocketLaunch.WriteCell(enabled);
+
+		DataPack dpRocketDetonate;
+		CreateDataTimer((flDelay + 1.5), tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
+		dpRocketDetonate.WriteCell(GetClientUserId(survivor));
+		dpRocketDetonate.WriteCell(GetClientUserId(tank));
+		dpRocketDetonate.WriteCell(g_esRocketPlayer[tank].g_iTankType);
+		dpRocketDetonate.WriteCell(enabled);
+		dpRocketDetonate.WriteCell(messages);
+	}
 }
 
 void vRocketAbility(int tank, float random, int pos = -1)
@@ -1180,28 +1217,24 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 					vSetEntityParent(iFlame, survivor);
 
 					iFlame = EntIndexToEntRef(iFlame);
-					vDeleteEntity(iFlame, 3.0);
+					vDeleteEntity(iFlame, (3.0 + g_esRocketCache[tank].g_flRocketCountdown));
 
 					vScreenEffect(survivor, tank, g_esRocketCache[tank].g_iRocketEffect, flags);
 					EmitSoundToAll(SOUND_FIRE, survivor);
 
-					float flDelay = (pos != -1) ? 0.1 : g_esRocketCache[tank].g_flRocketDelay;
-					if (flDelay > 0.0)
+					switch (g_esRocketCache[tank].g_flRocketCountdown > 0.0)
 					{
-						DataPack dpRocketLaunch;
-						CreateDataTimer(flDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
-						dpRocketLaunch.WriteCell(GetClientUserId(survivor));
-						dpRocketLaunch.WriteCell(GetClientUserId(tank));
-						dpRocketLaunch.WriteCell(g_esRocketPlayer[tank].g_iTankType);
-						dpRocketLaunch.WriteCell(enabled);
-
-						DataPack dpRocketDetonate;
-						CreateDataTimer((flDelay + 1.5), tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
-						dpRocketDetonate.WriteCell(GetClientUserId(survivor));
-						dpRocketDetonate.WriteCell(GetClientUserId(tank));
-						dpRocketDetonate.WriteCell(g_esRocketPlayer[tank].g_iTankType);
-						dpRocketDetonate.WriteCell(enabled);
-						dpRocketDetonate.WriteCell(messages);
+						case true:
+						{
+							DataPack dpRocket;
+							CreateDataTimer(g_esRocketCache[tank].g_flRocketCountdown, tTimerRocket, dpRocket, TIMER_FLAG_NO_MAPCHANGE);
+							dpRocket.WriteCell(GetClientUserId(survivor));
+							dpRocket.WriteCell(GetClientUserId(tank));
+							dpRocket.WriteCell(enabled);
+							dpRocket.WriteCell(messages);
+							dpRocket.WriteCell(pos);
+						}
+						case false: vRocket(tank, survivor, enabled, messages, pos);
 					}
 				}
 			}
@@ -1238,7 +1271,7 @@ void vRemoveRocket(int tank)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRocketPlayer[iSurvivor].g_bAffected && g_esRocketPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esRocketPlayer[iSurvivor].g_bAffected = false;
-			g_esRocketPlayer[iSurvivor].g_iOwner = 0;
+			g_esRocketPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1261,7 +1294,7 @@ void vRocketReset()
 void vRocketReset2(int survivor)
 {
 	g_esRocketPlayer[survivor].g_bAffected = false;
-	g_esRocketPlayer[survivor].g_iOwner = 0;
+	g_esRocketPlayer[survivor].g_iOwner = -1;
 
 	SetEntityGravity(survivor, 1.0);
 }
@@ -1274,6 +1307,31 @@ void vRocketReset3(int tank)
 	g_esRocketPlayer[tank].g_iAmmoCount = 0;
 	g_esRocketPlayer[tank].g_iCooldown = -1;
 	g_esRocketPlayer[tank].g_iRangeCooldown = -1;
+}
+
+void tTimerRocket(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	{
+		g_esRocketPlayer[iSurvivor].g_bAffected = false;
+		g_esRocketPlayer[iSurvivor].g_iOwner = -1;
+
+		return;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketEnabled = pack.ReadCell();
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esRocketCache[iTank].g_flOpenAreasOnly) || bIsAreaWide(iTank, g_esRocketCache[iTank].g_flCloseAreasOnly) || MT_DoesTypeRequireHumans(g_esRocketPlayer[iTank].g_iTankType, iTank) || (g_esRocketCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esRocketCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iAccessFlags, g_esRocketPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esRocketPlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esRocketPlayer[iTank].g_iTankType, g_esRocketAbility[g_esRocketPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esRocketPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esRocketPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	{
+		vRocketReset2(iSurvivor);
+
+		return;
+	}
+
+	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
+	vRocket(iTank, iSurvivor, iRocketEnabled, iMessage, iPos);
 }
 
 void tTimerRocketCombo(Handle timer, DataPack pack)
@@ -1329,7 +1387,7 @@ void tTimerRocketLaunch(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esRocketPlayer[iSurvivor].g_bAffected = false;
-		g_esRocketPlayer[iSurvivor].g_iOwner = 0;
+		g_esRocketPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1362,7 +1420,7 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esRocketPlayer[iSurvivor].g_bAffected = false;
-		g_esRocketPlayer[iSurvivor].g_iOwner = 0;
+		g_esRocketPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1375,35 +1433,38 @@ void tTimerRocketDetonate(Handle timer, DataPack pack)
 		return;
 	}
 
+	g_esRocketPlayer[iSurvivor].g_bAffected = false;
+	g_esRocketPlayer[iSurvivor].g_iOwner = -1;
+
 	float flPos[3];
 	GetClientAbsOrigin(iSurvivor, flPos);
 	TE_SetupExplosion(flPos, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
 	TE_SendToAll();
 	SetEntityGravity(iSurvivor, 1.0);
 
-	switch (g_esRocketCache[iTank].g_iRocketMode)
+	if (g_esRocketCache[iTank].g_flRocketCountdown <= 0.0 || bIsAreaNarrow(iSurvivor, 150.0))
 	{
-		case 0, 3:
+		switch (g_esRocketCache[iTank].g_iRocketMode)
 		{
-			switch (MT_GetRandomInt(1, 2))
+			case 0, 3:
 			{
-				case 1: ForcePlayerSuicide(iSurvivor);
-				case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+				switch (MT_GetRandomInt(1, 2))
+				{
+					case 1: ForcePlayerSuicide(iSurvivor);
+					case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
+				}
 			}
+			case 1: ForcePlayerSuicide(iSurvivor);
+			case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
 		}
-		case 1: ForcePlayerSuicide(iSurvivor);
-		case 2: vDamagePlayer(iSurvivor, iTank, float(GetEntProp(iSurvivor, Prop_Data, "m_iHealth")));
-	}
 
-	g_esRocketPlayer[iSurvivor].g_bAffected = false;
-	g_esRocketPlayer[iSurvivor].g_iOwner = 0;
-
-	int iMessage = pack.ReadCell();
-	if (g_esRocketCache[iTank].g_iRocketMessage & iMessage)
-	{
-		char sTankName[33];
-		MT_GetTankName(iTank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rocket", LANG_SERVER, sTankName, iSurvivor);
+		int iMessage = pack.ReadCell();
+		if (g_esRocketCache[iTank].g_iRocketMessage & iMessage)
+		{
+			char sTankName[33];
+			MT_GetTankName(iTank, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rocket", LANG_SERVER, sTankName, iSurvivor);
+		}
 	}
 }

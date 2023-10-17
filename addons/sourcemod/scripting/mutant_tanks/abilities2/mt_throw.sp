@@ -906,6 +906,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveThrow(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vThrowReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -927,12 +931,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		else if (bIsSpecialInfected(iInfected) && g_esThrowPlayer[iInfected].g_bThrown)
 		{
 			g_esThrowPlayer[iInfected].g_bThrown = false;
-			g_esThrowPlayer[iInfected].g_iOwner = 0;
+			g_esThrowPlayer[iInfected].g_iOwner = -1;
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vThrowReset();
 	}
 }
 
@@ -1041,7 +1041,7 @@ void vRemoveThrow(int tank, bool full = true)
 	g_esThrowPlayer[tank].g_bActivated = false;
 	g_esThrowPlayer[tank].g_iAmmoCount = 0;
 	g_esThrowPlayer[tank].g_iCooldown = -1;
-	g_esThrowPlayer[tank].g_iOwner = 0;
+	g_esThrowPlayer[tank].g_iOwner = -1;
 
 	if (full)
 	{
@@ -1057,7 +1057,7 @@ void vRemoveThrows(int tank)
 		{
 			if (g_esThrowPlayer[iSpecial].g_iOwner == tank)
 			{
-				g_esThrowPlayer[iSpecial].g_iOwner = 0;
+				g_esThrowPlayer[iSpecial].g_iOwner = -1;
 
 				if (g_esThrowPlayer[iSpecial].g_bThrown && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{

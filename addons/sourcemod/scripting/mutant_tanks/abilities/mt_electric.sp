@@ -733,6 +733,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricTeammate[admin].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricTeammate[admin].g_iElectricAbility, value, -1, 1);
 			g_esElectricTeammate[admin].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricTeammate[admin].g_iElectricEffect, value, -1, 7);
 			g_esElectricTeammate[admin].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricTeammate[admin].g_iElectricMessage, value, -1, 3);
+			g_esElectricTeammate[admin].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esElectricTeammate[admin].g_iElectricSight, value, -1, 2);
 			g_esElectricTeammate[admin].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricTeammate[admin].g_flElectricChance, value, -1.0, 100.0);
 			g_esElectricTeammate[admin].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricTeammate[admin].g_iElectricCooldown, value, -1, 99999);
 			g_esElectricTeammate[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricTeammate[admin].g_flElectricDamage, value, -1.0, 99999.0);
@@ -743,7 +744,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricTeammate[admin].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricTeammate[admin].g_flElectricRange, value, -1.0, 99999.0);
 			g_esElectricTeammate[admin].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricTeammate[admin].g_flElectricRangeChance, value, -1.0, 100.0);
 			g_esElectricTeammate[admin].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricTeammate[admin].g_iElectricRangeCooldown, value, -1, 99999);
-			g_esElectricTeammate[admin].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricSight", "Electric Sight", "Electric_Sight", "sight", g_esElectricTeammate[admin].g_iElectricSight, value, -1, 2);
 			g_esElectricTeammate[admin].g_flElectricStunSpeed = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricStunSpeed", "Electric Stun Speed", "Electric_Stun_Speed", "stunspeed", g_esElectricTeammate[admin].g_flElectricStunSpeed, value, -1.0, 0.99);
 		}
 		else
@@ -759,6 +759,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricPlayer[admin].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricPlayer[admin].g_iElectricAbility, value, -1, 1);
 			g_esElectricPlayer[admin].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricPlayer[admin].g_iElectricEffect, value, -1, 7);
 			g_esElectricPlayer[admin].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricPlayer[admin].g_iElectricMessage, value, -1, 3);
+			g_esElectricPlayer[admin].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esElectricPlayer[admin].g_iElectricSight, value, -1, 2);
 			g_esElectricPlayer[admin].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricPlayer[admin].g_flElectricChance, value, -1.0, 100.0);
 			g_esElectricPlayer[admin].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricPlayer[admin].g_iElectricCooldown, value, -1, 99999);
 			g_esElectricPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricPlayer[admin].g_flElectricDamage, value, -1.0, 99999.0);
@@ -769,7 +770,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricPlayer[admin].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricPlayer[admin].g_flElectricRange, value, -1.0, 99999.0);
 			g_esElectricPlayer[admin].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricPlayer[admin].g_flElectricRangeChance, value, -1.0, 100.0);
 			g_esElectricPlayer[admin].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricPlayer[admin].g_iElectricRangeCooldown, value, -1, 99999);
-			g_esElectricPlayer[admin].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricSight", "Electric Sight", "Electric_Sight", "sight", g_esElectricPlayer[admin].g_iElectricSight, value, -1, 2);
 			g_esElectricPlayer[admin].g_flElectricStunSpeed = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricStunSpeed", "Electric Stun Speed", "Electric_Stun_Speed", "stunspeed", g_esElectricPlayer[admin].g_flElectricStunSpeed, value, -1.0, 0.99);
 			g_esElectricPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esElectricPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -791,6 +791,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricSpecial[type].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricSpecial[type].g_iElectricAbility, value, -1, 1);
 			g_esElectricSpecial[type].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricSpecial[type].g_iElectricEffect, value, -1, 7);
 			g_esElectricSpecial[type].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricSpecial[type].g_iElectricMessage, value, -1, 3);
+			g_esElectricSpecial[type].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esElectricSpecial[type].g_iElectricSight, value, -1, 2);
 			g_esElectricSpecial[type].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricSpecial[type].g_flElectricChance, value, -1.0, 100.0);
 			g_esElectricSpecial[type].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricSpecial[type].g_iElectricCooldown, value, -1, 99999);
 			g_esElectricSpecial[type].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricSpecial[type].g_flElectricDamage, value, -1.0, 99999.0);
@@ -801,7 +802,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricSpecial[type].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricSpecial[type].g_flElectricRange, value, -1.0, 99999.0);
 			g_esElectricSpecial[type].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricSpecial[type].g_flElectricRangeChance, value, -1.0, 100.0);
 			g_esElectricSpecial[type].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricSpecial[type].g_iElectricRangeCooldown, value, -1, 99999);
-			g_esElectricSpecial[type].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricSight", "Electric Sight", "Electric_Sight", "sight", g_esElectricSpecial[type].g_iElectricSight, value, -1, 2);
 			g_esElectricSpecial[type].g_flElectricStunSpeed = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricStunSpeed", "Electric Stun Speed", "Electric_Stun_Speed", "stunspeed", g_esElectricSpecial[type].g_flElectricStunSpeed, value, -1.0, 0.99);
 		}
 		else
@@ -817,6 +817,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricAbility[type].g_iElectricAbility = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esElectricAbility[type].g_iElectricAbility, value, -1, 1);
 			g_esElectricAbility[type].g_iElectricEffect = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esElectricAbility[type].g_iElectricEffect, value, -1, 7);
 			g_esElectricAbility[type].g_iElectricMessage = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esElectricAbility[type].g_iElectricMessage, value, -1, 3);
+			g_esElectricAbility[type].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esElectricAbility[type].g_iElectricSight, value, -1, 2);
 			g_esElectricAbility[type].g_flElectricChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esElectricAbility[type].g_flElectricChance, value, -1.0, 100.0);
 			g_esElectricAbility[type].g_iElectricCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricCooldown", "Electric Cooldown", "Electric_Cooldown", "cooldown", g_esElectricAbility[type].g_iElectricCooldown, value, -1, 99999);
 			g_esElectricAbility[type].g_flElectricDamage = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esElectricAbility[type].g_flElectricDamage, value, -1.0, 99999.0);
@@ -827,7 +828,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esElectricAbility[type].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricAbility[type].g_flElectricRange, value, -1.0, 99999.0);
 			g_esElectricAbility[type].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricAbility[type].g_flElectricRangeChance, value, -1.0, 100.0);
 			g_esElectricAbility[type].g_iElectricRangeCooldown = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricRangeCooldown", "Electric Range Cooldown", "Electric_Range_Cooldown", "rangecooldown", g_esElectricAbility[type].g_iElectricRangeCooldown, value, -1, 99999);
-			g_esElectricAbility[type].g_iElectricSight = iGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricSight", "Electric Sight", "Electric_Sight", "sight", g_esElectricAbility[type].g_iElectricSight, value, -1, 2);
 			g_esElectricAbility[type].g_flElectricStunSpeed = flGetKeyValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ElectricStunSpeed", "Electric Stun Speed", "Electric_Stun_Speed", "stunspeed", g_esElectricAbility[type].g_flElectricStunSpeed, value, -1.0, 0.99);
 			g_esElectricAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esElectricAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -935,6 +935,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveElectric(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vElectricReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -963,10 +967,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vElectricHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esElectricCache[iBoomer].g_flElectricChance, g_esElectricCache[iBoomer].g_iElectricHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vElectricReset();
 	}
 }
 
@@ -1221,7 +1221,7 @@ void vRemoveElectric(int tank)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esElectricPlayer[iSurvivor].g_bAffected && g_esElectricPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esElectricPlayer[iSurvivor].g_bAffected = false;
-			g_esElectricPlayer[iSurvivor].g_iOwner = 0;
+			g_esElectricPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1244,7 +1244,7 @@ void vElectricReset()
 void vElectricReset2(int survivor, int tank, int messages)
 {
 	g_esElectricPlayer[survivor].g_bAffected = false;
-	g_esElectricPlayer[survivor].g_iOwner = 0;
+	g_esElectricPlayer[survivor].g_iOwner = -1;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_bLaggedMovementInstalled ? L4D_LaggedMovement(survivor, 1.0, true) : 1.0));
 
@@ -1318,7 +1318,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esElectricPlayer[iSurvivor].g_bAffected = false;
-		g_esElectricPlayer[iSurvivor].g_iOwner = 0;
+		g_esElectricPlayer[iSurvivor].g_iOwner = -1;
 
 		return Plugin_Stop;
 	}
@@ -1351,7 +1351,7 @@ Action tTimerElectric(Handle timer, DataPack pack)
 		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iPlayer, iTank) && !bIsAdminImmune(iPlayer, g_esElectricPlayer[iTank].g_iTankType, g_esElectricAbility[g_esElectricPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esElectricPlayer[iPlayer].g_iImmunityFlags) && !g_esElectricPlayer[iPlayer].g_bAffected)
 		{
 			GetClientAbsOrigin(iPlayer, flPlayerPos);
-			if (GetVectorDistance(flSurvivorPos, flPlayerPos) <= (flRange / 2.0))
+			if (GetVectorDistance(flSurvivorPos, flPlayerPos) <= (flRange / 2.0) && bIsVisibleToPlayer(iSurvivor, iPlayer, 1, .range = (flRange / 2.0)))
 			{
 				vElectric(iPlayer, iTank, false, iPos);
 			}
