@@ -187,6 +187,19 @@
 			}
 
 			/**
+			 * CPistol::GetRateOfFire()
+			 *
+			 * Note: Detouring as a pre-hook for changing pistol fire rate per player.
+			 **/
+			"MTDetour_CPistol::GetRateOfFire"
+			{
+				"signature"	"CPistol::GetRateOfFire"
+				"callconv"	"thiscall"
+				"return"	"float"
+				"this"		"entity"
+			}
+
+			/**
 			 * CTankClaw::DoSwing()
 			 *
 			 * Note: Detouring as a pre-hook for patching "CTankClaw::SweepFist" to hit all survivors within range in "coop" modes.
@@ -313,6 +326,19 @@
 				"signature"	"CTerrorGun::FireBullet"
 				"callconv"	"thiscall"
 				"return"	"void"
+				"this"		"entity"
+			}
+
+			/**
+			 * CTerrorGun::GetRateOfFire()
+			 *
+			 * Note: Detouring as a pre-hook for changing pistol fire rate per player.
+			 **/
+			"MTDetour_CTerrorGun::GetRateOfFire"
+			{
+				"signature"	"CTerrorGun::GetRateOfFire"
+				"callconv"	"thiscall"
+				"return"	"float"
 				"this"		"entity"
 			}
 
@@ -880,6 +906,29 @@
 					"angles"
 					{
 						"type"		"vectorptr"
+					}
+				}
+			}
+
+			/**
+			 * UTIL_SetModel(CBaseEntity *, char const*)
+			 *
+			 * Note: Detouring as a pre-hook for catching server crashes related to un-precached models.
+			 **/
+			"MTDetour_UTIL_SetModel"
+			{
+				"signature"	"UTIL_SetModel"
+				"callconv"	"cdecl"
+				"return"	"void"
+				"arguments"
+				{
+					"entity"
+					{
+						"type"		"cbaseentity"
+					}
+					"model"
+					{
+						"type"		"charptr"
 					}
 				}
 			}
@@ -1591,6 +1640,23 @@
 				"linux"		"309" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"393" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"417" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorPlayer::AddUpgrade(SurvivorUpgradeType)
+			 *
+			 * Note: Patches the "CCSPlayer::EmitPrivateSound" call for "Player.AwardUpgrade".
+			 *
+			 * How to find:
+			 * 1. Locate the "Player.AwardUpgrade" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. The patch location will be the first byte of the entire function call setup.
+			 **/
+			"CTerrorPlayer::AddUpgrade::Sound"
+			{
+				"linux"		"308" // start at 8D and patch 18 bytes with NOPs (0x90)
+				"mac"		"310" // start at 8D and patch 21 bytes with NOPs (0x90)
+				"windows"	"271" // start at 68 and patch 12 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -2471,6 +2537,25 @@
 			}
 
 			/**
+			 * CPistol::GetRateOfFire()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CPistol::`vftable'" to jump to the "CPistol" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CPistol::GetRateOfFire"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK7CPistol13GetRateOfFireEv"
+				"mac"		"@_ZNK7CPistol13GetRateOfFireEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x8B\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x8B\x82\x2A\x2A\x2A\x2A\xFF\x2A\x84"
+						/* ? ? ? ? ? ? ? ? ? ? ? FF ? 84 ? 8B ? 74 ? E8 ? ? ? ? 85 ? 74 ? 8B ? 8B ? 8B 82 ? ? ? ? FF ? 84 */
+			}
+
+			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
 			 *
 			 * Note: Used for finding the function.
@@ -2911,6 +2996,25 @@
 			}
 
 			/**
+			 * CTerrorGun::GetRateOfFire()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorGun::`vftable'" to jump to the "CTerrorGun" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::GetRateOfFire"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK10CTerrorGun13GetRateOfFireEv"
+				"mac"		"@_ZNK10CTerrorGun13GetRateOfFireEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x8B\x82\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xD9"
+						/* ? ? ? ? ? ? ? ? 85 ? 74 ? 8B ? 8B ? 8B 82 ? ? ? ? FF ? 84 ? 74 ? 8B 0D ? ? ? ? D9 */
+			}
+
+			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * Note: Used for detouring the function.
@@ -2929,6 +3033,22 @@
 				"mac"		"@_ZN10CTerrorGun3UseEP11CBaseEntityS1_8USE_TYPEf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x8B\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 						/* ? ? ? ? ? ? ? ? ? 85 ? 8B ? 0F 84 ? ? ? ? 8B ? 8B 90 ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 8B */
+			}
+
+			/**
+			 * CTerrorPlayer::AddUpgrade(SurvivorUpgradeType)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "upgrade" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"CTerrorPlayer::AddUpgrade"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10AddUpgradeE19SurvivorUpgradeType"
+				"mac"		"@_ZN13CTerrorPlayer10AddUpgradeE19SurvivorUpgradeType"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x56\x51"
+						/* ? ? ? ? ? ? ? ? ? 57 8B ? 0F 84 ? ? ? ? 8B ? ? ? 56 51 */
 			}
 
 			/**
@@ -3411,6 +3531,22 @@
 			}
 
 			/**
+			 * CTerrorPlayer::RemoveUpgrade(SurvivorUpgradeType)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerNeutralizedTongue" string.
+			 * 2. This function should be the first function call above the string.
+			 **/
+			"CTerrorPlayer::RemoveUpgrade"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13RemoveUpgradeE19SurvivorUpgradeType"
+				"mac"		"@_ZN13CTerrorPlayer13RemoveUpgradeE19SurvivorUpgradeType"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x56\x8B\x2A\x83"
+						/* ? ? ? ? ? ? ? 8B ? 56 8B ? 83 */
+			}
+
+			/**
 			 * CTerrorPlayer::RoundRespawn()
 			 *
 			 * Note: Used for finding/calling the function.
@@ -3859,6 +3995,24 @@
 				"mac"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x85\x2A\x75\x2A\x5E\xC2\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A\x8B\x2A\xFF\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x50\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x51\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x89\x35\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x8B\x2A\xFF\x2A\x6A\x2A\x6A\x2A\xB9\x2A\x2A\x2A\x2A\xC7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x0D"
 						/* ? ? ? ? ? ? E8 ? ? ? ? 8B ? 83 ? ? 85 ? 75 ? 5E C2 ? ? 8B ? 8B 90 ? ? ? ? 6A ? 6A ? 6A ? 8B ? FF ? 6A ? 8B ? E8 ? ? ? ? 8B ? ? ? 50 8B ? E8 ? ? ? ? 8B ? ? ? 51 8B ? E8 ? ? ? ? 89 35 ? ? ? ? 8B ? 8B ? ? 8B ? FF ? 6A ? 6A ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? E8 ? ? ? ? 8B 0D */
+			}
+
+			/**
+			 * UTIL_SetModel(CBaseEntity *, char const*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%i/%s - %s:  UTIL_SetModel:  not precached: %s\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"UTIL_SetModel"
+			{
+				"library"	"server"
+				"linux"		"@_Z13UTIL_SetModelP11CBaseEntityPKc"
+				"mac"		"@_Z13UTIL_SetModelP11CBaseEntityPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x83\x2A\x2A\x53\x8B"
+						/* ? ? ? ? ? ? 8B ? 8B ? ? 83 ? ? 53 8B */
 			}
 		}
 	}
@@ -4631,6 +4785,23 @@
 				"linux"		"313" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"mac"		"463" // start at 89 and patch 2 bytes with a short jump (0xEB) to skip instruction
 				"windows"	"384" // start at 56 and patch 2 bytes with a short jump (0xEB) to skip instruction
+			}
+
+			/**
+			 * CTerrorPlayer::AddUpgrade(SurvivorUpgradeType)
+			 *
+			 * Note: Patches the "CCSPlayer::EmitPrivateSound" call for "Player.AwardUpgrade".
+			 *
+			 * How to find:
+			 * 1. Locate the "Player.AwardUpgrade" string.
+			 * 2. The instruction should look like a function call.
+			 * 3. The patch location will be the first byte of the entire function call setup.
+			 **/
+			"CTerrorPlayer::AddUpgrade::Sound"
+			{
+				"linux"		"128" // start at C7 and patch 16 bytes with NOPs (0x90)
+				"mac"		"112" // start at 8D and patch 21 bytes with NOPs (0x90)
+				"windows"	"202" // start at 68 and patch 12 bytes with NOPs (0x90)
 			}
 
 			/**
@@ -5624,6 +5795,25 @@
 			}
 
 			/**
+			 * CPistol::GetRateOfFire()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CPistol::`vftable'" to jump to the "CPistol" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CPistol::GetRateOfFire"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK7CPistol13GetRateOfFireEv"
+				"mac"		"@_ZNK7CPistol13GetRateOfFireEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x8B\x2A\x84\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74"
+						/* ? ? ? ? ? ? ? ? ? ? ? FF ? 8B ? 84 ? 74 ? E8 ? ? ? ? 85 ? 74 */
+			}
+
+			/**
 			 * CSmokeCloudSystem::FireGameEvent(IGameEvent *)
 			 *
 			 * Note: Used for finding the function.
@@ -6185,6 +6375,25 @@
 			}
 
 			/**
+			 * CTerrorGun::GetRateOfFire()
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorGun::`vftable'" to jump to the "CTerrorGun" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorGun::GetRateOfFire"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK10CTerrorGun13GetRateOfFireEv"
+				"mac"		"@_ZNK10CTerrorGun13GetRateOfFireEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x8B\x82\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x0D"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? 85 ? 74 ? 8B ? 8B ? 8B 82 ? ? ? ? FF ? 84 ? 74 ? 8B 0D */
+			}
+
+			/**
 			 * CTerrorGun::Use(CBaseEntity *, CBaseEntity *, USE_TYPE, float)
 			 *
 			 * Note: Used for detouring the function.
@@ -6246,6 +6455,25 @@
 				"mac"		"@_ZN18CTerrorMeleeWeapon23TestMeleeSwingCollisionERK6Vector"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x89\x2A\x2A\xE8"
 						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? ? 57 89 ? ? E8 */
+			}
+
+			/**
+			 * CTerrorPlayer::AddUpgrade(SurvivorUpgradeType)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in this function):
+			 * - "upgrade_failed_no_primary"
+			 * - "upgrade"
+			 * - "receive_upgrade"
+			 * - "ItemPickedUp:%s"
+			 **/
+			"CTerrorPlayer::AddUpgrade"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10AddUpgradeE19SurvivorUpgradeType"
+				"mac"		"@_ZN13CTerrorPlayer10AddUpgradeE19SurvivorUpgradeType"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x53\x8B"
+						/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 57 53 8B */
 			}
 
 			/**
@@ -6873,6 +7101,23 @@
 			}
 
 			/**
+			 * CTerrorPlayer::RemoveUpgrade(SurvivorUpgradeType)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%s INVALID UPGRADE '%s'\n" string.
+			 * 2. One of the functions that references that string should be "UpgradeRemove".
+			 * 3. This function should be the last function call in "UpgradeRemove".
+			 **/
+			"CTerrorPlayer::RemoveUpgrade"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13RemoveUpgradeE19SurvivorUpgradeType"
+				"mac"		"@_ZN13CTerrorPlayer19ScriptRemoveUpgradeEi"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x6A\x2A\xFF\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x5D\xFF\x2A\x5D\xC2\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x55"
+						/* 55 8B ? 8B ? 8B ? ? ? ? ? 6A ? FF ? 85 ? 74 ? 8B ? 8B ? 8B ? ? ? ? ? 5D FF ? 5D C2 ? ? ? ? ? ? ? ? ? ? ? ? ? ? 55 */
+			}
+
+			/**
 			 * CTerrorPlayer::RoundRespawn()
 			 *
 			 * Note: Used for finding/calling the function.
@@ -7256,6 +7501,24 @@
 				"mac"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39\x81\x2A\x2A\x2A\x2A\x7C\x2A\x33\x2A\x5F"
 						/* ? ? ? ? ? ? 8B 0D ? ? ? ? E8 ? ? ? ? 85 ? 78 ? 8B 0D ? ? ? ? 39 81 ? ? ? ? 7C ? 33 ? 5F */
+			}
+
+			/**
+			 * UTIL_SetModel(CBaseEntity *, char const*)
+			 *
+			 * Note: Used for detouring the function.
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "%i/%s - %s:  UTIL_SetModel:  not precached: %s\n" string.
+			 * 2. The string can only be found in this function.
+			 **/
+			"UTIL_SetModel"
+			{
+				"library"	"server"
+				"linux"		"@_Z13UTIL_SetModelP11CBaseEntityPKc"
+				"mac"		"@_Z13UTIL_SetModelP11CBaseEntityPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x83\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x53\xFF"
+						/* ? ? ? ? ? ? ? ? ? 8B ? 8B ? ? 83 ? ? 53 8B ? ? 56 57 53 FF */
 			}
 		}
 	}

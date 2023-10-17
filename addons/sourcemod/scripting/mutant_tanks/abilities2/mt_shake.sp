@@ -731,6 +731,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeTeammate[admin].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeTeammate[admin].g_iShakeAbility, value, -1, 1);
 			g_esShakeTeammate[admin].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeTeammate[admin].g_iShakeEffect, value, -1, 7);
 			g_esShakeTeammate[admin].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeTeammate[admin].g_iShakeMessage, value, -1, 3);
+			g_esShakeTeammate[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeTeammate[admin].g_iShakeSight, value, -1, 2);
 			g_esShakeTeammate[admin].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeTeammate[admin].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakeTeammate[admin].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeTeammate[admin].g_iShakeCooldown, value, -1, 99999);
 			g_esShakeTeammate[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeTeammate[admin].g_iShakeDeath, value, -1, 1);
@@ -743,7 +744,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeTeammate[admin].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeTeammate[admin].g_flShakeRange, value, -1.0, 99999.0);
 			g_esShakeTeammate[admin].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeTeammate[admin].g_flShakeRangeChance, value, -1.0, 100.0);
 			g_esShakeTeammate[admin].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeTeammate[admin].g_iShakeRangeCooldown, value, -1, 99999);
-			g_esShakeTeammate[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeSight", "Shake Sight", "Shake_Sight", "sight", g_esShakeTeammate[admin].g_iShakeSight, value, -1, 2);
 		}
 		else
 		{
@@ -758,6 +758,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakePlayer[admin].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakePlayer[admin].g_iShakeAbility, value, -1, 1);
 			g_esShakePlayer[admin].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakePlayer[admin].g_iShakeEffect, value, -1, 7);
 			g_esShakePlayer[admin].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakePlayer[admin].g_iShakeMessage, value, -1, 3);
+			g_esShakePlayer[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakePlayer[admin].g_iShakeSight, value, -1, 2);
 			g_esShakePlayer[admin].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakePlayer[admin].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakePlayer[admin].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakePlayer[admin].g_iShakeCooldown, value, -1, 99999);
 			g_esShakePlayer[admin].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakePlayer[admin].g_iShakeDeath, value, -1, 1);
@@ -770,7 +771,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakePlayer[admin].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakePlayer[admin].g_flShakeRange, value, -1.0, 99999.0);
 			g_esShakePlayer[admin].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakePlayer[admin].g_flShakeRangeChance, value, -1.0, 100.0);
 			g_esShakePlayer[admin].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakePlayer[admin].g_iShakeRangeCooldown, value, -1, 99999);
-			g_esShakePlayer[admin].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeSight", "Shake Sight", "Shake_Sight", "sight", g_esShakePlayer[admin].g_iShakeSight, value, -1, 2);
 			g_esShakePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esShakePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -791,6 +791,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeSpecial[type].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeSpecial[type].g_iShakeAbility, value, -1, 1);
 			g_esShakeSpecial[type].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeSpecial[type].g_iShakeEffect, value, -1, 7);
 			g_esShakeSpecial[type].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeSpecial[type].g_iShakeMessage, value, -1, 3);
+			g_esShakeSpecial[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeSpecial[type].g_iShakeSight, value, -1, 2);
 			g_esShakeSpecial[type].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeSpecial[type].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakeSpecial[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeSpecial[type].g_iShakeDeath, value, -1, 1);
 			g_esShakeSpecial[type].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeSpecial[type].g_iShakeCooldown, value, -1, 99999);
@@ -803,7 +804,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeSpecial[type].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeSpecial[type].g_flShakeRange, value, -1.0, 99999.0);
 			g_esShakeSpecial[type].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeSpecial[type].g_flShakeRangeChance, value, -1.0, 100.0);
 			g_esShakeSpecial[type].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeSpecial[type].g_iShakeRangeCooldown, value, -1, 99999);
-			g_esShakeSpecial[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeSight", "Shake Sight", "Shake_Sight", "sight", g_esShakeSpecial[type].g_iShakeSight, value, -1, 2);
 		}
 		else
 		{
@@ -818,6 +818,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeAbility[type].g_iShakeAbility = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShakeAbility[type].g_iShakeAbility, value, -1, 1);
 			g_esShakeAbility[type].g_iShakeEffect = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esShakeAbility[type].g_iShakeEffect, value, -1, 7);
 			g_esShakeAbility[type].g_iShakeMessage = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShakeAbility[type].g_iShakeMessage, value, -1, 3);
+			g_esShakeAbility[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esShakeAbility[type].g_iShakeSight, value, -1, 2);
 			g_esShakeAbility[type].g_flShakeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esShakeAbility[type].g_flShakeChance, value, -1.0, 100.0);
 			g_esShakeAbility[type].g_iShakeDeath = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esShakeAbility[type].g_iShakeDeath, value, -1, 1);
 			g_esShakeAbility[type].g_iShakeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeCooldown", "Shake Cooldown", "Shake_Cooldown", "cooldown", g_esShakeAbility[type].g_iShakeCooldown, value, -1, 99999);
@@ -830,7 +831,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esShakeAbility[type].g_flShakeRange = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_esShakeAbility[type].g_flShakeRange, value, -1.0, 99999.0);
 			g_esShakeAbility[type].g_flShakeRangeChance = flGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_esShakeAbility[type].g_flShakeRangeChance, value, -1.0, 100.0);
 			g_esShakeAbility[type].g_iShakeRangeCooldown = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeRangeCooldown", "Shake Range Cooldown", "Shake_Range_Cooldown", "rangecooldown", g_esShakeAbility[type].g_iShakeRangeCooldown, value, -1, 99999);
-			g_esShakeAbility[type].g_iShakeSight = iGetKeyValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ShakeSight", "Shake Sight", "Shake_Sight", "sight", g_esShakeAbility[type].g_iShakeSight, value, -1, 2);
 			g_esShakeAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esShakeAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHAKE_SECTION, MT_SHAKE_SECTION2, MT_SHAKE_SECTION3, MT_SHAKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -939,6 +939,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveShake(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vShakeReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -967,10 +971,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vShakeHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esShakeCache[iBoomer].g_flShakeChance, g_esShakeCache[iBoomer].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vShakeReset();
 	}
 }
 
@@ -1221,7 +1221,7 @@ void vRemoveShake(int tank)
 		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShakePlayer[iSurvivor].g_bAffected && g_esShakePlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esShakePlayer[iSurvivor].g_bAffected = false;
-			g_esShakePlayer[iSurvivor].g_iOwner = 0;
+			g_esShakePlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1244,7 +1244,7 @@ void vShakeReset()
 void vShakeReset2(int survivor, int tank, int messages)
 {
 	g_esShakePlayer[survivor].g_bAffected = false;
-	g_esShakePlayer[survivor].g_iOwner = 0;
+	g_esShakePlayer[survivor].g_iOwner = -1;
 
 	if (g_esShakeCache[tank].g_iShakeMessage & messages)
 	{
@@ -1316,7 +1316,7 @@ Action tTimerShake(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_esShakePlayer[iSurvivor].g_bAffected = false;
-		g_esShakePlayer[iSurvivor].g_iOwner = 0;
+		g_esShakePlayer[iSurvivor].g_iOwner = -1;
 
 		return Plugin_Stop;
 	}

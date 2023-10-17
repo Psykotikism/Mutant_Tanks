@@ -603,12 +603,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLightningTeammate[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningTeammate[admin].g_iLightningAbility, value, -1, 1);
 			g_esLightningTeammate[admin].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningTeammate[admin].g_iLightningMessage, value, -1, 1);
+			g_esLightningTeammate[admin].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLightningTeammate[admin].g_iLightningSight, value, -1, 2);
 			g_esLightningTeammate[admin].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningTeammate[admin].g_flLightningChance, value, -1.0, 100.0);
 			g_esLightningTeammate[admin].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningTeammate[admin].g_iLightningCooldown, value, -1, 99999);
 			g_esLightningTeammate[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningTeammate[admin].g_flLightningDamage, value, -1.0, 99999.0);
 			g_esLightningTeammate[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningTeammate[admin].g_iLightningDuration, value, -1, 99999);
 			g_esLightningTeammate[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningTeammate[admin].g_flLightningInterval, value, -1.0, 99999.0);
-			g_esLightningTeammate[admin].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningSight", "Lightning Sight", "Lightning_Sight", "sight", g_esLightningTeammate[admin].g_iLightningSight, value, -1, 2);
 		}
 		else
 		{
@@ -623,12 +623,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esLightningPlayer[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningPlayer[admin].g_iLightningAbility, value, -1, 1);
 			g_esLightningPlayer[admin].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningPlayer[admin].g_iLightningMessage, value, -1, 1);
+			g_esLightningPlayer[admin].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLightningPlayer[admin].g_iLightningSight, value, -1, 2);
 			g_esLightningPlayer[admin].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningPlayer[admin].g_flLightningChance, value, -1.0, 100.0);
 			g_esLightningPlayer[admin].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningPlayer[admin].g_iLightningCooldown, value, -1, 99999);
 			g_esLightningPlayer[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningPlayer[admin].g_flLightningDamage, value, -1.0, 99999.0);
 			g_esLightningPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningPlayer[admin].g_iLightningDuration, value, -1, 99999);
 			g_esLightningPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningPlayer[admin].g_flLightningInterval, value, -1.0, 99999.0);
-			g_esLightningPlayer[admin].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningSight", "Lightning Sight", "Lightning_Sight", "sight", g_esLightningPlayer[admin].g_iLightningSight, value, -1, 2);
 			g_esLightningPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esLightningPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -649,12 +649,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esLightningSpecial[type].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningSpecial[type].g_iLightningAbility, value, -1, 1);
 			g_esLightningSpecial[type].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningSpecial[type].g_iLightningMessage, value, -1, 1);
+			g_esLightningSpecial[type].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLightningSpecial[type].g_iLightningSight, value, -1, 2);
 			g_esLightningSpecial[type].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningSpecial[type].g_flLightningChance, value, -1.0, 100.0);
 			g_esLightningSpecial[type].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningSpecial[type].g_iLightningCooldown, value, -1, 99999);
 			g_esLightningSpecial[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningSpecial[type].g_flLightningDamage, value, -1.0, 99999.0);
 			g_esLightningSpecial[type].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningSpecial[type].g_iLightningDuration, value, -1, 99999);
 			g_esLightningSpecial[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningSpecial[type].g_flLightningInterval, value, -1.0, 99999.0);
-			g_esLightningSpecial[type].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningSight", "Lightning Sight", "Lightning_Sight", "sight", g_esLightningSpecial[type].g_iLightningSight, value, -1, 2);
 		}
 		else
 		{
@@ -669,12 +669,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esLightningAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esLightningAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esLightningAbility[type].g_iLightningAbility = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esLightningAbility[type].g_iLightningAbility, value, -1, 1);
 			g_esLightningAbility[type].g_iLightningMessage = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esLightningAbility[type].g_iLightningMessage, value, -1, 1);
+			g_esLightningAbility[type].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esLightningAbility[type].g_iLightningSight, value, -1, 2);
 			g_esLightningAbility[type].g_flLightningChance = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esLightningAbility[type].g_flLightningChance, value, -1.0, 100.0);
 			g_esLightningAbility[type].g_iLightningCooldown = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningCooldown", "Lightning Cooldown", "Lightning_Cooldown", "cooldown", g_esLightningAbility[type].g_iLightningCooldown, value, -1, 99999);
 			g_esLightningAbility[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningAbility[type].g_flLightningDamage, value, -1.0, 99999.0);
 			g_esLightningAbility[type].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningAbility[type].g_iLightningDuration, value, -1, 99999);
 			g_esLightningAbility[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningAbility[type].g_flLightningInterval, value, -1.0, 99999.0);
-			g_esLightningAbility[type].g_iLightningSight = iGetKeyValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "LightningSight", "Lightning Sight", "Lightning_Sight", "sight", g_esLightningAbility[type].g_iLightningSight, value, -1, 2);
 			g_esLightningAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esLightningAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTION, MT_LIGHTNING_SECTION2, MT_LIGHTNING_SECTION3, MT_LIGHTNING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -769,6 +769,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveLightning(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vLightningReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -786,10 +790,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveLightning(iTank);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vLightningReset();
 	}
 }
 

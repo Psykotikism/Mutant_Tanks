@@ -722,6 +722,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceTeammate[admin].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceTeammate[admin].g_iIceAbility, value, -1, 1);
 			g_esIceTeammate[admin].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceTeammate[admin].g_iIceEffect, value, -1, 7);
 			g_esIceTeammate[admin].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceTeammate[admin].g_iIceMessage, value, -1, 3);
+			g_esIceTeammate[admin].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceTeammate[admin].g_iIceSight, value, -1, 2);
 			g_esIceTeammate[admin].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceTeammate[admin].g_flIceChance, value, -1.0, 100.0);
 			g_esIceTeammate[admin].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceTeammate[admin].g_iIceCooldown, value, -1, 99999);
 			g_esIceTeammate[admin].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceTeammate[admin].g_flIceDuration, value, -1.0, 99999.0);
@@ -730,7 +731,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceTeammate[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceTeammate[admin].g_flIceRange, value, -1.0, 99999.0);
 			g_esIceTeammate[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceTeammate[admin].g_flIceRangeChance, value, -1.0, 100.0);
 			g_esIceTeammate[admin].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceTeammate[admin].g_iIceRangeCooldown, value, -1, 99999);
-			g_esIceTeammate[admin].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceSight", "Ice Sight", "Ice_Sight", "sight", g_esIceTeammate[admin].g_iIceSight, value, -1, 2);
 		}
 		else
 		{
@@ -745,6 +745,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIcePlayer[admin].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIcePlayer[admin].g_iIceAbility, value, -1, 1);
 			g_esIcePlayer[admin].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIcePlayer[admin].g_iIceEffect, value, -1, 7);
 			g_esIcePlayer[admin].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIcePlayer[admin].g_iIceMessage, value, -1, 3);
+			g_esIcePlayer[admin].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIcePlayer[admin].g_iIceSight, value, -1, 2);
 			g_esIcePlayer[admin].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIcePlayer[admin].g_flIceChance, value, -1.0, 100.0);
 			g_esIcePlayer[admin].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIcePlayer[admin].g_iIceCooldown, value, -1, 99999);
 			g_esIcePlayer[admin].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIcePlayer[admin].g_flIceDuration, value, -1.0, 99999.0);
@@ -753,7 +754,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIcePlayer[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIcePlayer[admin].g_flIceRange, value, -1.0, 99999.0);
 			g_esIcePlayer[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIcePlayer[admin].g_flIceRangeChance, value, -1.0, 100.0);
 			g_esIcePlayer[admin].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIcePlayer[admin].g_iIceRangeCooldown, value, -1, 99999);
-			g_esIcePlayer[admin].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceSight", "Ice Sight", "Ice_Sight", "sight", g_esIcePlayer[admin].g_iIceSight, value, -1, 2);
 			g_esIcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esIcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -774,6 +774,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceSpecial[type].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceSpecial[type].g_iIceAbility, value, -1, 1);
 			g_esIceSpecial[type].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceSpecial[type].g_iIceEffect, value, -1, 7);
 			g_esIceSpecial[type].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceSpecial[type].g_iIceMessage, value, -1, 3);
+			g_esIceSpecial[type].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceSpecial[type].g_iIceSight, value, -1, 2);
 			g_esIceSpecial[type].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceSpecial[type].g_flIceChance, value, -1.0, 100.0);
 			g_esIceSpecial[type].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceSpecial[type].g_iIceCooldown, value, -1, 99999);
 			g_esIceSpecial[type].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceSpecial[type].g_flIceDuration, value, -1.0, 99999.0);
@@ -782,7 +783,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceSpecial[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceSpecial[type].g_flIceRange, value, -1.0, 99999.0);
 			g_esIceSpecial[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceSpecial[type].g_flIceRangeChance, value, -1.0, 100.0);
 			g_esIceSpecial[type].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceSpecial[type].g_iIceRangeCooldown, value, -1, 99999);
-			g_esIceSpecial[type].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceSight", "Ice Sight", "Ice_Sight", "sight", g_esIceSpecial[type].g_iIceSight, value, -1, 2);
 		}
 		else
 		{
@@ -797,6 +797,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceAbility[type].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceAbility[type].g_iIceAbility, value, -1, 1);
 			g_esIceAbility[type].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceAbility[type].g_iIceEffect, value, -1, 7);
 			g_esIceAbility[type].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceAbility[type].g_iIceMessage, value, -1, 3);
+			g_esIceAbility[type].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceAbility[type].g_iIceSight, value, -1, 2);
 			g_esIceAbility[type].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceAbility[type].g_flIceChance, value, -1.0, 100.0);
 			g_esIceAbility[type].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceAbility[type].g_iIceCooldown, value, -1, 99999);
 			g_esIceAbility[type].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceAbility[type].g_flIceDuration, value, -1.0, 99999.0);
@@ -805,7 +806,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIceAbility[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceAbility[type].g_flIceRange, value, -1.0, 99999.0);
 			g_esIceAbility[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceAbility[type].g_flIceRangeChance, value, -1.0, 100.0);
 			g_esIceAbility[type].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceAbility[type].g_iIceRangeCooldown, value, -1, 99999);
-			g_esIceAbility[type].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceSight", "Ice Sight", "Ice_Sight", "sight", g_esIceAbility[type].g_iIceSight, value, -1, 2);
 			g_esIceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esIceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -921,6 +921,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveIce(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vIceReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -952,10 +956,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vIceHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esIceCache[iBoomer].g_flIceChance, g_esIceCache[iBoomer].g_iIceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vIceReset();
 	}
 }
 
@@ -1217,7 +1217,7 @@ void vIceReset2(int tank)
 void vStopIce(int survivor, bool all = true)
 {
 	g_esIcePlayer[survivor].g_bAffected = false;
-	g_esIcePlayer[survivor].g_iOwner = 0;
+	g_esIcePlayer[survivor].g_iOwner = -1;
 
 	float flPos[3];
 	GetClientEyePosition(survivor, flPos);
@@ -1302,7 +1302,7 @@ void tTimerStopIce(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_esIcePlayer[iSurvivor].g_bAffected = false;
-		g_esIcePlayer[iSurvivor].g_iOwner = 0;
+		g_esIcePlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}

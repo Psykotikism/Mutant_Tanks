@@ -756,6 +756,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombTeammate[admin].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombTeammate[admin].g_iBombAbility, value, -1, 1);
 			g_esBombTeammate[admin].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombTeammate[admin].g_iBombEffect, value, -1, 7);
 			g_esBombTeammate[admin].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombTeammate[admin].g_iBombMessage, value, -1, 7);
+			g_esBombTeammate[admin].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBombTeammate[admin].g_iBombSight, value, -1, 2);
 			g_esBombTeammate[admin].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombTeammate[admin].g_flBombChance, value, -1.0, 100.0);
 			g_esBombTeammate[admin].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombTeammate[admin].g_iBombCooldown, value, -1, 99999);
 			g_esBombTeammate[admin].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombTeammate[admin].g_iBombDeath, value, -1, 1);
@@ -768,7 +769,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombTeammate[admin].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombTeammate[admin].g_iBombRockBreak, value, -1, 1);
 			g_esBombTeammate[admin].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombTeammate[admin].g_flBombRockChance, value, -1.0, 100.0);
 			g_esBombTeammate[admin].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombTeammate[admin].g_iBombRockCooldown, value, -1, 99999);
-			g_esBombTeammate[admin].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombSight", "Bomb Sight", "Bomb_Sight", "sight", g_esBombTeammate[admin].g_iBombSight, value, -1, 2);
 		}
 		else
 		{
@@ -784,6 +784,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombPlayer[admin].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombPlayer[admin].g_iBombAbility, value, -1, 1);
 			g_esBombPlayer[admin].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombPlayer[admin].g_iBombEffect, value, -1, 7);
 			g_esBombPlayer[admin].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombPlayer[admin].g_iBombMessage, value, -1, 7);
+			g_esBombPlayer[admin].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBombPlayer[admin].g_iBombSight, value, -1, 2);
 			g_esBombPlayer[admin].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombPlayer[admin].g_flBombChance, value, -1.0, 100.0);
 			g_esBombPlayer[admin].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombPlayer[admin].g_iBombCooldown, value, -1, 99999);
 			g_esBombPlayer[admin].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombPlayer[admin].g_iBombDeath, value, -1, 1);
@@ -796,7 +797,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombPlayer[admin].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombPlayer[admin].g_iBombRockBreak, value, -1, 1);
 			g_esBombPlayer[admin].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombPlayer[admin].g_flBombRockChance, value, -1.0, 100.0);
 			g_esBombPlayer[admin].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombPlayer[admin].g_iBombRockCooldown, value, -1, 99999);
-			g_esBombPlayer[admin].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombSight", "Bomb Sight", "Bomb_Sight", "sight", g_esBombPlayer[admin].g_iBombSight, value, -1, 2);
 			g_esBombPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esBombPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -818,6 +818,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombSpecial[type].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombSpecial[type].g_iBombAbility, value, -1, 1);
 			g_esBombSpecial[type].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombSpecial[type].g_iBombEffect, value, -1, 7);
 			g_esBombSpecial[type].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombSpecial[type].g_iBombMessage, value, -1, 7);
+			g_esBombSpecial[type].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBombSpecial[type].g_iBombSight, value, -1, 2);
 			g_esBombSpecial[type].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombSpecial[type].g_flBombChance, value, -1.0, 100.0);
 			g_esBombSpecial[type].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombSpecial[type].g_iBombCooldown, value, -1, 99999);
 			g_esBombSpecial[type].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombSpecial[type].g_iBombDeath, value, -1, 1);
@@ -830,7 +831,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombSpecial[type].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombSpecial[type].g_iBombRockBreak, value, -1, 1);
 			g_esBombSpecial[type].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombSpecial[type].g_flBombRockChance, value, -1.0, 100.0);
 			g_esBombSpecial[type].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombSpecial[type].g_iBombRockCooldown, value, -1, 99999);
-			g_esBombSpecial[type].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombSight", "Bomb Sight", "Bomb_Sight", "sight", g_esBombSpecial[type].g_iBombSight, value, -1, 2);
 		}
 		else
 		{
@@ -846,6 +846,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombAbility[type].g_iBombAbility = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esBombAbility[type].g_iBombAbility, value, -1, 1);
 			g_esBombAbility[type].g_iBombEffect = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esBombAbility[type].g_iBombEffect, value, -1, 7);
 			g_esBombAbility[type].g_iBombMessage = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esBombAbility[type].g_iBombMessage, value, -1, 7);
+			g_esBombAbility[type].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esBombAbility[type].g_iBombSight, value, -1, 2);
 			g_esBombAbility[type].g_flBombChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esBombAbility[type].g_flBombChance, value, -1.0, 100.0);
 			g_esBombAbility[type].g_iBombCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombCooldown", "Bomb Cooldown", "Bomb_Cooldown", "cooldown", g_esBombAbility[type].g_iBombCooldown, value, -1, 99999);
 			g_esBombAbility[type].g_iBombDeath = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esBombAbility[type].g_iBombDeath, value, -1, 1);
@@ -858,7 +859,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esBombAbility[type].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombAbility[type].g_iBombRockBreak, value, -1, 1);
 			g_esBombAbility[type].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombAbility[type].g_flBombRockChance, value, -1.0, 100.0);
 			g_esBombAbility[type].g_iBombRockCooldown = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombRockCooldown", "Bomb Rock Cooldown", "Bomb_Rock_Cooldown", "rockcooldown", g_esBombAbility[type].g_iBombRockCooldown, value, -1, 99999);
-			g_esBombAbility[type].g_iBombSight = iGetKeyValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "BombSight", "Bomb Sight", "Bomb_Sight", "sight", g_esBombAbility[type].g_iBombSight, value, -1, 2);
 			g_esBombAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esBombAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTION, MT_BOMB_SECTION2, MT_BOMB_SECTION3, MT_BOMB_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -969,6 +969,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveBomb(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vBombReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -997,10 +1001,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vBombHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esBombCache[iBoomer].g_flBombChance, g_esBombCache[iBoomer].g_iBombHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vBombReset();
 	}
 }
 

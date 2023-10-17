@@ -825,6 +825,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidTeammate[admin].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidTeammate[admin].g_iAcidAbility, value, -1, 1);
 			g_esAcidTeammate[admin].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidTeammate[admin].g_iAcidEffect, value, -1, 7);
 			g_esAcidTeammate[admin].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidTeammate[admin].g_iAcidMessage, value, -1, 7);
+			g_esAcidTeammate[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidTeammate[admin].g_iAcidSight, value, -1, 2);
 			g_esAcidTeammate[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidTeammate[admin].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidTeammate[admin].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidTeammate[admin].g_iAcidCooldown, value, -1, 99999);
 			g_esAcidTeammate[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidTeammate[admin].g_iAcidDeath, value, -1, 1);
@@ -838,7 +839,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidTeammate[admin].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidTeammate[admin].g_iAcidRockBreak, value, -1, 1);
 			g_esAcidTeammate[admin].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidTeammate[admin].g_flAcidRockChance, value, -1.0, 100.0);
 			g_esAcidTeammate[admin].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidTeammate[admin].g_iAcidRockCooldown, value, -1, 99999);
-			g_esAcidTeammate[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidSight", "Acid Sight", "Acid_Sight", "sight", g_esAcidTeammate[admin].g_iAcidSight, value, -1, 2);
 		}
 		else
 		{
@@ -854,6 +854,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidPlayer[admin].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidPlayer[admin].g_iAcidAbility, value, -1, 1);
 			g_esAcidPlayer[admin].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidPlayer[admin].g_iAcidEffect, value, -1, 7);
 			g_esAcidPlayer[admin].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidPlayer[admin].g_iAcidMessage, value, -1, 7);
+			g_esAcidPlayer[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidPlayer[admin].g_iAcidSight, value, -1, 2);
 			g_esAcidPlayer[admin].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidPlayer[admin].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidPlayer[admin].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidPlayer[admin].g_iAcidCooldown, value, -1, 99999);
 			g_esAcidPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidPlayer[admin].g_iAcidDeath, value, -1, 1);
@@ -867,7 +868,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidPlayer[admin].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidPlayer[admin].g_iAcidRockBreak, value, -1, 1);
 			g_esAcidPlayer[admin].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidPlayer[admin].g_flAcidRockChance, value, -1.0, 100.0);
 			g_esAcidPlayer[admin].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidPlayer[admin].g_iAcidRockCooldown, value, -1, 99999);
-			g_esAcidPlayer[admin].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidSight", "Acid Sight", "Acid_Sight", "sight", g_esAcidPlayer[admin].g_iAcidSight, value, -1, 2);
 			g_esAcidPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esAcidPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -889,6 +889,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidSpecial[type].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidSpecial[type].g_iAcidAbility, value, -1, 1);
 			g_esAcidSpecial[type].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidSpecial[type].g_iAcidEffect, value, -1, 7);
 			g_esAcidSpecial[type].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidSpecial[type].g_iAcidMessage, value, -1, 7);
+			g_esAcidSpecial[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidSpecial[type].g_iAcidSight, value, -1, 2);
 			g_esAcidSpecial[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidSpecial[type].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidSpecial[type].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidSpecial[type].g_iAcidCooldown, value, -1, 99999);
 			g_esAcidSpecial[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidSpecial[type].g_iAcidDeath, value, -1, 1);
@@ -902,7 +903,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidSpecial[type].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidSpecial[type].g_iAcidRockBreak, value, -1, 1);
 			g_esAcidSpecial[type].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidSpecial[type].g_flAcidRockChance, value, -1.0, 100.0);
 			g_esAcidSpecial[type].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidSpecial[type].g_iAcidRockCooldown, value, -1, 99999);
-			g_esAcidSpecial[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidSight", "Acid Sight", "Acid_Sight", "sight", g_esAcidSpecial[type].g_iAcidSight, value, -1, 2);
 		}
 		else
 		{
@@ -918,6 +918,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidAbility[type].g_iAcidAbility = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAcidAbility[type].g_iAcidAbility, value, -1, 1);
 			g_esAcidAbility[type].g_iAcidEffect = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAcidAbility[type].g_iAcidEffect, value, -1, 7);
 			g_esAcidAbility[type].g_iAcidMessage = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAcidAbility[type].g_iAcidMessage, value, -1, 7);
+			g_esAcidAbility[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esAcidAbility[type].g_iAcidSight, value, -1, 2);
 			g_esAcidAbility[type].g_flAcidChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAcidAbility[type].g_flAcidChance, value, -1.0, 100.0);
 			g_esAcidAbility[type].g_iAcidCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidCooldown", "Acid Cooldown", "Acid_Cooldown", "cooldown", g_esAcidAbility[type].g_iAcidCooldown, value, -1, 99999);
 			g_esAcidAbility[type].g_iAcidDeath = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAcidAbility[type].g_iAcidDeath, value, -1, 1);
@@ -931,7 +932,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esAcidAbility[type].g_iAcidRockBreak = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAcidAbility[type].g_iAcidRockBreak, value, -1, 1);
 			g_esAcidAbility[type].g_flAcidRockChance = flGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAcidAbility[type].g_flAcidRockChance, value, -1.0, 100.0);
 			g_esAcidAbility[type].g_iAcidRockCooldown = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidRockCooldown", "Acid Rock Cooldown", "Acid_Rock_Cooldown", "rockcooldown", g_esAcidAbility[type].g_iAcidRockCooldown, value, -1, 99999);
-			g_esAcidAbility[type].g_iAcidSight = iGetKeyValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AcidSight", "Acid Sight", "Acid_Sight", "sight", g_esAcidAbility[type].g_iAcidSight, value, -1, 2);
 			g_esAcidAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esAcidAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ACID_SECTION, MT_ACID_SECTION2, MT_ACID_SECTION3, MT_ACID_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -1044,6 +1044,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveAcid(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vAcidReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -1072,10 +1076,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vAcidHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esAcidCache[iBoomer].g_flAcidChance, g_esAcidCache[iBoomer].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vAcidReset();
 	}
 }
 

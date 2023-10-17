@@ -722,6 +722,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertTeammate[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertTeammate[admin].g_iInvertAbility, value, -1, 1);
 			g_esInvertTeammate[admin].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertTeammate[admin].g_iInvertEffect, value, -1, 7);
 			g_esInvertTeammate[admin].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertTeammate[admin].g_iInvertMessage, value, -1, 3);
+			g_esInvertTeammate[admin].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esInvertTeammate[admin].g_iInvertSight, value, -1, 2);
 			g_esInvertTeammate[admin].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertTeammate[admin].g_flInvertChance, value, -1.0, 100.0);
 			g_esInvertTeammate[admin].g_iInvertCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertCooldown", "Invert Cooldown", "Invert_Cooldown", "cooldown", g_esInvertTeammate[admin].g_iInvertCooldown, value, -1, 99999);
 			g_esInvertTeammate[admin].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertTeammate[admin].g_flInvertDuration, value, -1.0, 99999.0);
@@ -730,7 +731,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertTeammate[admin].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertTeammate[admin].g_flInvertRange, value, -1.0, 99999.0);
 			g_esInvertTeammate[admin].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertTeammate[admin].g_flInvertRangeChance, value, -1.0, 100.0);
 			g_esInvertTeammate[admin].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertTeammate[admin].g_iInvertRangeCooldown, value, -1, 99999);
-			g_esInvertTeammate[admin].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertSight", "Invert Sight", "Invert_Sight", "sight", g_esInvertTeammate[admin].g_iInvertSight, value, -1, 2);
 		}
 		else
 		{
@@ -745,6 +745,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertPlayer[admin].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertPlayer[admin].g_iInvertAbility, value, -1, 1);
 			g_esInvertPlayer[admin].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertPlayer[admin].g_iInvertEffect, value, -1, 7);
 			g_esInvertPlayer[admin].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertPlayer[admin].g_iInvertMessage, value, -1, 3);
+			g_esInvertPlayer[admin].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esInvertPlayer[admin].g_iInvertSight, value, -1, 2);
 			g_esInvertPlayer[admin].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertPlayer[admin].g_flInvertChance, value, -1.0, 100.0);
 			g_esInvertPlayer[admin].g_iInvertCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertCooldown", "Invert Cooldown", "Invert_Cooldown", "cooldown", g_esInvertPlayer[admin].g_iInvertCooldown, value, -1, 99999);
 			g_esInvertPlayer[admin].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertPlayer[admin].g_flInvertDuration, value, -1.0, 99999.0);
@@ -753,7 +754,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertPlayer[admin].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertPlayer[admin].g_flInvertRange, value, -1.0, 99999.0);
 			g_esInvertPlayer[admin].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertPlayer[admin].g_flInvertRangeChance, value, -1.0, 100.0);
 			g_esInvertPlayer[admin].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertPlayer[admin].g_iInvertRangeCooldown, value, -1, 99999);
-			g_esInvertPlayer[admin].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertSight", "Invert Sight", "Invert_Sight", "sight", g_esInvertPlayer[admin].g_iInvertSight, value, -1, 2);
 			g_esInvertPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esInvertPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -774,6 +774,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertSpecial[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertSpecial[type].g_iInvertAbility, value, -1, 1);
 			g_esInvertSpecial[type].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertSpecial[type].g_iInvertEffect, value, -1, 7);
 			g_esInvertSpecial[type].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertSpecial[type].g_iInvertMessage, value, -1, 3);
+			g_esInvertSpecial[type].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esInvertSpecial[type].g_iInvertSight, value, -1, 2);
 			g_esInvertSpecial[type].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertSpecial[type].g_flInvertChance, value, -1.0, 100.0);
 			g_esInvertSpecial[type].g_iInvertCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertCooldown", "Invert Cooldown", "Invert_Cooldown", "cooldown", g_esInvertSpecial[type].g_iInvertCooldown, value, -1, 99999);
 			g_esInvertSpecial[type].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertSpecial[type].g_flInvertDuration, value, -1.0, 99999.0);
@@ -782,7 +783,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertSpecial[type].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertSpecial[type].g_flInvertRange, value, -1.0, 99999.0);
 			g_esInvertSpecial[type].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertSpecial[type].g_flInvertRangeChance, value, -1.0, 100.0);
 			g_esInvertSpecial[type].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertSpecial[type].g_iInvertRangeCooldown, value, -1, 99999);
-			g_esInvertSpecial[type].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertSight", "Invert Sight", "Invert_Sight", "sight", g_esInvertSpecial[type].g_iInvertSight, value, -1, 2);
 		}
 		else
 		{
@@ -797,6 +797,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertAbility[type].g_iInvertAbility = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esInvertAbility[type].g_iInvertAbility, value, -1, 1);
 			g_esInvertAbility[type].g_iInvertEffect = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esInvertAbility[type].g_iInvertEffect, value, -1, 7);
 			g_esInvertAbility[type].g_iInvertMessage = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esInvertAbility[type].g_iInvertMessage, value, -1, 3);
+			g_esInvertAbility[type].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esInvertAbility[type].g_iInvertSight, value, -1, 2);
 			g_esInvertAbility[type].g_flInvertChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_esInvertAbility[type].g_flInvertChance, value, -1.0, 100.0);
 			g_esInvertAbility[type].g_iInvertCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertCooldown", "Invert Cooldown", "Invert_Cooldown", "cooldown", g_esInvertAbility[type].g_iInvertCooldown, value, -1, 99999);
 			g_esInvertAbility[type].g_flInvertDuration = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_esInvertAbility[type].g_flInvertDuration, value, -1.0, 99999.0);
@@ -805,7 +806,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esInvertAbility[type].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertAbility[type].g_flInvertRange, value, -1.0, 99999.0);
 			g_esInvertAbility[type].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertAbility[type].g_flInvertRangeChance, value, -1.0, 100.0);
 			g_esInvertAbility[type].g_iInvertRangeCooldown = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertRangeCooldown", "Invert Range Cooldown", "Invert_Range_Cooldown", "rangecooldown", g_esInvertAbility[type].g_iInvertRangeCooldown, value, -1, 99999);
-			g_esInvertAbility[type].g_iInvertSight = iGetKeyValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "InvertSight", "Invert Sight", "Invert_Sight", "sight", g_esInvertAbility[type].g_iInvertSight, value, -1, 2);
 			g_esInvertAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esInvertAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTION, MT_INVERT_SECTION2, MT_INVERT_SECTION3, MT_INVERT_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -906,6 +906,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveInvert(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vInvertReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -933,10 +937,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vInvertHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esInvertCache[iBoomer].g_flInvertChance, g_esInvertCache[iBoomer].g_iInvertHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vInvertReset();
 	}
 }
 
@@ -1146,7 +1146,7 @@ void vRemoveInvert(int tank)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esInvertPlayer[iSurvivor].g_bAffected && g_esInvertPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esInvertPlayer[iSurvivor].g_bAffected = false;
-			g_esInvertPlayer[iSurvivor].g_iOwner = 0;
+			g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1229,7 +1229,7 @@ void tTimerStopInvert(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_esInvertPlayer[iSurvivor].g_bAffected)
 	{
 		g_esInvertPlayer[iSurvivor].g_bAffected = false;
-		g_esInvertPlayer[iSurvivor].g_iOwner = 0;
+		g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1238,13 +1238,13 @@ void tTimerStopInvert(Handle timer, DataPack pack)
 	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
 	{
 		g_esInvertPlayer[iSurvivor].g_bAffected = false;
-		g_esInvertPlayer[iSurvivor].g_iOwner = 0;
+		g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
 
 	g_esInvertPlayer[iSurvivor].g_bAffected = false;
-	g_esInvertPlayer[iSurvivor].g_iOwner = 0;
+	g_esInvertPlayer[iSurvivor].g_iOwner = -1;
 
 	int iMessage = pack.ReadCell();
 	if (g_esInvertCache[iTank].g_iInvertMessage & iMessage)

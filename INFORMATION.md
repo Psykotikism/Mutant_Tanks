@@ -671,12 +671,14 @@
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
+			// - Turn damage into health from self-made fires.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
+			// - Laser sight
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
@@ -698,9 +700,9 @@
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
-			// - Shoving Tanks does damage.
+			// - Shoving damages Tanks.
 			// - Faster shove interval
-			// - Faster shoot rate (guns)
+			// - Faster fire rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
 			// - Faster throw time (throwables)
@@ -711,6 +713,7 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery time
+			// - Rapid-fire pistols
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -774,12 +777,14 @@
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
+			// - Turn damage into health from self-made fires.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
+			// - Laser sight
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
@@ -801,9 +806,9 @@
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
-			// - Shoving Tanks does damage.
+			// - Shoving damages Tanks.
 			// - Faster shove interval
-			// - Faster shoot rate (guns)
+			// - Faster fire rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
 			// - Faster throw time (throwables)
@@ -814,6 +819,7 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery time
+			// - Rapid-fire pistols
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -1105,6 +1111,24 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Attack Boost Reward"			"1.25,1.25,1.25,1.25"
+
+			// Allow healing from self-made fires as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing from self-made fires to killers.
+			// 2nd number = Allow healing from self-made fires to assistants.
+			// 3rd number = Allow healing from self-made fires to teammates.
+			// 4th number = Allow healing from self-made fires to assistant killers.
+			"Blaze Health Reward"			"1,1,1,1"
 
 			// Allow bunnyhopping as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1503,6 +1527,24 @@
 			// 3rd number = Resistance for teammates.
 			// 4th number = Resistance for assistant killers.
 			"Punch Resistance Reward"		"0.25,0.25,0.25,0.25"
+
+			// The rapid pistol fire rate to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 4
+			// Character limit for each fire rate: 6
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Rapid pistol fire rate for killers.
+			// 2nd number = Rapid pistol fire rate for assistants.
+			// 3rd number = Rapid pistol fire rate for teammates.
+			// 4th number = Rapid pistol fire rate for assistant killers.
+			"Rapid Pistol Reward"			"0.130,0.130,0.130,0.130"
 
 			// Give recoil dampener as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1996,6 +2038,7 @@
 				"Ammo Boost Reward"			"1,1,1,1"
 				"Ammo Regen Reward"			"1,1,1,1"
 				"Attack Boost Reward"			"1.25,1.25,1.25,1.25"
+				"Blaze Health Reward"			"1,1,1,1"
 				"Bunny Hop Reward"			"1,1,1,1"
 				"Burst Doors Reward"			"1,1,1,1"
 				"Clean Kills Reward"			"1,1,1,1"
@@ -2018,6 +2061,7 @@
 				"Midair Dashes Reward"			"2,2,2,2"
 				"Pipebomb Duration Reward"		"10.0,10.0,10.0,10.0"
 				"Punch Resistance Reward"		"0.25,0.25,0.25,0.25"
+				"Rapid Pistol Reward"			"0.130,0.130,0.130,0.130"
 				"Recoil Dampener Reward"		"1,1,1,1"
 				"Refill Percent Reward"			"100.0,100.0,100.0,100.0"
 				"Respawn Loadout Reward"		"1,1,1,1"
@@ -3054,6 +3098,7 @@
 
 			// The Mutant Tank has this many chances out of 100.0% to spawn.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
+			// Note: If each enabled Mutant Tank has less than 100% chance of spawning, then every enabled Mutant Tank that has a 1% or higher chance of spawning will have an equal chance to spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.0 (No chance)
@@ -3208,6 +3253,7 @@
 
 				// The Mutant Special Infected has this many chances out of 100.0% to spawn.
 				// Note: Clones, respawned Mutant Special Infected, randomized Special Infected, and Mutant Special Infected spawned through the Mutant Special Infected menu are not affected.
+				// Note: If each enabled Mutant Special Infected has less than 100% chance of spawning, then every enabled Mutant Special Infected that has a 1% or higher chance of spawning will have an equal chance to spawn.
 				// Note: Do not change this setting if you are unsure of how it works.
 				// --
 				// Minimum: 0.0 (No chance)
@@ -3454,12 +3500,14 @@
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
+			// - Turn damage into health from self-made fires.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
+			// - Laser sight
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
@@ -3481,9 +3529,9 @@
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
-			// - Shoving Tanks does damage.
+			// - Shoving damages Tanks.
 			// - Faster shove interval
-			// - Faster shoot rate (guns)
+			// - Faster fire rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
 			// - Faster throw time (throwables)
@@ -3494,6 +3542,7 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery time
+			// - Rapid-fire pistols
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -3557,12 +3606,14 @@
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
 			// - Leech health off of any infected per melee hit.
+			// - Turn damage into health from self-made fires.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// - Bunny hop consistently
 			// 4: Damage boost reward (temporary)
+			// - Laser sight
 			// - Inextinguishable fire
 			// - Extended pipebomb duration
 			// - Prevent dealing and receiving friendly-fire.
@@ -3584,9 +3635,9 @@
 			// - Prevent switching to throwables and health supplies given by teammates.
 			// - Perform actions on ladders.
 			// - Bypass shove penalty.
-			// - Shoving Tanks does damage.
+			// - Shoving damages Tanks.
 			// - Faster shove interval
-			// - Faster shoot rate (guns)
+			// - Faster fire rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
 			// - Faster throw time (throwables)
@@ -3597,6 +3648,7 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery time
+			// - Rapid-fire pistols
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -3888,6 +3940,24 @@
 			// 3rd number = Boost for teammates.
 			// 4th number = Boost for assistant killers.
 			"Attack Boost Reward"			"0.0,0.0,0.0,0.0"
+
+			// Allow healing from self-made fires as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 4
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Allow healing from self-made fires to killers.
+			// 2nd number = Allow healing from self-made fires to assistants.
+			// 3rd number = Allow healing from self-made fires to teammates.
+			// 4th number = Allow healing from self-made fires to assistant killers.
+			"Blaze Health Reward"			"0,0,0,0"
 
 			// Allow bunnyhopping as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -4286,6 +4356,24 @@
 			// 3rd number = Resistance for teammates.
 			// 4th number = Resistance for assistant killers.
 			"Punch Resistance Reward"		"0.0,0.0,0.0,0.0"
+
+			// The rapid pistol fire rate to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 4
+			// Character limit for each fire rate: 6
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Rapid pistol fire rate for killers.
+			// 2nd number = Rapid pistol fire rate for assistants.
+			// 3rd number = Rapid pistol fire rate for teammates.
+			// 4th number = Rapid pistol fire rate for assistant killers.
+			"Rapid Pistol Reward"			"0.0,0.0,0.0,0.0"
 
 			// Give recoil dampener as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -4779,6 +4867,7 @@
 				"Ammo Boost Reward"			"0,0,0,0"
 				"Ammo Regen Reward"			"0,0,0,0"
 				"Attack Boost Reward"			"0.0,0.0,0.0,0.0"
+				"Blaze Health Reward"			"0,0,0,0"
 				"Bunny Hop Reward"			"0,0,0,0"
 				"Burst Doors Reward"			"0,0,0,0"
 				"Clean Kills Reward"			"0,0,0,0"
@@ -4801,6 +4890,7 @@
 				"Midair Dashes Reward"			"0,0,0,0"
 				"Pipebomb Duration Reward"		"0.0,0.0,0.0,0.0"
 				"Punch Resistance Reward"		"0.0,0.0,0.0,0.0"
+				"Rapid Pistol Reward"			"0.0,0.0,0.0,0.0"
 				"Recoil Dampener Reward"		"0,0,0,0"
 				"Refill Percent Reward"			"0.0,0.0,0.0,0.0"
 				"Respawn Loadout Reward"		"0,0,0,0"
@@ -17591,6 +17681,13 @@
 			// "survivor"/"hurt" - 2
 			"Kamikaze Hit Mode"			"0"
 
+			// The amount of damage required to power up the Mutant Tank's kamikaze ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			"Kamikaze Meter"			"0.0"
+
 			// The mode of the Mutant Tank's kamikaze ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -17652,6 +17749,7 @@
 				"Kamikaze Chance"			"33.3"
 				"Kamikaze Hit"				"0"
 				"Kamikaze Hit Mode"			"0"
+				"Kamikaze Meter"			"0.0"
 				"Kamikaze Mode"				"1"
 				"Kamikaze Range"			"150.0"
 				"Kamikaze Range Chance"			"15.0"
@@ -18125,6 +18223,17 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
+			// Check line-of-sight when the Mutant Tank uses its abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 2
+			// --
+			// 0: OFF
+			// 1: Check if there is a solid object between the Mutant Tank and survivors.
+			// 2: Check if the Mutant Tank is facing the survivors.
+			"Ability Sight"				"0"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -18224,6 +18333,7 @@
 				"Requires Humans"			"0"
 				"Ability Enabled"			"0"
 				"Ability Message"			"0"
+				"Ability Sight"				"0"
 				"Laser Chance"				"33.3"
 				"Laser Cooldown"			"0"
 				"Laser Damage"				"5.0"
@@ -23792,6 +23902,20 @@
 			// "forever" - 99999 seconds
 			"Rocket Cooldown"			"0"
 
+			// The countdown before activating the Mutant Tank's rocket ability.
+			// Note: During the countdown phase, survivors can hide indoors to avoid dying.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Rocket Countdown"			"0.0"
+
 			// The Mutant Tank sends survivors into space after this many seconds passes upon triggering the ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -23903,6 +24027,7 @@
 				"Rocket Body"				"1"
 				"Rocket Chance"				"33.3"
 				"Rocket Cooldown"			"0"
+				"Rocket Countdown"			"0.0"
 				"Rocket Delay"				"1.0"
 				"Rocket Hit"				"0"
 				"Rocket Hit Mode"			"0"
@@ -25613,6 +25738,13 @@
 			// "survivor"/"hurt" - 2
 			"Smash Hit Mode"			"0"
 
+			// The amount of damage required to power up the Mutant Tank's smash ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			"Smash Meter"				"0.0"
+
 			// The mode of the Mutant Tank's smash ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -25692,6 +25824,7 @@
 				"Smash Cooldown"			"0"
 				"Smash Hit"				"0"
 				"Smash Hit Mode"			"0"
+				"Smash Meter"				"0.0"
 				"Smash Mode"				"1"
 				"Smash Range"				"150.0"
 				"Smash Range Chance"			"15.0"
@@ -25927,6 +26060,20 @@
 			// "forever" - 99999 seconds
 			"Smite Cooldown"			"0"
 
+			// The countdown before activating the Mutant Tank's smite ability.
+			// Note: During the countdown phase, survivors can heal themselves to avoid dying.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 99999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 99999 seconds
+			"Smite Countdown"			"0.0"
+
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -26025,6 +26172,7 @@
 				"Smite Body"				"1"
 				"Smite Chance"				"33.3"
 				"Smite Cooldown"			"0"
+				"Smite Countdown"			"0.0"
 				"Smite Hit"				"0"
 				"Smite Hit Mode"			"0"
 				"Smite Mode"				"1"

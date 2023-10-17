@@ -758,6 +758,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietTeammate[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietTeammate[admin].g_iQuietAbility, value, -1, 1);
 			g_esQuietTeammate[admin].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietTeammate[admin].g_iQuietEffect, value, -1, 7);
 			g_esQuietTeammate[admin].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietTeammate[admin].g_iQuietMessage, value, -1, 3);
+			g_esQuietTeammate[admin].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esQuietTeammate[admin].g_iQuietSight, value, -1, 2);
 			g_esQuietTeammate[admin].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietTeammate[admin].g_flQuietChance, value, -1.0, 100.0);
 			g_esQuietTeammate[admin].g_iQuietCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietCooldown", "Quiet Cooldown", "Quiet_Cooldown", "cooldown", g_esQuietTeammate[admin].g_iQuietCooldown, value, -1, 99999);
 			g_esQuietTeammate[admin].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietTeammate[admin].g_flQuietDuration, value, -1.0, 99999.0);
@@ -767,7 +768,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietTeammate[admin].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietTeammate[admin].g_flQuietRange, value, -1.0, 99999.0);
 			g_esQuietTeammate[admin].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietTeammate[admin].g_flQuietRangeChance, value, -1.0, 100.0);
 			g_esQuietTeammate[admin].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietTeammate[admin].g_iQuietRangeCooldown, value, -1, 99999);
-			g_esQuietTeammate[admin].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietSight", "Quiet Sight", "Quiet_Sight", "sight", g_esQuietTeammate[admin].g_iQuietSight, value, -1, 2);
 		}
 		else
 		{
@@ -782,6 +782,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietPlayer[admin].g_iQuietAbility, value, -1, 1);
 			g_esQuietPlayer[admin].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietPlayer[admin].g_iQuietEffect, value, -1, 7);
 			g_esQuietPlayer[admin].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietPlayer[admin].g_iQuietMessage, value, -1, 3);
+			g_esQuietPlayer[admin].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esQuietPlayer[admin].g_iQuietSight, value, -1, 2);
 			g_esQuietPlayer[admin].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietPlayer[admin].g_flQuietChance, value, -1.0, 100.0);
 			g_esQuietPlayer[admin].g_iQuietCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietCooldown", "Quiet Cooldown", "Quiet_Cooldown", "cooldown", g_esQuietPlayer[admin].g_iQuietCooldown, value, -1, 99999);
 			g_esQuietPlayer[admin].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietPlayer[admin].g_flQuietDuration, value, -1.0, 99999.0);
@@ -791,7 +792,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietPlayer[admin].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietPlayer[admin].g_flQuietRange, value, -1.0, 99999.0);
 			g_esQuietPlayer[admin].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietPlayer[admin].g_flQuietRangeChance, value, -1.0, 100.0);
 			g_esQuietPlayer[admin].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietPlayer[admin].g_iQuietRangeCooldown, value, -1, 99999);
-			g_esQuietPlayer[admin].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietSight", "Quiet Sight", "Quiet_Sight", "sight", g_esQuietPlayer[admin].g_iQuietSight, value, -1, 2);
 			g_esQuietPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esQuietPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -812,6 +812,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietSpecial[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietSpecial[type].g_iQuietAbility, value, -1, 1);
 			g_esQuietSpecial[type].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietSpecial[type].g_iQuietEffect, value, -1, 7);
 			g_esQuietSpecial[type].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietSpecial[type].g_iQuietMessage, value, -1, 3);
+			g_esQuietSpecial[type].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esQuietSpecial[type].g_iQuietSight, value, -1, 2);
 			g_esQuietSpecial[type].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietSpecial[type].g_flQuietChance, value, -1.0, 100.0);
 			g_esQuietSpecial[type].g_iQuietCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietCooldown", "Quiet Cooldown", "Quiet_Cooldown", "cooldown", g_esQuietSpecial[type].g_iQuietCooldown, value, -1, 99999);
 			g_esQuietSpecial[type].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietSpecial[type].g_flQuietDuration, value, -1.0, 99999.0);
@@ -821,7 +822,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietSpecial[type].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietSpecial[type].g_flQuietRange, value, -1.0, 99999.0);
 			g_esQuietSpecial[type].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietSpecial[type].g_flQuietRangeChance, value, -1.0, 100.0);
 			g_esQuietSpecial[type].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietSpecial[type].g_iQuietRangeCooldown, value, -1, 99999);
-			g_esQuietSpecial[type].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietSight", "Quiet Sight", "Quiet_Sight", "sight", g_esQuietSpecial[type].g_iQuietSight, value, -1, 2);
 		}
 		else
 		{
@@ -836,6 +836,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietAbility[type].g_iQuietAbility = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esQuietAbility[type].g_iQuietAbility, value, -1, 1);
 			g_esQuietAbility[type].g_iQuietEffect = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esQuietAbility[type].g_iQuietEffect, value, -1, 7);
 			g_esQuietAbility[type].g_iQuietMessage = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esQuietAbility[type].g_iQuietMessage, value, -1, 3);
+			g_esQuietAbility[type].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esQuietAbility[type].g_iQuietSight, value, -1, 2);
 			g_esQuietAbility[type].g_flQuietChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esQuietAbility[type].g_flQuietChance, value, -1.0, 100.0);
 			g_esQuietAbility[type].g_iQuietCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietCooldown", "Quiet Cooldown", "Quiet_Cooldown", "cooldown", g_esQuietAbility[type].g_iQuietCooldown, value, -1, 99999);
 			g_esQuietAbility[type].g_flQuietDuration = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esQuietAbility[type].g_flQuietDuration, value, -1.0, 99999.0);
@@ -845,7 +846,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esQuietAbility[type].g_flQuietRange = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esQuietAbility[type].g_flQuietRange, value, -1.0, 99999.0);
 			g_esQuietAbility[type].g_flQuietRangeChance = flGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esQuietAbility[type].g_flQuietRangeChance, value, -1.0, 100.0);
 			g_esQuietAbility[type].g_iQuietRangeCooldown = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietRangeCooldown", "Quiet Range Cooldown", "Quiet_Range_Cooldown", "rangecooldown", g_esQuietAbility[type].g_iQuietRangeCooldown, value, -1, 99999);
-			g_esQuietAbility[type].g_iQuietSight = iGetKeyValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "QuietSight", "Quiet Sight", "Quiet_Sight", "sight", g_esQuietAbility[type].g_iQuietSight, value, -1, 2);
 			g_esQuietAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esQuietAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_QUIET_SECTION, MT_QUIET_SECTION2, MT_QUIET_SECTION3, MT_QUIET_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -948,6 +948,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveQuiet(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vQuietReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -975,10 +979,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vQuietHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esQuietCache[iBoomer].g_flQuietChance, g_esQuietCache[iBoomer].g_iQuietHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vQuietReset();
 	}
 }
 
@@ -1190,7 +1190,7 @@ void vRemoveQuiet(int tank)
 		{
 			g_esQuietPlayer[iSurvivor].g_bAffected = false;
 			g_esQuietPlayer[iSurvivor].g_iFilter = 0;
-			g_esQuietPlayer[iSurvivor].g_iOwner = 0;
+			g_esQuietPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1275,7 +1275,7 @@ void tTimerStopQuiet(Handle timer, DataPack pack)
 	{
 		g_esQuietPlayer[iSurvivor].g_bAffected = false;
 		g_esQuietPlayer[iSurvivor].g_iFilter = 0;
-		g_esQuietPlayer[iSurvivor].g_iOwner = 0;
+		g_esQuietPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1285,14 +1285,14 @@ void tTimerStopQuiet(Handle timer, DataPack pack)
 	{
 		g_esQuietPlayer[iSurvivor].g_bAffected = false;
 		g_esQuietPlayer[iSurvivor].g_iFilter = 0;
-		g_esQuietPlayer[iSurvivor].g_iOwner = 0;
+		g_esQuietPlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
 
 	g_esQuietPlayer[iSurvivor].g_bAffected = false;
 	g_esQuietPlayer[iSurvivor].g_iFilter = 0;
-	g_esQuietPlayer[iSurvivor].g_iOwner = 0;
+	g_esQuietPlayer[iSurvivor].g_iOwner = -1;
 
 	int iMessage = pack.ReadCell();
 	if (g_esQuietCache[iTank].g_iQuietMessage & iMessage)

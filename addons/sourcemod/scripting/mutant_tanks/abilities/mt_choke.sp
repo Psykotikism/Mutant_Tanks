@@ -742,6 +742,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeTeammate[admin].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokeTeammate[admin].g_iChokeAbility, value, -1, 1);
 			g_esChokeTeammate[admin].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokeTeammate[admin].g_iChokeEffect, value, -1, 7);
 			g_esChokeTeammate[admin].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokeTeammate[admin].g_iChokeMessage, value, -1, 3);
+			g_esChokeTeammate[admin].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esChokeTeammate[admin].g_iChokeSight, value, -1, 2);
 			g_esChokeTeammate[admin].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokeTeammate[admin].g_flChokeChance, value, -1.0, 100.0);
 			g_esChokeTeammate[admin].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokeTeammate[admin].g_iChokeCooldown, value, -1, 99999);
 			g_esChokeTeammate[admin].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokeTeammate[admin].g_flChokeDamage, value, -1.0, 99999.0);
@@ -752,7 +753,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeTeammate[admin].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokeTeammate[admin].g_flChokeRange, value, -1.0, 99999.0);
 			g_esChokeTeammate[admin].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokeTeammate[admin].g_flChokeRangeChance, value, -1.0, 100.0);
 			g_esChokeTeammate[admin].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokeTeammate[admin].g_iChokeRangeCooldown, value, -1, 99999);
-			g_esChokeTeammate[admin].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeSight", "Choke Sight", "Choke_Sight", "sight", g_esChokeTeammate[admin].g_iChokeSight, value, -1, 2);
 		}
 		else
 		{
@@ -767,6 +767,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokePlayer[admin].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokePlayer[admin].g_iChokeAbility, value, -1, 1);
 			g_esChokePlayer[admin].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokePlayer[admin].g_iChokeEffect, value, -1, 7);
 			g_esChokePlayer[admin].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokePlayer[admin].g_iChokeMessage, value, -1, 3);
+			g_esChokePlayer[admin].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esChokePlayer[admin].g_iChokeSight, value, -1, 2);
 			g_esChokePlayer[admin].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokePlayer[admin].g_flChokeChance, value, -1.0, 100.0);
 			g_esChokePlayer[admin].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokePlayer[admin].g_iChokeCooldown, value, -1, 99999);
 			g_esChokePlayer[admin].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokePlayer[admin].g_flChokeDamage, value, -1.0, 99999.0);
@@ -777,7 +778,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokePlayer[admin].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokePlayer[admin].g_flChokeRange, value, -1.0, 99999.0);
 			g_esChokePlayer[admin].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokePlayer[admin].g_flChokeRangeChance, value, -1.0, 100.0);
 			g_esChokePlayer[admin].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokePlayer[admin].g_iChokeRangeCooldown, value, -1, 99999);
-			g_esChokePlayer[admin].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeSight", "Choke Sight", "Choke_Sight", "sight", g_esChokePlayer[admin].g_iChokeSight, value, -1, 2);
 			g_esChokePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esChokePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -798,6 +798,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeSpecial[type].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokeSpecial[type].g_iChokeAbility, value, -1, 1);
 			g_esChokeSpecial[type].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokeSpecial[type].g_iChokeEffect, value, -1, 7);
 			g_esChokeSpecial[type].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokeSpecial[type].g_iChokeMessage, value, -1, 3);
+			g_esChokeSpecial[type].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esChokeSpecial[type].g_iChokeSight, value, -1, 2);
 			g_esChokeSpecial[type].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokeSpecial[type].g_flChokeChance, value, -1.0, 100.0);
 			g_esChokeSpecial[type].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokeSpecial[type].g_iChokeCooldown, value, -1, 99999);
 			g_esChokeSpecial[type].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokeSpecial[type].g_flChokeDamage, value, -1.0, 99999.0);
@@ -808,7 +809,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeSpecial[type].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokeSpecial[type].g_flChokeRange, value, -1.0, 99999.0);
 			g_esChokeSpecial[type].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokeSpecial[type].g_flChokeRangeChance, value, -1.0, 100.0);
 			g_esChokeSpecial[type].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokeSpecial[type].g_iChokeRangeCooldown, value, -1, 99999);
-			g_esChokeSpecial[type].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeSight", "Choke Sight", "Choke_Sight", "sight", g_esChokeSpecial[type].g_iChokeSight, value, -1, 2);
 		}
 		else
 		{
@@ -823,6 +823,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeAbility[type].g_iChokeAbility = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esChokeAbility[type].g_iChokeAbility, value, -1, 1);
 			g_esChokeAbility[type].g_iChokeEffect = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esChokeAbility[type].g_iChokeEffect, value, -1, 7);
 			g_esChokeAbility[type].g_iChokeMessage = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esChokeAbility[type].g_iChokeMessage, value, -1, 3);
+			g_esChokeAbility[type].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esChokeAbility[type].g_iChokeSight, value, -1, 2);
 			g_esChokeAbility[type].g_flChokeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esChokeAbility[type].g_flChokeChance, value, -1.0, 100.0);
 			g_esChokeAbility[type].g_iChokeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeCooldown", "Choke Cooldown", "Choke_Cooldown", "cooldown", g_esChokeAbility[type].g_iChokeCooldown, value, -1, 99999);
 			g_esChokeAbility[type].g_flChokeDamage = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esChokeAbility[type].g_flChokeDamage, value, -1.0, 99999.0);
@@ -833,7 +834,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esChokeAbility[type].g_flChokeRange = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esChokeAbility[type].g_flChokeRange, value, -1.0, 99999.0);
 			g_esChokeAbility[type].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esChokeAbility[type].g_flChokeRangeChance, value, -1.0, 100.0);
 			g_esChokeAbility[type].g_iChokeRangeCooldown = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeRangeCooldown", "Choke Range Cooldown", "Choke_Range_Cooldown", "rangecooldown", g_esChokeAbility[type].g_iChokeRangeCooldown, value, -1, 99999);
-			g_esChokeAbility[type].g_iChokeSight = iGetKeyValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ChokeSight", "Choke Sight", "Choke_Sight", "sight", g_esChokeAbility[type].g_iChokeSight, value, -1, 2);
 			g_esChokeAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esChokeAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_CHOKE_SECTION, MT_CHOKE_SECTION2, MT_CHOKE_SECTION3, MT_CHOKE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -954,6 +954,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveChoke(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vChokeReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -981,10 +985,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vChokeHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esChokeCache[iBoomer].g_flChokeChance, g_esChokeCache[iBoomer].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vChokeReset();
 	}
 }
 
@@ -1224,7 +1224,7 @@ void vRemoveChoke(int tank)
 		{
 			g_esChokePlayer[iSurvivor].g_bAffected = false;
 			g_esChokePlayer[iSurvivor].g_bBlockFall = false;
-			g_esChokePlayer[iSurvivor].g_iOwner = 0;
+			g_esChokePlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1248,7 +1248,7 @@ void vChokeReset2(int survivor, int tank, int messages)
 {
 	g_esChokePlayer[survivor].g_bAffected = false;
 	g_esChokePlayer[survivor].g_bBlockFall = true;
-	g_esChokePlayer[survivor].g_iOwner = 0;
+	g_esChokePlayer[survivor].g_iOwner = -1;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 	SetEntityGravity(survivor, 1.0);
@@ -1338,7 +1338,7 @@ void tTimerChokeLaunch(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || bIsSurvivorDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
-		g_esChokePlayer[iSurvivor].g_iOwner = 0;
+		g_esChokePlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1347,7 +1347,7 @@ void tTimerChokeLaunch(Handle timer, DataPack pack)
 	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType, iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esChokePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esChokePlayer[iTank].g_iTankType, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[iSurvivor].g_iImmunityFlags) || iChokeEnabled == 0)
 	{
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
-		g_esChokePlayer[iSurvivor].g_iOwner = 0;
+		g_esChokePlayer[iSurvivor].g_iOwner = -1;
 
 		return;
 	}
@@ -1378,7 +1378,7 @@ Action tTimerChokeDamage(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
-		g_esChokePlayer[iSurvivor].g_iOwner = 0;
+		g_esChokePlayer[iSurvivor].g_iOwner = -1;
 
 		return Plugin_Stop;
 	}

@@ -765,6 +765,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingTeammate[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingTeammate[admin].g_iFlingAbility, value, -1, 1);
 			g_esFlingTeammate[admin].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingTeammate[admin].g_iFlingEffect, value, -1, 7);
 			g_esFlingTeammate[admin].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingTeammate[admin].g_iFlingMessage, value, -1, 3);
+			g_esFlingTeammate[admin].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFlingTeammate[admin].g_iFlingSight, value, -1, 2);
 			g_esFlingTeammate[admin].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingTeammate[admin].g_flFlingChance, value, -1.0, 100.0);
 			g_esFlingTeammate[admin].g_iFlingCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingCooldown", "Fling Cooldown", "Fling_Cooldown", "cooldown", g_esFlingTeammate[admin].g_iFlingCooldown, value, -1, 99999);
 			g_esFlingTeammate[admin].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingTeammate[admin].g_iFlingDeath, value, -1, 1);
@@ -776,7 +777,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingTeammate[admin].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingTeammate[admin].g_flFlingRange, value, -1.0, 99999.0);
 			g_esFlingTeammate[admin].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingTeammate[admin].g_flFlingRangeChance, value, -1.0, 100.0);
 			g_esFlingTeammate[admin].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingTeammate[admin].g_iFlingRangeCooldown, value, -1, 99999);
-			g_esFlingTeammate[admin].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingSight", "Fling Sight", "Fling_Sight", "sight", g_esFlingTeammate[admin].g_iFlingSight, value, -1, 2);
 		}
 		else
 		{
@@ -791,6 +791,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingPlayer[admin].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingPlayer[admin].g_iFlingAbility, value, -1, 1);
 			g_esFlingPlayer[admin].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingPlayer[admin].g_iFlingEffect, value, -1, 7);
 			g_esFlingPlayer[admin].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingPlayer[admin].g_iFlingMessage, value, -1, 3);
+			g_esFlingPlayer[admin].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFlingPlayer[admin].g_iFlingSight, value, -1, 2);
 			g_esFlingPlayer[admin].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingPlayer[admin].g_flFlingChance, value, -1.0, 100.0);
 			g_esFlingPlayer[admin].g_iFlingCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingCooldown", "Fling Cooldown", "Fling_Cooldown", "cooldown", g_esFlingPlayer[admin].g_iFlingCooldown, value, -1, 99999);
 			g_esFlingPlayer[admin].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingPlayer[admin].g_iFlingDeath, value, -1, 1);
@@ -802,7 +803,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingPlayer[admin].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingPlayer[admin].g_flFlingRange, value, -1.0, 99999.0);
 			g_esFlingPlayer[admin].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingPlayer[admin].g_flFlingRangeChance, value, -1.0, 100.0);
 			g_esFlingPlayer[admin].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingPlayer[admin].g_iFlingRangeCooldown, value, -1, 99999);
-			g_esFlingPlayer[admin].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingSight", "Fling Sight", "Fling_Sight", "sight", g_esFlingPlayer[admin].g_iFlingSight, value, -1, 2);
 			g_esFlingPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esFlingPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -823,6 +823,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingSpecial[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingSpecial[type].g_iFlingAbility, value, -1, 1);
 			g_esFlingSpecial[type].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingSpecial[type].g_iFlingEffect, value, -1, 7);
 			g_esFlingSpecial[type].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingSpecial[type].g_iFlingMessage, value, -1, 3);
+			g_esFlingSpecial[type].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFlingSpecial[type].g_iFlingSight, value, -1, 2);
 			g_esFlingSpecial[type].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingSpecial[type].g_flFlingChance, value, -1.0, 100.0);
 			g_esFlingSpecial[type].g_iFlingCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingCooldown", "Fling Cooldown", "Fling_Cooldown", "cooldown", g_esFlingSpecial[type].g_iFlingCooldown, value, -1, 99999);
 			g_esFlingSpecial[type].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingSpecial[type].g_iFlingDeath, value, -1, 1);
@@ -834,7 +835,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingSpecial[type].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingSpecial[type].g_flFlingRange, value, -1.0, 99999.0);
 			g_esFlingSpecial[type].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingSpecial[type].g_flFlingRangeChance, value, -1.0, 100.0);
 			g_esFlingSpecial[type].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingSpecial[type].g_iFlingRangeCooldown, value, -1, 99999);
-			g_esFlingSpecial[type].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingSight", "Fling Sight", "Fling_Sight", "sight", g_esFlingSpecial[type].g_iFlingSight, value, -1, 2);
 		}
 		else
 		{
@@ -849,6 +849,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingAbility[type].g_iFlingAbility = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlingAbility[type].g_iFlingAbility, value, -1, 1);
 			g_esFlingAbility[type].g_iFlingEffect = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esFlingAbility[type].g_iFlingEffect, value, -1, 7);
 			g_esFlingAbility[type].g_iFlingMessage = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlingAbility[type].g_iFlingMessage, value, -1, 3);
+			g_esFlingAbility[type].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esFlingAbility[type].g_iFlingSight, value, -1, 2);
 			g_esFlingAbility[type].g_flFlingChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esFlingAbility[type].g_flFlingChance, value, -1.0, 100.0);
 			g_esFlingAbility[type].g_iFlingCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingCooldown", "Fling Cooldown", "Fling_Cooldown", "cooldown", g_esFlingAbility[type].g_iFlingCooldown, value, -1, 99999);
 			g_esFlingAbility[type].g_iFlingDeath = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esFlingAbility[type].g_iFlingDeath, value, -1, 1);
@@ -860,7 +861,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esFlingAbility[type].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingAbility[type].g_flFlingRange, value, -1.0, 99999.0);
 			g_esFlingAbility[type].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingAbility[type].g_flFlingRangeChance, value, -1.0, 100.0);
 			g_esFlingAbility[type].g_iFlingRangeCooldown = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingRangeCooldown", "Fling Range Cooldown", "Fling_Range_Cooldown", "rangecooldown", g_esFlingAbility[type].g_iFlingRangeCooldown, value, -1, 99999);
-			g_esFlingAbility[type].g_iFlingSight = iGetKeyValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "FlingSight", "Fling Sight", "Fling_Sight", "sight", g_esFlingAbility[type].g_iFlingSight, value, -1, 2);
 			g_esFlingAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esFlingAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTION, MT_FLING_SECTION2, MT_FLING_SECTION3, MT_FLING_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -967,6 +967,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveFling(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vFlingReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -995,10 +999,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vFlingHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esFlingCache[iBoomer].g_flFlingChance, g_esFlingCache[iBoomer].g_iFlingHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vFlingReset();
 	}
 }
 

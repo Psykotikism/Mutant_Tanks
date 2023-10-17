@@ -712,6 +712,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleTeammate[admin].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdleTeammate[admin].g_iIdleAbility, value, -1, 1);
 			g_esIdleTeammate[admin].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdleTeammate[admin].g_iIdleEffect, value, -1, 7);
 			g_esIdleTeammate[admin].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdleTeammate[admin].g_iIdleMessage, value, -1, 3);
+			g_esIdleTeammate[admin].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIdleTeammate[admin].g_iIdleSight, value, -1, 2);
 			g_esIdleTeammate[admin].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdleTeammate[admin].g_flIdleChance, value, -1.0, 100.0);
 			g_esIdleTeammate[admin].g_iIdleCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleCooldown", "Idle Cooldown", "Idle_Cooldown", "cooldown", g_esIdleTeammate[admin].g_iIdleCooldown, value, -1, 99999);
 			g_esIdleTeammate[admin].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdleTeammate[admin].g_iIdleHit, value, -1, 1);
@@ -719,7 +720,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleTeammate[admin].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdleTeammate[admin].g_flIdleRange, value, -1.0, 99999.0);
 			g_esIdleTeammate[admin].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdleTeammate[admin].g_flIdleRangeChance, value, -1.0, 100.0);
 			g_esIdleTeammate[admin].g_iIdleRangeCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeCooldown", "Idle Range Cooldown", "Idle_Range_Cooldown", "rangecooldown", g_esIdleTeammate[admin].g_iIdleRangeCooldown, value, -1, 99999);
-			g_esIdleTeammate[admin].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleSight", "Idle Sight", "Idle_Sight", "sight", g_esIdleTeammate[admin].g_iIdleSight, value, -1, 2);
 		}
 		else
 		{
@@ -734,6 +734,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdlePlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdlePlayer[admin].g_iIdleAbility, value, -1, 1);
 			g_esIdlePlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdlePlayer[admin].g_iIdleEffect, value, -1, 7);
 			g_esIdlePlayer[admin].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdlePlayer[admin].g_iIdleMessage, value, -1, 3);
+			g_esIdlePlayer[admin].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIdlePlayer[admin].g_iIdleSight, value, -1, 2);
 			g_esIdlePlayer[admin].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdlePlayer[admin].g_flIdleChance, value, -1.0, 100.0);
 			g_esIdlePlayer[admin].g_iIdleCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleCooldown", "Idle Cooldown", "Idle_Cooldown", "cooldown", g_esIdlePlayer[admin].g_iIdleCooldown, value, -1, 99999);
 			g_esIdlePlayer[admin].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdlePlayer[admin].g_iIdleHit, value, -1, 1);
@@ -741,7 +742,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdlePlayer[admin].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdlePlayer[admin].g_flIdleRange, value, -1.0, 99999.0);
 			g_esIdlePlayer[admin].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdlePlayer[admin].g_flIdleRangeChance, value, -1.0, 100.0);
 			g_esIdlePlayer[admin].g_iIdleRangeCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeCooldown", "Idle Range Cooldown", "Idle_Range_Cooldown", "rangecooldown", g_esIdlePlayer[admin].g_iIdleRangeCooldown, value, -1, 99999);
-			g_esIdlePlayer[admin].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleSight", "Idle Sight", "Idle_Sight", "sight", g_esIdlePlayer[admin].g_iIdleSight, value, -1, 2);
 			g_esIdlePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esIdlePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -762,6 +762,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleSpecial[type].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdleSpecial[type].g_iIdleAbility, value, -1, 1);
 			g_esIdleSpecial[type].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdleSpecial[type].g_iIdleEffect, value, -1, 7);
 			g_esIdleSpecial[type].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdleSpecial[type].g_iIdleMessage, value, -1, 3);
+			g_esIdleSpecial[type].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIdleSpecial[type].g_iIdleSight, value, -1, 2);
 			g_esIdleSpecial[type].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdleSpecial[type].g_flIdleChance, value, -1.0, 100.0);
 			g_esIdleSpecial[type].g_iIdleCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleCooldown", "Idle Cooldown", "Idle_Cooldown", "cooldown", g_esIdleSpecial[type].g_iIdleCooldown, value, -1, 99999);
 			g_esIdleSpecial[type].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdleSpecial[type].g_iIdleHit, value, -1, 1);
@@ -769,7 +770,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleSpecial[type].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdleSpecial[type].g_flIdleRange, value, -1.0, 99999.0);
 			g_esIdleSpecial[type].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdleSpecial[type].g_flIdleRangeChance, value, -1.0, 100.0);
 			g_esIdleSpecial[type].g_iIdleRangeCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeCooldown", "Idle Range Cooldown", "Idle_Range_Cooldown", "rangecooldown", g_esIdleSpecial[type].g_iIdleRangeCooldown, value, -1, 99999);
-			g_esIdleSpecial[type].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleSight", "Idle Sight", "Idle_Sight", "sight", g_esIdleSpecial[type].g_iIdleSight, value, -1, 2);
 		}
 		else
 		{
@@ -784,6 +784,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleAbility[type].g_iIdleAbility = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIdleAbility[type].g_iIdleAbility, value, -1, 1);
 			g_esIdleAbility[type].g_iIdleEffect = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIdleAbility[type].g_iIdleEffect, value, -1, 7);
 			g_esIdleAbility[type].g_iIdleMessage = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIdleAbility[type].g_iIdleMessage, value, -1, 3);
+			g_esIdleAbility[type].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIdleAbility[type].g_iIdleSight, value, -1, 2);
 			g_esIdleAbility[type].g_flIdleChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esIdleAbility[type].g_flIdleChance, value, -1.0, 100.0);
 			g_esIdleAbility[type].g_iIdleCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleCooldown", "Idle Cooldown", "Idle_Cooldown", "cooldown", g_esIdleAbility[type].g_iIdleCooldown, value, -1, 99999);
 			g_esIdleAbility[type].g_iIdleHit = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esIdleAbility[type].g_iIdleHit, value, -1, 1);
@@ -791,7 +792,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esIdleAbility[type].g_flIdleRange = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esIdleAbility[type].g_flIdleRange, value, -1.0, 99999.0);
 			g_esIdleAbility[type].g_flIdleRangeChance = flGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esIdleAbility[type].g_flIdleRangeChance, value, -1.0, 100.0);
 			g_esIdleAbility[type].g_iIdleRangeCooldown = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleRangeCooldown", "Idle Range Cooldown", "Idle_Range_Cooldown", "rangecooldown", g_esIdleAbility[type].g_iIdleRangeCooldown, value, -1, 99999);
-			g_esIdleAbility[type].g_iIdleSight = iGetKeyValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "IdleSight", "Idle Sight", "Idle_Sight", "sight", g_esIdleAbility[type].g_iIdleSight, value, -1, 2);
 			g_esIdleAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esIdleAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_IDLE_SECTION, MT_IDLE_SECTION2, MT_IDLE_SECTION3, MT_IDLE_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -890,6 +890,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveIdle(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vIdleReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -917,10 +921,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vIdleHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esIdleCache[iBoomer].g_flIdleChance, g_esIdleCache[iBoomer].g_iIdleHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vIdleReset();
 	}
 }
 

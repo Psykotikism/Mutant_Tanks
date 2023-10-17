@@ -706,6 +706,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlTeammate[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlTeammate[admin].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlTeammate[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlTeammate[admin].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlTeammate[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlTeammate[admin].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlTeammate[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlTeammate[admin].g_iWhirlSight, value, -1, 2);
 			g_esWhirlTeammate[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlTeammate[admin].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlTeammate[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlTeammate[admin].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlTeammate[admin].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlTeammate[admin].g_iWhirlCooldown, value, -1, 99999);
@@ -715,7 +716,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlTeammate[admin].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlTeammate[admin].g_flWhirlRange, value, -1.0, 99999.0);
 			g_esWhirlTeammate[admin].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlTeammate[admin].g_flWhirlRangeChance, value, -1.0, 100.0);
 			g_esWhirlTeammate[admin].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlTeammate[admin].g_iWhirlRangeCooldown, value, -1, 99999);
-			g_esWhirlTeammate[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSight", "Whirl Sight", "Whirl_Sight", "sight", g_esWhirlTeammate[admin].g_iWhirlSight, value, -1, 2);
 			g_esWhirlTeammate[admin].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlTeammate[admin].g_flWhirlSpeed, value, -1.0, 99999.0);
 		}
 		else
@@ -731,6 +731,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlPlayer[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlPlayer[admin].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlPlayer[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlPlayer[admin].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlPlayer[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlPlayer[admin].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlPlayer[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlPlayer[admin].g_iWhirlSight, value, -1, 2);
 			g_esWhirlPlayer[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlPlayer[admin].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlPlayer[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlPlayer[admin].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlPlayer[admin].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlPlayer[admin].g_iWhirlCooldown, value, -1, 99999);
@@ -740,7 +741,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlPlayer[admin].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlPlayer[admin].g_flWhirlRange, value, -1.0, 99999.0);
 			g_esWhirlPlayer[admin].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlPlayer[admin].g_flWhirlRangeChance, value, -1.0, 100.0);
 			g_esWhirlPlayer[admin].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlPlayer[admin].g_iWhirlRangeCooldown, value, -1, 99999);
-			g_esWhirlPlayer[admin].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSight", "Whirl Sight", "Whirl_Sight", "sight", g_esWhirlPlayer[admin].g_iWhirlSight, value, -1, 2);
 			g_esWhirlPlayer[admin].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlPlayer[admin].g_flWhirlSpeed, value, -1.0, 99999.0);
 			g_esWhirlPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esWhirlPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -762,6 +762,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlSpecial[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlSpecial[type].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlSpecial[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlSpecial[type].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlSpecial[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlSpecial[type].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlSpecial[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlSpecial[type].g_iWhirlSight, value, -1, 2);
 			g_esWhirlSpecial[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlSpecial[type].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlSpecial[type].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlSpecial[type].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlSpecial[type].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlSpecial[type].g_iWhirlCooldown, value, -1, 99999);
@@ -771,7 +772,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlSpecial[type].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlSpecial[type].g_flWhirlRange, value, -1.0, 99999.0);
 			g_esWhirlSpecial[type].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlSpecial[type].g_flWhirlRangeChance, value, -1.0, 100.0);
 			g_esWhirlSpecial[type].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlSpecial[type].g_iWhirlRangeCooldown, value, -1, 99999);
-			g_esWhirlSpecial[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSight", "Whirl Sight", "Whirl_Sight", "sight", g_esWhirlSpecial[type].g_iWhirlSight, value, -1, 2);
 			g_esWhirlSpecial[type].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlSpecial[type].g_flWhirlSpeed, value, -1.0, 99999.0);
 		}
 		else
@@ -787,6 +787,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlAbility[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWhirlAbility[type].g_iWhirlAbility, value, -1, 1);
 			g_esWhirlAbility[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWhirlAbility[type].g_iWhirlEffect, value, -1, 7);
 			g_esWhirlAbility[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWhirlAbility[type].g_iWhirlMessage, value, -1, 3);
+			g_esWhirlAbility[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWhirlAbility[type].g_iWhirlSight, value, -1, 2);
 			g_esWhirlAbility[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esWhirlAbility[type].g_iWhirlAxis, value, -1, 7);
 			g_esWhirlAbility[type].g_flWhirlChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esWhirlAbility[type].g_flWhirlChance, value, -1.0, 100.0);
 			g_esWhirlAbility[type].g_iWhirlCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlCooldown", "Whirl Cooldown", "Whirl_Cooldown", "cooldown", g_esWhirlAbility[type].g_iWhirlCooldown, value, -1, 99999);
@@ -796,7 +797,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esWhirlAbility[type].g_flWhirlRange = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esWhirlAbility[type].g_flWhirlRange, value, -1.0, 99999.0);
 			g_esWhirlAbility[type].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esWhirlAbility[type].g_flWhirlRangeChance, value, -1.0, 100.0);
 			g_esWhirlAbility[type].g_iWhirlRangeCooldown = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlRangeCooldown", "Whirl Range Cooldown", "Whirl_Range_Cooldown", "rangecooldown", g_esWhirlAbility[type].g_iWhirlRangeCooldown, value, -1, 99999);
-			g_esWhirlAbility[type].g_iWhirlSight = iGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSight", "Whirl Sight", "Whirl_Sight", "sight", g_esWhirlAbility[type].g_iWhirlSight, value, -1, 2);
 			g_esWhirlAbility[type].g_flWhirlSpeed = flGetKeyValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esWhirlAbility[type].g_flWhirlSpeed, value, -1.0, 99999.0);
 			g_esWhirlAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esWhirlAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WHIRL_SECTION, MT_WHIRL_SECTION2, MT_WHIRL_SECTION3, MT_WHIRL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
@@ -917,6 +917,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveWhirl(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vWhirlReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -944,10 +948,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vWhirlHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWhirlCache[iBoomer].g_flWhirlChance, g_esWhirlCache[iBoomer].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vWhirlReset();
 	}
 }
 
@@ -1206,7 +1206,7 @@ void vRemoveWhirl(int tank)
 		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWhirlPlayer[iSurvivor].g_bAffected && g_esWhirlPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esWhirlPlayer[iSurvivor].g_bAffected = false;
-			g_esWhirlPlayer[iSurvivor].g_iOwner = 0;
+			g_esWhirlPlayer[iSurvivor].g_iOwner = -1;
 		}
 	}
 
@@ -1248,7 +1248,7 @@ void vWhirlReset3(int tank)
 void vStopWhirl(int survivor, int camera)
 {
 	g_esWhirlPlayer[survivor].g_bAffected = false;
-	g_esWhirlPlayer[survivor].g_iOwner = 0;
+	g_esWhirlPlayer[survivor].g_iOwner = -1;
 
 	SetClientViewEntity(survivor, survivor);
 	RemoveEntity(camera);
@@ -1307,7 +1307,7 @@ Action tTimerWhirl(Handle timer, DataPack pack)
 	if (!MT_IsCorePluginEnabled() || iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
 	{
 		g_esWhirlPlayer[iSurvivor].g_bAffected = false;
-		g_esWhirlPlayer[iSurvivor].g_iOwner = 0;
+		g_esWhirlPlayer[iSurvivor].g_iOwner = -1;
 
 		if (bIsHumanSurvivor(iSurvivor))
 		{

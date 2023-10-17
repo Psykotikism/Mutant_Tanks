@@ -1,34 +1,122 @@
 # Changelog
 
-## Version 8.99 (October 10, 2023)
+## Version 9.0 (December 2023)
 
 ### Bug Fixes
+
+#### Core Plugin
+- Fixed the following settings not being overridden properly for special infected:
+	- `Reward Enabled`
+	- `Reward Bots`
+	- `Claw Damage`
+	- `Hittable Damage`
+	- `Pin Damage`
+	- `Punch Force`
+	- `Rock Damage`
+- Fixed the issue with Tanks being assigned the wrong Mutant types. (Thanks to `thewintersoldier97` for reporting!)
+- Fixed the issue with no Mutant types being chosen when the `Tank Chance`/`Special Chance` setting is less than `100.0%`. (Thanks to `SpannerV2` for reporting!)
+
+#### Abilities
+- Fixed all the `Ability Sight` settings not working.
+- Clone: Fixed array index errors.
+- Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
+- Necro: Fixed sound being precached for every player that leaves.
+- Warp: Fixed the Tank never teleporting to its thrown rock when it breaks. (Thanks to `moschinovac` for reporting!)
+
+### Changes
+
+#### Core Plugin
+- The damage boost reward now gives recipients laser sights. (Thanks to `Dragokas` for the code!)
+- The attack boost reward now lets recipients shoot rapidly with pistols. (Thanks to `epzminion` for the code!)
+- The health reward now allows recipients to heal any survivor with their own fires.
+- Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
+
+#### Game Data
+- Added detour setups and signatures for the following functions:
+	- `CPistol::GetRateOfFire`
+	- `CTerrorGun::GetRateOfFire`
+	- `UTIL_SetModel`
+- Added signatures for the following functions:
+	- `CTerrorPlayer::AddUpgrade`
+	- `CTerrorPlayer::RemoveUpgrade`
+
+#### Settings
+- Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
+	- `Blaze Health Reward`
+	- `Rapid Pistol Reward`
+
+#### Abilities
+- Electric: Added visible check for survivors caught in chain reactions.
+- Kamikaze: Added the `Kamikaze Meter` setting.
+- Laser:
+	- The ability now chains to multiple survivors.
+	- Added the `Ability Sight` setting.
+- Nullify: The ability now blocks the survivors' damage towards everything.
+- Rocket: Added the `Rocket Countdown` setting.
+- Smash: Added the `Smash Meter` setting.
+- Smite: Added the `Smite Countdown` setting.
+
+### Files
+
+#### General
+- The pre-compiled plugins included in the package are:
+	- Compiled without any of the optional dependencies.
+	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated updater file.
+
+## Version 8.99 (October 10, 2023)
+<details>
+	<summary>Click to expand!</summary>
+
+### Bug Fixes
+<details>
+	<summary>General</summary>
 
 #### General
 - Fixed array index errors.
 - Fixed some props being created multiple times and crashing the server.
 - Fixed cooldowns not being applied properly.
+</details>
+<details>
+	<summary>Config Files</summary>
 
 #### Config Files
 - Fixed the config parser not reading specified sections.
 - Fixed custom config Mutant Tank types not overriding main config Mutant Tank types. (Thanks to `xcd222` for reporting!)
 - Fixed settings not being read properly for human-controlled infected in competitive modes.
+</details>
+<details>
+	<summary>Game Data</summary>
 
 #### Game Data
 - Fixed some incorrect offsets for Linux. (Thanks to `Krufftys Killers` for reporting!)
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Fixed the `Close Areas Only` setting not working for several abilities.
 - Clone: Fixed an issue with the ability cloning the same type in some scenarios. (Thanks to `SpannerV2` for testing and reporting!)
 - Fragile: Fixed the `Fragile Speed Boost` setting not working. (Thanks to `PVNDV` for testing and reporting!)
 - Track: Fixed the `Combo Speed` setting not overriding the `Track Speed` setting. (Thanks to `PVNDV` for testing and reporting!)
+</details>
 
 ### Changes
+<details>
+	<summary>General</summary>
 
 #### General
 - Most of Mutant Tanks' features can now be applied to the other special infected. (Requested by several people over the years.)
 	- The mutation continues to adapt to accommodate different strains of the virus...
 - Mutant Tanks and its sub-plugins now properly support the [`[L4D2] Tank Rush 2`](https://forums.alliedmods.net/showthread.php?t=234840) plugin. (Requested by `Tank Rush`.) [Thanks to `Carl Sagan` for the code!]
+</details>
+<details>
+	<summary>Core Plugin</summary>
 
 #### Core Plugin
 - Added the following target filters to let admins target Mutant Tanks:
@@ -46,9 +134,15 @@
 	- `@psychargers`
 - The `@mutants` target filter can now target all types of Mutant Infected.
 - Players can no longer see healthbars of Mutant Infected through solid objects.
+</details>
+<details>
+	<summary>Commands</summary>
 
 #### Commands
 - Added the `sm_mt_edit` command to allow admins to temporarily modify settings in-game.
+</details>
+<details>
+	<summary>Game Data</summary>
 
 #### Game Data
 - Added signatures for the following functions:
@@ -69,6 +163,9 @@
 	- `CTraceBulletEntityEnumerator::PerformMultiTrace`
 - Added offsets for the `CBasePlayer::Weapon_ShootPosition` function.
 - Replaced the `CThrow::ActivateAbility` function with the `CBaseAbility::ActivateAbility` function.
+</details>
+<details>
+	<summary>Settings</summary>
 
 #### Settings
 - Changed the minimum value of every setting from `0/0.0/0.1/1.0` to `-1/-1.0`.
@@ -80,12 +177,18 @@
 - Added the `Intangible Body` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections. (Requested by `Tank Rush`.)
 - Added the `Throw Rock` setting under the `Plugin Settings->Enhancements`, `Tank #->Enhancements`, and `STEAM_ID->Enhancements` sections.
 - Added the `Rush` section under the `Plugin Settings` section which allows to configure settings for the `Tank Rush 2` mode. (Requested by `Tank Rush`.) [Thanks to `Carl Sagan` for the code!]
+</details>
+<details>
+	<summary>Translations</summary>
 
 #### Translations
 - Updated English translations.
 - Updated Simplified Chinese translations. (Thanks to `yuzumi`!)
 - Updated Hungarian translations. (Thanks to `KasperH`/`Ladis`!)
 - Updated Russian translations. (Thanks to `Blueberry`/`Kleiner`!)
+</details>
+<details>
+	<summary>Natives & Forwards</summary>
 
 #### Natives & Forwards
 - The `MT_OnConfigsLoaded` forward now has two more parameters.
@@ -96,6 +199,9 @@
 	- `MT_IsFinaleType`
 	- `MT_IsNonFinaleType`
 	- `MT_IsTypeEnabled`
+</details>
+<details>
+	<summary>Abilities</summary>
 
 #### Abilities
 - Added the `Ability Sight` setting for several abilities.
@@ -141,13 +247,19 @@
 - Undead
 	- The Tank now gets extinguished and has the vomit effect removed when its health resets.
 	- Added sound effect.
+</details>
 
 ### Files
+<details>
+	<summary>General</summary>
 
 #### General
 - The pre-compiled plugins included in the package are:
 	- Compiled without any of the optional dependencies.
 	- Compiled with the `SourceMod 1.12.0.6985` compiler.
+</details>
+<details>
+	<summary>Updates</summary>
 
 #### Updates
 - Updated config files.
@@ -155,6 +267,8 @@
 - Updated include file.
 - Updated translation files.
 - Updated updater file.
+</details>
+</details>
 
 ## Version 8.98 (August 10, 2023)
 <details>

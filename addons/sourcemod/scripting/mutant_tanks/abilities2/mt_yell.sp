@@ -663,6 +663,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellTeammate[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellTeammate[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellTeammate[admin].g_iYellAbility, value, -1, 1);
 			g_esYellTeammate[admin].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellTeammate[admin].g_iYellMessage, value, -1, 1);
+			g_esYellTeammate[admin].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esYellTeammate[admin].g_iYellSight, value, -1, 2);
 			g_esYellTeammate[admin].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellTeammate[admin].g_flYellChance, value, -1.0, 100.0);
 			g_esYellTeammate[admin].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellTeammate[admin].g_iYellCooldown, value, -1, 99999);
 			g_esYellTeammate[admin].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellTeammate[admin].g_flYellDamage, value, -1.0, 99999.0);
@@ -671,7 +672,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellTeammate[admin].g_iYellMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellMode", "Yell Mode", "Yell_Mode", "mode", g_esYellTeammate[admin].g_iYellMode, value, -1, 2);
 			g_esYellTeammate[admin].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellTeammate[admin].g_iYellPitch, value, -1, 255);
 			g_esYellTeammate[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellTeammate[admin].g_flYellRange, value, -1.0, 99999.0);
-			g_esYellTeammate[admin].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellSight", "Yell Sight", "Yell_Sight", "sight", g_esYellTeammate[admin].g_iYellSight, value, -1, 2);
 		}
 		else
 		{
@@ -686,6 +686,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellPlayer[admin].g_iRequiresHumans, value, -1, 32);
 			g_esYellPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellPlayer[admin].g_iYellAbility, value, -1, 1);
 			g_esYellPlayer[admin].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellPlayer[admin].g_iYellMessage, value, -1, 1);
+			g_esYellPlayer[admin].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esYellPlayer[admin].g_iYellSight, value, -1, 2);
 			g_esYellPlayer[admin].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellPlayer[admin].g_flYellChance, value, -1.0, 100.0);
 			g_esYellPlayer[admin].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellPlayer[admin].g_iYellCooldown, value, -1, 99999);
 			g_esYellPlayer[admin].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellPlayer[admin].g_flYellDamage, value, -1.0, 99999.0);
@@ -694,7 +695,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellPlayer[admin].g_iYellMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellMode", "Yell Mode", "Yell_Mode", "mode", g_esYellPlayer[admin].g_iYellMode, value, -1, 2);
 			g_esYellPlayer[admin].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellPlayer[admin].g_iYellPitch, value, -1, 255);
 			g_esYellPlayer[admin].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellPlayer[admin].g_flYellRange, value, -1.0, 99999.0);
-			g_esYellPlayer[admin].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellSight", "Yell Sight", "Yell_Sight", "sight", g_esYellPlayer[admin].g_iYellSight, value, -1, 2);
 			g_esYellPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esYellPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -715,6 +715,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellSpecial[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellSpecial[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellSpecial[type].g_iYellAbility, value, -1, 1);
 			g_esYellSpecial[type].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellSpecial[type].g_iYellMessage, value, -1, 1);
+			g_esYellSpecial[type].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esYellSpecial[type].g_iYellSight, value, -1, 2);
 			g_esYellSpecial[type].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellSpecial[type].g_flYellChance, value, -1.0, 100.0);
 			g_esYellSpecial[type].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellSpecial[type].g_iYellCooldown, value, -1, 99999);
 			g_esYellSpecial[type].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellSpecial[type].g_flYellDamage, value, -1.0, 99999.0);
@@ -723,7 +724,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellSpecial[type].g_iYellMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellMode", "Yell Mode", "Yell_Mode", "mode", g_esYellSpecial[type].g_iYellMode, value, -1, 2);
 			g_esYellSpecial[type].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellSpecial[type].g_iYellPitch, value, -1, 255);
 			g_esYellSpecial[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellSpecial[type].g_flYellRange, value, -1.0, 99999.0);
-			g_esYellSpecial[type].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellSight", "Yell Sight", "Yell_Sight", "sight", g_esYellSpecial[type].g_iYellSight, value, -1, 2);
 		}
 		else
 		{
@@ -738,6 +738,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esYellAbility[type].g_iRequiresHumans, value, -1, 32);
 			g_esYellAbility[type].g_iYellAbility = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esYellAbility[type].g_iYellAbility, value, -1, 1);
 			g_esYellAbility[type].g_iYellMessage = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esYellAbility[type].g_iYellMessage, value, -1, 1);
+			g_esYellAbility[type].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esYellAbility[type].g_iYellSight, value, -1, 2);
 			g_esYellAbility[type].g_flYellChance = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esYellAbility[type].g_flYellChance, value, -1.0, 100.0);
 			g_esYellAbility[type].g_iYellCooldown = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellCooldown", "Yell Cooldown", "Yell_Cooldown", "cooldown", g_esYellAbility[type].g_iYellCooldown, value, -1, 99999);
 			g_esYellAbility[type].g_flYellDamage = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellDamage", "Yell Damage", "Yell_Damage", "damage", g_esYellAbility[type].g_flYellDamage, value, -1.0, 99999.0);
@@ -746,7 +747,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			g_esYellAbility[type].g_iYellMode = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellMode", "Yell Mode", "Yell_Mode", "mode", g_esYellAbility[type].g_iYellMode, value, -1, 2);
 			g_esYellAbility[type].g_iYellPitch = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellPitch", "Yell Pitch", "Yell_Pitch", "pitch", g_esYellAbility[type].g_iYellPitch, value, -1, 255);
 			g_esYellAbility[type].g_flYellRange = flGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellRange", "Yell Range", "Yell_Range", "range", g_esYellAbility[type].g_flYellRange, value, -1.0, 99999.0);
-			g_esYellAbility[type].g_iYellSight = iGetKeyValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "YellSight", "Yell Sight", "Yell_Sight", "sight", g_esYellAbility[type].g_iYellSight, value, -1, 2);
 			g_esYellAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 			g_esYellAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_YELL_SECTION, MT_YELL_SECTION2, MT_YELL_SECTION3, MT_YELL_SECTION4, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 		}
@@ -847,6 +847,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveYell(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vYellReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -864,10 +868,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveYell(iTank);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vYellReset();
 	}
 }
 

@@ -261,8 +261,11 @@ public void OnClientDisconnect(int client)
 {
 	if (bIsInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esClonePlayer[client].g_bCloned)
 	{
-		g_esClonePlayer[g_esClonePlayer[client].g_iOwner].g_iCount--;
-		g_esClonePlayer[client].g_iOwner = 0;
+		if (g_esClonePlayer[client].g_iOwner > 0)
+		{
+			g_esClonePlayer[g_esClonePlayer[client].g_iOwner].g_iCount--;
+			g_esClonePlayer[client].g_iOwner = -1;
+		}
 
 		vRemoveClone(client);
 	}
@@ -846,6 +849,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveClone(iBot);
 		}
 	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vCloneReset();
+	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
@@ -871,7 +878,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esClonePlayer[iTank].g_iOwner == iOwner)
 						{
 							g_esClonePlayer[iTank].g_bCloned = false;
-							g_esClonePlayer[iTank].g_iOwner = 0;
+							g_esClonePlayer[iTank].g_iOwner = -1;
 
 							if (g_esCloneCache[iOwner].g_iCloneAbility == 1)
 							{
@@ -918,10 +925,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 			vRemoveClone(iTank);
 		}
-	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
-	{
-		vCloneReset();
 	}
 }
 
@@ -1181,7 +1184,7 @@ void vRemoveClones(int tank)
 		{
 			if (g_esClonePlayer[iClone].g_iOwner == tank)
 			{
-				g_esClonePlayer[iClone].g_iOwner = 0;
+				g_esClonePlayer[iClone].g_iOwner = -1;
 
 				if (g_esClonePlayer[iClone].g_bCloned && bIsValidClient(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
