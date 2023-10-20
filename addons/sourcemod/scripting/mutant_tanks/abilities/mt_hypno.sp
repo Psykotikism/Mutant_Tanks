@@ -1193,14 +1193,9 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank))
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
 	{
-		vHypno(tank);
-
-		if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
-		{
-			vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
-		}
+		vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -1244,9 +1239,18 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	vRemoveHypno(tank);
 }
 
+#if defined MT_ABILITIES_MAIN
+void vHypnoPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
+{
+	vHypno(tank);
+}
+
 void vHypno(int tank)
 {
-	if (!g_esHypnoPlayer[tank].g_bActivated)
+	if (g_esHypnoCache[tank].g_iHypnoView == 1 && !g_esHypnoPlayer[tank].g_bActivated)
 	{
 		g_esHypnoPlayer[tank].g_bActivated = true;
 
@@ -1281,7 +1285,7 @@ void vHypno(int tank)
 			SetEntProp(g_esHypnoPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 			MT_HideEntity(g_esHypnoPlayer[tank].g_iShield, true);
 
-			if (g_esHypnoCache[tank].g_iHypnoView == 1 && !g_esHypnoPlayer[tank].g_bViewShield)
+			if (!g_esHypnoPlayer[tank].g_bViewShield)
 			{
 				g_esHypnoPlayer[tank].g_bViewShield = SDKHookEx(g_esHypnoPlayer[tank].g_iShield, SDKHook_SetTransmit, OnHypnoSetTransmit);
 			}

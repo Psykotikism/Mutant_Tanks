@@ -2709,6 +2709,7 @@ void vAbilityPlayer(int type, int client)
 		case 0: vHypnoClientPutInServer(client);
 		case 2: vHypnoClientDisconnect_Post(client);
 		case 3: vHypnoAbilityActivated(client);
+		case 4: vHypnoPostTankSpawn(client);
 	}
 #endif
 #if defined MT_MENU_ICE

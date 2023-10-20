@@ -3802,7 +3802,7 @@ any aNative_SetTankType(Handle plugin, int numParams)
 			}
 			case false:
 			{
-				//vResetTank3(iTank);
+				vResetTank3(iTank);
 				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType, (g_esPlayer[iTank].g_iTankType == iType));
 
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
