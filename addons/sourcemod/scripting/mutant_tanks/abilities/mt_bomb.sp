@@ -48,17 +48,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+
+#define SOUND_BOMB1 "animation/van_inside_debris.wav"
+#define SOUND_BOMB2 "animation/bombing_run_01.wav" // Only available in L4D2
+#define SOUND_HIT "animation/van_inside_hit_wall.wav"
 #else
 	#if MT_BOMB_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-
-#define SOUND_HIT "animation/van_inside_hit_wall.wav"
-#define SOUND_BOMB2 "animation/bombing_run_01.wav" // Only available in L4D2
-#define SOUND_BOMB1 "animation/van_inside_debris.wav"
 
 #define MT_BOMB_SECTION "bombability"
 #define MT_BOMB_SECTION2 "bomb ability"

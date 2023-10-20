@@ -48,11 +48,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_KAMIKAZE_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define PARTICLE_BLOOD "boomer_explode_D"
 
@@ -60,6 +55,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" // Only available in L4D1
 #define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
 #define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
+#else
+	#if MT_KAMIKAZE_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_KAMIKAZE_SECTION "kamikazeability"
 #define MT_KAMIKAZE_SECTION2 "kamikaze ability"

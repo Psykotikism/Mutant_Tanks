@@ -47,11 +47,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_ZOMBIE_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define MODEL_CEDA "models/infected/common_male_ceda.mdl"
 #define MODEL_CLOWN "models/infected/common_male_clown.mdl"
@@ -60,6 +55,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_MUDMAN "models/infected/common_male_mud.mdl"
 #define MODEL_RIOTCOP "models/infected/common_male_riot.mdl"
 #define MODEL_ROADCREW "models/infected/common_male_roadcrew.mdl"
+#else
+	#if MT_ZOMBIE_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_ZOMBIE_SECTION "zombieability"
 #define MT_ZOMBIE_SECTION2 "zombie ability"
@@ -913,13 +913,13 @@ public void MT_OnPostTankSpawn(int tank)
 
 void vSpawnUncommon(int tank, const char[] model)
 {
-	int iInfected = CreateEntityByName("infected");
-	if (bIsValidEntity(iInfected))
+	int iCommon = CreateEntityByName("infected");
+	if (bIsValidEntity(iCommon))
 	{
-		SetEntityModel(iInfected, model);
-		SetEntProp(iInfected, Prop_Data, "m_nNextThinkTick", (RoundToNearest(GetGameTime() / GetTickInterval()) + 5));
-		DispatchSpawn(iInfected);
-		ActivateEntity(iInfected);
+		SetEntityModel(iCommon, model);
+		SetEntProp(iCommon, Prop_Data, "m_nNextThinkTick", (RoundToNearest(GetGameTime() / GetTickInterval()) + 5));
+		DispatchSpawn(iCommon);
+		ActivateEntity(iCommon);
 
 		float flOrigin[3], flAngles[3];
 		GetClientAbsOrigin(tank, flOrigin);
@@ -929,7 +929,7 @@ void vSpawnUncommon(int tank, const char[] model)
 		flOrigin[1] += (50.0 * (Sine(DegToRad(flAngles[1]))));
 		flOrigin[2] += 5.0;
 
-		TeleportEntity(iInfected, flOrigin);
+		TeleportEntity(iCommon, flOrigin);
 	}
 }
 

@@ -44,15 +44,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+
+#define SPRITE_GLOW "sprites/glow01.vmt"
 #else
 	#if MT_SMITE_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
-
-#define SPRITE_GLOW "sprites/glow01.vmt"
 
 #define MT_SMITE_SECTION "smiteability"
 #define MT_SMITE_SECTION2 "smite ability"

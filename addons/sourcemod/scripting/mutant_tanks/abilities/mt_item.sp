@@ -43,6 +43,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
+#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #else
 	#if MT_ITEM_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
@@ -55,10 +59,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ITEM_SECTION4 "item"
 
 #define MT_MENU_ITEM "Item Ability"
-
-#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
-#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 
 enum struct esItemPlayer
 {

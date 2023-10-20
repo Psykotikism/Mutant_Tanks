@@ -47,14 +47,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 #else
 	#if MT_MEDIC_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SPRITE_GLOW "sprites/glow01.vmt"
-#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_MEDIC_SECTION "medicability"
 #define MT_MEDIC_SECTION2 "medic ability"

@@ -48,15 +48,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
 #else
 	#if MT_THROW_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
 
 #define MT_THROW_SECTION "throwability"
 #define MT_THROW_SECTION2 "throw ability"

@@ -47,14 +47,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SPRITE_LASER "sprites/laser.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 #else
 	#if MT_GUNNER_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SPRITE_LASER "sprites/laser.vmt"
-#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_GUNNER_SECTION "gunnerability"
 #define MT_GUNNER_SECTION2 "gunner ability"

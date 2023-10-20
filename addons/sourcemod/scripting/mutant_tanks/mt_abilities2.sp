@@ -31,6 +31,43 @@ public Plugin myinfo =
 #define MT_GAMEDATA "mutant_tanks"
 #define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+#define MODEL_CEDA "models/infected/common_male_ceda.mdl"
+#define MODEL_CLOWN "models/infected/common_male_clown.mdl"
+#define MODEL_FALLEN "models/infected/common_male_fallen_survivor.mdl"
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_JIMMY "models/infected/common_male_jimmy.mdl"
+#define MODEL_MUDMAN "models/infected/common_male_mud.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+#define MODEL_RIOTCOP "models/infected/common_male_riot.mdl"
+#define MODEL_ROADCREW "models/infected/common_male_roadcrew.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+
+#define PARTICLE_BLOOD "boomer_explode_D"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_VOMIT "boomer_vomit"
+
+#define SOUND_CHARGE "items/suitchargeok1.wav"
+#define SOUND_DRIP "ambient/water/distant_drip2.wav"
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
+#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+#define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
+#define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" // Only available in L4D1
+#define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" // Only available in L4D2
+#define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+#define SOUND_RAGE "npc/infected/action/rage/female/rage_68.wav"
+#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
+#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
+
+#define SPRITE_DOT "sprites/dot.vmt"
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN

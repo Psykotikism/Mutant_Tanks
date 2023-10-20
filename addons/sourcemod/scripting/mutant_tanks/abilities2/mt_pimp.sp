@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
 #else
 	#if MT_PIMP_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_BLOOD "boomer_explode_D"
 
 #define MT_PIMP_SECTION "pimpability"
 #define MT_PIMP_SECTION2 "pimp ability"

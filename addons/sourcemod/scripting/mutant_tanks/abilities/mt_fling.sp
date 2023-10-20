@@ -48,13 +48,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
 #else
 	#if MT_FLING_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_BLOOD "boomer_explode_D"
 
 #define MT_FLING_SECTION "flingability"
 #define MT_FLING_SECTION2 "fling ability"

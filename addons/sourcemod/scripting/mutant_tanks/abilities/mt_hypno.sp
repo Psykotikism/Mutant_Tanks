@@ -44,15 +44,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #else
 	#if MT_HYPNO_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
-
-#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 
 #define MT_HYPNO_SECTION "hypnoability"
 #define MT_HYPNO_SECTION2 "hypno ability"
@@ -1193,10 +1193,14 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsInfected(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank))
 	{
 		vHypno(tank);
-		vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+
+		if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
+		{
+			vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+		}
 	}
 }
 

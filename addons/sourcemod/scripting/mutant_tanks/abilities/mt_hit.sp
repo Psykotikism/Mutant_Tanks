@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #else
 	#if MT_HIT_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 
 #define MT_HIT_SECTION "hitability"
 #define MT_HIT_SECTION2 "hit ability"

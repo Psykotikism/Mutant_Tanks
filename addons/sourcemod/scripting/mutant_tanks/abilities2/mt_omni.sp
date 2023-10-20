@@ -43,15 +43,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #else
 	#if MT_OMNI_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-
-#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 
 #define MT_OMNI_SECTION "omniability"
 #define MT_OMNI_SECTION2 "omni ability"
@@ -1034,11 +1034,11 @@ void vOmni2(int tank, int pos = -1)
 	}
 	else
 	{
-		int iMaxType = MT_GetMaxType(), iType = iGetInfectedType(tank);
+		int iSpecType = iGetInfectedType(tank);
 		iTypeCount = 0;
-		for (int iIndex = MT_GetMinType(); iIndex <= iMaxType; iIndex++)
+		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iType) || MT_DoesTypeRequireHumans(iIndex, tank) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
+			if (!MT_IsTypeEnabled(iIndex, tank) || !MT_CanTypeSpawn(iIndex, iSpecType) || MT_DoesTypeRequireHumans(iIndex, tank) || g_esOmniPlayer[tank].g_iOmniType == iIndex)
 			{
 				continue;
 			}
@@ -1094,6 +1094,7 @@ void vOmniCopyStats2(int oldTank, int newTank)
 	g_esOmni[newTank].g_iHumanDuration = g_esOmni[oldTank].g_iHumanDuration;
 	g_esOmni[newTank].g_iHumanMode = g_esOmni[oldTank].g_iHumanMode;
 	g_esOmni[newTank].g_iOmniAbility = g_esOmni[oldTank].g_iOmniAbility;
+	g_esOmni[newTank].g_iOmniCooldown = g_esOmni[oldTank].g_iOmniCooldown;
 	g_esOmni[newTank].g_iOmniDuration = g_esOmni[oldTank].g_iOmniDuration;
 	g_esOmni[newTank].g_iOmniMessage = g_esOmni[oldTank].g_iOmniMessage;
 	g_esOmni[newTank].g_iOmniMode = g_esOmni[oldTank].g_iOmniMode;

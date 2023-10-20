@@ -48,21 +48,21 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_ULTIMATE_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
+#define SOUND_CHARGE "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
 #define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 #define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
-#define SOUND_ULTIMATE "items/suitchargeok1.wav"
+#else
+	#if MT_ULTIMATE_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_ULTIMATE_SECTION "ultimateability"
 #define MT_ULTIMATE_SECTION2 "ultimate ability"
@@ -1021,7 +1021,7 @@ void vUltimate(int tank, int pos = -1)
 
 		ExtinguishEntity(tank);
 		vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
-		EmitSoundToAll(SOUND_ULTIMATE, tank);
+		EmitSoundToAll(SOUND_CHARGE, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
 		switch (g_bSecondGame)

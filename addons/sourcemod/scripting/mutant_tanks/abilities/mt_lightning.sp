@@ -47,15 +47,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_LIGHTNING "storm_lightning_01"
+
+#define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 #else
 	#if MT_LIGHTNING_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_LIGHTNING "storm_lightning_01"
-
-#define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 
 #define MT_LIGHTNING_SECTION "lightningability"
 #define MT_LIGHTNING_SECTION2 "lightning ability"

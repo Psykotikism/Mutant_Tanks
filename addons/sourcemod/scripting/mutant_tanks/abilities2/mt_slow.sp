@@ -44,14 +44,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_DRIP "ambient/water/distant_drip2.wav"
+#define SOUND_RAGE "npc/infected/action/rage/female/rage_68.wav"
 #else
 	#if MT_SLOW_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_DRIP "ambient/water/distant_drip2.wav"
-#define SOUND_RAGE "npc/infected/action/rage/female/rage_68.wav"
 
 #define MT_SLOW_SECTION "slowability"
 #define MT_SLOW_SECTION2 "slow ability"

@@ -47,15 +47,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #else
 	#if MT_NECRO_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-
-#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 
 #define MT_NECRO_SECTION "necroability"
 #define MT_NECRO_SECTION2 "necro ability"

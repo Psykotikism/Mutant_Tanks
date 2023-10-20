@@ -44,16 +44,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
+#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
 #else
 	#if MT_WARP_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-
-#define SOUND_WARP "ambient/energy/zap5.wav"
-#define SOUND_WARP2 "ambient/energy/zap7.wav"
 
 #define MT_WARP_SECTION "warpability"
 #define MT_WARP_SECTION2 "warp ability"
@@ -74,6 +74,7 @@ esWarpGeneral g_esWarpGeneral;
 enum struct esWarpPlayer
 {
 	bool g_bActivated;
+	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
@@ -99,6 +100,8 @@ enum struct esWarpPlayer
 	int g_iHumanRangeCooldown;
 	int g_iHumanRockCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
+	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
 	int g_iRockCooldown;
@@ -343,8 +346,8 @@ void vWarpMapStart()
 public void OnMapStart()
 #endif
 {
-	PrecacheSound(SOUND_WARP, true);
-	PrecacheSound(SOUND_WARP2, true);
+	PrecacheSound(SOUND_ELECTRICITY, true);
+	PrecacheSound(SOUND_ELECTRICITY2, true);
 
 	vWarpReset();
 }
@@ -1115,11 +1118,40 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveWarp(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
+			bool bTeleport = false;
+			float flOrigin[3], flAngles[3];
+			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+			{
+				if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esWarpPlayer[iTeammate].g_bAffected)
+				{
+					bTeleport = true;
+
+					GetClientAbsOrigin(iTeammate, flOrigin);
+					GetClientEyeAngles(iTeammate, flAngles);
+
+					break;
+				}
+			}
+
+			if (bTeleport)
+			{
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWarpPlayer[iSurvivor].g_bAffected && g_esWarpPlayer[iSurvivor].g_iOwner == iTank)
+					{
+						g_esWarpPlayer[iSurvivor].g_bAffected = false;
+						g_esWarpPlayer[iSurvivor].g_iOwner = -1;
+
+						TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+					}
+				}
+			}
+
 			vWarpRange(iTank);
 			vRemoveWarp(iTank);
 		}
@@ -1132,6 +1164,15 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsBoomer(iBoomer) && bIsSurvivor(iSurvivor) && !bExploded)
 		{
 			vWarpHit(iSurvivor, iBoomer, GetRandomFloat(0.1, 100.0), g_esWarpCache[iBoomer].g_flWarpChance, g_esWarpCache[iBoomer].g_iWarpHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+		}
+	}
+	else if (StrEqual(name, "player_spawn"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vWarpRange(iTank);
+			vRemoveWarp(iTank);
 		}
 	}
 }
@@ -1264,6 +1305,8 @@ void vWarpPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
+	g_esWarpPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
+
 	vWarpRange(tank);
 }
 
@@ -1334,27 +1377,54 @@ void vWarp2(int tank, int other)
 		return;
 	}
 
-	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
-	EmitSoundToAll(SOUND_WARP, tank);
+	int iVictim = iGetInfectedVictim(tank, g_esWarpPlayer[tank].g_iInfectedType);
+	iVictim = (iVictim <= 0) ? tank : iVictim;
+	if (bIsSurvivor(iVictim))
+	{
+		g_esWarpPlayer[iVictim].g_bAffected = true;
+		g_esWarpPlayer[iVictim].g_iOwner = tank;
+
+		TeleportEntity(iVictim, flTempOrigin, flTempAngles, view_as<float>({0.0, 0.0, 0.0}));
+		vFixPlayerPosition(iVictim);
+	}
+
 	TeleportEntity(tank, flTempOrigin, flTempAngles, view_as<float>({0.0, 0.0, 0.0}));
 	vFixPlayerPosition(tank);
+	vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 1.0);
+	EmitSoundToAll(SOUND_ELECTRICITY, iVictim);
 
-	if (bIsPlayerStuck(tank))
+	if (bIsPlayerStuck(iVictim))
 	{
+		if (bIsSurvivor(iVictim))
+		{
+			g_esWarpPlayer[iVictim].g_bAffected = true;
+			g_esWarpPlayer[iVictim].g_iOwner = tank;
+
+			TeleportEntity(iVictim, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+		}
+
 		TeleportEntity(tank, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 		return;
 	}
 
-	if (g_esWarpCache[tank].g_iWarpMode == 1 || g_esWarpCache[tank].g_iWarpMode == 3)
+	if (!bIsSurvivorCaught(other) && (g_esWarpCache[tank].g_iWarpMode == 1 || g_esWarpCache[tank].g_iWarpMode == 3))
 	{
-		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0);
-		EmitSoundToAll(SOUND_WARP2, other);
 		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 		vFixPlayerPosition(other);
+		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0);
+		EmitSoundToAll(SOUND_ELECTRICITY2, other);
 
 		if (bIsPlayerStuck(other))
 		{
+			if (bIsSurvivor(iVictim))
+			{
+				g_esWarpPlayer[iVictim].g_bAffected = true;
+				g_esWarpPlayer[iVictim].g_iOwner = tank;
+
+				TeleportEntity(iVictim, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+			}
+
 			TeleportEntity(tank, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 			TeleportEntity(other, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
 
@@ -1561,7 +1631,7 @@ void vWarpRange(int tank)
 		}
 
 		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
-		EmitSoundToAll(SOUND_WARP, tank);
+		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	}
 }
 
@@ -1610,13 +1680,32 @@ void vWarpRockBreak2(int tank, int rock, float random, int pos = -1)
 			return;
 		}
 
-		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
-		EmitSoundToAll(SOUND_WARP, tank);
+		int iVictim = iGetInfectedVictim(tank, g_esWarpPlayer[tank].g_iInfectedType);
+		iVictim = (iVictim <= 0) ? tank : iVictim;
+		if (bIsSurvivor(iVictim))
+		{
+			g_esWarpPlayer[iVictim].g_bAffected = true;
+			g_esWarpPlayer[iVictim].g_iOwner = tank;
+
+			TeleportEntity(iVictim, flRockPos, flRockAngles, view_as<float>({0.0, 0.0, 0.0}));
+			vFixPlayerPosition(iVictim);
+		}
+
 		TeleportEntity(tank, flRockPos, flRockAngles, view_as<float>({0.0, 0.0, 0.0}));
 		vFixPlayerPosition(tank);
+		vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 1.0);
+		EmitSoundToAll(SOUND_ELECTRICITY, iVictim);
 
-		if (bIsPlayerStuck(tank))
+		if (bIsPlayerStuck(iVictim))
 		{
+			if (bIsSurvivor(iVictim))
+			{
+				g_esWarpPlayer[iVictim].g_bAffected = true;
+				g_esWarpPlayer[iVictim].g_iOwner = tank;
+
+				TeleportEntity(iVictim, flTankPos, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
+			}
+
 			TeleportEntity(tank, flTankPos, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 			return;
@@ -1644,7 +1733,17 @@ void vWarpCopyStats2(int oldTank, int newTank)
 
 void vRemoveWarp(int tank)
 {
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esWarpPlayer[iSurvivor].g_bAffected && g_esWarpPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esWarpPlayer[iSurvivor].g_bAffected = false;
+			g_esWarpPlayer[iSurvivor].g_iOwner = -1;
+		}
+	}
+
 	g_esWarpPlayer[tank].g_bActivated = false;
+	g_esWarpPlayer[tank].g_bAffected = false;
 	g_esWarpPlayer[tank].g_bFailed = false;
 	g_esWarpPlayer[tank].g_bNoAmmo = false;
 	g_esWarpPlayer[tank].g_iAmmoCount = 0;

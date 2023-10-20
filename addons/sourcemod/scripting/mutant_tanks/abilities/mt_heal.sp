@@ -48,13 +48,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 #else
 	#if MT_HEAL_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 
 #define MT_HEAL_SECTION "healability"
 #define MT_HEAL_SECTION2 "heal ability"

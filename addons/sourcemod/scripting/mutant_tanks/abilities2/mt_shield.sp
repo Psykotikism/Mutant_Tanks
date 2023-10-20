@@ -48,17 +48,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_SHIELD_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+#else
+	#if MT_SHIELD_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_SHIELD_SECTION "shieldability"
 #define MT_SHIELD_SECTION2 "shield ability"
@@ -605,7 +605,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 		vShieldAbility(client, false);
 	}
-	else if (g_esShieldPlayer[client].g_iCooldown2 != -1 && g_esShieldPlayer[client].g_iCooldown2 <= iTime)
+	else if (g_esShieldCache[client].g_iShieldAbility == 1 && g_esShieldPlayer[client].g_iCooldown2 != -1 && g_esShieldPlayer[client].g_iCooldown2 <= iTime)
 	{
 		vShieldAbility(client, true);
 	}

@@ -44,14 +44,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
+#define PARTICLE_VOMIT "boomer_vomit"
 #else
 	#if MT_PUKE_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_BLOOD "boomer_explode_D"
-#define PARTICLE_FOUNTAIN "boomer_vomit"
 
 #define MT_PUKE_SECTION "pukeability"
 #define MT_PUKE_SECTION2 "puke ability"
@@ -247,7 +247,7 @@ public void OnMapStart()
 #endif
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
-	iPrecacheParticle(PARTICLE_FOUNTAIN);
+	iPrecacheParticle(PARTICLE_VOMIT);
 
 	vPukeReset();
 }
@@ -1034,7 +1034,7 @@ void vPukeAbility(int tank, float random, int pos = -1)
 		}
 		else if (random <= flChance)
 		{
-			iCreateParticle(tank, PARTICLE_FOUNTAIN, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
+			iCreateParticle(tank, PARTICLE_VOMIT, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
 		}
 	}
 	else if (bIsInfected(tank, MT_CHECK_FAKECLIENT) && g_esPukeCache[tank].g_iHumanAbility == 1)
@@ -1143,7 +1143,7 @@ void vPukeRange(int tank, int value, float random, int pos = -1)
 		}
 
 		vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-		iCreateParticle(tank, PARTICLE_FOUNTAIN, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
+		iCreateParticle(tank, PARTICLE_VOMIT, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
 
 		float flTankPos[3], flSurvivorPos[3];
 		GetClientAbsOrigin(tank, flTankPos);

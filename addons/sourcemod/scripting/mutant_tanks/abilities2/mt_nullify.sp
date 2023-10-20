@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #else
 	#if MT_NULLIFY_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 
 #define MT_NULLIFY_SECTION "nullifyability"
 #define MT_NULLIFY_SECTION2 "nullify ability"
