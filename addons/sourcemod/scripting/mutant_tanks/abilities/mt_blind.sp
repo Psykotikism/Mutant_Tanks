@@ -48,16 +48,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BASHED "screen_bashed"
+
+#define SOUND_GROAN1 "ambient/random_amb_sfx/metalscrapeverb08.wav"
+#define SOUND_GROAN2 "ambient/random_amb_sounds/randbridgegroan_03.wav" // Only available in L4D2
 #else
 	#if MT_BLIND_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_BASHED "screen_bashed"
-
-#define SOUND_GROAN2 "ambient/random_amb_sounds/randbridgegroan_03.wav" // Only available in L4D2
-#define SOUND_GROAN1 "ambient/random_amb_sfx/metalscrapeverb08.wav"
 
 #define MT_BLIND_SECTION "blindability"
 #define MT_BLIND_SECTION2 "blind ability"

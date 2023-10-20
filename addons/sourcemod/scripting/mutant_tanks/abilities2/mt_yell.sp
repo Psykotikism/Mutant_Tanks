@@ -47,14 +47,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SPRITE_GLOW "sprites/glow01.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 #else
 	#if MT_YELL_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SPRITE_GLOW "sprites/glow01.vmt"
-#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
 
 #define MT_YELL_SECTION "yellability"
 #define MT_YELL_SECTION2 "yell ability"

@@ -1907,7 +1907,7 @@ stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float a
 	float flPos[3];
 	flPos[0] = origin[0] + (direction[0] * distance);
 	flPos[1] = origin[1] + (direction[1] * distance);
-	flPos[2] = origin[2] + (direction[2] * distance);
+	flPos[2] = origin[2];
 
 	TeleportEntity(tank, flPos, angles, velocity);
 }
@@ -2610,6 +2610,19 @@ stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK
 stock bool bIsTankInStasis(int tank)
 {
 	return bIsSecondGame() && !!GetEntProp(tank, Prop_Data, "m_bIsInStasis");
+}
+
+stock bool bIsTankVisible(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsVisibleToPlayer(iSurvivor, tank, 1))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -3544,6 +3557,23 @@ stock int iGetInfectedType(int client)
 	}
 
 	return 0;
+}
+
+stock int iGetInfectedVictim(int special, int type)
+{
+	switch (type)
+	{
+		case 1: return GetEntPropEnt(special, Prop_Send, "m_tongueVictim");
+		case 3: return GetEntPropEnt(special, Prop_Send, "m_pounceVictim");
+		case 5: return bIsSecondGame() ? GetEntPropEnt(special, Prop_Send, "m_jockeyVictim") : -1;
+		case 6:
+		{
+			int iVictim = GetEntPropEnt(special, Prop_Send, "m_carryVictim");
+			return (iVictim <= 0) ? GetEntPropEnt(special, Prop_Send, "m_pummelVictim") : iVictim;
+		}
+	}
+
+	return -1;
 }
 
 stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)

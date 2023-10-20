@@ -1000,6 +1000,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 	}
 
 	vRemoveFly(tank);
+	vRemoveFly2(tank);
 }
 
 #if defined MT_ABILITIES_MAIN

@@ -44,17 +44,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_ROCKET_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
 
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+#else
+	#if MT_ROCKET_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_ROCKET_SECTION "rocketability"
 #define MT_ROCKET_SECTION2 "rocket ability"

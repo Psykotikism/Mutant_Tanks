@@ -47,19 +47,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_LASER_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
-#define PARTICLE_LASER "electrical_arc_01_system"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
 
 #define SPRITE_LASER "sprites/laser.vmt"
 #define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+#else
+	#if MT_LASER_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_LASER_SECTION "laserability"
 #define MT_LASER_SECTION2 "laser ability"
@@ -952,7 +952,7 @@ void vLaser2(int tank, int survivor, int target, float range, int pos = -1)
 		return;
 	}
 
-	vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_LASER, 3.0);
+	vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_ELECTRICITY, 3.0);
 	EmitSoundToAll(((MT_GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(((MT_GetRandomInt(1, 2) == 1) ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
 

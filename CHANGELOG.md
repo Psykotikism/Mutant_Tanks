@@ -19,9 +19,16 @@
 #### Abilities
 - Fixed all the `Ability Sight` settings not working.
 - Clone: Fixed array index errors.
+- Fly: Fixed the ability not resetting when Infected with the ability change their Mutant types.
+- Hypno: Fixed shield not spawning all the time.
+- Ice: Fixed survivors not reverting back to their original colors when the ability ends.
 - Minion: Fixed array index errors. (Thanks to `Slaven555` for reporting!)
 - Necro: Fixed sound being precached for every player that leaves.
-- Warp: Fixed the Tank never teleporting to its thrown rock when it breaks. (Thanks to `moschinovac` for reporting!)
+- Recall: Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
+- Shield: Fixed shield spawning in some cases.
+- Warp:
+	- Fixed the survivor victims of Smokers, Hunters, Jockeys, and Chargers not teleporting with them.
+	- Fixed the Tank never teleporting to its thrown rock when it breaks. (Thanks to `moschinovac` for reporting!)
 
 ### Changes
 
@@ -30,6 +37,7 @@
 - The attack boost reward now lets recipients shoot rapidly with pistols. (Thanks to `epzminion` for the code!)
 - The health reward now allows recipients to heal any survivor with their own fires.
 - Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
+- Added code that uses the [`[TF2 & L4D & L4D2] Actions`](https://forums.alliedmods.net/showthread.php?t=336374) extension to track idle Infected. (Thanks to `BHaType` for helping with the code!)
 
 #### Game Data
 - Added detour setups and signatures for the following functions:
@@ -46,15 +54,18 @@
 	- `Rapid Pistol Reward`
 
 #### Abilities
-- Electric: Added visible check for survivors caught in chain reactions.
+- Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
+- Electric: Added visibility check for survivors caught in chain reactions.
 - Kamikaze: Added the `Kamikaze Meter` setting.
 - Laser:
 	- The ability now chains to multiple survivors.
 	- Added the `Ability Sight` setting.
 - Nullify: The ability now blocks the survivors' damage towards everything.
+- Recall: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 - Rocket: Added the `Rocket Countdown` setting.
 - Smash: Added the `Smash Meter` setting.
 - Smite: Added the `Smite Countdown` setting.
+- Warp: Affected survivors are now teleported back to the team when the Mutant Infected dies.
 
 ### Files
 

@@ -48,14 +48,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
+#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
 #else
 	#if MT_SHAKE_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
-#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 
 #define MT_SHAKE_SECTION "shakeability"
 #define MT_SHAKE_SECTION2 "shake ability"

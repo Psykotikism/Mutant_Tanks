@@ -44,14 +44,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #else
 	#if MT_METEOR_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 
 #define MT_METEOR_SECTION "meteorability"
 #define MT_METEOR_SECTION2 "meteor ability"

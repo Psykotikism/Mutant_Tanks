@@ -43,13 +43,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_CHARGE "items/suitchargeok1.wav"
 #else
 	#if MT_RESPAWN_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_RESPAWN "items/suitchargeok1.wav"
 
 #define MT_RESPAWN_SECTION "respawnability"
 #define MT_RESPAWN_SECTION2 "respawn ability"
@@ -880,7 +880,7 @@ void vRespawn2(int tank, int min = 0, int max = 0)
 
 	int iType = (iTypeCount > 0) ? iTankTypes[MT_GetRandomInt(1, iTypeCount)] : g_esRespawnPlayer[tank].g_iTankType;
 	MT_SpawnTank(tank, iType);
-	EmitSoundToAll(SOUND_RESPAWN, tank);
+	EmitSoundToAll(SOUND_CHARGE, tank);
 }
 
 void vRespawnCopyStats2(int oldTank, int newTank)

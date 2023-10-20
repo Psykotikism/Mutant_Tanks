@@ -44,23 +44,23 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-#else
-	#if MT_GHOST_COMPILE_METHOD == 1
-		#error This file must be compiled as a standalone plugin.
-	#endif
-#endif
 
 #define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 #define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_TANK_MAIN "models/infected/hulk.mdl"
 #define MODEL_TANK_DLC "models/infected/hulk_dlc3.mdl"
 #define MODEL_TANK_L4D1 "models/infected/hulk_l4d1.mdl"
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
+#define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 
 #define SOUND_DEATH "npc/infected/action/die/male/death_42.wav"
 #define SOUND_DEATH2 "npc/infected/action/die/male/death_43.wav"
+#else
+	#if MT_GHOST_COMPILE_METHOD == 1
+		#error This file must be compiled as a standalone plugin.
+	#endif
+#endif
 
 #define MT_GHOST_SECTION "ghostability"
 #define MT_GHOST_SECTION2 "ghost ability"

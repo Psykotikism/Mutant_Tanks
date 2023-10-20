@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 #else
 	#if MT_RECALL_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define MT_RECALL_SECTION "recallability"
 #define MT_RECALL_SECTION2 "recall ability"
@@ -63,6 +63,8 @@ enum struct esRecallPlayer
 {
 	ArrayList g_alHealthVals;
 	ArrayList g_alPrevLocations;
+
+	bool g_bAffected;
 
 	float g_flCloseAreasOnly;
 	float g_flOpenAreasOnly;
@@ -81,6 +83,8 @@ enum struct esRecallPlayer
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
+	int g_iInfectedType;
+	int g_iOwner;
 	int g_iRecallAbility;
 	int g_iRecallBlinkCooldown;
 	int g_iRecallBlinkCount;
@@ -774,7 +778,44 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRecall(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			bool bTeleport = false;
+			float flOrigin[3], flAngles[3];
+			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+			{
+				if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iTeammate) && !g_esRecallPlayer[iTeammate].g_bAffected)
+				{
+					bTeleport = true;
+
+					GetClientAbsOrigin(iTeammate, flOrigin);
+					GetClientEyeAngles(iTeammate, flAngles);
+
+					break;
+				}
+			}
+
+			if (bTeleport)
+			{
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRecallPlayer[iSurvivor].g_bAffected && g_esRecallPlayer[iSurvivor].g_iOwner == iTank)
+					{
+						g_esRecallPlayer[iSurvivor].g_bAffected = false;
+						g_esRecallPlayer[iSurvivor].g_iOwner = -1;
+
+						TeleportEntity(iSurvivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
+					}
+				}
+			}
+
+			vRemoveRecall(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
@@ -856,6 +897,8 @@ void vRecallPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
+	g_esRecallPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
+
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		vClearHealthValueList(tank);
@@ -945,8 +988,19 @@ void vRecallAbility(int tank, bool main)
 										float flNewPos[3], flEyeAngles[3];
 										GetClientEyeAngles(tank, flEyeAngles);
 										g_esRecallPlayer[tank].g_alPrevLocations.GetArray((iIndex - 1), flNewPos, sizeof flNewPos);
+
+										int iVictim = iGetInfectedVictim(tank, g_esRecallPlayer[tank].g_iInfectedType);
+										iVictim = (iVictim <= 0) ? tank : iVictim;
+										if (bIsSurvivor(iVictim))
+										{
+											g_esRecallPlayer[iVictim].g_bAffected = true;
+											g_esRecallPlayer[iVictim].g_iOwner = tank;
+
+											TeleportEntity(iVictim, flNewPos, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}));
+										}
+
 										TeleportEntity(tank, flNewPos, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}));
-										vAttachParticle(tank, PARTICLE_ELECTRICITY, 0.75, 30.0);
+										vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
 
 										if (g_esRecallCache[tank].g_iRecallRewindCleanse == 1)
 										{
@@ -1088,8 +1142,18 @@ void vRecallAbility(int tank, bool main)
 								}
 							}
 
-							vAttachParticle(tank, PARTICLE_ELECTRICITY, 0.75, 30.0);
+							int iVictim = iGetInfectedVictim(tank, g_esRecallPlayer[tank].g_iInfectedType);
+							iVictim = (iVictim <= 0) ? tank : iVictim;
+							if (bIsSurvivor(iVictim))
+							{
+								g_esRecallPlayer[iVictim].g_bAffected = true;
+								g_esRecallPlayer[iVictim].g_iOwner = tank;
+
+								MT_TeleportPlayerAhead(iVictim, flOrigin, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}), flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
+							}
+
 							MT_TeleportPlayerAhead(tank, flOrigin, flEyeAngles, view_as<float>({0.0, 0.0, 0.0}), flDirection, g_esRecallCache[tank].g_flRecallBlinkRange);
+							vAttachParticle(iVictim, PARTICLE_ELECTRICITY, 0.75, 30.0);
 
 							if (bIsPlayerStuck(tank))
 							{
@@ -1177,6 +1241,16 @@ void vRecallCopyStats2(int oldTank, int newTank)
 
 void vRemoveRecall(int tank)
 {
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esRecallPlayer[iSurvivor].g_bAffected && g_esRecallPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esRecallPlayer[iSurvivor].g_bAffected = false;
+			g_esRecallPlayer[iSurvivor].g_iOwner = -1;
+		}
+	}
+
+	g_esRecallPlayer[tank].g_bAffected = false;
 	g_esRecallPlayer[tank].g_iAmmoCount = 0;
 	g_esRecallPlayer[tank].g_iAmmoCount2 = 0;
 	g_esRecallPlayer[tank].g_iCooldown = -1;

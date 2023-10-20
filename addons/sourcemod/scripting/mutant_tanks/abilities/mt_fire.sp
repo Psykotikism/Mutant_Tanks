@@ -48,16 +48,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+
+#define SOUND_EXPLODE1 "weapons/hegrenade/explode4.wav"
+#define SOUND_EXPLODE2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav" // Only available in L4D2
 #else
 	#if MT_FIRE_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
-
-#define SOUND_EXPLODE2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav" // Only available in L4D2
-#define SOUND_EXPLODE1 "weapons/hegrenade/explode4.wav"
 
 #define MT_FIRE_SECTION "fireability"
 #define MT_FIRE_SECTION2 "fire ability"

@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
 #else
 	#if MT_ICE_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
 
 #define MT_ICE_SECTION "iceability"
 #define MT_ICE_SECTION2 "ice ability"
@@ -77,6 +77,7 @@ enum struct esIcePlayer
 	int g_iAccessFlags;
 	int g_iAmmoCount;
 	int g_iComboAbility;
+	int g_iColor[4];
 	int g_iCooldown;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
@@ -1139,6 +1140,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 				float flPos[3];
 				GetClientEyePosition(survivor, flPos);
 				GetClientEyeAngles(survivor, g_esIcePlayer[survivor].g_flAngle);
+				GetEntityRenderColor(survivor, g_esIcePlayer[survivor].g_iColor[0], g_esIcePlayer[survivor].g_iColor[1], g_esIcePlayer[survivor].g_iColor[2], g_esIcePlayer[survivor].g_iColor[3]);
 				SetEntityRenderColor(survivor, 0, 130, 255, 190);
 				EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 				vScreenEffect(survivor, tank, g_esIceCache[tank].g_iIceEffect, flags);
@@ -1210,6 +1212,10 @@ void vIceReset2(int tank)
 	g_esIcePlayer[tank].g_bNoAmmo = false;
 	g_esIcePlayer[tank].g_flDuration = -1.0;
 	g_esIcePlayer[tank].g_iAmmoCount = 0;
+	g_esIcePlayer[tank].g_iColor[0] = -1;
+	g_esIcePlayer[tank].g_iColor[1] = -1;
+	g_esIcePlayer[tank].g_iColor[2] = -1;
+	g_esIcePlayer[tank].g_iColor[3] = -1;
 	g_esIcePlayer[tank].g_iCooldown = -1;
 	g_esIcePlayer[tank].g_iRangeCooldown = -1;
 }
@@ -1240,7 +1246,7 @@ void vStopIce(int survivor, bool all = true)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	SetEntityRenderColor(survivor, 255, 255, 255, 255);
+	SetEntityRenderColor(survivor, g_esIcePlayer[survivor].g_iColor[0], g_esIcePlayer[survivor].g_iColor[1], g_esIcePlayer[survivor].g_iColor[2], g_esIcePlayer[survivor].g_iColor[3]);
 
 	if (all)
 	{

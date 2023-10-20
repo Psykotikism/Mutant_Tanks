@@ -43,13 +43,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_SMOKE "smoker_smokecloud"
 #else
 	#if MT_CLOUD_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define PARTICLE_SMOKE "smoker_smokecloud"
 
 #define MT_CLOUD_SECTION "cloudability"
 #define MT_CLOUD_SECTION2 "cloud ability"

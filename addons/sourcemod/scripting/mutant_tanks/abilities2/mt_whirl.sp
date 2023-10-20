@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SPRITE_DOT "sprites/dot.vmt"
 #else
 	#if MT_WHIRL_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SPRITE_DOT "sprites/dot.vmt"
 
 #define MT_WHIRL_SECTION "whirlability"
 #define MT_WHIRL_SECTION2 "whirl ability"

@@ -32,6 +32,55 @@ public Plugin myinfo =
 #define MT_GAMEDATA "mutant_tanks"
 #define MT_GAMEDATA_TEMP "mutant_tanks_temp"
 
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_OXYGENTANK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+#define MODEL_TANK_MAIN "models/infected/hulk.mdl"
+#define MODEL_TANK_DLC "models/infected/hulk_dlc3.mdl"
+#define MODEL_TANK_L4D1 "models/infected/hulk_l4d1.mdl"
+#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
+#define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
+
+#define PARTICLE_BASHED "screen_bashed"
+#define PARTICLE_BLOOD "boomer_explode_D"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_ELECTRICITY2 "electrical_arc_01_parent"
+#define PARTICLE_LIGHTNING "storm_lightning_01"
+#define PARTICLE_SMOKE "smoker_smokecloud"
+
+#define SOUND_ATTACK "player/pz/voice/attack/zombiedog_attack2.wav"
+#define SOUND_BELL "plats/churchbell_end.wav"
+#define SOUND_BOMB1 "animation/van_inside_debris.wav"
+#define SOUND_BOMB2 "animation/bombing_run_01.wav" // Only available in L4D2
+#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+#define SOUND_DEATH "npc/infected/action/die/male/death_42.wav"
+#define SOUND_DEATH2 "npc/infected/action/die/male/death_43.wav"
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
+#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
+#define SOUND_EXPLODE1 "weapons/hegrenade/explode4.wav"
+#define SOUND_EXPLODE2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav" // Only available in L4D2
+#define SOUND_GROAN2 "ambient/random_amb_sounds/randbridgegroan_03.wav" // Only available in L4D2
+#define SOUND_GROAN1 "ambient/random_amb_sfx/metalscrapeverb08.wav"
+#define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" // Only available in L4D1
+#define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" // Only available in L4D2
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
+#define SOUND_HIT "animation/van_inside_hit_wall.wav"
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+#define SOUND_PAIN1 "player/tank/voice/pain/tank_fire_04.wav"
+#define SOUND_PAIN2 "player/tank/voice/pain/tank_fire_08.wav" // Only available in L4D2
+#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
+#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
+
+#define SPRITE_EXPLODE "sprites/zerogxplode.spr"
+#define SPRITE_LASER "sprites/laser.vmt"
+#define SPRITE_LASERBEAM "sprites/laserbeam.vmt"
+
 bool g_bDedicated, g_bLaggedMovementInstalled, g_bLateLoad, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN

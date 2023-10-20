@@ -9,9 +9,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#define MT_CLONE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
-
 #if !defined MT_ABILITIES_MAIN
+#define MT_CLONE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
 	#if MT_CLONE_COMPILE_METHOD == 1
 		#include <sourcemod>
 		#include <mutant_tanks>

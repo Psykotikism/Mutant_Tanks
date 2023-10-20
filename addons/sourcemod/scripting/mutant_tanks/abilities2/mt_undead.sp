@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_CHARGE "items/suitchargeok1.wav"
 #else
 	#if MT_UNDEAD_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_UNDEAD "items/suitchargeok1.wav"
 
 #define MT_UNDEAD_SECTION "undeadability"
 #define MT_UNDEAD_SECTION2 "undead ability"
@@ -378,7 +378,7 @@ Action OnUndeadTakeDamage(int victim, int &attacker, int &inflictor, float &dama
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 				MT_UnvomitPlayer(victim);
 				ExtinguishEntity(victim);
-				EmitSoundToAll(SOUND_UNDEAD, victim);
+				EmitSoundToAll(SOUND_CHARGE, victim);
 
 				int iTime = GetTime();
 				if (g_esUndeadPlayer[victim].g_iCooldown == -1 || g_esUndeadPlayer[victim].g_iCooldown <= iTime)

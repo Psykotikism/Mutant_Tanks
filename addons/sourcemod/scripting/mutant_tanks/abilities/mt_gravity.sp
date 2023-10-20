@@ -44,13 +44,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_BELL "plats/churchbell_end.wav"
 #else
 	#if MT_GRAVITY_COMPILE_METHOD == 1
 		#error This file must be compiled as a standalone plugin.
 	#endif
 #endif
-
-#define SOUND_BELL "plats/churchbell_end.wav"
 
 #define MT_GRAVITY_SECTION "gravityability"
 #define MT_GRAVITY_SECTION2 "gravity ability"
