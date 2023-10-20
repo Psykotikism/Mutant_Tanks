@@ -1367,7 +1367,7 @@ void vStopBury(int survivor, int tank)
 		}
 	}
 
-	if (bTeleport)
+	if (bTeleport || bIsPlayerStuck(survivor))
 	{
 		g_esBuryPlayer[survivor].g_flLastPosition[2] += g_esBuryCache[tank].g_flBuryHeight / 2.0;
 

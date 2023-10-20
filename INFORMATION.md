@@ -15856,7 +15856,7 @@
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Hypno View"				"1"
+			"Hypno View"				"0"
 
 			// Syntax: "Special"/"spec"/"Infected"/"inf"
 			"Special"
@@ -15893,7 +15893,7 @@
 				"Hypno Range"				"150.0"
 				"Hypno Range Chance"			"15.0"
 				"Hypno Range Cooldown"			"0"
-				"Hypno View"				"1"
+				"Hypno View"				"0"
 			}
 		}
 	}

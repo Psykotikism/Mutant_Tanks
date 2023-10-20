@@ -56,6 +56,7 @@
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]
 - Electric: Added visibility check for survivors caught in chain reactions.
+- Hypno: Changed the default value of the `Hypno View` setting from `1` to `0`.
 - Kamikaze: Added the `Kamikaze Meter` setting.
 - Laser:
 	- The ability now chains to multiple survivors.
