@@ -68,7 +68,6 @@ enum struct esHypnoPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 	bool g_bRainbowColor;
-	bool g_bViewShield;
 
 	char g_sHypnoColor[16];
 
@@ -711,7 +710,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHypnoAbility[iIndex].g_flHypnoRangeChance = 15.0;
 				g_esHypnoAbility[iIndex].g_iHypnoRangeCooldown = 0;
 				g_esHypnoAbility[iIndex].g_iHypnoSight = 0;
-				g_esHypnoAbility[iIndex].g_iHypnoView = 1;
+				g_esHypnoAbility[iIndex].g_iHypnoView = 0;
 
 				g_esHypnoSpecial[iIndex].g_sHypnoColor[0] = '\0';
 				g_esHypnoSpecial[iIndex].g_flCloseAreasOnly = -1.0;
@@ -1284,12 +1283,7 @@ void vHypno(int tank)
 
 			SetEntProp(g_esHypnoPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 			MT_HideEntity(g_esHypnoPlayer[tank].g_iShield, true);
-
-			if (!g_esHypnoPlayer[tank].g_bViewShield)
-			{
-				g_esHypnoPlayer[tank].g_bViewShield = SDKHookEx(g_esHypnoPlayer[tank].g_iShield, SDKHook_SetTransmit, OnHypnoSetTransmit);
-			}
-
+			SDKHook(g_esHypnoPlayer[tank].g_iShield, SDKHook_SetTransmit, OnHypnoSetTransmit);
 			g_esHypnoPlayer[tank].g_iShield = EntIndexToEntRef(g_esHypnoPlayer[tank].g_iShield);
 		}
 	}
@@ -1511,14 +1505,7 @@ void vRemoveHypno(int tank)
 		if (bIsValidEntity(g_esHypnoPlayer[tank].g_iShield))
 		{
 			MT_HideEntity(g_esHypnoPlayer[tank].g_iShield, false);
-
-			if (g_esHypnoPlayer[tank].g_bViewShield)
-			{
-				g_esHypnoPlayer[tank].g_bViewShield = false;
-
-				SDKUnhook(g_esHypnoPlayer[tank].g_iShield, SDKHook_SetTransmit, OnHypnoSetTransmit);
-			}
-
+			SDKUnhook(g_esHypnoPlayer[tank].g_iShield, SDKHook_SetTransmit, OnHypnoSetTransmit);
 			RemoveEntity(g_esHypnoPlayer[tank].g_iShield);
 		}
 	}

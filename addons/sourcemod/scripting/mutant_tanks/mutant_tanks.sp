@@ -2742,16 +2742,26 @@ public void OnGameFrame()
 	int iTarget = 0, iHealth = 0, iMaxHealth = 0, iTotalHealth = 0;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
+#if defined _actions_included
+		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
+#else
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+#endif
 		{
 			iTarget = GetClientAimTarget(iPlayer);
 			if (bIsInfected(iTarget))
 			{
+#if defined _actions_included
+				if (bIsInfectedIdle(iTarget, 3) || !bIsVisibleToPlayer(iTarget, iPlayer, 1))
+				{
+					continue;
+				}
+#else
 				if (bIsSurvivor(iPlayer) && !bIsVisibleToPlayer(iTarget, iPlayer, 1))
 				{
 					continue;
 				}
-
+#endif
 				sHealthBar[0] = '\0';
 				iHealth = bIsPlayerIncapacitated(iTarget) ? 0 : GetEntProp(iTarget, Prop_Data, "m_iHealth");
 				iMaxHealth = GetEntProp(iTarget, Prop_Data, "m_iMaxHealth");
@@ -25350,7 +25360,7 @@ bool bIsInfectedIdle(int special, int type = 0)
 				case false: return bIsTankIdle(sAction, iSurvivor, type);
 			}
 		}
-		case 6: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "ReturnToNavMesh") != -1 || (StrContains(sAction, "Charge") != -1 && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
+		case 6: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "ReturnToNavMesh") != -1 || StrContains(sAction, "Evade") != -1 || (StrContains(sAction, "Charge") != -1 && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 		case 8: return bIsTankIdle(sAction, iSurvivor, type);
 	}
 #else
@@ -26619,7 +26629,7 @@ Action tTimerAnnounce2(Handle timer, DataPack pack)
 Action tTimerBloodEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
 	{
 		g_esPlayer[iTank].g_bBlood = false;
 
@@ -26634,7 +26644,7 @@ Action tTimerBloodEffect(Handle timer, int userid)
 Action tTimerBlurEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
@@ -26717,7 +26727,7 @@ Action tTimerDevParticle(Handle timer, int userid)
 Action tTimerElectricEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
 	{
 		g_esPlayer[iTank].g_bElectric = false;
 
@@ -26763,7 +26773,7 @@ void tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 Action tTimerFireEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
 	{
 		g_esPlayer[iTank].g_bFire = false;
 
@@ -26817,7 +26827,7 @@ Action tTimerHudPanel(Handle timer, int userid)
 Action tTimerIceEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
 	{
 		g_esPlayer[iTank].g_bIce = false;
 
@@ -26882,7 +26892,7 @@ Action tTimerLoopVoiceline(Handle timer, int userid)
 Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
 	{
 		g_esPlayer[iTank].g_bMeteor = false;
 
@@ -27183,7 +27193,7 @@ Action tTimerScreenEffect(Handle timer, int userid)
 Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
 	{
 		g_esPlayer[iTank].g_bSmoke = false;
 
@@ -27198,7 +27208,7 @@ Action tTimerSmokeEffect(Handle timer, int userid)
 Action tTimerSpitEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
 	{
 		g_esPlayer[iTank].g_bSpit = false;
 
