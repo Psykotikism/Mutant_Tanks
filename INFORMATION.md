@@ -727,6 +727,7 @@
 			// 64: God mode reward (temporary)
 			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
+			// - Cannot be nudged by teammates.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
 			// - Cannot be vomited on by Boomers.
@@ -833,6 +834,7 @@
 			// 64: God mode reward (temporary)
 			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
+			// - Cannot be nudged by teammates.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
 			// - Cannot be vomited on by Boomers.
@@ -3556,6 +3558,7 @@
 			// 64: God mode reward (temporary)
 			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
+			// - Cannot be nudged by teammates.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
 			// - Cannot be vomited on by Boomers.
@@ -3662,6 +3665,7 @@
 			// 64: God mode reward (temporary)
 			// - Automatically prevent attacks from and kill all special infected attackers.
 			// - Immune to all types of damage.
+			// - Cannot be nudged by teammates.
 			// - Cannot be flung away by Chargers.
 			// - Cannot be pushed around.
 			// - Cannot be vomited on by Boomers.

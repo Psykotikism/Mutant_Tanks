@@ -642,10 +642,12 @@ enum struct esGeneral
 	DynamicDetour g_ddTankClawGroundPoundDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
 	DynamicDetour g_ddTankClawPrimaryAttackDetour;
+	DynamicDetour g_ddTankClawTrySwingDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTankRockDetonateDetour;
 	DynamicDetour g_ddTankRockReleaseDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
+	DynamicDetour g_ddTrySwingDetour;
 	DynamicDetour g_ddTryToThrowRockDetour;
 	DynamicDetour g_ddUTILSetModelDetour;
 	DynamicDetour g_ddUseDetour;
@@ -2637,8 +2639,7 @@ public void OnConfigsExecuted()
 
 	CreateTimer(0.1, tTimerRefreshRewards, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(g_esGeneral.g_flConfigDelay, tTimerReloadConfigs, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	CreateTimer(1.0, tTimerRegenerateAmmo, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	CreateTimer(1.0, tTimerRegenerateHealth, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateTimer(1.0, tTimerRegenerateAmmoHealth, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerTankRushUpdate, .flags = TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_cvMTSurvivorUpgrades != null)
@@ -13133,6 +13134,25 @@ void vMutateTank(int tank, int specType, int type, bool blind)
 	g_esGeneral.g_iChosenType = 0;
 }
 
+void vNullifyNudge(int survivor)
+{
+	if (!bIsSurvivor(survivor) || bIsSurvivor(survivor, MT_CHECK_FAKECLIENT) || bIsSurvivorDisabled(survivor))
+	{
+		return;
+	}
+
+	if (bIsDeveloper(survivor, 4) || bIsDeveloper(survivor, 11) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE))
+	{
+		float flCurrentTime = GetGameTime();
+		if (GetEntPropFloat(survivor, Prop_Send, "m_noAvoidanceTimer", 1) > (flCurrentTime + 2.0))
+		{
+			return;
+		}
+
+		SetEntPropFloat(survivor, Prop_Send, "m_noAvoidanceTimer", (flCurrentTime + 2.0), 1);
+	}
+}
+
 void vParticleEffects(int tank)
 {
 	if (bIsInfectedSupported(tank) && g_esCache[tank].g_iBodyEffects > 0)
@@ -15948,8 +15968,8 @@ void vReadTankSettings(int type, int mode, const char[] subsection, const char[]
 		g_esTank[iIndex].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[iIndex].g_flHittableDamage, value, -2.0, 99999.0);
 		g_esTank[iIndex].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esTank[iIndex].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 		g_esTank[iIndex].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esTank[iIndex].g_iIntangibleBody, value, -1, 1);
-		g_esTank[iIndex].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esTank[iIndex].g_flPunchForce, value, -2.0, 99999.0);
-		g_esTank[iIndex].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esTank[iIndex].g_flPunchThrow, value, -1.0, 100.0);
+		g_esTank[iIndex].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esTank[iIndex].g_flPunchForce, value, -2.0, 99999.0);
+		g_esTank[iIndex].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esTank[iIndex].g_flPunchThrow, value, -1.0, 100.0);
 		g_esTank[iIndex].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esTank[iIndex].g_flRockDamage, value, -2.0, 99999.0);
 		g_esTank[iIndex].g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esTank[iIndex].g_iRockSound, value, -1, 1);
 		g_esTank[iIndex].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[iIndex].g_flRunSpeed, value, -1.0, 3.0);
@@ -16758,8 +16778,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 			g_esGeneral.g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esGeneral.g_flHittableDamage, value, -2.0, 99999.0);
 			g_esGeneral.g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esGeneral.g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 			g_esGeneral.g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esGeneral.g_iIntangibleBody, value, -1, 1);
-			g_esGeneral.g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esGeneral.g_flPunchForce, value, -2.0, 99999.0);
-			g_esGeneral.g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esGeneral.g_flPunchThrow, value, -1.0, 100.0);
+			g_esGeneral.g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esGeneral.g_flPunchForce, value, -2.0, 99999.0);
+			g_esGeneral.g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esGeneral.g_flPunchThrow, value, -1.0, 100.0);
 			g_esGeneral.g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esGeneral.g_flRockDamage, value, -2.0, 99999.0);
 			g_esGeneral.g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esGeneral.g_iRockSound, value, -1, 1);
 			g_esGeneral.g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, -1.0, 3.0);
@@ -16963,6 +16983,7 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 				char sKey[128], sValue[PLATFORM_MAX_PATH];
 				strcopy(sKey, sizeof sKey, key);
 				ReplaceString(sKey, sizeof sKey, " ", "");
+
 				strcopy(sValue, sizeof sValue, value);
 				ReplaceString(sValue, sizeof sValue, " ", "");
 
@@ -17095,8 +17116,8 @@ void vSetTankSettings(int mode, const char[] section, const char[] subsection, c
 					g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -2.0, 99999.0);
 					g_esPlayer[iPlayer].g_flIncapDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IncapDamageMultiplier", "Incap Damage Multiplier", "Incap_Damage_Multiplier", "incapdmgmulti", g_esPlayer[iPlayer].g_flIncapDamageMultiplier, value, -1.0, 99999.0);
 					g_esPlayer[iPlayer].g_iIntangibleBody = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "IntangibleBody", "Intangible Body", "Intangible_Body", "intangible", g_esPlayer[iPlayer].g_iIntangibleBody, value, -1, 1);
-					g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchf", g_esPlayer[iPlayer].g_flPunchForce, value, -2.0, 99999.0);
-					g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "puncht", g_esPlayer[iPlayer].g_flPunchThrow, value, -1.0, 100.0);
+					g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchForce", "Punch Force", "Punch_Force", "punchforce", g_esPlayer[iPlayer].g_flPunchForce, value, -2.0, 99999.0);
+					g_esPlayer[iPlayer].g_flPunchThrow = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "PunchThrow", "Punch Throw", "Punch_Throw", "punchthrow", g_esPlayer[iPlayer].g_flPunchThrow, value, -1.0, 100.0);
 					g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockDamage", "Rock Damage", "Rock_Damage", "rockdmg", g_esPlayer[iPlayer].g_flRockDamage, value, -2.0, 99999.0);
 					g_esPlayer[iPlayer].g_iRockSound = iGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RockSound", "Rock Sound", "Rock_Sound", "rocksnd", g_esPlayer[iPlayer].g_iRockSound, value, -1, 1);
 					g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE, MT_CONFIG_SECTION_ENHANCE2, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 3.0);
@@ -21564,10 +21585,12 @@ void vSetupDetours()
 	vSetupDetour(g_esGeneral.g_ddTankClawGroundPoundDetour, "MTDetour_CTankClaw::GroundPound");
 	vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit");
 	vSetupDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack");
+	vSetupDetour(g_esGeneral.g_ddTankClawTrySwingDetour, "MTDetour_CTankClaw::TrySwing");
 	vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, "MTDetour_CTankRock::Create");
 	vSetupDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate");
 	vSetupDetour(g_esGeneral.g_ddTankRockReleaseDetour, "MTDetour_CTankRock::OnRelease");
 	vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "MTDetour_CTerrorMeleeWeapon::TestMeleeSwingCollision");
+	vSetupDetour(g_esGeneral.g_ddTrySwingDetour, "MTDetour_CTerrorWeapon::TrySwing");
 	vSetupDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock");
 	vSetupDetour(g_esGeneral.g_ddUTILSetModelDetour, "MTDetour_UTIL_SetModel");
 	vSetupDetour(g_esGeneral.g_ddUseDetour, "MTDetour_CTerrorGun::Use");
@@ -21708,7 +21731,9 @@ void vToggleDetours(bool toggle)
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "MTDetour_CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankClawPrimaryAttackDetour, "MTDetour_CTankClaw::PrimaryAttack", Hook_Pre, mreTankClawPrimaryAttackPre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTankClawTrySwingDetour, "MTDetour_CTankClaw::TrySwing", Hook_Pre, mreTrySwingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTankRockDetonateDetour, "MTDetour_CTankRock::Detonate", Hook_Pre, mreTankRockDetonatePre, toggle);
+	vToggleDetour(g_esGeneral.g_ddTrySwingDetour, "MTDetour_CTerrorWeapon::TrySwing", Hook_Pre, mreTrySwingPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock", Hook_Pre, mreTryToThrowRockPre, toggle);
 	vToggleDetour(g_esGeneral.g_ddTryToThrowRockDetour, "MTDetour_TankAttack::TryToThrowRock", Hook_Post, mreTryToThrowRockPost, toggle);
 	vToggleDetour(g_esGeneral.g_ddUTILSetModelDetour, "MTDetour_UTIL_SetModel", Hook_Pre, mreUTILSetModelPre, toggle);
@@ -22065,6 +22090,12 @@ MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 
 		vResetSurvivorStats(pThis, true);
 		vSaveSurvivorWeapons(pThis);
+		SetEntPropFloat(pThis, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		SetEntityGravity(pThis, 1.0);
+		SetEntityMoveType(pThis, MOVETYPE_WALK);
+		SetEntPropFloat(pThis, Prop_Send, "m_flStepSize", 18.0);
+		SetEntProp(pThis, Prop_Send, "m_iFOV", 90);
+		SetEntProp(pThis, Prop_Send, "m_iDefaultFOV", 90);
 	}
 	else if (bIsInfected(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -23494,6 +23525,19 @@ MRESReturn mreTestMeleeSwingCollisionPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_cvMTMeleeRange.IntValue = g_esGeneral.g_iDefaultMeleeRange;
 		g_esGeneral.g_iDefaultMeleeRange = -1;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn mreTrySwingPre(int pThis, DHookParam hParams)
+{
+	int iSpecial = !bIsValidEntity(pThis) ? 0 : GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsInfected(iSpecial) && g_esCache[iSpecial].g_flAttackInterval > 0.0)
+	{
+		hParams.Set(1, g_esCache[iSpecial].g_flAttackInterval);
+
+		return MRES_ChangedHandled;
 	}
 
 	return MRES_Ignored;
@@ -25176,14 +25220,14 @@ bool bIsDayConfigFound(char[] buffer, int size)
  * 2 - 1 - immune to abilities, access to all tanks
  * 4 - 2 - loadout on initial spawn, voice pitch
  * 8 - 3 - all rewards/effects, laser sight
- * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener, blaze health
+ * 16 - 4 - damage boost/resistance, less punch force, no friendly-fire, ammo regen, custom pipe bomb duration, recoil dampener, blaze health, no nudge
  * 32 - 5 - speed boost, jump height, auto-revive, life leech, bunny hop, midair dash, door push
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recovery, full health when healing/reviving, ammo regen, ladder actions, bunny hop
  * 128 - 7 - infinite ammo, health regen, special ammo, inextinguishable fire
  * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle
  * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
  * 1024 - 10 - respawn upon death, clean kills, block puke/acid puddle
- * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo, voice pitch, door push
+ * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo, voice pitch, door push, no nudge
  **/
 bool bIsDeveloper(int developer, int bit = -1, bool real = false)
 {
@@ -25345,22 +25389,23 @@ bool bIsInfectedIdle(int special, int type = 0)
 	char sAction[32];
 	strcopy(sAction, sizeof sAction, g_esPlayer[special].g_sActionName);
 	int iSurvivor = GetClientOfUserId(g_esPlayer[special].g_iTargetID);
+	iSurvivor = bIsSurvivor(iSurvivor) ? iSurvivor : iGetInfectedVictim(special, g_esPlayer[special].g_iInfectedType);
 
-	switch (iGetInfectedType(special))
+	switch (g_esPlayer[special].g_iInfectedType)
 	{
-		case 1: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "RetreatToCover") != -1 || StrContains(sAction, "MoveToAttackPosition") != -1 || (StrContains(sAction, "Tongue") != -1 && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
+		case 1: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "RetreatToCover") != -1 || StrContains(sAction, "MoveToAttackPosition") != -1 || (StrContains(sAction, "Tongue") != -1 && !bIsSurvivor(iSurvivor)) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 		case 2: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "Hide") != -1 || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
-		case 3: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "RetreatToCover") != -1 || (StrContains(sAction, "Lunge") != -1 && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
+		case 3: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "RetreatToCover") != -1 || (StrContains(sAction, "Lunge") != -1 && !bIsSurvivor(iSurvivor)) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 		case 4: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "Ambush") != -1 || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 		case 5:
 		{
 			switch (g_bSecondGame)
 			{
-				case true: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : ((StrContains(sAction, "Leap") && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
+				case true: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : ((StrContains(sAction, "Leap") && !bIsSurvivor(iSurvivor)) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 				case false: return bIsTankIdle(sAction, iSurvivor, type);
 			}
 		}
-		case 6: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "ReturnToNavMesh") != -1 || StrContains(sAction, "Evade") != -1 || (StrContains(sAction, "Charge") != -1 && !bIsSurvivor(iGetInfectedVictim(special, iGetInfectedType(special)))) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
+		case 6: return (type != 3) ? (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)) : (StrContains(sAction, "ReturnToNavMesh") != -1 || StrContains(sAction, "Evade") != -1 || (StrContains(sAction, "Charge") != -1 && !bIsSurvivor(iSurvivor)) || (StrContains(sAction, "Attack") != -1 && !bIsSurvivor(iSurvivor)));
 		case 8: return bIsTankIdle(sAction, iSurvivor, type);
 	}
 #else
@@ -26629,11 +26674,16 @@ Action tTimerAnnounce2(Handle timer, DataPack pack)
 Action tTimerBloodEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
 	{
 		g_esPlayer[iTank].g_bBlood = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_BLOOD, 0.75, 30.0);
@@ -26644,7 +26694,7 @@ Action tTimerBloodEffect(Handle timer, int userid)
 Action tTimerBlurEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
@@ -26727,11 +26777,16 @@ Action tTimerDevParticle(Handle timer, int userid)
 Action tTimerElectricEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
 	{
 		g_esPlayer[iTank].g_bElectric = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	switch (bIsValidClient(iTank, MT_CHECK_FAKECLIENT))
@@ -26773,11 +26828,16 @@ void tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 Action tTimerFireEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
 	{
 		g_esPlayer[iTank].g_bFire = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_FIRE, 0.75);
@@ -26827,11 +26887,16 @@ Action tTimerHudPanel(Handle timer, int userid)
 Action tTimerIceEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
 	{
 		g_esPlayer[iTank].g_bIce = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_ICE, 2.0, 30.0);
@@ -26892,11 +26957,16 @@ Action tTimerLoopVoiceline(Handle timer, int userid)
 Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
 	{
 		g_esPlayer[iTank].g_bMeteor = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_METEOR, 6.0, 30.0);
@@ -26938,7 +27008,7 @@ Action tTimerRefreshRewards(Handle timer)
 	return Plugin_Continue;
 }
 
-Action tTimerRegenerateAmmo(Handle timer)
+Action tTimerRegenerateAmmoHealth(Handle timer)
 {
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
@@ -26954,6 +27024,9 @@ Action tTimerRegenerateAmmo(Handle timer)
 		{
 			continue;
 		}
+
+		vLifeLeech(iSurvivor, 7);
+		vNullifyNudge(iSurvivor);
 
 		bDeveloper = (bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6));
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
@@ -27032,21 +27105,6 @@ Action tTimerRegenerateAmmo(Handle timer)
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[iSurvivor].g_iMaxClip[1]);
 			}
 		}
-	}
-
-	return Plugin_Continue;
-}
-
-Action tTimerRegenerateHealth(Handle timer)
-{
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
-
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		vLifeLeech(iSurvivor, 7);
 	}
 
 	return Plugin_Continue;
@@ -27193,11 +27251,16 @@ Action tTimerScreenEffect(Handle timer, int userid)
 Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
 	{
 		g_esPlayer[iTank].g_bSmoke = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_SMOKE, 1.5);
@@ -27208,11 +27271,16 @@ Action tTimerSmokeEffect(Handle timer, int userid)
 Action tTimerSpitEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsInfectedSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsInfectedEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
 	{
 		g_esPlayer[iTank].g_bSpit = false;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsInfectedIdle(iTank) || (bIsSpecialInfected(iTank) && !bIsTankVisible(iTank)))
+	{
+		return Plugin_Continue;
 	}
 
 	vAttachParticle(iTank, PARTICLE_SPIT, 2.0, 30.0);

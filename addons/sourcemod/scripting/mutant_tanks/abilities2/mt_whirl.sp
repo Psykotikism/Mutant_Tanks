@@ -1116,9 +1116,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 					SetEntityRenderColor(iCamera, 0, 0, 0, 0);
 					TeleportEntity(iCamera, flEyePos, flAngles);
 					DispatchSpawn(iCamera);
-
 					TeleportEntity(survivor, .angles = flAngles);
-
 					vSetEntityParent(iCamera, survivor);
 					SetClientViewEntity(survivor, iCamera);
 
