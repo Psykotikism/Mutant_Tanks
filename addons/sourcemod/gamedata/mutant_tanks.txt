@@ -266,6 +266,38 @@
 			}
 
 			/**
+			 * CTankClaw::TrySwing(float, float, float, CBaseEntity *)
+			 *
+			 * Note: Detouring as a pre-hook for changing claw swing interval per special infected.
+			 **/
+			"MTDetour_CTankClaw::TrySwing"
+			{
+				"signature"	"CTankClaw::TrySwing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"interval"
+					{
+						"type"		"float"
+					}
+					"duration"
+					{
+						"type"		"float"
+					}
+					"range"
+					{
+						"type"		"float"
+					}
+					"target"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			/**
 			 * CTankRock::Detonate()
 			 *
 			 * Note: Detouring as a pre-hook for providing a forward for other plugins to use.
@@ -759,6 +791,34 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+			}
+
+			/**
+			 * CTerrorWeapon::TrySwing(float, float, float)
+			 *
+			 * Note: Detouring as a pre-hook for changing claw swing interval per special infected.
+			 **/
+			"MTDetour_CTerrorWeapon::TrySwing"
+			{
+				"signature"	"CTerrorWeapon::TrySwing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"interval"
+					{
+						"type"		"float"
+					}
+					"duration"
+					{
+						"type"		"float"
+					}
+					"range"
+					{
+						"type"		"float"
+					}
+				}
 			}
 
 			/**
@@ -2680,6 +2740,25 @@
 			}
 
 			/**
+			 * CTankClaw::TrySwing(float, float, float, CBaseEntity *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTankClaw::`vftable'" to jump to the "CTankClaw" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTankClaw::TrySwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw8TrySwingEfffP11CBaseEntity"
+				"mac"		"@_ZN9CTankClaw8TrySwingEfffP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x89\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90"
+						/* ? ? ? ? ? ? E8 ? ? ? ? 85 ? 89 ? ? ? 0F 84 ? ? ? ? 8B ? 8B 90 */
+			}
+
+			/**
 			 * CTankRock::Detonate()
 			 *
 			 * Note: Used for detouring/calling the function.
@@ -3689,6 +3768,25 @@
 				"mac"		"@_ZN13CTerrorWeapon16StartAttackTimerEf"
 				"windows"	"\xD9\x44\x24\x04\x51\x81\xC1\xD0"
 						/* D9 44 24 04 51 81 C1 D0 */
+			}
+
+			/**
+			 * CTerrorWeapon::TrySwing(float, float, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorWeapon::`vftable'" to jump to the "CTerrorWeapon" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorWeapon::TrySwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon8TrySwingEfff"
+				"mac"		"@_ZN13CTerrorWeapon8TrySwingEfff"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x55"
+						/* ? ? ? ? ? ? 8B ? 8B 90 ? ? ? ? FF ? 84 ? 0F 85 ? ? ? ? 55 */
 			}
 
 			/**
@@ -5969,6 +6067,25 @@
 			}
 
 			/**
+			 * CTankClaw::TrySwing(float, float, float, CBaseEntity *)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTankClaw::`vftable'" to jump to the "CTankClaw" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTankClaw::TrySwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw8TrySwingEfffP11CBaseEntity"
+				"mac"		"@_ZN9CTankClaw8TrySwingEfffP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x89\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
+						/* ? ? ? ? ? ? 56 57 8B ? E8 ? ? ? ? 8B ? 89 ? ? 85 ? 0F 84 ? ? ? ? 8B */
+			}
+
+			/**
 			 * CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*)
 			 *
 			 * Note: Used for detouring the function.
@@ -7264,6 +7381,25 @@
 				"mac"		"@_ZN13CTerrorWeapon16StartAttackTimerEf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB9\x4C"
 						/* ? ? ? ? ? ? 8D B9 4C */
+			}
+
+			/**
+			 * CTerrorWeapon::TrySwing(float, float, float)
+			 *
+			 * How to find on Windows:
+			 * 1. Find the function's offsets with asherkin's VTable dump.
+			 * 2. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3. Search for "CTerrorWeapon::`vftable'" to jump to the "CTerrorWeapon" vtable.
+			 * 4. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorWeapon::TrySwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon8TrySwingEfff"
+				"mac"		"@_ZN13CTerrorWeapon8TrySwingEfff"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? 56 8B ? 8B ? 8B 90 ? ? ? ? FF ? 84 ? 0F 85 ? ? ? ? 53 */
 			}
 
 			/**

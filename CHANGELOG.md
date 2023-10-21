@@ -36,13 +36,16 @@
 - The damage boost reward now gives recipients laser sights. (Thanks to `Dragokas` for the code!)
 - The attack boost reward now lets recipients shoot rapidly with pistols. (Thanks to `epzminion` for the code!)
 - The health reward now allows recipients to heal any survivor with their own fires.
+- The godmode reward now prevents recipients from being nudged by teammates. (Thanks to `Lux` for the code!)
 - Added code from the [`[L4D & L4D2] Late Model Precacher`](https://forums.alliedmods.net/showthread.php?t=337273) plugin.
 - Added code that uses the [`[TF2 & L4D & L4D2] Actions`](https://forums.alliedmods.net/showthread.php?t=336374) extension to track idle Infected. (Thanks to `BHaType` for helping with the code!)
 
 #### Game Data
 - Added detour setups and signatures for the following functions:
 	- `CPistol::GetRateOfFire`
+	- `CTankClaw::TrySwing`
 	- `CTerrorGun::GetRateOfFire`
+	- `CTerrorWeapon::TrySwing`
 	- `UTIL_SetModel`
 - Added signatures for the following functions:
 	- `CTerrorPlayer::AddUpgrade`
