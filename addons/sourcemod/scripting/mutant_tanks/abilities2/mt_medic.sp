@@ -848,8 +848,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 					}
 				}
 
-				g_esMedicPlayer[admin].g_iMedicFieldColor[3] = 255;
-				g_esMedicTeammate[admin][specType].g_iMedicFieldColor[3] = 255;
+				switch (special && specsection[0] != '\0')
+				{
+					case true: g_esMedicTeammate[admin][specType].g_iMedicFieldColor[3] = 255;
+					case false: g_esMedicPlayer[admin].g_iMedicFieldColor[3] = 255;
+				}
 			}
 			else
 			{
@@ -954,8 +957,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 					}
 				}
 
-				g_esMedicAbility[type].g_iMedicFieldColor[3] = 255;
-				g_esMedicSpecial[type][specType].g_iMedicFieldColor[3] = 255;
+				switch (special && specsection[0] != '\0')
+				{
+					case true: g_esMedicSpecial[type][specType].g_iMedicFieldColor[3] = 255;
+					case false: g_esMedicAbility[type].g_iMedicFieldColor[3] = 255;
+				}
 			}
 			else
 			{
