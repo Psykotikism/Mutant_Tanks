@@ -1039,8 +1039,10 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  * @param special		True if reading a special infected setting, false otherwise.
  * @param specsection		The special section the config parser is currently on.
+ * @param specName		Special Infected name.
+ * @param specType		Special Infected type.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType);
 
 /**
  * Called when the Tank is passed on to another player or bot.
@@ -1924,7 +1926,7 @@ stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float a
 	float flPos[3];
 	flPos[0] = origin[0] + (direction[0] * distance);
 	flPos[1] = origin[1] + (direction[1] * distance);
-	flPos[2] = origin[2] + (direction[2] * distance);
+	flPos[2] = origin[2];
 
 	TeleportEntity(tank, flPos, angles, velocity);
 }

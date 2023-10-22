@@ -155,7 +155,7 @@ enum struct esWarpTeammate
 	int g_iWarpSight;
 }
 
-esWarpTeammate g_esWarpTeammate[MAXPLAYERS + 1];
+esWarpTeammate g_esWarpTeammate[MAXPLAYERS + 1][6];
 
 enum struct esWarpAbility
 {
@@ -228,7 +228,7 @@ enum struct esWarpSpecial
 	int g_iWarpSight;
 }
 
-esWarpSpecial g_esWarpSpecial[MT_MAXTYPES + 1];
+esWarpSpecial g_esWarpSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esWarpCache
 {
@@ -753,34 +753,37 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWarpAbility[iIndex].g_iWarpRockCooldown = 0;
 				g_esWarpAbility[iIndex].g_iWarpSight = 0;
 
-				g_esWarpSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esWarpSpecial[iIndex].g_iComboAbility = -1;
-				g_esWarpSpecial[iIndex].g_iHumanAbility = -1;
-				g_esWarpSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esWarpSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esWarpSpecial[iIndex].g_iHumanDuration = -1;
-				g_esWarpSpecial[iIndex].g_iHumanMode = -1;
-				g_esWarpSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esWarpSpecial[iIndex].g_iHumanRockCooldown = -1;
-				g_esWarpSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esWarpSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esWarpSpecial[iIndex].g_iWarpAbility = -1;
-				g_esWarpSpecial[iIndex].g_iWarpEffect = -1;
-				g_esWarpSpecial[iIndex].g_iWarpMessage = -1;
-				g_esWarpSpecial[iIndex].g_flWarpChance = -1.0;
-				g_esWarpSpecial[iIndex].g_iWarpCooldown = -1;
-				g_esWarpSpecial[iIndex].g_iWarpDuration = -1;
-				g_esWarpSpecial[iIndex].g_iWarpHit = -1;
-				g_esWarpSpecial[iIndex].g_iWarpHitMode = -1;
-				g_esWarpSpecial[iIndex].g_flWarpInterval = -1.0;
-				g_esWarpSpecial[iIndex].g_iWarpMode = -1;
-				g_esWarpSpecial[iIndex].g_flWarpRange = -1.0;
-				g_esWarpSpecial[iIndex].g_flWarpRangeChance = -1.0;
-				g_esWarpSpecial[iIndex].g_iWarpRangeCooldown = -1;
-				g_esWarpSpecial[iIndex].g_iWarpRockBreak = -1;
-				g_esWarpSpecial[iIndex].g_flWarpRockChance = -1.0;
-				g_esWarpSpecial[iIndex].g_iWarpRockCooldown = -1;
-				g_esWarpSpecial[iIndex].g_iWarpSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esWarpSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanDuration = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanMode = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iHumanRockCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpAbility = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpEffect = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpMessage = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_flWarpChance = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpDuration = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpHit = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpHitMode = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_flWarpInterval = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpMode = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_flWarpRange = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_flWarpRangeChance = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpRangeCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpRockBreak = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_flWarpRockChance = -1.0;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpRockCooldown = -1;
+					g_esWarpSpecial[iIndex][iSpecType].g_iWarpSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -818,77 +821,80 @@ public void MT_OnConfigsLoad(int mode)
 				g_esWarpPlayer[iPlayer].g_iWarpRockCooldown = -1;
 				g_esWarpPlayer[iPlayer].g_iWarpSight = -1;
 
-				g_esWarpTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esWarpTeammate[iPlayer].g_iComboAbility = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanDuration = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanMode = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_iHumanRockCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esWarpTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpAbility = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpEffect = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpMessage = -1;
-				g_esWarpTeammate[iPlayer].g_flWarpChance = -1.0;
-				g_esWarpTeammate[iPlayer].g_iWarpCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpDuration = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpHit = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpHitMode = -1;
-				g_esWarpTeammate[iPlayer].g_flWarpInterval = -1.0;
-				g_esWarpTeammate[iPlayer].g_iWarpMode = -1;
-				g_esWarpTeammate[iPlayer].g_flWarpRange = -1.0;
-				g_esWarpTeammate[iPlayer].g_flWarpRangeChance = -1.0;
-				g_esWarpTeammate[iPlayer].g_iWarpRangeCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpRockBreak = -1;
-				g_esWarpTeammate[iPlayer].g_flWarpRockChance = -1.0;
-				g_esWarpTeammate[iPlayer].g_iWarpRockCooldown = -1;
-				g_esWarpTeammate[iPlayer].g_iWarpSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esWarpTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iHumanRockCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpAbility = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpEffect = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpMessage = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flWarpChance = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpDuration = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpHit = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpHitMode = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flWarpInterval = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpMode = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flWarpRange = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flWarpRangeChance = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpRangeCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpRockBreak = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_flWarpRockChance = -1.0;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpRockCooldown = -1;
+					g_esWarpTeammate[iPlayer][iSpecType].g_iWarpSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vWarpConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vWarpConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esWarpTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esWarpTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esWarpTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esWarpTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpTeammate[admin].g_iHumanMode, value, -1, 1);
-			g_esWarpTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpTeammate[admin].g_iHumanRockCooldown, value, -1, 99999);
-			g_esWarpTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esWarpTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esWarpTeammate[admin].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpTeammate[admin].g_iWarpAbility, value, -1, 3);
-			g_esWarpTeammate[admin].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpTeammate[admin].g_iWarpEffect, value, -1, 7);
-			g_esWarpTeammate[admin].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpTeammate[admin].g_iWarpMessage, value, -1, 7);
-			g_esWarpTeammate[admin].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpTeammate[admin].g_iWarpSight, value, -1, 2);
-			g_esWarpTeammate[admin].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpTeammate[admin].g_flWarpChance, value, -1.0, 100.0);
-			g_esWarpTeammate[admin].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpTeammate[admin].g_iWarpCooldown, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpTeammate[admin].g_iWarpDuration, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpTeammate[admin].g_iWarpHit, value, -1, 1);
-			g_esWarpTeammate[admin].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpTeammate[admin].g_iWarpHitMode, value, -1, 2);
-			g_esWarpTeammate[admin].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpTeammate[admin].g_flWarpInterval, value, -1.0, 99999.0);
-			g_esWarpTeammate[admin].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpTeammate[admin].g_iWarpMode, value, -1, 3);
-			g_esWarpTeammate[admin].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpTeammate[admin].g_flWarpRange, value, -1.0, 99999.0);
-			g_esWarpTeammate[admin].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpTeammate[admin].g_flWarpRangeChance, value, -1.0, 100.0);
-			g_esWarpTeammate[admin].g_iWarpRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeCooldown", "Warp Range Cooldown", "Warp_Range_Cooldown", "rangecooldown", g_esWarpTeammate[admin].g_iWarpRangeCooldown, value, -1, 99999);
-			g_esWarpTeammate[admin].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpTeammate[admin].g_iWarpRockBreak, value, -1, 1);
-			g_esWarpTeammate[admin].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpTeammate[admin].g_flWarpRockChance, value, -1.0, 100.0);
-			g_esWarpTeammate[admin].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockCooldown", "Warp Rock Cooldown", "Warp_Rock_Cooldown", "rockcooldown", g_esWarpTeammate[admin].g_iWarpRockCooldown, value, -1, 99999);
+			g_esWarpTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpTeammate[admin][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpTeammate[admin][specType].g_iHumanRockCooldown, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpTeammate[admin][specType].g_iWarpAbility, value, -1, 3, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpTeammate[admin][specType].g_iWarpEffect, value, -1, 7, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpTeammate[admin][specType].g_iWarpMessage, value, -1, 7, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpTeammate[admin][specType].g_iWarpSight, value, -1, 2, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpTeammate[admin][specType].g_flWarpChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpTeammate[admin][specType].g_iWarpCooldown, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpTeammate[admin][specType].g_iWarpDuration, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpTeammate[admin][specType].g_iWarpHit, value, -1, 1, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpTeammate[admin][specType].g_iWarpHitMode, value, -1, 2, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpTeammate[admin][specType].g_flWarpInterval, value, -1.0, 99999.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpTeammate[admin][specType].g_iWarpMode, value, -1, 3, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpTeammate[admin][specType].g_flWarpRange, value, -1.0, 99999.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpTeammate[admin][specType].g_flWarpRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeCooldown", "Warp Range Cooldown", "Warp_Range_Cooldown", "rangecooldown", g_esWarpTeammate[admin][specType].g_iWarpRangeCooldown, value, -1, 99999, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpTeammate[admin][specType].g_iWarpRockBreak, value, -1, 1, specName, specType);
+			g_esWarpTeammate[admin][specType].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpTeammate[admin][specType].g_flWarpRockChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpTeammate[admin][specType].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockCooldown", "Warp Rock Cooldown", "Warp_Rock_Cooldown", "rockcooldown", g_esWarpTeammate[admin][specType].g_iWarpRockCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -929,34 +935,34 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esWarpSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esWarpSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esWarpSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esWarpSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esWarpSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esWarpSpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpSpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esWarpSpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpSpecial[type].g_iHumanMode, value, -1, 1);
-			g_esWarpSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esWarpSpecial[type].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpSpecial[type].g_iHumanRockCooldown, value, -1, 99999);
-			g_esWarpSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esWarpSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esWarpSpecial[type].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpSpecial[type].g_iWarpAbility, value, -1, 3);
-			g_esWarpSpecial[type].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpSpecial[type].g_iWarpEffect, value, -1, 7);
-			g_esWarpSpecial[type].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpSpecial[type].g_iWarpMessage, value, -1, 7);
-			g_esWarpSpecial[type].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpSpecial[type].g_iWarpSight, value, -1, 2);
-			g_esWarpSpecial[type].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpSpecial[type].g_flWarpChance, value, -1.0, 100.0);
-			g_esWarpSpecial[type].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpSpecial[type].g_iWarpCooldown, value, -1, 99999);
-			g_esWarpSpecial[type].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpSpecial[type].g_iWarpDuration, value, -1, 99999);
-			g_esWarpSpecial[type].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpSpecial[type].g_iWarpHit, value, -1, 1);
-			g_esWarpSpecial[type].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpSpecial[type].g_iWarpHitMode, value, -1, 2);
-			g_esWarpSpecial[type].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpSpecial[type].g_flWarpInterval, value, -1.0, 99999.0);
-			g_esWarpSpecial[type].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpSpecial[type].g_iWarpMode, value, -1, 3);
-			g_esWarpSpecial[type].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpSpecial[type].g_flWarpRange, value, -1.0, 99999.0);
-			g_esWarpSpecial[type].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpSpecial[type].g_flWarpRangeChance, value, -1.0, 100.0);
-			g_esWarpSpecial[type].g_iWarpRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeCooldown", "Warp Range Cooldown", "Warp_Range_Cooldown", "rangecooldown", g_esWarpSpecial[type].g_iWarpRangeCooldown, value, -1, 99999);
-			g_esWarpSpecial[type].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpSpecial[type].g_iWarpRockBreak, value, -1, 1);
-			g_esWarpSpecial[type].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpSpecial[type].g_flWarpRockChance, value, -1.0, 100.0);
-			g_esWarpSpecial[type].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockCooldown", "Warp Rock Cooldown", "Warp_Rock_Cooldown", "rockcooldown", g_esWarpSpecial[type].g_iWarpRockCooldown, value, -1, 99999);
+			g_esWarpSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esWarpSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esWarpSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esWarpSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esWarpSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esWarpSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esWarpSpecial[type][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esWarpSpecial[type][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esWarpSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iHumanRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "HumanRockCooldown", "Human Rock Cooldown", "Human_Rock_Cooldown", "hrockcooldown", g_esWarpSpecial[type][specType].g_iHumanRockCooldown, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esWarpSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esWarpSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpAbility = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esWarpSpecial[type][specType].g_iWarpAbility, value, -1, 3, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpEffect = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esWarpSpecial[type][specType].g_iWarpEffect, value, -1, 7, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpMessage = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esWarpSpecial[type][specType].g_iWarpMessage, value, -1, 7, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpSight = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esWarpSpecial[type][specType].g_iWarpSight, value, -1, 2, specName, specType);
+			g_esWarpSpecial[type][specType].g_flWarpChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpChance", "Warp Chance", "Warp_Chance", "chance", g_esWarpSpecial[type][specType].g_flWarpChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpCooldown", "Warp Cooldown", "Warp_Cooldown", "cooldown", g_esWarpSpecial[type][specType].g_iWarpCooldown, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpDuration = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpDuration", "Warp Duration", "Warp_Duration", "duration", g_esWarpSpecial[type][specType].g_iWarpDuration, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpHit = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esWarpSpecial[type][specType].g_iWarpHit, value, -1, 1, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpHitMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esWarpSpecial[type][specType].g_iWarpHitMode, value, -1, 2, specName, specType);
+			g_esWarpSpecial[type][specType].g_flWarpInterval = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esWarpSpecial[type][specType].g_flWarpInterval, value, -1.0, 99999.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpMode = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esWarpSpecial[type][specType].g_iWarpMode, value, -1, 3, specName, specType);
+			g_esWarpSpecial[type][specType].g_flWarpRange = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esWarpSpecial[type][specType].g_flWarpRange, value, -1.0, 99999.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_flWarpRangeChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esWarpSpecial[type][specType].g_flWarpRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpRangeCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRangeCooldown", "Warp Range Cooldown", "Warp_Range_Cooldown", "rangecooldown", g_esWarpSpecial[type][specType].g_iWarpRangeCooldown, value, -1, 99999, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpRockBreak = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockBreak", "Warp Rock Break", "Warp_Rock_Break", "rock", g_esWarpSpecial[type][specType].g_iWarpRockBreak, value, -1, 1, specName, specType);
+			g_esWarpSpecial[type][specType].g_flWarpRockChance = flGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockChance", "Warp Rock Chance", "Warp_Rock_Chance", "rockchance", g_esWarpSpecial[type][specType].g_flWarpRockChance, value, -1.0, 100.0, specName, specType);
+			g_esWarpSpecial[type][specType].g_iWarpRockCooldown = iGetKeyValue(subsection, MT_WARP_SECTION, MT_WARP_SECTION2, MT_WARP_SECTION3, MT_WARP_SECTION4, key, "WarpRockCooldown", "Warp Rock Cooldown", "Warp_Rock_Cooldown", "rockcooldown", g_esWarpSpecial[type][specType].g_iWarpRockCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -1001,38 +1007,40 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esWarpPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esWarpPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esWarpPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flCloseAreasOnly, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpSpecial[type].g_flCloseAreasOnly, g_esWarpAbility[type].g_flCloseAreasOnly, 1);
-		g_esWarpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iComboAbility, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpSpecial[type].g_iComboAbility, g_esWarpAbility[type].g_iComboAbility, 1);
-		g_esWarpCache[tank].g_flWarpChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpChance, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpSpecial[type].g_flWarpChance, g_esWarpAbility[type].g_flWarpChance, 1);
-		g_esWarpCache[tank].g_flWarpInterval = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpInterval, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpSpecial[type].g_flWarpInterval, g_esWarpAbility[type].g_flWarpInterval, 1);
-		g_esWarpCache[tank].g_flWarpRange = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRange, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpSpecial[type].g_flWarpRange, g_esWarpAbility[type].g_flWarpRange, 1);
-		g_esWarpCache[tank].g_flWarpRangeChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRangeChance, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpSpecial[type].g_flWarpRangeChance, g_esWarpAbility[type].g_flWarpRangeChance, 1);
-		g_esWarpCache[tank].g_flWarpRockChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flWarpRockChance, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpSpecial[type].g_flWarpRockChance, g_esWarpAbility[type].g_flWarpRockChance, 1);
-		g_esWarpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAbility, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpSpecial[type].g_iHumanAbility, g_esWarpAbility[type].g_iHumanAbility, 1);
-		g_esWarpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanAmmo, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpSpecial[type].g_iHumanAmmo, g_esWarpAbility[type].g_iHumanAmmo, 1);
-		g_esWarpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanCooldown, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpSpecial[type].g_iHumanCooldown, g_esWarpAbility[type].g_iHumanCooldown, 1);
-		g_esWarpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanDuration, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpSpecial[type].g_iHumanDuration, g_esWarpAbility[type].g_iHumanDuration, 1);
-		g_esWarpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanMode, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpSpecial[type].g_iHumanMode, g_esWarpAbility[type].g_iHumanMode, 1);
-		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRangeCooldown, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpSpecial[type].g_iHumanRangeCooldown, g_esWarpAbility[type].g_iHumanRangeCooldown, 1);
-		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iHumanRockCooldown, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpSpecial[type].g_iHumanRockCooldown, g_esWarpAbility[type].g_iHumanRockCooldown, 1);
-		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_flOpenAreasOnly, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpSpecial[type].g_flOpenAreasOnly, g_esWarpAbility[type].g_flOpenAreasOnly, 1);
-		g_esWarpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iRequiresHumans, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpSpecial[type].g_iRequiresHumans, g_esWarpAbility[type].g_iRequiresHumans, 1);
-		g_esWarpCache[tank].g_iWarpAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpAbility, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpSpecial[type].g_iWarpAbility, g_esWarpAbility[type].g_iWarpAbility, 1);
-		g_esWarpCache[tank].g_iWarpCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpCooldown, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpSpecial[type].g_iWarpCooldown, g_esWarpAbility[type].g_iWarpCooldown, 1);
-		g_esWarpCache[tank].g_iWarpDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpDuration, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpSpecial[type].g_iWarpDuration, g_esWarpAbility[type].g_iWarpDuration, 1);
-		g_esWarpCache[tank].g_iWarpEffect = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpEffect, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpSpecial[type].g_iWarpEffect, g_esWarpAbility[type].g_iWarpEffect, 1);
-		g_esWarpCache[tank].g_iWarpHit = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHit, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpSpecial[type].g_iWarpHit, g_esWarpAbility[type].g_iWarpHit, 1);
-		g_esWarpCache[tank].g_iWarpHitMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpHitMode, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpSpecial[type].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode, 1);
-		g_esWarpCache[tank].g_iWarpMessage = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMessage, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpSpecial[type].g_iWarpMessage, g_esWarpAbility[type].g_iWarpMessage, 1);
-		g_esWarpCache[tank].g_iWarpMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpMode, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpSpecial[type].g_iWarpMode, g_esWarpAbility[type].g_iWarpMode, 1);
-		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRangeCooldown, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpSpecial[type].g_iWarpRangeCooldown, g_esWarpAbility[type].g_iWarpRangeCooldown, 1);
-		g_esWarpCache[tank].g_iWarpSight = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpSight, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpSpecial[type].g_iWarpSight, g_esWarpAbility[type].g_iWarpSight, 1);
-		g_esWarpCache[tank].g_iWarpRockBreak = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockBreak, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpSpecial[type].g_iWarpRockBreak, g_esWarpAbility[type].g_iWarpRockBreak, 1);
-		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank].g_iWarpRockCooldown, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpSpecial[type].g_iWarpRockCooldown, g_esWarpAbility[type].g_iWarpRockCooldown, 1);
+		g_esWarpCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esWarpPlayer[tank].g_flCloseAreasOnly, g_esWarpSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esWarpAbility[type].g_flCloseAreasOnly, 1);
+		g_esWarpCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iComboAbility, g_esWarpPlayer[tank].g_iComboAbility, g_esWarpSpecial[type][iSpecType - 1].g_iComboAbility, g_esWarpAbility[type].g_iComboAbility, 1);
+		g_esWarpCache[tank].g_flWarpChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flWarpChance, g_esWarpPlayer[tank].g_flWarpChance, g_esWarpSpecial[type][iSpecType - 1].g_flWarpChance, g_esWarpAbility[type].g_flWarpChance, 1);
+		g_esWarpCache[tank].g_flWarpInterval = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flWarpInterval, g_esWarpPlayer[tank].g_flWarpInterval, g_esWarpSpecial[type][iSpecType - 1].g_flWarpInterval, g_esWarpAbility[type].g_flWarpInterval, 1);
+		g_esWarpCache[tank].g_flWarpRange = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flWarpRange, g_esWarpPlayer[tank].g_flWarpRange, g_esWarpSpecial[type][iSpecType - 1].g_flWarpRange, g_esWarpAbility[type].g_flWarpRange, 1);
+		g_esWarpCache[tank].g_flWarpRangeChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flWarpRangeChance, g_esWarpPlayer[tank].g_flWarpRangeChance, g_esWarpSpecial[type][iSpecType - 1].g_flWarpRangeChance, g_esWarpAbility[type].g_flWarpRangeChance, 1);
+		g_esWarpCache[tank].g_flWarpRockChance = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flWarpRockChance, g_esWarpPlayer[tank].g_flWarpRockChance, g_esWarpSpecial[type][iSpecType - 1].g_flWarpRockChance, g_esWarpAbility[type].g_flWarpRockChance, 1);
+		g_esWarpCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esWarpPlayer[tank].g_iHumanAbility, g_esWarpSpecial[type][iSpecType - 1].g_iHumanAbility, g_esWarpAbility[type].g_iHumanAbility, 1);
+		g_esWarpCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esWarpPlayer[tank].g_iHumanAmmo, g_esWarpSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esWarpAbility[type].g_iHumanAmmo, 1);
+		g_esWarpCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esWarpPlayer[tank].g_iHumanCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esWarpAbility[type].g_iHumanCooldown, 1);
+		g_esWarpCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanDuration, g_esWarpPlayer[tank].g_iHumanDuration, g_esWarpSpecial[type][iSpecType - 1].g_iHumanDuration, g_esWarpAbility[type].g_iHumanDuration, 1);
+		g_esWarpCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanMode, g_esWarpPlayer[tank].g_iHumanMode, g_esWarpSpecial[type][iSpecType - 1].g_iHumanMode, g_esWarpAbility[type].g_iHumanMode, 1);
+		g_esWarpCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esWarpPlayer[tank].g_iHumanRangeCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esWarpAbility[type].g_iHumanRangeCooldown, 1);
+		g_esWarpCache[tank].g_iHumanRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iHumanRockCooldown, g_esWarpPlayer[tank].g_iHumanRockCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iHumanRockCooldown, g_esWarpAbility[type].g_iHumanRockCooldown, 1);
+		g_esWarpCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esWarpPlayer[tank].g_flOpenAreasOnly, g_esWarpSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esWarpAbility[type].g_flOpenAreasOnly, 1);
+		g_esWarpCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esWarpPlayer[tank].g_iRequiresHumans, g_esWarpSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esWarpAbility[type].g_iRequiresHumans, 1);
+		g_esWarpCache[tank].g_iWarpAbility = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpAbility, g_esWarpPlayer[tank].g_iWarpAbility, g_esWarpSpecial[type][iSpecType - 1].g_iWarpAbility, g_esWarpAbility[type].g_iWarpAbility, 1);
+		g_esWarpCache[tank].g_iWarpCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpCooldown, g_esWarpPlayer[tank].g_iWarpCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iWarpCooldown, g_esWarpAbility[type].g_iWarpCooldown, 1);
+		g_esWarpCache[tank].g_iWarpDuration = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpDuration, g_esWarpPlayer[tank].g_iWarpDuration, g_esWarpSpecial[type][iSpecType - 1].g_iWarpDuration, g_esWarpAbility[type].g_iWarpDuration, 1);
+		g_esWarpCache[tank].g_iWarpEffect = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpEffect, g_esWarpPlayer[tank].g_iWarpEffect, g_esWarpSpecial[type][iSpecType - 1].g_iWarpEffect, g_esWarpAbility[type].g_iWarpEffect, 1);
+		g_esWarpCache[tank].g_iWarpHit = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpHit, g_esWarpPlayer[tank].g_iWarpHit, g_esWarpSpecial[type][iSpecType - 1].g_iWarpHit, g_esWarpAbility[type].g_iWarpHit, 1);
+		g_esWarpCache[tank].g_iWarpHitMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpHitMode, g_esWarpPlayer[tank].g_iWarpHitMode, g_esWarpSpecial[type][iSpecType - 1].g_iWarpHitMode, g_esWarpAbility[type].g_iWarpHitMode, 1);
+		g_esWarpCache[tank].g_iWarpMessage = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpMessage, g_esWarpPlayer[tank].g_iWarpMessage, g_esWarpSpecial[type][iSpecType - 1].g_iWarpMessage, g_esWarpAbility[type].g_iWarpMessage, 1);
+		g_esWarpCache[tank].g_iWarpMode = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpMode, g_esWarpPlayer[tank].g_iWarpMode, g_esWarpSpecial[type][iSpecType - 1].g_iWarpMode, g_esWarpAbility[type].g_iWarpMode, 1);
+		g_esWarpCache[tank].g_iWarpRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpRangeCooldown, g_esWarpPlayer[tank].g_iWarpRangeCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iWarpRangeCooldown, g_esWarpAbility[type].g_iWarpRangeCooldown, 1);
+		g_esWarpCache[tank].g_iWarpSight = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpSight, g_esWarpPlayer[tank].g_iWarpSight, g_esWarpSpecial[type][iSpecType - 1].g_iWarpSight, g_esWarpAbility[type].g_iWarpSight, 1);
+		g_esWarpCache[tank].g_iWarpRockBreak = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpRockBreak, g_esWarpPlayer[tank].g_iWarpRockBreak, g_esWarpSpecial[type][iSpecType - 1].g_iWarpRockBreak, g_esWarpAbility[type].g_iWarpRockBreak, 1);
+		g_esWarpCache[tank].g_iWarpRockCooldown = iGetSubSettingValue(apply, bHuman, g_esWarpTeammate[tank][iSpecType - 1].g_iWarpRockCooldown, g_esWarpPlayer[tank].g_iWarpRockCooldown, g_esWarpSpecial[type][iSpecType - 1].g_iWarpRockCooldown, g_esWarpAbility[type].g_iWarpRockCooldown, 1);
 	}
 	else
 	{
@@ -1305,8 +1313,6 @@ void vWarpPostTankSpawn(int tank)
 public void MT_OnPostTankSpawn(int tank)
 #endif
 {
-	g_esWarpPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
-
 	vWarpRange(tank);
 }
 

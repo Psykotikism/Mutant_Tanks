@@ -52,9 +52,16 @@
 	- `CTerrorPlayer::RemoveUpgrade`
 
 #### Settings
+- Added missing `Special Name` setting under the `Tank #->General->Special` and `STEAM_ID->General->Special` sections.
 - Added the following settings under the `Plugin Settings->Rewards`, `Tank #->Rewards`, and `STEAM_ID->Rewards` sections:
 	- `Blaze Health Reward`
 	- `Rapid Pistol Reward`
+- All special infected settings can now be overridden for each type of special infected.
+	- Specify the special infected's name in front of a setting to determine which special infected to apply the setting for.
+	- Example: `Smoker Base Health`
+
+#### Natives & Forwards
+- The `MT_OnConfigsLoaded` forward now has two more parameters.
 
 #### Abilities
 - Mutant Infected will now reserve their abilities for engaging with survivors for a more tactical approach. [Requires `Actions`.]

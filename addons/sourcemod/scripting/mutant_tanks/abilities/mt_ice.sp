@@ -92,6 +92,7 @@ enum struct esIcePlayer
 	int g_iIceRangeCooldown;
 	int g_iIceSight;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -125,7 +126,7 @@ enum struct esIceTeammate
 	int g_iRequiresHumans;
 }
 
-esIceTeammate g_esIceTeammate[MAXPLAYERS + 1];
+esIceTeammate g_esIceTeammate[MAXPLAYERS + 1][6];
 
 enum struct esIceAbility
 {
@@ -181,7 +182,7 @@ enum struct esIceSpecial
 	int g_iRequiresHumans;
 }
 
-esIceSpecial g_esIceSpecial[MT_MAXTYPES + 1];
+esIceSpecial g_esIceSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esIceCache
 {
@@ -628,26 +629,29 @@ public void MT_OnConfigsLoad(int mode)
 				g_esIceAbility[iIndex].g_iIceRangeCooldown = 0;
 				g_esIceAbility[iIndex].g_iIceSight = 0;
 
-				g_esIceSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esIceSpecial[iIndex].g_iComboAbility = -1;
-				g_esIceSpecial[iIndex].g_iHumanAbility = -1;
-				g_esIceSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esIceSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esIceSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esIceSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esIceSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esIceSpecial[iIndex].g_iIceAbility = -1;
-				g_esIceSpecial[iIndex].g_iIceEffect = -1;
-				g_esIceSpecial[iIndex].g_iIceMessage = -1;
-				g_esIceSpecial[iIndex].g_flIceChance = -1.0;
-				g_esIceSpecial[iIndex].g_iIceCooldown = -1;
-				g_esIceSpecial[iIndex].g_flIceDuration = -1.0;
-				g_esIceSpecial[iIndex].g_iIceHit = -1;
-				g_esIceSpecial[iIndex].g_iIceHitMode = -1;
-				g_esIceSpecial[iIndex].g_flIceRange = -1.0;
-				g_esIceSpecial[iIndex].g_flIceRangeChance = -1.0;
-				g_esIceSpecial[iIndex].g_iIceRangeCooldown = -1;
-				g_esIceSpecial[iIndex].g_iIceSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esIceSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceAbility = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceEffect = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceMessage = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_flIceChance = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceCooldown = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_flIceDuration = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceHit = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceHitMode = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_flIceRange = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_flIceRangeChance = -1.0;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceRangeCooldown = -1;
+					g_esIceSpecial[iIndex][iSpecType].g_iIceSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -677,61 +681,64 @@ public void MT_OnConfigsLoad(int mode)
 				g_esIcePlayer[iPlayer].g_iIceRangeCooldown = -1;
 				g_esIcePlayer[iPlayer].g_iIceSight = -1;
 
-				g_esIceTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esIceTeammate[iPlayer].g_iComboAbility = -1;
-				g_esIceTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esIceTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esIceTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esIceTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esIceTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esIceTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esIceTeammate[iPlayer].g_iIceAbility = -1;
-				g_esIceTeammate[iPlayer].g_iIceEffect = -1;
-				g_esIceTeammate[iPlayer].g_iIceMessage = -1;
-				g_esIceTeammate[iPlayer].g_flIceChance = -1.0;
-				g_esIceTeammate[iPlayer].g_iIceCooldown = -1;
-				g_esIceTeammate[iPlayer].g_flIceDuration = -1.0;
-				g_esIceTeammate[iPlayer].g_iIceHit = -1;
-				g_esIceTeammate[iPlayer].g_iIceHitMode = -1;
-				g_esIceTeammate[iPlayer].g_flIceRange = -1.0;
-				g_esIceTeammate[iPlayer].g_flIceRangeChance = -1.0;
-				g_esIceTeammate[iPlayer].g_iIceRangeCooldown = -1;
-				g_esIceTeammate[iPlayer].g_iIceSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esIceTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceAbility = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceEffect = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceMessage = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_flIceChance = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceCooldown = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_flIceDuration = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceHit = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceHitMode = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_flIceRange = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_flIceRangeChance = -1.0;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceRangeCooldown = -1;
+					g_esIceTeammate[iPlayer][iSpecType].g_iIceSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vIceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vIceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esIceTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esIceTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esIceTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esIceTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esIceTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esIceTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esIceTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esIceTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esIceTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esIceTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esIceTeammate[admin].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceTeammate[admin].g_iIceAbility, value, -1, 1);
-			g_esIceTeammate[admin].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceTeammate[admin].g_iIceEffect, value, -1, 7);
-			g_esIceTeammate[admin].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceTeammate[admin].g_iIceMessage, value, -1, 3);
-			g_esIceTeammate[admin].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceTeammate[admin].g_iIceSight, value, -1, 2);
-			g_esIceTeammate[admin].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceTeammate[admin].g_flIceChance, value, -1.0, 100.0);
-			g_esIceTeammate[admin].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceTeammate[admin].g_iIceCooldown, value, -1, 99999);
-			g_esIceTeammate[admin].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceTeammate[admin].g_flIceDuration, value, -1.0, 99999.0);
-			g_esIceTeammate[admin].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceTeammate[admin].g_iIceHit, value, -1, 1);
-			g_esIceTeammate[admin].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceTeammate[admin].g_iIceHitMode, value, -1, 2);
-			g_esIceTeammate[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceTeammate[admin].g_flIceRange, value, -1.0, 99999.0);
-			g_esIceTeammate[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceTeammate[admin].g_flIceRangeChance, value, -1.0, 100.0);
-			g_esIceTeammate[admin].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceTeammate[admin].g_iIceRangeCooldown, value, -1, 99999);
+			g_esIceTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esIceTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esIceTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esIceTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esIceTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esIceTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esIceTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esIceTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceTeammate[admin][specType].g_iIceAbility, value, -1, 1, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceTeammate[admin][specType].g_iIceEffect, value, -1, 7, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceTeammate[admin][specType].g_iIceMessage, value, -1, 3, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceTeammate[admin][specType].g_iIceSight, value, -1, 2, specName, specType);
+			g_esIceTeammate[admin][specType].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceTeammate[admin][specType].g_flIceChance, value, -1.0, 100.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceTeammate[admin][specType].g_iIceCooldown, value, -1, 99999, specName, specType);
+			g_esIceTeammate[admin][specType].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceTeammate[admin][specType].g_flIceDuration, value, -1.0, 99999.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceTeammate[admin][specType].g_iIceHit, value, -1, 1, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceTeammate[admin][specType].g_iIceHitMode, value, -1, 2, specName, specType);
+			g_esIceTeammate[admin][specType].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceTeammate[admin][specType].g_flIceRange, value, -1.0, 99999.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceTeammate[admin][specType].g_flIceRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esIceTeammate[admin][specType].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceTeammate[admin][specType].g_iIceRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -764,26 +771,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esIceSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esIceSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esIceSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esIceSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esIceSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esIceSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esIceSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esIceSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esIceSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esIceSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esIceSpecial[type].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceSpecial[type].g_iIceAbility, value, -1, 1);
-			g_esIceSpecial[type].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceSpecial[type].g_iIceEffect, value, -1, 7);
-			g_esIceSpecial[type].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceSpecial[type].g_iIceMessage, value, -1, 3);
-			g_esIceSpecial[type].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceSpecial[type].g_iIceSight, value, -1, 2);
-			g_esIceSpecial[type].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceSpecial[type].g_flIceChance, value, -1.0, 100.0);
-			g_esIceSpecial[type].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceSpecial[type].g_iIceCooldown, value, -1, 99999);
-			g_esIceSpecial[type].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceSpecial[type].g_flIceDuration, value, -1.0, 99999.0);
-			g_esIceSpecial[type].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceSpecial[type].g_iIceHit, value, -1, 1);
-			g_esIceSpecial[type].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceSpecial[type].g_iIceHitMode, value, -1, 2);
-			g_esIceSpecial[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceSpecial[type].g_flIceRange, value, -1.0, 99999.0);
-			g_esIceSpecial[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceSpecial[type].g_flIceRangeChance, value, -1.0, 100.0);
-			g_esIceSpecial[type].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceSpecial[type].g_iIceRangeCooldown, value, -1, 99999);
+			g_esIceSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esIceSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esIceSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esIceSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esIceSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esIceSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esIceSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esIceSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esIceSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esIceSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esIceSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esIceSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esIceSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esIceSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esIceSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esIceSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceAbility = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esIceSpecial[type][specType].g_iIceAbility, value, -1, 1, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceEffect = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esIceSpecial[type][specType].g_iIceEffect, value, -1, 7, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceMessage = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esIceSpecial[type][specType].g_iIceMessage, value, -1, 3, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceSight = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esIceSpecial[type][specType].g_iIceSight, value, -1, 2, specName, specType);
+			g_esIceSpecial[type][specType].g_flIceChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_esIceSpecial[type][specType].g_flIceChance, value, -1.0, 100.0, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceCooldown", "Ice Cooldown", "Ice_Cooldown", "cooldown", g_esIceSpecial[type][specType].g_iIceCooldown, value, -1, 99999, specName, specType);
+			g_esIceSpecial[type][specType].g_flIceDuration = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_esIceSpecial[type][specType].g_flIceDuration, value, -1.0, 99999.0, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceHit = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_esIceSpecial[type][specType].g_iIceHit, value, -1, 1, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceSpecial[type][specType].g_iIceHitMode, value, -1, 2, specName, specType);
+			g_esIceSpecial[type][specType].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceSpecial[type][specType].g_flIceRange, value, -1.0, 99999.0, specName, specType);
+			g_esIceSpecial[type][specType].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceSpecial[type][specType].g_flIceRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esIceSpecial[type][specType].g_iIceRangeCooldown = iGetKeyValue(subsection, MT_ICE_SECTION, MT_ICE_SECTION2, MT_ICE_SECTION3, MT_ICE_SECTION4, key, "IceRangeCooldown", "Ice Range Cooldown", "Ice_Range_Cooldown", "rangecooldown", g_esIceSpecial[type][specType].g_iIceRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -820,30 +827,32 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esIcePlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esIcePlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esIcePlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esIceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flCloseAreasOnly, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceSpecial[type].g_flCloseAreasOnly, g_esIceAbility[type].g_flCloseAreasOnly, 1);
-		g_esIceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iComboAbility, g_esIcePlayer[tank].g_iComboAbility, g_esIceSpecial[type].g_iComboAbility, g_esIceAbility[type].g_iComboAbility, 1);
-		g_esIceCache[tank].g_flIceChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceChance, g_esIcePlayer[tank].g_flIceChance, g_esIceSpecial[type].g_flIceChance, g_esIceAbility[type].g_flIceChance, 1);
-		g_esIceCache[tank].g_flIceDuration = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceDuration, g_esIcePlayer[tank].g_flIceDuration, g_esIceSpecial[type].g_flIceDuration, g_esIceAbility[type].g_flIceDuration, 1);
-		g_esIceCache[tank].g_flIceRange = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRange, g_esIcePlayer[tank].g_flIceRange, g_esIceSpecial[type].g_flIceRange, g_esIceAbility[type].g_flIceRange, 1);
-		g_esIceCache[tank].g_flIceRangeChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flIceRangeChance, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceSpecial[type].g_flIceRangeChance, g_esIceAbility[type].g_flIceRangeChance, 1);
-		g_esIceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAbility, g_esIcePlayer[tank].g_iHumanAbility, g_esIceSpecial[type].g_iHumanAbility, g_esIceAbility[type].g_iHumanAbility, 1);
-		g_esIceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanAmmo, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceSpecial[type].g_iHumanAmmo, g_esIceAbility[type].g_iHumanAmmo, 1);
-		g_esIceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanCooldown, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceSpecial[type].g_iHumanCooldown, g_esIceAbility[type].g_iHumanCooldown, 1);
-		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iHumanRangeCooldown, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceSpecial[type].g_iHumanRangeCooldown, g_esIceAbility[type].g_iHumanRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceAbility, g_esIcePlayer[tank].g_iIceAbility, g_esIceSpecial[type].g_iIceAbility, g_esIceAbility[type].g_iIceAbility, 1);
-		g_esIceCache[tank].g_iIceCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceCooldown, g_esIcePlayer[tank].g_iIceCooldown, g_esIceSpecial[type].g_iIceCooldown, g_esIceAbility[type].g_iIceCooldown, 1);
-		g_esIceCache[tank].g_iIceEffect = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceEffect, g_esIcePlayer[tank].g_iIceEffect, g_esIceSpecial[type].g_iIceEffect, g_esIceAbility[type].g_iIceEffect, 1);
-		g_esIceCache[tank].g_iIceHit = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHit, g_esIcePlayer[tank].g_iIceHit, g_esIceSpecial[type].g_iIceHit, g_esIceAbility[type].g_iIceHit, 1);
-		g_esIceCache[tank].g_iIceHitMode = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceHitMode, g_esIcePlayer[tank].g_iIceHitMode, g_esIceSpecial[type].g_iIceHitMode, g_esIceAbility[type].g_iIceHitMode, 1);
-		g_esIceCache[tank].g_iIceMessage = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceMessage, g_esIcePlayer[tank].g_iIceMessage, g_esIceSpecial[type].g_iIceMessage, g_esIceAbility[type].g_iIceMessage, 1);
-		g_esIceCache[tank].g_iIceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceRangeCooldown, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceSpecial[type].g_iIceRangeCooldown, g_esIceAbility[type].g_iIceRangeCooldown, 1);
-		g_esIceCache[tank].g_iIceSight = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iIceSight, g_esIcePlayer[tank].g_iIceSight, g_esIceSpecial[type].g_iIceSight, g_esIceAbility[type].g_iIceSight, 1);
-		g_esIceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_flOpenAreasOnly, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceSpecial[type].g_flOpenAreasOnly, g_esIceAbility[type].g_flOpenAreasOnly, 1);
-		g_esIceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank].g_iRequiresHumans, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceSpecial[type].g_iRequiresHumans, g_esIceAbility[type].g_iRequiresHumans, 1);
+		g_esIceCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esIcePlayer[tank].g_flCloseAreasOnly, g_esIceSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esIceAbility[type].g_flCloseAreasOnly, 1);
+		g_esIceCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iComboAbility, g_esIcePlayer[tank].g_iComboAbility, g_esIceSpecial[type][iSpecType - 1].g_iComboAbility, g_esIceAbility[type].g_iComboAbility, 1);
+		g_esIceCache[tank].g_flIceChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flIceChance, g_esIcePlayer[tank].g_flIceChance, g_esIceSpecial[type][iSpecType - 1].g_flIceChance, g_esIceAbility[type].g_flIceChance, 1);
+		g_esIceCache[tank].g_flIceDuration = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flIceDuration, g_esIcePlayer[tank].g_flIceDuration, g_esIceSpecial[type][iSpecType - 1].g_flIceDuration, g_esIceAbility[type].g_flIceDuration, 1);
+		g_esIceCache[tank].g_flIceRange = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flIceRange, g_esIcePlayer[tank].g_flIceRange, g_esIceSpecial[type][iSpecType - 1].g_flIceRange, g_esIceAbility[type].g_flIceRange, 1);
+		g_esIceCache[tank].g_flIceRangeChance = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flIceRangeChance, g_esIcePlayer[tank].g_flIceRangeChance, g_esIceSpecial[type][iSpecType - 1].g_flIceRangeChance, g_esIceAbility[type].g_flIceRangeChance, 1);
+		g_esIceCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esIcePlayer[tank].g_iHumanAbility, g_esIceSpecial[type][iSpecType - 1].g_iHumanAbility, g_esIceAbility[type].g_iHumanAbility, 1);
+		g_esIceCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esIcePlayer[tank].g_iHumanAmmo, g_esIceSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esIceAbility[type].g_iHumanAmmo, 1);
+		g_esIceCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esIcePlayer[tank].g_iHumanCooldown, g_esIceSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esIceAbility[type].g_iHumanCooldown, 1);
+		g_esIceCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esIcePlayer[tank].g_iHumanRangeCooldown, g_esIceSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esIceAbility[type].g_iHumanRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceAbility = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceAbility, g_esIcePlayer[tank].g_iIceAbility, g_esIceSpecial[type][iSpecType - 1].g_iIceAbility, g_esIceAbility[type].g_iIceAbility, 1);
+		g_esIceCache[tank].g_iIceCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceCooldown, g_esIcePlayer[tank].g_iIceCooldown, g_esIceSpecial[type][iSpecType - 1].g_iIceCooldown, g_esIceAbility[type].g_iIceCooldown, 1);
+		g_esIceCache[tank].g_iIceEffect = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceEffect, g_esIcePlayer[tank].g_iIceEffect, g_esIceSpecial[type][iSpecType - 1].g_iIceEffect, g_esIceAbility[type].g_iIceEffect, 1);
+		g_esIceCache[tank].g_iIceHit = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceHit, g_esIcePlayer[tank].g_iIceHit, g_esIceSpecial[type][iSpecType - 1].g_iIceHit, g_esIceAbility[type].g_iIceHit, 1);
+		g_esIceCache[tank].g_iIceHitMode = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceHitMode, g_esIcePlayer[tank].g_iIceHitMode, g_esIceSpecial[type][iSpecType - 1].g_iIceHitMode, g_esIceAbility[type].g_iIceHitMode, 1);
+		g_esIceCache[tank].g_iIceMessage = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceMessage, g_esIcePlayer[tank].g_iIceMessage, g_esIceSpecial[type][iSpecType - 1].g_iIceMessage, g_esIceAbility[type].g_iIceMessage, 1);
+		g_esIceCache[tank].g_iIceRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceRangeCooldown, g_esIcePlayer[tank].g_iIceRangeCooldown, g_esIceSpecial[type][iSpecType - 1].g_iIceRangeCooldown, g_esIceAbility[type].g_iIceRangeCooldown, 1);
+		g_esIceCache[tank].g_iIceSight = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iIceSight, g_esIcePlayer[tank].g_iIceSight, g_esIceSpecial[type][iSpecType - 1].g_iIceSight, g_esIceAbility[type].g_iIceSight, 1);
+		g_esIceCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esIcePlayer[tank].g_flOpenAreasOnly, g_esIceSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esIceAbility[type].g_flOpenAreasOnly, 1);
+		g_esIceCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esIceTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esIcePlayer[tank].g_iRequiresHumans, g_esIceSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esIceAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

@@ -1039,8 +1039,10 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Загрузить общие настройки, 2 = 1 + настройки типа нагрузки, 3 = Загрузить настройки администратора
  * @param special		True при чтении настройки особого заражённого, иначе - false.
  * @param specsection		Специальный раздел, на котором в данный момент находится анализатор конфигурации.
+ * @param specName		Имя особого заражённого.
+ * @param specType		Тип особого заражённого.
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType);
 
 /**
  * Вызывается, когда танк передаётся другому игроку или боту.
@@ -1924,7 +1926,7 @@ stock void MT_TeleportPlayerAhead(int tank, const float origin[3], const float a
 	float flPos[3];
 	flPos[0] = origin[0] + (direction[0] * distance);
 	flPos[1] = origin[1] + (direction[1] * distance);
-	flPos[2] = origin[2] + (direction[2] * distance);
+	flPos[2] = origin[2];
 
 	TeleportEntity(tank, flPos, angles, velocity);
 }

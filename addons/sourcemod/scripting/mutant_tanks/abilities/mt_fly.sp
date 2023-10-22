@@ -89,6 +89,7 @@ enum struct esFlyPlayer
 	int g_iHumanDuration;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -116,7 +117,7 @@ enum struct esFlyTeammate
 	int g_iRequiresHumans;
 }
 
-esFlyTeammate g_esFlyTeammate[MAXPLAYERS + 1];
+esFlyTeammate g_esFlyTeammate[MAXPLAYERS + 1][6];
 
 enum struct esFlyAbility
 {
@@ -165,7 +166,7 @@ enum struct esFlySpecial
 	int g_iRequiresHumans;
 }
 
-esFlySpecial g_esFlySpecial[MT_MAXTYPES + 1];
+esFlySpecial g_esFlySpecial[MT_MAXTYPES + 1][6];
 
 enum struct esFlyCache
 {
@@ -596,22 +597,25 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFlyAbility[iIndex].g_flFlySpeed = 500.0;
 				g_esFlyAbility[iIndex].g_iFlyType = 0;
 
-				g_esFlySpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esFlySpecial[iIndex].g_iComboAbility = -1;
-				g_esFlySpecial[iIndex].g_iHumanAbility = -1;
-				g_esFlySpecial[iIndex].g_iHumanAmmo = -1;
-				g_esFlySpecial[iIndex].g_iHumanCooldown = -1;
-				g_esFlySpecial[iIndex].g_iHumanDuration = -1;
-				g_esFlySpecial[iIndex].g_iHumanMode = -1;
-				g_esFlySpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esFlySpecial[iIndex].g_iRequiresHumans = -1;
-				g_esFlySpecial[iIndex].g_iFlyAbility = -1;
-				g_esFlySpecial[iIndex].g_iFlyMessage = -1;
-				g_esFlySpecial[iIndex].g_flFlyChance = -1.0;
-				g_esFlySpecial[iIndex].g_iFlyCooldown = -1;
-				g_esFlySpecial[iIndex].g_iFlyDuration = -1;
-				g_esFlySpecial[iIndex].g_flFlySpeed = -1.0;
-				g_esFlySpecial[iIndex].g_iFlyType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esFlySpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esFlySpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iHumanDuration = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iHumanMode = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esFlySpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iFlyAbility = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iFlyMessage = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_flFlyChance = -1.0;
+					g_esFlySpecial[iIndex][iSpecType].g_iFlyCooldown = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_iFlyDuration = -1;
+					g_esFlySpecial[iIndex][iSpecType].g_flFlySpeed = -1.0;
+					g_esFlySpecial[iIndex][iSpecType].g_iFlyType = -1;
+				}
 			}
 		}
 		case 3:
@@ -637,53 +641,56 @@ public void MT_OnConfigsLoad(int mode)
 				g_esFlyPlayer[iPlayer].g_flFlySpeed = -1.0;
 				g_esFlyPlayer[iPlayer].g_iFlyType = -1;
 
-				g_esFlyTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esFlyTeammate[iPlayer].g_iComboAbility = -1;
-				g_esFlyTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esFlyTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esFlyTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esFlyTeammate[iPlayer].g_iHumanDuration = -1;
-				g_esFlyTeammate[iPlayer].g_iHumanMode = -1;
-				g_esFlyTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esFlyTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esFlyTeammate[iPlayer].g_iFlyAbility = -1;
-				g_esFlyTeammate[iPlayer].g_iFlyMessage = -1;
-				g_esFlyTeammate[iPlayer].g_flFlyChance = -1.0;
-				g_esFlyTeammate[iPlayer].g_iFlyCooldown = -1;
-				g_esFlyTeammate[iPlayer].g_iFlyDuration = -1;
-				g_esFlyTeammate[iPlayer].g_flFlySpeed = -1.0;
-				g_esFlyTeammate[iPlayer].g_iFlyType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esFlyTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iHumanDuration = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iHumanMode = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iFlyAbility = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iFlyMessage = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_flFlyChance = -1.0;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iFlyCooldown = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iFlyDuration = -1;
+					g_esFlyTeammate[iPlayer][iSpecType].g_flFlySpeed = -1.0;
+					g_esFlyTeammate[iPlayer][iSpecType].g_iFlyType = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFlyTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esFlyTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esFlyTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esFlyTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esFlyTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esFlyTeammate[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyTeammate[admin].g_iHumanDuration, value, -1, 99999);
-			g_esFlyTeammate[admin].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyTeammate[admin].g_iHumanMode, value, -1, 1);
-			g_esFlyTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esFlyTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esFlyTeammate[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyTeammate[admin].g_iFlyAbility, value, -1, 1);
-			g_esFlyTeammate[admin].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyTeammate[admin].g_iFlyMessage, value, -1, 1);
-			g_esFlyTeammate[admin].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyTeammate[admin].g_flFlyChance, value, -1.0, 100.0);
-			g_esFlyTeammate[admin].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyTeammate[admin].g_iFlyCooldown, value, -1, 99999);
-			g_esFlyTeammate[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyTeammate[admin].g_iFlyDuration, value, -1, 99999);
-			g_esFlyTeammate[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyTeammate[admin].g_flFlySpeed, value, -1.0, 99999.0);
-			g_esFlyTeammate[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyTeammate[admin].g_iFlyType, value, -1, 15);
+			g_esFlyTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlyTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlyTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlyTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlyTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlyTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlyTeammate[admin][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlyTeammate[admin][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esFlyTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlyTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlyTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlyTeammate[admin][specType].g_iFlyAbility, value, -1, 1, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlyTeammate[admin][specType].g_iFlyMessage, value, -1, 1, specName, specType);
+			g_esFlyTeammate[admin][specType].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlyTeammate[admin][specType].g_flFlyChance, value, -1.0, 100.0, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlyTeammate[admin][specType].g_iFlyCooldown, value, -1, 99999, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyTeammate[admin][specType].g_iFlyDuration, value, -1, 99999, specName, specType);
+			g_esFlyTeammate[admin][specType].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyTeammate[admin][specType].g_flFlySpeed, value, -1.0, 99999.0, specName, specType);
+			g_esFlyTeammate[admin][specType].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyTeammate[admin][specType].g_iFlyType, value, -1, 15, specName, specType);
 		}
 		else
 		{
@@ -712,22 +719,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esFlySpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlySpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esFlySpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlySpecial[type].g_iComboAbility, value, -1, 1);
-			g_esFlySpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlySpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esFlySpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlySpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esFlySpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlySpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esFlySpecial[type].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlySpecial[type].g_iHumanDuration, value, -1, 99999);
-			g_esFlySpecial[type].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlySpecial[type].g_iHumanMode, value, -1, 1);
-			g_esFlySpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlySpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esFlySpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlySpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esFlySpecial[type].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlySpecial[type].g_iFlyAbility, value, -1, 1);
-			g_esFlySpecial[type].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlySpecial[type].g_iFlyMessage, value, -1, 1);
-			g_esFlySpecial[type].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlySpecial[type].g_flFlyChance, value, -1.0, 100.0);
-			g_esFlySpecial[type].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlySpecial[type].g_iFlyCooldown, value, -1, 99999);
-			g_esFlySpecial[type].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlySpecial[type].g_iFlyDuration, value, -1, 99999);
-			g_esFlySpecial[type].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlySpecial[type].g_flFlySpeed, value, -1.0, 99999.0);
-			g_esFlySpecial[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlySpecial[type].g_iFlyType, value, -1, 15);
+			g_esFlySpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esFlySpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFlySpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esFlySpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esFlySpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esFlySpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esFlySpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esFlySpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esFlySpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esFlySpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esFlySpecial[type][specType].g_iHumanDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esFlySpecial[type][specType].g_iHumanDuration, value, -1, 99999, specName, specType);
+			g_esFlySpecial[type][specType].g_iHumanMode = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esFlySpecial[type][specType].g_iHumanMode, value, -1, 1, specName, specType);
+			g_esFlySpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esFlySpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esFlySpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esFlySpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esFlySpecial[type][specType].g_iFlyAbility = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esFlySpecial[type][specType].g_iFlyAbility, value, -1, 1, specName, specType);
+			g_esFlySpecial[type][specType].g_iFlyMessage = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esFlySpecial[type][specType].g_iFlyMessage, value, -1, 1, specName, specType);
+			g_esFlySpecial[type][specType].g_flFlyChance = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esFlySpecial[type][specType].g_flFlyChance, value, -1.0, 100.0, specName, specType);
+			g_esFlySpecial[type][specType].g_iFlyCooldown = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyCooldown", "Fly Cooldown", "Fly_Cooldown", "cooldown", g_esFlySpecial[type][specType].g_iFlyCooldown, value, -1, 99999, specName, specType);
+			g_esFlySpecial[type][specType].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlySpecial[type][specType].g_iFlyDuration, value, -1, 99999, specName, specType);
+			g_esFlySpecial[type][specType].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlySpecial[type][specType].g_flFlySpeed, value, -1.0, 99999.0, specName, specType);
+			g_esFlySpecial[type][specType].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTION, MT_FLY_SECTION2, MT_FLY_SECTION3, MT_FLY_SECTION4, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlySpecial[type][specType].g_iFlyType, value, -1, 15, specName, specType);
 		}
 		else
 		{
@@ -760,25 +767,27 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esFlyPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esFlyPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esFlyPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[type].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
-		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[type].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
-		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[type].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
-		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[type].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
-		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[type].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
-		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[type].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
-		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[type].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
-		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[type].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
-		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[type].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
-		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[type].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
-		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[type].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
-		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[type].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
-		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[type].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
-		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[type].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
-		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[type].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
+		g_esFlyCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esFlyPlayer[tank].g_flCloseAreasOnly, g_esFlySpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esFlyAbility[type].g_flCloseAreasOnly, 1);
+		g_esFlyCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iComboAbility, g_esFlyPlayer[tank].g_iComboAbility, g_esFlySpecial[type][iSpecType - 1].g_iComboAbility, g_esFlyAbility[type].g_iComboAbility, 1);
+		g_esFlyCache[tank].g_flFlyChance = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_flFlyChance, g_esFlyPlayer[tank].g_flFlyChance, g_esFlySpecial[type][iSpecType - 1].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance, 1);
+		g_esFlyCache[tank].g_flFlySpeed = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_flFlySpeed, g_esFlyPlayer[tank].g_flFlySpeed, g_esFlySpecial[type][iSpecType - 1].g_flFlySpeed, g_esFlyAbility[type].g_flFlySpeed, 1);
+		g_esFlyCache[tank].g_iFlyAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iFlyAbility, g_esFlyPlayer[tank].g_iFlyAbility, g_esFlySpecial[type][iSpecType - 1].g_iFlyAbility, g_esFlyAbility[type].g_iFlyAbility, 1);
+		g_esFlyCache[tank].g_iFlyCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iFlyCooldown, g_esFlyPlayer[tank].g_iFlyCooldown, g_esFlySpecial[type][iSpecType - 1].g_iFlyCooldown, g_esFlyAbility[type].g_iFlyCooldown, 1);
+		g_esFlyCache[tank].g_iFlyDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iFlyDuration, g_esFlyPlayer[tank].g_iFlyDuration, g_esFlySpecial[type][iSpecType - 1].g_iFlyDuration, g_esFlyAbility[type].g_iFlyDuration, 1);
+		g_esFlyCache[tank].g_iFlyType = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iFlyType, g_esFlyPlayer[tank].g_iFlyType, g_esFlySpecial[type][iSpecType - 1].g_iFlyType, g_esFlyAbility[type].g_iFlyType, 1);
+		g_esFlyCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esFlyPlayer[tank].g_iHumanAbility, g_esFlySpecial[type][iSpecType - 1].g_iHumanAbility, g_esFlyAbility[type].g_iHumanAbility, 1);
+		g_esFlyCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esFlyPlayer[tank].g_iHumanAmmo, g_esFlySpecial[type][iSpecType - 1].g_iHumanAmmo, g_esFlyAbility[type].g_iHumanAmmo, 1);
+		g_esFlyCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esFlyPlayer[tank].g_iHumanCooldown, g_esFlySpecial[type][iSpecType - 1].g_iHumanCooldown, g_esFlyAbility[type].g_iHumanCooldown, 1);
+		g_esFlyCache[tank].g_iHumanDuration = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iHumanDuration, g_esFlyPlayer[tank].g_iHumanDuration, g_esFlySpecial[type][iSpecType - 1].g_iHumanDuration, g_esFlyAbility[type].g_iHumanDuration, 1);
+		g_esFlyCache[tank].g_iHumanMode = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iHumanMode, g_esFlyPlayer[tank].g_iHumanMode, g_esFlySpecial[type][iSpecType - 1].g_iHumanMode, g_esFlyAbility[type].g_iHumanMode, 1);
+		g_esFlyCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esFlyPlayer[tank].g_flOpenAreasOnly, g_esFlySpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esFlyAbility[type].g_flOpenAreasOnly, 1);
+		g_esFlyCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esFlyTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esFlyPlayer[tank].g_iRequiresHumans, g_esFlySpecial[type][iSpecType - 1].g_iRequiresHumans, g_esFlyAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{

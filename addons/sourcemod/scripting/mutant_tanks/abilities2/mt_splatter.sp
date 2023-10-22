@@ -105,6 +105,7 @@ enum struct esSplatterPlayer
 	int g_iHumanCooldown;
 	int g_iHumanRangeCooldown;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -150,7 +151,7 @@ enum struct esSplatterTeammate
 	int g_iSplatterType;
 }
 
-esSplatterTeammate g_esSplatterTeammate[MAXPLAYERS + 1];
+esSplatterTeammate g_esSplatterTeammate[MAXPLAYERS + 1][6];
 
 enum struct esSplatterAbility
 {
@@ -210,7 +211,7 @@ enum struct esSplatterSpecial
 	int g_iSplatterType;
 }
 
-esSplatterSpecial g_esSplatterSpecial[MT_MAXTYPES + 1];
+esSplatterSpecial g_esSplatterSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esSplatterCache
 {
@@ -635,28 +636,31 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplatterAbility[iIndex].g_iSplatterSight = 0;
 				g_esSplatterAbility[iIndex].g_iSplatterType = 0;
 
-				g_esSplatterSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esSplatterSpecial[iIndex].g_iComboAbility = -1;
-				g_esSplatterSpecial[iIndex].g_iHumanAbility = -1;
-				g_esSplatterSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esSplatterSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esSplatterSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esSplatterSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esSplatterSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterAbility = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterEffect = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterMessage = -1;
-				g_esSplatterSpecial[iIndex].g_flSplatterChance = -1.0;
-				g_esSplatterSpecial[iIndex].g_iSplatterCooldown = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterDuration = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterHit = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterHitMode = -1;
-				g_esSplatterSpecial[iIndex].g_flSplatterInterval = -1.0;
-				g_esSplatterSpecial[iIndex].g_flSplatterRange = -1.0;
-				g_esSplatterSpecial[iIndex].g_flSplatterRangeChance = -1.0;
-				g_esSplatterSpecial[iIndex].g_iSplatterRangeCooldown = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterSight = -1;
-				g_esSplatterSpecial[iIndex].g_iSplatterType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esSplatterSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterAbility = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterEffect = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterMessage = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_flSplatterChance = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterCooldown = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterDuration = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterHit = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterHitMode = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_flSplatterInterval = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_flSplatterRange = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_flSplatterRangeChance = -1.0;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterRangeCooldown = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterSight = -1;
+					g_esSplatterSpecial[iIndex][iSpecType].g_iSplatterType = -1;
+				}
 			}
 		}
 		case 3:
@@ -688,65 +692,68 @@ public void MT_OnConfigsLoad(int mode)
 				g_esSplatterPlayer[iPlayer].g_iSplatterSight = -1;
 				g_esSplatterPlayer[iPlayer].g_iSplatterType = -1;
 
-				g_esSplatterTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esSplatterTeammate[iPlayer].g_iComboAbility = -1;
-				g_esSplatterTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esSplatterTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esSplatterTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esSplatterTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esSplatterTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esSplatterTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterAbility = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterEffect = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterMessage = -1;
-				g_esSplatterTeammate[iPlayer].g_flSplatterChance = -1.0;
-				g_esSplatterTeammate[iPlayer].g_iSplatterCooldown = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterDuration = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterHit = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterHitMode = -1;
-				g_esSplatterTeammate[iPlayer].g_flSplatterInterval = -1.0;
-				g_esSplatterTeammate[iPlayer].g_flSplatterRange = -1.0;
-				g_esSplatterTeammate[iPlayer].g_flSplatterRangeChance = -1.0;
-				g_esSplatterTeammate[iPlayer].g_iSplatterRangeCooldown = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterSight = -1;
-				g_esSplatterTeammate[iPlayer].g_iSplatterType = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterAbility = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterEffect = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterMessage = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flSplatterChance = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterCooldown = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterDuration = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterHit = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterHitMode = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flSplatterInterval = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flSplatterRange = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_flSplatterRangeChance = -1.0;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterRangeCooldown = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterSight = -1;
+					g_esSplatterTeammate[iPlayer][iSpecType].g_iSplatterType = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSplatterConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vSplatterConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esSplatterTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esSplatterTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esSplatterTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esSplatterTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSplatterTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esSplatterTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esSplatterTeammate[admin].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterTeammate[admin].g_iSplatterAbility, value, -1, 3);
-			g_esSplatterTeammate[admin].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterTeammate[admin].g_iSplatterEffect, value, -1, 7);
-			g_esSplatterTeammate[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterTeammate[admin].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterTeammate[admin].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterTeammate[admin].g_iSplatterSight, value, -1, 2);
-			g_esSplatterTeammate[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterTeammate[admin].g_flSplatterChance, value, -1.0, 100.0);
-			g_esSplatterTeammate[admin].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterTeammate[admin].g_iSplatterCooldown, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterTeammate[admin].g_iSplatterDuration, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterTeammate[admin].g_iSplatterHit, value, -1, 1);
-			g_esSplatterTeammate[admin].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterTeammate[admin].g_iSplatterHitMode, value, -1, 2);
-			g_esSplatterTeammate[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterTeammate[admin].g_flSplatterInterval, value, -1.0, 99999.0);
-			g_esSplatterTeammate[admin].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterTeammate[admin].g_flSplatterRange, value, -1.0, 99999.0);
-			g_esSplatterTeammate[admin].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterTeammate[admin].g_flSplatterRangeChance, value, -1.0, 100.0);
-			g_esSplatterTeammate[admin].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterTeammate[admin].g_iSplatterRangeCooldown, value, -1, 99999);
-			g_esSplatterTeammate[admin].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterTeammate[admin].g_iSplatterType, value, -1, sizeof g_sParticles);
+			g_esSplatterTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSplatterTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterTeammate[admin][specType].g_iSplatterAbility, value, -1, 3, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterTeammate[admin][specType].g_iSplatterEffect, value, -1, 7, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterTeammate[admin][specType].g_iSplatterMessage, value, -1, 1, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterTeammate[admin][specType].g_iSplatterSight, value, -1, 2, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterTeammate[admin][specType].g_flSplatterChance, value, -1.0, 100.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterTeammate[admin][specType].g_iSplatterCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterTeammate[admin][specType].g_iSplatterDuration, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterTeammate[admin][specType].g_iSplatterHit, value, -1, 1, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterTeammate[admin][specType].g_iSplatterHitMode, value, -1, 2, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterTeammate[admin][specType].g_flSplatterInterval, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterTeammate[admin][specType].g_flSplatterRange, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterTeammate[admin][specType].g_flSplatterRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterTeammate[admin][specType].g_iSplatterRangeCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterTeammate[admin][specType].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterTeammate[admin][specType].g_iSplatterType, value, -1, sizeof g_sParticles, specName, specType);
 		}
 		else
 		{
@@ -781,28 +788,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esSplatterSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esSplatterSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esSplatterSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esSplatterSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esSplatterSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esSplatterSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSplatterSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esSplatterSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esSplatterSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esSplatterSpecial[type].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterSpecial[type].g_iSplatterAbility, value, -1, 3);
-			g_esSplatterSpecial[type].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterSpecial[type].g_iSplatterEffect, value, -1, 7);
-			g_esSplatterSpecial[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterSpecial[type].g_iSplatterMessage, value, -1, 1);
-			g_esSplatterSpecial[type].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterSpecial[type].g_iSplatterSight, value, -1, 2);
-			g_esSplatterSpecial[type].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterSpecial[type].g_flSplatterChance, value, -1.0, 100.0);
-			g_esSplatterSpecial[type].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterSpecial[type].g_iSplatterCooldown, value, -1, 99999);
-			g_esSplatterSpecial[type].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterSpecial[type].g_iSplatterDuration, value, -1, 99999);
-			g_esSplatterSpecial[type].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterSpecial[type].g_iSplatterHit, value, -1, 1);
-			g_esSplatterSpecial[type].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterSpecial[type].g_iSplatterHitMode, value, -1, 2);
-			g_esSplatterSpecial[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterSpecial[type].g_flSplatterInterval, value, -1.0, 99999.0);
-			g_esSplatterSpecial[type].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterSpecial[type].g_flSplatterRange, value, -1.0, 99999.0);
-			g_esSplatterSpecial[type].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterSpecial[type].g_flSplatterRangeChance, value, -1.0, 100.0);
-			g_esSplatterSpecial[type].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterSpecial[type].g_iSplatterRangeCooldown, value, -1, 99999);
-			g_esSplatterSpecial[type].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterSpecial[type].g_iSplatterType, value, -1, sizeof g_sParticles);
+			g_esSplatterSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esSplatterSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esSplatterSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esSplatterSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esSplatterSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esSplatterSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esSplatterSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esSplatterSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esSplatterSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterAbility = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esSplatterSpecial[type][specType].g_iSplatterAbility, value, -1, 3, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterEffect = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esSplatterSpecial[type][specType].g_iSplatterEffect, value, -1, 7, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterMessage = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esSplatterSpecial[type][specType].g_iSplatterMessage, value, -1, 1, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterSight = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esSplatterSpecial[type][specType].g_iSplatterSight, value, -1, 2, specName, specType);
+			g_esSplatterSpecial[type][specType].g_flSplatterChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esSplatterSpecial[type][specType].g_flSplatterChance, value, -1.0, 100.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterCooldown", "Splatter Cooldown", "Splatter_Cooldown", "cooldown", g_esSplatterSpecial[type][specType].g_iSplatterCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterDuration = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterDuration", "Splatter Duration", "Splatter_Duration", "duration", g_esSplatterSpecial[type][specType].g_iSplatterDuration, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterHit = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHit", "Splatter Hit", "Splatter_Hit", "hit", g_esSplatterSpecial[type][specType].g_iSplatterHit, value, -1, 1, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterHitMode = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterHitMode", "Splatter Hit Mode", "Splatter_Hit_Mode", "hitmode", g_esSplatterSpecial[type][specType].g_iSplatterHitMode, value, -1, 2, specName, specType);
+			g_esSplatterSpecial[type][specType].g_flSplatterInterval = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esSplatterSpecial[type][specType].g_flSplatterInterval, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_flSplatterRange = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRange", "Splatter Range", "Splatter_Range", "range", g_esSplatterSpecial[type][specType].g_flSplatterRange, value, -1.0, 99999.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_flSplatterRangeChance = flGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeChance", "Splatter Range Chance", "Splatter_Range_Chance", "rangechance", g_esSplatterSpecial[type][specType].g_flSplatterRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterRangeCooldown = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterRangeCooldown", "Splatter Range Cooldown", "Splatter_Range_Cooldown", "rangecooldown", g_esSplatterSpecial[type][specType].g_iSplatterRangeCooldown, value, -1, 99999, specName, specType);
+			g_esSplatterSpecial[type][specType].g_iSplatterType = iGetKeyValue(subsection, MT_SPLATTER_SECTION, MT_SPLATTER_SECTION2, MT_SPLATTER_SECTION3, MT_SPLATTER_SECTION4, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esSplatterSpecial[type][specType].g_iSplatterType, value, -1, sizeof g_sParticles, specName, specType);
 		}
 		else
 		{
@@ -841,32 +848,34 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esSplatterPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esSplatterPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esSplatterPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esSplatterCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flCloseAreasOnly, g_esSplatterPlayer[tank].g_flCloseAreasOnly, g_esSplatterSpecial[type].g_flCloseAreasOnly, g_esSplatterAbility[type].g_flCloseAreasOnly, 1);
-		g_esSplatterCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iComboAbility, g_esSplatterPlayer[tank].g_iComboAbility, g_esSplatterSpecial[type].g_iComboAbility, g_esSplatterAbility[type].g_iComboAbility, 1);
-		g_esSplatterCache[tank].g_flSplatterChance = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flSplatterChance, g_esSplatterPlayer[tank].g_flSplatterChance, g_esSplatterSpecial[type].g_flSplatterChance, g_esSplatterAbility[type].g_flSplatterChance, 1);
-		g_esSplatterCache[tank].g_flSplatterInterval = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flSplatterInterval, g_esSplatterPlayer[tank].g_flSplatterInterval, g_esSplatterSpecial[type].g_flSplatterInterval, g_esSplatterAbility[type].g_flSplatterInterval, 1);
-		g_esSplatterCache[tank].g_flSplatterRange = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flSplatterRange, g_esSplatterPlayer[tank].g_flSplatterRange, g_esSplatterSpecial[type].g_flSplatterRange, g_esSplatterAbility[type].g_flSplatterRange, 1);
-		g_esSplatterCache[tank].g_flSplatterRangeChance = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flSplatterRangeChance, g_esSplatterPlayer[tank].g_flSplatterRangeChance, g_esSplatterSpecial[type].g_flSplatterRangeChance, g_esSplatterAbility[type].g_flSplatterRangeChance, 1);
-		g_esSplatterCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iHumanAbility, g_esSplatterPlayer[tank].g_iHumanAbility, g_esSplatterSpecial[type].g_iHumanAbility, g_esSplatterAbility[type].g_iHumanAbility, 1);
-		g_esSplatterCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iHumanAmmo, g_esSplatterPlayer[tank].g_iHumanAmmo, g_esSplatterSpecial[type].g_iHumanAmmo, g_esSplatterAbility[type].g_iHumanAmmo, 1);
-		g_esSplatterCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iHumanCooldown, g_esSplatterPlayer[tank].g_iHumanCooldown, g_esSplatterSpecial[type].g_iHumanCooldown, g_esSplatterAbility[type].g_iHumanCooldown, 1);
-		g_esSplatterCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iHumanRangeCooldown, g_esSplatterPlayer[tank].g_iHumanRangeCooldown, g_esSplatterSpecial[type].g_iHumanRangeCooldown, g_esSplatterAbility[type].g_iHumanRangeCooldown, 1);
-		g_esSplatterCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_flOpenAreasOnly, g_esSplatterPlayer[tank].g_flOpenAreasOnly, g_esSplatterSpecial[type].g_flOpenAreasOnly, g_esSplatterAbility[type].g_flOpenAreasOnly, 1);
-		g_esSplatterCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iRequiresHumans, g_esSplatterPlayer[tank].g_iRequiresHumans, g_esSplatterSpecial[type].g_iRequiresHumans, g_esSplatterAbility[type].g_iRequiresHumans, 1);
-		g_esSplatterCache[tank].g_iSplatterAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterAbility, g_esSplatterPlayer[tank].g_iSplatterAbility, g_esSplatterSpecial[type].g_iSplatterAbility, g_esSplatterAbility[type].g_iSplatterAbility, 1);
-		g_esSplatterCache[tank].g_iSplatterCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterCooldown, g_esSplatterPlayer[tank].g_iSplatterCooldown, g_esSplatterSpecial[type].g_iSplatterCooldown, g_esSplatterAbility[type].g_iSplatterCooldown, 1);
-		g_esSplatterCache[tank].g_iSplatterDuration = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterDuration, g_esSplatterPlayer[tank].g_iSplatterDuration, g_esSplatterSpecial[type].g_iSplatterDuration, g_esSplatterAbility[type].g_iSplatterDuration, 1);
-		g_esSplatterCache[tank].g_iSplatterEffect = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterEffect, g_esSplatterPlayer[tank].g_iSplatterEffect, g_esSplatterSpecial[type].g_iSplatterEffect, g_esSplatterAbility[type].g_iSplatterEffect, 1);
-		g_esSplatterCache[tank].g_iSplatterHit = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterHit, g_esSplatterPlayer[tank].g_iSplatterHit, g_esSplatterSpecial[type].g_iSplatterHit, g_esSplatterAbility[type].g_iSplatterHit, 1);
-		g_esSplatterCache[tank].g_iSplatterHitMode = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterHitMode, g_esSplatterPlayer[tank].g_iSplatterHitMode, g_esSplatterSpecial[type].g_iSplatterHitMode, g_esSplatterAbility[type].g_iSplatterHitMode, 1);
-		g_esSplatterCache[tank].g_iSplatterMessage = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterMessage, g_esSplatterPlayer[tank].g_iSplatterMessage, g_esSplatterSpecial[type].g_iSplatterMessage, g_esSplatterAbility[type].g_iSplatterMessage, 1);
-		g_esSplatterCache[tank].g_iSplatterRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterRangeCooldown, g_esSplatterPlayer[tank].g_iSplatterRangeCooldown, g_esSplatterSpecial[type].g_iSplatterRangeCooldown, g_esSplatterAbility[type].g_iSplatterRangeCooldown, 1);
-		g_esSplatterCache[tank].g_iSplatterSight = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterSight, g_esSplatterPlayer[tank].g_iSplatterSight, g_esSplatterSpecial[type].g_iSplatterSight, g_esSplatterAbility[type].g_iSplatterSight, 1);
-		g_esSplatterCache[tank].g_iSplatterType = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank].g_iSplatterType, g_esSplatterPlayer[tank].g_iSplatterType, g_esSplatterSpecial[type].g_iSplatterType, g_esSplatterAbility[type].g_iSplatterType, 1);
+		g_esSplatterCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esSplatterPlayer[tank].g_flCloseAreasOnly, g_esSplatterSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esSplatterAbility[type].g_flCloseAreasOnly, 1);
+		g_esSplatterCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iComboAbility, g_esSplatterPlayer[tank].g_iComboAbility, g_esSplatterSpecial[type][iSpecType - 1].g_iComboAbility, g_esSplatterAbility[type].g_iComboAbility, 1);
+		g_esSplatterCache[tank].g_flSplatterChance = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flSplatterChance, g_esSplatterPlayer[tank].g_flSplatterChance, g_esSplatterSpecial[type][iSpecType - 1].g_flSplatterChance, g_esSplatterAbility[type].g_flSplatterChance, 1);
+		g_esSplatterCache[tank].g_flSplatterInterval = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flSplatterInterval, g_esSplatterPlayer[tank].g_flSplatterInterval, g_esSplatterSpecial[type][iSpecType - 1].g_flSplatterInterval, g_esSplatterAbility[type].g_flSplatterInterval, 1);
+		g_esSplatterCache[tank].g_flSplatterRange = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flSplatterRange, g_esSplatterPlayer[tank].g_flSplatterRange, g_esSplatterSpecial[type][iSpecType - 1].g_flSplatterRange, g_esSplatterAbility[type].g_flSplatterRange, 1);
+		g_esSplatterCache[tank].g_flSplatterRangeChance = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flSplatterRangeChance, g_esSplatterPlayer[tank].g_flSplatterRangeChance, g_esSplatterSpecial[type][iSpecType - 1].g_flSplatterRangeChance, g_esSplatterAbility[type].g_flSplatterRangeChance, 1);
+		g_esSplatterCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esSplatterPlayer[tank].g_iHumanAbility, g_esSplatterSpecial[type][iSpecType - 1].g_iHumanAbility, g_esSplatterAbility[type].g_iHumanAbility, 1);
+		g_esSplatterCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esSplatterPlayer[tank].g_iHumanAmmo, g_esSplatterSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esSplatterAbility[type].g_iHumanAmmo, 1);
+		g_esSplatterCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esSplatterPlayer[tank].g_iHumanCooldown, g_esSplatterSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esSplatterAbility[type].g_iHumanCooldown, 1);
+		g_esSplatterCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esSplatterPlayer[tank].g_iHumanRangeCooldown, g_esSplatterSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esSplatterAbility[type].g_iHumanRangeCooldown, 1);
+		g_esSplatterCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esSplatterPlayer[tank].g_flOpenAreasOnly, g_esSplatterSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esSplatterAbility[type].g_flOpenAreasOnly, 1);
+		g_esSplatterCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esSplatterPlayer[tank].g_iRequiresHumans, g_esSplatterSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esSplatterAbility[type].g_iRequiresHumans, 1);
+		g_esSplatterCache[tank].g_iSplatterAbility = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterAbility, g_esSplatterPlayer[tank].g_iSplatterAbility, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterAbility, g_esSplatterAbility[type].g_iSplatterAbility, 1);
+		g_esSplatterCache[tank].g_iSplatterCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterCooldown, g_esSplatterPlayer[tank].g_iSplatterCooldown, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterCooldown, g_esSplatterAbility[type].g_iSplatterCooldown, 1);
+		g_esSplatterCache[tank].g_iSplatterDuration = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterDuration, g_esSplatterPlayer[tank].g_iSplatterDuration, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterDuration, g_esSplatterAbility[type].g_iSplatterDuration, 1);
+		g_esSplatterCache[tank].g_iSplatterEffect = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterEffect, g_esSplatterPlayer[tank].g_iSplatterEffect, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterEffect, g_esSplatterAbility[type].g_iSplatterEffect, 1);
+		g_esSplatterCache[tank].g_iSplatterHit = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterHit, g_esSplatterPlayer[tank].g_iSplatterHit, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterHit, g_esSplatterAbility[type].g_iSplatterHit, 1);
+		g_esSplatterCache[tank].g_iSplatterHitMode = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterHitMode, g_esSplatterPlayer[tank].g_iSplatterHitMode, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterHitMode, g_esSplatterAbility[type].g_iSplatterHitMode, 1);
+		g_esSplatterCache[tank].g_iSplatterMessage = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterMessage, g_esSplatterPlayer[tank].g_iSplatterMessage, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterMessage, g_esSplatterAbility[type].g_iSplatterMessage, 1);
+		g_esSplatterCache[tank].g_iSplatterRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterRangeCooldown, g_esSplatterPlayer[tank].g_iSplatterRangeCooldown, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterRangeCooldown, g_esSplatterAbility[type].g_iSplatterRangeCooldown, 1);
+		g_esSplatterCache[tank].g_iSplatterSight = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterSight, g_esSplatterPlayer[tank].g_iSplatterSight, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterSight, g_esSplatterAbility[type].g_iSplatterSight, 1);
+		g_esSplatterCache[tank].g_iSplatterType = iGetSubSettingValue(apply, bHuman, g_esSplatterTeammate[tank][iSpecType - 1].g_iSplatterType, g_esSplatterPlayer[tank].g_iSplatterType, g_esSplatterSpecial[type][iSpecType - 1].g_iSplatterType, g_esSplatterAbility[type].g_iSplatterType, 1);
 	}
 	else
 	{

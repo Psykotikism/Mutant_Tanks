@@ -99,6 +99,7 @@ enum struct esHurtPlayer
 	int g_iHurtRangeCooldown;
 	int g_iHurtSight;
 	int g_iImmunityFlags;
+	int g_iInfectedType;
 	int g_iOwner;
 	int g_iRangeCooldown;
 	int g_iRequiresHumans;
@@ -134,7 +135,7 @@ enum struct esHurtTeammate
 	int g_iRequiresHumans;
 }
 
-esHurtTeammate g_esHurtTeammate[MAXPLAYERS + 1];
+esHurtTeammate g_esHurtTeammate[MAXPLAYERS + 1][6];
 
 enum struct esHurtAbility
 {
@@ -194,7 +195,7 @@ enum struct esHurtSpecial
 	int g_iRequiresHumans;
 }
 
-esHurtSpecial g_esHurtSpecial[MT_MAXTYPES + 1];
+esHurtSpecial g_esHurtSpecial[MT_MAXTYPES + 1][6];
 
 enum struct esHurtCache
 {
@@ -619,28 +620,31 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtAbility[iIndex].g_iHurtRangeCooldown = 0;
 				g_esHurtAbility[iIndex].g_iHurtSight = 0;
 
-				g_esHurtSpecial[iIndex].g_flCloseAreasOnly = -1.0;
-				g_esHurtSpecial[iIndex].g_iComboAbility = -1;
-				g_esHurtSpecial[iIndex].g_iHumanAbility = -1;
-				g_esHurtSpecial[iIndex].g_iHumanAmmo = -1;
-				g_esHurtSpecial[iIndex].g_iHumanCooldown = -1;
-				g_esHurtSpecial[iIndex].g_iHumanRangeCooldown = -1;
-				g_esHurtSpecial[iIndex].g_flOpenAreasOnly = -1.0;
-				g_esHurtSpecial[iIndex].g_iRequiresHumans = -1;
-				g_esHurtSpecial[iIndex].g_iHurtAbility = -1;
-				g_esHurtSpecial[iIndex].g_iHurtEffect = -1;
-				g_esHurtSpecial[iIndex].g_iHurtMessage = -1;
-				g_esHurtSpecial[iIndex].g_flHurtChance = -1.0;
-				g_esHurtSpecial[iIndex].g_iHurtCooldown = -1;
-				g_esHurtSpecial[iIndex].g_flHurtDamage = -1.0;
-				g_esHurtSpecial[iIndex].g_iHurtDuration = -1;
-				g_esHurtSpecial[iIndex].g_iHurtHit = -1;
-				g_esHurtSpecial[iIndex].g_iHurtHitMode = -1;
-				g_esHurtSpecial[iIndex].g_flHurtInterval = -1.0;
-				g_esHurtSpecial[iIndex].g_flHurtRange = -1.0;
-				g_esHurtSpecial[iIndex].g_flHurtRangeChance = -1.0;
-				g_esHurtSpecial[iIndex].g_iHurtRangeCooldown = -1;
-				g_esHurtSpecial[iIndex].g_iHurtSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esHurtSpecial[iIndex][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_iComboAbility = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHumanAbility = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHumanAmmo = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHumanCooldown = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_iRequiresHumans = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtAbility = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtEffect = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtMessage = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_flHurtChance = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtCooldown = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_flHurtDamage = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtDuration = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtHit = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtHitMode = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_flHurtInterval = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_flHurtRange = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_flHurtRangeChance = -1.0;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtRangeCooldown = -1;
+					g_esHurtSpecial[iIndex][iSpecType].g_iHurtSight = -1;
+				}
 			}
 		}
 		case 3:
@@ -672,65 +676,68 @@ public void MT_OnConfigsLoad(int mode)
 				g_esHurtPlayer[iPlayer].g_iHurtRangeCooldown = -1;
 				g_esHurtPlayer[iPlayer].g_iHurtSight = -1;
 
-				g_esHurtTeammate[iPlayer].g_flCloseAreasOnly = -1.0;
-				g_esHurtTeammate[iPlayer].g_iComboAbility = -1;
-				g_esHurtTeammate[iPlayer].g_iHumanAbility = -1;
-				g_esHurtTeammate[iPlayer].g_iHumanAmmo = -1;
-				g_esHurtTeammate[iPlayer].g_iHumanCooldown = -1;
-				g_esHurtTeammate[iPlayer].g_iHumanRangeCooldown = -1;
-				g_esHurtTeammate[iPlayer].g_flOpenAreasOnly = -1.0;
-				g_esHurtTeammate[iPlayer].g_iRequiresHumans = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtAbility = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtEffect = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtMessage = -1;
-				g_esHurtTeammate[iPlayer].g_flHurtChance = -1.0;
-				g_esHurtTeammate[iPlayer].g_iHurtCooldown = -1;
-				g_esHurtTeammate[iPlayer].g_flHurtDamage = -1.0;
-				g_esHurtTeammate[iPlayer].g_iHurtDuration = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtHit = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtHitMode = -1;
-				g_esHurtTeammate[iPlayer].g_flHurtInterval = -1.0;
-				g_esHurtTeammate[iPlayer].g_flHurtRange = -1.0;
-				g_esHurtTeammate[iPlayer].g_flHurtRangeChance = -1.0;
-				g_esHurtTeammate[iPlayer].g_iHurtRangeCooldown = -1;
-				g_esHurtTeammate[iPlayer].g_iHurtSight = -1;
+				for (int iSpecType = 0; iSpecType < 6; iSpecType++)
+				{
+					g_esHurtTeammate[iPlayer][iSpecType].g_flCloseAreasOnly = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iComboAbility = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHumanAbility = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHumanAmmo = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHumanCooldown = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHumanRangeCooldown = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flOpenAreasOnly = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iRequiresHumans = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtAbility = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtEffect = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtMessage = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flHurtChance = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtCooldown = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flHurtDamage = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtDuration = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtHit = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtHitMode = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flHurtInterval = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flHurtRange = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_flHurtRangeChance = -1.0;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtRangeCooldown = -1;
+					g_esHurtTeammate[iPlayer][iSpecType].g_iHurtSight = -1;
+				}
 			}
 		}
 	}
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHurtConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+void vHurtConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #else
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode, bool special, const char[] specsection, const char[] specName, int specType)
 #endif
 {
 	if ((mode == -1 || mode == 3) && bIsValidClient(admin))
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esHurtTeammate[admin].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHurtTeammate[admin].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esHurtTeammate[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtTeammate[admin].g_iComboAbility, value, -1, 1);
-			g_esHurtTeammate[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtTeammate[admin].g_iHumanAbility, value, -1, 2);
-			g_esHurtTeammate[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtTeammate[admin].g_iHumanAmmo, value, -1, 99999);
-			g_esHurtTeammate[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtTeammate[admin].g_iHumanCooldown, value, -1, 99999);
-			g_esHurtTeammate[admin].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHurtTeammate[admin].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esHurtTeammate[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtTeammate[admin].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esHurtTeammate[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtTeammate[admin].g_iRequiresHumans, value, -1, 32);
-			g_esHurtTeammate[admin].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtTeammate[admin].g_iHurtAbility, value, -1, 1);
-			g_esHurtTeammate[admin].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtTeammate[admin].g_iHurtEffect, value, -1, 7);
-			g_esHurtTeammate[admin].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtTeammate[admin].g_iHurtMessage, value, -1, 3);
-			g_esHurtTeammate[admin].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtTeammate[admin].g_iHurtSight, value, -1, 2);
-			g_esHurtTeammate[admin].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtTeammate[admin].g_flHurtChance, value, -1.0, 100.0);
-			g_esHurtTeammate[admin].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtTeammate[admin].g_iHurtCooldown, value, -1, 99999);
-			g_esHurtTeammate[admin].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtTeammate[admin].g_flHurtDamage, value, -1.0, 99999.0);
-			g_esHurtTeammate[admin].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtTeammate[admin].g_iHurtDuration, value, -1, 99999);
-			g_esHurtTeammate[admin].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtTeammate[admin].g_iHurtHit, value, -1, 1);
-			g_esHurtTeammate[admin].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtTeammate[admin].g_iHurtHitMode, value, -1, 2);
-			g_esHurtTeammate[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtTeammate[admin].g_flHurtInterval, value, -1.0, 99999.0);
-			g_esHurtTeammate[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtTeammate[admin].g_flHurtRange, value, -1.0, 99999.0);
-			g_esHurtTeammate[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtTeammate[admin].g_flHurtRangeChance, value, -1.0, 100.0);
-			g_esHurtTeammate[admin].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtTeammate[admin].g_iHurtRangeCooldown, value, -1, 99999);
+			g_esHurtTeammate[admin][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHurtTeammate[admin][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtTeammate[admin][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtTeammate[admin][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtTeammate[admin][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtTeammate[admin][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHurtTeammate[admin][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtTeammate[admin][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtTeammate[admin][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtTeammate[admin][specType].g_iHurtAbility, value, -1, 1, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtTeammate[admin][specType].g_iHurtEffect, value, -1, 7, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtTeammate[admin][specType].g_iHurtMessage, value, -1, 3, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtTeammate[admin][specType].g_iHurtSight, value, -1, 2, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtTeammate[admin][specType].g_flHurtChance, value, -1.0, 100.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtTeammate[admin][specType].g_iHurtCooldown, value, -1, 99999, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtTeammate[admin][specType].g_flHurtDamage, value, -1.0, 99999.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtTeammate[admin][specType].g_iHurtDuration, value, -1, 99999, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtTeammate[admin][specType].g_iHurtHit, value, -1, 1, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtTeammate[admin][specType].g_iHurtHitMode, value, -1, 2, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtTeammate[admin][specType].g_flHurtInterval, value, -1.0, 99999.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtTeammate[admin][specType].g_flHurtRange, value, -1.0, 99999.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtTeammate[admin][specType].g_flHurtRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esHurtTeammate[admin][specType].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtTeammate[admin][specType].g_iHurtRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -765,28 +772,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	{
 		if (special && specsection[0] != '\0')
 		{
-			g_esHurtSpecial[type].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHurtSpecial[type].g_flCloseAreasOnly, value, -1.0, 99999.0);
-			g_esHurtSpecial[type].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtSpecial[type].g_iComboAbility, value, -1, 1);
-			g_esHurtSpecial[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtSpecial[type].g_iHumanAbility, value, -1, 2);
-			g_esHurtSpecial[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtSpecial[type].g_iHumanAmmo, value, -1, 99999);
-			g_esHurtSpecial[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtSpecial[type].g_iHumanCooldown, value, -1, 99999);
-			g_esHurtSpecial[type].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHurtSpecial[type].g_iHumanRangeCooldown, value, -1, 99999);
-			g_esHurtSpecial[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtSpecial[type].g_flOpenAreasOnly, value, -1.0, 99999.0);
-			g_esHurtSpecial[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtSpecial[type].g_iRequiresHumans, value, -1, 32);
-			g_esHurtSpecial[type].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtSpecial[type].g_iHurtAbility, value, -1, 1);
-			g_esHurtSpecial[type].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtSpecial[type].g_iHurtEffect, value, -1, 7);
-			g_esHurtSpecial[type].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtSpecial[type].g_iHurtMessage, value, -1, 3);
-			g_esHurtSpecial[type].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtSpecial[type].g_iHurtSight, value, -1, 2);
-			g_esHurtSpecial[type].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtSpecial[type].g_flHurtChance, value, -1.0, 100.0);
-			g_esHurtSpecial[type].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtSpecial[type].g_iHurtCooldown, value, -1, 99999);
-			g_esHurtSpecial[type].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtSpecial[type].g_flHurtDamage, value, -1.0, 99999.0);
-			g_esHurtSpecial[type].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtSpecial[type].g_iHurtDuration, value, -1, 99999);
-			g_esHurtSpecial[type].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtSpecial[type].g_iHurtHit, value, -1, 1);
-			g_esHurtSpecial[type].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtSpecial[type].g_iHurtHitMode, value, -1, 2);
-			g_esHurtSpecial[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtSpecial[type].g_flHurtInterval, value, -1.0, 99999.0);
-			g_esHurtSpecial[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtSpecial[type].g_flHurtRange, value, -1.0, 99999.0);
-			g_esHurtSpecial[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtSpecial[type].g_flHurtRangeChance, value, -1.0, 100.0);
-			g_esHurtSpecial[type].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtSpecial[type].g_iHurtRangeCooldown, value, -1, 99999);
+			g_esHurtSpecial[type][specType].g_flCloseAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "CloseAreasOnly", "Close Areas Only", "Close_Areas_Only", "closeareas", g_esHurtSpecial[type][specType].g_flCloseAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_iComboAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHurtSpecial[type][specType].g_iComboAbility, value, -1, 1, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHumanAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHurtSpecial[type][specType].g_iHumanAbility, value, -1, 2, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHumanAmmo = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHurtSpecial[type][specType].g_iHumanAmmo, value, -1, 99999, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHumanCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHurtSpecial[type][specType].g_iHumanCooldown, value, -1, 99999, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHumanRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HumanRangeCooldown", "Human Range Cooldown", "Human_Range_Cooldown", "hrangecooldown", g_esHurtSpecial[type][specType].g_iHumanRangeCooldown, value, -1, 99999, specName, specType);
+			g_esHurtSpecial[type][specType].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHurtSpecial[type][specType].g_flOpenAreasOnly, value, -1.0, 99999.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_iRequiresHumans = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHurtSpecial[type][specType].g_iRequiresHumans, value, -1, 32, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtAbility = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHurtSpecial[type][specType].g_iHurtAbility, value, -1, 1, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtEffect = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHurtSpecial[type][specType].g_iHurtEffect, value, -1, 7, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtMessage = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHurtSpecial[type][specType].g_iHurtMessage, value, -1, 3, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtSight = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "AbilitySight", "Ability Sight", "Ability_Sight", "sight", g_esHurtSpecial[type][specType].g_iHurtSight, value, -1, 2, specName, specType);
+			g_esHurtSpecial[type][specType].g_flHurtChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_esHurtSpecial[type][specType].g_flHurtChance, value, -1.0, 100.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtCooldown", "Hurt Cooldown", "Hurt_Cooldown", "cooldown", g_esHurtSpecial[type][specType].g_iHurtCooldown, value, -1, 99999, specName, specType);
+			g_esHurtSpecial[type][specType].g_flHurtDamage = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_esHurtSpecial[type][specType].g_flHurtDamage, value, -1.0, 99999.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtDuration = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_esHurtSpecial[type][specType].g_iHurtDuration, value, -1, 99999, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtHit = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_esHurtSpecial[type][specType].g_iHurtHit, value, -1, 1, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtHitMode = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_esHurtSpecial[type][specType].g_iHurtHitMode, value, -1, 2, specName, specType);
+			g_esHurtSpecial[type][specType].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtSpecial[type][specType].g_flHurtInterval, value, -1.0, 99999.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtSpecial[type][specType].g_flHurtRange, value, -1.0, 99999.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtSpecial[type][specType].g_flHurtRangeChance, value, -1.0, 100.0, specName, specType);
+			g_esHurtSpecial[type][specType].g_iHurtRangeCooldown = iGetKeyValue(subsection, MT_HURT_SECTION, MT_HURT_SECTION2, MT_HURT_SECTION3, MT_HURT_SECTION4, key, "HurtRangeCooldown", "Hurt Range Cooldown", "Hurt_Range_Cooldown", "rangecooldown", g_esHurtSpecial[type][specType].g_iHurtRangeCooldown, value, -1, 99999, specName, specType);
 		}
 		else
 		{
@@ -825,32 +832,34 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsValidClient(tank, MT_CHECK_FAKECLIENT);
+	g_esHurtPlayer[tank].g_iInfectedType = iGetInfectedType(tank);
 	g_esHurtPlayer[tank].g_iTankType = apply ? type : 0;
+	int iSpecType = g_esHurtPlayer[tank].g_iInfectedType;
 
 	if (bIsSpecialInfected(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flCloseAreasOnly, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtSpecial[type].g_flCloseAreasOnly, g_esHurtAbility[type].g_flCloseAreasOnly, 1);
-		g_esHurtCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iComboAbility, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtSpecial[type].g_iComboAbility, g_esHurtAbility[type].g_iComboAbility, 1);
-		g_esHurtCache[tank].g_flHurtChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtChance, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtSpecial[type].g_flHurtChance, g_esHurtAbility[type].g_flHurtChance, 1);
-		g_esHurtCache[tank].g_flHurtDamage = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtDamage, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtSpecial[type].g_flHurtDamage, g_esHurtAbility[type].g_flHurtDamage, 1);
-		g_esHurtCache[tank].g_flHurtInterval = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtInterval, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtSpecial[type].g_flHurtInterval, g_esHurtAbility[type].g_flHurtInterval, 1);
-		g_esHurtCache[tank].g_flHurtRange = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRange, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtSpecial[type].g_flHurtRange, g_esHurtAbility[type].g_flHurtRange, 1);
-		g_esHurtCache[tank].g_flHurtRangeChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flHurtRangeChance, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtSpecial[type].g_flHurtRangeChance, g_esHurtAbility[type].g_flHurtRangeChance, 1);
-		g_esHurtCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAbility, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtSpecial[type].g_iHumanAbility, g_esHurtAbility[type].g_iHumanAbility, 1);
-		g_esHurtCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanAmmo, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtSpecial[type].g_iHumanAmmo, g_esHurtAbility[type].g_iHumanAmmo, 1);
-		g_esHurtCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanCooldown, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtSpecial[type].g_iHumanCooldown, g_esHurtAbility[type].g_iHumanCooldown, 1);
-		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHumanRangeCooldown, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtSpecial[type].g_iHumanRangeCooldown, g_esHurtAbility[type].g_iHumanRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtAbility, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtSpecial[type].g_iHurtAbility, g_esHurtAbility[type].g_iHurtAbility, 1);
-		g_esHurtCache[tank].g_iHurtCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtCooldown, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtSpecial[type].g_iHurtCooldown, g_esHurtAbility[type].g_iHurtCooldown, 1);
-		g_esHurtCache[tank].g_iHurtDuration = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtDuration, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtSpecial[type].g_iHurtDuration, g_esHurtAbility[type].g_iHurtDuration, 1);
-		g_esHurtCache[tank].g_iHurtEffect = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtEffect, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtSpecial[type].g_iHurtEffect, g_esHurtAbility[type].g_iHurtEffect, 1);
-		g_esHurtCache[tank].g_iHurtHit = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHit, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtSpecial[type].g_iHurtHit, g_esHurtAbility[type].g_iHurtHit, 1);
-		g_esHurtCache[tank].g_iHurtHitMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtHitMode, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtSpecial[type].g_iHurtHitMode, g_esHurtAbility[type].g_iHurtHitMode, 1);
-		g_esHurtCache[tank].g_iHurtMessage = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtMessage, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtSpecial[type].g_iHurtMessage, g_esHurtAbility[type].g_iHurtMessage, 1);
-		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtRangeCooldown, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtSpecial[type].g_iHurtRangeCooldown, g_esHurtAbility[type].g_iHurtRangeCooldown, 1);
-		g_esHurtCache[tank].g_iHurtSight = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iHurtSight, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtSpecial[type].g_iHurtSight, g_esHurtAbility[type].g_iHurtSight, 1);
-		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_flOpenAreasOnly, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtSpecial[type].g_flOpenAreasOnly, g_esHurtAbility[type].g_flOpenAreasOnly, 1);
-		g_esHurtCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank].g_iRequiresHumans, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtSpecial[type].g_iRequiresHumans, g_esHurtAbility[type].g_iRequiresHumans, 1);
+		g_esHurtCache[tank].g_flCloseAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flCloseAreasOnly, g_esHurtPlayer[tank].g_flCloseAreasOnly, g_esHurtSpecial[type][iSpecType - 1].g_flCloseAreasOnly, g_esHurtAbility[type].g_flCloseAreasOnly, 1);
+		g_esHurtCache[tank].g_iComboAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iComboAbility, g_esHurtPlayer[tank].g_iComboAbility, g_esHurtSpecial[type][iSpecType - 1].g_iComboAbility, g_esHurtAbility[type].g_iComboAbility, 1);
+		g_esHurtCache[tank].g_flHurtChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flHurtChance, g_esHurtPlayer[tank].g_flHurtChance, g_esHurtSpecial[type][iSpecType - 1].g_flHurtChance, g_esHurtAbility[type].g_flHurtChance, 1);
+		g_esHurtCache[tank].g_flHurtDamage = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flHurtDamage, g_esHurtPlayer[tank].g_flHurtDamage, g_esHurtSpecial[type][iSpecType - 1].g_flHurtDamage, g_esHurtAbility[type].g_flHurtDamage, 1);
+		g_esHurtCache[tank].g_flHurtInterval = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flHurtInterval, g_esHurtPlayer[tank].g_flHurtInterval, g_esHurtSpecial[type][iSpecType - 1].g_flHurtInterval, g_esHurtAbility[type].g_flHurtInterval, 1);
+		g_esHurtCache[tank].g_flHurtRange = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flHurtRange, g_esHurtPlayer[tank].g_flHurtRange, g_esHurtSpecial[type][iSpecType - 1].g_flHurtRange, g_esHurtAbility[type].g_flHurtRange, 1);
+		g_esHurtCache[tank].g_flHurtRangeChance = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flHurtRangeChance, g_esHurtPlayer[tank].g_flHurtRangeChance, g_esHurtSpecial[type][iSpecType - 1].g_flHurtRangeChance, g_esHurtAbility[type].g_flHurtRangeChance, 1);
+		g_esHurtCache[tank].g_iHumanAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHumanAbility, g_esHurtPlayer[tank].g_iHumanAbility, g_esHurtSpecial[type][iSpecType - 1].g_iHumanAbility, g_esHurtAbility[type].g_iHumanAbility, 1);
+		g_esHurtCache[tank].g_iHumanAmmo = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHumanAmmo, g_esHurtPlayer[tank].g_iHumanAmmo, g_esHurtSpecial[type][iSpecType - 1].g_iHumanAmmo, g_esHurtAbility[type].g_iHumanAmmo, 1);
+		g_esHurtCache[tank].g_iHumanCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHumanCooldown, g_esHurtPlayer[tank].g_iHumanCooldown, g_esHurtSpecial[type][iSpecType - 1].g_iHumanCooldown, g_esHurtAbility[type].g_iHumanCooldown, 1);
+		g_esHurtCache[tank].g_iHumanRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHumanRangeCooldown, g_esHurtPlayer[tank].g_iHumanRangeCooldown, g_esHurtSpecial[type][iSpecType - 1].g_iHumanRangeCooldown, g_esHurtAbility[type].g_iHumanRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtAbility = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtAbility, g_esHurtPlayer[tank].g_iHurtAbility, g_esHurtSpecial[type][iSpecType - 1].g_iHurtAbility, g_esHurtAbility[type].g_iHurtAbility, 1);
+		g_esHurtCache[tank].g_iHurtCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtCooldown, g_esHurtPlayer[tank].g_iHurtCooldown, g_esHurtSpecial[type][iSpecType - 1].g_iHurtCooldown, g_esHurtAbility[type].g_iHurtCooldown, 1);
+		g_esHurtCache[tank].g_iHurtDuration = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtDuration, g_esHurtPlayer[tank].g_iHurtDuration, g_esHurtSpecial[type][iSpecType - 1].g_iHurtDuration, g_esHurtAbility[type].g_iHurtDuration, 1);
+		g_esHurtCache[tank].g_iHurtEffect = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtEffect, g_esHurtPlayer[tank].g_iHurtEffect, g_esHurtSpecial[type][iSpecType - 1].g_iHurtEffect, g_esHurtAbility[type].g_iHurtEffect, 1);
+		g_esHurtCache[tank].g_iHurtHit = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtHit, g_esHurtPlayer[tank].g_iHurtHit, g_esHurtSpecial[type][iSpecType - 1].g_iHurtHit, g_esHurtAbility[type].g_iHurtHit, 1);
+		g_esHurtCache[tank].g_iHurtHitMode = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtHitMode, g_esHurtPlayer[tank].g_iHurtHitMode, g_esHurtSpecial[type][iSpecType - 1].g_iHurtHitMode, g_esHurtAbility[type].g_iHurtHitMode, 1);
+		g_esHurtCache[tank].g_iHurtMessage = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtMessage, g_esHurtPlayer[tank].g_iHurtMessage, g_esHurtSpecial[type][iSpecType - 1].g_iHurtMessage, g_esHurtAbility[type].g_iHurtMessage, 1);
+		g_esHurtCache[tank].g_iHurtRangeCooldown = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtRangeCooldown, g_esHurtPlayer[tank].g_iHurtRangeCooldown, g_esHurtSpecial[type][iSpecType - 1].g_iHurtRangeCooldown, g_esHurtAbility[type].g_iHurtRangeCooldown, 1);
+		g_esHurtCache[tank].g_iHurtSight = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iHurtSight, g_esHurtPlayer[tank].g_iHurtSight, g_esHurtSpecial[type][iSpecType - 1].g_iHurtSight, g_esHurtAbility[type].g_iHurtSight, 1);
+		g_esHurtCache[tank].g_flOpenAreasOnly = flGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_flOpenAreasOnly, g_esHurtPlayer[tank].g_flOpenAreasOnly, g_esHurtSpecial[type][iSpecType - 1].g_flOpenAreasOnly, g_esHurtAbility[type].g_flOpenAreasOnly, 1);
+		g_esHurtCache[tank].g_iRequiresHumans = iGetSubSettingValue(apply, bHuman, g_esHurtTeammate[tank][iSpecType - 1].g_iRequiresHumans, g_esHurtPlayer[tank].g_iRequiresHumans, g_esHurtSpecial[type][iSpecType - 1].g_iRequiresHumans, g_esHurtAbility[type].g_iRequiresHumans, 1);
 	}
 	else
 	{
